@@ -241,7 +241,7 @@ MIT
 
 ## 👤 Author
 
-Ruben Van Paemel
+Ruben Van Paemel & Claude Opus 4.6
 
 ---
 
