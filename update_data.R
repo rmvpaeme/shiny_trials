@@ -80,10 +80,11 @@ message("EUCTR done.\n")
 message("=== 2/2  CTIS ===")
 
 ctis_url <- paste0(
-  "https://euclinicaltrials.eu/ctis-public/search#searchCriteria=",
-  "{%22containAll%22:%22%22,",
-  "%22containAny%22:%22pediatric,infant,neonatal,adolescent,children%22,",
-  "%22containNot%22:%22%22}"
+  "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={%22ageGroupCode%22:[2]}"
+  #  "https://euclinicaltrials.eu/ctis-public/search#searchCriteria=",
+  #  "{%22containAll%22:%22%22,",
+  #  "%22containAny%22:%22pediatric,infant,neonatal,adolescent,children%22,",
+  #  "%22containNot%22:%22%22}"
 )
 
 ctis_q <- ctrGetQueryUrl(ctis_url)

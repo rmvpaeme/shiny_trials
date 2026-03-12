@@ -1,5 +1,4 @@
-
-# 🧒 EU Paediatric Clinical Trials Dashboard
+# EU Paediatric Clinical Trials Dashboard `v0.1`
 
 An interactive R Shiny dashboard providing a unified view of paediatric
 clinical trials registered in the European Union, integrating two primary
@@ -12,7 +11,7 @@ sources:
 
 ---
 
-## ✨ Features
+## Features
 
 ### Data Integration
 - **Multi-register harmonisation** — unifies fields (trial ID, title,
@@ -20,12 +19,15 @@ sources:
   single searchable dataset
 - **Smart deduplication** — EUCTR stores one record per member state per
   trial; all countries, statuses, and MedDRA terms are aggregated
-  *before* collapsing to one row per unique trial (no Belgium bias)
+  *before* collapsing to one row per unique trial
 - **Country name cleaning** — strips EUCTR agency suffixes
   (`"Germany - BfArM"` → `"Germany"`), removes CTIS numeric/timestamp
   junk, normalises against a canonical list of ~200 country names
+- **CTIS PIP detection** — the `paediatricInvestigationPlan` field in CTIS
+  contains PIP record objects rather than a yes/no string; presence of any
+  content is correctly mapped to "Yes", absence to "No"
 - **RDS caching** — processed data saved to `.rds` on first build;
-  subsequent app starts load in ~1 second instead of minutes
+  subsequent app starts load in ~1 second
 
 ### Registry Overlap Detection
 - Trials matched across EUCTR and CTIS by **normalised title text**
@@ -44,30 +46,50 @@ sources:
 - Free-text search (title, product, CT number)
 
 ### Dashboard Tabs
-- **Overview** — value boxes, cumulative start-date ECDF, status pie chart,
-  registry overlap Venn diagram, submissions per year, register comparison
-- **Data Explorer** — full interactive DataTable with per-column filters,
-  CSV and Excel download
-- **Analytics** — top MedDRA organ classes, top conditions, country
-  distribution, PIP breakdown, quarterly start-date timeline
-- **About** — data sources, methodology, version info
+
+#### Overview
+
+- 4 summary value boxes: Total Trials, Ongoing, Completed, With PIP
+- **5 most recently submitted trials** table (by submission date, respects active filters)
+- Cumulative start-date ECDF plot by status
+- Status distribution pie chart
+- Registry overlap Venn diagram
+- Overlap summary with counts and percentages
+- Submissions per year stacked bar
+- Register comparison bar chart — "Other" status is expanded into its
+  constituent raw values when there are fewer than 6 distinct categories
+
+#### Data Explorer
+
+- Full interactive DataTable with per-column filters
+- CSV and Excel download
+
+#### Analytics
+
+- Top MedDRA organ classes (configurable N)
+- Top conditions / MedDRA terms (configurable N)
+- Trials by country (top 30)
+- PIP status breakdown by register
+- Quarterly start-date timeline
+
+#### About
+
+- Data sources, methodology, version info
 
 ### Visual Themes
+
 - **Nord** — dark theme using the [Nord colour palette](https://www.nordtheme.com/)
 - **Default** — standard shinydashboard light blue theme
-- Toggle between themes via radio button in the sidebar; all charts,
-  tables, and UI elements adapt instantly
+- Toggle via radio button in the sidebar; all charts, tables, and UI elements adapt instantly
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-- **R** ≥ 4.1
-- **System dependencies** (for `ctrdata`):
-  - JavaScript runtime: `node.js` (recommended) or `V8`
-  - `libcurl`, `libssl`, `libxml2` (usually pre-installed on Linux/macOS)
+- **R** >= 4.1
+- **System dependencies** (for `ctrdata`): `node.js` (recommended) or `V8`; `libcurl`, `libssl`, `libxml2`
 
 ### 1. Install R packages
 
@@ -86,8 +108,7 @@ install.packages(c(
 Rscript update_data.R
 ```
 
-> ⏱ **First run takes 30–60 minutes** depending on network speed.
-> EUCTR (~30 min), CTIS (~5 min).
+> First run takes 30–60 minutes (EUCTR ~30 min, CTIS ~5 min).
 > Subsequent runs are incremental and faster.
 
 ### 3. Launch the dashboard
@@ -100,17 +121,12 @@ Or from RStudio: open `app.R` → click **Run App**.
 
 ---
 
-## 🐳 Docker
+## Docker
 
-### Build
+### Build & run
 
 ```bash
 docker build -t pediatric-trials .
-```
-
-### Run
-
-```bash
 mkdir -p data
 docker run -p 3838:3838 \
   -v $(pwd)/data:/app/data \
@@ -130,7 +146,7 @@ mkdir -p data
 
 # Fetch data (30-60 min first time)
 docker run --rm -v $(pwd)/data:/app/data pediatric-trials \
-  Rscript /app/update_wrapper.R
+  Rscript /app/update_data.R
 
 # Launch dashboard
 docker run -d -p 3838:3838 \
@@ -143,21 +159,20 @@ docker run -d -p 3838:3838 \
 
 ```bash
 docker compose up -d
-docker compose exec app Rscript /app/update_wrapper.R   # first time
-# → open http://localhost:3838
+docker compose exec app Rscript /app/update_data.R   # first time
+# open http://localhost:3838
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
-```
+```text
 pediatric-trials-dashboard/
 ├── app.R                    # Shiny dashboard (UI + server)
 ├── update_data.R            # Data fetching script (EUCTR + CTIS)
 ├── Dockerfile               # Container definition
 ├── docker-compose.yml       # Compose orchestration
-├── .dockerignore            # Files excluded from Docker build
 ├── README.md                # This file
 └── data/                    # Runtime data (created automatically)
     ├── pediatric_trials.sqlite    # SQLite database
@@ -166,14 +181,14 @@ pediatric-trials-dashboard/
 
 ---
 
-## 🔄 Data Pipeline
+## Data Pipeline
 
-```
+```text
 ┌──────────────────────────┐    ┌──────────────────────────┐
 │  EUCTR                    │    │  CTIS                     │
 │  clinicaltrialsregister.eu│    │  euclinicaltrials.eu      │
 │  age < 18                 │    │  paediatric keywords      │
-│  ~10k records             │    │  ~2k records              │
+│  ~10k records             │    │  ~1k records              │
 │  (per-country duplicates) │    │  (nested JSON metadata)   │
 └───────────┬──────────────┘    └───────────┬──────────────┘
             │                                │
@@ -183,18 +198,16 @@ pediatric-trials-dashboard/
 │                                                             │
 │  1. Flatten list-columns to " / "-separated strings         │
 │  2. Coerce all columns to character (type-safety)           │
-│  3. Clean country names:                                    │
-│     • Strip EUCTR agency suffixes                           │
-│     • Remove CTIS numeric/timestamp junk                    │
-│     • Normalise against canonical country list              │
+│  3. Clean country names                                     │
 │  4. Unite corresponding fields across registers             │
 │  5. Aggregate countries / statuses / MedDRA per trial       │
 │     BEFORE deduplication                                    │
 │  6. dbFindIdsUniqueTrials → one row per trial               │
 │  7. Harmonise status → Ongoing / Completed / Other          │
-│  8. Parse dates safely (multiple formats)                   │
-│  9. Compute normalised title key for overlap detection      │
-│ 10. Cache processed data to .rds                            │
+│  8. Detect CTIS PIP from field presence (not yes/no string) │
+│  9. Parse dates safely (multiple formats)                   │
+│ 10. Compute normalised title key for overlap detection      │
+│ 11. Cache processed data to .rds                            │
 └────────────────────────┬────────────────────────────────────┘
                          │
                          ▼
@@ -211,41 +224,32 @@ pediatric-trials-dashboard/
 
 ---
 
-## ⚠️ Known Issues / Caveats
+## Known Issues / Caveats
 
 | Issue | Details |
-|-------|---------|
-| **EUCTR `rows_update` errors** | `ctrdata` internally uses `dplyr::rows_update()` which fails on duplicate/unmatched keys in newer dplyr versions. Scripts temporarily monkey-patch this function during EUCTR loading. |
+| ----- | ------- |
+| **EUCTR `rows_update` errors** | `ctrdata` uses `dplyr::rows_update()` which fails on duplicate/unmatched keys in newer dplyr versions. `update_data.R` and the in-app update button both temporarily monkey-patch this function. |
 | **CTIS country field** | Contains nested metadata (numeric IDs, timestamps) alongside country names. Cleaned by matching against a canonical country list of ~200 entries. |
 | **MedDRA classification** | EUCTR and CTIS both use MedDRA but may classify the same trial differently. Terms are aggregated as-is. |
-| **PIP data** | Only available from EUCTR and CTIS. Interpretation varies between `"Yes"`, `"true"`, and other values — normalised to Yes/No/Unknown. |
+| **PIP data** | For EUCTR, PIP is stored as `"Yes"/"No"/"true"/"false"`. For CTIS, the `paediatricInvestigationPlan` field holds a list of PIP record objects — presence = Yes, absent = No. |
 | **Overlap detection** | Based on normalised title matching (first 80 chars). Conservative estimate — actual overlap may be higher for trials with different title formulations across registries. |
-| **Incremental updates** | `ctrdata` performs upserts — existing records updated, new ones added. Delete `pediatric_trials.sqlite` and `pediatric_trials_cache.rds` for a clean start. |
-| **Cache invalidation** | Cache auto-invalidates when SQLite DB is newer. Delete `.rds` file manually to force rebuild without re-downloading. |
+| **Cache invalidation** | Cache auto-invalidates when SQLite DB is newer. Delete `pediatric_trials_cache.rds` manually to force rebuild without re-downloading. |
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 | Variable | Default | Description |
-|----------|---------|-------------|
-| `DB_PATH` | `pediatric_trials.sqlite` | Path to SQLite database file |
+| -------- | ------- | ----------- |
+| `DB_PATH` | `./data/pediatric_trials.sqlite` | Path to SQLite database file |
 | `DB_COLLECTION` | `trials` | Collection name within the database |
 | `CACHE_PATH` | `pediatric_trials_cache.rds` | Path to processed data cache |
 
 Edit these at the top of both `app.R` and `update_data.R`.
 
-In Docker, override via environment variables:
-
-```bash
-docker run -e DB_PATH=/app/data/trials.sqlite \
-           -e DB_COLLECTION=trials \
-           -p 3838:3838 pediatric-trials
-```
-
 ---
 
-## 🧰 Technology Stack
+## Technology Stack
 
 | Component | Package | Purpose |
 |-----------|---------|---------|
@@ -260,23 +264,21 @@ docker run -e DB_PATH=/app/data/trials.sqlite \
 
 ---
 
-## 📄 License
+## License
 
 MIT
 
 ---
 
-## 👤 Author
+## Author
 
-Ruben Van Paemel & Claude Opus 4.6
+Ruben Van Paemel & Claude Sonnet 4.6
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
-- [`ctrdata`](https://github.com/rfhb/ctrdata) by Ralf Herold — unified
-  access to EU and US clinical trial registers from R
+- [`ctrdata`](https://github.com/rfhb/ctrdata) by Ralf Herold — unified access to EU and US clinical trial registers from R
 - [EU Clinical Trials Register](https://www.clinicaltrialsregister.eu)
 - [Clinical Trials Information System](https://euclinicaltrials.eu)
 - [Nord Theme](https://www.nordtheme.com/) colour palette
-
