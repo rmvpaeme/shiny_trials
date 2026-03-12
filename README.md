@@ -126,11 +126,10 @@ Or from RStudio: open `app.R` → click **Run App**.
 ### Build & run
 
 ```bash
-docker build -t pediatric-trials .
 mkdir -p data
 docker run -p 3838:3838 \
   -v $(pwd)/data:/app/data \
-  pediatric-trials
+  rmvpaeme/shiny_trials:0.1
 ```
 
 Open [http://localhost:3838](http://localhost:3838).
@@ -141,18 +140,17 @@ and RDS cache persist across container restarts.
 ### Pre-populate before launching
 
 ```bash
-docker build -t pediatric-trials .
 mkdir -p data
 
 # Fetch data (30-60 min first time)
-docker run --rm -v $(pwd)/data:/app/data pediatric-trials \
+docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1 \
   Rscript /app/update_data.R
 
 # Launch dashboard
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
-  --name pediatric-trials \
-  pediatric-trials
+  --name shiny_trials \
+  rmvpaeme/shiny_trials:0.1
 ```
 
 ### Docker Compose
