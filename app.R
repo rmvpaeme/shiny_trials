@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v11 — EUCTR + CTIS, fixed CTIS list handling + overlap)
+# app.R  (v0.1 — EUCTR + CTIS, fixed CTIS list handling + overlap)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -15,6 +15,7 @@ suppressPackageStartupMessages({
   library(DT)
   library(plotly)
 })
+
 
 has_eulerr <- requireNamespace("eulerr", quietly = TRUE)
 if (has_eulerr) library(eulerr)
@@ -459,11 +460,23 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   completed_pat <- regex("Completed|COMPLETED|Ended", ignore_case = TRUE)
   
   result <- result %>% mutate(
-    status_raw = coalesce(p_end_of_trial_status, ctStatus, trial_status_raw),
+    # status_raw_orig: used for Ongoing/Completed/Other classification only.
+    # Must NOT be cleaned so that trials with numeric CTIS status codes still
+    # fall into "Other" rather than becoming NA and disappearing from filters.
+    status_raw_orig = coalesce(p_end_of_trial_status, ctStatus, trial_status_raw),
+    # status_raw: display value — strip purely-numeric tokens from CTIS JSON
+    # flattening and deduplicate repeated tokens in aggregated multi-country strings.
+    status_raw = vapply(status_raw_orig, function(x) {
+      if (is.na(x) || !nzchar(str_trim(x))) return(NA_character_)
+      parts <- str_trim(unlist(str_split(x, " / ")))
+      parts <- parts[nzchar(parts) & !str_detect(parts, "^[0-9]+$")]
+      parts <- unique(parts)
+      if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
+    }, FUN.VALUE = character(1L), USE.NAMES = FALSE),
     status = case_when(
-      is.na(status_raw) ~ NA_character_,
-      str_detect(status_raw, ongoing_pat) ~ "Ongoing",
-      str_detect(status_raw, completed_pat) ~ "Completed",
+      is.na(status_raw_orig) ~ NA_character_,
+      str_detect(status_raw_orig, ongoing_pat) ~ "Ongoing",
+      str_detect(status_raw_orig, completed_pat) ~ "Completed",
       TRUE ~ "Other"))
   
   # ── Derived ───────────────────────────────────────────────────────────────
@@ -474,6 +487,10 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     has_PIP = case_when(
       str_detect(tolower(PIP_status), "yes|true") ~ "Yes",
       str_detect(tolower(PIP_status), "no|false") ~ "No",
+      # CTIS: paediatricInvestigationPlan is a list of PIP records; any non-empty
+      # content means a PIP exists. Empty/NA means no PIP was specified.
+      register == "CTIS" & !is.na(PIP_status) & nzchar(str_trim(PIP_status)) ~ "Yes",
+      register == "CTIS" & (is.na(PIP_status) | !nzchar(str_trim(PIP_status))) ~ "No",
       TRUE ~ "Unknown"),
     # Overlap title key — guaranteed character
     title_key = {
@@ -484,6 +501,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       substr(tt, 1, 80)
     })
   
+  result <- result %>% select(-status_raw_orig)
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
 }
@@ -564,9 +582,6 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
-                                     hr(),
-                                     div(style="padding:0 15px;",
-                                         radioButtons("theme_select","Theme:",choices=c("Nord","Default"),selected="Nord",inline=TRUE)),
                                      hr(), h4("  Filters",style="padding-left:15px;"),
                                      checkboxGroupInput("status_filter","Trial Status:",
                                                         choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other")),
@@ -586,7 +601,10 @@ ui <- dashboardPage(skin = "blue",
                                      hr(),
                                      div(style="padding:0 15px;",
                                          actionButton("update_btn"," Update Database",icon=icon("sync"),class="btn-warning btn-block"),
-                                         br(),textOutput("data_info",inline=TRUE)%>%tagAppendAttributes(style="font-size:11px;"))
+                                         br(),textOutput("data_info",inline=TRUE)%>%tagAppendAttributes(style="font-size:11px;")),
+                                     hr(),
+                                     div(style="padding:0 15px;",
+                                         radioButtons("theme_select","Theme:",choices=c("Nord","Default"),selected="Nord",inline=TRUE))
                     ),
                     
                     dashboardBody(
@@ -596,6 +614,9 @@ ui <- dashboardPage(skin = "blue",
                                 uiOutput("no_data_banner"),
                                 fluidRow(valueBoxOutput("vb_total",width=3),valueBoxOutput("vb_ongoing",width=3),
                                          valueBoxOutput("vb_completed",width=3),valueBoxOutput("vb_pip",width=3)),
+                                fluidRow(
+                                  box(title="5 Most Recently Submitted Trials",status="warning",solidHeader=TRUE,
+                                      width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
                                 fluidRow(
                                   box(title="Cumulative Trials by Start Date",status="primary",solidHeader=TRUE,
                                       width=8,height=420,withSpinner(plotlyOutput("plot_cumulative",height="360px"),type=6)),
@@ -640,11 +661,65 @@ ui <- dashboardPage(skin = "blue",
                                       withSpinner(plotlyOutput("plot_timeline_q",height="360px"),type=6)))
                         ),
                         tabItem(tabName="about",
-                                fluidRow(box(title="About",width=12,status="primary",solidHeader=TRUE,
-                                             h3(icon("child")," EU Paediatric Clinical Trials Dashboard"),
-                                             tags$ul(tags$li(tags$b("EUCTR")," — clinicaltrialsregister.eu"),
-                                                     tags$li(tags$b("CTIS")," — euclinicaltrials.eu")),
-                                             hr(),p(em(paste0("v3.1 — ",Sys.Date())),style="opacity:0.5;"))))
+                                fluidRow(
+                                  box(title="About This Dashboard",width=8,status="primary",solidHeader=TRUE,
+                                      h3(icon("child")," EU Paediatric Clinical Trials Dashboard"),
+                                      p("This dashboard provides a comprehensive view of paediatric clinical trials
+                                        registered in the European Union. It integrates data from two official EU
+                                        clinical trial registries and allows users to explore, filter, and analyse
+                                        trial activity across conditions, countries, and time."),
+                                      h4(icon("database")," Data Sources"),
+                                      tags$ul(
+                                        tags$li(tags$b("EUCTR")," — EU Clinical Trials Register (",
+                                                tags$a("clinicaltrialsregister.eu", href="https://www.clinicaltrialsregister.eu", target="_blank"),
+                                                "). The legacy EU registry covering trials authorised under Directive 2001/20/EC.
+                                                Contains trials submitted from 2004 onwards."),
+                                        tags$li(tags$b("CTIS")," — Clinical Trials Information System (",
+                                                tags$a("euclinicaltrials.eu", href="https://euclinicaltrials.eu", target="_blank"),
+                                                "). The new EU registry under Regulation (EU) No 536/2014, mandatory for new
+                                                applications from January 2023 onwards.")
+                                      ),
+                                      h4(icon("filter")," Filters & Features"),
+                                      tags$ul(
+                                        tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, or other trial status."),
+                                        tags$li(tags$b("Source Register:"), " View data from EUCTR, CTIS, or both."),
+                                        tags$li(tags$b("Date Range:"), " Restrict results to a specific submission period."),
+                                        tags$li(tags$b("MedDRA Organ Class / Condition:"), " Filter by therapeutic area using standardised MedDRA terminology."),
+                                        tags$li(tags$b("Country:"), " Restrict to trials active in one or more EU Member States."),
+                                        tags$li(tags$b("PIP Status:"), " Filter by Paediatric Investigation Plan involvement."),
+                                        tags$li(tags$b("Free-text search:"), " Search across trial titles and other fields.")
+                                      ),
+                                      h4(icon("sync")," Data Updates"),
+                                      p("Trial data is retrieved from the registries using the ",
+                                        tags$a("ctrdata", href="https://cran.r-project.org/package=ctrdata", target="_blank"),
+                                        " R package and stored in a local SQLite database. Use the ",
+                                        tags$b("Update Database"), " button in the sidebar to fetch the latest records.
+                                        Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
+                                      hr(),
+                                      p(em(paste0("v0.1 — ",Sys.Date())),style="opacity:0.5;")
+                                  ),
+                                  box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
+                                      h4(icon("code")," Built With"),
+                                      tags$ul(
+                                        tags$li(tags$b("R Shiny"), " + ", tags$b("shinydashboard")),
+                                        tags$li(tags$b("ctrdata"), " — registry data retrieval"),
+                                        tags$li(tags$b("plotly"), " — interactive visualisations"),
+                                        tags$li(tags$b("DT"), " — interactive data tables"),
+                                        tags$li(tags$b("dplyr / tidyr"), " — data wrangling"),
+                                        tags$li(tags$b("SQLite"), " — local data storage")
+                                      ),
+                                      h4(icon("chart-bar")," Dashboard Tabs"),
+                                      tags$ul(
+                                        tags$li(tags$b("Overview:"), " Summary statistics, cumulative trends, registry overlap, and yearly submission charts."),
+                                        tags$li(tags$b("Data Explorer:"), " Searchable, filterable table of all trials with CSV/Excel export."),
+                                        tags$li(tags$b("Analytics:"), " MedDRA term breakdowns, country-level activity, PIP status, and quarterly timeline.")
+                                      ),
+                                      h4(icon("info-circle")," Notes"),
+                                      p("Overlap detection is approximate and based on normalised title matching.
+                                        Trials covering multiple countries or conditions may appear in multiple filter categories.
+                                        Data reflects the state of the registries at the time of the last database update.")
+                                  )
+                                ))
                       )
                     )
 )
@@ -745,7 +820,21 @@ server <- function(input, output, session) {
   output$vb_ongoing<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Ongoing",na.rm=TRUE),big.mark=","),"Ongoing",icon=icon("play-circle"),color="green"))
   output$vb_completed<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Completed",na.rm=TRUE),big.mark=","),"Completed",icon=icon("check-circle"),color="yellow"))
   output$vb_pip<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$has_PIP=="Yes",na.rm=TRUE),big.mark=","),"With PIP",icon=icon("child"),color="purple"))
-  
+
+  output$recent_trials_table <- DT::renderDataTable({
+    req(rv$data)
+    df <- filt() %>%
+      filter(!is.na(submission_date_parsed)) %>%
+      arrange(desc(submission_date_parsed)) %>%
+      head(5) %>%
+      select(CT_number, Full_title, submission_date_parsed) %>%
+      rename(`CT Number` = CT_number, Title = Full_title, Submitted = submission_date_parsed)
+    validate(need(nrow(df) > 0, "No submission date information available."))
+    datatable(df, rownames = FALSE, class = "compact stripe hover",
+              options = list(pageLength = 5, scrollX = TRUE, dom = "t",
+                             columnDefs = list(list(width = "500px", targets = 1))))
+  })
+
   output$plot_cumulative <- renderPlotly({
     df<-filt()%>%filter(!is.na(start_date))
     validate(need(nrow(df)>0,"No trials with known start date."))
@@ -755,13 +844,14 @@ server <- function(input, output, session) {
   })
   
   output$plot_status_pie <- renderPlotly({
-    df<-filt()%>%count(status)%>%filter(!is.na(status))
+    df<-filt()%>%filter(!is.na(status_raw))%>%count(status_raw)%>%arrange(desc(n))
     validate(need(nrow(df)>0,"No data."))
-    sc<-status_cols();t<-tc()
-    plot_ly(df,labels=~status,values=~n,type="pie",hole=0.45,
-            marker=list(colors=sc[df$status],line=list(color=t$chart_bg,width=2)),
+    t<-tc()
+    pal<-colorRampPalette(c(tc()$s_completed,tc()$s_ongoing,tc()$frost1,tc()$purple,tc()$orange,tc()$s_other))(nrow(df))
+    plot_ly(df,labels=~status_raw,values=~n,type="pie",hole=0.45,
+            marker=list(colors=pal,line=list(color=t$chart_bg,width=2)),
             textfont=list(color=t$chart_bg),textinfo="label+percent",hoverinfo="label+value+percent")%>%
-      plt_layout(showlegend=FALSE)
+      plt_layout(showlegend=TRUE,legend=list(orientation="v"))
   })
   
   output$plot_overlap <- renderPlot({
@@ -822,21 +912,28 @@ server <- function(input, output, session) {
   })
   
   output$plot_register <- renderPlotly({
-    df<-filt()%>%count(register,status)%>%filter(!is.na(status))
-    validate(need(nrow(df)>0,"No data."))
-    plot_ly(df,x=~register,y=~n,color=~status,colors=status_cols(),type="bar")%>%
-      plt_layout(barmode="stack",legend=list(orientation="h",y=-0.15))
+    base <- filt() %>% filter(!is.na(status_raw))
+    validate(need(nrow(base) > 0, "No data."))
+    df2 <- base %>% count(register, status_raw)
+    t <- tc()
+    all_statuses <- unique(df2$status_raw)
+    pal <- setNames(
+      colorRampPalette(c(t$s_completed, t$s_ongoing, t$frost1, t$purple, t$orange, t$s_other))(length(all_statuses)),
+      all_statuses)
+    plot_ly(df2, x = ~register, y = ~n, color = ~status_raw,
+            colors = pal, type = "bar") %>%
+      plt_layout(barmode = "stack", legend = list(orientation = "h", y = -0.2))
   })
   
   output$trials_table <- DT::renderDataTable({
     req(rv$data)
     df<-filt()%>%select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
-                        MEDDRA_organ_class,Member_state,n_countries,status,has_PIP,
+                        MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
                         submission_date_parsed,start_date)%>%
       rename(`CT Number`=CT_number,Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
-             `# Countries`=n_countries,Status=status,PIP=has_PIP,
+             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
              Submitted=submission_date_parsed,Started=start_date)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
