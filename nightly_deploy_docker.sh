@@ -24,11 +24,11 @@ docker exec -it $instanceName Rscript  rebuild_cache.R >> "$LOG_FILE" 2>&1
 
 # 3. Sync app.R and cache to deploy/
 log "Step 3/4: Syncing files to deploy/..."
-cp app.R deploy/app.R
-cp pediatric_trials_cache.rds deploy/pediatric_trials_cache.rds
+docker exec -it $instanceName cp /app/app.R /app/data/deploy/app.R
+docker exec -it $instanceName cp /app/data/pediatric_trials_cache.rds /app/data/deploy/pediatric_trials_cache.rds
 
 # 4. Deploy to shinyapps.io
 log "Step 4/4: Deploying to shinyapps.io..."
-docker exec -it $instanceName Rscript  -e "rsconnect::deployApp('deploy/', forceUpdate = TRUE, launch.browser = FALSE)" >> "$LOG_FILE" 2>&1
+docker exec -it $instanceName Rscript  -e "rsconnect::deployApp('/app/data/deploy', forceUpdate = TRUE, launch.browser = FALSE)" >> "$LOG_FILE" 2>&1
 
 log "=== Nightly deploy complete ==="
