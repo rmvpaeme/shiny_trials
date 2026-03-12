@@ -99,6 +99,11 @@ tryCatch({
 # ============================================================================
 # Finish
 # ============================================================================
+message("Running VACUUM to compress database...")
+con <- DBI::dbConnect(RSQLite::SQLite(), DB_PATH)
+DBI::dbExecute(con, "VACUUM")
+DBI::dbDisconnect(con)
+
 message(sprintf(
   "Done. Database: %s (%s bytes)",
   normalizePath(DB_PATH),

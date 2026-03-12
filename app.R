@@ -543,7 +543,7 @@ compute_overlap <- function(df) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
-  file.exists(cp) && file.exists(dp) && file.mtime(cp) > file.mtime(dp)
+  file.exists(cp) && (!file.exists(dp) || file.mtime(cp) > file.mtime(dp))
 }
 
 load_trial_data <- function(force_rebuild = FALSE) {
@@ -600,8 +600,7 @@ ui <- dashboardPage(skin = "blue",
                                      textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma…"),
                                      hr(),
                                      div(style="padding:0 15px;",
-                                         actionButton("update_btn"," Update Database",icon=icon("sync"),class="btn-warning btn-block"),
-                                         br(),textOutput("data_info",inline=TRUE)%>%tagAppendAttributes(style="font-size:11px;")),
+                                         textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")),
                                      hr(),
                                      div(style="padding:0 15px;",
                                          radioButtons("theme_select","Theme:",choices=c("Nord","Default"),selected="Nord",inline=TRUE))
@@ -692,8 +691,7 @@ ui <- dashboardPage(skin = "blue",
                                       h4(icon("sync")," Data Updates"),
                                       p("Trial data is retrieved from the registries using the ",
                                         tags$a("ctrdata", href="https://cran.r-project.org/package=ctrdata", target="_blank"),
-                                        " R package and stored in a local SQLite database. Use the ",
-                                        tags$b("Update Database"), " button in the sidebar to fetch the latest records.
+                                        " R package and stored in a local SQLite database. The database is refreshed automatically every night.
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       hr(),
                                       p(em(paste0("v0.1 — ",Sys.Date())),style="opacity:0.5;")
@@ -802,18 +800,16 @@ server <- function(input, output, session) {
                                                         only_euctr=0,only_ctis=0,n_total=0,n_overlap=0)))
   
   output$data_info <- renderText({
-    if(is.null(rv$data))return("No database loaded.")
-    rt<-table(rv$data$register)
-    rs<-paste(names(rt),rt,sep=": ",collapse=" | ")
-    cached<-if(cache_is_valid())"\u2744 cached" else "\u26a1 live"
-    sprintf("%s trials [%s] (%s)",format(nrow(rv$data),big.mark=","),cached,rs)
+    if(!file.exists(CACHE_PATH)) return("Database not yet loaded.")
+    mtime <- file.mtime(CACHE_PATH)
+    sprintf("Last updated: %s", format(mtime, "%Y-%m-%d %H:%M"))
   })
   
   output$no_data_banner <- renderUI({
     if(is.null(rv$data))
       div(class="text-center",style="padding:40px;",
           h3(icon("database")," No data loaded"),
-          p("Run ",tags$code("update_data.R")," or press Update Database."))
+          p("Run ",tags$code("update_data.R")," to populate the database."))
   })
   
   output$vb_total<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else nrow(filt()),big.mark=","),"Total Trials",icon=icon("flask"),color="blue"))
@@ -990,56 +986,6 @@ server <- function(input, output, session) {
       plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
   })
   
-  # ── Database Refresh ──────────────────────────────────────────────────────
-  observeEvent(input$update_btn,{
-    showModal(modalDialog(title="Update Database",
-                          p("Re-download from EUCTR and CTIS."),p(tags$b("May take 30-60 minutes.")),
-                          footer=tagList(modalButton("Cancel"),
-                                         actionButton("confirm_update","Start",class="btn-warning",icon=icon("download")))))
-  })
-  
-  observeEvent(input$confirm_update,{
-    removeModal()
-    withProgress(message="Updating…",value=0,{
-      tryCatch({
-        db<-nodbi::src_sqlite(dbname=DB_PATH,collection=DB_COLLECTION)
-        orig_ru<-dplyr::rows_update
-        assignInNamespace("rows_update",function(x,y,by=NULL,...,unmatched="ignore",copy=FALSE,in_place=FALSE){
-          if(is.null(by))by<-intersect(names(x),names(y))
-          if(length(by)>0&&nrow(y)>0){tryCatch({
-            y<-y[!duplicated(y[,by,drop=FALSE],fromLast=TRUE),]
-            ky<-do.call(paste,c(y[,by,drop=FALSE],sep="\x01"))
-            kx<-do.call(paste,c(x[,by,drop=FALSE],sep="\x01"))
-            y<-y[ky%in%kx,]},error=function(e){})}
-          if(nrow(y)==0)return(x)
-          orig_ru(x,y,by=by,...,unmatched="ignore",copy=copy,in_place=in_place)
-        },ns="dplyr")
-        
-        setProgress(0.05,detail="EUCTR…")
-        euctr_q<-ctrGetQueryUrl(url=paste0(
-          "https://www.clinicaltrialsregister.eu/ctr-search/search?",
-          "query=&age=under-18&status=completed&status=ongoing"))
-        tryCatch(ctrLoadQueryIntoDb(queryterm=euctr_q,euctrresults=TRUE,con=db),
-                 error=function(e)tryCatch(ctrLoadQueryIntoDb(queryterm=euctr_q,euctrresults=FALSE,con=db),
-                                           error=function(e2)showNotification(paste("EUCTR:",e2$message),type="warning",duration=10)))
-        assignInNamespace("rows_update",orig_ru,ns="dplyr")
-        
-        setProgress(0.50,detail="CTIS…")
-        ctis_q<-ctrGetQueryUrl(paste0(
-          "https://euclinicaltrials.eu/ctis-public/search#searchCriteria=",
-          "{%22containAll%22:%22%22,",
-          "%22containAny%22:%22pediatric,infant,neonatal,adolescent,children%22,",
-          "%22containNot%22:%22%22}"))
-        tryCatch(ctrLoadQueryIntoDb(queryterm=ctis_q,register="CTIS",con=db),
-                 error=function(e)showNotification(paste("CTIS:",e$message),type="warning",duration=10))
-        
-        setProgress(0.90,detail="Processing…")
-        rv$data<-load_trial_data(force_rebuild=TRUE)
-        setProgress(1,detail="Done!")
-        showNotification("Database updated!",type="message",duration=8)
-      },error=function(e)showNotification(paste("Failed:",e$message),type="error",duration=15))
-    })
-  })
 }
 
 shinyApp(ui, server)
