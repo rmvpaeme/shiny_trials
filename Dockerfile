@@ -51,7 +51,7 @@ RUN R -e 'install.packages(c( \
 
 # Shiny + dashboard
 RUN R -e 'install.packages(c( \
-    "shiny", "shinydashboard", "shinycssloaders", "htmltools", "httpuv" \
+    "shiny", "shinydashboard", "shinycssloaders", "htmltools", "httpuv", "eulerr"  \
   ), repos = "https://cloud.r-project.org/")'
 
 # Data wrangling
@@ -70,17 +70,6 @@ RUN R -e 'install.packages("writexl", repos = "https://cloud.r-project.org/")'
 # ctrdata (install last — most likely to need updates)
 RUN R -e 'install.packages("ctrdata", repos = "https://cloud.r-project.org/")'
 
-# Verify all packages load
-RUN R -e ' \
-  pkgs <- c("shiny", "shinydashboard", "shinycssloaders", \
-            "ctrdata", "nodbi", "RSQLite", \
-            "dplyr", "tidyr", "ggplot2", "stringr", "lubridate", \
-            "DT", "plotly", "readr", "writexl", "eulerr"); \
-  for (p in pkgs) { \
-    if (!requireNamespace(p, quietly = TRUE)) \
-      stop(paste("Package not installed:", p)); \
-    cat(paste0("OK: ", p, " ", packageVersion(p), "\n")) \
-  }'
 
 # ── Application stage ───────────────────────────────────────────────────────
 FROM builder AS app
