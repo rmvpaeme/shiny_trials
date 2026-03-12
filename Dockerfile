@@ -6,11 +6,13 @@
 #   Stage 2 (app):     copy code + launch config
 #
 # Usage:
-#   docker build -t pediatric-trials .
+#   docker build --platform linux/x86_64 .
+#   docker tag rshiny_claude rmvpaeme/shiny_trials:0.1
+#  docker push rmvpaeme/shiny_trials:0.1
 #   docker run -p 3838:3838 -v $(pwd)/data:/app/data pediatric-trials
 # ============================================================================
 
-FROM rocker/r-ver:4.4.1 AS builder
+FROM rocker/shiny:4.5.3 AS builder
 
 LABEL maintainer="Ruben Van Paemel"
 LABEL description="EU Paediatric Clinical Trials Dashboard (EUCTR + CTIS)"
@@ -26,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
+    libjq-dev \
     libharfbuzz-dev \
     libfribidi-dev \
     zlib1g-dev \
@@ -56,7 +59,7 @@ RUN R -e 'install.packages(c( \
 
 # Data wrangling
 RUN R -e 'install.packages(c( \
-    "dplyr", "tidyr", "stringr", "lubridate", "readr", "purrr" \
+    "dplyr", "tidyr", "stringr", "lubridate", "readr", "purrr", "rsconnect" \
   ), repos = "https://cloud.r-project.org/")'
 
 # Visualisation
@@ -68,8 +71,8 @@ RUN R -e 'install.packages(c( \
 RUN R -e 'install.packages("writexl", repos = "https://cloud.r-project.org/")'
 
 # ctrdata (install last — most likely to need updates)
+RUN R -e 'install.packages(c("nodbi", "jqr"), repos = "https://cloud.r-project.org/")'
 RUN R -e 'install.packages("ctrdata", repos = "https://cloud.r-project.org/")'
-
 
 # ── Application stage ───────────────────────────────────────────────────────
 FROM builder AS app
@@ -80,6 +83,8 @@ WORKDIR /app
 # Copy application files
 COPY app.R          /app/app.R
 COPY update_data.R  /app/update_data.R
+COPY nightly_deploy.sh  /app/nightly_deploy.sh 
+COPY rebuild_cache.R /app/rebuild_cache.R
 
 # Environment variables for DB path (overridable at runtime)
 ENV DB_PATH=/app/data/pediatric_trials.sqlite
