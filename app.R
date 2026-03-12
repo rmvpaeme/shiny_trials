@@ -285,8 +285,11 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
                   all(sapply(result, is.character) | names(result) == "_id")))
   
   # Register detection
+  # EUCTR IDs: YYYY-NNNNNN-NN-CC  (CC = letter country code, e.g. -BE, -GB3)
+  # CTIS  IDs: YYYY-NNNNNN-NN-NN  (last segment is numeric, e.g. -00)
+  # Both share the same numeric prefix — require a letter in the suffix for EUCTR.
   result <- result %>% mutate(register = case_when(
-    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}") ~ "EUCTR",
+    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]") ~ "EUCTR",
     TRUE ~ "CTIS"))
   message(sprintf("Registers: %s",
                   paste(names(table(result$register)), table(result$register), sep="=", collapse=", ")))
@@ -380,7 +383,29 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   slu <- agg_field(result, "trial_status_raw") %>% rename(all_statuses_raw = val)
   mlu <- agg_field(result, "MEDDRA_term") %>% rename(all_meddra = val)
   olu <- agg_field(result, "MEDDRA_organ_class") %>% rename(all_organ = val)
-  
+
+  # ── Cross-register overlap: must be computed BEFORE dedup ─────────────────
+  # dbFindIdsUniqueTrials removes cross-register duplicates, so after filtering
+  # to unique_ids a trial only appears in one register — title matching would
+  # find zero overlap.  We therefore build the flag here on the full result.
+  result <- result %>% mutate(
+    title_key = {
+      tt <- as.character(Full_title)
+      tt <- tolower(tt)
+      tt <- str_replace_all(tt, "[^a-z0-9 ]", " ")
+      tt <- str_squish(tt)
+      substr(tt, 1, 80)
+    })
+  both_tk <- result %>%
+    filter(!is.na(title_key) & nchar(title_key) >= 20) %>%
+    group_by(title_key) %>%
+    filter(n_distinct(register) > 1) %>%
+    ungroup() %>%
+    pull(title_key) %>%
+    unique()
+  result <- result %>% mutate(in_both_registers = title_key %in% both_tk)
+  message(sprintf("Cross-register overlap (by title): %d trial(s)", length(both_tk)))
+
   result <- result %>% filter(`_id` %in% unique_ids)
   message(sprintf("Unique trials: %d", nrow(result)))
   
@@ -468,33 +493,31 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 compute_overlap <- function(df) {
-  n_e <- sum(df$register == "EUCTR", na.rm = TRUE)
-  n_c <- sum(df$register == "CTIS",  na.rm = TRUE)
-  
-  # Only attempt matching if both registers have data
-  n_ec <- 0L
-  if (n_e > 0 && n_c > 0) {
-    tk <- df %>%
-      filter(!is.na(title_key) & is.character(title_key) & nchar(title_key) >= 20) %>%
-      select(title_key, register) %>%
-      distinct()
-    
-    if (nrow(tk) > 0) {
-      tm <- tk %>%
-        group_by(title_key) %>%
-        filter(n_distinct(register) > 1) %>%
-        ungroup()
-      n_ec <- n_distinct(tm$title_key)
-    }
+  # in_both_registers is set before dedup in prepare_trial_data().
+  # After dedup each overlapping trial survives in exactly one register, so
+  # we cannot re-detect overlap from the register column alone.
+  has_flag <- "in_both_registers" %in% names(df)
+  if (has_flag) {
+    flag     <- !is.na(df$in_both_registers) & df$in_both_registers
+    n_ec     <- sum(flag)
+    only_e   <- sum(df$register == "EUCTR" & !flag, na.rm = TRUE)
+    only_c   <- sum(df$register == "CTIS"  & !flag, na.rm = TRUE)
+  } else {
+    n_ec   <- 0L
+    only_e <- sum(df$register == "EUCTR", na.rm = TRUE)
+    only_c <- sum(df$register == "CTIS",  na.rm = TRUE)
   }
-  
+  n_e <- only_e + n_ec   # total EUCTR membership (unique + shared)
+  n_c <- only_c + n_ec   # total CTIS  membership (unique + shared)
+
   list(
-    n_euctr = n_e, n_ctis = n_c,
+    n_euctr      = n_e,
+    n_ctis       = n_c,
     n_euctr_ctis = n_ec,
-    only_euctr = max(0L, n_e - n_ec),
-    only_ctis  = max(0L, n_c - n_ec),
-    n_total = n_e + n_c,
-    n_overlap = n_ec)
+    only_euctr   = only_e,
+    only_ctis    = only_c,
+    n_total      = only_e + only_c + n_ec,   # unique trial count
+    n_overlap    = n_ec)
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -817,7 +840,7 @@ server <- function(input, output, session) {
              Submitted=submission_date_parsed,Started=start_date)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
-                           columnDefs=list(list(className="ellipsis",targets=2))))
+                           columnDefs=list(list(width="350px",targets=2))))
   })
   
   output$dl_csv<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".csv"),
