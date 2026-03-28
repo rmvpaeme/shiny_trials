@@ -6,13 +6,13 @@
 #   Stage 2 (app):     copy code + launch config
 #
 # Usage:
-#   docker build --platform linux/x86_64 .
-#   docker tag rshiny_claude rmvpaeme/shiny_trials:0.1
-#  docker push rmvpaeme/shiny_trials:0.1
+#   docker build -t shiny_trials --platform linux/x86_64 .
+#   docker tag  shiny_trials rmvpaeme/shiny_trials:0.1.1
+#  docker push rmvpaeme/shiny_trials:0.1.1
 #   docker run -p 3838:3838 -v $(pwd)/data:/app/data pediatric-trials
 # ============================================================================
 
-FROM rocker/shiny:4.5.3 AS builder
+FROM rocker/shiny:4.4.1 AS builder
 
 LABEL maintainer="Ruben Van Paemel"
 LABEL description="EU Paediatric Clinical Trials Dashboard (EUCTR + CTIS)"
@@ -150,3 +150,4 @@ HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:3838/ || exit 1
 
 CMD ["/app/start.sh"]
+

@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1 — EUCTR + CTIS, fixed CTIS list handling + overlap)
+# app.R  (v0.1.1 — EUCTR + CTIS, fixed CTIS list handling + overlap)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -19,6 +19,53 @@ suppressPackageStartupMessages({
 
 has_eulerr <- requireNamespace("eulerr", quietly = TRUE)
 if (has_eulerr) library(eulerr)
+
+# ── EMA CTIS MedDRA SOC code lookup ──────────────────────────────────────────
+ctis_soc_lookup <- c(
+  "100000004848" = "Investigations",
+  "100000004849" = "Cardiac disorders",
+  "100000004850" = "Congenital, familial and genetic disorders",
+  "100000004851" = "Blood and lymphatic system disorders",
+  "100000004852" = "Nervous system disorders",
+  "100000004853" = "Eye disorders",
+  "100000004854" = "Ear and labyrinth disorders",
+  "100000004855" = "Respiratory, thoracic and mediastinal disorders",
+  "100000004856" = "Gastrointestinal disorders",
+  "100000004857" = "Renal and urinary disorders",
+  "100000004858" = "Skin and subcutaneous tissue disorders",
+  "100000004859" = "Musculoskeletal and connective tissue disorders",
+  "100000004860" = "Endocrine disorders",
+  "100000004861" = "Metabolism and nutrition disorders",
+  "100000004862" = "Infections and infestations",
+  "100000004863" = "Injury, poisoning and procedural complications",
+  "100000004864" = "Neoplasms benign, malignant and unspecified (incl cysts and polyps)",
+  "100000004865" = "Surgical and medical procedures",
+  "100000004866" = "Vascular disorders",
+  "100000004867" = "General disorders and administration site conditions",
+  "100000004868" = "Pregnancy, puerperium and perinatal conditions",
+  "100000004869" = "Social circumstances",
+  "100000004870" = "Immune system disorders",
+  "100000004871" = "Hepatobiliary disorders",
+  "100000004872" = "Reproductive system and breast disorders",
+  "100000004873" = "Psychiatric disorders"
+)
+
+clean_organ_class <- function(x) {
+  if (is.na(x) || x == "") return(NA_character_)
+  parts <- trimws(strsplit(x, " / ")[[1]])
+  cleaned <- sapply(parts, function(p) {
+    if (grepl("^[0-9]+ - ", p)) {
+      sub("^[0-9]+ - ", "", p)                    # EUCTR: strip numeric prefix
+    } else if (grepl("^[0-9]+$", trimws(p))) {
+      lbl <- ctis_soc_lookup[trimws(p)]
+      if (!is.na(lbl)) unname(lbl) else NA_character_ # CTIS: look up code
+    } else {
+      p
+    }
+  })
+  cleaned <- unique(cleaned[!is.na(cleaned)])
+  if (length(cleaned) == 0) NA_character_ else paste(cleaned, collapse = " / ")
+}
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 1. CONFIGURATION
@@ -233,7 +280,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "a7_trial_is_part_of_a_paediatric_investigation_plan","x5_trial_status",
     "x6_date_on_which_this_record_was_first_entered_in_the_eudract_database",
     "n_date_of_competent_authority_decision",
-    "trialInformation.recruitmentStartDate","p_end_of_trial_status")
+    "trialInformation.recruitmentStartDate","p_end_of_trial_status",
+    "b1_sponsor.b31_and_b32_status_of_the_sponsor")
   
   CTIS_fields <- c(
     "authorizedApplication.applicationInfo.ctNumber",
@@ -246,7 +294,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.applicationInfo.trialStatus",
     "authorizedApplication.applicationInfo.submissionDate",
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
-    "ctStatus")
+    "ctStatus",
+    "authorizedApplication.authorizedPartI.sponsors.commercial")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -315,7 +364,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.applicationInfo.trialStatus",
     "authorizedApplication.applicationInfo.submissionDate",
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
-    "ctStatus")
+    "ctStatus",
+    "b1_sponsor.b31_and_b32_status_of_the_sponsor",
+    "authorizedApplication.authorizedPartI.sponsors.commercial")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
@@ -420,7 +471,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term)) %>%
     left_join(olu, by="trial_base_id") %>%
     mutate(MEDDRA_organ_class = if_else(!is.na(all_organ), all_organ, MEDDRA_organ_class)) %>%
-    select(-all_countries, -all_statuses_raw, -all_meddra, -all_organ)
+    select(-all_countries, -all_statuses_raw, -all_meddra, -all_organ) %>%
+    mutate(MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)))
   
   # ── Start date ────────────────────────────────────────────────────────────
   dcols <- intersect(c(
@@ -482,6 +534,19 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       if (is.na(x) || !nzchar(str_trim(x))) return(NA_character_)
       parts <- str_trim(unlist(str_split(x, " / ")))
       parts <- parts[nzchar(parts) & !str_detect(parts, "^[0-9]+$")]
+      parts <- tolower(parts)
+      parts <- dplyr::recode(parts,
+        "temporarily halted"          = "Temporarily halted",
+        "temporarily halted (current)"= "Temporarily halted",
+        "restarted"                   = "Restarted",
+        "withdrawn"                   = "Withdrawn",
+        "terminated"                  = "Terminated",
+        "completed"                   = "Completed",
+        "authorised"                  = "Authorised",
+        "in progress"                 = "Ongoing",
+        "ongoing"                     = "Ongoing",
+        "not authorised"              = "Not Authorised",
+        .default = stringr::str_to_sentence(parts))
       parts <- unique(parts)
       if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
     }, FUN.VALUE = character(1L), USE.NAMES = FALSE),
@@ -516,6 +581,16 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     })
   
   result <- result %>% select(-status_raw_orig)
+
+  # ── Sponsor type ──────────────────────────────────────────────────────────
+  result <- result %>% mutate(
+    sponsor_type = case_when(
+      register == "EUCTR" & str_detect(tolower(as.character(`b1_sponsor.b31_and_b32_status_of_the_sponsor`)), "non.commercial|non commercial|academic") ~ "Academic",
+      register == "EUCTR" & str_detect(tolower(as.character(`b1_sponsor.b31_and_b32_status_of_the_sponsor`)), "commercial") ~ "Industry",
+      register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "non.commercial|non commercial|academic") ~ "Academic",
+      register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "commercial") ~ "Industry",
+      TRUE ~ NA_character_))
+
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
 }
@@ -642,9 +717,9 @@ ui <- dashboardPage(skin = "blue",
                                       width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
                                 fluidRow(
                                   box(title="Cumulative Trials by Start Date",status="primary",solidHeader=TRUE,
-                                      width=8,height=420,withSpinner(plotlyOutput("plot_cumulative",height="360px"),type=6)),
-                                  box(title="Status Distribution",status="info",solidHeader=TRUE,
-                                      width=4,height=420,withSpinner(plotlyOutput("plot_status_pie",height="360px"),type=6))),
+                                      width=7,height=420,withSpinner(plotlyOutput("plot_cumulative",height="360px"),type=6)),
+                                  box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
+                                      width=5,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
                                 fluidRow(
                                   box(title="Registry Overlap (title matching)",status="primary",solidHeader=TRUE,
                                       width=5,height=350,withSpinner(plotOutput("plot_overlap",height="250px"),type=6),
@@ -659,7 +734,7 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Submissions per Year",status="primary",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
                                   box(title="Register Comparison",status="info",solidHeader=TRUE,
-                                      width=6,height=400,withSpinner(plotlyOutput("plot_register",height="340px"),type=6)))
+                                      width=6,height=400,withSpinner(plotlyOutput("plot_register",height="340px"),type=6))),
                         ),
                         tabItem(tabName="data",
                                 fluidRow(box(title="Filtered Trial Data",width=12,status="primary",solidHeader=TRUE,
@@ -681,7 +756,7 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="PIP Status",status="info",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_pip",height="360px"),type=6)),
                                   box(title="Start-Date Timeline (quarterly)",status="primary",solidHeader=TRUE,width=6,height=420,
-                                      withSpinner(plotlyOutput("plot_timeline_q",height="360px"),type=6)))
+                                      withSpinner(plotlyOutput("plot_timeline_q",height="360px"),type=6))),
                         ),
                         tabItem(tabName="about",
                                 fluidRow(
@@ -718,7 +793,7 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night.
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       hr(),
-                                      p(em(paste0("v0.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.1.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -847,10 +922,15 @@ server <- function(input, output, session) {
       filter(!is.na(submission_date_parsed)) %>%
       arrange(desc(submission_date_parsed)) %>%
       head(5) %>%
-      select(CT_number, Full_title, submission_date_parsed) %>%
-      rename(`CT Number` = CT_number, Title = Full_title, Submitted = submission_date_parsed)
+      select(CT_number, register, Full_title, submission_date_parsed) %>%
+      mutate(`CT Number` = case_when(
+        register == "EUCTR" ~ paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/', CT_number, '/results" target="_blank">', CT_number, '</a>'),
+        register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]); paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1, '" target="_blank">', ct1, '</a>') },
+        TRUE ~ CT_number)) %>%
+      select(`CT Number`, Full_title, submission_date_parsed) %>%
+      rename(Title = Full_title, Submitted = submission_date_parsed)
     validate(need(nrow(df) > 0, "No submission date information available."))
-    datatable(df, rownames = FALSE, class = "compact stripe hover",
+    datatable(df, rownames = FALSE, class = "compact stripe hover", escape = FALSE,
               options = list(pageLength = 5, scrollX = TRUE, dom = "t",
                              columnDefs = list(list(width = "500px", targets = 1))))
   })
@@ -949,7 +1029,7 @@ server <- function(input, output, session) {
     req(rv$data)
     df<-filt()%>%select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
                         MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-                        submission_date_parsed,start_date)%>%
+                        sponsor_type,submission_date_parsed,start_date)%>%
       mutate(`CT Number`=case_when(
         register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/results" target="_blank">',CT_number,'</a>'),
         register=="CTIS" ~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',ct1,'" target="_blank">',ct1,'</a>')},
@@ -959,7 +1039,7 @@ server <- function(input, output, session) {
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
              `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Submitted=submission_date_parsed,Started=start_date)%>%
+             Sponsor=sponsor_type,Submitted=submission_date_parsed,Started=start_date)%>%
       relocate(`CT Number`)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
@@ -1015,7 +1095,31 @@ server <- function(input, output, session) {
     plot_ly(df,x=~quarter,y=~n,color=~register,colors=register_cols(),type="bar")%>%
       plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
   })
-  
+
+  output$plot_sponsor_top <- renderPlotly({
+    df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
+    validate(need(nrow(df)>0,"No sponsor type data available."))
+    all_rows<-df%>%group_by(sponsor_type)%>%summarise(n=sum(n),.groups="drop")%>%mutate(register="All")
+    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","All")))
+    t<-tc()
+    pal<-c("Academic"=t$frost1,"Industry"=t$orange)
+    plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
+            text=~n,textposition="outside",hoverinfo="x+y+text")%>%
+      plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
+  })
+
+  output$plot_sponsor <- renderPlotly({
+    df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
+    validate(need(nrow(df)>0,"No sponsor type data available."))
+    all_rows<-df%>%group_by(sponsor_type)%>%summarise(n=sum(n),.groups="drop")%>%mutate(register="All")
+    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","All")))
+    t<-tc()
+    pal<-c("Academic"=t$frost1,"Industry"=t$orange)
+    plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
+            text=~n,textposition="outside",hoverinfo="x+y+text")%>%
+      plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
+  })
+
 }
 
 shinyApp(ui, server)

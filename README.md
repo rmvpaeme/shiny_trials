@@ -1,4 +1,4 @@
-# EU Paediatric Clinical Trials Dashboard `v0.1`
+# EU Paediatric Clinical Trials Dashboard `v0.1.1`
 
 An interactive R Shiny dashboard providing a unified view of paediatric
 clinical trials registered in the European Union, integrating two primary
@@ -50,9 +50,9 @@ sources:
 #### Overview
 
 - 4 summary value boxes: Total Trials, Ongoing, Completed, With PIP
-- **5 most recently submitted trials** table (by submission date, respects active filters)
-- Cumulative start-date ECDF plot by status
-- Status distribution pie chart
+- **5 most recently submitted trials** table (by submission date, respects active filters; CT numbers are clickable links to the respective register)
+- Cumulative start-date ECDF plot by status (width 7/12)
+- **Sponsor type by register** grouped bar chart (width 5/12) — Academic vs Industry breakdown per register and combined
 - Registry overlap Venn diagram
 - Overlap summary with counts and percentages
 - Submissions per year stacked bar
@@ -129,7 +129,7 @@ Or from RStudio: open `app.R` → click **Run App**.
 mkdir -p data
 docker run -p 3838:3838 \
   -v $(pwd)/data:/app/data \
-  rmvpaeme/shiny_trials:0.1
+  rmvpaeme/shiny_trials:0.1.1
 ```
 
 Open [http://localhost:3838](http://localhost:3838).
@@ -143,14 +143,14 @@ and RDS cache persist across container restarts.
 mkdir -p data
 
 # Fetch data (30-60 min first time)
-docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1 \
+docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1.1 \
   Rscript /app/update_data.R
 
 # Launch dashboard
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
   --name shiny_trials \
-  rmvpaeme/shiny_trials:0.1
+  rmvpaeme/shiny_trials:0.1.1
 ```
 
 ### Docker Compose
