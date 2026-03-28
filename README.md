@@ -6,14 +6,15 @@ sources:
 
 | Register | Source | Filter |
 |----------|--------|--------|
-| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | Subjects under 18 |
-| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | Paediatric keywords |
+| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | Age group: under 18 |
+| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | Age group code 2 (paediatric) |
 
 ---
 
 ## Features
 
 ### Data Integration
+
 - **Multi-register harmonisation** — unifies fields (trial ID, title,
   conditions, countries, status, dates) across EUCTR and CTIS into a
   single searchable dataset
@@ -26,16 +27,20 @@ sources:
 - **CTIS PIP detection** — the `paediatricInvestigationPlan` field in CTIS
   contains PIP record objects rather than a yes/no string; presence of any
   content is correctly mapped to "Yes", absence to "No"
+- **MedDRA code resolution** — EUCTR numeric prefixes and CTIS EMA SOC codes
+  are resolved to human-readable organ class names
 - **RDS caching** — processed data saved to `.rds` on first build;
   subsequent app starts load in ~1 second
 
 ### Registry Overlap Detection
+
 - Trials matched across EUCTR and CTIS by **normalised title text**
   (lowercase, remove punctuation, first 80 characters)
 - Proportional **Euler/Venn diagram** (via `eulerr` package)
 - Summary panel showing unique-to-register and shared trial counts
 
 ### Interactive Filters (sidebar)
+
 - Trial status (Ongoing / Completed / Other)
 - Source register (EUCTR / CTIS)
 - Submission date range
@@ -59,9 +64,17 @@ sources:
 - Register comparison bar chart — "Other" status is expanded into its
   constituent raw values when there are fewer than 6 distinct categories
 
+#### Map
+
+- Interactive **Leaflet map** showing open/ongoing trials by country
+- Circle markers sized and coloured by trial count (green → yellow → orange → red)
+- When zoomed in to level 5 or higher, a sortable trial table appears below the map showing trials within the current map view
+- Trials sorted by submission date descending (most recent first)
+
 #### Data Explorer
 
 - Full interactive DataTable with per-column filters
+- Sorted by submission date descending by default
 - CSV and Excel download
 
 #### Analytics
@@ -69,12 +82,12 @@ sources:
 - Top MedDRA organ classes (configurable N)
 - Top conditions / MedDRA terms (configurable N)
 - Trials by country (top 30)
-- PIP status breakdown by register
+- PIP status by year (stacked bar chart)
 - Quarterly start-date timeline
 
 #### About
 
-- Data sources, methodology, version info
+- Data sources, methodology, changelog, version info
 
 ### Visual Themes
 
@@ -98,7 +111,7 @@ install.packages(c(
   "shiny", "shinydashboard", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite",
   "dplyr", "tidyr", "ggplot2", "stringr", "lubridate",
-  "DT", "plotly", "readr", "writexl", "eulerr"
+  "DT", "plotly", "leaflet", "readr", "writexl", "eulerr"
 ))
 ```
 
@@ -185,7 +198,7 @@ pediatric-trials-dashboard/
 ┌──────────────────────────┐    ┌──────────────────────────┐
 │  EUCTR                    │    │  CTIS                     │
 │  clinicaltrialsregister.eu│    │  euclinicaltrials.eu      │
-│  age < 18                 │    │  paediatric keywords      │
+│  age < 18                 │    │  ageGroupCode = 2         │
 │  ~10k records             │    │  ~1k records              │
 │  (per-country duplicates) │    │  (nested JSON metadata)   │
 └───────────┬──────────────┘    └───────────┬──────────────┘
@@ -197,21 +210,24 @@ pediatric-trials-dashboard/
 │  1. Flatten list-columns to " / "-separated strings         │
 │  2. Coerce all columns to character (type-safety)           │
 │  3. Clean country names                                     │
-│  4. Unite corresponding fields across registers             │
-│  5. Aggregate countries / statuses / MedDRA per trial       │
+│  4. Resolve MedDRA numeric codes to human-readable names    │
+│  5. Unite corresponding fields across registers             │
+│  6. Aggregate countries / statuses / MedDRA per trial       │
 │     BEFORE deduplication                                    │
-│  6. dbFindIdsUniqueTrials → one row per trial               │
-│  7. Harmonise status → Ongoing / Completed / Other          │
-│  8. Detect CTIS PIP from field presence (not yes/no string) │
-│  9. Parse dates safely (multiple formats)                   │
-│ 10. Compute normalised title key for overlap detection      │
-│ 11. Cache processed data to .rds                            │
+│  7. dbFindIdsUniqueTrials → one row per trial               │
+│  8. Harmonise status → Ongoing / Completed / Other          │
+│  9. Detect CTIS PIP from field presence (not yes/no string) │
+│ 10. Parse dates safely (multiple formats)                   │
+│ 11. Compute normalised title key for overlap detection      │
+│ 12. Cache processed data to .rds                            │
 └────────────────────────┬────────────────────────────────────┘
                          │
                          ▼
               ┌─────────────────────┐
               │   Shiny Dashboard    │
               │   • Filters          │
+              │   • Overview plots   │
+              │   • Map (Leaflet)    │
               │   • Plots (plotly)   │
               │   • Venn (eulerr)    │
               │   • DataTable (DT)   │
@@ -264,7 +280,7 @@ Initial release.
 | `DB_COLLECTION` | `trials` | Collection name within the database |
 | `CACHE_PATH` | `pediatric_trials_cache.rds` | Path to processed data cache |
 
-Edit these at the top of both `app.R` and `update_data.R`.
+These can be overridden via environment variables (used automatically by Docker) or edited at the top of `app.R` and `update_data.R`.
 
 ---
 
@@ -276,6 +292,7 @@ Edit these at the top of both `app.R` and `update_data.R`.
 | Database | [`nodbi`](https://github.com/ropensci/nodbi) + [`RSQLite`](https://cran.r-project.org/package=RSQLite) | Local document store |
 | Dashboard | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) | Web framework |
 | Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive visualisation |
+| Map | [`leaflet`](https://rstudio.github.io/leaflet/) | Interactive country-level map |
 | Venn diagram | [`eulerr`](https://cran.r-project.org/package=eulerr) | Proportional area-accurate Euler diagrams |
 | Tables | [`DT`](https://rstudio.github.io/DT/) | Interactive data tables |
 | Data wrangling | [`dplyr`](https://dplyr.tidyverse.org/), [`tidyr`](https://tidyr.tidyverse.org/), [`stringr`](https://stringr.tidyverse.org/), [`lubridate`](https://lubridate.tidyverse.org/) | Data manipulation |
