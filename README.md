@@ -1,4 +1,4 @@
-# EU Paediatric Clinical Trials Dashboard `v0.1.1`
+# EU Paediatric Clinical Trials Dashboard `v0.1.3`
 
 An interactive R Shiny dashboard providing a unified view of paediatric
 clinical trials registered in the European Union, integrating two primary
@@ -129,7 +129,7 @@ Or from RStudio: open `app.R` → click **Run App**.
 mkdir -p data
 docker run -p 3838:3838 \
   -v $(pwd)/data:/app/data \
-  rmvpaeme/shiny_trials:0.1.1
+  rmvpaeme/shiny_trials:0.1.3
 ```
 
 Open [http://localhost:3838](http://localhost:3838).
@@ -143,14 +143,14 @@ and RDS cache persist across container restarts.
 mkdir -p data
 
 # Fetch data (30-60 min first time)
-docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1.1 \
+docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1.3 \
   Rscript /app/update_data.R
 
 # Launch dashboard
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
   --name shiny_trials \
-  rmvpaeme/shiny_trials:0.1.1
+  rmvpaeme/shiny_trials:0.1.3
 ```
 
 ### Docker Compose
@@ -219,6 +219,27 @@ pediatric-trials-dashboard/
               │   • Nord/Default     │
               └─────────────────────┘
 ```
+
+---
+
+## Changelog
+
+### v0.1.3 (2026-03-28) — v0.1.2 skipped
+
+- **Map tab**: new interactive Leaflet map showing open/ongoing trials by country; circle markers sized and coloured by trial count; trial table appears below when zoomed in (zoom ≥ 5)
+- **Fix**: EUCTR trial links now use the correct URL format (`/{country_code}` instead of `/results`)
+- **Data Explorer & Map**: tables now sorted by submission date descending (most recent first)
+
+### v0.1.1 (2026-03-28)
+
+- **Overview**: replaced Status Distribution chart with Sponsor Type by Register (Academic vs Industry breakdown per register and combined)
+- **Overview**: CT numbers in "5 Most Recently Submitted Trials" are now clickable links to the respective registry
+- **Analytics**: added PIP Status by Year stacked bar chart
+- **Data**: MedDRA organ class numeric codes resolved to human-readable names
+
+### v0.1
+
+Initial release.
 
 ---
 

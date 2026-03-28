@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1.1 — EUCTR + CTIS, fixed CTIS list handling + overlap)
+# app.R  (v0.1.3 — EUCTR + CTIS, fixed CTIS list handling + overlap)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -870,6 +870,13 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.1.3 (2026-03-28):"), " (v0.1.2 skipped)",
+                                          tags$ul(
+                                            tags$li("Map: new Map tab showing open/ongoing trials by country on an interactive Leaflet map; trial table appears below when zoomed in"),
+                                            tags$li("Fix: EUCTR trial links now use correct URL format (/{country_code} instead of /results)"),
+                                            tags$li("Data Explorer & Map: tables now sorted by submission date descending (most recent first)")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.1.1 (2026-03-28):"),
                                           tags$ul(
                                             tags$li("Overview: replaced Status Distribution chart with Sponsor Type by Register (Academic vs Industry, per register and combined)"),
@@ -881,7 +888,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.1.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.1.3 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
