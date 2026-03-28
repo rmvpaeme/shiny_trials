@@ -14,6 +14,7 @@ suppressPackageStartupMessages({
   library(lubridate)
   library(DT)
   library(plotly)
+  library(leaflet)
 })
 
 
@@ -214,6 +215,58 @@ KNOWN_COUNTRIES <- c(
   "Thailand","Tunisia","Turkey","Türkiye","Uganda","Ukraine",
   "United Arab Emirates","United States","Uruguay","Uzbekistan","Venezuela",
   "Vietnam","Zambia","Zimbabwe")
+
+COUNTRY_COORDS <- data.frame(
+  country = c(
+    "Austria","Belgium","Bulgaria","Croatia","Cyprus","Czech Republic",
+    "Denmark","Estonia","Finland","France","Germany","Greece","Hungary",
+    "Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands",
+    "Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden",
+    "Norway","Iceland","Liechtenstein","Switzerland","United Kingdom",
+    "Albania","Algeria","Argentina","Armenia","Australia","Azerbaijan",
+    "Bangladesh","Belarus","Bolivia","Bosnia and Herzegovina","Brazil",
+    "Canada","Chile","China","Colombia","Cuba","Dominican Republic",
+    "Ecuador","Egypt","Ethiopia","Georgia","Ghana","Guatemala","India",
+    "Indonesia","Iran","Iraq","Israel","Japan","Jordan","Kazakhstan",
+    "Kenya","South Korea","Kuwait","Lebanon","Malaysia","Mexico",
+    "Moldova","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+    "Nepal","New Zealand","Nigeria","North Macedonia","Pakistan","Panama",
+    "Paraguay","Peru","Philippines","Qatar","Russia","Rwanda","Saudi Arabia",
+    "Senegal","Serbia","Singapore","South Africa","Sri Lanka","Taiwan",
+    "Tanzania","Thailand","Tunisia","Turkey","Uganda","Ukraine",
+    "United Arab Emirates","United States","Uruguay","Uzbekistan","Venezuela",
+    "Vietnam","Zambia","Zimbabwe"
+  ),
+  lat = c(
+    47.52, 50.50, 42.73, 45.10, 34.92, 49.82, 56.26, 58.60, 64.96, 46.23,
+    51.17, 39.07, 47.16, 53.41, 42.50, 56.88, 55.17, 49.82, 35.94, 52.13,
+    51.92, 39.40, 45.94, 48.67, 46.15, 40.46, 60.13,
+    60.47, 64.96, 47.14, 46.82, 54.91,
+    41.15, 28.03, -38.42, 40.07, -25.27, 40.14, 23.69, 53.71, -16.29,
+    43.92, -14.24, 56.13, -35.68, 35.86,  4.57, 21.52, 18.74,  -1.83,
+    26.82,  9.15, 42.32,  7.95, 15.78, 20.59,  -0.79, 32.43, 33.22, 31.05,
+    36.20, 30.59, 48.02,  -0.02, 35.91, 29.37, 33.86,  4.21, 23.63, 47.41,
+    46.86, 42.71, 31.79, -18.67, 16.87, 28.39, -40.90,  9.08, 41.61, 30.38,
+     8.54, -23.44,  -9.19, 12.88, 25.35, 61.52,  -1.94, 23.90, 14.50, 44.02,
+     1.35, -28.47,  7.87, 23.70,  -6.37, 15.87, 33.89, 38.96,  1.37, 48.38,
+    24.47,  37.09, -32.52, 41.38,  8.00, 14.06, -13.13, -19.02
+  ),
+  lng = c(
+    14.55,  4.47, 25.49, 15.20, 32.91, 15.47,  9.50, 25.01, 25.75,  2.21,
+    10.45, 21.82, 19.50, -8.24, 12.57, 24.60, 23.88,  6.13, 14.38,  5.29,
+    19.15, -8.22, 24.97, 19.70, 14.80, -3.75, 18.64,
+     8.47,-18.49,  9.55,  8.23, -3.44,
+    20.17,  1.66,-63.62, 45.04,133.78, 47.58, 90.36, 27.95,-63.59,
+    17.56,-51.93,-106.35,-71.54,104.20,-74.30,-79.52,-69.97,-78.18,
+    30.80, 40.49, 43.36, -1.02,-90.23, 78.96,113.92, 53.69, 43.68, 34.85,
+   138.25, 36.24, 66.92, 37.91,127.77, 47.48, 35.86,109.70,-102.55, 28.37,
+   103.84, 19.37, -7.09, 35.53, 95.96, 84.12,172.50,  8.68, 21.75, 69.35,
+   -80.78,-58.44,-75.02,122.56, 51.18,105.32, 29.87, 45.08,-14.45, 21.01,
+   103.82, 25.08, 80.77,120.96, 34.89,100.99,  9.54, 35.24, 32.29, 31.17,
+    53.85,-95.71,-56.17, 64.59,-66.59,108.28, 27.85, 29.15
+  ),
+  stringsAsFactors = FALSE
+)
 
 COUNTRY_LOOKUP <- setNames(KNOWN_COUNTRIES, tolower(KNOWN_COUNTRIES))
 COUNTRY_LOOKUP[c("uk","u.k.","great britain")] <- "United Kingdom"
@@ -688,6 +741,7 @@ ui <- dashboardPage(skin = "blue",
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
                                                  menuItem("Overview",tabName="overview",icon=icon("dashboard")),
+                                                 menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
@@ -770,6 +824,15 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
+                        ),
+                        tabItem(tabName="map",
+                                fluidRow(
+                                  box(title="Open Trials by Country", status="primary", solidHeader=TRUE, width=12,
+                                      p(em("Only ongoing/open trials are shown. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(leafletOutput("eu_map", height="520px"), type=6))
+                                ),
+                                uiOutput("map_table_ui")
                         ),
                         tabItem(tabName="about",
                                 fluidRow(
@@ -947,9 +1010,8 @@ server <- function(input, output, session) {
       filter(!is.na(submission_date_parsed)) %>%
       arrange(desc(submission_date_parsed)) %>%
       head(5) %>%
-      select(CT_number, register, Full_title, submission_date_parsed) %>%
       mutate(`CT Number` = case_when(
-        register == "EUCTR" ~ paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/', CT_number, '/results" target="_blank">', CT_number, '</a>'),
+        register == "EUCTR" ~ paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/', CT_number, '/', str_extract(`_id`, "[A-Z]{2,3}$"), '" target="_blank">', CT_number, '</a>'),
         register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]); paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1, '" target="_blank">', ct1, '</a>') },
         TRUE ~ CT_number)) %>%
       select(`CT Number`, Full_title, submission_date_parsed) %>%
@@ -1052,13 +1114,14 @@ server <- function(input, output, session) {
   
   output$trials_table <- DT::renderDataTable({
     req(rv$data)
-    df<-filt()%>%select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
-                        MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-                        sponsor_type,submission_date_parsed,start_date)%>%
+    df<-filt()%>%
       mutate(`CT Number`=case_when(
-        register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/results" target="_blank">',CT_number,'</a>'),
+        register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/',str_extract(`_id`,"[A-Z]{2,3}$"),'" target="_blank">',CT_number,'</a>'),
         register=="CTIS" ~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',ct1,'" target="_blank">',ct1,'</a>')},
         TRUE~CT_number))%>%
+      select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
+             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
+             sponsor_type,submission_date_parsed,start_date,`CT Number`)%>%
       select(-CT_number)%>%
       rename(Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
@@ -1152,6 +1215,100 @@ server <- function(input, output, session) {
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
             text=~n,textposition="outside",hoverinfo="x+y+text")%>%
       plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
+  })
+
+  # ── Map tab ───────────────────────────────────────────────────────────────
+
+  eu_map_ongoing <- reactive({
+    req(rv$data)
+    rv$data %>%
+      filter(status == "Ongoing", !is.na(Member_state)) %>%
+      separate_rows(Member_state, sep = " / ") %>%
+      mutate(Member_state = str_trim(Member_state)) %>%
+      filter(Member_state != "")
+  })
+
+  eu_country_counts <- reactive({
+    eu_map_ongoing() %>%
+      group_by(Member_state) %>%
+      summarise(n_trials = n_distinct(`_id`), .groups = "drop") %>%
+      left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
+      filter(!is.na(lat))
+  })
+
+  output$eu_map <- renderLeaflet({
+    cc <- eu_country_counts()
+    t  <- tc()
+    pal <- colorNumeric(
+      c(t$green, t$yellow, t$orange, t$red),
+      domain = cc$n_trials, na.color = "grey")
+    m <- leaflet(options = leafletOptions(minZoom = 2)) %>%
+      addProviderTiles("Esri.WorldTopoMap") %>%
+      setView(lng = 15, lat = 52, zoom = 4)
+    if (nrow(cc) > 0) {
+      m <- m %>%
+        addCircleMarkers(
+          data = cc,
+          lat = ~lat, lng = ~lng,
+          radius = ~pmin(8 + log1p(n_trials) * 4, 35),
+          color = "white", weight = 1,
+          fillColor = ~pal(n_trials),
+          fillOpacity = 0.85,
+          label = ~as.character(n_trials),
+          labelOptions = labelOptions(
+            noHide = TRUE, textOnly = TRUE, direction = "center",
+            style = list("font-weight" = "bold", "color" = "white",
+                         "font-size" = "11px")),
+          popup = ~paste0("<b>", Member_state, "</b><br/>",
+                          n_trials, " open trial(s)")
+        ) %>%
+        addLegend(
+          position = "bottomright", pal = pal, values = cc$n_trials,
+          title = "Open Trials", opacity = 0.85
+        )
+    }
+    m
+  })
+
+  output$map_table_ui <- renderUI({
+    zoom <- input$eu_map_zoom
+    if (!is.null(zoom) && zoom >= 5) {
+      fluidRow(
+        box(title = "Trials in Current Map View", status = "info",
+            solidHeader = TRUE, width = 12,
+            withSpinner(DT::dataTableOutput("map_trials_table"), type = 6))
+      )
+    }
+  })
+
+  output$map_trials_table <- DT::renderDataTable({
+    req(input$eu_map_bounds, input$eu_map_zoom)
+    req(input$eu_map_zoom >= 5)
+    bounds <- input$eu_map_bounds
+    visible_ids <- eu_map_ongoing() %>%
+      left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
+      filter(!is.na(lat),
+             lat >= bounds$south & lat <= bounds$north,
+             lng >= bounds$west & lng <= bounds$east) %>%
+      pull(`_id`) %>% unique()
+    validate(need(length(visible_ids) > 0, "No open trials in current map view."))
+    rv$data %>%
+      filter(`_id` %in% visible_ids) %>%
+      mutate(`CT Number` = case_when(
+        register == "EUCTR" ~ paste0(
+          '<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',
+          CT_number, "/", str_extract(`_id`, "[A-Z]{2,3}$"),
+          '" target="_blank">', CT_number, "</a>"),
+        register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]);
+                                paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',
+                                       ct1, '" target="_blank">', ct1, '</a>') },
+        TRUE ~ CT_number)) %>%
+      select(`CT Number`, register, Full_title, Member_state, MEDDRA_term, status_raw) %>%
+      rename(Register = register, Title = Full_title, Country = Member_state,
+             Condition = MEDDRA_term, Status = status_raw) %>%
+      datatable(rownames = FALSE, class = "compact stripe hover", escape = FALSE,
+                options = list(pageLength = 15, scrollX = TRUE, dom = "lBfrtip",
+                               columnDefs = list(list(width = "350px", targets = 2))))
   })
 
 }
