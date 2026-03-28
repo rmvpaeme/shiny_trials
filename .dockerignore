@@ -1,0 +1,37 @@
+# ── .dockerignore ──────────────────────────────────────────────────────────
+# Exclude files that shouldn't be copied into the Docker image
+
+# Database files (will be mounted as volume)
+*.sqlite
+*.sqlite_file
+data/
+
+# R/RStudio project files
+.Rproj.user/
+*.Rproj
+.Rhistory
+.RData
+.Renviron
+.Rprofile
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docs (not needed in image)
+docs/
+*.md
+LICENSE
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

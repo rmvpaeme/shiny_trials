@@ -1,0 +1,26 @@
+# docker-compose.yml
+# Usage:
+#   docker compose up -d
+#   docker compose exec app Rscript /app/update_data.R  # first-time data load
+
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: rmvpaeme/shiny_trials:0.1.1
+    container_name: shiny_trials
+    ports:
+      - "3838:3838"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DB_PATH=/app/data/pediatric_trials.sqlite
+      - DB_COLLECTION=trials
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3838/"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
