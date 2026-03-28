@@ -856,7 +856,7 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="map",
                                 fluidRow(
                                   box(title="Open Trials by Country", status="primary", solidHeader=TRUE, width=12,
-                                      p(em("Only ongoing/open trials are shown. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
+                                      p(em("Completed trials are excluded. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       withSpinner(leafletOutput("eu_map", height="520px"), type=6))
                                 ),
@@ -1257,7 +1257,7 @@ server <- function(input, output, session) {
 
   eu_map_ongoing <- reactive({
     req(rv$data)
-    df <- rv$data %>% filter(status == "Ongoing")
+    df <- rv$data %>% filter(status != "Completed")
     # Apply all sidebar filters except status (map always shows Ongoing)
     if(length(input$register_filter) > 0)
       df <- df %>% filter(register %in% input$register_filter)
