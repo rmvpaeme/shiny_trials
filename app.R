@@ -603,7 +603,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # CTIS-specific status values
     "Authorised","In Progress","Temporarily halted"
   ), collapse = "|"), ignore_case = TRUE)
-  completed_pat <- regex("Completed|COMPLETED|Ended|Terminated|Withdrawn", ignore_case = TRUE)
+  completed_pat <- regex("Completed|COMPLETED|Ended", ignore_case = TRUE)
 
   # CTIS numeric status code mapping (CTIS API stores status as integer enums)
   ctis_status_map <- c(
