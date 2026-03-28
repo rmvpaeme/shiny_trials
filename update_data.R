@@ -1,5 +1,5 @@
 # ============================================================================
-# update_data.R  (v10 — EUCTR + CTIS only)
+# update_data.R  (v11 — EUCTR + CTIS + CTGOV)
 # ============================================================================
 
 library(ctrdata)
@@ -42,7 +42,7 @@ patched_rows_update <- function(x, y, by = NULL, ...,
 # ============================================================================
 # 1. EU Clinical Trials Register (EUCTR)
 # ============================================================================
-message("\n=== 1/2  EUCTR ===")
+message("\n=== 1/3  EUCTR ===")
 
 assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
 
@@ -79,7 +79,7 @@ message("EUCTR done.\n")
 # ============================================================================
 # 2. Clinical Trials Information System (CTIS)
 # ============================================================================
-message("=== 2/2  CTIS ===")
+message("=== 2/3  CTIS ===")
 
 ctis_url <- paste0(
   "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={%22ageGroupCode%22:[2]}"
@@ -96,6 +96,24 @@ tryCatch({
   message("CTIS load complete.\n")
 }, error = function(e) {
   message("CTIS load failed: ", e$message, "\n")
+})
+
+# ============================================================================
+# 3. ClinicalTrials.gov (CTGOV2)
+# ============================================================================
+message("=== 3/3  CTGOV (ClinicalTrials.gov) ===")
+
+ctgov_url <- paste0(
+  "https://clinicaltrials.gov/search?aggFilters=ages:child"
+)
+
+ctgov_q <- ctrGetQueryUrl(ctgov_url, register = "CTGOV2")
+
+tryCatch({
+  ctrLoadQueryIntoDb(queryterm = ctgov_q, register = "CTGOV2", con = db)
+  message("CTGOV load complete.\n")
+}, error = function(e) {
+  message("CTGOV load failed: ", e$message, "\n")
 })
 
 # ============================================================================

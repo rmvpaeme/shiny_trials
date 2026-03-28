@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1.1 — EUCTR + CTIS, fixed CTIS list handling + overlap)
+# app.R  (v0.2.0 — EUCTR + CTIS + CTGOV)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -88,7 +88,7 @@ THEMES <- list(
     red="#BF616A",orange="#D08770",yellow="#EBCB8B",
     green="#A3BE8C",purple="#B48EAD",
     s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
-    r_euctr="#5E81AC",r_ctis="#88C0D0",
+    r_euctr="#5E81AC",r_ctis="#88C0D0",r_ctgov="#A3BE8C",
     chart_bg="#3B4252",chart_fg="#D8DEE9",chart_grid="#434C5E",
     spinner="#88C0D0"),
   Default = list(
@@ -98,7 +98,7 @@ THEMES <- list(
     red="#dd4b39",orange="#ff851b",yellow="#f39c12",
     green="#00a65a",purple="#605ca8",
     s_ongoing="#00a65a",s_completed="#f39c12",s_other="#dd4b39",
-    r_euctr="#3c8dbc",r_ctis="#00c0ef",
+    r_euctr="#3c8dbc",r_ctis="#00c0ef",r_ctgov="#00a65a",
     chart_bg="#ffffff",chart_fg="#333333",chart_grid="#e5e5e5",
     spinner="#3c8dbc")
 )
@@ -306,8 +306,18 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
     "authorizedApplication.authorizedPartI.sponsors.commercial")
-  
-  result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
+
+  CTGOV_fields <- c(
+    "protocolSection.identificationModule.briefTitle",
+    "protocolSection.statusModule.overallStatus",
+    "protocolSection.statusModule.studyFirstSubmitDate",
+    "protocolSection.statusModule.startDateStruct.date",
+    "protocolSection.conditionsModule.conditions",
+    "protocolSection.armsInterventionsModule.interventions.name",
+    "protocolSection.contactsLocationsModule.locations.country",
+    "protocolSection.sponsorCollaboratorsModule.leadSponsor.class")
+
+  result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields, CTGOV_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
   
   # ── AGGRESSIVE flatten: two passes ────────────────────────────────────────
@@ -351,6 +361,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   # Both share the same numeric prefix — require a letter in the suffix for EUCTR.
   result <- result %>% mutate(register = case_when(
     str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]") ~ "EUCTR",
+    str_detect(`_id`, "^NCT\\d+") ~ "CTGOV",
     TRUE ~ "CTIS"))
   message(sprintf("Registers: %s",
                   paste(names(table(result$register)), table(result$register), sep="=", collapse=", ")))
@@ -376,7 +387,15 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
     "b1_sponsor.b31_and_b32_status_of_the_sponsor",
-    "authorizedApplication.authorizedPartI.sponsors.commercial")
+    "authorizedApplication.authorizedPartI.sponsors.commercial",
+    "protocolSection.identificationModule.briefTitle",
+    "protocolSection.statusModule.overallStatus",
+    "protocolSection.statusModule.studyFirstSubmitDate",
+    "protocolSection.statusModule.startDateStruct.date",
+    "protocolSection.conditionsModule.conditions",
+    "protocolSection.armsInterventionsModule.interventions.name",
+    "protocolSection.contactsLocationsModule.locations.country",
+    "protocolSection.sponsorCollaboratorsModule.leadSponsor.class")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
@@ -386,7 +405,12 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     a1_member_state_concerned = clean_member_state(a1_member_state_concerned),
     `authorizedApplication.memberStatesConcerned` =
       clean_member_state(`authorizedApplication.memberStatesConcerned`))
-  
+  if ("protocolSection.contactsLocationsModule.locations.country" %in% names(result)) {
+    result <- result %>% mutate(
+      `protocolSection.contactsLocationsModule.locations.country` =
+        clean_member_state(`protocolSection.contactsLocationsModule.locations.country`))
+  }
+
   # Unite
   result <- result %>%
     unite("CT_number", a2_eudract_number,
@@ -394,30 +418,41 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           na.rm=TRUE, remove=TRUE) %>%
     unite("Full_title", a3_full_title_of_the_trial,
           `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle`,
+          `protocolSection.identificationModule.briefTitle`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("DIMP_product_name", `dimp.d31_product_name`,
           `authorizedApplication.authorizedPartI.products.productName`,
+          `protocolSection.armsInterventionsModule.interventions.name`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("MEDDRA_term", `e12_meddra_classification.e12_term`,
           `authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.termName`,
+          `protocolSection.conditionsModule.conditions`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("MEDDRA_organ_class", `e12_meddra_classification.e12_system_organ_class`,
           `authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.organClass`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("Member_state", a1_member_state_concerned,
           `authorizedApplication.memberStatesConcerned`,
+          `protocolSection.contactsLocationsModule.locations.country`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("PIP_status", a7_trial_is_part_of_a_paediatric_investigation_plan,
           `authorizedApplication.authorizedPartI.trialDetails.scientificAdviceAndPip.paediatricInvestigationPlan`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("trial_status_raw", x5_trial_status,
           `authorizedApplication.applicationInfo.trialStatus`,
+          `protocolSection.statusModule.overallStatus`,
           na.rm=TRUE, remove=TRUE) %>%
     unite("submission_date",
           x6_date_on_which_this_record_was_first_entered_in_the_eudract_database,
           `authorizedApplication.applicationInfo.submissionDate`,
+          `protocolSection.statusModule.studyFirstSubmitDate`,
           na.rm=TRUE, remove=TRUE)
   
+  # For CTGOV trials, fill CT_number from _id (NCT number) if empty
+  result <- result %>% mutate(
+    CT_number = if_else(register == "CTGOV" & (is.na(CT_number) | CT_number == ""),
+                        as.character(`_id`), CT_number))
+
   result <- result %>% mutate(Member_state = clean_member_state(Member_state))
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
   
@@ -459,15 +494,38 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_squish(tt)
       substr(tt, 1, 80)
     })
-  both_tk <- result %>%
+
+  # Build per-title register sets for all overlap combinations
+  title_reg_tbl <- result %>%
     filter(!is.na(title_key) & nchar(title_key) >= 20) %>%
     group_by(title_key) %>%
-    filter(n_distinct(register) > 1) %>%
-    ungroup() %>%
-    pull(title_key) %>%
-    unique()
-  result <- result %>% mutate(in_both_registers = title_key %in% both_tk)
-  message(sprintf("Cross-register overlap (by title): %d trial(s)", length(both_tk)))
+    summarise(regs = list(sort(unique(register))), .groups = "drop")
+
+  get_titles <- function(r1, r2 = NULL) {
+    if (is.null(r2)) {
+      title_reg_tbl %>% filter(sapply(regs, function(r) r1 %in% r & length(r) > 1)) %>% pull(title_key)
+    } else {
+      title_reg_tbl %>% filter(sapply(regs, function(r) r1 %in% r & r2 %in% r)) %>% pull(title_key)
+    }
+  }
+
+  tk_ec  <- get_titles("EUCTR", "CTIS")
+  tk_eg  <- get_titles("EUCTR", "CTGOV")
+  tk_cg  <- get_titles("CTIS",  "CTGOV")
+  tk_all <- title_reg_tbl %>%
+    filter(sapply(regs, function(r) all(c("EUCTR","CTIS","CTGOV") %in% r))) %>%
+    pull(title_key)
+
+  result <- result %>% mutate(
+    in_both_registers  = title_key %in% union(tk_ec, union(tk_eg, tk_cg)),
+    overlap_euctr_ctis  = title_key %in% tk_ec,
+    overlap_euctr_ctgov = title_key %in% tk_eg,
+    overlap_ctis_ctgov  = title_key %in% tk_cg,
+    overlap_all_three   = title_key %in% tk_all)
+
+  message(sprintf(
+    "Cross-register overlap \u2014 EUCTR\u2194CTIS: %d, EUCTR\u2194CTGOV: %d, CTIS\u2194CTGOV: %d, all 3: %d",
+    length(tk_ec), length(tk_eg), length(tk_cg), length(tk_all)))
 
   result <- result %>% filter(`_id` %in% unique_ids)
   message(sprintf("Unique trials: %d", nrow(result)))
@@ -487,7 +545,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   # ── Start date ────────────────────────────────────────────────────────────
   dcols <- intersect(c(
     "n_date_of_competent_authority_decision","trialInformation.recruitmentStartDate",
-    "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate"),
+    "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
+    "protocolSection.statusModule.startDateStruct.date"),
     names(result))
   if (length(dcols) > 0) {
     ddf <- result %>% select(all_of(dcols)) %>%
@@ -529,6 +588,23 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "1" = "Authorised", "2" = "In Progress", "3" = "Completed",
     "4" = "Terminated",  "5" = "Temporarily halted", "6" = "Withdrawn")
 
+  # CTGOV overallStatus code mapping
+  ctgov_status_map <- c(
+    "RECRUITING"               = "Recruiting",
+    "ACTIVE_NOT_RECRUITING"    = "Active, not recruiting",
+    "NOT_YET_RECRUITING"       = "Not yet recruiting",
+    "ENROLLING_BY_INVITATION"  = "Enrolling by invitation",
+    "COMPLETED"                = "Completed",
+    "TERMINATED"               = "Terminated",
+    "WITHDRAWN"                = "Withdrawn",
+    "SUSPENDED"                = "Suspended",
+    "UNKNOWN"                  = "Unknown status",
+    "AVAILABLE"                = "Completed",
+    "NO_LONGER_AVAILABLE"      = "Completed",
+    "TEMPORARILY_NOT_AVAILABLE"= "Temporarily halted",
+    "APPROVED_FOR_MARKETING"   = "Completed"
+  )
+
   result <- result %>% mutate(
     # status_raw_orig: used for Ongoing/Completed/Other classification only.
     status_raw_orig = coalesce(p_end_of_trial_status, ctStatus, trial_status_raw),
@@ -537,6 +613,12 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       register == "CTIS" & !is.na(status_raw_orig) &
         str_trim(status_raw_orig) %in% names(ctis_status_map),
       ctis_status_map[str_trim(status_raw_orig)],
+      status_raw_orig),
+    # For CTGOV, map uppercase status codes to human-readable labels.
+    status_raw_orig = if_else(
+      register == "CTGOV" & !is.na(status_raw_orig) &
+        str_trim(status_raw_orig) %in% names(ctgov_status_map),
+      ctgov_status_map[str_trim(status_raw_orig)],
       status_raw_orig),
     # status_raw: display value — strip purely-numeric tokens from CTIS JSON
     # flattening and deduplicate repeated tokens in aggregated multi-country strings.
@@ -599,6 +681,10 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       register == "EUCTR" & str_detect(tolower(as.character(`b1_sponsor.b31_and_b32_status_of_the_sponsor`)), "commercial") ~ "Industry",
       register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "non.commercial|non commercial|academic") ~ "Academic",
       register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "commercial") ~ "Industry",
+      register == "CTGOV" & !is.na(`protocolSection.sponsorCollaboratorsModule.leadSponsor.class`) &
+        str_detect(toupper(as.character(`protocolSection.sponsorCollaboratorsModule.leadSponsor.class`)), "INDUSTRY") ~ "Industry",
+      register == "CTGOV" & !is.na(`protocolSection.sponsorCollaboratorsModule.leadSponsor.class`) &
+        str_detect(toupper(as.character(`protocolSection.sponsorCollaboratorsModule.leadSponsor.class`)), "NIH|FED|OTHER_GOV|OTHER|INDIV|NETWORK") ~ "Academic",
       TRUE ~ NA_character_))
 
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
@@ -610,34 +696,41 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 compute_overlap <- function(df) {
-  # n_euctr / n_ctis are the register counts in the already-deduped data.
   n_e <- sum(df$register == "EUCTR", na.rm = TRUE)
   n_c <- sum(df$register == "CTIS",  na.rm = TRUE)
+  n_g <- sum(df$register == "CTGOV", na.rm = TRUE)
 
-  # in_both_registers is set by title-matching BEFORE dedup.
-  # When ctrdata does NOT merge EUCTR<->CTIS duplicates (as is typical),
-  # both a EUCTR record AND a CTIS record for the same trial survive in the
-  # deduped set, each with in_both_registers=TRUE.  Counting all flagged rows
-  # would double-count every shared trial.  We anchor the count on EUCTR to
-  # count each shared trial exactly once.
-  has_flag <- "in_both_registers" %in% names(df)
-  if (has_flag) {
-    flag   <- !is.na(df$in_both_registers) & df$in_both_registers
-    n_ec   <- sum(df$register == "EUCTR" & flag, na.rm = TRUE)
-  } else {
-    n_ec   <- 0L
-  }
-  only_e <- n_e - n_ec
-  only_c <- n_c - n_ec
+  get_flag <- function(col) if (col %in% names(df)) df[[col]] else rep(FALSE, nrow(df))
+
+  flag_ec  <- !is.na(get_flag("overlap_euctr_ctis"))  & get_flag("overlap_euctr_ctis")
+  flag_eg  <- !is.na(get_flag("overlap_euctr_ctgov")) & get_flag("overlap_euctr_ctgov")
+  flag_cg  <- !is.na(get_flag("overlap_ctis_ctgov"))  & get_flag("overlap_ctis_ctgov")
+  flag_all <- !is.na(get_flag("overlap_all_three"))   & get_flag("overlap_all_three")
+
+  # Anchor on EUCTR/CTIS to count each pair once
+  n_ec  <- sum(df$register == "EUCTR" & flag_ec,  na.rm = TRUE)
+  n_eg  <- sum(df$register == "EUCTR" & flag_eg,  na.rm = TRUE)
+  n_cg  <- sum(df$register == "CTIS"  & flag_cg & !flag_ec, na.rm = TRUE)
+  n_all <- sum(df$register == "EUCTR" & flag_all, na.rm = TRUE)
+
+  only_e <- max(0L, n_e - n_ec - n_eg + n_all)
+  only_c <- max(0L, n_c - n_ec - n_cg + n_all)
+  only_g <- max(0L, n_g - n_eg - (if("overlap_ctis_ctgov" %in% names(df)) sum(df$register=="CTGOV"&flag_cg,na.rm=TRUE) else 0L) + n_all)
+  n_total <- n_e + n_c + n_g - n_ec - n_eg - n_cg - n_all
 
   list(
-    n_euctr      = n_e,
-    n_ctis       = n_c,
-    n_euctr_ctis = n_ec,
-    only_euctr   = max(0L, only_e),
-    only_ctis    = max(0L, only_c),
-    n_total      = max(0L, only_e) + max(0L, only_c) + n_ec,
-    n_overlap    = n_ec)
+    n_euctr        = n_e,
+    n_ctis         = n_c,
+    n_ctgov        = n_g,
+    n_euctr_ctis   = n_ec,
+    n_euctr_ctgov  = n_eg,
+    n_ctis_ctgov   = n_cg,
+    n_all_three    = n_all,
+    only_euctr     = max(0L, only_e),
+    only_ctis      = max(0L, only_c),
+    only_ctgov     = max(0L, only_g),
+    n_total        = max(0L, n_total),
+    n_overlap      = n_ec + n_eg + n_cg + n_all)
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -695,7 +788,7 @@ ui <- dashboardPage(skin = "blue",
                                      checkboxGroupInput("status_filter","Trial Status:",
                                                         choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other")),
                                      checkboxGroupInput("register_filter","Source Register:",
-                                                        choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS")),
+                                                        choices=c("EUCTR","CTIS","CTGOV"),selected=c("EUCTR","CTIS","CTGOV")),
                                      dateRangeInput("date_range","Submission Date Range:",
                                                     start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
                                      selectizeInput("organ_class_filter","MedDRA Organ Class:",
@@ -732,14 +825,14 @@ ui <- dashboardPage(skin = "blue",
                                       width=5,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
                                 fluidRow(
                                   box(title="Registry Overlap (title matching)",status="primary",solidHeader=TRUE,
-                                      width=5,height=350,withSpinner(plotOutput("plot_overlap",height="250px"),type=6),
+                                      width=4,height=350,withSpinner(plotOutput("plot_overlap",height="250px"),type=6),
                                       p(em("Matched by normalised title (first 80 chars)."),
                                         style="font-size:10px;margin:2px 0 0;opacity:0.6;")),
                                   box(title="Overlap Summary",status="info",solidHeader=TRUE,
                                       width=4,height=350,div(style="overflow-y:auto;max-height:300px;",
                                                              uiOutput("overlap_summary"))),
                                   box(title="Unique vs Shared",status="primary",solidHeader=TRUE,
-                                      width=3,height=350,withSpinner(plotlyOutput("plot_overlap_bar",height="270px"),type=6))),
+                                      width=4,height=350,withSpinner(plotlyOutput("plot_overlap_bar",height="270px"),type=6))),
                                 fluidRow(
                                   box(title="Submissions per Year",status="primary",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
@@ -788,12 +881,16 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("CTIS")," — Clinical Trials Information System (",
                                                 tags$a("euclinicaltrials.eu", href="https://euclinicaltrials.eu", target="_blank"),
                                                 "). The new EU registry under Regulation (EU) No 536/2014, mandatory for new
-                                                applications from January 2023 onwards.")
+                                                applications from January 2023 onwards."),
+                                        tags$li(tags$b("ClinicalTrials.gov (CTGOV)")," — US National Library of Medicine registry (",
+                                                tags$a("clinicaltrials.gov", href="https://clinicaltrials.gov", target="_blank"),
+                                                "). The world's largest clinical trial registry, maintained by NLM/NIH.
+                                                Contains trials from the US and internationally.")
                                       ),
                                       h4(icon("filter")," Filters & Features"),
                                       tags$ul(
                                         tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, or other trial status."),
-                                        tags$li(tags$b("Source Register:"), " View data from EUCTR, CTIS, or both."),
+                                        tags$li(tags$b("Source Register:"), " View data from EUCTR, CTIS, CTGOV, or any combination."),
                                         tags$li(tags$b("Date Range:"), " Restrict results to a specific submission period."),
                                         tags$li(tags$b("MedDRA Organ Class / Condition:"), " Filter by therapeutic area using standardised MedDRA terminology. Numeric codes (EUCTR prefix format and CTIS EMA vocabulary codes) are automatically resolved to human-readable SOC names."),
                                         tags$li(tags$b("Country:"), " Restrict to trials active in one or more EU Member States."),
@@ -807,6 +904,14 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.2.0 (2026-03-28):"),
+                                          tags$ul(
+                                            tags$li("Added ClinicalTrials.gov (CTGOV) as a third data source alongside EUCTR and CTIS"),
+                                            tags$li("Register filter and all analytics now support CTGOV"),
+                                            tags$li("Registry overlap detection extended to handle all three-way combinations"),
+                                            tags$li("Sponsor type detection for CTGOV using NIH/Industry/Other classification")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.1.1 (2026-03-28):"),
                                           tags$ul(
                                             tags$li("Overview: replaced Status Distribution chart with Sponsor Type by Register (Academic vs Industry, per register and combined)"),
@@ -818,7 +923,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.1.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -883,7 +988,7 @@ server <- function(input, output, session) {
   }
   
   status_cols <- reactive(c("Ongoing"=tc()$s_ongoing,"Completed"=tc()$s_completed,"Other"=tc()$s_other))
-  register_cols <- reactive(c("EUCTR"=tc()$r_euctr,"CTIS"=tc()$r_ctis))
+  register_cols <- reactive(c("EUCTR"=tc()$r_euctr,"CTIS"=tc()$r_ctis,"CTGOV"=tc()$r_ctgov))
   
   observe({
     req(rv$data)
@@ -920,8 +1025,9 @@ server <- function(input, output, session) {
   })
   
   overlap <- reactive(tryCatch(compute_overlap(filt()),
-                               error = function(e) list(n_euctr=0,n_ctis=0,n_euctr_ctis=0,
-                                                        only_euctr=0,only_ctis=0,n_total=0,n_overlap=0)))
+                               error = function(e) list(n_euctr=0,n_ctis=0,n_ctgov=0,
+                                                        n_euctr_ctis=0,n_euctr_ctgov=0,n_ctis_ctgov=0,n_all_three=0,
+                                                        only_euctr=0,only_ctis=0,only_ctgov=0,n_total=0,n_overlap=0)))
   
   output$data_info <- renderText({
     if(!file.exists(CACHE_PATH)) return("Database not yet loaded.")
@@ -951,6 +1057,7 @@ server <- function(input, output, session) {
       mutate(`CT Number` = case_when(
         register == "EUCTR" ~ paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/', CT_number, '/results" target="_blank">', CT_number, '</a>'),
         register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]); paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1, '" target="_blank">', ct1, '</a>') },
+        register == "CTGOV" ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]); paste0('<a href="https://clinicaltrials.gov/study/', ct1, '" target="_blank">', ct1, '</a>') },
         TRUE ~ CT_number)) %>%
       select(`CT Number`, Full_title, submission_date_parsed) %>%
       rename(Title = Full_title, Submitted = submission_date_parsed)
@@ -984,19 +1091,27 @@ server <- function(input, output, session) {
     validate(need(ol$n_total>0,"No data."))
     if(has_eulerr){
       vals<-c()
-      if(ol$only_euctr>0)vals["EUCTR"]<-ol$only_euctr
-      if(ol$only_ctis>0)vals["CTIS"]<-ol$only_ctis
-      if(ol$n_euctr_ctis>0)vals["EUCTR&CTIS"]<-ol$n_euctr_ctis
-      if(length(vals)==0||all(vals==0))vals<-c("EUCTR"=max(1,ol$n_euctr),"CTIS"=max(1,ol$n_ctis))
+      if(ol$only_euctr>0)  vals["EUCTR"]        <- ol$only_euctr
+      if(ol$only_ctis>0)   vals["CTIS"]         <- ol$only_ctis
+      if(ol$only_ctgov>0)  vals["CTGOV"]        <- ol$only_ctgov
+      if(ol$n_euctr_ctis>0)  vals["EUCTR&CTIS"]    <- ol$n_euctr_ctis
+      if(ol$n_euctr_ctgov>0) vals["EUCTR&CTGOV"]   <- ol$n_euctr_ctgov
+      if(ol$n_ctis_ctgov>0)  vals["CTIS&CTGOV"]    <- ol$n_ctis_ctgov
+      if(ol$n_all_three>0)   vals["EUCTR&CTIS&CTGOV"] <- ol$n_all_three
+      if(length(vals)==0||all(vals==0))
+        vals<-c("EUCTR"=max(1,ol$n_euctr),"CTIS"=max(1,ol$n_ctis),"CTGOV"=max(1,ol$n_ctgov))
+      n_sets <- length(unique(c(
+        if(ol$n_euctr>0)"EUCTR",if(ol$n_ctis>0)"CTIS",if(ol$n_ctgov>0)"CTGOV")))
+      fill_cols <- c(t$r_euctr,t$r_ctis,t$r_ctgov)[seq_len(min(n_sets,3))]
       fit<-euler(vals)
       par(bg=t$chart_bg,mar=c(0,0,0,0))
-      plot(fit,fills=list(fill=c(t$r_euctr,t$r_ctis),alpha=0.5),
-           edges=list(col=t$fg0,lwd=1.5),labels=list(col=t$fg2,fontsize=16,font=2),
-           quantities=list(col=t$chart_fg,fontsize=13),main=NULL)
+      plot(fit,fills=list(fill=fill_cols,alpha=0.5),
+           edges=list(col=t$fg0,lwd=1.5),labels=list(col=t$fg2,fontsize=14,font=2),
+           quantities=list(col=t$chart_fg,fontsize=11),main=NULL)
     } else {
       par(bg=t$chart_bg,mar=c(3,3,1,1))
-      barplot(c(ol$n_euctr,ol$n_ctis),names.arg=c("EUCTR","CTIS"),
-              col=c(t$r_euctr,t$r_ctis),border=NA,col.axis=t$chart_fg,col.lab=t$chart_fg)
+      barplot(c(ol$n_euctr,ol$n_ctis,ol$n_ctgov),names.arg=c("EUCTR","CTIS","CTGOV"),
+              col=c(t$r_euctr,t$r_ctis,t$r_ctgov),border=NA,col.axis=t$chart_fg,col.lab=t$chart_fg)
       mtext("Install 'eulerr' for Venn diagram",side=3,col=t$s_other,cex=0.8)
     }
   },bg="transparent")
@@ -1011,8 +1126,12 @@ server <- function(input, output, session) {
     tagList(
       mk(sprintf("EUCTR (%s)",pct(ol$n_euctr,ol$n_total)),ol$n_euctr,t$r_euctr),
       mk(sprintf("CTIS (%s)",pct(ol$n_ctis,ol$n_total)),ol$n_ctis,t$r_ctis),
+      mk(sprintf("CTGOV (%s)",pct(ol$n_ctgov,ol$n_total)),ol$n_ctgov,t$r_ctgov),
       hr(style=sprintf("border-color:%s;margin:6px 0;",t$bg3)),
-      mk("EUCTR \u2194 CTIS (shared)",ol$n_euctr_ctis,t$orange),
+      mk("EUCTR \u2194 CTIS",ol$n_euctr_ctis,t$orange),
+      mk("EUCTR \u2194 CTGOV",ol$n_euctr_ctgov,t$green),
+      mk("CTIS \u2194 CTGOV",ol$n_ctis_ctgov,t$purple),
+      if(ol$n_all_three>0) mk("All three registers",ol$n_all_three,t$yellow) else NULL,
       div(style=sprintf("margin-top:6px;padding:5px 8px;background:%s;border-radius:3px;border:1px dashed %s;",t$bg2,t$bg3),
           span(sprintf("\u2248 %s shared (%s)",format(ol$n_overlap,big.mark=","),pct(ol$n_overlap,ol$n_total)),
                style=sprintf("color:%s;font-weight:600;font-size:12px;",t$frost1))))
@@ -1021,12 +1140,14 @@ server <- function(input, output, session) {
   output$plot_overlap_bar <- renderPlotly({
     req(rv$data);ol<-overlap();t<-tc()
     validate(need(ol$n_total>0,"No data."))
-    df<-data.frame(cat=c("Only\nEUCTR","Only\nCTIS","Shared"),
-                   n=c(ol$only_euctr,ol$only_ctis,ol$n_euctr_ctis),
-                   col=c(t$r_euctr,t$r_ctis,t$orange),stringsAsFactors=FALSE)%>%filter(n>0)
+    df<-data.frame(
+      cat=c("Only\nEUCTR","Only\nCTIS","Only\nCTGOV","EUCTR\n\u2194CTIS","EUCTR\n\u2194CTGOV","CTIS\n\u2194CTGOV"),
+      n=c(ol$only_euctr,ol$only_ctis,ol$only_ctgov,ol$n_euctr_ctis,ol$n_euctr_ctgov,ol$n_ctis_ctgov),
+      col=c(t$r_euctr,t$r_ctis,t$r_ctgov,t$orange,t$green,t$purple),
+      stringsAsFactors=FALSE)%>%filter(n>0)
     validate(need(nrow(df)>0,"No data."))
     plot_ly(df,x=~reorder(cat,-n),y=~n,type="bar",marker=list(color=~col))%>%
-      plt_layout(xaxis=list(title="",tickfont=list(size=10)),yaxis=list(title="Trials"),showlegend=FALSE)
+      plt_layout(xaxis=list(title="",tickfont=list(size=9)),yaxis=list(title="Trials"),showlegend=FALSE)
   })
   
   output$plot_yearly <- renderPlotly({
@@ -1058,6 +1179,7 @@ server <- function(input, output, session) {
       mutate(`CT Number`=case_when(
         register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/results" target="_blank">',CT_number,'</a>'),
         register=="CTIS" ~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',ct1,'" target="_blank">',ct1,'</a>')},
+        register=="CTGOV"~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://clinicaltrials.gov/study/',ct1,'" target="_blank">',ct1,'</a>')},
         TRUE~CT_number))%>%
       select(-CT_number)%>%
       rename(Register=register,Title=Full_title,
@@ -1134,7 +1256,7 @@ server <- function(input, output, session) {
     df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
     validate(need(nrow(df)>0,"No sponsor type data available."))
     all_rows<-df%>%group_by(sponsor_type)%>%summarise(n=sum(n),.groups="drop")%>%mutate(register="All")
-    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","All")))
+    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","CTGOV","All")))
     t<-tc()
     pal<-c("Academic"=t$frost1,"Industry"=t$orange)
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
@@ -1146,7 +1268,7 @@ server <- function(input, output, session) {
     df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
     validate(need(nrow(df)>0,"No sponsor type data available."))
     all_rows<-df%>%group_by(sponsor_type)%>%summarise(n=sum(n),.groups="drop")%>%mutate(register="All")
-    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","All")))
+    df<-bind_rows(df,all_rows)%>%mutate(register=factor(register,levels=c("CTIS","EUCTR","CTGOV","All")))
     t<-tc()
     pal<-c("Academic"=t$frost1,"Industry"=t$orange)
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
