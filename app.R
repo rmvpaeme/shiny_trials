@@ -1131,6 +1131,7 @@ server <- function(input, output, session) {
       relocate(`CT Number`)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
+                           order=list(list(11,"desc")),
                            columnDefs=list(list(width="350px",targets=2))))
   })
   
@@ -1294,6 +1295,7 @@ server <- function(input, output, session) {
     validate(need(length(visible_ids) > 0, "No open trials in current map view."))
     rv$data %>%
       filter(`_id` %in% visible_ids) %>%
+      arrange(desc(submission_date_parsed)) %>%
       mutate(`CT Number` = case_when(
         register == "EUCTR" ~ paste0(
           '<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',
@@ -1303,11 +1305,13 @@ server <- function(input, output, session) {
                                 paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',
                                        ct1, '" target="_blank">', ct1, '</a>') },
         TRUE ~ CT_number)) %>%
-      select(`CT Number`, register, Full_title, Member_state, MEDDRA_term, status_raw) %>%
+      select(`CT Number`, register, Full_title, Member_state, MEDDRA_term,
+             status_raw, submission_date_parsed) %>%
       rename(Register = register, Title = Full_title, Country = Member_state,
-             Condition = MEDDRA_term, Status = status_raw) %>%
+             Condition = MEDDRA_term, Status = status_raw, Submitted = submission_date_parsed) %>%
       datatable(rownames = FALSE, class = "compact stripe hover", escape = FALSE,
                 options = list(pageLength = 15, scrollX = TRUE, dom = "lBfrtip",
+                               order = list(list(6, "desc")),
                                columnDefs = list(list(width = "350px", targets = 2))))
   })
 
