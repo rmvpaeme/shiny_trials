@@ -522,6 +522,34 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% mutate(in_both_registers = title_key %in% both_tk)
   message(sprintf("Cross-register overlap (by title): %d trial(s)", length(both_tk)))
 
+  # ── Prefer CTIS over EUCTR "transitioned" records ─────────────────────────
+  # dbFindIdsUniqueTrials may keep an EUCTR "Trial now transitioned" record
+  # instead of its CTIS counterpart. Find such cases by normalised title and
+  # swap the kept ID so the CTIS version is used after dedup.
+  trans_pat <- regex("transitioned", ignore_case = TRUE)
+  raw_status_cols <- intersect(c("trial_status_raw", "p_end_of_trial_status"), names(result))
+  trans_euctr <- result %>%
+    filter(register == "EUCTR", `_id` %in% unique_ids,
+           !is.na(title_key), nchar(title_key) >= 20)
+  if (length(raw_status_cols) > 0) {
+    is_trans <- Reduce(`|`, lapply(raw_status_cols, function(col)
+      str_detect(coalesce(as.character(trans_euctr[[col]]), ""), trans_pat)))
+    trans_euctr <- trans_euctr[is_trans, ]
+  } else {
+    trans_euctr <- trans_euctr[0, ]
+  }
+  if (nrow(trans_euctr) > 0) {
+    ctis_matches <- result %>%
+      filter(register == "CTIS", !is.na(title_key), nchar(title_key) >= 20,
+             title_key %in% trans_euctr$title_key)
+    if (nrow(ctis_matches) > 0) {
+      euctr_drop <- trans_euctr %>% filter(title_key %in% ctis_matches$title_key) %>% pull(`_id`)
+      unique_ids <- unique(c(setdiff(unique_ids, euctr_drop), ctis_matches$`_id`))
+      message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s)",
+                      length(euctr_drop)))
+    }
+  }
+
   result <- result %>% filter(`_id` %in% unique_ids)
   message(sprintf("Unique trials: %d", nrow(result)))
   
@@ -643,25 +671,6 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       substr(tt, 1, 80)
     })
   
-  # ── Drop transitioned EUCTR trials that have a matching CTIS record ─────────
-  # "Trial now transitioned" is an admin status meaning the trial moved to CTIS.
-  # If a CTIS record with a matching normalised title exists in the deduped set,
-  # the EUCTR record is redundant — drop it and rely on the CTIS version.
-  # If no CTIS match is found, keep the EUCTR record (it's the only data we have).
-  ctis_title_keys <- result %>%
-    filter(register == "CTIS", !is.na(title_key), nchar(title_key) >= 20) %>%
-    pull(title_key) %>% unique()
-  n_before <- nrow(result)
-  result <- result %>%
-    filter(!(
-      register == "EUCTR" &
-      str_detect(coalesce(status_raw_orig, ""), regex("transitioned", ignore_case = TRUE)) &
-      !is.na(title_key) & nchar(title_key) >= 20 &
-      title_key %in% ctis_title_keys
-    ))
-  message(sprintf("Dropped %d EUCTR 'transitioned' record(s) with a matching CTIS entry",
-                  n_before - nrow(result)))
-
   result <- result %>% select(-status_raw_orig)
 
   # ── Sponsor type ──────────────────────────────────────────────────────────
