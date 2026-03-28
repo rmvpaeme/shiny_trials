@@ -64,7 +64,7 @@ RUN R -e 'install.packages(c( \
 
 # Visualisation
 RUN R -e 'install.packages(c( \
-    "ggplot2", "plotly", "DT", "eulerr" \
+    "ggplot2", "plotly", "DT", "eulerr", "leaflet" \
   ), repos = "https://cloud.r-project.org/")'
 
 # Export
