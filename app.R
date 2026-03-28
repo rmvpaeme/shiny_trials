@@ -643,6 +643,25 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       substr(tt, 1, 80)
     })
   
+  # ── Drop transitioned EUCTR trials that have a matching CTIS record ─────────
+  # "Trial now transitioned" is an admin status meaning the trial moved to CTIS.
+  # If a CTIS record with a matching normalised title exists in the deduped set,
+  # the EUCTR record is redundant — drop it and rely on the CTIS version.
+  # If no CTIS match is found, keep the EUCTR record (it's the only data we have).
+  ctis_title_keys <- result %>%
+    filter(register == "CTIS", !is.na(title_key), nchar(title_key) >= 20) %>%
+    pull(title_key) %>% unique()
+  n_before <- nrow(result)
+  result <- result %>%
+    filter(!(
+      register == "EUCTR" &
+      str_detect(coalesce(status_raw_orig, ""), regex("transitioned", ignore_case = TRUE)) &
+      !is.na(title_key) & nchar(title_key) >= 20 &
+      title_key %in% ctis_title_keys
+    ))
+  message(sprintf("Dropped %d EUCTR 'transitioned' record(s) with a matching CTIS entry",
+                  n_before - nrow(result)))
+
   result <- result %>% select(-status_raw_orig)
 
   # ── Sponsor type ──────────────────────────────────────────────────────────
