@@ -1229,8 +1229,33 @@ server <- function(input, output, session) {
 
   eu_map_ongoing <- reactive({
     req(rv$data)
-    rv$data %>%
-      filter(status == "Ongoing", !is.na(Member_state)) %>%
+    df <- rv$data %>% filter(status == "Ongoing")
+    # Apply all sidebar filters except status (map always shows Ongoing)
+    if(length(input$register_filter) > 0)
+      df <- df %>% filter(register %in% input$register_filter)
+    if(!is.null(input$date_range))
+      df <- df %>% filter(is.na(submission_date_parsed) |
+                            (submission_date_parsed >= input$date_range[1] &
+                             submission_date_parsed <= input$date_range[2]))
+    if(length(input$organ_class_filter) > 0)
+      df <- df %>% filter(str_detect(MEDDRA_organ_class,
+                                     regex(paste(input$organ_class_filter, collapse="|"), ignore_case=TRUE)))
+    if(length(input$condition_filter) > 0)
+      df <- df %>% filter(str_detect(MEDDRA_term,
+                                     regex(paste(input$condition_filter, collapse="|"), ignore_case=TRUE)))
+    if(length(input$country_filter) > 0) {
+      pat <- paste(str_replace_all(input$country_filter, "([.()\\[\\]{}+*?^$|\\\\])", "\\\\\\1"), collapse="|")
+      df <- df %>% filter(str_detect(Member_state, regex(pat, ignore_case=TRUE)))
+    }
+    if(input$pip_filter != "All")
+      df <- df %>% filter(has_PIP == input$pip_filter)
+    if(nzchar(input$text_search)) {
+      pat <- regex(input$text_search, ignore_case=TRUE)
+      df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
+                            str_detect(CT_number, pat) | str_detect(MEDDRA_term, pat))
+    }
+    df %>%
+      filter(!is.na(Member_state)) %>%
       separate_rows(Member_state, sep = " / ") %>%
       mutate(Member_state = str_trim(Member_state)) %>%
       filter(Member_state != "")
