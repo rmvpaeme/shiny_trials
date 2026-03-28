@@ -522,6 +522,41 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% mutate(in_both_registers = title_key %in% both_tk)
   message(sprintf("Cross-register overlap (by title): %d trial(s)", length(both_tk)))
 
+  # ── For CTIS: always use the latest amendment version ─────────────────────
+  # CTIS IDs end in -VV (amendment version, e.g. -01, -02).
+  # dbFindIdsUniqueTrials may keep an older amendment; find any such cases
+  # among the CTIS records already in unique_ids and swap to the latest version.
+  ctis_in_unique <- result %>%
+    filter(register == "CTIS", `_id` %in% unique_ids) %>%
+    mutate(
+      base_id = str_replace(`_id`, "-\\d+$", ""),
+      version = as.integer(str_extract(`_id`, "\\d+$"))
+    ) %>%
+    select(`_id`, base_id, version)
+
+  if (nrow(ctis_in_unique) > 0) {
+    ctis_latest <- result %>%
+      filter(register == "CTIS") %>%
+      mutate(
+        base_id = str_replace(`_id`, "-\\d+$", ""),
+        version = as.integer(str_extract(`_id`, "\\d+$"))
+      ) %>%
+      group_by(base_id) %>%
+      slice_max(version, n = 1, with_ties = FALSE) %>%
+      ungroup() %>%
+      select(base_id, latest_id = `_id`)
+
+    to_update <- ctis_in_unique %>%
+      left_join(ctis_latest, by = "base_id") %>%
+      filter(`_id` != latest_id)
+
+    if (nrow(to_update) > 0) {
+      unique_ids <- unique(c(setdiff(unique_ids, to_update$`_id`), to_update$latest_id))
+      message(sprintf("CTIS: updated %d record(s) to their latest amendment version",
+                      nrow(to_update)))
+    }
+  }
+
   # ── Prefer CTIS over EUCTR "transitioned" records ─────────────────────────
   # dbFindIdsUniqueTrials may keep an EUCTR "Trial now transitioned" record
   # instead of its CTIS counterpart. Find such cases by normalised title and
