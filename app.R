@@ -23,6 +23,7 @@ if (has_eulerr) library(eulerr)
 # ══════════════════════════════════════════════════════════════════════════════
 # 1. CONFIGURATION
 # ══════════════════════════════════════════════════════════════════════════════
+try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 
 DB_PATH       <- "./data/pediatric_trials.sqlite"
 DB_COLLECTION <- "trials"
@@ -455,15 +456,26 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "Recruiting","Active","Ongoing","Temporarily Halted","Restarted",
     "Ongoing, recruiting","Ongoing, recruitment ended",
     "Ongoing, not yet recruiting","Authorised, not started",
-    "Active, not recruiting","Enrolling by invitation","Not yet recruiting"
+    "Active, not recruiting","Enrolling by invitation","Not yet recruiting",
+    # CTIS-specific status values
+    "Authorised","In Progress","Temporarily halted"
   ), collapse = "|"), ignore_case = TRUE)
-  completed_pat <- regex("Completed|COMPLETED|Ended", ignore_case = TRUE)
-  
+  completed_pat <- regex("Completed|COMPLETED|Ended|Terminated|Withdrawn", ignore_case = TRUE)
+
+  # CTIS numeric status code mapping (CTIS API stores status as integer enums)
+  ctis_status_map <- c(
+    "1" = "Authorised", "2" = "In Progress", "3" = "Completed",
+    "4" = "Terminated",  "5" = "Temporarily halted", "6" = "Withdrawn")
+
   result <- result %>% mutate(
     # status_raw_orig: used for Ongoing/Completed/Other classification only.
-    # Must NOT be cleaned so that trials with numeric CTIS status codes still
-    # fall into "Other" rather than becoming NA and disappearing from filters.
     status_raw_orig = coalesce(p_end_of_trial_status, ctStatus, trial_status_raw),
+    # For CTIS, map numeric codes to human-readable labels before any processing.
+    status_raw_orig = if_else(
+      register == "CTIS" & !is.na(status_raw_orig) &
+        str_trim(status_raw_orig) %in% names(ctis_status_map),
+      ctis_status_map[str_trim(status_raw_orig)],
+      status_raw_orig),
     # status_raw: display value — strip purely-numeric tokens from CTIS JSON
     # flattening and deduplicate repeated tokens in aggregated multi-country strings.
     status_raw = vapply(status_raw_orig, function(x) {
@@ -477,7 +489,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       is.na(status_raw_orig) ~ NA_character_,
       str_detect(status_raw_orig, ongoing_pat) ~ "Ongoing",
       str_detect(status_raw_orig, completed_pat) ~ "Completed",
-      TRUE ~ "Other"))
+      TRUE ~ "Other")) %>%
+    # Ensure the display column is never blank: fall back to the status category.
+    mutate(status_raw = if_else(is.na(status_raw) & !is.na(status), status, status_raw))
   
   # ── Derived ───────────────────────────────────────────────────────────────
   result <- result %>% mutate(
@@ -511,30 +525,33 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 compute_overlap <- function(df) {
-  # in_both_registers is set before dedup in prepare_trial_data().
-  # After dedup each overlapping trial survives in exactly one register, so
-  # we cannot re-detect overlap from the register column alone.
+  # n_euctr / n_ctis are the register counts in the already-deduped data.
+  n_e <- sum(df$register == "EUCTR", na.rm = TRUE)
+  n_c <- sum(df$register == "CTIS",  na.rm = TRUE)
+
+  # in_both_registers is set by title-matching BEFORE dedup.
+  # When ctrdata does NOT merge EUCTR<->CTIS duplicates (as is typical),
+  # both a EUCTR record AND a CTIS record for the same trial survive in the
+  # deduped set, each with in_both_registers=TRUE.  Counting all flagged rows
+  # would double-count every shared trial.  We anchor the count on EUCTR to
+  # count each shared trial exactly once.
   has_flag <- "in_both_registers" %in% names(df)
   if (has_flag) {
-    flag     <- !is.na(df$in_both_registers) & df$in_both_registers
-    n_ec     <- sum(flag)
-    only_e   <- sum(df$register == "EUCTR" & !flag, na.rm = TRUE)
-    only_c   <- sum(df$register == "CTIS"  & !flag, na.rm = TRUE)
+    flag   <- !is.na(df$in_both_registers) & df$in_both_registers
+    n_ec   <- sum(df$register == "EUCTR" & flag, na.rm = TRUE)
   } else {
     n_ec   <- 0L
-    only_e <- sum(df$register == "EUCTR", na.rm = TRUE)
-    only_c <- sum(df$register == "CTIS",  na.rm = TRUE)
   }
-  n_e <- only_e + n_ec   # total EUCTR membership (unique + shared)
-  n_c <- only_c + n_ec   # total CTIS  membership (unique + shared)
+  only_e <- n_e - n_ec
+  only_c <- n_c - n_ec
 
   list(
     n_euctr      = n_e,
     n_ctis       = n_c,
     n_euctr_ctis = n_ec,
-    only_euctr   = only_e,
-    only_ctis    = only_c,
-    n_total      = only_e + only_c + n_ec,   # unique trial count
+    only_euctr   = max(0L, only_e),
+    only_ctis    = max(0L, only_c),
+    n_total      = max(0L, only_e) + max(0L, only_c) + n_ec,
     n_overlap    = n_ec)
 }
 
@@ -575,7 +592,14 @@ extract_choices <- function(x, sep = " / ") {
 # ══════════════════════════════════════════════════════════════════════════════
 
 ui <- dashboardPage(skin = "blue",
-                    dashboardHeader(title = span(icon("child"), " EU Paediatric Trials"), titleWidth = 300),
+                    title = "Shiny Trials",
+                    dashboardHeader(title = tagList(
+                      tags$head(
+                        tags$title("Shiny Trials"),
+                        tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg")
+                      ),
+                      icon("child"), " EU Paediatric Trials"
+                    ), titleWidth = 300),
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
                                                  menuItem("Overview",tabName="overview",icon=icon("dashboard")),
@@ -770,7 +794,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session,"country_filter",
                          choices=extract_choices(rv$data$Member_state,sep=" / "),server=TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
-    if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=max(d))
+    if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
   })
   
   filt <- reactive({
@@ -926,12 +950,18 @@ server <- function(input, output, session) {
     df<-filt()%>%select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
                         MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
                         submission_date_parsed,start_date)%>%
-      rename(`CT Number`=CT_number,Register=register,Title=Full_title,
+      mutate(`CT Number`=case_when(
+        register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/results" target="_blank">',CT_number,'</a>'),
+        register=="CTIS" ~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',ct1,'" target="_blank">',ct1,'</a>')},
+        TRUE~CT_number))%>%
+      select(-CT_number)%>%
+      rename(Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
              `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Submitted=submission_date_parsed,Started=start_date)
-    datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",
+             Submitted=submission_date_parsed,Started=start_date)%>%
+      relocate(`CT Number`)
+    datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
                            columnDefs=list(list(width="350px",targets=2))))
   })
