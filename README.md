@@ -1,4 +1,4 @@
-# EU Paediatric Clinical Trials Dashboard `v0.1.3`
+# EU Paediatric Clinical Trials Dashboard `v0.1.4`
 
 An interactive R Shiny dashboard providing a unified view of paediatric
 clinical trials registered in the European Union, integrating two primary
@@ -142,7 +142,7 @@ Or from RStudio: open `app.R` → click **Run App**.
 mkdir -p data
 docker run -p 3838:3838 \
   -v $(pwd)/data:/app/data \
-  rmvpaeme/shiny_trials:0.1.3
+  rmvpaeme/shiny_trials:0.1.4
 ```
 
 Open [http://localhost:3838](http://localhost:3838).
@@ -156,14 +156,14 @@ and RDS cache persist across container restarts.
 mkdir -p data
 
 # Fetch data (30-60 min first time)
-docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1.3 \
+docker run --rm -v $(pwd)/data:/app/data rmvpaeme/shiny_trials:0.1.4 \
   Rscript /app/update_data.R
 
 # Launch dashboard
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
   --name shiny_trials \
-  rmvpaeme/shiny_trials:0.1.3
+  rmvpaeme/shiny_trials:0.1.4
 ```
 
 ### Docker Compose
@@ -239,6 +239,11 @@ pediatric-trials-dashboard/
 ---
 
 ## Changelog
+
+### v0.1.4 (2026-03-28)
+
+- **Sidebar**: added Trial Phase filter (Phase I / II / III / IV)
+- **Analytics**: added Trial Phase bar chart (stacked by register, EUCTR + CTIS)
 
 ### v0.1.3 (2026-03-28) — v0.1.2 skipped
 

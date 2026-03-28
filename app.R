@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1.3 — EUCTR + CTIS, fixed CTIS list handling + overlap)
+# app.R  (v0.1.4 — trial phase filter + chart)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -344,7 +344,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "x6_date_on_which_this_record_was_first_entered_in_the_eudract_database",
     "n_date_of_competent_authority_decision",
     "trialInformation.recruitmentStartDate","p_end_of_trial_status",
-    "b1_sponsor.b31_and_b32_status_of_the_sponsor")
+    "b1_sponsor.b31_and_b32_status_of_the_sponsor",
+    "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
+    "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv")
   
   CTIS_fields <- c(
     "authorizedApplication.applicationInfo.ctNumber",
@@ -358,7 +360,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.applicationInfo.submissionDate",
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
-    "authorizedApplication.authorizedPartI.sponsors.commercial")
+    "authorizedApplication.authorizedPartI.sponsors.commercial",
+    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -429,7 +432,10 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
     "b1_sponsor.b31_and_b32_status_of_the_sponsor",
-    "authorizedApplication.authorizedPartI.sponsors.commercial")
+    "authorizedApplication.authorizedPartI.sponsors.commercial",
+    "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
+    "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
+    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
@@ -717,6 +723,56 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "commercial") ~ "Industry",
       TRUE ~ NA_character_))
 
+  # ── Trial phase ───────────────────────────────────────────────────────────
+  euctr_phase_cols <- c(
+    "e71_human_pharmacology_phase_i",
+    "e72_therapeutic_exploratory_phase_ii",
+    "e73_therapeutic_confirmatory_phase_iii",
+    "e74_therapeutic_use_phase_iv")
+  euctr_phase_labels <- c("Phase I", "Phase II", "Phase III", "Phase IV")
+  ctis_phase_col <- "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase"
+
+  euctr_phase_cols_present <- intersect(euctr_phase_cols, names(result))
+  ctis_phase_col_present <- ctis_phase_col %in% names(result)
+
+  result <- result %>% mutate(phase = {
+    euctr_phases <- if (length(euctr_phase_cols_present) > 0) {
+      apply(result[, euctr_phase_cols_present, drop = FALSE], 1, function(r) {
+        flags <- str_detect(tolower(as.character(r)), "true|yes|1")
+        flags[is.na(flags)] <- FALSE
+        lbs <- euctr_phase_labels[match(euctr_phase_cols_present, euctr_phase_cols)]
+        lbs <- lbs[flags]
+        if (length(lbs) == 0) NA_character_ else paste(lbs, collapse = " / ")
+      })
+    } else rep(NA_character_, nrow(result))
+
+    ctis_phases <- if (ctis_phase_col_present) {
+      vapply(as.character(result[[ctis_phase_col]]), function(x) {
+        if (is.na(x) || !nzchar(str_trim(x))) return(NA_character_)
+        x <- str_trim(x)
+        # Map numeric CTIS phase codes or text values to labels
+        phase_map <- c(
+          "1" = "Phase I",  "Phase I" = "Phase I",
+          "2" = "Phase II", "Phase II" = "Phase II",
+          "3" = "Phase III","Phase III" = "Phase III",
+          "4" = "Phase IV", "Phase IV" = "Phase IV",
+          "phase i"   = "Phase I",   "phase ii"  = "Phase II",
+          "phase iii" = "Phase III", "phase iv"  = "Phase IV")
+        parts <- unique(str_trim(unlist(str_split(x, "[/,;]"))))
+        mapped <- phase_map[parts]
+        mapped <- mapped[!is.na(mapped)]
+        if (length(mapped) == 0) x else paste(unique(mapped), collapse = " / ")
+      }, FUN.VALUE = character(1L), USE.NAMES = FALSE)
+    } else rep(NA_character_, nrow(result))
+
+    dplyr::coalesce(
+      if_else(register == "EUCTR" & !is.na(euctr_phases), euctr_phases, NA_character_),
+      if_else(register == "CTIS"  & !is.na(ctis_phases),  ctis_phases,  NA_character_))
+  })
+
+  # Drop raw phase columns
+  result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col)))
+
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
 }
@@ -821,6 +877,8 @@ ui <- dashboardPage(skin = "blue",
                                                     choices=NULL,multiple=TRUE,options=list(placeholder="Type to search…")),
                                      selectizeInput("country_filter","Country / Member State:",
                                                     choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
+                                     selectizeInput("phase_filter","Trial Phase:",
+                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
                                      selectInput("pip_filter","Part of PIP:",
                                                  choices=c("All","Yes","No","Unknown"),selected="All"),
                                      textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma…"),
@@ -887,6 +945,9 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
+                                fluidRow(
+                                  box(title="Trial Phase",status="primary",solidHeader=TRUE,width=12,height=420,
+                                      withSpinner(plotlyOutput("plot_phase",height="360px"),type=6))),
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
@@ -933,6 +994,12 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.1.4 (2026-03-28):"),
+                                          tags$ul(
+                                            tags$li("Sidebar: added Trial Phase filter (Phase I–IV)"),
+                                            tags$li("Analytics: added Trial Phase bar chart (stacked by register)")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.1.3 (2026-03-28):"), " (v0.1.2 skipped)",
                                           tags$ul(
                                             tags$li("Map: new Map tab showing open/ongoing trials by country on an interactive Leaflet map; trial table appears below when zoomed in"),
@@ -951,7 +1018,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.1.3 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.1.4 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1026,6 +1093,8 @@ server <- function(input, output, session) {
                          choices=extract_choices(rv$data$MEDDRA_term),server=TRUE)
     updateSelectizeInput(session,"country_filter",
                          choices=extract_choices(rv$data$Member_state,sep=" / "),server=TRUE)
+    updateSelectizeInput(session,"phase_filter",
+                         choices=extract_choices(rv$data$phase),server=TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
   })
@@ -1044,6 +1113,9 @@ server <- function(input, output, session) {
     if(length(input$country_filter)>0){
       pat<-paste(str_replace_all(input$country_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
       df<-df%>%filter(str_detect(Member_state,regex(pat,ignore_case=TRUE)))}
+    if(length(input$phase_filter)>0){
+      pat<-paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
+      df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
@@ -1256,6 +1328,23 @@ server <- function(input, output, session) {
                  yaxis=list(title="Number of Trials"),legend=list(orientation="h",y=-0.2))
   })
   
+  output$plot_phase <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(phase) & nzchar(str_trim(phase))) %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(phase = str_trim(phase)) %>%
+      filter(nzchar(phase)) %>%
+      count(phase, register) %>%
+      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
+    validate(need(nrow(df) > 0, "No phase data available."))
+    plot_ly(df, x = ~phase, y = ~n, color = ~register, colors = register_cols(), type = "bar",
+            text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = "Trial Phase"),
+                 yaxis = list(title = "Number of Trials"),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
   output$plot_timeline_q <- renderPlotly({
     df<-filt()%>%filter(!is.na(start_date))%>%mutate(quarter=floor_date(start_date,"quarter"))%>%
       count(quarter,register)
