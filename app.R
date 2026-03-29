@@ -361,7 +361,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
     "authorizedApplication.authorizedPartI.sponsors.commercial",
-    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase")
+    "trialPhase")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -435,7 +435,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.sponsors.commercial",
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
     "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
-    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase")
+    "trialPhase")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
@@ -730,7 +730,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "e73_therapeutic_confirmatory_phase_iii",
     "e74_therapeutic_use_phase_iv")
   euctr_phase_labels <- c("Phase I", "Phase II", "Phase III", "Phase IV")
-  ctis_phase_col <- "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialPhase"
+  ctis_phase_col <- "trialPhase"
 
   euctr_phase_cols_present <- intersect(euctr_phase_cols, names(result))
   ctis_phase_col_present <- ctis_phase_col %in% names(result)
@@ -750,18 +750,15 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       vapply(as.character(result[[ctis_phase_col]]), function(x) {
         if (is.na(x) || !nzchar(str_trim(x))) return(NA_character_)
         x <- str_trim(x)
-        # Map numeric CTIS phase codes or text values to labels
-        phase_map <- c(
-          "1" = "Phase I",  "Phase I" = "Phase I",
-          "2" = "Phase II", "Phase II" = "Phase II",
-          "3" = "Phase III","Phase III" = "Phase III",
-          "4" = "Phase IV", "Phase IV" = "Phase IV",
-          "phase i"   = "Phase I",   "phase ii"  = "Phase II",
-          "phase iii" = "Phase III", "phase iv"  = "Phase IV")
-        parts <- unique(str_trim(unlist(str_split(x, "[/,;]"))))
-        mapped <- phase_map[parts]
-        mapped <- mapped[!is.na(mapped)]
-        if (length(mapped) == 0) x else paste(unique(mapped), collapse = " / ")
+        # Map CTIS phase text to canonical labels
+        # CTIS uses descriptions like "Therapeutic exploratory (Phase II)"
+        lbl <- dplyr::case_when(
+          grepl("phase i[^iv]|phase i$|human pharmacology", tolower(x)) ~ "Phase I",
+          grepl("phase iv|therapeutic use", tolower(x))                  ~ "Phase IV",
+          grepl("phase iii|confirmatory", tolower(x))                    ~ "Phase III",
+          grepl("phase ii|exploratory", tolower(x))                      ~ "Phase II",
+          TRUE ~ NA_character_)
+        if (is.na(lbl)) x else lbl
       }, FUN.VALUE = character(1L), USE.NAMES = FALSE)
     } else rep(NA_character_, nrow(result))
 
@@ -1274,17 +1271,18 @@ server <- function(input, output, session) {
         TRUE~CT_number))%>%
       select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
              MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-             sponsor_type,submission_date_parsed,start_date,`CT Number`)%>%
+             phase,sponsor_type,submission_date_parsed,start_date,`CT Number`)%>%
       select(-CT_number)%>%
       rename(Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
              `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Sponsor=sponsor_type,Submitted=submission_date_parsed,Started=start_date)%>%
+             Phase=phase,Sponsor=sponsor_type,
+             Submitted=submission_date_parsed,Started=start_date)%>%
       relocate(`CT Number`)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
-                           order=list(list(11,"desc")),
+                           order=list(list(12,"desc")),
                            columnDefs=list(list(width="350px",targets=2))))
   })
   
