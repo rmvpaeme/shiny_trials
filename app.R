@@ -521,9 +521,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_squish(tt)
       substr(tt, 1, 80)
     })
-  # Identify EUCTR "transitioned" records by status — these are EUCTR stubs
-  # pointing to a CTIS record. Exclude their title_keys from overlap so the
-  # diagram only shows trials genuinely present in both registers simultaneously.
+  # Identify EUCTR "transitioned" title_keys — used below to prefer CTIS records
   raw_status_cols_pre <- intersect(c("trial_status_raw", "p_end_of_trial_status"), names(result))
   trans_pat_pre <- regex("transitioned", ignore_case = TRUE)
   if (length(raw_status_cols_pre) > 0) {
@@ -536,20 +534,6 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   } else {
     trans_tks <- character(0)
   }
-  both_tk <- result %>%
-    filter(!is.na(title_key) & nchar(title_key) >= 20,
-           !title_key %in% trans_tks) %>%
-    group_by(title_key) %>%
-    filter(n_distinct(register) > 1) %>%
-    ungroup() %>%
-    pull(title_key) %>%
-    unique()
-  result <- result %>% mutate(
-    in_both_registers   = title_key %in% both_tk,
-    is_ctis_transition  = register == "CTIS" & !is.na(title_key) & title_key %in% trans_tks
-  )
-  message(sprintf("Cross-register overlap (by title, excl. transitioned): %d trial(s)", length(both_tk)))
-  message(sprintf("CTIS records flagged as transitioned from EUCTR: %d", sum(result$is_ctis_transition, na.rm=TRUE)))
 
   # ── For CTIS: always use the latest amendment version ─────────────────────
   # CTIS IDs end in -VV (amendment version, e.g. -01, -02).
@@ -798,42 +782,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 6. OVERLAP — defensive, handles 0 rows
-# ══════════════════════════════════════════════════════════════════════════════
-
-compute_overlap <- function(df) {
-  # n_euctr / n_ctis are the register counts in the already-deduped data.
-  n_e <- sum(df$register == "EUCTR", na.rm = TRUE)
-  n_c <- sum(df$register == "CTIS",  na.rm = TRUE)
-
-  # in_both_registers is set by title-matching BEFORE dedup.
-  # When ctrdata does NOT merge EUCTR<->CTIS duplicates (as is typical),
-  # both a EUCTR record AND a CTIS record for the same trial survive in the
-  # deduped set, each with in_both_registers=TRUE.  Counting all flagged rows
-  # would double-count every shared trial.  We anchor the count on EUCTR to
-  # count each shared trial exactly once.
-  has_flag <- "in_both_registers" %in% names(df)
-  if (has_flag) {
-    flag   <- !is.na(df$in_both_registers) & df$in_both_registers
-    n_ec   <- sum(df$register == "EUCTR" & flag, na.rm = TRUE)
-  } else {
-    n_ec   <- 0L
-  }
-  only_e <- n_e - n_ec
-  only_c <- n_c - n_ec
-
-  list(
-    n_euctr      = n_e,
-    n_ctis       = n_c,
-    n_euctr_ctis = n_ec,
-    only_euctr   = max(0L, only_e),
-    only_ctis    = max(0L, only_c),
-    n_total      = max(0L, only_e) + max(0L, only_c) + n_ec,
-    n_overlap    = n_ec)
-}
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 7. CACHING
+# 6. CACHING
 # ══════════════════════════════════════════════════════════════════════════════
 
 cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
@@ -938,14 +887,6 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
                                       width=5,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
                                 fluidRow(
-                                  box(title="EUCTR \u2192 CTIS Transitions by Year",status="primary",solidHeader=TRUE,
-                                      width=9,height=350,withSpinner(plotlyOutput("plot_transition",height="280px"),type=6),
-                                      p(em("CTIS records matched to a EUCTR 'Trial now transitioned' stub by normalised title."),
-                                        style="font-size:10px;margin:2px 0 0;opacity:0.6;")),
-                                  box(title="Transition Summary",status="info",solidHeader=TRUE,
-                                      width=3,height=350,div(style="overflow-y:auto;max-height:300px;",
-                                                             uiOutput("transition_summary")))),
-                                fluidRow(
                                   box(title="Submissions per Year",status="primary",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
                                   box(title="Register Comparison",status="info",solidHeader=TRUE,
@@ -1027,8 +968,7 @@ ui <- dashboardPage(skin = "blue",
                                       h4(icon("sync")," Data Updates"),
                                       p("Trial data is retrieved from the registries using the ",
                                         tags$a("ctrdata", href="https://cran.r-project.org/package=ctrdata", target="_blank"),
-                                        " R package and stored in a local SQLite database. The database is refreshed automatically every night.
-                                        EUCTR \u2192 CTIS transitions are detected by normalised title matching (first 80 characters)."),
+                                        " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
                                         tags$li(tags$b("v0.2.0 (2026-03-29):"),
@@ -1087,8 +1027,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("Phase Analysis:"), " Trial phase breakdown by register, status, and sponsor type (Academic vs Industry).")
                                       ),
                                       h4(icon("info-circle")," Notes"),
-                                      p("Transition detection matches CTIS records to EUCTR 'Trial now transitioned' stubs by normalised title (first 80 characters) — conservative estimate only.
-                                        Trials covering multiple countries or conditions may appear in multiple filter categories.
+                                      p("Trials covering multiple countries or conditions may appear in multiple filter categories.
                                         Data reflects the state of the registries at the time of the last database update.")
                                   )
                                 ),
@@ -1243,10 +1182,6 @@ server <- function(input, output, session) {
     df
   })
   
-  overlap <- reactive(tryCatch(compute_overlap(filt()),
-                               error = function(e) list(n_euctr=0,n_ctis=0,n_euctr_ctis=0,
-                                                        only_euctr=0,only_ctis=0,n_total=0,n_overlap=0)))
-  
   output$data_info <- renderText({
     if(!file.exists(CACHE_PATH)) return("Database not yet loaded.")
     mtime <- file.mtime(CACHE_PATH)
@@ -1300,49 +1235,6 @@ server <- function(input, output, session) {
             marker=list(colors=pal,line=list(color=t$chart_bg,width=2)),
             textfont=list(color=t$chart_bg),textinfo="label+percent",hoverinfo="label+value+percent")%>%
       plt_layout(showlegend=TRUE,legend=list(orientation="v"))
-  })
-  
-  output$plot_transition <- renderPlotly({
-    req(rv$data); t <- tc()
-    df <- filt() %>%
-      filter(!is.na(year)) %>%
-      mutate(category = case_when(
-        register == "CTIS" & !is.na(is_ctis_transition) & is_ctis_transition ~ "CTIS (transitioned)",
-        register == "CTIS"   ~ "CTIS (new)",
-        register == "EUCTR"  ~ "EUCTR"
-      )) %>%
-      count(year, category)
-    validate(need(nrow(df) > 0, "No data."))
-    cat_cols <- c("EUCTR" = t$r_euctr, "CTIS (new)" = t$r_ctis, "CTIS (transitioned)" = t$orange)
-    cat_order <- c("EUCTR", "CTIS (new)", "CTIS (transitioned)")
-    df$category <- factor(df$category, levels = cat_order)
-    plot_ly(df, x = ~year, y = ~n, color = ~category,
-            colors = cat_cols[levels(df$category)], type = "bar") %>%
-      plt_layout(barmode = "stack",
-                 xaxis = list(title = "Year"),
-                 yaxis = list(title = "Trials submitted"),
-                 legend = list(orientation = "h", y = -0.2))
-  })
-
-  output$transition_summary <- renderUI({
-    req(rv$data); df <- filt(); t <- tc()
-    mk <- function(label, n, col) {
-      div(style = sprintf("padding:5px 8px;margin:2px 0;border-left:4px solid %s;background:%s;border-radius:3px;", col, t$bg2),
-          span(tags$b(format(n, big.mark = ",")), style = sprintf("font-size:14px;color:%s;", t$fg2)),
-          span(label, style = sprintf("margin-left:6px;color:%s;font-size:12px;", t$fg0)))
-    }
-    pct <- function(n, total) if (total == 0) "0%" else paste0(round(100 * n / total, 1), "%")
-    n_euctr  <- sum(df$register == "EUCTR", na.rm = TRUE)
-    n_ctis   <- sum(df$register == "CTIS",  na.rm = TRUE)
-    n_trans  <- sum(df$register == "CTIS" & !is.na(df$is_ctis_transition) & df$is_ctis_transition, na.rm = TRUE)
-    n_new    <- n_ctis - n_trans
-    n_total  <- n_euctr + n_ctis
-    tagList(
-      mk(sprintf("EUCTR (%s)", pct(n_euctr, n_total)), n_euctr, t$r_euctr),
-      mk(sprintf("CTIS new (%s)", pct(n_new, n_total)), n_new, t$r_ctis),
-      hr(style = sprintf("border-color:%s;margin:6px 0;", t$bg3)),
-      mk(sprintf("Transitioned (%s of CTIS)", pct(n_trans, n_ctis)), n_trans, t$orange)
-    )
   })
   
   output$plot_yearly <- renderPlotly({
