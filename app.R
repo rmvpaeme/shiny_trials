@@ -521,15 +521,31 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_squish(tt)
       substr(tt, 1, 80)
     })
+  # Identify EUCTR "transitioned" records by status — these are EUCTR stubs
+  # pointing to a CTIS record. Exclude their title_keys from overlap so the
+  # diagram only shows trials genuinely present in both registers simultaneously.
+  raw_status_cols_pre <- intersect(c("trial_status_raw", "p_end_of_trial_status"), names(result))
+  trans_pat_pre <- regex("transitioned", ignore_case = TRUE)
+  if (length(raw_status_cols_pre) > 0) {
+    trans_tks <- result %>%
+      filter(register == "EUCTR", !is.na(title_key), nchar(title_key) >= 20) %>%
+      filter(Reduce(`|`, lapply(raw_status_cols_pre, function(col)
+        str_detect(coalesce(as.character(.data[[col]]), ""), trans_pat_pre)))) %>%
+      pull(title_key) %>%
+      unique()
+  } else {
+    trans_tks <- character(0)
+  }
   both_tk <- result %>%
-    filter(!is.na(title_key) & nchar(title_key) >= 20) %>%
+    filter(!is.na(title_key) & nchar(title_key) >= 20,
+           !title_key %in% trans_tks) %>%
     group_by(title_key) %>%
     filter(n_distinct(register) > 1) %>%
     ungroup() %>%
     pull(title_key) %>%
     unique()
   result <- result %>% mutate(in_both_registers = title_key %in% both_tk)
-  message(sprintf("Cross-register overlap (by title): %d trial(s)", length(both_tk)))
+  message(sprintf("Cross-register overlap (by title, excl. transitioned): %d trial(s)", length(both_tk)))
 
   # ── For CTIS: always use the latest amendment version ─────────────────────
   # CTIS IDs end in -VV (amendment version, e.g. -01, -02).
