@@ -1361,17 +1361,30 @@ server <- function(input, output, session) {
         text_search = if (nzchar(input$text_search)) input$text_search else "(none)"
       )
 
-      # Ensure TinyTeX bin is on PATH
-      if (requireNamespace("tinytex", quietly = TRUE)) {
-        tl_root <- tinytex::tinytex_root()
-        if (nzchar(tl_root)) {
-          bins <- list.files(file.path(tl_root, "bin"), full.names = TRUE)
-          if (length(bins) > 0) {
+      # Ensure pdflatex is on PATH (handles TinyTeX on macOS where it isn't
+      # in the system PATH, but is a no-op on shinyapps.io / Docker where
+      # system texlive puts pdflatex in /usr/bin directly)
+      if (!nzchar(Sys.which("pdflatex"))) {
+        tl_candidates <- c(
+          path.expand("~/Library/TinyTeX/bin"),
+          path.expand("~/.TinyTeX/bin"),
+          "/opt/TinyTeX/bin"
+        )
+        for (d in tl_candidates) {
+          subs <- list.files(d, full.names = TRUE)
+          if (length(subs) > 0 && file.exists(file.path(subs[[1]], "pdflatex"))) {
             orig_path <- Sys.getenv("PATH")
-            Sys.setenv(PATH = paste(c(bins[[1]], orig_path), collapse = ":"))
+            Sys.setenv(PATH = paste(c(subs[[1]], orig_path), collapse = ":"))
             on.exit(Sys.setenv(PATH = orig_path), add = TRUE)
+            break
           }
         }
+      }
+
+      if (!nzchar(Sys.which("pdflatex"))) {
+        showNotification("pdflatex not found. Install TinyTeX or a system LaTeX distribution.",
+                         type = "error", duration = 10)
+        return()
       }
 
       tryCatch(
