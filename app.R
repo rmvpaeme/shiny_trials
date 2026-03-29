@@ -51,6 +51,21 @@ ctis_soc_lookup <- c(
   "100000004873" = "Psychiatric disorders"
 )
 
+clean_meddra_term <- function(x) {
+  if (is.na(x) || x == "") return(NA_character_)
+  parts <- trimws(strsplit(x, " / ")[[1]])
+  # Spelling variants: normalise to MedDRA preferred British spelling
+  parts <- gsub("\\bHemophilia\\b", "Haemophilia", parts)
+  parts <- gsub("\\bhemophilia\\b", "haemophilia", parts)
+  # Roman numeral type notation → Arabic (order: IV before III before II before I)
+  parts <- gsub("\\bType IV\\b",  "Type 4", parts, ignore.case = TRUE)
+  parts <- gsub("\\bType III\\b", "Type 3", parts, ignore.case = TRUE)
+  parts <- gsub("\\bType II\\b",  "Type 2", parts, ignore.case = TRUE)
+  parts <- gsub("\\bType I\\b",   "Type 1", parts, ignore.case = TRUE)
+  parts <- unique(trimws(parts[parts != ""]))
+  if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
+}
+
 clean_organ_class <- function(x) {
   if (is.na(x) || x == "") return(NA_character_)
   parts <- trimws(strsplit(x, " / ")[[1]])
@@ -607,7 +622,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     left_join(slu, by="trial_base_id") %>%
     mutate(trial_status_raw = if_else(!is.na(all_statuses_raw), all_statuses_raw, trial_status_raw)) %>%
     left_join(mlu, by="trial_base_id") %>%
-    mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term)) %>%
+    mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term),
+           MEDDRA_term = vapply(MEDDRA_term, clean_meddra_term, character(1))) %>%
     left_join(olu, by="trial_base_id") %>%
     mutate(MEDDRA_organ_class = if_else(!is.na(all_organ), all_organ, MEDDRA_organ_class)) %>%
     select(-all_countries, -all_statuses_raw, -all_meddra, -all_organ) %>%
