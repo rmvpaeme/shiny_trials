@@ -7,8 +7,8 @@
 #
 # Usage:
 #   docker build -t shiny_trials --platform linux/x86_64 .
-#   docker tag  shiny_trials rmvpaeme/shiny_trials:2.0
-#  docker push rmvpaeme/shiny_trials:2.0
+#   docker tag  shiny_trials rmvpaeme/shiny_trials:0.2.0
+#  docker push rmvpaeme/shiny_trials:0.2.0
 #   docker run -p 3838:3838 -v $(pwd)/data:/app/data pediatric-trials
 # ============================================================================
 

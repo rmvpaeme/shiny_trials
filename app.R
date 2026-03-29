@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v2.0 — filter save/restore + PDF report export)
+# app.R  (v0.2.0 — filter save/restore + PDF report export)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1010,7 +1010,7 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
-                                        tags$li(tags$b("v2.0 (2026-03-29):"),
+                                        tags$li(tags$b("v0.2.0 (2026-03-29):"),
                                           tags$ul(
                                             tags$li("Filters: save current filter settings to a JSON file and reload them in a later session"),
                                             tags$li("Report: download a full PDF summary report with all charts and descriptive statistics (n, %, mean, median, SD, IQR) for the active filter selection")
@@ -1046,7 +1046,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v2.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
