@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.2.0 — filter save/restore + PDF report export)
+# app.R  (v0.2.1 — MedDRA condition name normalisation)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1007,6 +1007,12 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.2.1 (2026-03-29):"),
+                                          tags$ul(
+                                            tags$li("Data: normalise MedDRA condition name spelling variants between EUCTR (American) and CTIS (British MedDRA preferred) — leukemia/leukaemia, tumor/tumour, diarrhea/diarrhoea, esophag/oesophag, tyrosinemia/tyrosinaemia, localized/localised"),
+                                            tags$li("Data: convert Roman numeral type notation (Type I/II/III/IV) to Arabic numerals (Type 1/2/3/4) so cross-register duplicates collapse into single entries")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.2.0 (2026-03-29):"),
                                           tags$ul(
                                             tags$li("Filters: save current filter settings to a JSON file and reload them in a later session"),
@@ -1043,7 +1049,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.2.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),

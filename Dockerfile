@@ -7,8 +7,8 @@
 #
 # Usage:
 #   docker build -t shiny_trials --platform linux/x86_64 .
-#   docker tag  shiny_trials rmvpaeme/shiny_trials:0.2.0
-#  docker push rmvpaeme/shiny_trials:0.2.0
+#   docker tag  shiny_trials rmvpaeme/shiny_trials:0.2.1
+#   docker push rmvpaeme/shiny_trials:0.2.1
 #   docker run -p 3838:3838 -v $(pwd)/data:/app/data pediatric-trials
 # ============================================================================
 
@@ -79,7 +79,7 @@ RUN R -e 'install.packages(c("writexl", "rmarkdown", "scales"), repos = "https:/
 
 # ctrdata (install last — most likely to need updates)
 RUN R -e 'install.packages(c("nodbi", "jqr"), repos = "https://cloud.r-project.org/")'
-RUN R -e 'install.packages("ctrdata", "jsonlite", repos = "https://cloud.r-project.org/")'
+RUN R -e 'install.packages("ctrdata", repos = "https://cloud.r-project.org/")'
 
 # ── Application stage ───────────────────────────────────────────────────────
 FROM builder AS app

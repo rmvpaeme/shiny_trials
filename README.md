@@ -1,6 +1,6 @@
 # EU Paediatric Clinical Trials Dashboard
 
-**Version:** `v0.2.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.2.1` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -74,7 +74,7 @@ mkdir -p data
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
   --name shiny_trials \
-  rmvpaeme/shiny_trials:0.2.0
+  rmvpaeme/shiny_trials:0.2.1
 ```
 
 Open [http://localhost:3838](http://localhost:3838).
@@ -89,14 +89,14 @@ mkdir -p data
 # Fetch data (30–60 min on first run)
 docker run --rm \
   -v $(pwd)/data:/app/data \
-  rmvpaeme/shiny_trials:0.2.0 \
+  rmvpaeme/shiny_trials:0.2.1 \
   Rscript /app/update_data.R
 
 # Launch the dashboard
 docker run -d -p 3838:3838 \
   -v $(pwd)/data:/app/data \
   --name shiny_trials \
-  rmvpaeme/shiny_trials:0.2.0
+  rmvpaeme/shiny_trials:0.2.1
 ```
 
 ### Docker Compose
@@ -299,6 +299,11 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.2.1 (2026-03-29)
+
+- **Data:** normalise MedDRA condition name spelling variants between EUCTR (American) and CTIS (British MedDRA preferred) — leukemia/leukaemia, tumor/tumour, diarrhea/diarrhoea, esophag/oesophag, tyrosinemia/tyrosinaemia, localized/localised
+- **Data:** convert Roman numeral type notation (Type I/II/III/IV) to Arabic numerals (Type 1/2/3/4) so cross-register duplicates collapse into single entries
 
 ### v0.2.0 (2026-03-29)
 
