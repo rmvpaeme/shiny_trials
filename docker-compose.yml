@@ -8,7 +8,7 @@ version: "3.9"
 services:
   app:
     build: .
-    image: rmvpaeme/shiny_trials:0.1.4
+    image: rmvpaeme/shiny_trials:0.1.5
     container_name: shiny_trials
     ports:
       - "3838:3838"

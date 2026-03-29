@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1.4 — trial phase filter + chart)
+# app.R  (v0.1.5 — split Analytics into Analytics + Phase Analysis tabs)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -999,6 +999,12 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.1.5 (2026-03-29):"),
+                                          tags$ul(
+                                            tags$li("Navigation: split Analytics page into Analytics and Phase Analysis tabs"),
+                                            tags$li("Phase Analysis: trial phase by register, by status, and by sponsor type (Academic vs Industry)")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.1.4 (2026-03-28):"),
                                           tags$ul(
                                             tags$li("Sidebar: added Trial Phase filter (Phase I–IV)"),
@@ -1023,7 +1029,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.1.4 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.1.5 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
