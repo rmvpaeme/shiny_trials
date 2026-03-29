@@ -1000,26 +1000,26 @@ ui <- dashboardPage(skin = "blue",
                                         style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px;",
                                         tags$thead(
                                           tags$tr(
-                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","Dashboard category"),
-                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","EUCTR status"),
-                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","CTIS status")
+                                            tags$th(style="background:#5E81AC;color:#FFFFFF;padding:8px 12px;text-align:left;border:none;","Dashboard category"),
+                                            tags$th(style="background:#5E81AC;color:#FFFFFF;padding:8px 12px;text-align:left;border:none;","EUCTR status"),
+                                            tags$th(style="background:#5E81AC;color:#FFFFFF;padding:8px 12px;text-align:left;border:none;","CTIS status")
                                           )
                                         ),
                                         tags$tbody(
-                                          tags$tr(style="background:#ECEFF4;",
-                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#A3BE8C;","Ongoing"),
-                                            tags$td(style="padding:6px 10px;","Ongoing, Restarted, Temporarily halted"),
-                                            tags$td(style="padding:6px 10px;","Authorised, In Progress, Temporarily halted")
+                                          tags$tr(style="background:#E8F5E9;",
+                                            tags$td(style="padding:8px 12px;font-weight:bold;color:#2E7D32;border-bottom:1px solid #C8E6C9;","Ongoing"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #C8E6C9;","Ongoing, Restarted, Temporarily halted"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #C8E6C9;","Authorised, In Progress, Temporarily halted")
                                           ),
-                                          tags$tr(
-                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#5E81AC;","Completed"),
-                                            tags$td(style="padding:6px 10px;","Completed, Prematurely Ended"),
-                                            tags$td(style="padding:6px 10px;","Completed")
+                                          tags$tr(style="background:#E3F2FD;",
+                                            tags$td(style="padding:8px 12px;font-weight:bold;color:#1565C0;border-bottom:1px solid #BBDEFB;","Completed"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed, Prematurely Ended"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed")
                                           ),
-                                          tags$tr(style="background:#ECEFF4;",
-                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#D08770;","Other"),
-                                            tags$td(style="padding:6px 10px;","Withdrawn, Not Authorised"),
-                                            tags$td(style="padding:6px 10px;","Terminated, Withdrawn, Not Authorised")
+                                          tags$tr(style="background:#FFF3E0;",
+                                            tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;","Other"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;","Withdrawn, Not Authorised"),
+                                            tags$td(style="padding:8px 12px;color:#1C1C1C;","Terminated, Withdrawn, Not Authorised")
                                           )
                                         )
                                       ),
