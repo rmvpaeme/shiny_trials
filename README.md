@@ -120,7 +120,6 @@ The landing tab. Provides a high-level summary of the filtered dataset:
 - **5 most recently submitted trials** — sortable table; CT numbers are clickable links to the originating registry
 - **Cumulative ECDF** — trial start dates by status (Ongoing / Completed / Other)
 - **Sponsor type by register** — grouped bar chart comparing Academic vs Industry across EUCTR, CTIS, and combined
-- **Registry overlap** — proportional Euler/Venn diagram showing trials unique to each register and those present in both
 - **Submissions per year** — stacked bar chart by register
 - **Status by register** — comparative bar chart; when "Other" contains fewer than six distinct raw values, they are expanded individually
 
@@ -237,7 +236,7 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
 
 **Trial phase** — EUCTR phase is stored as four boolean fields (Phase I–IV). CTIS stores descriptive text (`"Therapeutic exploratory (Phase II)"`). Both are mapped to a common set of labels via regex matching.
 
-**Overlap detection** — trials are matched across registers by normalised title (lowercase, punctuation removed, first 80 characters). This is a conservative estimate; trials with differently phrased titles across registries may not be linked.
+**EUCTR → CTIS transition** — EUCTR records with status "Trial now transitioned to CTIS" are matched to their CTIS counterpart by normalised title (first 80 characters). The CTIS record is preferred in the deduplicated dataset.
 
 **Caching** — processed data is saved to `pediatric_trials_cache.rds` in the app root. The cache is automatically invalidated when the SQLite database is newer. Delete this file manually to force a rebuild without re-downloading data.
 
