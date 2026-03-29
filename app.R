@@ -993,6 +993,58 @@ ui <- dashboardPage(skin = "blue",
                                                 "). The new EU registry under Regulation (EU) No 536/2014, mandatory for new
                                                 applications from January 2023 onwards.")
                                       ),
+                                      h4(icon("info-circle")," Trial Status Definitions"),
+                                      p("The dashboard groups all trials into three categories. The table below shows how
+                                        the registry-specific statuses map to each category."),
+                                      tags$table(
+                                        style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px;",
+                                        tags$thead(
+                                          tags$tr(
+                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","Dashboard category"),
+                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","EUCTR status"),
+                                            tags$th(style="background:#5E81AC;color:white;padding:6px 10px;text-align:left;","CTIS status")
+                                          )
+                                        ),
+                                        tags$tbody(
+                                          tags$tr(style="background:#ECEFF4;",
+                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#A3BE8C;","Ongoing"),
+                                            tags$td(style="padding:6px 10px;","Ongoing, Restarted, Temporarily halted"),
+                                            tags$td(style="padding:6px 10px;","Authorised, In Progress, Temporarily halted")
+                                          ),
+                                          tags$tr(
+                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#5E81AC;","Completed"),
+                                            tags$td(style="padding:6px 10px;","Completed, Prematurely Ended"),
+                                            tags$td(style="padding:6px 10px;","Completed")
+                                          ),
+                                          tags$tr(style="background:#ECEFF4;",
+                                            tags$td(style="padding:6px 10px;font-weight:bold;color:#D08770;","Other"),
+                                            tags$td(style="padding:6px 10px;","Withdrawn, Not Authorised"),
+                                            tags$td(style="padding:6px 10px;","Terminated, Withdrawn, Not Authorised")
+                                          )
+                                        )
+                                      ),
+                                      tags$dl(style="font-size:13px;",
+                                        tags$dt(tags$b("Authorised (CTIS)")),
+                                        tags$dd("The trial application has been approved by the relevant Member State(s) and the Ethics Committee, but recruitment may not have started yet."),
+                                        tags$dt(tags$b("In Progress (CTIS)")),
+                                        tags$dd("The trial is actively running and recruiting or treating participants."),
+                                        tags$dt(tags$b("Ongoing (EUCTR)")),
+                                        tags$dd("The trial is authorised and active in at least one EU Member State."),
+                                        tags$dt(tags$b("Temporarily halted")),
+                                        tags$dd("Recruitment or treatment has been paused — e.g. due to a safety signal or operational issue — but the trial is expected to resume. Counted as Ongoing in this dashboard."),
+                                        tags$dt(tags$b("Restarted (EUCTR)")),
+                                        tags$dd("A previously halted trial that has resumed. Counted as Ongoing."),
+                                        tags$dt(tags$b("Completed")),
+                                        tags$dd("All participants have finished the protocol and the trial has formally closed in the registry."),
+                                        tags$dt(tags$b("Prematurely Ended (EUCTR)")),
+                                        tags$dd("The trial was stopped before completion — e.g. due to insufficient recruitment, sponsor decision, or a safety finding. Mapped to Completed in this dashboard as the trial activity has ended."),
+                                        tags$dt(tags$b("Terminated (CTIS)")),
+                                        tags$dd("The trial was permanently stopped before completion. Unlike 'Temporarily halted', termination is not expected to be reversed. Counted as Other."),
+                                        tags$dt(tags$b("Withdrawn")),
+                                        tags$dd("The sponsor withdrew the application before the trial started (or before completion in CTIS). No participants were enrolled under this authorisation. Counted as Other."),
+                                        tags$dt(tags$b("Not Authorised")),
+                                        tags$dd("The application was refused by the competent authority or Ethics Committee. Counted as Other.")
+                                      ),
                                       h4(icon("filter")," Filters & Features"),
                                       tags$ul(
                                         tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, or other trial status."),
