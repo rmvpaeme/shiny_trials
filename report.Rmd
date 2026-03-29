@@ -1,0 +1,613 @@
+---
+title: "EU Paediatric Clinical Trials"
+subtitle: "Summary Report"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  pdf_document:
+    latex_engine: pdflatex
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    fig_width: 6.5
+    fig_height: 3.4
+    keep_tex: false
+classoption: a4paper
+header-includes:
+  - \usepackage{helvet}
+  - \renewcommand{\familydefault}{\sfdefault}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{float}
+  - \usepackage{xcolor}
+  - \usepackage{geometry}
+  - \geometry{top=22mm,bottom=22mm,left=22mm,right=22mm}
+  - \definecolor{nordblue}{HTML}{5E81AC}
+  - \definecolor{nordgray}{HTML}{4C566A}
+  - \setlength{\parskip}{5pt}
+  - \setlength{\parindent}{0pt}
+params:
+  data_path: ""
+  filters: !r list()
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(stringr)
+  library(lubridate)
+  library(scales)
+  library(knitr)
+})
+
+# ── Data ───────────────────────────────────────────────────────────────────────
+df <- readRDS(params$data_path)
+N  <- nrow(df)
+f  <- params$filters
+
+if (N == 0) {
+  cat("\\textbf{No trials match the current filter criteria.}")
+  knitr::knit_exit()
+}
+
+# ── Colour palette ─────────────────────────────────────────────────────────────
+BLUE   <- "#5E81AC"; FROST  <- "#81A1C1"; TEAL   <- "#88C0D0"
+GREEN  <- "#A3BE8C"; YELLOW <- "#EBCB8B"; ORANGE <- "#D08770"
+RED    <- "#BF616A"; PURPLE <- "#B48EAD"; GRAY   <- "#4C566A"
+LIGHT  <- "#ECEFF4"; DARK   <- "#2E3440"
+NORD8  <- c(BLUE, GREEN, YELLOW, RED, PURPLE, ORANGE, TEAL, FROST)
+
+STATUS_COLS <- c(Ongoing = GREEN, Completed = BLUE, Other = ORANGE)
+REG_COLS    <- c(EUCTR = BLUE, CTIS = TEAL)
+PIP_COLS    <- c(Yes = GREEN, No = RED, Unknown = ORANGE)
+
+# ── ggplot2 theme ──────────────────────────────────────────────────────────────
+theme_rep <- function(base = 9) {
+  theme_minimal(base_size = base, base_family = "Helvetica") %+replace% theme(
+    plot.title       = element_text(size = base + 1, face = "bold",  color = DARK,  hjust = 0),
+    plot.subtitle    = element_text(size = base - 0.5, color = GRAY, hjust = 0),
+    axis.title       = element_text(size = base - 0.5, color = GRAY),
+    axis.text        = element_text(size = base - 1,   color = GRAY),
+    axis.text.y      = element_text(margin = margin(r = 2)),
+    panel.grid.major = element_line(color = LIGHT, linewidth = 0.45),
+    panel.grid.minor = element_blank(),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    legend.key.size  = unit(0.32, "cm"),
+    legend.text      = element_text(size = base - 1.5, color = GRAY),
+    plot.margin      = margin(4, 6, 4, 4),
+    plot.background  = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    strip.text       = element_text(size = base - 0.5, face = "bold", color = DARK)
+  )
+}
+
+# ── kable helper ───────────────────────────────────────────────────────────────
+nk <- function(x, cap = NULL, cn = colnames(x), al = NULL, lw = FALSE) {
+  kable(x, booktabs = TRUE, linesep = "", caption = cap,
+        col.names = cn, align = al, longtable = lw, escape = TRUE)
+}
+
+fmt_pct  <- function(x) sprintf("%.1f%%", x)
+fmt_n    <- function(x) format(x, big.mark = ",")
+iqr_str  <- function(x) {
+  q <- quantile(x, c(0.25, 0.75), na.rm = TRUE)
+  sprintf("%.1f\u2013%.1f", q[1], q[2])
+}
+
+# ── Pre-compute tables ─────────────────────────────────────────────────────────
+status_tab <- df %>%
+  mutate(status = coalesce(status, "Unknown")) %>%
+  count(status, name = "n") %>%
+  mutate(pct = round(n / N * 100, 1)) %>%
+  arrange(desc(n))
+
+reg_tab <- df %>%
+  count(register, name = "n") %>%
+  mutate(pct = round(n / N * 100, 1)) %>%
+  arrange(desc(n))
+
+pip_tab <- df %>%
+  mutate(has_PIP = coalesce(has_PIP, "Unknown")) %>%
+  count(has_PIP, name = "n") %>%
+  mutate(pct = round(n / N * 100, 1)) %>%
+  arrange(match(has_PIP, c("Yes", "No", "Unknown")))
+
+sponsor_tab <- df %>%
+  filter(!is.na(sponsor_type)) %>%
+  count(sponsor_type, name = "n") %>%
+  mutate(pct = round(n / sum(n) * 100, 1)) %>%
+  arrange(desc(n))
+
+phase_tab <- df %>%
+  filter(!is.na(phase), phase != "") %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase != "") %>%
+  count(phase, name = "n") %>%
+  mutate(pct = round(n / sum(n) * 100, 1)) %>%
+  arrange(match(phase, c("I", "I-II", "II", "II-III", "III", "III-IV", "IV")))
+
+country_tab <- df %>%
+  filter(!is.na(Member_state)) %>%
+  separate_rows(Member_state, sep = " / ") %>%
+  mutate(Member_state = str_trim(Member_state)) %>%
+  filter(Member_state != "") %>%
+  count(Member_state, name = "n", sort = TRUE) %>%
+  mutate(pct = round(n / N * 100, 1))
+
+organ_tab <- df %>%
+  filter(!is.na(MEDDRA_organ_class)) %>%
+  separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+  mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
+  filter(MEDDRA_organ_class != "") %>%
+  count(MEDDRA_organ_class, name = "n", sort = TRUE) %>%
+  mutate(pct = round(n / N * 100, 1))
+
+cond_tab <- df %>%
+  filter(!is.na(MEDDRA_term)) %>%
+  separate_rows(MEDDRA_term, sep = " / ") %>%
+  mutate(MEDDRA_term = str_trim(MEDDRA_term)) %>%
+  filter(MEDDRA_term != "") %>%
+  count(MEDDRA_term, name = "n", sort = TRUE) %>%
+  mutate(pct = round(n / N * 100, 1))
+
+year_reg <- df %>%
+  filter(!is.na(submission_date_parsed)) %>%
+  mutate(year = year(submission_date_parsed)) %>%
+  count(year, register, name = "n") %>%
+  arrange(year)
+
+year_total <- year_reg %>%
+  group_by(year) %>% summarise(n = sum(n), .groups = "drop") %>%
+  arrange(year) %>% mutate(cumulative = cumsum(n))
+
+# Continuous per-trial counts
+countries_per_trial <- df %>%
+  filter(!is.na(Member_state)) %>%
+  rowwise() %>%
+  mutate(nc = length(str_trim(str_split(Member_state, " / ")[[1]]))) %>%
+  pull(nc)
+
+conds_per_trial <- df %>%
+  filter(!is.na(MEDDRA_term)) %>%
+  rowwise() %>%
+  mutate(nc = length(str_trim(str_split(MEDDRA_term, " / ")[[1]]))) %>%
+  pull(nc)
+
+# Sponsor × register cross-tab
+sponsor_reg <- df %>%
+  filter(!is.na(sponsor_type)) %>%
+  count(sponsor_type, register) %>%
+  pivot_wider(names_from = register, values_from = n, values_fill = 0) %>%
+  mutate(Total = rowSums(across(where(is.numeric)))) %>%
+  arrange(desc(Total))
+
+# Phase × register
+phase_reg <- df %>%
+  filter(!is.na(phase), phase != "") %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase != "") %>%
+  count(phase, register) %>%
+  pivot_wider(names_from = register, values_from = n, values_fill = 0) %>%
+  mutate(Total = rowSums(across(where(is.numeric)))) %>%
+  arrange(match(phase, c("I","I-II","II","II-III","III","III-IV","IV")))
+
+# Overlap
+has_overlap_col <- "in_both_registers" %in% names(df)
+if (has_overlap_col) {
+  n_both  <- sum(df$in_both_registers == TRUE,  na.rm = TRUE)
+  n_euctr_only <- df %>% filter(register == "EUCTR", !in_both_registers) %>% nrow()
+  n_ctis_only  <- df %>% filter(register == "CTIS",  !in_both_registers) %>% nrow()
+  overlap_df <- tibble(
+    Category = c("EUCTR only", "CTIS only", "In both registers"),
+    n        = c(n_euctr_only, n_ctis_only, n_both),
+    pct      = round(c(n_euctr_only, n_ctis_only, n_both) / N * 100, 1)
+  )
+}
+```
+
+# Applied Filters {-}
+
+The following filters were active when this report was generated.
+
+```{r filter-table}
+fnames <- c("Trial Status", "Source Register", "Submission Date (from)",
+            "Submission Date (to)", "MedDRA Organ Class", "Condition / MedDRA Term",
+            "Country / Member State", "Trial Phase", "Part of PIP", "Free-text search")
+fvals <- c(
+  if (length(f$status) == 0)   "All" else paste(f$status, collapse = ", "),
+  if (length(f$register) == 0) "All" else paste(f$register, collapse = ", "),
+  if (length(f$date_range) >= 1) f$date_range[1] else "—",
+  if (length(f$date_range) >= 2) f$date_range[2] else "—",
+  if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All"
+    else paste(f$organ_class, collapse = "; "),
+  if (length(f$condition) == 0 || identical(f$condition, "All")) "All"
+    else paste(f$condition, collapse = "; "),
+  if (length(f$country) == 0 || identical(f$country, "All")) "All"
+    else paste(f$country, collapse = "; "),
+  if (length(f$phase) == 0 || identical(f$phase, "All")) "All"
+    else paste(f$phase, collapse = ", "),
+  if (is.null(f$pip) || f$pip == "All") "All" else f$pip,
+  if (is.null(f$text_search) || f$text_search == "(none)" || !nzchar(f$text_search)) "(none)"
+    else f$text_search
+)
+nk(data.frame(Filter = fnames, Value = fvals),
+   cn = c("Filter", "Value"), al = c("l","l"))
+```
+
+\newpage
+
+# Overview
+
+```{r overview-summary}
+date_range_str <- if (!all(is.na(df$submission_date_parsed))) {
+  paste(format(min(df$submission_date_parsed, na.rm=TRUE), "%d %b %Y"), "to",
+        format(max(df$submission_date_parsed, na.rm=TRUE), "%d %b %Y"))
+} else "n/a"
+
+n_countries_unique <- country_tab %>% nrow()
+n_organs_unique    <- organ_tab %>% nrow()
+n_conds_unique     <- cond_tab %>% nrow()
+
+overview_df <- tibble(
+  Metric = c("Total trials in selection", "Submission date range",
+             "Unique member states", "Unique MedDRA organ classes",
+             "Unique MedDRA conditions"),
+  Value = c(fmt_n(N), date_range_str,
+            as.character(n_countries_unique),
+            as.character(n_organs_unique),
+            fmt_n(n_conds_unique))
+)
+nk(overview_df, cap = paste("Key metrics for the", fmt_n(N), "selected trials."),
+   cn = c("Metric", "Value"), al = c("l","l"))
+```
+
+## Trial Status and Register Distribution
+
+```{r status-register, fig.show='hold', out.width='49%', fig.height=3.2, fig.cap="Left: trial status distribution. Right: source register distribution."}
+# Status chart
+p1 <- status_tab %>%
+  mutate(status = factor(status, levels = status),
+         label  = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")) %>%
+  ggplot(aes(x = reorder(status, n), y = n, fill = status)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = label), hjust = -0.1, size = 2.8, color = GRAY) +
+  scale_fill_manual(values = STATUS_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
+  coord_flip() +
+  labs(title = "Trial Status", x = NULL, y = "Number of trials") +
+  theme_rep()
+print(p1)
+
+# Register chart
+p2 <- reg_tab %>%
+  mutate(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")) %>%
+  ggplot(aes(x = reorder(register, n), y = n, fill = register)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = label), hjust = -0.1, size = 2.8, color = GRAY) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
+  coord_flip() +
+  labs(title = "Source Register", x = NULL, y = "Number of trials") +
+  theme_rep()
+print(p2)
+```
+
+```{r status-register-tables, fig.show='hold', out.width='49%'}
+st <- status_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(st, cn = c("Status", "n", "%"), al = "lrr")
+
+rt <- reg_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(rt, cn = c("Register", "n", "%"), al = "lrr")
+```
+
+## Per-trial Continuous Metrics
+
+```{r continuous-table}
+cont_df <- tibble(
+  Metric   = c("Member states per trial", "Conditions (MedDRA terms) per trial",
+               "Submissions per year"),
+  Mean_SD  = c(
+    sprintf("%.1f \u00b1 %.1f", mean(countries_per_trial), sd(countries_per_trial)),
+    sprintf("%.1f \u00b1 %.1f", mean(conds_per_trial),    sd(conds_per_trial)),
+    sprintf("%.1f \u00b1 %.1f", mean(year_total$n),       sd(year_total$n))
+  ),
+  Median   = c(
+    sprintf("%.1f", median(countries_per_trial)),
+    sprintf("%.1f", median(conds_per_trial)),
+    sprintf("%.1f", median(year_total$n))
+  ),
+  IQR      = c(
+    iqr_str(countries_per_trial),
+    iqr_str(conds_per_trial),
+    iqr_str(year_total$n)
+  ),
+  Min_Max  = c(
+    sprintf("%d\u2013%d", min(countries_per_trial), max(countries_per_trial)),
+    sprintf("%d\u2013%d", min(conds_per_trial),    max(conds_per_trial)),
+    sprintf("%d\u2013%d", min(year_total$n),        max(year_total$n))
+  )
+)
+nk(cont_df,
+   cap  = "Descriptive statistics for continuous per-trial and per-year metrics.",
+   cn   = c("Metric", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
+   al   = c("l","r","r","r","r"))
+```
+
+\newpage
+
+# Submission Timeline
+
+```{r timeline-bar, fig.height=3.4, fig.cap="Annual trial submissions by source register."}
+year_reg %>%
+  ggplot(aes(x = year, y = n, fill = register)) +
+  geom_col(width = 0.75) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  scale_x_continuous(breaks = pretty_breaks(8)) +
+  labs(title = "Submissions per Year", x = NULL, y = "Number of trials") +
+  theme_rep()
+```
+
+```{r timeline-cumul, fig.height=3.0, fig.cap="Cumulative trial submissions over time."}
+year_total %>%
+  ggplot(aes(x = year, y = cumulative)) +
+  geom_area(fill = BLUE, alpha = 0.18) +
+  geom_line(color = BLUE, linewidth = 0.9) +
+  geom_point(color = BLUE, size = 1.8) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  scale_x_continuous(breaks = pretty_breaks(8)) +
+  labs(title = "Cumulative Submissions", x = NULL, y = "Cumulative trials") +
+  theme_rep()
+```
+
+```{r timeline-table}
+ytbl <- year_total %>%
+  mutate(n = fmt_n(n), cumulative = fmt_n(cumulative)) %>%
+  rename(Year = year, `Submissions` = n, `Cumulative` = cumulative)
+nk(ytbl, cap = "Submissions and cumulative total by year.", al = c("l","r","r"))
+```
+
+\newpage
+
+# Geographic Distribution
+
+```{r countries-bar, fig.height=5.5, fig.cap="Top 20 EU member states by number of trials (trials may span multiple countries)."}
+country_tab %>%
+  head(20) %>%
+  mutate(Member_state = factor(Member_state, levels = rev(Member_state))) %>%
+  ggplot(aes(x = n, y = Member_state)) +
+  geom_col(fill = FROST, width = 0.7) +
+  geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
+            hjust = -0.08, size = 2.6, color = GRAY) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2)), labels = comma) +
+  labs(title = "Trials by Member State (top 20)", x = "Number of trials", y = NULL) +
+  theme_rep()
+```
+
+```{r countries-table}
+ctbl <- country_tab %>%
+  head(20) %>%
+  mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(ctbl, cap = "Top 20 member states: number of trial participations and percentage of all selected trials.",
+   cn = c("Member State", "n", "% of trials"), al = c("l","r","r"))
+```
+
+\newpage
+
+# Therapeutic Areas
+
+## MedDRA Organ Classes
+
+```{r organ-bar, fig.height=4.8, fig.cap="Trials per MedDRA system organ class (top 15). Trials may belong to more than one class."}
+organ_tab %>%
+  head(15) %>%
+  mutate(
+    lbl  = str_wrap(MEDDRA_organ_class, 35),
+    lbl  = factor(lbl, levels = rev(lbl))
+  ) %>%
+  ggplot(aes(x = n, y = lbl)) +
+  geom_col(fill = PURPLE, width = 0.72) +
+  geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
+            hjust = -0.08, size = 2.5, color = GRAY) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25)), labels = comma) +
+  labs(title = "MedDRA Organ Classes (top 15)", x = "Number of trials", y = NULL) +
+  theme_rep()
+```
+
+```{r organ-table}
+otbl <- organ_tab %>%
+  mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(otbl,
+   cap = "All MedDRA system organ classes: number of trials and percentage.",
+   cn  = c("MedDRA Organ Class", "n", "% of trials"),
+   al  = c("l","r","r"), lw  = TRUE)
+```
+
+\newpage
+
+## Conditions (MedDRA Terms)
+
+```{r cond-bar, fig.height=5.2, fig.cap="Top 20 MedDRA conditions. Trials may be classified under more than one condition."}
+cond_tab %>%
+  head(20) %>%
+  mutate(
+    lbl = str_trunc(MEDDRA_term, 45),
+    lbl = factor(lbl, levels = rev(lbl))
+  ) %>%
+  ggplot(aes(x = n, y = lbl)) +
+  geom_col(fill = TEAL, width = 0.72) +
+  geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
+            hjust = -0.08, size = 2.5, color = GRAY) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25)), labels = comma) +
+  labs(title = "MedDRA Conditions (top 20)", x = "Number of trials", y = NULL) +
+  theme_rep()
+```
+
+```{r cond-table}
+ctbl2 <- cond_tab %>%
+  head(30) %>%
+  mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(ctbl2,
+   cap = "Top 30 MedDRA conditions: number of trials and percentage.",
+   cn  = c("MedDRA Condition", "n", "% of trials"),
+   al  = c("l","r","r"))
+```
+
+\newpage
+
+# Trial Phases
+
+```{r phase-bar, fig.height=3.0, fig.cap="Phase distribution across all selected trials (trials with multiple phases are counted once per phase)."}
+phase_tab %>%
+  mutate(phase = factor(phase, levels = phase)) %>%
+  ggplot(aes(x = phase, y = n, fill = phase)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt_n(n), "\n", fmt_pct(pct))),
+            vjust = -0.3, size = 2.6, color = GRAY) +
+  scale_fill_manual(values = setNames(NORD8, phase_tab$phase)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.18)), labels = comma) +
+  labs(title = "Trial Phase Distribution", x = "Phase", y = "Number of trials") +
+  theme_rep()
+```
+
+```{r phase-reg-bar, fig.height=3.2, fig.cap="Phase distribution split by source register."}
+df %>%
+  filter(!is.na(phase), phase != "") %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase != "") %>%
+  count(phase, register) %>%
+  ggplot(aes(x = phase, y = n, fill = register)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  labs(title = "Phase by Register", x = "Phase", y = "Number of trials") +
+  theme_rep()
+```
+
+```{r phase-tables, fig.show='hold', out.width='49%'}
+# Phase summary
+ptbl <- phase_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(ptbl, cn = c("Phase", "n", "%"), al = "lrr")
+
+# Phase × register cross-tab
+prtbl <- phase_reg %>%
+  mutate(across(where(is.numeric), fmt_n))
+nk(prtbl, cap = "Phase by register.", al = c("l", rep("r", ncol(prtbl)-1)))
+```
+
+\newpage
+
+# Sponsor Analysis
+
+```{r sponsor-bar, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: sponsor type distribution. Right: sponsor type by source register."}
+p_sp1 <- sponsor_tab %>%
+  ggplot(aes(x = reorder(sponsor_type, n), y = n, fill = sponsor_type)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
+            hjust = -0.1, size = 2.8, color = GRAY) +
+  scale_fill_manual(values = c(Academic = GREEN, Industry = BLUE)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.28)), labels = comma) +
+  coord_flip() +
+  labs(title = "Sponsor Type", x = NULL, y = "Trials") +
+  theme_rep()
+print(p_sp1)
+
+p_sp2 <- df %>%
+  filter(!is.na(sponsor_type)) %>%
+  count(sponsor_type, register) %>%
+  ggplot(aes(x = sponsor_type, y = n, fill = register)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  labs(title = "Sponsor Type by Register", x = NULL, y = "Trials") +
+  theme_rep()
+print(p_sp2)
+```
+
+```{r sponsor-table}
+sptbl <- sponsor_reg %>%
+  mutate(across(where(is.numeric), fmt_n))
+nk(sptbl, cap = "Sponsor type by source register.",
+   al = c("l", rep("r", ncol(sptbl)-1)))
+```
+
+\newpage
+
+# Paediatric Investigation Plans (PIP)
+
+```{r pip-bar, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: overall PIP status. Right: PIP status by register."}
+p_pip1 <- pip_tab %>%
+  mutate(has_PIP = factor(has_PIP, levels = c("Yes","No","Unknown"))) %>%
+  ggplot(aes(x = has_PIP, y = n, fill = has_PIP)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
+            vjust = -0.3, size = 2.6, color = GRAY) +
+  scale_fill_manual(values = PIP_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), labels = comma) +
+  labs(title = "PIP Status", x = NULL, y = "Trials") +
+  theme_rep()
+print(p_pip1)
+
+p_pip2 <- df %>%
+  mutate(has_PIP = coalesce(has_PIP, "Unknown")) %>%
+  count(has_PIP, register) %>%
+  ggplot(aes(x = has_PIP, y = n, fill = register)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  labs(title = "PIP Status by Register", x = NULL, y = "Trials") +
+  theme_rep()
+print(p_pip2)
+```
+
+```{r pip-table}
+ptbl2 <- pip_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
+```
+
+\newpage
+
+# Registry Overlap
+
+```{r overlap-section, eval=has_overlap_col}
+```
+
+```{r overlap-bar, eval=has_overlap_col, fig.height=2.8, fig.cap="Trials classified by registry membership. Shared trials appear in both EUCTR and CTIS (matched by normalised title)."}
+overlap_df %>%
+  mutate(Category = factor(Category, levels = rev(Category))) %>%
+  ggplot(aes(x = n, y = Category, fill = Category)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
+            hjust = -0.08, size = 2.8, color = GRAY) +
+  scale_fill_manual(values = c("EUCTR only" = BLUE, "CTIS only" = TEAL,
+                                "In both registers" = GREEN)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
+  labs(title = "Registry Overlap", x = "Number of trials", y = NULL) +
+  theme_rep()
+```
+
+```{r overlap-table, eval=has_overlap_col}
+oltbl <- overlap_df %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(oltbl, cn = c("Category", "n", "% of selection"), al = "lrr")
+```
+
+```{r overlap-na, eval=!has_overlap_col, results='asis'}
+cat("*Registry overlap data is not available for this selection.*")
+```
+
+---
+*Report generated by the EU Paediatric Clinical Trials dashboard on `r format(Sys.Date(), "%d %B %Y")`.*
+*Data sources: EUCTR (EU Clinical Trials Register) and CTIS (Clinical Trials Information System).*

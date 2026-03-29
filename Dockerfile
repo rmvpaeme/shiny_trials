@@ -7,8 +7,8 @@
 #
 # Usage:
 #   docker build -t shiny_trials --platform linux/x86_64 .
-#   docker tag  shiny_trials rmvpaeme/shiny_trials:0.1.5
-#  docker push rmvpaeme/shiny_trials:0.1.5
+#   docker tag  shiny_trials rmvpaeme/shiny_trials:2.0
+#  docker push rmvpaeme/shiny_trials:2.0
 #   docker run -p 3838:3838 -v $(pwd)/data:/app/data pediatric-trials
 # ============================================================================
 
@@ -39,6 +39,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium-bsu \
     # curl for healthcheck
     curl \
+    # PDF report generation
+    pandoc \
+    texlive-latex-base \
+    texlive-latex-recommended \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    lmodern \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -67,12 +74,12 @@ RUN R -e 'install.packages(c( \
     "ggplot2", "plotly", "DT", "eulerr", "leaflet" \
   ), repos = "https://cloud.r-project.org/")'
 
-# Export
-RUN R -e 'install.packages("writexl", repos = "https://cloud.r-project.org/")'
+# Export + PDF report
+RUN R -e 'install.packages(c("writexl", "rmarkdown", "scales"), repos = "https://cloud.r-project.org/")'
 
 # ctrdata (install last — most likely to need updates)
 RUN R -e 'install.packages(c("nodbi", "jqr"), repos = "https://cloud.r-project.org/")'
-RUN R -e 'install.packages("ctrdata", repos = "https://cloud.r-project.org/")'
+RUN R -e 'install.packages("ctrdata", "jsonlite", repos = "https://cloud.r-project.org/")'
 
 # ── Application stage ───────────────────────────────────────────────────────
 FROM builder AS app
@@ -81,9 +88,10 @@ RUN mkdir -p /app/data
 WORKDIR /app
 
 # Copy application files
-COPY app.R          /app/app.R
-COPY update_data.R  /app/update_data.R
-COPY nightly_deploy.sh  /app/nightly_deploy.sh 
+COPY app.R           /app/app.R
+COPY report.Rmd      /app/report.Rmd
+COPY update_data.R   /app/update_data.R
+COPY nightly_deploy.sh /app/nightly_deploy.sh
 COPY rebuild_cache.R /app/rebuild_cache.R
 
 # Environment variables for DB path (overridable at runtime)

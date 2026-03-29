@@ -1,6 +1,6 @@
 # EU Paediatric Clinical Trials Dashboard
 
-**Version:** `v0.1.5` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v2.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -300,6 +300,11 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v2.0 (2026-03-29)
+
+- **Filter save/restore:** download active filter settings as a JSON file and re-upload them in any future session to instantly restore the same selection
+- **PDF report:** new "Download PDF Report" button generates a full summary PDF for the current filter selection, including all dashboard charts and descriptive statistics (n, %, mean ± SD, median, IQR) for each section; uses R Markdown + pdflatex with Helvetica/Arial font
 
 ### v0.1.5 (2026-03-29)
 

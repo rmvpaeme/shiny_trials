@@ -1,2 +1,12 @@
 ./data/*
 data/*
+
+# R Markdown / LaTeX render artifacts
+*.tex
+*.knit.md
+*_files/
+*_cache/
+test_report.pdf
+*.log
+*.aux
+*.out

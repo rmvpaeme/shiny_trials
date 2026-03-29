@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.1.5 — split Analytics into Analytics + Phase Analysis tabs)
+# app.R  (v2.0 — filter save/restore + PDF report export)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -882,6 +882,17 @@ ui <- dashboardPage(skin = "blue",
                                      textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma…"),
                                      hr(),
                                      div(style="padding:0 15px;",
+                                         p("Save / restore filters:",style="font-size:12px;margin-bottom:4px;"),
+                                         downloadButton("dl_filters","Save filters",class="btn-sm btn-default",style="width:100%;margin-bottom:6px;"),
+                                         fileInput("ul_filters",NULL,accept=".json",placeholder="Load filters (.json)",
+                                                   buttonLabel="Load…",width="100%")),
+                                     hr(),
+                                     div(style="padding:0 15px 10px;",
+                                         downloadButton("dl_report","Download PDF Report",
+                                                        class="btn-sm btn-warning",
+                                                        style="width:100%;")),
+                                     hr(),
+                                     div(style="padding:0 15px;",
                                          textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")),
                                      hr(),
                                      div(style="padding:0 15px;",
@@ -999,6 +1010,12 @@ ui <- dashboardPage(skin = "blue",
                                         Overlap between registries is detected by normalised trial title matching (first 80 characters)."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v2.0 (2026-03-29):"),
+                                          tags$ul(
+                                            tags$li("Filters: save current filter settings to a JSON file and reload them in a later session"),
+                                            tags$li("Report: download a full PDF summary report with all charts and descriptive statistics (n, %, mean, median, SD, IQR) for the active filter selection")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.1.5 (2026-03-29):"),
                                           tags$ul(
                                             tags$li("Navigation: split Analytics page into Analytics and Phase Analysis tabs"),
@@ -1029,7 +1046,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.1.5 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v2.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1303,6 +1320,100 @@ server <- function(input, output, session) {
                                  content=function(f)readr::write_csv(filt(),f))
   output$dl_excel<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".xlsx"),
                                    content=function(f)writexl::write_xlsx(filt(),f))
+
+  output$dl_filters<-downloadHandler(
+    filename=function()paste0("filters_",Sys.Date(),".json"),
+    content=function(f){
+      settings<-list(
+        status_filter   = input$status_filter,
+        register_filter = input$register_filter,
+        date_range      = as.character(input$date_range),
+        organ_class_filter = input$organ_class_filter,
+        condition_filter   = input$condition_filter,
+        country_filter     = input$country_filter,
+        phase_filter       = input$phase_filter,
+        pip_filter         = input$pip_filter,
+        text_search        = input$text_search
+      )
+      jsonlite::write_json(settings,f,auto_unbox=TRUE)
+    })
+
+  output$dl_report <- downloadHandler(
+    filename = function() paste0("paediatric_trials_report_", Sys.Date(), ".pdf"),
+    content  = function(file) {
+      notif <- showNotification("Generating PDF report\u2026 this may take 20\u201330 seconds.",
+                                duration = NULL, type = "message")
+      on.exit(removeNotification(notif), add = TRUE)
+
+      tmp_data <- tempfile(fileext = ".rds")
+      saveRDS(filt(), tmp_data)
+      on.exit(unlink(tmp_data), add = TRUE)
+
+      filters <- list(
+        status      = input$status_filter,
+        register    = input$register_filter,
+        date_range  = as.character(input$date_range),
+        organ_class = if (length(input$organ_class_filter) > 0) input$organ_class_filter else "All",
+        condition   = if (length(input$condition_filter)   > 0) input$condition_filter   else "All",
+        country     = if (length(input$country_filter)     > 0) input$country_filter     else "All",
+        phase       = if (length(input$phase_filter)       > 0) input$phase_filter       else "All",
+        pip         = input$pip_filter,
+        text_search = if (nzchar(input$text_search)) input$text_search else "(none)"
+      )
+
+      # Ensure TinyTeX bin is on PATH
+      if (requireNamespace("tinytex", quietly = TRUE)) {
+        tl_root <- tinytex::tinytex_root()
+        if (nzchar(tl_root)) {
+          bins <- list.files(file.path(tl_root, "bin"), full.names = TRUE)
+          if (length(bins) > 0) {
+            orig_path <- Sys.getenv("PATH")
+            Sys.setenv(PATH = paste(c(bins[[1]], orig_path), collapse = ":"))
+            on.exit(Sys.setenv(PATH = orig_path), add = TRUE)
+          }
+        }
+      }
+
+      tryCatch(
+        rmarkdown::render(
+          input       = file.path(getwd(), "report.Rmd"),
+          output_file = file,
+          params      = list(data_path = tmp_data, filters = filters),
+          envir       = new.env(parent = globalenv()),
+          quiet       = TRUE
+        ),
+        error = function(e) {
+          showNotification(paste("PDF generation failed:", conditionMessage(e)),
+                           type = "error", duration = 15)
+        }
+      )
+    }
+  )
+
+  observeEvent(input$ul_filters,{
+    req(input$ul_filters)
+    tryCatch({
+      s<-jsonlite::read_json(input$ul_filters$datapath,simplifyVector=TRUE)
+      if(!is.null(s$status_filter))
+        updateCheckboxGroupInput(session,"status_filter",selected=s$status_filter)
+      if(!is.null(s$register_filter))
+        updateCheckboxGroupInput(session,"register_filter",selected=s$register_filter)
+      if(!is.null(s$date_range)&&length(s$date_range)==2)
+        updateDateRangeInput(session,"date_range",start=s$date_range[1],end=s$date_range[2])
+      if(!is.null(s$organ_class_filter))
+        updateSelectizeInput(session,"organ_class_filter",selected=s$organ_class_filter)
+      if(!is.null(s$condition_filter))
+        updateSelectizeInput(session,"condition_filter",selected=s$condition_filter)
+      if(!is.null(s$country_filter))
+        updateSelectizeInput(session,"country_filter",selected=s$country_filter)
+      if(!is.null(s$phase_filter))
+        updateSelectizeInput(session,"phase_filter",selected=s$phase_filter)
+      if(!is.null(s$pip_filter))
+        updateSelectInput(session,"pip_filter",selected=s$pip_filter)
+      if(!is.null(s$text_search))
+        updateTextInput(session,"text_search",value=s$text_search)
+    },error=function(e)showNotification(paste("Could not load filters:",e$message),type="error"))
+  })
   
   output$plot_organ <- renderPlotly({
     df<-filt()%>%filter(!is.na(MEDDRA_organ_class))%>%
