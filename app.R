@@ -1041,6 +1041,15 @@ ui <- dashboardPage(skin = "blue",
                                         Trials covering multiple countries or conditions may appear in multiple filter categories.
                                         Data reflects the state of the registries at the time of the last database update.")
                                   )
+                                ),
+                                fluidRow(
+                                  box(title="MedDRA System Organ Class (SOC) Code Reference",
+                                      width=12, status="info", solidHeader=TRUE,
+                                      p("CTIS stores MedDRA organ classes as numeric EMA vocabulary codes.
+                                        The table below shows the mapping used to resolve these codes to
+                                        human-readable System Organ Class names."),
+                                      DT::dataTableOutput("meddra_soc_table")
+                                  )
                                 ))
                       )
                     )
@@ -1375,6 +1384,15 @@ server <- function(input, output, session) {
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
             text=~n,textposition="outside",hoverinfo="x+y+text")%>%
       plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
+  })
+
+  output$meddra_soc_table <- DT::renderDataTable({
+    df <- data.frame(
+      Code = names(ctis_soc_lookup),
+      `System Organ Class` = unname(ctis_soc_lookup),
+      check.names = FALSE, stringsAsFactors = FALSE)
+    datatable(df, rownames = FALSE, class = "compact stripe hover",
+              options = list(pageLength = 30, dom = "ftp", scrollX = TRUE))
   })
 
   # ── Map tab ───────────────────────────────────────────────────────────────
