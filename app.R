@@ -64,7 +64,10 @@ clean_organ_class <- function(x) {
       p
     }
   })
-  cleaned <- unique(cleaned[!is.na(cleaned)])
+  # Normalise "unspecified incl cysts and polyps" (EUCTR) to canonical form with parens (CTIS)
+  cleaned <- sub("unspecified incl cysts and polyps",
+                 "unspecified (incl cysts and polyps)", cleaned, fixed = TRUE)
+  cleaned <- unique(trimws(cleaned[!is.na(cleaned)]))
   if (length(cleaned) == 0) NA_character_ else paste(cleaned, collapse = " / ")
 }
 
