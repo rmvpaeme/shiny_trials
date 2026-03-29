@@ -203,16 +203,27 @@ phase_reg <- df %>%
   mutate(Total = rowSums(across(where(is.numeric)))) %>%
   arrange(match(phase, c("I","I-II","II","II-III","III","III-IV","IV")))
 
-# Overlap
-has_overlap_col <- "in_both_registers" %in% names(df)
-if (has_overlap_col) {
-  n_both  <- sum(df$in_both_registers == TRUE,  na.rm = TRUE)
-  n_euctr_only <- df %>% filter(register == "EUCTR", !in_both_registers) %>% nrow()
-  n_ctis_only  <- df %>% filter(register == "CTIS",  !in_both_registers) %>% nrow()
-  overlap_df <- tibble(
-    Category = c("EUCTR only", "CTIS only", "In both registers"),
-    n        = c(n_euctr_only, n_ctis_only, n_both),
-    pct      = round(c(n_euctr_only, n_ctis_only, n_both) / N * 100, 1)
+# Transition
+has_transition_col <- "is_ctis_transition" %in% names(df)
+if (has_transition_col) {
+  trans_df <- df %>%
+    filter(!is.na(year)) %>%
+    mutate(category = case_when(
+      register == "CTIS" & !is.na(is_ctis_transition) & is_ctis_transition ~ "CTIS (transitioned)",
+      register == "CTIS"  ~ "CTIS (new)",
+      register == "EUCTR" ~ "EUCTR"
+    )) %>%
+    count(year, category) %>%
+    mutate(category = factor(category,
+             levels = c("EUCTR", "CTIS (new)", "CTIS (transitioned)")))
+  n_trans <- sum(df$register == "CTIS" &
+                 !is.na(df$is_ctis_transition) & df$is_ctis_transition, na.rm = TRUE)
+  n_ctis_new <- sum(df$register == "CTIS", na.rm = TRUE) - n_trans
+  n_euctr    <- sum(df$register == "EUCTR", na.rm = TRUE)
+  trans_summary <- tibble(
+    Category = c("EUCTR", "CTIS (new)", "CTIS (transitioned from EUCTR)"),
+    n   = c(n_euctr, n_ctis_new, n_trans),
+    pct = round(c(n_euctr, n_ctis_new, n_trans) / N * 100, 1)
   )
 }
 ```
@@ -580,32 +591,27 @@ nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
 
 \newpage
 
-# Registry Overlap
+# EUCTR to CTIS Transition
 
-```{r overlap-section, eval=has_overlap_col}
+```{r transition-timeline, eval=has_transition_col, fig.height=3.2, fig.cap="Trials submitted per year by register type. CTIS (transitioned) are trials that moved from EUCTR under Regulation 536/2014; CTIS (new) were registered directly in CTIS."}
+ggplot(trans_df, aes(x = year, y = n, fill = category)) +
+  geom_col(width = 0.75) +
+  scale_fill_manual(values = c("EUCTR" = BLUE,
+                                "CTIS (new)" = TEAL,
+                                "CTIS (transitioned)" = ORANGE)) +
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.08))) +
+  labs(x = "Year", y = "Trials submitted", fill = NULL) +
+  theme_rep() +
+  theme(legend.position = "bottom")
 ```
 
-```{r overlap-bar, eval=has_overlap_col, fig.height=2.8, fig.cap="Trials classified by registry membership. Shared trials appear in both EUCTR and CTIS (matched by normalised title)."}
-overlap_df %>%
-  mutate(Category = factor(Category, levels = rev(Category))) %>%
-  ggplot(aes(x = n, y = Category, fill = Category)) +
-  geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
-            hjust = -0.08, size = 2.8, color = GRAY) +
-  scale_fill_manual(values = c("EUCTR only" = BLUE, "CTIS only" = TEAL,
-                                "In both registers" = GREEN)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
-  labs(title = "Registry Overlap", x = "Number of trials", y = NULL) +
-  theme_rep()
+```{r transition-table, eval=has_transition_col}
+ttbl <- trans_summary %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
+nk(ttbl, cn = c("Category", "n", "% of selection"), al = "lrr")
 ```
 
-```{r overlap-table, eval=has_overlap_col}
-oltbl <- overlap_df %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(oltbl, cn = c("Category", "n", "% of selection"), al = "lrr")
-```
-
-```{r overlap-na, eval=!has_overlap_col, results='asis'}
-cat("*Registry overlap data is not available for this selection.*")
+```{r transition-na, eval=!has_transition_col, results='asis'}
+cat("*Transition data is not available for this selection.*")
 ```
 
 ---
