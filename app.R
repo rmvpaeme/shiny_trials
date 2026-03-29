@@ -860,6 +860,7 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analytics",tabName="analytics",icon=icon("chart-bar")),
+                                                 menuItem("Phase Analysis",tabName="phase",icon=icon("flask")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      hr(), h4("  Filters",style="padding-left:15px;"),
                                      checkboxGroupInput("status_filter","Trial Status:",
@@ -942,6 +943,8 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
+                        ),
+                        tabItem(tabName="phase",
                                 fluidRow(
                                   box(title="Trial Phase by Register",status="primary",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_phase",height="360px"),type=6)),
@@ -1036,7 +1039,8 @@ ui <- dashboardPage(skin = "blue",
                                       tags$ul(
                                         tags$li(tags$b("Overview:"), " Summary statistics, cumulative trends, sponsor type breakdown, registry overlap, and yearly submission charts. CT numbers link directly to their registry."),
                                         tags$li(tags$b("Data Explorer:"), " Searchable, filterable table of all trials with CSV/Excel export."),
-                                        tags$li(tags$b("Analytics:"), " MedDRA term breakdowns, country-level activity, PIP status by register and by year, and quarterly timeline.")
+                                        tags$li(tags$b("Analytics:"), " MedDRA term breakdowns, country-level activity, PIP status by register and by year, and quarterly timeline."),
+                                        tags$li(tags$b("Phase Analysis:"), " Trial phase breakdown by register, status, and sponsor type (Academic vs Industry).")
                                       ),
                                       h4(icon("info-circle")," Notes"),
                                       p("Overlap detection is approximate and based on normalised title matching.
