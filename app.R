@@ -947,6 +947,9 @@ ui <- dashboardPage(skin = "blue",
                                       withSpinner(plotlyOutput("plot_phase",height="360px"),type=6)),
                                   box(title="Trial Phase by Status",status="info",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_phase_status",height="360px"),type=6))),
+                                fluidRow(
+                                  box(title="Trial Phase by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=420,
+                                      withSpinner(plotlyOutput("plot_phase_sponsor",height="360px"),type=6))),
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
@@ -1367,6 +1370,25 @@ server <- function(input, output, session) {
     plot_ly(df, x = ~phase, y = ~n, color = ~status, colors = pal, type = "bar",
             text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
       plt_layout(barmode = "stack",
+                 xaxis = list(title = "Trial Phase"),
+                 yaxis = list(title = "Number of Trials"),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
+  output$plot_phase_sponsor <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(phase) & nzchar(str_trim(phase)), !is.na(sponsor_type)) %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(phase = str_trim(phase)) %>%
+      filter(nzchar(phase)) %>%
+      count(phase, sponsor_type) %>%
+      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
+    validate(need(nrow(df) > 0, "No phase / sponsor type data available."))
+    t <- tc()
+    pal <- c("Academic" = t$frost1, "Industry" = t$orange)
+    plot_ly(df, x = ~phase, y = ~n, color = ~sponsor_type, colors = pal, type = "bar",
+            text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
+      plt_layout(barmode = "group",
                  xaxis = list(title = "Trial Phase"),
                  yaxis = list(title = "Number of Trials"),
                  legend = list(orientation = "h", y = -0.2))
