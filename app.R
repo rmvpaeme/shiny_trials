@@ -1573,12 +1573,16 @@ server <- function(input, output, session) {
   })
 
   output$plot_decision_time <- renderPlotly({
-    df <- filt() %>%
+    base <- filt() %>%
       filter(!is.na(days_to_decision), is.finite(days_to_decision),
              days_to_decision >= 0, days_to_decision < 3650)
-    validate(need(nrow(df) > 0, "No decision date data available."))
+    validate(need(nrow(base) > 0, "No decision date data available."))
+    df <- bind_rows(base, mutate(base, register = "All")) %>%
+      mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All")))
+    t <- tc()
+    pal <- c(register_cols(), All = t$purple)
     plot_ly(df, x = ~register, y = ~days_to_decision, color = ~register,
-            colors = register_cols(), type = "violin",
+            colors = pal, type = "violin",
             box = list(visible = TRUE),
             meanline = list(visible = TRUE),
             points = "outliers") %>%

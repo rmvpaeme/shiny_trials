@@ -579,13 +579,14 @@ nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
 has_decision <- nrow(decision_df) > 0
 ```
 
-```{r decision-violin, eval=has_decision, fig.height=3.8, fig.cap="Distribution of days from submission date to competent authority decision date, by source register. Box shows IQR and median; whiskers extend to 1.5 × IQR."}
-decision_df %>%
+```{r decision-violin, eval=has_decision, fig.height=3.8, fig.cap="Distribution of days from submission date to competent authority decision date, by source register and combined. Box shows IQR and median; whiskers extend to 1.5 × IQR."}
+bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
+  mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
   ggplot(aes(x = register, y = days_to_decision, fill = register)) +
   geom_violin(alpha = 0.55, trim = TRUE, width = 0.8) +
   geom_boxplot(width = 0.18, outlier.size = 0.8, outlier.alpha = 0.4,
                colour = DARK, fill = "white") +
-  scale_fill_manual(values = REG_COLS) +
+  scale_fill_manual(values = c(REG_COLS, All = PURPLE)) +
   scale_y_continuous(labels = comma) +
   labs(title = "Time from Submission to Decision",
        x = "Register", y = "Days") +
@@ -594,7 +595,8 @@ decision_df %>%
 ```
 
 ```{r decision-table, eval=has_decision}
-dec_stats <- decision_df %>%
+dec_stats <- bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
+  mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
   group_by(Register = register) %>%
   summarise(
     n         = fmt_n(n()),
