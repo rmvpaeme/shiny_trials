@@ -203,6 +203,11 @@ phase_reg <- df %>%
   mutate(Total = rowSums(across(where(is.numeric)))) %>%
   arrange(match(phase, c("I","I-II","II","II-III","III","III-IV","IV")))
 
+# Decision timeline
+decision_df <- df %>%
+  filter(!is.na(days_to_decision), is.finite(days_to_decision),
+         days_to_decision >= 0, days_to_decision < 3650)
+
 ```
 
 # Applied Filters {-}
@@ -564,6 +569,50 @@ print(p_pip2)
 ```{r pip-table}
 ptbl2 <- pip_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
 nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
+```
+
+\newpage
+
+# Decision Timeline
+
+```{r decision-check, include=FALSE}
+has_decision <- nrow(decision_df) > 0
+```
+
+```{r decision-violin, eval=has_decision, fig.height=3.8, fig.cap="Distribution of days from submission date to competent authority decision date, by source register. Box shows IQR and median; whiskers extend to 1.5 × IQR."}
+decision_df %>%
+  ggplot(aes(x = register, y = days_to_decision, fill = register)) +
+  geom_violin(alpha = 0.55, trim = TRUE, width = 0.8) +
+  geom_boxplot(width = 0.18, outlier.size = 0.8, outlier.alpha = 0.4,
+               colour = DARK, fill = "white") +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Time from Submission to Decision",
+       x = "Register", y = "Days") +
+  theme_rep() +
+  theme(legend.position = "none")
+```
+
+```{r decision-table, eval=has_decision}
+dec_stats <- decision_df %>%
+  group_by(Register = register) %>%
+  summarise(
+    n         = fmt_n(n()),
+    Mean_SD   = sprintf("%.1f \u00b1 %.1f", mean(days_to_decision), sd(days_to_decision)),
+    Median    = sprintf("%.0f", median(days_to_decision)),
+    IQR       = iqr_str(days_to_decision),
+    Min_Max   = sprintf("%d\u2013%d", as.integer(min(days_to_decision)),
+                                      as.integer(max(days_to_decision))),
+    .groups = "drop"
+  )
+nk(dec_stats,
+   cap = "Descriptive statistics for days from submission to decision, by register.",
+   cn  = c("Register", "n", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
+   al  = c("l","r","r","r","r","r"))
+```
+
+```{r decision-missing, eval=!has_decision, results='asis'}
+cat("\\textit{No decision date data available for the current filter selection.}")
 ```
 
 ---
