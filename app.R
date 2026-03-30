@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.2.1 — MedDRA condition name normalisation)
+# app.R  (v0.2.2 — skip EUCTR download when query unchanged)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1007,6 +1007,11 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.2.2 (2026-03-30):"),
+                                          tags$ul(
+                                            tags$li("Data pipeline: EUCTR download skipped when query URL unchanged; normalised query term stored in _meta table and compared on each run — nightly updates now only fetch CTIS unless search criteria change")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.2.1 (2026-03-29):"),
                                           tags$ul(
                                             tags$li("Data: normalise MedDRA condition name spelling variants between EUCTR (American) and CTIS (British MedDRA preferred) — leukemia/leukaemia, tumor/tumour, diarrhea/diarrhoea, esophag/oesophag, tyrosinemia/tyrosinaemia, localized/localised"),
@@ -1049,7 +1054,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.2.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.2 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),

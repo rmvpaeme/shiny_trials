@@ -1,6 +1,6 @@
 # EU Paediatric Clinical Trials Dashboard
 
-**Version:** `v0.2.1` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.2.2` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -299,6 +299,10 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.2.2 (2026-03-30)
+
+- **Data pipeline:** EUCTR download is now skipped when the query URL has not changed since the last successful load; the normalised query term is stored in a `_meta` table in the SQLite database and compared on each run — nightly updates now only fetch CTIS (~5 min) unless the search criteria are modified
 
 ### v0.2.1 (2026-03-29)
 
