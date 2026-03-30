@@ -919,7 +919,7 @@ ui <- dashboardPage(skin = "blue",
                                      div(style="padding:0 15px;",
                                          radioButtons("theme_select","Theme:",choices=c("Nord","Default"),selected="Nord",inline=TRUE))
                     ),
-                    
+
                     dashboardBody(
                       uiOutput("active_theme"),
                       tabItems(
