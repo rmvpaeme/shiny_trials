@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.2.2 — skip EUCTR download when query unchanged)
+# app.R  (v0.2.3 — decision date in data explorer + violin plot)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -399,7 +399,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
     "authorizedApplication.authorizedPartI.sponsors.commercial",
-    "trialPhase")
+    "trialPhase",
+    "authorizedApplication.applicationInfo.decisionDate")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -473,7 +474,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.sponsors.commercial",
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
     "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
-    "trialPhase")
+    "trialPhase",
+    "authorizedApplication.applicationInfo.decisionDate")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
@@ -757,6 +759,17 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   
   result <- result %>% select(-status_raw_orig)
 
+  # ── Decision date & time-to-decision ─────────────────────────────────────
+  result <- result %>% mutate(
+    decision_date = suppressWarnings(as.Date(parse_date_time(
+      case_when(
+        register == "EUCTR" ~ as.character(n_date_of_competent_authority_decision),
+        register == "CTIS"  ~ as.character(`authorizedApplication.applicationInfo.decisionDate`),
+        TRUE ~ NA_character_),
+      orders = c("ymd", "ym", "y", "ymd HMS")))),
+    days_to_decision = as.numeric(decision_date - submission_date_parsed)
+  )
+
   # ── Sponsor type ──────────────────────────────────────────────────────────
   result <- result %>% mutate(
     sponsor_type = case_when(
@@ -952,6 +965,9 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
+                                fluidRow(
+                                  box(title="Time from Submission to Decision (days)",status="info",solidHeader=TRUE,width=12,height=460,
+                                      withSpinner(plotlyOutput("plot_decision_time",height="400px"),type=6))),
                         ),
                         tabItem(tabName="phase",
                                 fluidRow(
@@ -1007,6 +1023,12 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.2.3 (2026-03-30):"),
+                                          tags$ul(
+                                            tags$li("Data Explorer: added Decision Date column (Competent Authority decision date for EUCTR; authorisation date for CTIS)"),
+                                            tags$li("Analytics: added violin plot showing the distribution of days from submission to decision, split by register")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.2.2 (2026-03-30):"),
                                           tags$ul(
                                             tags$li("Data pipeline: EUCTR download skipped when query URL unchanged; normalised query term stored in _meta table and compared on each run — nightly updates now only fetch CTIS unless search criteria change")
@@ -1054,7 +1076,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.2.2 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.3 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1314,14 +1336,15 @@ server <- function(input, output, session) {
         TRUE~CT_number))%>%
       select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
              MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-             phase,sponsor_type,submission_date_parsed,start_date,`CT Number`)%>%
+             phase,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
       select(-CT_number)%>%
       rename(Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
              `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
              Phase=phase,Sponsor=sponsor_type,
-             Submitted=submission_date_parsed,Started=start_date)%>%
+             Submitted=submission_date_parsed,Started=start_date,
+             `Decision Date`=decision_date)%>%
       relocate(`CT Number`)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
@@ -1547,6 +1570,23 @@ server <- function(input, output, session) {
     validate(need(nrow(df)>0,"No data."))
     plot_ly(df,x=~quarter,y=~n,color=~register,colors=register_cols(),type="bar")%>%
       plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
+  })
+
+  output$plot_decision_time <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(days_to_decision), is.finite(days_to_decision),
+             days_to_decision >= 0, days_to_decision < 3650)
+    validate(need(nrow(df) > 0, "No decision date data available."))
+    plot_ly(df, x = ~register, y = ~days_to_decision, color = ~register,
+            colors = register_cols(), type = "violin",
+            box = list(visible = TRUE),
+            meanline = list(visible = TRUE),
+            points = "outliers") %>%
+      plt_layout(
+        xaxis = list(title = "Register"),
+        yaxis = list(title = "Days from Submission to Decision"),
+        legend = list(orientation = "h", y = -0.2),
+        showlegend = FALSE)
   })
 
   output$plot_sponsor_top <- renderPlotly({
