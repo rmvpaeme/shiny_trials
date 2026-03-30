@@ -1,4 +1,4 @@
-# EU Paediatric Clinical Trials Dashboard
+# EU Paediatric Trial Monitor
 
 **Version:** `v0.2.3` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 

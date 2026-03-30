@@ -145,7 +145,7 @@ THEMES <- list(
 generate_css <- function(t) {
   sprintf('
   body{background:%s!important;color:%s}
-  .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700}
+  .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700;font-size:15px}
   .skin-blue .main-header .logo:hover{background:%s!important}
   .skin-blue .main-header .navbar{background:%s!important}
   .skin-blue .main-header .navbar .sidebar-toggle{color:%s!important}
@@ -867,13 +867,13 @@ extract_choices <- function(x, sep = " / ") {
 # ══════════════════════════════════════════════════════════════════════════════
 
 ui <- dashboardPage(skin = "blue",
-                    title = "Shiny Trials",
+                    title = "EU Paediatric Trial Monitor",
                     dashboardHeader(title = tagList(
                       tags$head(
-                        tags$title("Shiny Trials"),
+                        tags$title("EU Paediatric Trial Monitor"),
                         tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg")
                       ),
-                      icon("child"), " EU Paediatric Trials"
+                      icon("child"), " EU Paediatric Trial Monitor"
                     ), titleWidth = 300),
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
@@ -904,7 +904,7 @@ ui <- dashboardPage(skin = "blue",
                                      hr(),
                                      div(style="padding:0 15px;",
                                          p("Save / restore filters:",style="font-size:12px;margin-bottom:4px;"),
-                                         downloadButton("dl_filters","Save filters",class="btn-sm btn-default",style="width:100%;margin-bottom:6px;"),
+                                         downloadButton("dl_filters","Save filters",class="btn-sm btn-primary",style="width:100%;margin-bottom:6px;"),
                                          fileInput("ul_filters",NULL,accept=".json",placeholder="Load filters (.json)",
                                                    buttonLabel="Load…",width="100%")),
                                      hr(),
