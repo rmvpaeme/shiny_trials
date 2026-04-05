@@ -118,10 +118,10 @@ The landing tab. Provides a high-level summary of the filtered dataset:
 
 - **Value boxes** — Total Trials, Ongoing, Completed, With PIP
 - **5 most recently submitted trials** — sortable table; CT numbers are clickable links to the originating registry
-- **Cumulative ECDF** — trial start dates by status (Ongoing / Completed / Other)
+- **Cumulative Trials by Start Date** — ECDF of trial start dates, coloured by status (Ongoing / Completed / Other)
 - **Sponsor type by register** — grouped bar chart comparing Academic vs Industry across EUCTR, CTIS, and combined
 - **Submissions per year** — stacked bar chart by register
-- **Status by register** — comparative bar chart; when "Other" contains fewer than six distinct raw values, they are expanded individually
+- **Register Comparison** — status breakdown stacked by register
 
 ### Map
 
@@ -136,20 +136,23 @@ An interactive Leaflet map of ongoing/open trials by country:
 A full interactive DataTable of all trials matching the active filters:
 
 - Per-column search filters
-- Columns: CT number, register, title, product, MedDRA term, MedDRA organ class, countries, country count, status, PIP, phase, sponsor type, submission date, start date
+- Columns: CT number, register, title, product, MedDRA term, MedDRA organ class, countries, country count, status, PIP, phase, sponsor name, sponsor type, submission date, start date, decision date
 - Default sort: submission date descending
 - Download as CSV or Excel
 
 ### Analytics
 
-Charts focused on therapeutic area, geography, and PIP trends:
+Charts focused on therapeutic area, geography, PIP trends, and sponsors:
 
 - **Top MedDRA organ classes** — configurable N, stacked by register
 - **Top conditions / MedDRA terms** — configurable N, stacked by register
 - **Trials by country** — top 30, horizontal bar chart
-- **Submissions per year** — stacked by register
-- **PIP status by year** — stacked bar showing Yes / No / Unknown split over time
-- **Quarterly start-date timeline** — count of new trials per quarter
+- **PIP Status** — pie chart of Yes / No / Unknown
+- **Start-Date Timeline (quarterly)** — count of new trials per quarter
+- **PIP Status by Year** — stacked bar showing Yes / No / Unknown split over time
+- **Time from Submission to Decision** — violin plot of days from submission to regulatory decision, split by register
+- **Top Sponsors / Companies** — horizontal bar chart coloured by sponsor type (Academic / Industry), configurable Top N
+- **Sponsor Trial Timeline** *(visible only when exactly one sponsor is selected in the sidebar)* — bars showing new trials per year with a cumulative line overlay
 
 ### Phase Analysis
 
@@ -178,7 +181,8 @@ All filters apply globally across every tab.
 | **Condition / MedDRA Term** | Searchable multi-select |
 | **Country / Member State** | Searchable multi-select |
 | **Trial Phase** | Phase I / II / III / IV (searchable multi-select) |
-| **PIP Status** | Yes / No (searchable multi-select) |
+| **PIP Status** | All / Yes / No / Unknown (single-select dropdown) |
+| **Sponsor / Company** | Searchable multi-select; names are normalised and deduplicated |
 | **Search** | Free-text search across title, product name, and CT number |
 
 A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All charts, tables, and UI elements switch instantly.
@@ -211,8 +215,9 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
             │  9.  Detect CTIS PIP           │
             │  10. Map trial phase           │
             │  11. Parse dates               │
-            │  12. Normalise title key       │
-            │  13. Cache to .rds             │
+            │  12. Normalise sponsor names   │
+            │  13. Normalise title key       │
+            │  14. Cache to .rds             │
             └──────────────┬─────────────────┘
                            ▼
                 ┌─────────────────────┐
@@ -238,6 +243,8 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
 
 **EUCTR → CTIS transition** — EUCTR records with status "Trial now transitioned to CTIS" are matched to their CTIS counterpart by normalised title (first 80 characters). The CTIS record is preferred in the deduplicated dataset.
 
+**Sponsor name normalisation** — raw sponsor names from both registers are cleaned in a multi-pass pipeline: legal suffixes stripped (GmbH & Co. KG, Inc., Ltd., S.A., DAC, A/S, …), department qualifiers removed, subsidiary boilerplate stripped, title-case applied (dotted abbreviations like A.I.E.O.P. are preserved), and ~70 known pharma brand prefixes are mapped to canonical names (e.g. GlaxoSmithKline → GSK). A mapping log is written to `data/sponsor_normalisation_log.csv` on each cache rebuild.
+
 **Caching** — processed data is saved to `pediatric_trials_cache.rds` in the app root. The cache is automatically invalidated when the SQLite database is newer. Delete this file manually to force a rebuild without re-downloading data.
 
 ---
@@ -260,12 +267,14 @@ Environment variables control runtime paths. They can be set in the shell, passe
 shiny_trials/
 ├── app.R                          # Shiny UI + server (single-file app)
 ├── update_data.R                  # Data fetching script (EUCTR + CTIS)
+├── report.Rmd                     # R Markdown template for the PDF report
 ├── pediatric_trials_cache.rds     # Processed data cache (auto-generated)
 ├── Dockerfile                     # Two-stage container build
 ├── docker-compose.yml             # Compose orchestration
 ├── README.md                      # This file
 └── data/
-    └── pediatric_trials.sqlite    # SQLite database (auto-generated)
+    ├── pediatric_trials.sqlite         # SQLite database (auto-generated)
+    └── sponsor_normalisation_log.csv   # Sponsor name mapping log (auto-generated)
 ```
 
 ---
