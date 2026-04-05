@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**Version:** `v0.2.3` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.2.4` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -299,6 +299,15 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.2.4 (2026-04-05)
+
+- **Sidebar:** new Sponsor / Company filter with multi-select, supporting both EUCTR and CTIS registers
+- **Data:** sponsor names normalised and deduplicated — legal suffixes stripped, brand-name canonicalisation for ~70 major pharma companies, title-case applied where appropriate
+- **Analytics:** new Top Sponsors chart (horizontal bar, coloured by sponsor type, configurable Top N slider)
+- **Data Explorer:** Sponsor Name and Sponsor Type columns added
+- **Report:** Top Sponsors section added (bar chart + table)
+- **Fix:** CTIS sponsor name field corrected to `authorizedApplication.authorizedPartI.sponsors.organisation.name`
 
 ### v0.2.3 (2026-03-30)
 

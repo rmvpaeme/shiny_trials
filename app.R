@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.2.3 — decision date in data explorer + violin plot)
+# app.R  (v0.2.4 — sponsor/company filter with name normalisation + Top Sponsors chart)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -344,6 +344,167 @@ clean_member_state <- function(x) {
 # 4. DEEP FLATTEN — handles CTIS nested lists that survive first pass
 # ══════════════════════════════════════════════════════════════════════════════
 
+normalize_sponsor_name <- function(x) {
+  x <- str_trim(as.character(x))
+  x[x %in% c("NA", "", "NULL")] <- NA_character_
+  # Collapse multiple spaces (raw EUCTR data has "GmbH  Co. KG" with double space)
+  x <- str_replace_all(x, "\\s{2,}", " ")
+
+  # ── Pre-step: structural cleanup before any token removal ─────────────────
+  # Strip "a wholly[-owned] subsidiary of..." and similar sub-company noise
+  x <- str_replace_all(x, regex(",?\\s*(an?\\s+)?wholly.owned\\s+subsidiary.*$|,?\\s*an?\\s+indirect.*subsidiary.*$|,?\\s*a\\s+wholly\\s+owned.*$|,?\\s*como\\s+filial.*$", ignore_case = TRUE), "")
+  # Strip "- [long expansion]" (acronym + full name), with or without spaces
+  x <- str_replace_all(x, "\\s*-\\s*[A-Z][A-Za-z\\s]{15,}$", "")
+  # Strip trailing ", Department/Unit/Ward/Section..." qualifiers
+  x <- str_replace_all(x,
+    regex(",\\s*(Department|Dept|Unit|Ward|Section|Centre|Center|Division|Faculty|School|Institute|Laboratory|Clinic|Service|Team).*$",
+          ignore_case = TRUE), "")
+  x <- str_trim(x)
+
+  # ── Strip legal-entity tokens early so they don't trigger is_abbrev ────────
+  # (e.g. "ADAMED Pharma S.A." has "S.A." which would block title-casing)
+  legal_tok_early <- paste0(
+    "\\b(GmbH\\s+&\\s+Co\\.?\\s*KGaA|GmbH\\s+&\\s+Co\\.?\\s*KG|",
+    "GmbH\\s+Co\\.?\\s*KGaA|GmbH\\s+Co\\.?\\s*KG|",
+    "GmbH|AG|SE|KGaA|KG|LLC|L\\.L\\.C\\.?|SNC|SRL|SAS|SARL|DAC|",
+    "Inc\\.?|Incorporated|Ltd\\.?|Limited|",
+    "B\\.V\\.?|N\\.V\\.?|S\\.A\\.?|SA|S\\.L\\.?|SL\\.?|S\\.p\\.A\\.?|S\\.r\\.l\\.?|",
+    "Corp\\.?|Corporation|PLC|LP\\.?|L\\.P\\.?|AB|Oy|NV|BV|A\\/S|",
+    "&\\s*Co\\.?|and\\s+Co\\.?|Sp\\.\\s*z\\s*o\\.\\s*o\\.)\\b")
+  x <- str_replace_all(x, regex(legal_tok_early, ignore_case = TRUE), " ")
+  x <- str_replace_all(x, "(^[,\\.\\-/\\s]+|[,\\.\\-/\\s]+$)", "")
+  x <- str_replace_all(x, "\\s{2,}", " ")
+  x <- str_trim(x)
+
+  # Title-case everything EXCEPT dotted abbreviations (A.I.E.O.P., A.O., etc.)
+  is_abbrev <- !is.na(x) & str_detect(x, "[A-Za-z]\\.[A-Za-z]")
+  x <- ifelse(!is.na(x) & !is_abbrev, str_to_title(x), x)
+
+  # ── Step 1: prefix-brand extraction ───────────────────────────────────────
+  # For known pharma brands: if the string STARTS WITH the brand name
+  # (optionally followed by junk), return the canonical brand.
+  # Order matters — more specific entries before general ones.
+  brand_prefixes <- list(
+    c("4D\\s+Molecular",                "4D Molecular Therapeutics"),
+    c("4D\\s+Pharma",                  "4D Pharma"),
+    c("A\\.?I\\.?E\\.?O\\.?P\\.?",    "AIEOP"),
+    c("AIEOP",                         "AIEOP"),
+    c("Ap-Hp",                         "AP-HP"),
+    c("Aphp",                          "AP-HP"),
+    c("Ap-Hp/Drcd",                    "AP-HP"),
+    c("Assistance\\s+Publique",        "AP-HP"),
+    c("Assistanc-Publique",            "AP-HP"),
+    c("AbbVie",                        "AbbVie"),
+    c("Abbott\\s+Laboratories",        "Abbott"),
+    c("Abbott",                        "Abbott"),
+    c("Actelion",                      "Actelion"),
+    c("Aimmune",                       "Aimmune"),
+    c("Alexion",                       "Alexion"),
+    c("Allergan",                      "Allergan"),
+    c("Amgen",                         "Amgen"),
+    c("Astellas",                      "Astellas"),
+    c("AstraZeneca",                   "AstraZeneca"),
+    c("Baxalta",                       "Baxalta"),
+    c("Baxter",                        "Baxter"),
+    c("Bayer",                         "Bayer"),
+    c("Biogen",                        "Biogen"),
+    c("BioMarin",                      "BioMarin"),
+    c("Biomarin",                      "BioMarin"),
+    c("bluebird\\s+bio",               "bluebird bio"),
+    c("Blueprint\\s+Medicines",        "Blueprint Medicines"),
+    c("Boehringer\\s+Ingelheim",       "Boehringer Ingelheim"),
+    c("Bristol.Myers\\s+Squibb",       "BMS"),
+    c("CSL\\s+Behring",                "CSL Behring"),
+    c("Celgene",                       "Celgene"),
+    c("Chiesi",                        "Chiesi"),
+    c("Eisai",                         "Eisai"),
+    c("Eli\\s+Lilly",                  "Lilly"),
+    c("F\\.?\\s*Hoffmann.La\\s+Roche", "Roche"),
+    c("Genentech",                     "Genentech"),
+    c("Gilead",                        "Gilead"),
+    c("GlaxoSmithKline\\s+Biologicals","GSK Biologicals"),
+    c("GlaxoSmithKline",               "GSK"),
+    c("GSK\\s+Biologicals",            "GSK Biologicals"),
+    c("GSK",                           "GSK"),
+    c("GW\\s+(Pharma|Research)",       "GW Pharma"),
+    c("Hoffmann.La\\s+Roche",          "Roche"),
+    c("Ipsen",                         "Ipsen"),
+    c("Janssen.Cilag",                 "Janssen"),
+    c("Janssen",                       "Janssen"),
+    c("Jazz\\s+Pharmaceuticals",       "Jazz Pharmaceuticals"),
+    c("Kyowa\\s+Kirin",                "Kyowa Kirin"),
+    c("Lilly",                         "Lilly"),
+    c("Lundbeck",                      "Lundbeck"),
+    c("Medimmune",                     "MedImmune"),
+    c("Merck\\s+Sharp.{0,8}Dohme",     "MSD"),
+    c("MSD\\s+Sharp.{0,8}Dohme",       "MSD"),
+    c("Merck\\s+KGaA",                 "Merck KGaA"),
+    c("Merck\\s+&\\s+Co",              "MSD"),
+    c("Merck\\s+and\\s+Co",            "MSD"),
+    c("MSD",                           "MSD"),
+    c("Novartis\\s+Vaccines",          "Novartis Vaccines"),
+    c("Novartis",                      "Novartis"),
+    c("Novo\\s+Nordisk",               "Novo Nordisk"),
+    c("Octapharma",                    "Octapharma"),
+    c("Otsuka",                        "Otsuka"),
+    c("Pfizer",                        "Pfizer"),
+    c("PTC\\s+Therapeutics",           "PTC Therapeutics"),
+    c("Regeneron",                     "Regeneron"),
+    c("Roche",                         "Roche"),
+    c("Sanofi\\s+Pasteur",             "Sanofi Pasteur"),
+    c("Sanofi.Aventis",                "Sanofi"),
+    c("Sanofi",                        "Sanofi"),
+    c("Servier",                       "Servier"),
+    c("Shire",                         "Shire"),
+    c("Sobi",                          "Sobi"),
+    c("Swedish\\s+Orphan\\s+Biovitrum","Sobi"),
+    c("Takeda",                        "Takeda"),
+    c("Teva",                          "Teva"),
+    c("UCB\\s+Biosciences",            "UCB"),
+    c("UCB\\s+Biopharma",              "UCB"),
+    c("UCB\\s+Pharma",                 "UCB"),
+    c("UCB",                           "UCB"),
+    c("Vertex",                        "Vertex"),
+    c("Wyeth",                         "Wyeth"),
+    c("Zogenix",                       "Zogenix")
+  )
+  for (bp in brand_prefixes) {
+    pat <- regex(paste0("^", bp[[1]], "(\\s|,|\\.|$)"), ignore_case = TRUE)
+    x <- ifelse(!is.na(x) & str_detect(x, pat), bp[[2]], x)
+  }
+
+  # ── Step 2: for non-brand entries, strip pharma/country noise ────────────
+  # Pharma-descriptor words that are noise when standalone
+  pharma_tok <- paste0(
+    "\\b(R\\s*&\\s*D|\\bR[dD]\\b|R\\s+D\\b|",   # R&D / RD / R D artifact
+    "Pharmaceuticals?|Pharma|Biopharmaceuticals?|Biopharma|",
+    "Biosciences?|Biotechnology|Biotech|Therapeutics?|",
+    "Laboratories?|Sciences?|Research\\s+&\\s+Development|",
+    "Research\\s+and\\s+Development|Research|Development|",
+    "Healthcare|Health\\s+Care|Oncology|Biologics?|",
+    "Products?|Ventures?|Partners?|Group|Holdings?|Division)\\b")
+  x <- str_replace_all(x, regex(pharma_tok, ignore_case = TRUE), " ")
+
+  # Country/region subsidiary words
+  country_tok <- paste0(
+    "\\b(Deutschland|Germany|France|Espa[nñ]a|Spain|Italy|Italia|",
+    "Netherlands|Nederland|Belgium|Belgique|Austria|[Öö]sterreich|",
+    "Switzerland|Schweiz|Suisse|Sweden|Sverige|Denmark|Danmark|",
+    "Finland|Norway|Norge|Poland|Polska|Portugal|Greece|Ireland|",
+    "Czech|Hungary|Romania|Slovakia|Slovenia|Croatia|",
+    "UK|Europe|European|International|Worldwide|Global|",
+    "North\\s+America|Latin\\s+America|Asia\\s+Pacific)\\b")
+  x <- str_replace_all(x, regex(country_tok, ignore_case = TRUE), " ")
+
+  # Remove stray punctuation and collapse spaces
+  x <- str_replace_all(x, "(^[,\\.\\-/\\s]+|[,\\.\\-/\\s]+$)", "")
+  x <- str_replace_all(x, "\\s{2,}", " ")
+  x <- str_trim(x)
+
+  x[x %in% c("Na", "NA", "")] <- NA_character_
+  x
+}
+
 deep_flatten_col <- function(x) {
   if (!is.list(x)) return(as.character(x))
   sapply(x, function(el) {
@@ -382,6 +543,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "x6_date_on_which_this_record_was_first_entered_in_the_eudract_database",
     "n_date_of_competent_authority_decision",
     "trialInformation.recruitmentStartDate","p_end_of_trial_status",
+    "b1_sponsor.b11_name_of_sponsor",
     "b1_sponsor.b31_and_b32_status_of_the_sponsor",
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
     "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv")
@@ -398,6 +560,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.applicationInfo.submissionDate",
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
+    "authorizedApplication.authorizedPartI.sponsors.organisation.name",
     "authorizedApplication.authorizedPartI.sponsors.commercial",
     "trialPhase",
     "authorizedApplication.applicationInfo.decisionDate")
@@ -470,7 +633,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.applicationInfo.submissionDate",
     "authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate",
     "ctStatus",
+    "b1_sponsor.b11_name_of_sponsor",
     "b1_sponsor.b31_and_b32_status_of_the_sponsor",
+    "authorizedApplication.authorizedPartI.sponsors.organisation.name",
     "authorizedApplication.authorizedPartI.sponsors.commercial",
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
     "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
@@ -779,6 +944,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       register == "CTIS" & str_detect(tolower(as.character(`authorizedApplication.authorizedPartI.sponsors.commercial`)), "commercial") ~ "Industry",
       TRUE ~ NA_character_))
 
+  # ── Sponsor name ──────────────────────────────────────────────────────────
+  result <- result %>% mutate(
+    sponsor_name = normalize_sponsor_name(case_when(
+      register == "EUCTR" ~ str_split_fixed(as.character(`b1_sponsor.b11_name_of_sponsor`), " / ", 2)[, 1],
+      register == "CTIS"  ~ as.character(`authorizedApplication.authorizedPartI.sponsors.organisation.name`),
+      TRUE ~ NA_character_)))
+
   # ── Trial phase ───────────────────────────────────────────────────────────
   euctr_phase_cols <- c(
     "e71_human_pharmacology_phase_i",
@@ -900,6 +1072,8 @@ ui <- dashboardPage(skin = "blue",
                                                     choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
                                      selectInput("pip_filter","Part of PIP:",
                                                  choices=c("All","Yes","No","Unknown"),selected="All"),
+                                     selectizeInput("sponsor_filter","Sponsor / Company:",
+                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors")),
                                      textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma…"),
                                      hr(),
                                      div(style="padding:0 15px;",
@@ -968,6 +1142,10 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="Time from Submission to Decision (days)",status="info",solidHeader=TRUE,width=12,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time",height="400px"),type=6))),
+                                fluidRow(
+                                  box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,height=520,
+                                      sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
+                                      withSpinner(plotlyOutput("plot_top_sponsors",height="400px"),type=6))),
                         ),
                         tabItem(tabName="phase",
                                 fluidRow(
@@ -1023,6 +1201,16 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.2.4 (2026-04-05):"),
+                                          tags$ul(
+                                            tags$li("Sidebar: new Sponsor / Company filter with multi-select, supporting both EUCTR and CTIS registers"),
+                                            tags$li("Data: sponsor names normalised and deduplicated (legal suffixes stripped, brand-name canonicalisation for ~70 pharma companies, title-case)"),
+                                            tags$li("Analytics: new Top Sponsors chart (horizontal bar, coloured by sponsor type, configurable Top N)"),
+                                            tags$li("Data Explorer: Sponsor Name and Sponsor Type columns added"),
+                                            tags$li("Report: Top Sponsors section added (bar chart + table)"),
+                                            tags$li("Fix: CTIS sponsor name field corrected to authorizedApplication.authorizedPartI.sponsors.organisation.name")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.2.3 (2026-03-30):"),
                                           tags$ul(
                                             tags$li("Data Explorer: added Decision Date column (Competent Authority decision date for EUCTR; authorisation date for CTIS)"),
@@ -1076,7 +1264,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.2.3 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.2.4 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1222,6 +1410,8 @@ server <- function(input, output, session) {
                          choices=extract_choices(rv$data$Member_state,sep=" / "),server=TRUE)
     updateSelectizeInput(session,"phase_filter",
                          choices=extract_choices(rv$data$phase),server=TRUE)
+    updateSelectizeInput(session,"sponsor_filter",
+                         choices=sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),server=TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
   })
@@ -1244,6 +1434,7 @@ server <- function(input, output, session) {
       pat<-paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
       df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
+    if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
       df<-df%>%filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
@@ -1336,13 +1527,13 @@ server <- function(input, output, session) {
         TRUE~CT_number))%>%
       select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
              MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-             phase,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
+             phase,sponsor_name,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
       select(-CT_number)%>%
       rename(Register=register,Title=Full_title,
              Product=DIMP_product_name,Condition=MEDDRA_term,
              `Organ Class`=MEDDRA_organ_class,Country=Member_state,
              `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Phase=phase,Sponsor=sponsor_type,
+             Phase=phase,`Sponsor Name`=sponsor_name,`Sponsor Type`=sponsor_type,
              Submitted=submission_date_parsed,Started=start_date,
              `Decision Date`=decision_date)%>%
       relocate(`CT Number`)
@@ -1369,6 +1560,7 @@ server <- function(input, output, session) {
         country_filter     = input$country_filter,
         phase_filter       = input$phase_filter,
         pip_filter         = input$pip_filter,
+        sponsor_filter     = input$sponsor_filter,
         text_search        = input$text_search
       )
       jsonlite::write_json(settings,f,auto_unbox=TRUE)
@@ -1459,6 +1651,8 @@ server <- function(input, output, session) {
         updateSelectizeInput(session,"phase_filter",selected=s$phase_filter)
       if(!is.null(s$pip_filter))
         updateSelectInput(session,"pip_filter",selected=s$pip_filter)
+      if(!is.null(s$sponsor_filter))
+        updateSelectizeInput(session,"sponsor_filter",selected=s$sponsor_filter)
       if(!is.null(s$text_search))
         updateTextInput(session,"text_search",value=s$text_search)
     },error=function(e)showNotification(paste("Could not load filters:",e$message),type="error"))
@@ -1593,6 +1787,27 @@ server <- function(input, output, session) {
         showlegend = FALSE)
   })
 
+  output$plot_top_sponsors <- renderPlotly({
+    df <- filt() %>% filter(!is.na(sponsor_name))
+    validate(need(nrow(df) > 0, "No sponsor name data available."))
+    t <- tc()
+    sp <- df %>%
+      count(sponsor_name, sponsor_type, sort = TRUE) %>%
+      slice_head(n = input$top_n_sponsor) %>%
+      mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)),
+             sponsor_type = coalesce(sponsor_type, "Unknown"))
+    pal <- c(Academic = t$frost1, Industry = t$orange, Unknown = t$fg)
+    plot_ly(sp, x = ~n, y = ~sponsor_name, color = ~sponsor_type, colors = pal,
+            type = "bar", orientation = "h",
+            text = ~paste0(sponsor_name, "<br>", n, " trial(s) — ", sponsor_type),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Number of Trials"),
+        yaxis = list(title = "", tickfont = list(size = 11)),
+        legend = list(orientation = "h", y = -0.15),
+        margin = list(l = 180))
+  })
+
   output$plot_sponsor_top <- renderPlotly({
     df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
     validate(need(nrow(df)>0,"No sponsor type data available."))
@@ -1650,6 +1865,8 @@ server <- function(input, output, session) {
     }
     if(input$pip_filter != "All")
       df <- df %>% filter(has_PIP == input$pip_filter)
+    if(length(input$sponsor_filter) > 0)
+      df <- df %>% filter(sponsor_name %in% input$sponsor_filter)
     if(nzchar(input$text_search)) {
       pat <- regex(input$text_search, ignore_case=TRUE)
       df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
