@@ -184,6 +184,13 @@ conds_per_trial <- df %>%
   mutate(nc = length(str_trim(str_split(MEDDRA_term, " / ")[[1]]))) %>%
   pull(nc)
 
+# Top sponsors by name
+top_sponsor_tab <- df %>%
+  filter(!is.na(sponsor_name)) %>%
+  count(sponsor_name, sponsor_type, sort = TRUE) %>%
+  slice_head(n = 20) %>%
+  mutate(pct = round(n / N * 100, 1))
+
 # Sponsor × register cross-tab
 sponsor_reg <- df %>%
   filter(!is.na(sponsor_type)) %>%
@@ -535,6 +542,41 @@ sptbl <- sponsor_reg %>%
   mutate(across(where(is.numeric), fmt_n))
 nk(sptbl, cap = "Sponsor type by source register.",
    al = c("l", rep("r", ncol(sptbl)-1)))
+```
+
+## Top Sponsors by Name
+
+```{r top-sponsor-bar, fig.height=5.5, fig.cap="Top 20 sponsors by number of trials. Colour indicates sponsor type (Academic/Industry)."}
+if (nrow(top_sponsor_tab) > 0) {
+  p_top_sp <- top_sponsor_tab %>%
+    mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)),
+           sponsor_type = coalesce(sponsor_type, "Unknown")) %>%
+    ggplot(aes(x = n, y = sponsor_name, fill = sponsor_type)) +
+    geom_col(width = 0.65, show.legend = TRUE) +
+    geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
+              hjust = -0.1, size = 2.6, color = GRAY) +
+    scale_fill_manual(values = c(Academic = GREEN, Industry = BLUE, Unknown = GRAY),
+                      name = "Sponsor Type") +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.25)), labels = comma) +
+    labs(title = "Top 20 Sponsors", x = "Trials", y = NULL) +
+    theme_rep() +
+    theme(legend.position = "bottom")
+  print(p_top_sp)
+} else {
+  cat("No sponsor name data available for this filter selection.")
+}
+```
+
+```{r top-sponsor-table}
+if (nrow(top_sponsor_tab) > 0) {
+  tsp_tbl <- top_sponsor_tab %>%
+    select(sponsor_name, sponsor_type, n, pct) %>%
+    rename(`Sponsor` = sponsor_name, `Type` = sponsor_type,
+           `Trials` = n, `%` = pct) %>%
+    mutate(Trials = fmt_n(Trials), `%` = fmt_pct(`%`))
+  nk(tsp_tbl, cap = "Top 20 sponsors by trial count.",
+     al = c("l", "l", "r", "r"))
+}
 ```
 
 \newpage
