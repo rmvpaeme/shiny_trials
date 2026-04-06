@@ -85,4 +85,21 @@ update the version number everywhere in the code, update the readme and about wi
 - Status logs captured before select(-status_raw_orig) removes the raw column (app.R ~line 961)
 - Phase raw capture added before the phase mutate block (app.R ~line 1023)
 
-## Current version: v0.2.4
+## Current version: v0.3.0
+
+## README audit (2026-04-06)
+### Known Issues
+- **EUCTR `rows_update` errors**: still accurate; stale "in-app update button" reference removed
+- **CTIS country field**: still accurate
+- **MedDRA classification divergence**: still accurate
+- **Overlap detection accuracy**: still accurate
+- **Cache invalidation**: still accurate
+
+### Other fixes applied
+- Data pipeline diagram: tab names updated (Phase Analysis → Phase Analytics, etc.)
+- Project structure: added rebuild_cache.R; expanded data/ to list all 7 normalisation logs
+- Key processing steps: sponsor normalisation description updated; new "Normalisation logs" paragraph added covering all 7 log files
+- Docker image version still shows 0.2.1 — intentionally not changed (depends on whether Docker image was rebuilt)
+
+### Residual notes
+- `eulerr` is conditionally loaded in app.R (~line 21) but never used in any chart output — worth removing

@@ -1,5 +1,7 @@
 # EU Paediatric Trial Monitor
 
+![Overview](overview.png)
+
 **Version:** `v0.3.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
@@ -236,10 +238,10 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
                            ▼
                 ┌─────────────────────┐
                 │   Shiny Dashboard   │
-                │  Overview · Map     │
+                │  Overview           │
+                │  Chart Builder · Map│
                 │  Explorer · Analytics│
-                │  Phase Analysis     │
-                │  About              │
+                │  Phase · About      │
                 └─────────────────────┘
 ```
 
@@ -257,7 +259,9 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
 
 **EUCTR → CTIS transition** — EUCTR records with status "Trial now transitioned to CTIS" are matched to their CTIS counterpart by normalised title (first 80 characters). The CTIS record is preferred in the deduplicated dataset.
 
-**Sponsor name normalisation** — raw sponsor names from both registers are cleaned in a multi-pass pipeline: legal suffixes stripped (GmbH & Co. KG, Inc., Ltd., S.A., DAC, A/S, …), department qualifiers removed, subsidiary boilerplate stripped, title-case applied (dotted abbreviations like A.I.E.O.P. are preserved), and ~70 known pharma brand prefixes are mapped to canonical names (e.g. GlaxoSmithKline → GSK). A mapping log is written to `data/sponsor_normalisation_log.csv` on each cache rebuild.
+**Sponsor name normalisation** — raw sponsor names from both registers are cleaned in a multi-pass pipeline: legal suffixes stripped (GmbH & Co. KG, Inc., Ltd., S.A., DAC, A/S, …), department qualifiers removed, subsidiary boilerplate stripped, title-case applied (dotted abbreviations like A.I.E.O.P. are preserved), and ~70 known pharma brand prefixes are mapped to canonical names (e.g. GlaxoSmithKline → GSK).
+
+**Normalisation logs** — on every cache rebuild, a CSV log is written to `data/` for each normalisation step: sponsor names, country names, MedDRA terms, organ classes, trial phase, status category, and status display labels. Each log contains the raw value, normalised output, register, trial count, and a flag indicating whether the value changed.
 
 **Caching** — processed data is saved to `pediatric_trials_cache.rds` in the app root. The cache is automatically invalidated when the SQLite database is newer. Delete this file manually to force a rebuild without re-downloading data.
 
@@ -281,14 +285,21 @@ Environment variables control runtime paths. They can be set in the shell, passe
 shiny_trials/
 ├── app.R                          # Shiny UI + server (single-file app)
 ├── update_data.R                  # Data fetching script (EUCTR + CTIS)
+├── rebuild_cache.R                # Rebuilds RDS cache from SQLite without re-downloading
 ├── report.Rmd                     # R Markdown template for the PDF report
 ├── pediatric_trials_cache.rds     # Processed data cache (auto-generated)
 ├── Dockerfile                     # Two-stage container build
 ├── docker-compose.yml             # Compose orchestration
 ├── README.md                      # This file
 └── data/
-    ├── pediatric_trials.sqlite         # SQLite database (auto-generated)
-    └── sponsor_normalisation_log.csv   # Sponsor name mapping log (auto-generated)
+    ├── pediatric_trials.sqlite              # SQLite database (auto-generated)
+    ├── sponsor_normalisation_log.csv        # Sponsor name mapping log (auto-generated)
+    ├── country_normalisation_log.csv        # Country name cleaning log (auto-generated)
+    ├── meddra_term_normalisation_log.csv    # MedDRA term cleaning log (auto-generated)
+    ├── organ_class_normalisation_log.csv    # Organ class cleaning log (auto-generated)
+    ├── phase_normalisation_log.csv          # Phase mapping log (auto-generated)
+    ├── status_category_normalisation_log.csv  # Status category log (auto-generated)
+    └── status_display_normalisation_log.csv   # Status display label log (auto-generated)
 ```
 
 ---
@@ -313,7 +324,7 @@ shiny_trials/
 
 | Issue | Details |
 |---|---|
-| **EUCTR `rows_update` errors** | `ctrdata` calls `dplyr::rows_update()`, which fails on duplicate or unmatched keys in newer dplyr versions. `update_data.R` and the in-app update button monkey-patch this function before each EUCTR load and restore the original afterwards. |
+| **EUCTR `rows_update` errors** | `ctrdata` calls `dplyr::rows_update()`, which fails on duplicate or unmatched keys in newer dplyr versions. `update_data.R` monkey-patches this function before each EUCTR load and restores the original afterwards. |
 | **CTIS country field** | Contains nested metadata (numeric IDs, timestamps) alongside country names. Cleaned by matching against a canonical ~200-entry country list. |
 | **MedDRA classification divergence** | EUCTR and CTIS may classify the same trial under different MedDRA terms. Terms are aggregated as-is without cross-register normalisation. |
 | **Overlap detection accuracy** | Title-based matching (first 80 normalised characters) is a conservative estimate. Trials phrased differently across registers will not be linked. |
