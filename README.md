@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**Version:** `v0.2.4` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.3.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -110,7 +110,7 @@ docker compose exec app Rscript /app/update_data.R  # first-time data load
 
 ## Dashboard Overview
 
-The dashboard has six tabs, each respecting the active sidebar filters.
+The dashboard has seven tabs, each respecting the active sidebar filters.
 
 ### Overview
 
@@ -122,6 +122,20 @@ The landing tab. Provides a high-level summary of the filtered dataset:
 - **Sponsor type by register** — grouped bar chart comparing Academic vs Industry across EUCTR, CTIS, and combined
 - **Submissions per year** — stacked bar chart by register
 - **Register Comparison** — status breakdown stacked by register
+
+### Chart Builder
+
+A flexible custom chart tab for building ad-hoc visualisations of the filtered dataset:
+
+- **X axis** — choose from: Year of Submission, Status, Register, Phase, Sponsor Type, PIP Status, MedDRA Organ Class, MedDRA Condition, Country / Member State
+- **Group by** — optional second variable for colour-splitting (same choices as X axis)
+- **Chart types** — Bar (stacked), Bar (grouped), Bar (100% stacked), Line
+- **Max groups slider** — limit the number of colour groups shown (3–20) when a grouping variable is selected
+- **Summary table** — aggregated counts with % of total and cumulative % columns
+- **Statistics panel** — Total, Mean, Median, SD, Min, Max of counts; per group when a grouping variable is active
+- **PDF export** — the custom chart and its statistics table are included in the downloaded PDF report
+
+Multi-value variables (Organ Class, Condition, Country) are split before aggregation; a note is shown when counts may exceed the total number of trials.
 
 ### Map
 
@@ -140,7 +154,7 @@ A full interactive DataTable of all trials matching the active filters:
 - Default sort: submission date descending
 - Download as CSV or Excel
 
-### Analytics
+### Basic Analytics
 
 Charts focused on therapeutic area, geography, PIP trends, and sponsors:
 
@@ -154,7 +168,7 @@ Charts focused on therapeutic area, geography, PIP trends, and sponsors:
 - **Top Sponsors / Companies** — horizontal bar chart coloured by sponsor type (Academic / Industry), configurable Top N
 - **Sponsor Trial Timeline** *(visible only when exactly one sponsor is selected in the sidebar)* — bars showing new trials per year with a cumulative line overlay
 
-### Phase Analysis
+### Phase Analytics
 
 Charts focused on trial phase across different dimensions:
 
@@ -308,6 +322,13 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.3.0 (2026-04-06)
+
+- **Chart Builder tab:** new tab (second position, after Overview) for building custom charts from the filtered dataset — choose X axis, optional grouping variable, and chart type (bar stacked / grouped / 100% stacked, line); multi-value variables (organ class, condition, country) are split before aggregation with an inline warning when counts may exceed trial totals
+- **Chart Builder — statistics:** summary table shows counts with % of total and cumulative %; a companion statistics panel shows Total, Mean, Median, SD, Min, Max — one row per group when a grouping variable is active
+- **Chart Builder — PDF export:** the custom chart and matching statistics table are included in the downloaded PDF report, rendered with ggplot2 using the Nord colour palette
+- **Navigation:** "Analytics" renamed to "Basic Analytics"; "Phase Analysis" renamed to "Phase Analytics"
 
 ### v0.2.4 (2026-04-05)
 

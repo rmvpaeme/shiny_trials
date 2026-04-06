@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.2.4 — sponsor/company filter with name normalisation + Top Sponsors chart)
+# app.R  (v0.3.0 — Chart Builder tab with custom charts and PDF export)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -526,7 +526,33 @@ deep_flatten_col <- function(x) {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 5. DATA PREPARATION
+# 5. NORMALISATION LOGGER
+# ══════════════════════════════════════════════════════════════════════════════
+
+write_norm_log <- function(raw_vec, norm_vec, register_vec, type_name, log_dir) {
+  tryCatch({
+    log_df <- data.frame(
+      register   = as.character(register_vec),
+      raw        = as.character(raw_vec),
+      normalised = as.character(norm_vec),
+      stringsAsFactors = FALSE
+    ) %>%
+      group_by(register, raw, normalised) %>%
+      summarise(n_trials = n(), .groups = "drop") %>%
+      mutate(changed = !is.na(raw) & raw != coalesce(normalised, "")) %>%
+      arrange(register, desc(n_trials))
+    log_path <- file.path(log_dir, paste0(type_name, "_normalisation_log.csv"))
+    write.csv(log_df, log_path, row.names = FALSE)
+    message(sprintf("%s normalisation log: %d rows, %d changed -> %s",
+                    type_name, nrow(log_df), sum(log_df$changed, na.rm = TRUE), log_path))
+  }, error = function(e) {
+    message(sprintf("Could not write %s log: %s", type_name, e$message))
+  })
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 6. DATA PREPARATION
+# (normalisation logs written by write_norm_log defined in section 5)
 # ══════════════════════════════════════════════════════════════════════════════
 
 prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
@@ -682,7 +708,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           `authorizedApplication.applicationInfo.submissionDate`,
           na.rm=TRUE, remove=TRUE)
   
+  raw_country_for_log <- result$Member_state
   result <- result %>% mutate(Member_state = clean_member_state(Member_state))
+  write_norm_log(raw_country_for_log, result$Member_state, result$register, "country", dirname(db_path))
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
   
   # ── Dedup ─────────────────────────────────────────────────────────────────
@@ -809,12 +837,20 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     left_join(slu, by="trial_base_id") %>%
     mutate(trial_status_raw = if_else(!is.na(all_statuses_raw), all_statuses_raw, trial_status_raw)) %>%
     left_join(mlu, by="trial_base_id") %>%
-    mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term),
-           MEDDRA_term = vapply(MEDDRA_term, clean_meddra_term, character(1))) %>%
+    mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term)) %>%
     left_join(olu, by="trial_base_id") %>%
     mutate(MEDDRA_organ_class = if_else(!is.na(all_organ), all_organ, MEDDRA_organ_class)) %>%
-    select(-all_countries, -all_statuses_raw, -all_meddra, -all_organ) %>%
-    mutate(MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)))
+    select(-all_countries, -all_statuses_raw, -all_meddra, -all_organ)
+
+  raw_meddra_for_log <- result$MEDDRA_term
+  raw_organ_for_log  <- result$MEDDRA_organ_class
+
+  result <- result %>%
+    mutate(MEDDRA_term        = vapply(MEDDRA_term, clean_meddra_term, character(1)),
+           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)))
+
+  write_norm_log(raw_meddra_for_log, result$MEDDRA_term, result$register, "meddra_term", dirname(db_path))
+  write_norm_log(raw_organ_for_log,  result$MEDDRA_organ_class, result$register, "organ_class", dirname(db_path))
   
   # ── Start date ────────────────────────────────────────────────────────────
   dcols <- intersect(c(
@@ -922,6 +958,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       substr(tt, 1, 80)
     })
   
+  write_norm_log(result$status_raw_orig, result$status,     result$register, "status_category", dirname(db_path))
+  write_norm_log(result$status_raw_orig, result$status_raw, result$register, "status_display",  dirname(db_path))
   result <- result %>% select(-status_raw_orig)
 
   # ── Decision date & time-to-decision ─────────────────────────────────────
@@ -945,11 +983,30 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       TRUE ~ NA_character_))
 
   # ── Sponsor name ──────────────────────────────────────────────────────────
-  result <- result %>% mutate(
-    sponsor_name = normalize_sponsor_name(case_when(
-      register == "EUCTR" ~ str_split_fixed(as.character(`b1_sponsor.b11_name_of_sponsor`), " / ", 2)[, 1],
-      register == "CTIS"  ~ as.character(`authorizedApplication.authorizedPartI.sponsors.organisation.name`),
-      TRUE ~ NA_character_)))
+  raw_sponsor <- case_when(
+    result$register == "EUCTR" ~ str_split_fixed(as.character(result$`b1_sponsor.b11_name_of_sponsor`), " / ", 2)[, 1],
+    result$register == "CTIS"  ~ as.character(result$`authorizedApplication.authorizedPartI.sponsors.organisation.name`),
+    TRUE ~ NA_character_)
+  result <- result %>% mutate(sponsor_name = normalize_sponsor_name(raw_sponsor))
+
+  # Write sponsor normalisation log (raw -> normalised, with register + count)
+  tryCatch({
+    sponsor_log <- data.frame(
+      raw        = raw_sponsor,
+      normalised = result$sponsor_name,
+      register   = result$register,
+      stringsAsFactors = FALSE) %>%
+      filter(!is.na(raw), raw != "NA", raw != "") %>%
+      group_by(register, raw, normalised) %>%
+      summarise(n_trials = n(), .groups = "drop") %>%
+      mutate(changed = raw != coalesce(normalised, "")) %>%
+      arrange(register, desc(n_trials))
+    log_path <- file.path(dirname(db_path), "sponsor_normalisation_log.csv")
+    write.csv(sponsor_log, log_path, row.names = FALSE)
+    message(sprintf("Sponsor normalisation log written to %s (%d rows)", log_path, nrow(sponsor_log)))
+  }, error = function(e) {
+    message("Could not write sponsor log: ", e$message)
+  })
 
   # ── Trial phase ───────────────────────────────────────────────────────────
   euctr_phase_cols <- c(
@@ -962,6 +1019,23 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   euctr_phase_cols_present <- intersect(euctr_phase_cols, names(result))
   ctis_phase_col_present <- ctis_phase_col %in% names(result)
+
+  # Capture raw phase inputs for logging before transformation
+  raw_phase_for_log <- {
+    raw_euctr <- if (length(euctr_phase_cols_present) > 0) {
+      apply(result[, euctr_phase_cols_present, drop = FALSE], 1, function(r) {
+        flags <- str_detect(tolower(as.character(r)), "true|yes|1")
+        flags[is.na(flags)] <- FALSE
+        lbs <- euctr_phase_labels[match(euctr_phase_cols_present, euctr_phase_cols)]
+        lbs <- lbs[flags]
+        if (length(lbs) == 0) NA_character_ else paste(lbs, collapse = " / ")
+      })
+    } else rep(NA_character_, nrow(result))
+    raw_ctis <- if (ctis_phase_col_present) as.character(result[[ctis_phase_col]]) else rep(NA_character_, nrow(result))
+    dplyr::coalesce(
+      if_else(result$register == "EUCTR", as.character(raw_euctr), NA_character_),
+      if_else(result$register == "CTIS",  raw_ctis, NA_character_))
+  }
 
   result <- result %>% mutate(phase = {
     euctr_phases <- if (length(euctr_phase_cols_present) > 0) {
@@ -995,6 +1069,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       if_else(register == "CTIS"  & !is.na(ctis_phases),  ctis_phases,  NA_character_))
   })
 
+  write_norm_log(raw_phase_for_log, result$phase, result$register, "phase", dirname(db_path))
+
   # Drop raw phase columns
   result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col)))
 
@@ -1003,7 +1079,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 6. CACHING
+# 7. CACHING
 # ══════════════════════════════════════════════════════════════════════════════
 
 cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
@@ -1050,10 +1126,11 @@ ui <- dashboardPage(skin = "blue",
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
                                                  menuItem("Overview",tabName="overview",icon=icon("dashboard")),
+                                                 menuItem("Chart Builder",tabName="chartbuilder",icon=icon("chart-line")),
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
-                                                 menuItem("Analytics",tabName="analytics",icon=icon("chart-bar")),
-                                                 menuItem("Phase Analysis",tabName="phase",icon=icon("flask")),
+                                                 menuItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
+                                                 menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      hr(), h4("  Filters",style="padding-left:15px;"),
                                      checkboxGroupInput("status_filter","Trial Status:",
@@ -1115,6 +1192,63 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Register Comparison",status="info",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_register",height="340px"),type=6))),
                         ),
+                        tabItem(tabName="chartbuilder",
+                                fluidRow(
+                                  box(title="Chart Builder", status="primary", solidHeader=TRUE, width=12,
+                                      p(em("Build a custom chart. Select an X axis, chart type, and optional grouping variable."),
+                                        style="font-size:12px;opacity:0.75;margin-bottom:10px;"),
+                                      fluidRow(
+                                        column(3,
+                                               selectInput("explore_x","X axis:",
+                                                           choices=c(
+                                                             "Year of submission"="year",
+                                                             "Status"="status",
+                                                             "Register"="register",
+                                                             "Phase"="phase",
+                                                             "Sponsor Type"="sponsor_type",
+                                                             "PIP Status"="has_PIP",
+                                                             "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
+                                                             "Condition (MedDRA term)"="MEDDRA_term",
+                                                             "Country / Member State"="Member_state"),
+                                                           selected="year")),
+                                        column(3,
+                                               selectInput("explore_group","Group by (optional):",
+                                                           choices=c(
+                                                             "None"="None",
+                                                             "Year of submission"="year",
+                                                             "Status"="status",
+                                                             "Register"="register",
+                                                             "Phase"="phase",
+                                                             "Sponsor Type"="sponsor_type",
+                                                             "PIP Status"="has_PIP",
+                                                             "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
+                                                             "Condition (MedDRA term)"="MEDDRA_term",
+                                                             "Country / Member State"="Member_state"),
+                                                           selected="None")),
+                                        column(3,
+                                               selectInput("explore_chart_type","Chart type:",
+                                                           choices=c(
+                                                             "Bar (stacked)"="bar_stacked",
+                                                             "Bar (grouped)"="bar_grouped",
+                                                             "Bar (100% stacked)"="bar_pct",
+                                                             "Line"="line"),
+                                                           selected="bar_stacked")),
+                                        column(3,
+                                               conditionalPanel(
+                                                 condition="input.explore_group !== 'None'",
+                                                 sliderInput("explore_top_n","Max groups shown:",
+                                                             min=3, max=20, value=8, step=1)))
+                                      ),
+                                      uiOutput("explore_note"),
+                                      withSpinner(plotlyOutput("plot_explore", height="450px"), type=6))
+                                ),
+                                fluidRow(
+                                  box(title="Summary Table", status="info", solidHeader=TRUE, width=8,
+                                      withSpinner(DT::dataTableOutput("table_explore"), type=6)),
+                                  box(title="Statistics", status="warning", solidHeader=TRUE, width=4,
+                                      withSpinner(DT::dataTableOutput("stats_explore"), type=6))
+                                )
+                        ),
                         tabItem(tabName="data",
                                 fluidRow(box(title="Filtered Trial Data",width=12,status="primary",solidHeader=TRUE,
                                              downloadButton("dl_csv","CSV",class="btn-sm btn-success"),
@@ -1146,6 +1280,7 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,height=520,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
                                       withSpinner(plotlyOutput("plot_top_sponsors",height="400px"),type=6))),
+                                uiOutput("sponsor_timeline_ui"),
                         ),
                         tabItem(tabName="phase",
                                 fluidRow(
@@ -1201,6 +1336,14 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.3.0 (2026-04-06):"),
+                                          tags$ul(
+                                            tags$li("Chart Builder: new tab (second position in sidebar) for building custom bar and line charts with a freely chosen X axis, optional grouping variable, and four chart types (stacked bar, grouped bar, 100% stacked bar, line)"),
+                                            tags$li("Chart Builder: summary table shows counts with % of total and cumulative %; statistics panel shows Total, Mean, Median, SD, Min, Max — per group when grouped"),
+                                            tags$li("Chart Builder: custom chart included in PDF report with ggplot2 rendering and matching stats table"),
+                                            tags$li("Navigation: Analytics renamed to Basic Analytics; Phase Analysis renamed to Phase Analytics")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.2.4 (2026-04-05):"),
                                           tags$ul(
                                             tags$li("Sidebar: new Sponsor / Company filter with multi-select, supporting both EUCTR and CTIS registers"),
@@ -1264,7 +1407,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.2.4 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.3.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1577,6 +1720,10 @@ server <- function(input, output, session) {
       saveRDS(filt(), tmp_data)
       on.exit(unlink(tmp_data), add = TRUE)
 
+      tmp_chart <- tempfile(fileext = ".rds")
+      saveRDS(explore_data(), tmp_chart)
+      on.exit(unlink(tmp_chart), add = TRUE)
+
       filters <- list(
         status      = input$status_filter,
         register    = input$register_filter,
@@ -1619,7 +1766,9 @@ server <- function(input, output, session) {
         rmarkdown::render(
           input       = file.path(getwd(), "report.Rmd"),
           output_file = file,
-          params      = list(data_path = tmp_data, filters = filters),
+          params      = list(data_path = tmp_data, filters = filters,
+                             chart_data_path = tmp_chart,
+                             chart_type      = input$explore_chart_type),
           envir       = new.env(parent = globalenv()),
           quiet       = TRUE
         ),
@@ -1808,6 +1957,43 @@ server <- function(input, output, session) {
         margin = list(l = 180))
   })
 
+  output$sponsor_timeline_ui <- renderUI({
+    req(length(input$sponsor_filter) == 1)
+    fluidRow(
+      box(title = paste0("Trial Timeline — ", input$sponsor_filter[[1]]),
+          status = "info", solidHeader = TRUE, width = 12, height = 460,
+          withSpinner(plotlyOutput("plot_sponsor_timeline", height = "380px"), type = 6)))
+  })
+
+  output$plot_sponsor_timeline <- renderPlotly({
+    req(length(input$sponsor_filter) == 1)
+    df <- filt() %>%
+      filter(!is.na(sponsor_name), !is.na(submission_date_parsed)) %>%
+      mutate(year = year(submission_date_parsed)) %>%
+      count(year, name = "n") %>%
+      arrange(year) %>%
+      mutate(cumulative = cumsum(n))
+    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
+    t <- tc()
+    plot_ly(df) %>%
+      add_bars(x = ~year, y = ~n, name = "New trials per year",
+               marker = list(color = t$frost1),
+               text = ~paste0(year, "<br>", n, " new trial(s)"),
+               hoverinfo = "text") %>%
+      add_lines(x = ~year, y = ~cumulative, name = "Cumulative",
+                line = list(color = t$orange, width = 2.5),
+                yaxis = "y2",
+                text = ~paste0(year, "<br>", cumulative, " total"),
+                hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Year", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "New Trials per Year", rangemode = "tozero"),
+        yaxis2 = list(title = "Cumulative Trials", overlaying = "y",
+                      side = "right", rangemode = "tozero",
+                      showgrid = FALSE),
+        legend = list(orientation = "h", y = -0.2))
+  })
+
   output$plot_sponsor_top <- renderPlotly({
     df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
     validate(need(nrow(df)>0,"No sponsor type data available."))
@@ -1930,6 +2116,208 @@ server <- function(input, output, session) {
             withSpinner(DT::dataTableOutput("map_trials_table"), type = 6))
       )
     }
+  })
+
+  # ── Chart Builder tab ────────────────────────────────────────────────────────
+
+  EXPLORE_MULTI_COLS <- c("MEDDRA_organ_class", "MEDDRA_term", "Member_state")
+
+  EXPLORE_LABELS <- c(
+    "None"               = "None",
+    "status"             = "Status",
+    "register"           = "Register",
+    "phase"              = "Phase",
+    "sponsor_type"       = "Sponsor Type",
+    "has_PIP"            = "PIP Status",
+    "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
+    "MEDDRA_term"        = "Condition (MedDRA term)",
+    "Member_state"       = "Country / Member State"
+  )
+
+  # Aggregated x_var × group counts (for bar / line charts)
+  explore_data <- reactive({
+    req(rv$data)
+    x_var <- input$explore_x
+    grp   <- input$explore_group
+    req(x_var)
+
+    # Handle multi-value columns for both x and group axes
+    df <- filt()
+
+    if (x_var %in% EXPLORE_MULTI_COLS) {
+      df <- df %>%
+        filter(!is.na(.data[[x_var]]), nzchar(as.character(.data[[x_var]]))) %>%
+        separate_rows(all_of(x_var), sep = " / ") %>%
+        mutate(across(all_of(x_var), str_trim)) %>%
+        filter(nzchar(.data[[x_var]]))
+    } else {
+      df <- df %>% filter(!is.na(.data[[x_var]]), nzchar(as.character(.data[[x_var]])))
+    }
+
+    if (grp == "None") {
+      d <- df %>% count(x_val = .data[[x_var]], name = "n")
+      return(list(data = d, x_var = x_var, grp = "None"))
+    }
+
+    if (grp %in% EXPLORE_MULTI_COLS) {
+      df <- df %>%
+        filter(!is.na(.data[[grp]]), nzchar(as.character(.data[[grp]]))) %>%
+        separate_rows(all_of(grp), sep = " / ") %>%
+        mutate(across(all_of(grp), str_trim)) %>%
+        filter(nzchar(.data[[grp]]))
+    } else {
+      df <- df %>% filter(!is.na(.data[[grp]]), nzchar(as.character(.data[[grp]])))
+    }
+
+    top_groups <- df %>%
+      count(.data[[grp]], name = "n_total") %>%
+      arrange(desc(n_total)) %>%
+      head(input$explore_top_n) %>%
+      pull(.data[[grp]])
+
+    d <- df %>%
+      filter(.data[[grp]] %in% top_groups) %>%
+      count(x_val = .data[[x_var]], grp_val = .data[[grp]], name = "n")
+
+    list(data = d, x_var = x_var, grp = grp)
+  })
+
+  output$explore_note <- renderUI({
+    x_var <- input$explore_x
+    grp   <- input$explore_group
+    notes <- character(0)
+    if (isTruthy(x_var) && x_var %in% EXPLORE_MULTI_COLS)
+      notes <- c(notes, paste0(unname(EXPLORE_LABELS[x_var]), " (X axis): trials can match multiple categories; counts may exceed total trials."))
+    if (isTruthy(grp) && grp %in% EXPLORE_MULTI_COLS && grp != x_var)
+      notes <- c(notes, paste0(unname(EXPLORE_LABELS[grp]), " (group): trials can match multiple categories; counts may exceed total trials."))
+    if (length(notes) == 0) return(NULL)
+    div(style="font-size:11px;opacity:0.7;margin-bottom:8px;",
+        lapply(notes, function(n) p(style="margin:2px 0;", icon("info-circle"), " ", n)))
+  })
+
+  output$plot_explore <- renderPlotly({
+    t          <- tc()
+    chart_type <- input$explore_chart_type
+    ed         <- explore_data()
+    d          <- ed$data
+    x_var      <- ed$x_var
+    grp        <- ed$grp
+    validate(need(nrow(d) > 0, "No data available for this selection."))
+
+    x_lbl  <- unname(EXPLORE_LABELS[x_var])
+    x_tick  <- if (x_var == "year") list(dtick = 1, tickformat = "d") else list()
+    y_lbl  <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
+
+    if (grp == "None") {
+      p <- if (chart_type == "line") {
+        plot_ly(d, x = ~x_val, y = ~n, type = "scatter", mode = "lines+markers",
+                line   = list(color = t$frost1, width = 2),
+                marker = list(color = t$frost1, size = 7),
+                hovertemplate = "%{x}<br>%{y} trials<extra></extra>")
+      } else {
+        plot_ly(d, x = ~x_val, y = ~n, type = "bar",
+                marker = list(color = t$frost1),
+                hovertemplate = "%{x}<br>%{y} trials<extra></extra>")
+      }
+      return(p %>% plt_layout(
+        xaxis = c(list(title = x_lbl), x_tick),
+        yaxis = list(title = y_lbl, rangemode = "tozero")))
+    }
+
+    groups <- sort(unique(d$grp_val))
+    pal    <- setNames(
+      colorRampPalette(c(t$frost1, t$frost3, t$orange, t$green, t$purple, t$red, t$yellow))(length(groups)),
+      groups)
+
+    if (chart_type == "line") {
+      p <- plot_ly()
+      for (g in groups) {
+        sub <- d %>% filter(grp_val == g)
+        p   <- p %>% add_lines(
+          data = sub, x = ~x_val, y = ~n, name = g,
+          line = list(color = pal[[g]], width = 2),
+          hovertemplate = paste0(g, " | %{x}<br>%{y} trials<extra></extra>"))
+      }
+    } else {
+      barmode <- if (chart_type == "bar_grouped") "group" else "stack"
+      barnorm  <- if (chart_type == "bar_pct")    "percent" else ""
+      p <- plot_ly(d, x = ~x_val, y = ~n, color = ~grp_val,
+                   colors = pal, type = "bar",
+                   hovertemplate = "%{fullData.name} | %{x}<br>%{y:.1f}<extra></extra>") %>%
+        layout(barmode = barmode, barnorm = barnorm)
+    }
+
+    p %>% plt_layout(
+      xaxis  = c(list(title = x_lbl), x_tick),
+      yaxis  = list(title = y_lbl, rangemode = "tozero"),
+      legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$table_explore <- DT::renderDataTable({
+    ed    <- explore_data()
+    d     <- ed$data
+    x_var <- ed$x_var
+    grp   <- ed$grp
+    validate(need(nrow(d) > 0, "No data available."))
+
+    x_lbl       <- unname(EXPLORE_LABELS[x_var])
+    grand_total  <- sum(d$n)
+
+    if (grp == "None") {
+      d %>% arrange(x_val) %>%
+        mutate(`% of Total`  = round(n / grand_total * 100, 1),
+               `Cumulative %` = round(cumsum(n) / grand_total * 100, 1)) %>%
+        rename(!!x_lbl := x_val, `Trial Count` = n) %>%
+        datatable(rownames = FALSE, class = "compact stripe hover",
+                  options = list(pageLength = 20, dom = "ftp", scrollX = TRUE))
+    } else {
+      grp_label <- unname(EXPLORE_LABELS[grp])
+      d %>%
+        arrange(x_val, grp_val) %>%
+        mutate(`% of Total` = round(n / grand_total * 100, 1)) %>%
+        rename(!!x_lbl := x_val, !!grp_label := grp_val, `Trial Count` = n) %>%
+        datatable(rownames = FALSE, class = "compact stripe hover",
+                  options = list(pageLength = 20, dom = "ftp", scrollX = TRUE))
+    }
+  })
+
+  output$stats_explore <- DT::renderDataTable({
+    ed    <- explore_data()
+    d     <- ed$data
+    grp   <- ed$grp
+    validate(need(nrow(d) > 0, "No data available."))
+
+    if (grp == "None") {
+      stats <- data.frame(
+        Statistic = c("Total", "Mean", "Median", "SD", "Min", "Max"),
+        Value     = c(
+          sum(d$n),
+          round(mean(d$n), 1),
+          round(median(d$n), 1),
+          round(sd(d$n), 1),
+          min(d$n),
+          max(d$n)
+        ), stringsAsFactors = FALSE)
+    } else {
+      grand_total <- sum(d$n)
+      stats <- d %>%
+        group_by(grp_val) %>%
+        summarise(
+          Total    = sum(n),
+          `% Total` = round(sum(n) / grand_total * 100, 1),
+          Mean     = round(mean(n), 1),
+          Median   = round(median(n), 1),
+          SD       = round(sd(n), 1),
+          Min      = min(n),
+          Max      = max(n),
+          .groups  = "drop") %>%
+        arrange(desc(Total))
+      grp_label <- unname(EXPLORE_LABELS[grp])
+      stats <- stats %>% rename(!!grp_label := grp_val)
+    }
+
+    datatable(stats, rownames = FALSE, class = "compact stripe hover",
+              options = list(pageLength = 20, dom = "t", scrollX = TRUE))
   })
 
   output$map_trials_table <- DT::renderDataTable({

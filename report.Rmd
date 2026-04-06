@@ -29,6 +29,8 @@ header-includes:
 params:
   data_path: ""
   filters: !r list()
+  chart_data_path: ""
+  chart_type: "bar_stacked"
 ---
 
 ```{r setup, include=FALSE}
@@ -657,6 +659,121 @@ nk(dec_stats,
 
 ```{r decision-missing, eval=!has_decision, results='asis'}
 cat("\\textit{No decision date data available for the current filter selection.}")
+```
+
+# Custom Chart Builder
+
+```{r custom-chart-setup, include=FALSE}
+EXPLORE_LABELS <- c(
+  "year"               = "Year of Submission",
+  "status"             = "Status",
+  "register"           = "Register",
+  "phase"              = "Phase",
+  "sponsor_type"       = "Sponsor Type",
+  "has_PIP"            = "PIP Status",
+  "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
+  "MEDDRA_term"        = "Condition (MedDRA term)",
+  "Member_state"       = "Country / Member State"
+)
+
+chart_ed      <- readRDS(params$chart_data_path)
+chart_df      <- chart_ed$data
+chart_x_var   <- chart_ed$x_var
+chart_grp     <- chart_ed$grp
+chart_type    <- params$chart_type
+chart_x_lbl   <- unname(EXPLORE_LABELS[chart_x_var])
+chart_grp_lbl <- if (chart_grp != "None") unname(EXPLORE_LABELS[chart_grp]) else NULL
+has_custom    <- nrow(chart_df) > 0
+
+# Convert year x_val to integer for proper numeric axis
+if (chart_x_var == "year" && has_custom) {
+  chart_df <- chart_df %>% mutate(x_val = as.integer(x_val))
+}
+```
+
+```{r custom-chart-note, eval=!has_custom, results='asis'}
+cat("\\textit{No data available for the custom chart selection.}")
+```
+
+```{r custom-chart-plot, eval=has_custom, fig.height=3.6}
+y_lbl <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
+
+if (chart_grp == "None") {
+  p <- ggplot(chart_df, aes(x = x_val, y = n))
+  if (chart_type == "line") {
+    p <- p + geom_line(colour = BLUE, linewidth = 0.8) +
+             geom_point(colour = BLUE, size = 1.5)
+  } else {
+    p <- p + geom_col(fill = BLUE)
+  }
+  p <- p + labs(x = chart_x_lbl, y = y_lbl)
+} else {
+  n_grps <- n_distinct(chart_df$grp_val)
+  pal    <- setNames(
+    colorRampPalette(c(BLUE, FROST, ORANGE, GREEN, PURPLE, RED, YELLOW))(n_grps),
+    sort(unique(chart_df$grp_val)))
+
+  if (chart_type == "line") {
+    p <- ggplot(chart_df, aes(x = x_val, y = n, colour = grp_val, group = grp_val)) +
+      geom_line(linewidth = 0.8) + geom_point(size = 1.5) +
+      scale_colour_manual(values = pal, name = chart_grp_lbl)
+  } else {
+    pos <- switch(chart_type,
+      bar_grouped = position_dodge(width = 0.8),
+      bar_pct     = "fill",
+      "stack")
+    p <- ggplot(chart_df, aes(x = x_val, y = n, fill = grp_val)) +
+      geom_col(position = pos) +
+      scale_fill_manual(values = pal, name = chart_grp_lbl)
+  }
+  p <- p + labs(x = chart_x_lbl, y = y_lbl)
+}
+
+if (chart_x_var == "year") {
+  p <- p + scale_x_continuous(breaks = scales::breaks_width(1))
+}
+if (chart_type == "bar_pct") {
+  p <- p + scale_y_continuous(labels = scales::percent)
+}
+
+p + theme_rep()
+```
+
+```{r custom-chart-stats, eval=has_custom}
+grand_total <- sum(chart_df$n)
+
+if (chart_grp == "None") {
+  stats_tbl <- data.frame(
+    Statistic = c("Total", "Mean", "Median", "SD", "Min", "Max"),
+    Value     = c(
+      fmt_n(grand_total),
+      sprintf("%.1f", mean(chart_df$n)),
+      sprintf("%.1f", median(chart_df$n)),
+      sprintf("%.1f", sd(chart_df$n)),
+      fmt_n(min(chart_df$n)),
+      fmt_n(max(chart_df$n))
+    ), stringsAsFactors = FALSE)
+  nk(stats_tbl,
+     cap = paste0("Summary statistics for trial counts by ", chart_x_lbl, "."),
+     al  = c("l", "r"))
+} else {
+  stats_tbl <- chart_df %>%
+    group_by(!!as.name(chart_grp_lbl) := grp_val) %>%
+    summarise(
+      Total    = fmt_n(sum(n)),
+      `% Total` = sprintf("%.1f%%", sum(n) / grand_total * 100),
+      Mean     = sprintf("%.1f", mean(n)),
+      Median   = sprintf("%.1f", median(n)),
+      SD       = sprintf("%.1f", sd(n)),
+      Min      = fmt_n(min(n)),
+      Max      = fmt_n(max(n)),
+      .groups  = "drop") %>%
+    arrange(desc(as.numeric(gsub(",", "", Total))))
+  nk(stats_tbl,
+     cap = paste0("Summary statistics by ", chart_grp_lbl,
+                  " for trial counts grouped by ", chart_x_lbl, "."),
+     al  = c("l", rep("r", ncol(stats_tbl) - 1)))
+}
 ```
 
 ---
