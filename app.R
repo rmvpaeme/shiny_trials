@@ -1129,6 +1129,7 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                  menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
+                                                 menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      hr(), h4("  Filters",style="padding-left:15px;"),
                                      checkboxGroupInput("status_filter","Trial Status:",
@@ -1192,10 +1193,8 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="5 Most Recently Submitted Trials",status="warning",solidHeader=TRUE,
                                       width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
                                 fluidRow(
-                                  box(title="Cumulative Trials by Start Date",status="primary",solidHeader=TRUE,
-                                      width=7,height=420,withSpinner(plotlyOutput("plot_cumulative",height="360px"),type=6)),
                                   box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
-                                      width=5,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
+                                      width=12,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
                                 fluidRow(
                                   box(title="Submissions per Year",status="primary",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
@@ -1297,7 +1296,6 @@ ui <- dashboardPage(skin = "blue",
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
                                       withSpinner(plotlyOutput("plot_top_sponsors",height="400px"),type=6))),
                                 uiOutput("sponsor_timeline_ui"),
-                                uiOutput("sponsor_compare_ui"),
                         ),
                         tabItem(tabName="phase",
                                 fluidRow(
@@ -1327,6 +1325,9 @@ ui <- dashboardPage(skin = "blue",
                                       withSpinner(leafletOutput("eu_map", height="520px"), type=6))
                                 ),
                                 uiOutput("map_table_ui")
+                        ),
+                        tabItem(tabName="sponsor_compare",
+                                uiOutput("sponsor_compare_tab_ui")
                         ),
                         tabItem(tabName="about",
                                 fluidRow(
@@ -2322,29 +2323,68 @@ server <- function(input, output, session) {
         legend = list(orientation = "h", y = -0.2))
   })
 
-  # ── Sponsor comparison (shown when 2–3 sponsors selected) ─────────────────
-  output$sponsor_compare_ui <- renderUI({
+  # ── Sponsor Comparison tab ────────────────────────────────────────────────
+  output$sponsor_compare_tab_ui <- renderUI({
     n <- length(input$sponsor_filter)
-    req(n >= 2, n <= 3)
+
+    help_box <- function(icon_name, icon_color = "#3c8dbc", title, lines) {
+      fluidRow(column(12, div(
+        style = "padding:60px 20px;text-align:center;",
+        tags$i(class = paste0("fa fa-", icon_name),
+               style = paste0("font-size:48px;color:", icon_color, ";margin-bottom:16px;")),
+        h3(title),
+        tagList(lines))))
+    }
+
+    if (n == 0) return(help_box("exchange", title = "Sponsor Comparison", lines = tagList(
+      p("Use the ", tags$b("Sponsor / Company"), " filter in the sidebar to select ",
+        tags$b("2 or 3 sponsors"), " and compare their trial portfolios side-by-side."),
+      p(em("The comparison will show phase distribution, trial status, and top therapeutic areas."),
+        style = "color:#888;"))))
+
+    if (n == 1) return(help_box("exchange", title = "Sponsor Comparison", lines = tagList(
+      p(tags$b(input$sponsor_filter[[1]]), " is selected."),
+      p("Select ", tags$b("one or two more sponsors"), " in the sidebar to start the comparison."),
+      p(em("You can compare 2 or 3 sponsors at a time."), style = "color:#888;"))))
+
+    if (n > 3) return(help_box("exclamation-triangle", icon_color = "#e67e22",
+      title = "Too many sponsors selected", lines = tagList(
+        p(paste0(n, " sponsors are currently selected.")),
+        p("Narrow it down to ", tags$b("2 or 3"), " to enable the comparison."))))
+
     ttl <- paste(input$sponsor_filter, collapse = " vs. ")
-    fluidRow(
-      box(title = paste0("Sponsor Comparison — ", ttl),
-          status = "warning", solidHeader = TRUE, width = 12,
-          p(em("Phase distribution, trial status, and top organ classes for selected sponsors."),
-            style = "font-size:11px;opacity:0.7;margin-bottom:8px;"),
-          fluidRow(
-            column(6,
-                   h5("Phase Distribution", style = "font-weight:600;margin-bottom:6px;"),
-                   withSpinner(plotlyOutput("plot_compare_phase", height = "280px"), type = 6)),
-            column(6,
-                   h5("Trial Status", style = "font-weight:600;margin-bottom:6px;"),
-                   withSpinner(plotlyOutput("plot_compare_status", height = "280px"), type = 6))
-          ),
-          fluidRow(
-            column(12,
-                   h5("Top Organ Classes", style = "font-weight:600;margin-bottom:6px;"),
-                   withSpinner(plotlyOutput("plot_compare_organ", height = "300px"), type = 6))
-          ))
+    tagList(
+      fluidRow(column(12,
+        h3(style = "margin-bottom:4px;", icon("exchange"), " ", ttl),
+        p(em("Phase distribution, trial status, organ classes, country activity, PIP status, and yearly submissions for selected sponsors."),
+          style = "font-size:12px;opacity:0.7;margin-bottom:16px;")
+      )),
+      fluidRow(
+        box(title = "Phase Distribution", status = "primary", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_compare_phase", height = "320px"), type = 6)),
+        box(title = "Trial Status", status = "info", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_compare_status", height = "320px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Top Organ Classes", status = "warning", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_compare_organ", height = "340px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Trials by Country", status = "primary", solidHeader = TRUE,
+            width = 8, height = 460,
+            withSpinner(plotlyOutput("plot_compare_country", height = "380px"), type = 6)),
+        box(title = "PIP Status", status = "info", solidHeader = TRUE,
+            width = 4, height = 460,
+            withSpinner(plotlyOutput("plot_compare_pip", height = "380px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Submissions per Year", status = "warning", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_compare_year", height = "340px"), type = 6))
+      )
     )
   })
 
@@ -2414,6 +2454,70 @@ server <- function(input, output, session) {
                  yaxis = list(title = ""),
                  legend = list(orientation = "h", y = -0.2),
                  margin = list(l = 240))
+  })
+
+  output$plot_compare_country <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(Member_state), sponsor_name %in% input$sponsor_filter) %>%
+      separate_rows(Member_state, sep = " / ") %>%
+      mutate(Member_state = str_trim(Member_state)) %>%
+      filter(nzchar(Member_state)) %>%
+      count(sponsor_name, Member_state)
+    top_countries <- df %>%
+      group_by(Member_state) %>%
+      summarise(total = sum(n), .groups = "drop") %>%
+      slice_max(total, n = 10) %>%
+      pull(Member_state)
+    df <- df %>% filter(Member_state %in% top_countries)
+    validate(need(nrow(df) > 0, "No country data for selected sponsors."))
+    plot_ly(df,
+            y = ~reorder(Member_state, n), x = ~n,
+            color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = "Trials"),
+                 yaxis = list(title = ""),
+                 legend = list(orientation = "h", y = -0.2),
+                 margin = list(l = 140))
+  })
+
+  output$plot_compare_pip <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(has_PIP), sponsor_name %in% input$sponsor_filter) %>%
+      count(sponsor_name, has_PIP)
+    validate(need(nrow(df) > 0, "No PIP data for selected sponsors."))
+    t <- tc()
+    pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$fg)
+    plot_ly(df, x = ~sponsor_name, y = ~n,
+            color = ~has_PIP, colors = pip_pal,
+            type = "bar", text = ~n, textposition = "outside",
+            hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = "Trials"),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
+  output$plot_compare_year <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(submission_date_parsed),
+             sponsor_name %in% input$sponsor_filter) %>%
+      mutate(year = year(submission_date_parsed)) %>%
+      count(sponsor_name, year)
+    validate(need(nrow(df) > 0, "No submission date data for selected sponsors."))
+    plot_ly(df, x = ~year, y = ~n,
+            color = ~sponsor_name, colors = compare_pal(),
+            type = "scatter", mode = "lines+markers",
+            line = list(width = 2), marker = list(size = 6),
+            text = ~paste0(sponsor_name, " ", year, "<br>", n, " trial(s)"),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Submission Year", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "Trials", rangemode = "tozero"),
+        legend = list(orientation = "h", y = -0.2))
   })
 
   output$plot_sponsor_top <- renderPlotly({
