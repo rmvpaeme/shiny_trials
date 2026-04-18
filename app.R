@@ -2277,10 +2277,18 @@ server <- function(input, output, session) {
     if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     t <- tc()
     sp <- df %>%
-      count(sponsor_name, sponsor_type, sort = TRUE) %>%
+      group_by(sponsor_name) %>%
+      summarise(
+        n = n(),
+        sponsor_type = {
+          tbl <- sort(table(coalesce(sponsor_type, "Unknown")), decreasing = TRUE)
+          names(tbl)[1]
+        },
+        .groups = "drop"
+      ) %>%
+      arrange(desc(n)) %>%
       slice_head(n = input$top_n_sponsor) %>%
-      mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)),
-             sponsor_type = coalesce(sponsor_type, "Unknown"))
+      mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)))
     pal <- c(Academic = t$frost1, Industry = t$orange, Unknown = t$fg)
     plot_ly(sp, x = ~n, y = ~sponsor_name, color = ~sponsor_type, colors = pal,
             type = "bar", orientation = "h",
