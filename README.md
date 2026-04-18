@@ -2,7 +2,7 @@
 
 ![Overview](overview.png)
 
-**Version:** `v0.3.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.4.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -333,6 +333,17 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.4.0 (2026-04-15)
+
+- **Trial detail modal:** clicking any row in the Data Explorer opens a modal dialog with full trial details — title, CT number (linked to source register), register, status, phase, sponsor, MedDRA terms, countries, and key dates
+- **URL state:** active filters are encoded in the URL query string (`?f=`) so filtered views can be bookmarked and shared; filters are restored automatically on page load
+- **Active filter chips:** a badge bar above the tab content shows all non-default filters as coloured chips; a "Reset all" button clears all filters at once
+- **Days-to-decision violin:** new chart in the Sponsors section of Basic Analytics showing distribution of days from submission to authorisation/registration, split by sponsor type (Academic / Industry) with register overlay
+- **Analytics section headers:** boxes in Basic Analytics grouped under section headers — Therapeutic Areas, Geography & PIP, Sponsors
+- **Empty states:** when no trials match the active filters all main plotly charts show a friendly "no data" message instead of a blank area
+- **Plotly toolbar:** mode bar always visible with camera icon for PNG download; non-essential buttons removed
+- **Responsive metric cards:** KPI cards shown 2-per-row on tablet-width screens and 1-per-row on very small screens
 
 ### v0.3.0 (2026-04-06)
 

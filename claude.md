@@ -87,12 +87,10 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 - Status logs captured before select(-status_raw_orig) removes the raw column (app.R ~line 961)
 - Phase raw capture added before the phase mutate block (app.R ~line 1023)
 
-## Current version: v0.4.0 (in progress, branch: ui-improvements)
-
-## In progress: UI improvements (v0.4.0) — branch ui-improvements, 2026-04-15
+## Completed: UI improvements (v0.4.0) — shipped 2026-04-15
 
 ### Branch info
-- Branched from main (commit 229e2c5 "shinylive")
+- Branched from main (commit 229e2c5 "shinylive"), merged/committed on ui-improvements branch
 - shiny_fluent branch work is stashed (shiny.fluent UI rebuild, not yet merged/committed)
 
 ### What was built
@@ -108,7 +106,10 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 
 ### What was NOT built / removed
 - Country choropleth map — removed per user request ("less clear than circle markers")
+- YoY delta trend on organ class chart — removed per user request
 - shiny.fluent UI rebuild — that work is on the stashed `shiny_fluent` branch, not included here
+
+## Current version: v0.4.0
 
 ## README audit (2026-04-06)
 ### Known Issues
