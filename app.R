@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.3.0 — Chart Builder tab with custom charts and PDF export)
+# app.R  (v0.5.1 — Sponsor Comparison tab, PIP Unknown colour, remove cumulative chart from Overview)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -17,9 +17,6 @@ suppressPackageStartupMessages({
   library(leaflet)
 })
 
-
-has_eulerr <- requireNamespace("eulerr", quietly = TRUE)
-if (has_eulerr) library(eulerr)
 
 # ── EMA CTIS MedDRA SOC code lookup ──────────────────────────────────────────
 ctis_soc_lookup <- c(
@@ -1110,6 +1107,7 @@ extract_choices <- function(x, sep = " / ") {
   v <- str_trim(v); sort(unique(v[v != "" & !is.na(v)]))
 }
 
+
 # ══════════════════════════════════════════════════════════════════════════════
 # 8. UI
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1131,6 +1129,7 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                  menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
+                                                 menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      hr(), h4("  Filters",style="padding-left:15px;"),
                                      checkboxGroupInput("status_filter","Trial Status:",
@@ -1172,7 +1171,19 @@ ui <- dashboardPage(skin = "blue",
                     ),
 
                     dashboardBody(
+                      tags$head(tags$style(HTML("
+                        @media (max-width: 768px) {
+                          .small-box { min-width: calc(50% - 20px); max-width: calc(50% - 20px); }
+                        }
+                        @media (max-width: 480px) {
+                          .small-box { min-width: 100%; max-width: 100%; }
+                        }
+                        .analytics-section-header { padding: 6px 0 4px; border-bottom: 2px solid #3c8dbc; margin: 10px 0 14px; color: #3c8dbc; font-size:14px; font-weight:700; letter-spacing:.2px; }
+                        .filter-chip-row { padding: 8px 15px; background: #eaf2fb; border-top: 2px solid #3c8dbc; border-bottom: 1px solid #c8dff0; margin-bottom: 18px; min-height: 36px; display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+                        .filter-chip { display:inline-flex; align-items:center; background:#3c8dbc; color:#fff; border-radius:12px; padding:3px 10px 3px 8px; font-size:11px; margin:2px 3px; gap:4px; }
+                      "))),
                       uiOutput("active_theme"),
+                      uiOutput("active_filters_row"),
                       tabItems(
                         tabItem(tabName="overview",
                                 uiOutput("no_data_banner"),
@@ -1182,10 +1193,8 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="5 Most Recently Submitted Trials",status="warning",solidHeader=TRUE,
                                       width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
                                 fluidRow(
-                                  box(title="Cumulative Trials by Start Date",status="primary",solidHeader=TRUE,
-                                      width=7,height=420,withSpinner(plotlyOutput("plot_cumulative",height="360px"),type=6)),
                                   box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
-                                      width=5,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
+                                      width=12,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
                                 fluidRow(
                                   box(title="Submissions per Year",status="primary",solidHeader=TRUE,
                                       width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
@@ -1256,13 +1265,15 @@ ui <- dashboardPage(skin = "blue",
                                              withSpinner(DT::dataTableOutput("trials_table"),type=6)))
                         ),
                         tabItem(tabName="analytics",
+                                fluidRow(column(12, h4(icon("stethoscope"), " Therapeutic Areas", class="analytics-section-header"))),
                                 fluidRow(
-                                  box(title="Top MedDRA Organ Classes",status="primary",solidHeader=TRUE,width=6,height=520,
+                                  box(title="Top MedDRA Organ Classes",status="primary",solidHeader=TRUE,width=6,
                                       sliderInput("top_n_organ","Top N:",min=5,max=30,value=15),
-                                      withSpinner(plotlyOutput("plot_organ",height="400px"),type=6)),
-                                  box(title="Top Conditions / MedDRA Terms",status="info",solidHeader=TRUE,width=6,height=520,
+                                      withSpinner(plotlyOutput("plot_organ",height="420px"),type=6)),
+                                  box(title="Top Conditions / MedDRA Terms",status="info",solidHeader=TRUE,width=6,
                                       sliderInput("top_n_term","Top N:",min=5,max=30,value=15),
-                                      withSpinner(plotlyOutput("plot_term",height="400px"),type=6))),
+                                      withSpinner(plotlyOutput("plot_term",height="420px"),type=6))),
+                                fluidRow(column(12, h4(icon("globe"), " Geography & PIP", class="analytics-section-header"))),
                                 fluidRow(box(title="Trials by Country",status="primary",solidHeader=TRUE,width=12,height=460,
                                              withSpinner(plotlyOutput("plot_country",height="400px"),type=6))),
                                 fluidRow(
@@ -1273,9 +1284,13 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
+                                fluidRow(column(12, h4(icon("building"), " Sponsors", class="analytics-section-header"))),
                                 fluidRow(
                                   box(title="Time from Submission to Decision (days)",status="info",solidHeader=TRUE,width=12,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time",height="400px"),type=6))),
+                                fluidRow(
+                                  box(title="Days to Decision by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=460,
+                                      withSpinner(plotlyOutput("plot_decision_time_sponsor",height="400px"),type=6))),
                                 fluidRow(
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,height=520,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
@@ -1291,6 +1306,16 @@ ui <- dashboardPage(skin = "blue",
                                 fluidRow(
                                   box(title="Trial Phase by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=420,
                                       withSpinner(plotlyOutput("plot_phase_sponsor",height="360px"),type=6))),
+                                fluidRow(column(12, h4(icon("chart-area"), " Phase Distribution & Completion", class="analytics-section-header"))),
+                                fluidRow(
+                                  box(title="Phase Distribution (Funnel)",status="primary",solidHeader=TRUE,width=5,height=460,
+                                      p(em("Each trial phase shown as a proportion of all phased trials."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_phase_funnel",height="370px"),type=6)),
+                                  box(title="Completion Rate by Authorization Cohort",status="info",solidHeader=TRUE,width=7,height=460,
+                                      p(em("% of trials authorized in each year that have completed. More recent cohorts naturally show lower rates."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_completion_cohort",height="370px"),type=6))),
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
@@ -1300,6 +1325,9 @@ ui <- dashboardPage(skin = "blue",
                                       withSpinner(leafletOutput("eu_map", height="520px"), type=6))
                                 ),
                                 uiOutput("map_table_ui")
+                        ),
+                        tabItem(tabName="sponsor_compare",
+                                uiOutput("sponsor_compare_tab_ui")
                         ),
                         tabItem(tabName="about",
                                 fluidRow(
@@ -1336,6 +1364,34 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.5.1 (2026-04-18):"),
+                                          tags$ul(
+                                            tags$li("Sponsor Comparison promoted to a dedicated sidebar tab; shows contextual help when 0 or 1 sponsors are selected, and a side-by-side comparison panel (phase distribution, trial status, top organ classes, trials by country, PIP status, submissions per year) when 2–3 sponsors are selected"),
+                                            tags$li("Sponsor Comparison: PIP Unknown category now displayed in amber instead of foreground grey"),
+                                            tags$li("Overview: removed Cumulative Trials by Start Date chart; Sponsor Type by Register now spans the full row")
+                                          )
+                                        ),
+                                        tags$li(tags$b("v0.5.0 (2026-04-18):"),
+                                          tags$ul(
+                                            tags$li("Free-text search now also searches sponsor name (previously title, CT number, MedDRA term, and product name only)"),
+                                            tags$li("Phase Analytics: new Phase Funnel chart showing the distribution of trials across Phase I–IV as proportional bars"),
+                                            tags$li("Phase Analytics: new Completion Rate by Authorization Cohort line chart showing what % of trials authorized each year have since completed, split by register"),
+                                            tags$li("Analytics: Sponsor Comparison section — when exactly 2 or 3 sponsors are selected in the Sponsor filter, a side-by-side comparison appears showing phase distribution, trial status, and top organ classes"),
+                                            tags$li("Removed unused eulerr package import")
+                                          )
+                                        ),
+                                        tags$li(tags$b("v0.4.0 (2026-04-15):"),
+                                          tags$ul(
+                                            tags$li("Data Explorer: clicking a row opens a modal dialog with full trial details (title, CT number link, register, status, phase, sponsor, MedDRA terms, countries, dates)"),
+                                            tags$li("URL state: active filters are encoded in the URL query string (?f=) so views can be bookmarked and shared; filters are restored automatically on page load"),
+                                            tags$li("Active filter chips: a badge row above the tab content shows all non-default filters as coloured chips with a Reset all button"),
+                                            tags$li("Basic Analytics: new violin plot showing days-to-decision split by sponsor type (Academic / Industry) with register overlay"),
+                                            tags$li("Basic Analytics: section headers group boxes into Therapeutic Areas, Geography & PIP, and Sponsors"),
+                                            tags$li("Charts: empty-state message shown instead of blank area when no trials match filters (all main plotly outputs)"),
+                                            tags$li("Charts: plotly toolbar visible with camera (PNG download) icon; non-essential mode bar buttons removed"),
+                                            tags$li("Responsive layout: metric cards shown 2-per-row on narrow screens and 1-per-row on very small screens")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.3.0 (2026-04-06):"),
                                           tags$ul(
                                             tags$li("Chart Builder: new tab (second position in sidebar) for building custom bar and line charts with a freely chosen X axis, optional grouping variable, and four chart types (stacked bar, grouped bar, 100% stacked bar, line)"),
@@ -1407,7 +1463,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.3.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.5.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1524,7 +1580,11 @@ server <- function(input, output, session) {
                             tickfont=list(color=t$chart_fg),titlefont=list(color=t$chart_fg)),
                  yaxis=list(gridcolor=t$chart_grid,zerolinecolor=t$chart_grid,
                             tickfont=list(color=t$chart_fg),titlefont=list(color=t$chart_fg)),
-                 legend=list(font=list(color=t$chart_fg)),...)
+                 legend=list(font=list(color=t$chart_fg)),...) %>%
+      config(displayModeBar=TRUE, displaylogo=FALSE,
+             modeBarButtonsToRemove=list("lasso2d","select2d","autoScale2d",
+               "zoom2d","pan2d","resetScale2d","hoverClosestCartesian",
+               "hoverCompareCartesian","toggleSpikelines"))
   }
   
   gg_theme <- function() {
@@ -1581,10 +1641,148 @@ server <- function(input, output, session) {
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
       df<-df%>%filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
-                        str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat))}
+                        str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat)|
+                        str_detect(coalesce(sponsor_name,""),pat))}
     df
   })
   
+  # ── URL-based state ──────────────────────────────────────────────────────
+  # Restore filters from ?f= query param once data is loaded
+  observeEvent(rv$data, {
+    qs <- parseQueryString(session$clientData$url_search)
+    if (!is.null(qs$f) && nzchar(qs$f)) {
+      tryCatch({
+        raw  <- rawToChar(base64enc::base64decode(qs$f))
+        s    <- jsonlite::fromJSON(raw, simplifyVector = TRUE)
+        if (!is.null(s$status_filter))
+          updateCheckboxGroupInput(session, "status_filter",   selected = s$status_filter)
+        if (!is.null(s$register_filter))
+          updateCheckboxGroupInput(session, "register_filter", selected = s$register_filter)
+        if (!is.null(s$date_range) && length(s$date_range) == 2)
+          updateDateRangeInput(session, "date_range", start = s$date_range[1], end = s$date_range[2])
+        if (!is.null(s$organ_class_filter))
+          updateSelectizeInput(session, "organ_class_filter", selected = s$organ_class_filter)
+        if (!is.null(s$condition_filter))
+          updateSelectizeInput(session, "condition_filter",   selected = s$condition_filter)
+        if (!is.null(s$country_filter))
+          updateSelectizeInput(session, "country_filter",     selected = s$country_filter)
+        if (!is.null(s$phase_filter))
+          updateSelectizeInput(session, "phase_filter",       selected = s$phase_filter)
+        if (!is.null(s$pip_filter))
+          updateSelectInput(session, "pip_filter",            selected = s$pip_filter)
+        if (!is.null(s$sponsor_filter))
+          updateSelectizeInput(session, "sponsor_filter",     selected = s$sponsor_filter)
+        if (!is.null(s$text_search))
+          updateTextInput(session, "text_search", value = s$text_search)
+      }, error = function(e) message("URL state restore failed: ", e$message))
+    }
+  }, once = TRUE, ignoreNULL = TRUE)
+
+  # Debounced filter state -> encode to URL
+  filter_state <- reactive({
+    list(
+      status_filter      = input$status_filter,
+      register_filter    = input$register_filter,
+      date_range         = as.character(input$date_range),
+      organ_class_filter = input$organ_class_filter,
+      condition_filter   = input$condition_filter,
+      country_filter     = input$country_filter,
+      phase_filter       = input$phase_filter,
+      pip_filter         = input$pip_filter,
+      sponsor_filter     = input$sponsor_filter,
+      text_search        = input$text_search
+    )
+  }) %>% debounce(1000)
+
+  observe({
+    fs <- filter_state()
+    tryCatch({
+      encoded <- base64enc::base64encode(charToRaw(jsonlite::toJSON(fs, auto_unbox = TRUE)))
+      updateQueryString(paste0("?f=", encoded), mode = "replace", session = session)
+    }, error = function(e) NULL)
+  })
+
+  # ── Active filters badge row ──────────────────────────────────────────────
+  output$active_filters_row <- renderUI({
+    req(rv$data)
+    chips <- list()
+    default_date_start <- min(rv$data$submission_date_parsed, na.rm = TRUE)
+
+    status_default <- c("Ongoing", "Completed", "Other")
+    if (!setequal(input$status_filter, status_default))
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Status: ", paste(input$status_filter, collapse = ", ")))))
+
+    register_default <- c("EUCTR", "CTIS")
+    if (!setequal(input$register_filter, register_default))
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Register: ", paste(input$register_filter, collapse = ", ")))))
+
+    if (!is.null(input$date_range)) {
+      if (!is.na(input$date_range[1]) && input$date_range[1] != default_date_start)
+        chips <- c(chips, list(span(class = "filter-chip",
+          paste0("From: ", format(input$date_range[1])))))
+      if (!is.na(input$date_range[2]) && input$date_range[2] != Sys.Date())
+        chips <- c(chips, list(span(class = "filter-chip",
+          paste0("To: ", format(input$date_range[2])))))
+    }
+
+    if (length(input$organ_class_filter) > 0)
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Organ Class: ", paste(input$organ_class_filter, collapse = ", ")))))
+
+    if (length(input$condition_filter) > 0)
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Condition: ", paste(input$condition_filter, collapse = ", ")))))
+
+    if (length(input$country_filter) > 0)
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Country: ", paste(input$country_filter, collapse = ", ")))))
+
+    if (length(input$phase_filter) > 0)
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Phase: ", paste(input$phase_filter, collapse = ", ")))))
+
+    if (!is.null(input$pip_filter) && input$pip_filter != "All")
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("PIP: ", input$pip_filter))))
+
+    if (length(input$sponsor_filter) > 0)
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0("Sponsor: ", paste(input$sponsor_filter, collapse = ", ")))))
+
+    if (nzchar(input$text_search))
+      chips <- c(chips, list(span(class = "filter-chip",
+        paste0('Search: "', input$text_search, '"'))))
+
+    if (length(chips) == 0) return(NULL)
+
+    div(class = "filter-chip-row",
+        span(style = "font-size:11px;opacity:0.7;margin-right:6px;", "Active filters:"),
+        chips,
+        actionButton("reset_filters", "Reset all", class = "btn-xs btn-default",
+                     style = "margin-left:8px;font-size:11px;padding:2px 8px;"))
+  })
+
+  observeEvent(input$reset_filters, {
+    req(rv$data)
+    updateCheckboxGroupInput(session, "status_filter",
+                             selected = c("Ongoing", "Completed", "Other"))
+    updateCheckboxGroupInput(session, "register_filter",
+                             selected = c("EUCTR", "CTIS"))
+    d <- rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
+    updateDateRangeInput(session, "date_range",
+                         start = if (length(d) > 0) min(d) else "2004-01-01",
+                         end   = Sys.Date())
+    updateSelectizeInput(session, "organ_class_filter", selected = character(0))
+    updateSelectizeInput(session, "condition_filter",   selected = character(0))
+    updateSelectizeInput(session, "country_filter",     selected = character(0))
+    updateSelectizeInput(session, "phase_filter",       selected = character(0))
+    updateSelectInput(session, "pip_filter", selected = "All")
+    updateSelectizeInput(session, "sponsor_filter",     selected = character(0))
+    updateTextInput(session, "text_search", value = "")
+  })
+
   output$data_info <- renderText({
     if(!file.exists(CACHE_PATH)) return("Database not yet loaded.")
     mtime <- file.mtime(CACHE_PATH)
@@ -1681,6 +1879,7 @@ server <- function(input, output, session) {
              `Decision Date`=decision_date)%>%
       relocate(`CT Number`)
     datatable(df,filter="top",rownames=FALSE,class="compact stripe hover",escape=FALSE,
+              selection=list(mode="single",target="row"),
               options=list(pageLength=20,scrollX=TRUE,dom="lBfrtip",
                            order=list(list(12,"desc")),
                            columnDefs=list(list(width="350px",targets=2))))
@@ -1690,6 +1889,54 @@ server <- function(input, output, session) {
                                  content=function(f)readr::write_csv(filt(),f))
   output$dl_excel<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".xlsx"),
                                    content=function(f)writexl::write_xlsx(filt(),f))
+
+  # ── Trial detail modal ────────────────────────────────────────────────────
+  observeEvent(input$trials_table_rows_selected, {
+    idx <- input$trials_table_rows_selected
+    req(length(idx) == 1)
+    row <- filt()[idx, ]
+    ct_raw  <- row$CT_number
+    reg     <- row$register
+    link <- if (reg == "EUCTR") {
+      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
+      cc  <- str_extract(row$`_id`, "[A-Z]{2,3}$")
+      paste0("https://www.clinicaltrialsregister.eu/ctr-search/trial/", ct1, "/", cc)
+    } else {
+      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
+      paste0("https://euclinicaltrials.eu/ctis-public/view/", ct1)
+    }
+    ct_display <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
+    showModal(modalDialog(
+      title = tagList(icon("flask"), " Trial Detail"),
+      size  = "l",
+      easyClose = TRUE,
+      footer = modalButton("Close"),
+      tags$dl(
+        tags$dt("Full Title"),
+        tags$dd(style = "margin-bottom:10px;", coalesce(row$Full_title, "—")),
+        tags$dt("CT Number"),
+        tags$dd(style = "margin-bottom:10px;",
+                tags$a(ct_display, href = link, target = "_blank")),
+        fluidRow(
+          column(6,
+            tags$dt("Register"),   tags$dd(coalesce(reg, "—")),
+            tags$dt("Status"),     tags$dd(coalesce(row$status_raw, "—")),
+            tags$dt("Phase"),      tags$dd(coalesce(row$phase, "—")),
+            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_name, "—")),
+            tags$dt("Sponsor Type"),  tags$dd(coalesce(row$sponsor_type, "—"))
+          ),
+          column(6,
+            tags$dt("Organ Class"),   tags$dd(coalesce(row$MEDDRA_organ_class, "—")),
+            tags$dt("MedDRA Term"),   tags$dd(coalesce(row$MEDDRA_term, "—")),
+            tags$dt("Countries"),     tags$dd(coalesce(row$Member_state, "—")),
+            tags$dt("Submitted"),     tags$dd(as.character(coalesce(row$submission_date_parsed, NA))),
+            tags$dt("Start Date"),    tags$dd(as.character(coalesce(row$start_date, NA))),
+            tags$dt("Decision Date"), tags$dd(as.character(coalesce(row$decision_date, NA)))
+          )
+        )
+      )
+    ))
+  })
 
   output$dl_filters<-downloadHandler(
     filename=function()paste0("filters_",Sys.Date(),".json"),
@@ -1808,13 +2055,21 @@ server <- function(input, output, session) {
   })
   
   output$plot_organ <- renderPlotly({
-    df<-filt()%>%filter(!is.na(MEDDRA_organ_class))%>%
-      separate_rows(MEDDRA_organ_class,sep=" / ")%>%
-      mutate(MEDDRA_organ_class=str_trim(MEDDRA_organ_class))%>%
-      filter(MEDDRA_organ_class!="")%>%count(MEDDRA_organ_class,sort=TRUE)%>%head(input$top_n_organ)
-    validate(need(nrow(df)>0,"No data."))
-    plot_ly(df,y=~reorder(MEDDRA_organ_class,n),x=~n,type="bar",orientation="h",
-            marker=list(color=tc()$frost2))%>%plt_layout(margin=list(l=220))
+    df <- filt() %>%
+      filter(!is.na(MEDDRA_organ_class)) %>%
+      separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+      mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
+      filter(MEDDRA_organ_class != "") %>%
+      count(MEDDRA_organ_class, sort = TRUE) %>%
+      head(input$top_n_organ)
+    if (nrow(df) == 0) return(plotly_empty() %>%
+      layout(title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
+             annotations = list(text = "Adjust the sidebar filters to see data here.",
+                                showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    plot_ly(df, y = ~reorder(MEDDRA_organ_class, n), x = ~n,
+            type = "bar", orientation = "h",
+            marker = list(color = tc()$frost2)) %>%
+      plt_layout(margin = list(l = 220))
   })
   
   output$plot_term <- renderPlotly({
@@ -1822,7 +2077,7 @@ server <- function(input, output, session) {
       separate_rows(MEDDRA_term,sep=" / ")%>%
       mutate(MEDDRA_term=str_trim(MEDDRA_term))%>%
       filter(MEDDRA_term!="")%>%count(MEDDRA_term,sort=TRUE)%>%head(input$top_n_term)
-    validate(need(nrow(df)>0,"No data."))
+    if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df,y=~reorder(MEDDRA_term,n),x=~n,type="bar",orientation="h",
             marker=list(color=tc()$green))%>%plt_layout(margin=list(l=260))
   })
@@ -1832,14 +2087,14 @@ server <- function(input, output, session) {
       separate_rows(Member_state,sep=" / |, ")%>%
       mutate(Member_state=str_trim(Member_state))%>%filter(Member_state!="")%>%
       count(Member_state,sort=TRUE)%>%head(30)
-    validate(need(nrow(df)>0,"No data."))
+    if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df,x=~reorder(Member_state,-n),y=~n,type="bar",marker=list(color=tc()$frost1))%>%
       plt_layout(margin=list(b=120),xaxis=list(tickangle=-45,tickfont=list(color=tc()$chart_fg)))
   })
   
   output$plot_pip <- renderPlotly({
     df<-filt()%>%count(has_PIP,register)%>%filter(!is.na(has_PIP))
-    validate(need(nrow(df)>0,"No data."))
+    if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df,x=~has_PIP,y=~n,color=~register,colors=register_cols(),type="bar")%>%
       plt_layout(barmode="group",legend=list(orientation="h",y=-0.2))
   })
@@ -1861,7 +2116,7 @@ server <- function(input, output, session) {
       filter(nzchar(phase)) %>%
       count(phase, register) %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
-    validate(need(nrow(df) > 0, "No phase data available."))
+    if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df, x = ~phase, y = ~n, color = ~register, colors = register_cols(), type = "bar",
             text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
       plt_layout(barmode = "stack",
@@ -1907,6 +2162,59 @@ server <- function(input, output, session) {
                  legend = list(orientation = "h", y = -0.2))
   })
 
+  # ── Phase funnel ─────────────────────────────────────────────────────────────
+  output$plot_phase_funnel <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(phase), nzchar(str_trim(phase))) %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(phase = str_trim(phase)) %>%
+      filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+      count(phase) %>%
+      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV"))) %>%
+      arrange(phase)
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters to see data here.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    t <- tc()
+    pal <- colorRampPalette(c(t$frost1, t$frost3, t$orange, t$yellow))(nrow(df))
+    plot_ly(df, type = "funnel",
+            y = ~phase, x = ~n,
+            textinfo = "value+percent total",
+            marker = list(color = pal),
+            connector = list(line = list(color = t$chart_grid, width = 1))) %>%
+      plt_layout(yaxis = list(title = ""), xaxis = list(title = "Number of Trials"))
+  })
+
+  # ── Completion rate by authorization cohort ───────────────────────────────
+  output$plot_completion_cohort <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(decision_date), !is.na(status)) %>%
+      mutate(auth_year = year(decision_date)) %>%
+      filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
+      group_by(auth_year, register) %>%
+      summarise(n_total = n(),
+                n_completed = sum(status == "Completed", na.rm = TRUE),
+                .groups = "drop") %>%
+      filter(n_total >= 5) %>%
+      mutate(pct_completed = round(n_completed / n_total * 100, 1))
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters to see data here.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    plot_ly(df, x = ~auth_year, y = ~pct_completed,
+            color = ~register, colors = register_cols(),
+            type = "scatter", mode = "lines+markers",
+            line = list(width = 2), marker = list(size = 7),
+            text = ~paste0(register, " ", auth_year, "<br>",
+                           n_completed, "/", n_total, " completed (", pct_completed, "%)"),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Authorization Year", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "% Completed", range = c(0, 105)),
+        legend = list(orientation = "h", y = -0.2))
+  })
+
   output$plot_timeline_q <- renderPlotly({
     df<-filt()%>%filter(!is.na(start_date))%>%mutate(quarter=floor_date(start_date,"quarter"))%>%
       count(quarter,register)
@@ -1919,7 +2227,10 @@ server <- function(input, output, session) {
     base <- filt() %>%
       filter(!is.na(days_to_decision), is.finite(days_to_decision),
              days_to_decision >= 0, days_to_decision < 3650)
-    validate(need(nrow(base) > 0, "No decision date data available."))
+    if (nrow(base) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters to see data here.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
     df <- bind_rows(base, mutate(base, register = "All")) %>%
       mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All")))
     t <- tc()
@@ -1936,9 +2247,34 @@ server <- function(input, output, session) {
         showlegend = FALSE)
   })
 
+  output$plot_decision_time_sponsor <- renderPlotly({
+    base <- filt() %>%
+      filter(!is.na(days_to_decision), is.finite(days_to_decision),
+             days_to_decision >= 0, days_to_decision < 3650,
+             !is.na(sponsor_type))
+    if (nrow(base) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters to see data here.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    t <- tc()
+    pal <- c("Academic" = t$frost1, "Industry" = t$orange)
+    plot_ly(base, x = ~sponsor_type, y = ~days_to_decision,
+            color = ~sponsor_type, colors = pal,
+            type = "violin",
+            box = list(visible = TRUE),
+            meanline = list(visible = TRUE),
+            points = "outliers",
+            split = ~register) %>%
+      plt_layout(
+        xaxis = list(title = "Sponsor Type"),
+        yaxis = list(title = "Days from Submission to Decision"),
+        legend = list(orientation = "h", y = -0.2),
+        violingap = 0, violingroupgap = 0.2)
+  })
+
   output$plot_top_sponsors <- renderPlotly({
     df <- filt() %>% filter(!is.na(sponsor_name))
-    validate(need(nrow(df) > 0, "No sponsor name data available."))
+    if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     t <- tc()
     sp <- df %>%
       count(sponsor_name, sponsor_type, sort = TRUE) %>%
@@ -1991,6 +2327,203 @@ server <- function(input, output, session) {
         yaxis2 = list(title = "Cumulative Trials", overlaying = "y",
                       side = "right", rangemode = "tozero",
                       showgrid = FALSE),
+        legend = list(orientation = "h", y = -0.2))
+  })
+
+  # ── Sponsor Comparison tab ────────────────────────────────────────────────
+  output$sponsor_compare_tab_ui <- renderUI({
+    n <- length(input$sponsor_filter)
+
+    help_box <- function(icon_name, icon_color = "#3c8dbc", title, lines) {
+      fluidRow(column(12, div(
+        style = "padding:60px 20px;text-align:center;",
+        tags$i(class = paste0("fa fa-", icon_name),
+               style = paste0("font-size:48px;color:", icon_color, ";margin-bottom:16px;")),
+        h3(title),
+        tagList(lines))))
+    }
+
+    if (n == 0) return(help_box("exchange", title = "Sponsor Comparison", lines = tagList(
+      p("Use the ", tags$b("Sponsor / Company"), " filter in the sidebar to select ",
+        tags$b("2 or 3 sponsors"), " and compare their trial portfolios side-by-side."),
+      p(em("The comparison will show phase distribution, trial status, and top therapeutic areas."),
+        style = "color:#888;"))))
+
+    if (n == 1) return(help_box("exchange", title = "Sponsor Comparison", lines = tagList(
+      p(tags$b(input$sponsor_filter[[1]]), " is selected."),
+      p("Select ", tags$b("one or two more sponsors"), " in the sidebar to start the comparison."),
+      p(em("You can compare 2 or 3 sponsors at a time."), style = "color:#888;"))))
+
+    if (n > 3) return(help_box("exclamation-triangle", icon_color = "#e67e22",
+      title = "Too many sponsors selected", lines = tagList(
+        p(paste0(n, " sponsors are currently selected.")),
+        p("Narrow it down to ", tags$b("2 or 3"), " to enable the comparison."))))
+
+    ttl <- paste(input$sponsor_filter, collapse = " vs. ")
+    tagList(
+      fluidRow(column(12,
+        h3(style = "margin-bottom:4px;", icon("exchange"), " ", ttl),
+        p(em("Phase distribution, trial status, organ classes, country activity, PIP status, and yearly submissions for selected sponsors."),
+          style = "font-size:12px;opacity:0.7;margin-bottom:16px;")
+      )),
+      fluidRow(
+        box(title = "Phase Distribution", status = "primary", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_compare_phase", height = "320px"), type = 6)),
+        box(title = "Trial Status", status = "info", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_compare_status", height = "320px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Top Organ Classes", status = "warning", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_compare_organ", height = "340px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Trials by Country", status = "primary", solidHeader = TRUE,
+            width = 8, height = 460,
+            withSpinner(plotlyOutput("plot_compare_country", height = "380px"), type = 6)),
+        box(title = "PIP Status", status = "info", solidHeader = TRUE,
+            width = 4, height = 460,
+            withSpinner(plotlyOutput("plot_compare_pip", height = "380px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Submissions per Year", status = "warning", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_compare_year", height = "340px"), type = 6))
+      )
+    )
+  })
+
+  compare_pal <- reactive({
+    sponsors <- input$sponsor_filter
+    t <- tc()
+    setNames(
+      colorRampPalette(c(t$frost1, t$orange, t$green, t$purple))(length(sponsors)),
+      sponsors)
+  })
+
+  output$plot_compare_phase <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(phase), nzchar(str_trim(phase)),
+             sponsor_name %in% input$sponsor_filter) %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(phase = str_trim(phase)) %>%
+      filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+      count(sponsor_name, phase) %>%
+      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
+    validate(need(nrow(df) > 0, "No phase data for selected sponsors."))
+    plot_ly(df, x = ~phase, y = ~n, color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", text = ~n, textposition = "outside", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = "Trials"),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_compare_status <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(status), sponsor_name %in% input$sponsor_filter) %>%
+      count(sponsor_name, status)
+    validate(need(nrow(df) > 0, "No status data for selected sponsors."))
+    plot_ly(df, x = ~status, y = ~n, color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", text = ~n, textposition = "outside", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = "Trials"),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_compare_organ <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(MEDDRA_organ_class),
+             sponsor_name %in% input$sponsor_filter) %>%
+      separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+      mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
+      filter(nzchar(MEDDRA_organ_class)) %>%
+      count(sponsor_name, MEDDRA_organ_class)
+    top_oc <- df %>%
+      group_by(MEDDRA_organ_class) %>%
+      summarise(total = sum(n), .groups = "drop") %>%
+      slice_max(total, n = 8) %>%
+      pull(MEDDRA_organ_class)
+    df <- df %>% filter(MEDDRA_organ_class %in% top_oc)
+    validate(need(nrow(df) > 0, "No organ class data for selected sponsors."))
+    plot_ly(df,
+            y = ~reorder(MEDDRA_organ_class, n), x = ~n,
+            color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = "Trials"),
+                 yaxis = list(title = ""),
+                 legend = list(orientation = "h", y = -0.2),
+                 margin = list(l = 240))
+  })
+
+  output$plot_compare_country <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(Member_state), sponsor_name %in% input$sponsor_filter) %>%
+      separate_rows(Member_state, sep = " / ") %>%
+      mutate(Member_state = str_trim(Member_state)) %>%
+      filter(nzchar(Member_state)) %>%
+      count(sponsor_name, Member_state)
+    top_countries <- df %>%
+      group_by(Member_state) %>%
+      summarise(total = sum(n), .groups = "drop") %>%
+      slice_max(total, n = 10) %>%
+      pull(Member_state)
+    df <- df %>% filter(Member_state %in% top_countries)
+    validate(need(nrow(df) > 0, "No country data for selected sponsors."))
+    plot_ly(df,
+            y = ~reorder(Member_state, n), x = ~n,
+            color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = "Trials"),
+                 yaxis = list(title = ""),
+                 legend = list(orientation = "h", y = -0.2),
+                 margin = list(l = 140))
+  })
+
+  output$plot_compare_pip <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(has_PIP), sponsor_name %in% input$sponsor_filter) %>%
+      count(sponsor_name, has_PIP)
+    validate(need(nrow(df) > 0, "No PIP data for selected sponsors."))
+    t <- tc()
+    pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$yellow)
+    plot_ly(df, x = ~sponsor_name, y = ~n,
+            color = ~has_PIP, colors = pip_pal,
+            type = "bar", text = ~n, textposition = "outside",
+            hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = "Trials"),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
+  output$plot_compare_year <- renderPlotly({
+    req(length(input$sponsor_filter) >= 2)
+    df <- filt() %>%
+      filter(!is.na(submission_date_parsed),
+             sponsor_name %in% input$sponsor_filter) %>%
+      mutate(year = year(submission_date_parsed)) %>%
+      count(sponsor_name, year)
+    validate(need(nrow(df) > 0, "No submission date data for selected sponsors."))
+    plot_ly(df, x = ~year, y = ~n,
+            color = ~sponsor_name, colors = compare_pal(),
+            type = "scatter", mode = "lines+markers",
+            line = list(width = 2), marker = list(size = 6),
+            text = ~paste0(sponsor_name, " ", year, "<br>", n, " trial(s)"),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Submission Year", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "Trials", rangemode = "tozero"),
         legend = list(orientation = "h", y = -0.2))
   })
 
@@ -2056,7 +2589,8 @@ server <- function(input, output, session) {
     if(nzchar(input$text_search)) {
       pat <- regex(input$text_search, ignore_case=TRUE)
       df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
-                            str_detect(CT_number, pat) | str_detect(MEDDRA_term, pat))
+                            str_detect(CT_number, pat) | str_detect(MEDDRA_term, pat) |
+                            str_detect(coalesce(sponsor_name,""), pat))
     }
     df %>%
       filter(!is.na(Member_state)) %>%

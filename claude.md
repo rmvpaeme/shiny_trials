@@ -1,4 +1,6 @@
-update the version number everywhere in the code, update the readme and about with the changelog and commit all changes to github
+when committing, update the version number everywhere in the code, update the readme and about with the changelog and commit all changes to github
+
+update CLAUDE.md every time the project has a git commit (add a section for the version/feature with what was built)
 
 ## Completed: Sponsor / Company feature (v0.2.4) — shipped 2026-04-05
 
@@ -85,7 +87,49 @@ update the version number everywhere in the code, update the readme and about wi
 - Status logs captured before select(-status_raw_orig) removes the raw column (app.R ~line 961)
 - Phase raw capture added before the phase mutate block (app.R ~line 1023)
 
-## Current version: v0.3.0
+## Completed: UI improvements (v0.4.0) — shipped 2026-04-15
+
+### Branch info
+- Branched from main (commit 229e2c5 "shinylive"), merged/committed on ui-improvements branch
+- shiny_fluent branch work is stashed (shiny.fluent UI rebuild, not yet merged/committed)
+
+### What was built
+- **Trial detail modal** — clicking a row in Data Explorer opens a `modalDialog()` with full trial record (title, CT number link to EUCTR/CTIS, register, status, phase, sponsor, MedDRA, countries, dates). Uses `selection = list(mode="single", target="row")` on trials_table DT + `observeEvent(input$trials_table_rows_selected, ...)`
+- **URL state** — filters encoded as base64 JSON in `?f=` query param via `base64enc::base64encode()` + `jsonlite::toJSON()`. `updateQueryString()` updates URL on filter change (debounced). `observeEvent(rv$data, ..., once=TRUE)` restores on load. NOTE: `observe({...}, once=TRUE)` is invalid — must use `observeEvent(..., once=TRUE)`
+- **Active filter chips** — `uiOutput("active_filters_row")` renders colored chip badges for each non-default filter above tab content. Style: `#eaf2fb` background, `2px solid #3c8dbc` top border, `margin-bottom:18px`. "Reset all" `actionButton("reset_filters")` clears all filters to defaults
+- **Decision time by sponsor type** — new `output$plot_decision_time_sponsor` violin plot in Basic Analytics splitting days-to-decision by Academic vs Industry sponsor type
+- **Section headers** — "Therapeutic Areas", "Geography & PIP", "Sponsors" `h4()` headings in Basic Analytics tab using `.analytics-section-header` CSS class
+- **Empty-state illustrations** — `empty_state()` helper returns centered div with search icon + message when no data matches filters. Applied to major chart outputs via `plotly_empty() %>% layout(...)` pattern
+- **Plotly export button** — `plt_layout()` now includes `%>% config(displayModeBar=TRUE, displaylogo=FALSE, modeBarButtonsToRemove=list(...))` so camera/download toolbar is always visible
+- **Responsive metric cards** — CSS media queries: ≤768px → 2 cards/row; ≤480px → 1 card/row
+- **PDF chart builder** — was already fully implemented in v0.3.0 (app.R dl_report passes `explore_data()` + `chart_type` to report.Rmd which has a "Custom Chart Builder" section)
+
+### What was NOT built / removed
+- Country choropleth map — removed per user request ("less clear than circle markers")
+- YoY delta trend on organ class chart — removed per user request
+- shiny.fluent UI rebuild — that work is on the stashed `shiny_fluent` branch, not included here
+
+## Completed: Analytics improvements (v0.5.0) — shipped 2026-04-18
+
+### What was built
+- **Free-text search** — sponsor_name added to search (filt() and eu_map_ongoing() reactives)
+- **Phase funnel** — `output$plot_phase_funnel`: plotly funnel chart of Phase I–IV distribution with % of total labels; new box in Phase Analytics tab below existing 3 charts
+- **Completion cohort chart** — `output$plot_completion_cohort`: line chart of % completed by authorization year, split by register; uses `year(decision_date)` + `status == "Completed"`; cohorts with < 5 trials filtered out; in same row as funnel
+- **Sponsor comparison** — `output$sponsor_compare_ui` + `plot_compare_phase` + `plot_compare_status` + `plot_compare_organ`: appears only when 2–3 sponsors selected; shows phase, status, and top 8 organ class grouped bar charts side-by-side; uses `compare_pal()` reactive for consistent colours across the 3 charts
+- **Removed eulerr** — `has_eulerr` / `library(eulerr)` lines removed (were unused)
+
+## Completed: Sponsor Comparison tab + polish (v0.5.1) — shipped 2026-04-18
+
+### What was built
+- Sponsor Comparison promoted to dedicated sidebar tab (between Phase Analytics and About)
+- `output$sponsor_compare_tab_ui`: 0 sponsors → help, 1 → prompt, 4+ → error, 2–3 → 6 charts (phase, status, organ class, country, PIP, year)
+- PIP Unknown colour changed from `t$fg` to `t$yellow` in `plot_compare_pip`
+- Removed Cumulative Trials by Start Date from Overview; Sponsor Type by Register spans full row
+- README rewritten from scratch (accurate tab list, updated feature descriptions, removed eulerr from install)
+- manuscript.md: abstract (8 modules), Phase Analytics description updated, new Sponsor Comparison paragraph, version updated to 0.5.1
+- report.Rmd: Phase Distribution funnel chart + Completion Rate by Authorisation Cohort added to Trial Phases section
+
+## Current version: v0.5.1
 
 ## README audit (2026-04-06)
 ### Known Issues

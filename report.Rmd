@@ -510,6 +510,83 @@ prtbl <- phase_reg %>%
 nk(prtbl, cap = "Phase by register.", al = c("l", rep("r", ncol(prtbl)-1)))
 ```
 
+## Phase Distribution
+
+```{r phase-funnel, fig.height=3.2, fig.cap="Proportional distribution of trials across Phase I–IV. Each bar represents one phase; width is proportional to trial count. Trials with combined phase designations (e.g. Phase I/II) are counted once per constituent phase."}
+funnel_df <- df %>%
+  filter(!is.na(phase), phase != "") %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+  count(phase, name = "n") %>%
+  mutate(
+    phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")),
+    pct   = round(n / sum(n) * 100, 1)
+  ) %>%
+  arrange(phase)
+
+if (nrow(funnel_df) > 0) {
+  pal_funnel <- c("Phase I" = FROST, "Phase II" = BLUE,
+                  "Phase III" = PURPLE, "Phase IV" = ORANGE)
+  funnel_df %>%
+    ggplot(aes(x = phase, y = n, fill = phase)) +
+    geom_col(width = 0.65, show.legend = FALSE) +
+    geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
+              vjust = -0.3, size = 2.6, color = GRAY) +
+    scale_fill_manual(values = pal_funnel) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
+    labs(title = "Phase Distribution", x = NULL, y = "Number of trials") +
+    theme_rep()
+}
+```
+
+## Completion Rate by Authorisation Cohort
+
+```{r completion-cohort, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, stratified by source register. Cohorts with fewer than five trials are excluded. More recent cohorts naturally show lower completion rates owing to shorter observation windows."}
+cohort_df <- df %>%
+  filter(!is.na(decision_date), !is.na(status)) %>%
+  mutate(auth_year = year(decision_date)) %>%
+  filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
+  group_by(auth_year, register) %>%
+  summarise(
+    n_total     = n(),
+    n_completed = sum(status == "Completed", na.rm = TRUE),
+    .groups     = "drop"
+  ) %>%
+  filter(n_total >= 5) %>%
+  mutate(pct_completed = n_completed / n_total * 100)
+
+if (nrow(cohort_df) > 0) {
+  cohort_df %>%
+    ggplot(aes(x = auth_year, y = pct_completed,
+               colour = register, group = register)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = REG_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(limits = c(0, 105),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Completion Rate by Authorisation Cohort",
+         x = "Authorisation Year", y = "% Completed") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data to render completion cohort chart.}")
+}
+```
+
+```{r completion-cohort-table}
+if (nrow(cohort_df) > 0) {
+  cohort_tbl <- cohort_df %>%
+    mutate(pct_completed = sprintf("%.1f%%", pct_completed)) %>%
+    select(auth_year, register, n_total, n_completed, pct_completed) %>%
+    rename(`Year` = auth_year, `Register` = register,
+           `Authorised` = n_total, `Completed` = n_completed, `% Completed` = pct_completed)
+  nk(cohort_tbl,
+     cap = "Completion rates by authorisation year and register (cohorts with ≥ 5 trials).",
+     al  = c("l","l","r","r","r"))
+}
+```
+
 \newpage
 
 # Sponsor Analysis
