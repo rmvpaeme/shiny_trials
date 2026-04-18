@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.5.0 — Free-text searches sponsor, phase funnel, completion cohort chart, sponsor comparison, remove eulerr)
+# app.R  (v0.5.1 — Sponsor Comparison tab, PIP Unknown colour, remove cumulative chart from Overview)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1364,6 +1364,13 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.5.1 (2026-04-18):"),
+                                          tags$ul(
+                                            tags$li("Sponsor Comparison promoted to a dedicated sidebar tab; shows contextual help when 0 or 1 sponsors are selected, and a side-by-side comparison panel (phase distribution, trial status, top organ classes, trials by country, PIP status, submissions per year) when 2–3 sponsors are selected"),
+                                            tags$li("Sponsor Comparison: PIP Unknown category now displayed in amber instead of foreground grey"),
+                                            tags$li("Overview: removed Cumulative Trials by Start Date chart; Sponsor Type by Register now spans the full row")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.5.0 (2026-04-18):"),
                                           tags$ul(
                                             tags$li("Free-text search now also searches sponsor name (previously title, CT number, MedDRA term, and product name only)"),
@@ -1456,7 +1463,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.5.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.5.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -2489,7 +2496,7 @@ server <- function(input, output, session) {
       count(sponsor_name, has_PIP)
     validate(need(nrow(df) > 0, "No PIP data for selected sponsors."))
     t <- tc()
-    pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$fg)
+    pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$yellow)
     plot_ly(df, x = ~sponsor_name, y = ~n,
             color = ~has_PIP, colors = pip_pal,
             type = "bar", text = ~n, textposition = "outside",

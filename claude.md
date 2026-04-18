@@ -118,7 +118,18 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 - **Sponsor comparison** — `output$sponsor_compare_ui` + `plot_compare_phase` + `plot_compare_status` + `plot_compare_organ`: appears only when 2–3 sponsors selected; shows phase, status, and top 8 organ class grouped bar charts side-by-side; uses `compare_pal()` reactive for consistent colours across the 3 charts
 - **Removed eulerr** — `has_eulerr` / `library(eulerr)` lines removed (were unused)
 
-## Current version: v0.5.0
+## Completed: Sponsor Comparison tab + polish (v0.5.1) — shipped 2026-04-18
+
+### What was built
+- Sponsor Comparison promoted to dedicated sidebar tab (between Phase Analytics and About)
+- `output$sponsor_compare_tab_ui`: 0 sponsors → help, 1 → prompt, 4+ → error, 2–3 → 6 charts (phase, status, organ class, country, PIP, year)
+- PIP Unknown colour changed from `t$fg` to `t$yellow` in `plot_compare_pip`
+- Removed Cumulative Trials by Start Date from Overview; Sponsor Type by Register spans full row
+- README rewritten from scratch (accurate tab list, updated feature descriptions, removed eulerr from install)
+- manuscript.md: abstract (8 modules), Phase Analytics description updated, new Sponsor Comparison paragraph, version updated to 0.5.1
+- report.Rmd: Phase Distribution funnel chart + Completion Rate by Authorisation Cohort added to Trial Phases section
+
+## Current version: v0.5.1
 
 ## README audit (2026-04-06)
 ### Known Issues

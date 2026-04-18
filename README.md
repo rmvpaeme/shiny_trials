@@ -2,9 +2,9 @@
 
 ![Overview](overview.png)
 
-**Version:** `v0.5.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.5.1` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
-An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
+An interactive R Shiny dashboard providing a unified, searchable view of paediatric clinical trials registered in the European Union. Data is retrieved nightly from two complementary registers and harmonised into a single, consistently coded dataset.
 
 | Register | URL | Paediatric filter |
 |---|---|---|
@@ -42,7 +42,8 @@ install.packages(c(
   "shiny", "shinydashboard", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite", "DBI",
   "dplyr", "tidyr", "ggplot2", "stringr", "lubridate",
-  "DT", "plotly", "leaflet", "readr", "writexl", "eulerr"
+  "DT", "plotly", "leaflet", "readr", "writexl",
+  "base64enc", "jsonlite", "rmarkdown"
 ))
 ```
 
@@ -112,7 +113,7 @@ docker compose exec app Rscript /app/update_data.R  # first-time data load
 
 ## Dashboard Overview
 
-The dashboard has seven tabs, each respecting the active sidebar filters.
+The dashboard has eight tabs, all of which respect the active sidebar filters in real time.
 
 ### Overview
 
@@ -120,88 +121,110 @@ The landing tab. Provides a high-level summary of the filtered dataset:
 
 - **Value boxes** — Total Trials, Ongoing, Completed, With PIP
 - **5 most recently submitted trials** — sortable table; CT numbers are clickable links to the originating registry
-- **Cumulative Trials by Start Date** — ECDF of trial start dates, coloured by status (Ongoing / Completed / Other)
-- **Sponsor type by register** — grouped bar chart comparing Academic vs Industry across EUCTR, CTIS, and combined
-- **Submissions per year** — stacked bar chart by register
+- **Sponsor Type by Register** — grouped bar chart comparing Academic vs Industry across EUCTR, CTIS, and combined
+- **Submissions per Year** — stacked bar chart by register
 - **Register Comparison** — status breakdown stacked by register
 
 ### Chart Builder
 
 A flexible custom chart tab for building ad-hoc visualisations of the filtered dataset:
 
-- **X axis** — choose from: Year of Submission, Status, Register, Phase, Sponsor Type, PIP Status, MedDRA Organ Class, MedDRA Condition, Country / Member State
-- **Group by** — optional second variable for colour-splitting (same choices as X axis)
+- **X axis** — Year of Submission, Status, Register, Phase, Sponsor Type, PIP Status, MedDRA Organ Class, MedDRA Condition, Country / Member State
+- **Group by** — optional second variable for colour-splitting (same choices, plus None)
 - **Chart types** — Bar (stacked), Bar (grouped), Bar (100% stacked), Line
-- **Max groups slider** — limit the number of colour groups shown (3–20) when a grouping variable is selected
+- **Max groups slider** — limit the number of colour groups shown (3–20) when a grouping variable is active
 - **Summary table** — aggregated counts with % of total and cumulative % columns
-- **Statistics panel** — Total, Mean, Median, SD, Min, Max of counts; per group when a grouping variable is active
-- **PDF export** — the custom chart and its statistics table are included in the downloaded PDF report
+- **Statistics panel** — Total, Mean, Median, SD, Min, Max per stratum
+- **PDF export** — the custom chart and statistics table are included in the downloaded PDF report
 
-Multi-value variables (Organ Class, Condition, Country) are split before aggregation; a note is shown when counts may exceed the total number of trials.
+Multi-value variables (Organ Class, Condition, Country) are split before aggregation; a note is shown when counts may exceed the total trial count.
 
 ### Map
 
-An interactive Leaflet map of ongoing/open trials by country:
+An interactive Leaflet map of ongoing trials by country:
 
 - Circle markers sized and colour-coded by trial count (green → yellow → orange → red)
-- A sortable trial table appears below the map when zoomed to level 5 or higher, showing only trials within the current map viewport
-- Trials sorted by submission date, most recent first
+- A sortable trial table appears below the map when zoomed to level 5 or higher
 
 ### Data Explorer
 
 A full interactive DataTable of all trials matching the active filters:
 
-- Per-column search filters
-- Columns: CT number, register, title, product, MedDRA term, MedDRA organ class, countries, country count, status, PIP, phase, sponsor name, sponsor type, submission date, start date, decision date
-- Default sort: submission date descending
+- Columns: CT number (linked to registry), register, title, product, MedDRA term, MedDRA organ class, countries, country count, status, PIP, phase, sponsor name, sponsor type, submission date, start date, decision date
+- Clicking a row opens a **modal dialog** with the full trial record and a direct link to the originating registry
 - Download as CSV or Excel
 
 ### Basic Analytics
 
-Charts focused on therapeutic area, geography, PIP trends, and sponsors:
+Pre-specified charts grouped into three sections:
 
-- **Top MedDRA organ classes** — configurable N, stacked by register
-- **Top conditions / MedDRA terms** — configurable N, stacked by register
-- **Trials by country** — top 30, horizontal bar chart
-- **PIP Status** — pie chart of Yes / No / Unknown
-- **Start-Date Timeline (quarterly)** — count of new trials per quarter
-- **PIP Status by Year** — stacked bar showing Yes / No / Unknown split over time
-- **Time from Submission to Decision** — violin plot of days from submission to regulatory decision, split by register
-- **Top Sponsors / Companies** — horizontal bar chart coloured by sponsor type (Academic / Industry), configurable Top N
-- **Sponsor Trial Timeline** *(visible only when exactly one sponsor is selected in the sidebar)* — bars showing new trials per year with a cumulative line overlay
+**Therapeutic Areas**
+- Top MedDRA organ classes (configurable N)
+- Top conditions / MedDRA terms (configurable N)
+
+**Geography & PIP**
+- Trials by country (top 30)
+- PIP Status distribution (Yes / No / Unknown)
+- Start-date timeline (quarterly)
+- PIP Status by year
+
+**Sponsors**
+- Time from submission to decision — violin plot by register
+- Days to decision by sponsor type — violin split by Academic / Industry with register overlay
+- Top sponsors by trial count (configurable N, coloured by sponsor type)
+- Sponsor Trial Timeline *(visible only when exactly one sponsor is selected)* — bars for new trials per year with a cumulative line overlay
 
 ### Phase Analytics
 
-Charts focused on trial phase across different dimensions:
+Charts focused on trial phase:
 
-- **Trial Phase by Register** — stacked bar showing Phase I / II / III / IV distribution across EUCTR and CTIS
-- **Trial Phase by Status** — phase breakdown split by Ongoing, Completed, Other
-- **Trial Phase by Sponsor Type** — phase breakdown split by Academic vs Industry
+- **Trial Phase by Register** — stacked bar, Phase I–IV across EUCTR and CTIS
+- **Trial Phase by Status** — phase split by Ongoing / Completed / Other
+- **Trial Phase by Sponsor Type** — phase split by Academic vs Industry
+- **Phase Funnel** — proportional funnel showing the distribution across Phase I–IV with % of total labels
+- **Completion Rate by Authorization Cohort** — line chart showing what % of trials authorized in each year have since completed, split by register; more recent cohorts naturally show lower rates
+
+### Sponsor Comparison
+
+A dedicated tab for side-by-side comparison of 2–3 sponsors:
+
+- **0 sponsors selected** — instructions on how to use the tab
+- **1 sponsor selected** — names the sponsor and prompts to add one more
+- **4+ sponsors selected** — prompts to narrow the selection
+- **2–3 sponsors selected** — six comparison charts:
+  - Phase distribution (grouped bar)
+  - Trial status (grouped bar)
+  - Top organ classes (horizontal grouped bar, top 8 across selected sponsors)
+  - Trials by country (horizontal grouped bar, top 10)
+  - PIP status (stacked bar per sponsor; Yes = green, No = red, Unknown = amber)
+  - Submissions per year (line chart)
 
 ### About
 
-Data sources, processing methodology, MedDRA SOC code reference table, changelog, and version information.
+Data sources, processing methodology, registry-to-dashboard status mapping, MedDRA SOC code reference table, version changelog, and technical acknowledgements.
 
 ---
 
 ## Sidebar Filters
 
-All filters apply globally across every tab.
+All filters apply globally across every tab in real time.
 
-| Filter | Description |
-|---|---|
-| **Trial Status** | Ongoing / Completed / Other (multi-select checkboxes) |
-| **Register** | EUCTR / CTIS (multi-select checkboxes) |
-| **Submission Date** | Date range picker |
-| **MedDRA Organ Class** | Searchable multi-select |
-| **Condition / MedDRA Term** | Searchable multi-select |
-| **Country / Member State** | Searchable multi-select |
-| **Trial Phase** | Phase I / II / III / IV (searchable multi-select) |
-| **PIP Status** | All / Yes / No / Unknown (single-select dropdown) |
-| **Sponsor / Company** | Searchable multi-select; names are normalised and deduplicated |
-| **Search** | Free-text search across title, product name, and CT number |
+| Filter | Type | Description |
+|---|---|---|
+| **Trial Status** | Multi-select checkboxes | Ongoing / Completed / Other |
+| **Register** | Multi-select checkboxes | EUCTR / CTIS |
+| **Submission Date** | Date range picker | Inclusive date range |
+| **MedDRA Organ Class** | Searchable multi-select | System Organ Class (SOC) level |
+| **Condition / MedDRA Term** | Searchable multi-select | Preferred term level |
+| **Country / Member State** | Searchable multi-select | EU member states |
+| **Trial Phase** | Searchable multi-select | Phase I / II / III / IV |
+| **PIP Status** | Single-select dropdown | All / Yes / No / Unknown |
+| **Sponsor / Company** | Searchable multi-select | Normalised and deduplicated names |
+| **Free-text search** | Text input | Searches title, CT number, product name, MedDRA term, and sponsor name |
 
-A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All charts, tables, and UI elements switch instantly.
+Active filters are displayed as colour-coded chips above the tab content. A **Reset all** button clears every filter at once. Filter state is encoded in the URL query string (`?f=`) so views can be bookmarked and shared.
+
+A **Theme** toggle (Nord dark / Default light) is in the sidebar. All charts, tables, and UI elements switch instantly.
 
 ---
 
@@ -210,7 +233,7 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
 ```
 ┌──────────────────────────┐    ┌──────────────────────────┐
 │  EUCTR                   │    │  CTIS                    │
-│  ~10 000 records         │    │  ~1 000 records          │
+│  ~10 000 records         │    │  ~1 500 records          │
 │  (per-country duplicates)│    │  (nested JSON metadata)  │
 └───────────┬──────────────┘    └────────────┬─────────────┘
             │                                │
@@ -236,13 +259,15 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
             │  14. Cache to .rds             │
             └──────────────┬─────────────────┘
                            ▼
-                ┌─────────────────────┐
-                │   Shiny Dashboard   │
-                │  Overview           │
-                │  Chart Builder · Map│
-                │  Explorer · Analytics│
-                │  Phase · About      │
-                └─────────────────────┘
+                ┌──────────────────────────┐
+                │   Shiny Dashboard        │
+                │  Overview · Chart Builder│
+                │  Map · Data Explorer     │
+                │  Basic Analytics         │
+                │  Phase Analytics         │
+                │  Sponsor Comparison      │
+                │  About                   │
+                └──────────────────────────┘
 ```
 
 ### Key processing steps
@@ -255,21 +280,19 @@ A **Theme** toggle (Nord dark / Default light) is also in the sidebar. All chart
 
 **PIP detection** — EUCTR stores PIP as `"Yes"/"No"/"true"/"false"`. In CTIS the `paediatricInvestigationPlan` field holds a list of record objects; presence of any content maps to "Yes", absence to "No".
 
-**Trial phase** — EUCTR phase is stored as four boolean fields (Phase I–IV). CTIS stores descriptive text (`"Therapeutic exploratory (Phase II)"`). Both are mapped to a common set of labels via regex matching.
+**Trial phase** — EUCTR phase is stored as four boolean fields (Phase I–IV). CTIS stores descriptive text (`"Therapeutic exploratory (Phase II)"`). Both are mapped to a common label set via regex matching.
 
-**EUCTR → CTIS transition** — EUCTR records with status "Trial now transitioned to CTIS" are matched to their CTIS counterpart by normalised title (first 80 characters). The CTIS record is preferred in the deduplicated dataset.
+**EUCTR → CTIS transition** — EUCTR records with status "Trial now transitioned to CTIS" are matched to their CTIS counterpart by normalised title (first 80 characters). The CTIS record is retained as the authoritative source.
 
-**Sponsor name normalisation** — raw sponsor names from both registers are cleaned in a multi-pass pipeline: legal suffixes stripped (GmbH & Co. KG, Inc., Ltd., S.A., DAC, A/S, …), department qualifiers removed, subsidiary boilerplate stripped, title-case applied (dotted abbreviations like A.I.E.O.P. are preserved), and ~70 known pharma brand prefixes are mapped to canonical names (e.g. GlaxoSmithKline → GSK).
+**Sponsor name normalisation** — raw sponsor names undergo a multi-pass pipeline: legal suffixes stripped (GmbH & Co. KG, Inc., Ltd., S.A., DAC, A/S, …), department qualifiers removed, subsidiary boilerplate stripped, title-case applied (dotted abbreviations like A.I.E.O.P. preserved), and ~70 known pharma brand prefixes mapped to canonical names (e.g. GlaxoSmithKline → GSK).
 
-**Normalisation logs** — on every cache rebuild, a CSV log is written to `data/` for each normalisation step: sponsor names, country names, MedDRA terms, organ classes, trial phase, status category, and status display labels. Each log contains the raw value, normalised output, register, trial count, and a flag indicating whether the value changed.
+**Normalisation logs** — on every cache rebuild, a CSV log is written to `data/` for each normalisation step: sponsor names, country names, MedDRA terms, organ classes, trial phase, status category, and status display labels. Each log contains the raw value, normalised output, register, trial count, and a changed flag.
 
-**Caching** — processed data is saved to `pediatric_trials_cache.rds` in the app root. The cache is automatically invalidated when the SQLite database is newer. Delete this file manually to force a rebuild without re-downloading data.
+**Caching** — processed data is saved to `pediatric_trials_cache.rds`. The cache is automatically invalidated when the SQLite database is newer. Delete the file manually to force a rebuild without re-downloading data.
 
 ---
 
 ## Configuration
-
-Environment variables control runtime paths. They can be set in the shell, passed to Docker with `-e`, or edited at the top of `app.R` and `update_data.R`.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -293,13 +316,13 @@ shiny_trials/
 ├── README.md                      # This file
 └── data/
     ├── pediatric_trials.sqlite              # SQLite database (auto-generated)
-    ├── sponsor_normalisation_log.csv        # Sponsor name mapping log (auto-generated)
-    ├── country_normalisation_log.csv        # Country name cleaning log (auto-generated)
-    ├── meddra_term_normalisation_log.csv    # MedDRA term cleaning log (auto-generated)
-    ├── organ_class_normalisation_log.csv    # Organ class cleaning log (auto-generated)
-    ├── phase_normalisation_log.csv          # Phase mapping log (auto-generated)
-    ├── status_category_normalisation_log.csv  # Status category log (auto-generated)
-    └── status_display_normalisation_log.csv   # Status display label log (auto-generated)
+    ├── sponsor_normalisation_log.csv        # Sponsor name mapping log
+    ├── country_normalisation_log.csv        # Country name cleaning log
+    ├── meddra_term_normalisation_log.csv    # MedDRA term cleaning log
+    ├── organ_class_normalisation_log.csv    # Organ class cleaning log
+    ├── phase_normalisation_log.csv          # Phase mapping log
+    ├── status_category_normalisation_log.csv
+    └── status_display_normalisation_log.csv
 ```
 
 ---
@@ -311,12 +334,13 @@ shiny_trials/
 | Data retrieval | [`ctrdata`](https://github.com/rfhb/ctrdata) | Unified access to EUCTR and CTIS |
 | Database | [`nodbi`](https://github.com/ropensci/nodbi) + [`RSQLite`](https://cran.r-project.org/package=RSQLite) | Local document store over SQLite |
 | Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) | Dashboard UI |
-| Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive visualisations |
+| Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive + PDF visualisations |
 | Map | [`leaflet`](https://rstudio.github.io/leaflet/) | Country-level interactive map |
-| Euler diagram | [`eulerr`](https://cran.r-project.org/package=eulerr) | Proportional Venn / Euler diagram |
 | Tables | [`DT`](https://rstudio.github.io/DT/) | Interactive data tables |
 | Data wrangling | [`dplyr`](https://dplyr.tidyverse.org/), [`tidyr`](https://tidyr.tidyverse.org/), [`stringr`](https://stringr.tidyverse.org/), [`lubridate`](https://lubridate.tidyverse.org/) | Data manipulation |
 | Export | [`writexl`](https://cran.r-project.org/package=writexl), [`readr`](https://readr.tidyverse.org/) | CSV and Excel download |
+| URL state | [`base64enc`](https://cran.r-project.org/package=base64enc), [`jsonlite`](https://cran.r-project.org/package=jsonlite) | Filter serialisation to URL |
+| Report | [`rmarkdown`](https://rmarkdown.rstudio.com/) | PDF report generation |
 
 ---
 
@@ -334,12 +358,17 @@ shiny_trials/
 
 ## Changelog
 
+### v0.5.1 (2026-04-18)
+
+- **Sponsor Comparison tab:** promoted to a dedicated sidebar tab between Phase Analytics and About; shows contextual help (with instructions) when 0 or 1 sponsors are selected, an error state when 4+ are selected, and a full comparison panel for 2–3 sponsors comprising phase distribution, trial status, top organ classes, trials by country, PIP status, and submissions per year
+- **Sponsor Comparison — PIP Status:** Unknown category now displayed in amber (previously foreground grey, which was invisible on dark backgrounds)
+- **Overview:** removed Cumulative Trials by Start Date chart; Sponsor Type by Register now spans the full row width
+
 ### v0.5.0 (2026-04-18)
 
-- **Free-text search:** now also matches against sponsor name (previously searched title, CT number, MedDRA term, and product name only)
+- **Free-text search:** now also matches against sponsor name (previously title, CT number, MedDRA term, and product name only)
 - **Phase Analytics — Phase Funnel:** new chart showing the distribution of trials across Phase I–IV as a proportional funnel with % of total labels
-- **Phase Analytics — Completion Rate by Authorization Cohort:** line chart showing what % of trials authorized in each year have since completed, split by register (EUCTR / CTIS); more recent cohorts naturally show lower rates
-- **Sponsor Comparison:** when exactly 2 or 3 sponsors are selected in the sidebar Sponsor filter, a comparison panel appears in the Sponsors section of Basic Analytics with side-by-side phase distribution, trial status, and top organ class charts
+- **Phase Analytics — Completion Rate by Authorization Cohort:** line chart showing what % of trials authorized in each year have since completed, split by register; more recent cohorts naturally show lower rates
 - **Code:** removed unused `eulerr` package import
 
 ### v0.4.0 (2026-04-15)
@@ -347,71 +376,61 @@ shiny_trials/
 - **Trial detail modal:** clicking any row in the Data Explorer opens a modal dialog with full trial details — title, CT number (linked to source register), register, status, phase, sponsor, MedDRA terms, countries, and key dates
 - **URL state:** active filters are encoded in the URL query string (`?f=`) so filtered views can be bookmarked and shared; filters are restored automatically on page load
 - **Active filter chips:** a badge bar above the tab content shows all non-default filters as coloured chips; a "Reset all" button clears all filters at once
-- **Days-to-decision violin:** new chart in the Sponsors section of Basic Analytics showing distribution of days from submission to authorisation/registration, split by sponsor type (Academic / Industry) with register overlay
-- **Analytics section headers:** boxes in Basic Analytics grouped under section headers — Therapeutic Areas, Geography & PIP, Sponsors
-- **Empty states:** when no trials match the active filters all main plotly charts show a friendly "no data" message instead of a blank area
+- **Days-to-decision by sponsor type:** new violin plot in Basic Analytics splitting days from submission to decision by Academic vs Industry, with register overlay
+- **Analytics section headers:** boxes in Basic Analytics grouped under Therapeutic Areas, Geography & PIP, and Sponsors
+- **Empty states:** when no trials match the active filters, all main charts show a friendly "no data" message
 - **Plotly toolbar:** mode bar always visible with camera icon for PNG download; non-essential buttons removed
-- **Responsive metric cards:** KPI cards shown 2-per-row on tablet-width screens and 1-per-row on very small screens
+- **Responsive metric cards:** KPI cards shown 2-per-row on tablet-width screens, 1-per-row on mobile
 
 ### v0.3.0 (2026-04-06)
 
-- **Chart Builder tab:** new tab (second position, after Overview) for building custom charts from the filtered dataset — choose X axis, optional grouping variable, and chart type (bar stacked / grouped / 100% stacked, line); multi-value variables (organ class, condition, country) are split before aggregation with an inline warning when counts may exceed trial totals
-- **Chart Builder — statistics:** summary table shows counts with % of total and cumulative %; a companion statistics panel shows Total, Mean, Median, SD, Min, Max — one row per group when a grouping variable is active
-- **Chart Builder — PDF export:** the custom chart and matching statistics table are included in the downloaded PDF report, rendered with ggplot2 using the Nord colour palette
+- **Chart Builder tab:** new tab for building custom bar and line charts — choose X axis, optional grouping variable, and chart type; multi-value variables split before aggregation
+- **Chart Builder — statistics:** summary table with counts, % of total, and cumulative %; statistics panel with Total, Mean, Median, SD, Min, Max
+- **Chart Builder — PDF export:** custom chart and statistics table included in the PDF report
 - **Navigation:** "Analytics" renamed to "Basic Analytics"; "Phase Analysis" renamed to "Phase Analytics"
 
 ### v0.2.4 (2026-04-05)
 
-- **Sidebar:** new Sponsor / Company filter with multi-select, supporting both EUCTR and CTIS registers
-- **Data:** sponsor names normalised and deduplicated — legal suffixes stripped, brand-name canonicalisation for ~70 major pharma companies, title-case applied where appropriate
-- **Analytics:** new Top Sponsors chart (horizontal bar, coloured by sponsor type, configurable Top N slider)
+- **Sponsor filter:** new Sponsor / Company sidebar filter with multi-select
+- **Sponsor normalisation:** legal suffixes stripped, ~70 pharma brand canonicalisation, title-case applied
+- **Analytics:** Top Sponsors chart (horizontal bar, coloured by sponsor type, configurable N)
 - **Data Explorer:** Sponsor Name and Sponsor Type columns added
-- **Report:** Top Sponsors section added (bar chart + table)
-- **Fix:** CTIS sponsor name field corrected to `authorizedApplication.authorizedPartI.sponsors.organisation.name`
 
 ### v0.2.3 (2026-03-30)
 
-- **Data Explorer:** added Decision Date column (Competent Authority decision date for EUCTR; authorisation date for CTIS)
-- **Analytics:** added violin plot showing the distribution of days from submission to decision, split by register
+- **Data Explorer:** Decision Date column added
+- **Analytics:** violin plot of days from submission to decision, split by register
 
 ### v0.2.2 (2026-03-30)
 
-- **Data pipeline:** EUCTR download is now skipped when the query URL has not changed since the last successful load; the normalised query term is stored in a `_meta` table in the SQLite database and compared on each run — nightly updates now only fetch CTIS (~5 min) unless the search criteria are modified
+- **Data pipeline:** EUCTR download skipped when query URL has not changed since last run; nightly updates now only re-fetch CTIS (~5 min) unless search criteria change
 
 ### v0.2.1 (2026-03-29)
 
-- **Data:** normalise MedDRA condition name spelling variants between EUCTR (American) and CTIS (British MedDRA preferred) — leukemia/leukaemia, tumor/tumour, diarrhea/diarrhoea, esophag/oesophag, tyrosinemia/tyrosinaemia, localized/localised
-- **Data:** convert Roman numeral type notation (Type I/II/III/IV) to Arabic numerals (Type 1/2/3/4) so cross-register duplicates collapse into single entries
+- **Data:** MedDRA spelling normalisation (leukemia → leukaemia, tumor → tumour, etc.) and Roman numeral type notation converted to Arabic (Type I → Type 1)
 
 ### v0.2.0 (2026-03-29)
 
-- **Filter save/restore:** download active filter settings as a JSON file and re-upload them in any future session to instantly restore the same selection
-- **PDF report:** new "Download PDF Report" button generates a full summary PDF for the current filter selection, including all dashboard charts and descriptive statistics (n, %, mean ± SD, median, IQR) for each section; uses R Markdown + pdflatex with Helvetica/Arial font
+- **Filter save/restore:** download active filter settings as JSON; re-upload to restore them in any session
+- **PDF report:** full summary PDF for any filter selection via sidebar
 
 ### v0.1.5 (2026-03-29)
 
-- **Navigation:** split the Analytics tab into two separate tabs — Analytics and Phase Analysis
-- **Phase Analysis tab:** trial phase breakdown by register, by status, and by sponsor type (Academic vs Industry)
+- **Navigation:** Analytics split into Analytics and Phase Analysis tabs
 
 ### v0.1.4 (2026-03-28)
 
-- **Sidebar:** added Trial Phase filter (Phase I / II / III / IV)
-- **Data Explorer:** added Phase column
-- **Analytics:** added Trial Phase by Register, by Status, and by Sponsor Type charts
-- **Fix:** CTIS phase resolved from top-level `trialPhase` field using regex mapping (descriptive text format)
+- **Sidebar:** Trial Phase filter added
+- **Analytics:** Phase charts by register, status, and sponsor type
 
 ### v0.1.3 (2026-03-28)
 
-- **Map tab:** new interactive Leaflet map showing open/ongoing trials by country; circle markers sized and colour-coded by trial count; trial table appears below the map when zoomed in (zoom ≥ 5)
-- **Fix:** EUCTR trial links now use the correct URL format (`/{country_code}` instead of `/results`)
-- **Data Explorer & Map:** tables now sorted by submission date descending
+- **Map tab:** interactive Leaflet map of ongoing trials by country; trial table at zoom ≥ 5
 
 ### v0.1.1 (2026-03-28)
 
-- **Overview:** replaced Status Distribution chart with Sponsor Type by Register (Academic vs Industry per register and combined)
-- **Overview:** CT numbers in "5 Most Recently Submitted Trials" are now clickable links to the respective registry
-- **Analytics:** added PIP Status by Year stacked bar chart
-- **Data:** MedDRA organ class numeric codes (EUCTR prefix format and CTIS EMA SOC codes) resolved to human-readable names
+- **Overview:** Sponsor Type by Register chart; CT numbers as clickable links
+- **Analytics:** PIP Status by Year chart; MedDRA SOC code resolution
 
 ### v0.1.0
 
