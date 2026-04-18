@@ -1428,85 +1428,18 @@ ui <- dashboardPage(skin = "blue",
                                         ),
                                         tags$li(tags$b("v0.4.0 (2026-04-15):"),
                                           tags$ul(
-                                            tags$li("Data Explorer: clicking a row opens a modal dialog with full trial details (title, CT number link, register, status, phase, sponsor, MedDRA terms, countries, dates)"),
-                                            tags$li("URL state: active filters are encoded in the URL query string (?f=) so views can be bookmarked and shared; filters are restored automatically on page load"),
-                                            tags$li("Active filter chips: a badge row above the tab content shows all non-default filters as coloured chips with a Reset all button"),
-                                            tags$li("Basic Analytics: new violin plot showing days-to-decision split by sponsor type (Academic / Industry) with register overlay"),
-                                            tags$li("Basic Analytics: section headers group boxes into Therapeutic Areas, Geography & PIP, and Sponsors"),
-                                            tags$li("Charts: empty-state message shown instead of blank area when no trials match filters (all main plotly outputs)"),
-                                            tags$li("Charts: plotly toolbar visible with camera (PNG download) icon; non-essential mode bar buttons removed"),
-                                            tags$li("Responsive layout: metric cards shown 2-per-row on narrow screens and 1-per-row on very small screens")
+                                            tags$li("Data Explorer: clicking a row opens a modal with full trial details"),
+                                            tags$li("URL state: filters encoded in ?f= query string for bookmarking and sharing"),
+                                            tags$li("Active filter chips above tab content with Reset all button"),
+                                            tags$li("Basic Analytics: violin plot for days-to-decision by sponsor type; section headers added"),
+                                            tags$li("Charts: empty-state messages; plotly toolbar with PNG export")
                                           )
                                         ),
                                         tags$li(tags$b("v0.3.0 (2026-04-06):"),
                                           tags$ul(
-                                            tags$li("Chart Builder: new tab (second position in sidebar) for building custom bar and line charts with a freely chosen X axis, optional grouping variable, and four chart types (stacked bar, grouped bar, 100% stacked bar, line)"),
-                                            tags$li("Chart Builder: summary table shows counts with % of total and cumulative %; statistics panel shows Total, Mean, Median, SD, Min, Max — per group when grouped"),
-                                            tags$li("Chart Builder: custom chart included in PDF report with ggplot2 rendering and matching stats table"),
-                                            tags$li("Navigation: Analytics renamed to Basic Analytics; Phase Analysis renamed to Phase Analytics")
+                                            tags$li("Chart Builder tab: custom bar / line charts with freely chosen X axis, grouping variable, and four chart types; included in PDF report")
                                           )
-                                        ),
-                                        tags$li(tags$b("v0.2.4 (2026-04-05):"),
-                                          tags$ul(
-                                            tags$li("Sidebar: new Sponsor / Company filter with multi-select, supporting both EUCTR and CTIS registers"),
-                                            tags$li("Data: sponsor names normalised and deduplicated (legal suffixes stripped, brand-name canonicalisation for ~70 pharma companies, title-case)"),
-                                            tags$li("Analytics: new Top Sponsors chart (horizontal bar, coloured by sponsor type, configurable Top N)"),
-                                            tags$li("Data Explorer: Sponsor Name and Sponsor Type columns added"),
-                                            tags$li("Report: Top Sponsors section added (bar chart + table)"),
-                                            tags$li("Fix: CTIS sponsor name field corrected to authorizedApplication.authorizedPartI.sponsors.organisation.name")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.2.3 (2026-03-30):"),
-                                          tags$ul(
-                                            tags$li("Data Explorer: added Decision Date column (Competent Authority decision date for EUCTR; authorisation date for CTIS)"),
-                                            tags$li("Analytics: added violin plot showing the distribution of days from submission to decision, split by register")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.2.2 (2026-03-30):"),
-                                          tags$ul(
-                                            tags$li("Data pipeline: EUCTR download skipped when query URL unchanged; normalised query term stored in _meta table and compared on each run — nightly updates now only fetch CTIS unless search criteria change")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.2.1 (2026-03-29):"),
-                                          tags$ul(
-                                            tags$li("Data: normalise MedDRA condition name spelling variants between EUCTR (American) and CTIS (British MedDRA preferred) — leukemia/leukaemia, tumor/tumour, diarrhea/diarrhoea, esophag/oesophag, tyrosinemia/tyrosinaemia, localized/localised"),
-                                            tags$li("Data: convert Roman numeral type notation (Type I/II/III/IV) to Arabic numerals (Type 1/2/3/4) so cross-register duplicates collapse into single entries")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.2.0 (2026-03-29):"),
-                                          tags$ul(
-                                            tags$li("Filters: save current filter settings to a JSON file and reload them in a later session"),
-                                            tags$li("Report: download a full PDF summary report with all charts and descriptive statistics (n, %, mean, median, SD, IQR) for the active filter selection")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.1.5 (2026-03-29):"),
-                                          tags$ul(
-                                            tags$li("Navigation: split Analytics page into Analytics and Phase Analysis tabs"),
-                                            tags$li("Phase Analysis: trial phase by register, by status, and by sponsor type (Academic vs Industry)")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.1.4 (2026-03-28):"),
-                                          tags$ul(
-                                            tags$li("Sidebar: added Trial Phase filter (Phase I–IV)"),
-                                            tags$li("Analytics: added Trial Phase bar chart (stacked by register)")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.1.3 (2026-03-28):"), " (v0.1.2 skipped)",
-                                          tags$ul(
-                                            tags$li("Map: new Map tab showing open/ongoing trials by country on an interactive Leaflet map; trial table appears below when zoomed in"),
-                                            tags$li("Fix: EUCTR trial links now use correct URL format (/{country_code} instead of /results)"),
-                                            tags$li("Data Explorer & Map: tables now sorted by submission date descending (most recent first)")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.1.1 (2026-03-28):"),
-                                          tags$ul(
-                                            tags$li("Overview: replaced Status Distribution chart with Sponsor Type by Register (Academic vs Industry, per register and combined)"),
-                                            tags$li("Overview: CT numbers in '5 Most Recently Submitted Trials' are now clickable links to the respective registry"),
-                                            tags$li("Analytics: added PIP Status by Year stacked bar chart"),
-                                            tags$li("Data: MedDRA organ class numeric codes (EUCTR prefix format and CTIS EMA SOC codes) are now resolved to human-readable names")
-                                          )
-                                        ),
-                                        tags$li(tags$b("v0.1:"), " Initial release.")
+                                        )
                                       ),
                                       hr(),
                                       p(em(paste0("v0.6.0 — ",Sys.Date())),style="opacity:0.5;")
