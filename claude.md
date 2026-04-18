@@ -109,7 +109,16 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 - YoY delta trend on organ class chart — removed per user request
 - shiny.fluent UI rebuild — that work is on the stashed `shiny_fluent` branch, not included here
 
-## Current version: v0.4.0
+## Completed: Analytics improvements (v0.5.0) — shipped 2026-04-18
+
+### What was built
+- **Free-text search** — sponsor_name added to search (filt() and eu_map_ongoing() reactives)
+- **Phase funnel** — `output$plot_phase_funnel`: plotly funnel chart of Phase I–IV distribution with % of total labels; new box in Phase Analytics tab below existing 3 charts
+- **Completion cohort chart** — `output$plot_completion_cohort`: line chart of % completed by authorization year, split by register; uses `year(decision_date)` + `status == "Completed"`; cohorts with < 5 trials filtered out; in same row as funnel
+- **Sponsor comparison** — `output$sponsor_compare_ui` + `plot_compare_phase` + `plot_compare_status` + `plot_compare_organ`: appears only when 2–3 sponsors selected; shows phase, status, and top 8 organ class grouped bar charts side-by-side; uses `compare_pal()` reactive for consistent colours across the 3 charts
+- **Removed eulerr** — `has_eulerr` / `library(eulerr)` lines removed (were unused)
+
+## Current version: v0.5.0
 
 ## README audit (2026-04-06)
 ### Known Issues

@@ -2,7 +2,7 @@
 
 ![Overview](overview.png)
 
-**Version:** `v0.4.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.5.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard that provides a unified, searchable view of paediatric clinical trials registered in the European Union. Data is pulled from two complementary registers and harmonised into a single dataset.
 
@@ -333,6 +333,14 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.5.0 (2026-04-18)
+
+- **Free-text search:** now also matches against sponsor name (previously searched title, CT number, MedDRA term, and product name only)
+- **Phase Analytics — Phase Funnel:** new chart showing the distribution of trials across Phase I–IV as a proportional funnel with % of total labels
+- **Phase Analytics — Completion Rate by Authorization Cohort:** line chart showing what % of trials authorized in each year have since completed, split by register (EUCTR / CTIS); more recent cohorts naturally show lower rates
+- **Sponsor Comparison:** when exactly 2 or 3 sponsors are selected in the sidebar Sponsor filter, a comparison panel appears in the Sponsors section of Basic Analytics with side-by-side phase distribution, trial status, and top organ class charts
+- **Code:** removed unused `eulerr` package import
 
 ### v0.4.0 (2026-04-15)
 
