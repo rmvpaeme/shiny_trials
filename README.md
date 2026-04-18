@@ -2,7 +2,7 @@
 
 ![Overview](overview.png)
 
-**Version:** `v0.5.1` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.6.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard providing a unified, searchable view of paediatric clinical trials registered in the European Union. Data is retrieved nightly from two complementary registers and harmonised into a single, consistently coded dataset.
 
@@ -357,6 +357,14 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.6.0 (2026-04-18)
+
+- **Sidebar:** filters and tools split into two tabs (Filters / Tools) to eliminate scrolling
+- **Filters tab:** reordered inputs — date range and free-text search at top, then sponsor, country, then remaining filters; Trial Status and Source Register converted from checkboxes to selectize dropdowns
+- **Active filter chips:** two-tone pill design (darker label badge + lighter value) for easier scanning; colours adapt to Nord dark theme
+- **Tools tab:** Save / Load / PDF / Theme redesigned as compact full-width buttons; Load uses a hidden file input triggered by a plain button to guarantee identical sizing with Save
+- **Sponsor Comparison:** title and Count / Percentage toggle now co-linear on the same row
 
 ### v0.5.1 (2026-04-18)
 

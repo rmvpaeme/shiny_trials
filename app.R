@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.5.1 — Sponsor Comparison tab, PIP Unknown colour, remove cumulative chart from Overview)
+# app.R  (v0.6.0 — Sidebar tabbed UI, filter reorder, compact tools)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -212,7 +212,11 @@ generate_css <- function(t) {
   .irs--shiny .irs-single{background:%s;color:%s}
   .irs--shiny .irs-line{background:%s}
   .irs--shiny .irs-grid-text,.irs--shiny .irs-min,.irs--shiny .irs-max{
-    color:%s;background:%s}',
+    color:%s;background:%s}
+  .filter-chip-row{background:%s!important;border-top-color:%s!important;border-bottom-color:%s!important}
+  .filter-chip{border-color:%s!important}
+  .filter-chip-key{background:%s!important}
+  .filter-chip-val{background:%s!important}',
           t$bg0,t$fg0,t$bg1,t$frost1,t$bg2,t$bg1,t$fg0,t$bg2,
           t$bg1,t$fg0,t$bg2,t$frost1,t$frost1,t$fg0,t$frost1,t$bg3,
           t$bg2,t$fg0,t$bg3,t$bg2,t$fg0,t$bg3,t$frost2,t$fg2,t$fg0,
@@ -223,7 +227,8 @@ generate_css <- function(t) {
           t$bg2,t$fg0,t$bg3,
           t$orange,t$orange,t$bg0,t$green,t$green,t$bg0,t$frost2,t$frost2,t$fg2,
           t$frost1,t$frost0,t$bg1,t$fg0,t$bg3,t$bg2,t$bg2,
-          t$frost2,t$frost2,t$frost1,t$frost3,t$frost2,t$fg2,t$bg3,t$fg0,t$bg2)
+          t$frost2,t$frost2,t$frost1,t$frost3,t$frost2,t$fg2,t$bg3,t$fg0,t$bg2,
+          t$bg1,t$frost2,t$bg2,t$frost3,t$frost3,t$frost2)
 }
 
 NORD_CSS <- generate_css(THEMES$Nord)
@@ -1131,43 +1136,59 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                  menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
-                                     hr(), h4("  Filters",style="padding-left:15px;"),
-                                     checkboxGroupInput("status_filter","Trial Status:",
-                                                        choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other")),
-                                     checkboxGroupInput("register_filter","Source Register:",
-                                                        choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS")),
-                                     dateRangeInput("date_range","Submission Date Range:",
-                                                    start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
-                                     selectizeInput("organ_class_filter","MedDRA Organ Class:",
-                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
-                                     selectizeInput("condition_filter","Condition / MedDRA Term:",
-                                                    choices=NULL,multiple=TRUE,options=list(placeholder="Type to search…")),
-                                     selectizeInput("country_filter","Country / Member State:",
-                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
-                                     selectizeInput("phase_filter","Trial Phase:",
-                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
-                                     selectInput("pip_filter","Part of PIP:",
-                                                 choices=c("All","Yes","No","Unknown"),selected="All"),
-                                     selectizeInput("sponsor_filter","Sponsor / Company:",
-                                                    choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors")),
-                                     textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma…"),
-                                     hr(),
-                                     div(style="padding:0 15px;",
-                                         p("Save / restore filters:",style="font-size:12px;margin-bottom:4px;"),
-                                         downloadButton("dl_filters","Save filters",class="btn-sm btn-primary",style="width:100%;margin-bottom:6px;"),
-                                         fileInput("ul_filters",NULL,accept=".json",placeholder="Load filters (.json)",
-                                                   buttonLabel="Load…",width="100%")),
-                                     hr(),
-                                     div(style="padding:0 15px 10px;",
-                                         downloadButton("dl_report","Download PDF Report",
-                                                        class="btn-sm btn-warning",
-                                                        style="width:100%;")),
-                                     hr(),
-                                     div(style="padding:0 15px;",
-                                         textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")),
-                                     hr(),
-                                     div(style="padding:0 15px;",
-                                         radioButtons("theme_select","Theme:",choices=c("Nord","Default"),selected="Nord",inline=TRUE))
+                                     tags$div(class="sidebar-tabset",
+                                       tabsetPanel(id="sidebar_tabs",
+                                         tabPanel("Filters",
+                                           tags$div(style="padding:0 4px;",
+                                             dateRangeInput("date_range","Submission Date Range:",
+                                                            start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
+                                             textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma\u2026"),
+                                             selectizeInput("sponsor_filter","Sponsor / Company:",
+                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors")),
+                                             selectizeInput("country_filter","Country / Member State:",
+                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
+                                             selectizeInput("status_filter","Trial Status:",
+                                                            choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
+                                                            multiple=TRUE,options=list(placeholder="All statuses")),
+                                             selectizeInput("register_filter","Source Register:",
+                                                            choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS"),
+                                                            multiple=TRUE,options=list(placeholder="All registers")),
+                                             selectizeInput("phase_filter","Trial Phase:",
+                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
+                                             selectizeInput("organ_class_filter","MedDRA Organ Class:",
+                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
+                                             selectizeInput("condition_filter","Condition / MedDRA Term:",
+                                                            choices=NULL,multiple=TRUE,options=list(placeholder="Type to search\u2026")),
+                                             selectInput("pip_filter","Part of PIP:",
+                                                         choices=c("All","Yes","No","Unknown"),selected="All")
+                                           )
+                                         ),
+                                         tabPanel("Tools",
+                                           tags$div(style="padding:10px 12px;",
+                                             tags$p(tags$b("Save / restore filters"), style="font-size:11px;margin-bottom:6px;"),
+                                             downloadButton("dl_filters", " Save",
+                                                            class="btn-sm btn-primary sidebar-tool-btn",
+                                                            title="Save filters as JSON"),
+                                             tags$button(tagList(icon("upload"), " Load"),
+                                               class="btn btn-default btn-sm sidebar-tool-btn",
+                                               onclick="document.getElementById('ul_filters').click();",
+                                               title="Load filters from JSON"),
+                                             div(style="display:none;",
+                                               fileInput("ul_filters",NULL,accept=".json")),
+                                             tags$hr(style="margin:8px 0;"),
+                                             tags$p(tags$b("Report"), style="font-size:11px;margin-bottom:6px;"),
+                                             downloadButton("dl_report", " Download PDF",
+                                                            class="btn-sm btn-warning",
+                                                            style="width:100%;margin-bottom:8px;"),
+                                             tags$hr(style="margin:8px 0;"),
+                                             tags$p(tags$b("Theme"), style="font-size:11px;margin-bottom:4px;"),
+                                             radioButtons("theme_select",NULL,choices=c("Nord","Default"),selected="Nord",inline=TRUE),
+                                             tags$hr(style="margin:8px 0;"),
+                                             textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")
+                                           )
+                                         )
+                                       )
+                                     )
                     ),
 
                     dashboardBody(
@@ -1179,8 +1200,23 @@ ui <- dashboardPage(skin = "blue",
                           .small-box { min-width: 100%; max-width: 100%; }
                         }
                         .analytics-section-header { padding: 6px 0 4px; border-bottom: 2px solid #3c8dbc; margin: 10px 0 14px; color: #3c8dbc; font-size:14px; font-weight:700; letter-spacing:.2px; }
-                        .filter-chip-row { padding: 8px 15px; background: #eaf2fb; border-top: 2px solid #3c8dbc; border-bottom: 1px solid #c8dff0; margin-bottom: 18px; min-height: 36px; display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
-                        .filter-chip { display:inline-flex; align-items:center; background:#3c8dbc; color:#fff; border-radius:12px; padding:3px 10px 3px 8px; font-size:11px; margin:2px 3px; gap:4px; }
+                        .filter-chip-row { padding: 8px 15px; background: #eaf2fb; border-top: 2px solid #3c8dbc; border-bottom: 1px solid #c8dff0; margin-bottom: 18px; min-height: 36px; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+                        .filter-chip { display:inline-flex; align-items:center; border-radius:12px; overflow:hidden; font-size:11.5px; margin:2px 0; gap:0; border: 1px solid #2d7aaa; }
+                        .filter-chip-key { background:#2d7aaa; color:rgba(255,255,255,0.85); padding:3px 7px; font-weight:600; letter-spacing:0.2px; }
+                        .filter-chip-val { background:#3c8dbc; color:#fff; padding:3px 10px 3px 7px; }
+                        /* ── Sidebar tabset ── */
+                        .sidebar-tabset { margin-top: 8px; }
+                        .sidebar-tabset .nav-tabs { border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; }
+                        .sidebar-tabset .nav-tabs > li { flex: 1; text-align: center; }
+                        .sidebar-tabset .nav-tabs > li > a { color: inherit !important; border-radius: 0; border: none !important; padding: 8px 0; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; opacity: 0.6; background: transparent !important; }
+                        .sidebar-tabset .nav-tabs > li.active > a, .sidebar-tabset .nav-tabs > li.active > a:focus, .sidebar-tabset .nav-tabs > li.active > a:hover { opacity: 1; border-bottom: 2px solid #3c8dbc !important; background: transparent !important; color: #3c8dbc !important; }
+                        .sidebar-tabset .nav-tabs > li > a:hover { opacity: 0.9; background: rgba(255,255,255,0.05) !important; }
+                        .sidebar-tabset .tab-content { overflow-y: visible; }
+                        .sidebar-tabset .tab-pane { padding-top: 6px; }
+                        /* ── Compact tool buttons ── */
+                        .sidebar-tool-btn { width: 100%; padding: 4px 6px; font-size: 11px; }
+                        /* ── Save / Load buttons ── */
+                        .sidebar-tool-btn { display:block; width:100% !important; font-size:12px !important; padding:6px 12px !important; line-height:1.5 !important; box-sizing:border-box; text-align:center; margin-bottom:6px; }
                       "))),
                       uiOutput("active_theme"),
                       uiOutput("active_filters_row"),
@@ -1364,6 +1400,16 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.6.0 (2026-04-18):"),
+                                          tags$ul(
+                                            tags$li("Sidebar: filters and tools split into two tabs (Filters / Tools) to reduce scrolling"),
+                                            tags$li("Filters tab: reordered inputs — date range and free-text search at the top, followed by sponsor, country, then remaining filters"),
+                                            tags$li("Filters tab: Trial Status and Source Register converted from checkboxes to selectize dropdowns, consistent with all other filters"),
+                                            tags$li("Active filter chips: two-tone pill design with darker label badge and lighter value section for easier scanning; adapts to Nord dark theme"),
+                                            tags$li("Tools tab: Save / Load / PDF / Theme controls redesigned as compact full-width buttons; Load button uses a hidden file input triggered by a plain button to guarantee identical sizing with Save"),
+                                            tags$li("Sponsor Comparison header: title and Count / Percentage toggle now co-linear on the same row")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.5.1 (2026-04-18):"),
                                           tags$ul(
                                             tags$li("Sponsor Comparison promoted to a dedicated sidebar tab; shows contextual help when 0 or 1 sponsors are selected, and a side-by-side comparison panel (phase distribution, trial status, top organ classes, trials by country, PIP status, submissions per year) when 2–3 sponsors are selected"),
@@ -1463,7 +1509,7 @@ ui <- dashboardPage(skin = "blue",
                                         tags$li(tags$b("v0.1:"), " Initial release.")
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.5.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.6.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1655,9 +1701,9 @@ server <- function(input, output, session) {
         raw  <- rawToChar(base64enc::base64decode(qs$f))
         s    <- jsonlite::fromJSON(raw, simplifyVector = TRUE)
         if (!is.null(s$status_filter))
-          updateCheckboxGroupInput(session, "status_filter",   selected = s$status_filter)
+          updateSelectizeInput(session, "status_filter",   selected = s$status_filter)
         if (!is.null(s$register_filter))
-          updateCheckboxGroupInput(session, "register_filter", selected = s$register_filter)
+          updateSelectizeInput(session, "register_filter", selected = s$register_filter)
         if (!is.null(s$date_range) && length(s$date_range) == 2)
           updateDateRangeInput(session, "date_range", start = s$date_range[1], end = s$date_range[2])
         if (!is.null(s$organ_class_filter))
@@ -1708,52 +1754,46 @@ server <- function(input, output, session) {
     chips <- list()
     default_date_start <- min(rv$data$submission_date_parsed, na.rm = TRUE)
 
+    mk_chip <- function(key, val)
+      span(class = "filter-chip",
+           span(class = "filter-chip-key", key),
+           span(class = "filter-chip-val", val))
+
     status_default <- c("Ongoing", "Completed", "Other")
     if (!setequal(input$status_filter, status_default))
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Status: ", paste(input$status_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Status", paste(input$status_filter, collapse = ", "))))
 
     register_default <- c("EUCTR", "CTIS")
     if (!setequal(input$register_filter, register_default))
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Register: ", paste(input$register_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Register", paste(input$register_filter, collapse = ", "))))
 
     if (!is.null(input$date_range)) {
       if (!is.na(input$date_range[1]) && input$date_range[1] != default_date_start)
-        chips <- c(chips, list(span(class = "filter-chip",
-          paste0("From: ", format(input$date_range[1])))))
+        chips <- c(chips, list(mk_chip("From", format(input$date_range[1]))))
       if (!is.na(input$date_range[2]) && input$date_range[2] != Sys.Date())
-        chips <- c(chips, list(span(class = "filter-chip",
-          paste0("To: ", format(input$date_range[2])))))
+        chips <- c(chips, list(mk_chip("To", format(input$date_range[2]))))
     }
 
     if (length(input$organ_class_filter) > 0)
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Organ Class: ", paste(input$organ_class_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Organ Class", paste(input$organ_class_filter, collapse = ", "))))
 
     if (length(input$condition_filter) > 0)
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Condition: ", paste(input$condition_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Condition", paste(input$condition_filter, collapse = ", "))))
 
     if (length(input$country_filter) > 0)
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Country: ", paste(input$country_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Country", paste(input$country_filter, collapse = ", "))))
 
     if (length(input$phase_filter) > 0)
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Phase: ", paste(input$phase_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Phase", paste(input$phase_filter, collapse = ", "))))
 
     if (!is.null(input$pip_filter) && input$pip_filter != "All")
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("PIP: ", input$pip_filter))))
+      chips <- c(chips, list(mk_chip("PIP", input$pip_filter)))
 
     if (length(input$sponsor_filter) > 0)
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0("Sponsor: ", paste(input$sponsor_filter, collapse = ", ")))))
+      chips <- c(chips, list(mk_chip("Sponsor", paste(input$sponsor_filter, collapse = ", "))))
 
     if (nzchar(input$text_search))
-      chips <- c(chips, list(span(class = "filter-chip",
-        paste0('Search: "', input$text_search, '"'))))
+      chips <- c(chips, list(mk_chip("Search", paste0('"', input$text_search, '"'))))
 
     if (length(chips) == 0) return(NULL)
 
@@ -1766,9 +1806,9 @@ server <- function(input, output, session) {
 
   observeEvent(input$reset_filters, {
     req(rv$data)
-    updateCheckboxGroupInput(session, "status_filter",
+    updateSelectizeInput(session, "status_filter",
                              selected = c("Ongoing", "Completed", "Other"))
-    updateCheckboxGroupInput(session, "register_filter",
+    updateSelectizeInput(session, "register_filter",
                              selected = c("EUCTR", "CTIS"))
     d <- rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     updateDateRangeInput(session, "date_range",
@@ -2370,9 +2410,19 @@ server <- function(input, output, session) {
     ttl <- paste(input$sponsor_filter, collapse = " vs. ")
     tagList(
       fluidRow(column(12,
-        h3(style = "margin-bottom:4px;", icon("exchange"), " ", ttl),
-        p(em("Phase distribution, trial status, organ classes, country activity, PIP status, and yearly submissions for selected sponsors."),
-          style = "font-size:12px;opacity:0.7;margin-bottom:16px;")
+        div(
+          div(style = "display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:12px;",
+            h3(style = "margin:0;", icon("exchange"), " ", ttl),
+            div(style = "flex-shrink:0;",
+              radioButtons("compare_pct", NULL,
+                choices = c("Count" = "n", "Percentage" = "pct"),
+                selected = isolate(if (!is.null(input$compare_pct)) input$compare_pct else "n"),
+                inline = TRUE)
+            )
+          ),
+          p(em("Phase distribution, trial status, organ classes, country activity, PIP status, and yearly submissions for selected sponsors."),
+            style = "font-size:12px;opacity:0.7;margin:4px 0 8px;")
+        )
       )),
       fluidRow(
         box(title = "Phase Distribution", status = "primary", solidHeader = TRUE,
@@ -2413,6 +2463,7 @@ server <- function(input, output, session) {
 
   output$plot_compare_phase <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
+    use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(phase), nzchar(str_trim(phase)),
              sponsor_name %in% input$sponsor_filter) %>%
@@ -2420,52 +2471,73 @@ server <- function(input, output, session) {
       mutate(phase = str_trim(phase)) %>%
       filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
       count(sponsor_name, phase) %>%
+      group_by(sponsor_name) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup() %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
     validate(need(nrow(df) > 0, "No phase data for selected sponsors."))
-    plot_ly(df, x = ~phase, y = ~n, color = ~sponsor_name, colors = compare_pal(),
-            type = "bar", text = ~n, textposition = "outside", hoverinfo = "x+y+name") %>%
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~phase, y = y_col, color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
-                 yaxis = list(title = "Trials"),
+                 yaxis = list(title = y_lbl),
                  legend = list(orientation = "h", y = -0.25))
   })
 
   output$plot_compare_status <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
+    use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(status), sponsor_name %in% input$sponsor_filter) %>%
-      count(sponsor_name, status)
+      count(sponsor_name, status) %>%
+      group_by(sponsor_name) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
     validate(need(nrow(df) > 0, "No status data for selected sponsors."))
-    plot_ly(df, x = ~status, y = ~n, color = ~sponsor_name, colors = compare_pal(),
-            type = "bar", text = ~n, textposition = "outside", hoverinfo = "x+y+name") %>%
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~status, y = y_col, color = ~sponsor_name, colors = compare_pal(),
+            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
-                 yaxis = list(title = "Trials"),
+                 yaxis = list(title = y_lbl),
                  legend = list(orientation = "h", y = -0.25))
   })
 
   output$plot_compare_organ <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
+    use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(MEDDRA_organ_class),
              sponsor_name %in% input$sponsor_filter) %>%
       separate_rows(MEDDRA_organ_class, sep = " / ") %>%
       mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
       filter(nzchar(MEDDRA_organ_class)) %>%
-      count(sponsor_name, MEDDRA_organ_class)
+      count(sponsor_name, MEDDRA_organ_class) %>%
+      group_by(sponsor_name) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
     top_oc <- df %>%
       group_by(MEDDRA_organ_class) %>%
       summarise(total = sum(n), .groups = "drop") %>%
       slice_max(total, n = 8) %>%
       pull(MEDDRA_organ_class)
-    df <- df %>% filter(MEDDRA_organ_class %in% top_oc)
+    df <- df %>%
+      filter(MEDDRA_organ_class %in% top_oc) %>%
+      mutate(sort_val = if (use_pct) pct else n)
     validate(need(nrow(df) > 0, "No organ class data for selected sponsors."))
+    x_col <- if (use_pct) ~pct else ~n
+    x_lbl <- if (use_pct) "% of Trials" else "Trials"
     plot_ly(df,
-            y = ~reorder(MEDDRA_organ_class, n), x = ~n,
+            y = ~reorder(MEDDRA_organ_class, sort_val), x = x_col,
             color = ~sponsor_name, colors = compare_pal(),
             type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
-                 xaxis = list(title = "Trials"),
+                 xaxis = list(title = x_lbl),
                  yaxis = list(title = ""),
                  legend = list(orientation = "h", y = -0.2),
                  margin = list(l = 240))
@@ -2473,25 +2545,33 @@ server <- function(input, output, session) {
 
   output$plot_compare_country <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
+    use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(Member_state), sponsor_name %in% input$sponsor_filter) %>%
       separate_rows(Member_state, sep = " / ") %>%
       mutate(Member_state = str_trim(Member_state)) %>%
       filter(nzchar(Member_state)) %>%
-      count(sponsor_name, Member_state)
+      count(sponsor_name, Member_state) %>%
+      group_by(sponsor_name) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
     top_countries <- df %>%
       group_by(Member_state) %>%
       summarise(total = sum(n), .groups = "drop") %>%
       slice_max(total, n = 10) %>%
       pull(Member_state)
-    df <- df %>% filter(Member_state %in% top_countries)
+    df <- df %>%
+      filter(Member_state %in% top_countries) %>%
+      mutate(sort_val = if (use_pct) pct else n)
     validate(need(nrow(df) > 0, "No country data for selected sponsors."))
+    x_col <- if (use_pct) ~pct else ~n
+    x_lbl <- if (use_pct) "% of Trials" else "Trials"
     plot_ly(df,
-            y = ~reorder(Member_state, n), x = ~n,
+            y = ~reorder(Member_state, sort_val), x = x_col,
             color = ~sponsor_name, colors = compare_pal(),
             type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
-                 xaxis = list(title = "Trials"),
+                 xaxis = list(title = x_lbl),
                  yaxis = list(title = ""),
                  legend = list(orientation = "h", y = -0.2),
                  margin = list(l = 140))
@@ -2499,19 +2579,27 @@ server <- function(input, output, session) {
 
   output$plot_compare_pip <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
+    use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(has_PIP), sponsor_name %in% input$sponsor_filter) %>%
-      count(sponsor_name, has_PIP)
+      count(sponsor_name, has_PIP) %>%
+      group_by(sponsor_name) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
     validate(need(nrow(df) > 0, "No PIP data for selected sponsors."))
     t <- tc()
     pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$yellow)
-    plot_ly(df, x = ~sponsor_name, y = ~n,
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~sponsor_name, y = y_col,
             color = ~has_PIP, colors = pip_pal,
-            type = "bar", text = ~n, textposition = "outside",
+            type = "bar", text = txt, textposition = "outside",
             hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = ""),
-                 yaxis = list(title = "Trials"),
+                 yaxis = list(title = y_lbl,
+                              range = if (use_pct) list(0, 110) else NULL),
                  legend = list(orientation = "h", y = -0.2))
   })
 
