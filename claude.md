@@ -129,7 +129,60 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 - manuscript.md: abstract (8 modules), Phase Analytics description updated, new Sponsor Comparison paragraph, version updated to 0.5.1
 - report.Rmd: Phase Distribution funnel chart + Completion Rate by Authorisation Cohort added to Trial Phases section
 
-## Current version: v0.5.1
+## Completed: Research Analytics (v0.7.0) — shipped 2026-04-19, branch feature/research-analytics
+
+### What was built
+
+- **Compliance tab** (tabName="compliance") — new sidebar menu entry with icon "shield-alt"
+  - 4 value boxes: Completed Trials, With Results Posted, Academic no-results >12mo, Industry no-results >12mo
+  - `output$plot_results_compliance_overview`: stacked bar by auth year colored by "Results posted" / "Within 12mo" / "12-24mo missing" / ">24mo missing"
+  - `output$plot_results_by_sponsor`: stacked bar Academic vs Industry — OK vs missing
+  - `output$plot_results_by_area`: horizontal bar top-15 organ classes by missing results count
+  - `output$table_overdue` + `output$dl_overdue_list`: DT table + CSV download of overdue trials
+  - `compliance_base()` reactive: completed trials with decision_date, used by all compliance outputs
+- **Orphan designation** — real data from registry
+  - EUCTR: `dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community` (Yes/No per DIMP product) → `is_orphan` column
+  - CTIS: `authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber` (EU/3/... numbers) → non-NA = "Yes"
+  - `orphan_filter` selectInput in sidebar "Trial" section
+  - Plumbed into `filt()`, `reset_filters`, `filter_state`, URL restore, `badge_trial`, `active_filters_row`
+- **Results posted** — real data from registry
+  - EUCTR: `endPoints.endPoint.readyForValues` (non-NA = results section populated) → `has_results` column
+  - CTIS: `resultsFirstReceived` (TRUE/FALSE) → `has_results` column
+  - Cache must be rebuilt for has_results/is_orphan to activate; Compliance tab degrades gracefully without it
+- **Co-participation heatmap** — added to Map tab (below existing map + table)
+  - `sliderInput("copara_n")` to control number of countries shown (5–30, default 20)
+  - `output$plot_copara`: plotly heatmap of trial co-participation counts via self-join on `_id`
+  - Ordered by trial count; diagonal blank; symmetric matrix
+- **Phase Pipeline by Authorization Year** — added to Phase Analytics
+  - `output$plot_phase_pipeline`: stacked bar Phase I–IV by auth_year (decision_date); uses separate_rows for multi-phase trials
+- **Completion Rate vs Cohort Age** — added to Phase Analytics (survival-style chart)
+  - `output$plot_trial_survival`: bubble scatter — x=cohort age (years), y=% completed, bubble size=cohort size, color=register; cohort year as text label
+  - Approximates a KM survival curve without requiring individual completion dates
+- Version bumped to v0.7.0 in header, About tab changelog, footer
+
+## Completed: UI trimming + README overhaul (v0.7.0 patch) — shipped 2026-04-19
+
+### What was removed
+- **Country Co-participation Heatmap** — removed from Map tab UI (`copara_n` sliderInput + `plot_copara` plotlyOutput box) and `output$plot_copara` server function
+- **Phase Pipeline & Cohort Duration** — removed section header + both boxes (`plot_phase_pipeline`, `plot_trial_survival`) from Phase Analytics UI, plus `output$plot_phase_pipeline` and `output$plot_trial_survival` server functions
+- **Text labels in Results Posting by Sponsor Type** — replaced `text`/`hoverinfo` with `customdata`/`hovertemplate` (hover still works, no bar text annotations)
+- **Missing Results by Organ Class (top 15)** — removed box from Compliance tab UI (Results Posting by Sponsor Type now spans full width 12), plus `output$plot_results_by_area` server function
+- **"Geographic equity analysis" example use** — removed from README (referenced deleted heatmap)
+
+### README overhaul
+- Added **Source data** section: register table (EUCTR/CTIS), exact search URLs, explanation of incremental update logic and euctrresults fetching
+- Added author/license to header
+- Added `RSQLite` + `DBI` to install list
+- Clarified `update_data.R` (fetch) vs `rebuild_cache.R` (cache-only) distinction in deploy steps
+- Added Docker Compose instructions
+- Added **Technology stack** table
+- Added **Configuration** table (DB_PATH, DB_COLLECTION, CACHE_PATH)
+- Expanded project structure to list all 7 normalisation logs + docker-compose.yml
+- Improved `rows_update` Known Issue with monkey-patch explanation
+- Extended changelog back to v0.1.0 (was truncated at v0.2.4)
+- Updated tabs table and example uses to reflect deleted features
+
+## Current version: v0.7.0
 
 ## README audit (2026-04-06)
 ### Known Issues
@@ -147,3 +200,18 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 
 ### Residual notes
 - `eulerr` is conditionally loaded in app.R (~line 21) but never used in any chart output — worth removing
+
+## Future ideas (not yet implemented)
+
+### Email notifications on new trials
+Use `blastula` package in `rebuild_cache.R`. After `prepare_trial_data()` runs, diff new vs old CT numbers; if any new IDs found, compose and send an HTML email via `blastula::smtp_send()`. Credentials stored via `blastula::create_smtp_credentials()` (keychain). Schedule `rebuild_cache.R` via cron (macOS/Linux) or Task Scheduler (Windows). Example code was discussed 2026-04-19.
+
+### Other pending ideas
+- Export Data Explorer to CSV/Excel (download button on DT table)
+- Time-to-decision histogram (days from submission to decision)
+- Trial status over time stacked area chart
+- "Copy shareable link" button in Tools tab (URL state already encoded)
+- Empty state on map when 0 countries match filters
+- Filter reset per group (× on each details summary)
+- PDF report respects active sidebar filters (currently always full dataset)
+- Lazy tab rendering (only fire expensive plots when tab is viewed)

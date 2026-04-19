@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.6.1 — Data pipeline: dedup improvements, migrated CTIS relabelling, NA status fix)
+# app.R  (v0.7.0 — Research analytics: Compliance tab, orphan filter, co-participation heatmap, phase pipeline, cohort survival)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -574,8 +574,12 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "b1_sponsor.b11_name_of_sponsor",
     "b1_sponsor.b31_and_b32_status_of_the_sponsor",
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
-    "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv")
-  
+    "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
+    # Results: non-NA when results section is populated in EudraCT
+    "endPoints.endPoint.readyForValues",
+    # Orphan designation per investigational medicinal product
+    "dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community")
+
   CTIS_fields <- c(
     "authorizedApplication.applicationInfo.ctNumber",
     "authorizedApplication.authorizedPartI.products.productName",
@@ -591,7 +595,11 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.sponsors.organisation.name",
     "authorizedApplication.authorizedPartI.sponsors.commercial",
     "trialPhase",
-    "authorizedApplication.applicationInfo.decisionDate")
+    "authorizedApplication.applicationInfo.decisionDate",
+    # Results: TRUE when results have been received by CTIS
+    "resultsFirstReceived",
+    # Orphan designation numbers (EU/3/... format); non-NA = orphan drug
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -1114,8 +1122,37 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   write_norm_log(raw_phase_for_log, result$phase, result$register, "phase", dirname(db_path))
 
-  # Drop raw phase columns
-  result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col)))
+  # ── Results posted ──────────────────────────────────────────────────────────
+  # EUCTR: endPoints.endPoint.readyForValues is non-NA when results section exists
+  # CTIS:  resultsFirstReceived is a logical TRUE/FALSE
+  euctr_res_raw <- as.character(result[["endPoints.endPoint.readyForValues"]])
+  ctis_res_raw  <- as.character(result[["resultsFirstReceived"]])
+  result <- result %>% mutate(
+    has_results = case_when(
+      register == "EUCTR" ~ !is.na(euctr_res_raw),
+      register == "CTIS"  ~ str_detect(tolower(coalesce(ctis_res_raw, "")), "^true$"),
+      TRUE ~ FALSE))
+
+  # ── Orphan designation ──────────────────────────────────────────────────────
+  # EUCTR: dimp.d25_... is a "Yes / No / ..." string per DIMP product
+  # CTIS:  orphanDrugDesigNumber is an EU/3/... designation number string
+  euctr_orphan_raw <- as.character(
+    result[["dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community"]])
+  ctis_orphan_raw  <- as.character(
+    result[["authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber"]])
+  result <- result %>% mutate(
+    is_orphan = case_when(
+      register == "EUCTR" & str_detect(tolower(coalesce(euctr_orphan_raw, "")), "\\byes\\b") ~ "Yes",
+      register == "EUCTR" & !is.na(euctr_orphan_raw)                                        ~ "No",
+      register == "CTIS"  & !is.na(ctis_orphan_raw) &
+        nzchar(str_trim(coalesce(ctis_orphan_raw, "")))                                      ~ "Yes",
+      TRUE ~ "Unknown"))
+
+  # Drop raw phase columns and raw results/orphan source columns
+  result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col,
+    "endPoints.endPoint.readyForValues", "resultsFirstReceived",
+    "dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community",
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")))
 
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
@@ -1176,6 +1213,7 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                  menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                  menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
+                                                 menuItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      uiOutput("trial_count_bar"),
                                      tags$div(class="sidebar-tabset",
@@ -1183,20 +1221,23 @@ ui <- dashboardPage(skin = "blue",
                                          tabPanel("Filters",
                                            tags$div(class="filter-groups",
                                              tags$details(open=NA,
-                                               tags$summary("Search & Date"),
+                                               tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
+                                                 "Search & Date", uiOutput("badge_search_date", inline=TRUE)),
                                                dateRangeInput("date_range","Submission Date Range:",
                                                               start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
                                                textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma\u2026")
                                              ),
                                              tags$details(open=NA,
-                                               tags$summary("Geography & Sponsor"),
+                                               tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
+                                                 "Geography & Sponsor", uiOutput("badge_geo_sponsor", inline=TRUE)),
                                                selectizeInput("country_filter","Country / Member State:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
                                                selectizeInput("sponsor_filter","Sponsor / Company:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors"))
                                              ),
                                              tags$details(
-                                               tags$summary("Trial"),
+                                               tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
+                                                 "Trial", uiOutput("badge_trial", inline=TRUE)),
                                                selectizeInput("status_filter","Trial Status:",
                                                               choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
                                                               multiple=TRUE,options=list(placeholder="All statuses")),
@@ -1206,10 +1247,13 @@ ui <- dashboardPage(skin = "blue",
                                                selectizeInput("phase_filter","Trial Phase:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
                                                selectInput("pip_filter","Part of PIP:",
+                                                           choices=c("All","Yes","No","Unknown"),selected="All"),
+                                               selectInput("orphan_filter","Orphan Designation:",
                                                            choices=c("All","Yes","No","Unknown"),selected="All")
                                              ),
                                              tags$details(
-                                               tags$summary("Therapeutic Area"),
+                                               tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
+                                                 "Therapeutic Area", uiOutput("badge_therapeutic", inline=TRUE)),
                                                selectizeInput("organ_class_filter","MedDRA Organ Class:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
                                                selectizeInput("condition_filter","Condition / MedDRA Term:",
@@ -1283,6 +1327,8 @@ ui <- dashboardPage(skin = "blue",
                         .sidebar-tool-btn { width: 100%; padding: 4px 6px; font-size: 11px; }
                         /* ── Save / Load buttons ── */
                         .sidebar-tool-btn { display:block; width:100% !important; font-size:12px !important; padding:6px 12px !important; line-height:1.5 !important; box-sizing:border-box; text-align:center; margin-bottom:6px; }
+                        /* ── Filter group count badges ── */
+                        .filter-badge { display:inline-block; min-width:18px; height:18px; line-height:18px; border-radius:9px; background:#3c8dbc; color:#fff; font-size:10px; font-weight:700; text-align:center; padding:0 5px; pointer-events:none; }
                       "))),
                       uiOutput("active_theme"),
                       uiOutput("active_filters_row"),
@@ -1432,6 +1478,32 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="sponsor_compare",
                                 uiOutput("sponsor_compare_tab_ui")
                         ),
+                        tabItem(tabName="compliance",
+                                fluidRow(
+                                  valueBoxOutput("vb_completed_total", width=3),
+                                  valueBoxOutput("vb_results_posted",  width=3),
+                                  valueBoxOutput("vb_overdue_academic",width=3),
+                                  valueBoxOutput("vb_overdue_industry",width=3)
+                                ),
+                                fluidRow(
+                                  box(title="Results Posting by Authorization Year",status="primary",solidHeader=TRUE,width=12,height=500,
+                                      p(em("Completed trials grouped by authorization year. Green = results confirmed posted in the registry; red = no results posted. Results data is sourced directly from EUCTR (endPoints.endPoint.readyForValues) and CTIS (resultsFirstReceived). Rebuild the cache to reflect the latest registry data."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+                                      withSpinner(plotlyOutput("plot_results_compliance_overview",height="380px"),type=6))
+                                ),
+                                fluidRow(
+                                  box(title="Results Posting by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=460,
+                                      withSpinner(plotlyOutput("plot_results_by_sponsor",height="380px"),type=6))
+                                ),
+                                fluidRow(
+                                  box(title="Completed Trials Without Results Posted",status="warning",solidHeader=TRUE,width=12,
+                                      p(em("Completed trials where results have not been confirmed posted in the registry. Links open the registry record."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+                                      downloadButton("dl_overdue_list","Download list",class="btn-sm btn-success",style="margin-bottom:8px;"),
+                                      br(),
+                                      withSpinner(DT::dataTableOutput("table_overdue"),type=6))
+                                )
+                        ),
                         tabItem(tabName="about",
                                 fluidRow(
                                   box(title="About This Dashboard",width=8,status="primary",solidHeader=TRUE,
@@ -1467,6 +1539,12 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.7.0 (2026-04-19):"),
+                                          tags$ul(
+                                            tags$li("New Results Posting tab: value boxes (completed, results posted %, academic/industry without results), bar chart by authorization year, breakdown by sponsor type, and downloadable list of completed trials without results. Results data sourced directly from registry fields (rebuild cache to activate)."),
+                                            tags$li("Orphan Designation filter added to sidebar; filters all tabs. Derived from EUCTR DIMP D.2.5 field (Yes/No per product) and CTIS orphan designation number field.")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.6.1 (2026-04-19):"),
                                           tags$ul(
                                             tags$li("Data pipeline: trials with NA status now classified as 'Other' instead of being silently excluded from filter results"),
@@ -1518,7 +1596,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.6.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.7.0 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1692,6 +1770,7 @@ server <- function(input, output, session) {
       pat<-paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
       df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
+    if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df))df<-df%>%filter(is_orphan==input$orphan_filter)
     if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
@@ -1725,6 +1804,8 @@ server <- function(input, output, session) {
           updateSelectizeInput(session, "phase_filter",       selected = s$phase_filter)
         if (!is.null(s$pip_filter))
           updateSelectInput(session, "pip_filter",            selected = s$pip_filter)
+        if (!is.null(s$orphan_filter))
+          updateSelectInput(session, "orphan_filter",         selected = s$orphan_filter)
         if (!is.null(s$sponsor_filter))
           updateSelectizeInput(session, "sponsor_filter",     selected = s$sponsor_filter)
         if (!is.null(s$text_search))
@@ -1744,6 +1825,7 @@ server <- function(input, output, session) {
       country_filter     = input$country_filter,
       phase_filter       = input$phase_filter,
       pip_filter         = input$pip_filter,
+      orphan_filter      = input$orphan_filter,
       sponsor_filter     = input$sponsor_filter,
       text_search        = input$text_search
     )
@@ -1768,6 +1850,45 @@ server <- function(input, output, session) {
       span(class = "trial-count-tot", format(tot, big.mark = ",")),
       span(class = "trial-count-lbl", " trials")
     )
+  })
+
+  # ── Filter group count badges ─────────────────────────────────────────────
+  mk_filter_badge <- function(n) {
+    if (n == 0) return(NULL)
+    tags$span(class = "filter-badge", n)
+  }
+
+  output$badge_search_date <- renderUI({
+    req(input$date_range)
+    n <- 0L
+    if (!is.null(input$date_range)) {
+      default_start <- as.Date("2004-01-01")
+      default_end   <- Sys.Date()
+      if (!isTRUE(as.Date(input$date_range[1]) == default_start)) n <- n + 1L
+      if (!isTRUE(as.Date(input$date_range[2]) == default_end))   n <- n + 1L
+    }
+    if (nchar(trimws(if (is.null(input$text_search)) "" else input$text_search)) > 0) n <- n + 1L
+    mk_filter_badge(n)
+  })
+
+  output$badge_geo_sponsor <- renderUI({
+    n <- length(input$country_filter) + length(input$sponsor_filter)
+    mk_filter_badge(n)
+  })
+
+  output$badge_trial <- renderUI({
+    n <- 0L
+    if (!setequal(input$status_filter,   c("Ongoing","Completed","Other"))) n <- n + 1L
+    if (!setequal(input$register_filter, c("EUCTR","CTIS")))                n <- n + 1L
+    if (length(input$phase_filter) > 0)                                     n <- n + 1L
+    if (!isTRUE(input$pip_filter == "All"))                                  n <- n + 1L
+    if (!isTRUE(input$orphan_filter == "All"))                               n <- n + 1L
+    mk_filter_badge(n)
+  })
+
+  output$badge_therapeutic <- renderUI({
+    n <- length(input$organ_class_filter) + length(input$condition_filter)
+    mk_filter_badge(n)
   })
 
   # ── Active filters badge row ──────────────────────────────────────────────
@@ -1811,6 +1932,9 @@ server <- function(input, output, session) {
     if (!is.null(input$pip_filter) && input$pip_filter != "All")
       chips <- c(chips, list(mk_chip("PIP", input$pip_filter)))
 
+    if (!is.null(input$orphan_filter) && input$orphan_filter != "All")
+      chips <- c(chips, list(mk_chip("Orphan", input$orphan_filter)))
+
     if (length(input$sponsor_filter) > 0)
       chips <- c(chips, list(mk_chip("Sponsor", paste(input$sponsor_filter, collapse = ", "))))
 
@@ -1841,6 +1965,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "country_filter",     selected = character(0))
     updateSelectizeInput(session, "phase_filter",       selected = character(0))
     updateSelectInput(session, "pip_filter", selected = "All")
+    updateSelectInput(session, "orphan_filter", selected = "All")
     updateSelectizeInput(session, "sponsor_filter",     selected = character(0))
     updateTextInput(session, "text_search", value = "")
   })
@@ -2971,6 +3096,149 @@ server <- function(input, output, session) {
     datatable(stats, rownames = FALSE, class = "compact stripe hover",
               options = list(pageLength = 20, dom = "t", scrollX = TRUE))
   })
+
+  # ── Compliance tab ────────────────────────────────────────────────────────
+  compliance_base <- reactive({
+    req(rv$data)
+    filt() %>% filter(status == "Completed", !is.na(decision_date))
+  })
+
+  output$vb_completed_total <- renderValueBox({
+    n <- nrow(compliance_base())
+    valueBox(format(n, big.mark=","), "Completed Trials", icon=icon("check-circle"), color="green")
+  })
+
+  output$vb_results_posted <- renderValueBox({
+    df <- compliance_base()
+    if ("has_results" %in% names(df)) {
+      n     <- sum(df$has_results, na.rm = TRUE)
+      total <- nrow(df)
+      pct   <- if (total > 0) paste0(round(n / total * 100), "%") else "—"
+      valueBox(paste0(format(n, big.mark=","), " (", pct, ")"),
+               "Results Posted", icon=icon("file-alt"), color="blue")
+    } else {
+      valueBox("N/A", "Results data (rebuild cache)", icon=icon("sync"), color="blue")
+    }
+  })
+
+  output$vb_overdue_academic <- renderValueBox({
+    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Academic")
+    if ("has_results" %in% names(df)) {
+      n <- sum(!df$has_results, na.rm = TRUE)
+      valueBox(format(n, big.mark=","), "Academic — no results posted", icon=icon("university"), color="yellow")
+    } else {
+      valueBox("N/A", "Academic — no results (rebuild cache)", icon=icon("university"), color="yellow")
+    }
+  })
+
+  output$vb_overdue_industry <- renderValueBox({
+    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Industry")
+    if ("has_results" %in% names(df)) {
+      n <- sum(!df$has_results, na.rm = TRUE)
+      valueBox(format(n, big.mark=","), "Industry — no results posted", icon=icon("building"), color="orange")
+    } else {
+      valueBox("N/A", "Industry — no results (rebuild cache)", icon=icon("building"), color="orange")
+    }
+  })
+
+  output$plot_results_compliance_overview <- renderPlotly({
+    df <- compliance_base() %>%
+      mutate(
+        auth_year = year(decision_date),
+        results_status = if ("has_results" %in% names(.))
+          ifelse(has_results, "Results posted", "No results posted")
+        else
+          "Unknown (rebuild cache)",
+        results_status = factor(results_status,
+          levels = c("Results posted", "No results posted", "Unknown (rebuild cache)"))
+      ) %>%
+      filter(auth_year >= 2004) %>%
+      count(auth_year, results_status)
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      annotations = list(text="No completed trial data for current filters.",
+                         showarrow=FALSE, font=list(size=13, color="#888"))))
+    t <- tc()
+    pal <- c("Results posted"           = t$s_ongoing,
+             "No results posted"        = t$s_other,
+             "Unknown (rebuild cache)"  = t$yellow)
+    plot_ly(df, x = ~auth_year, y = ~n, color = ~results_status,
+            colors = pal, type = "bar",
+            customdata = ~paste0(results_status, "<br>", n, " trials (", auth_year, ")"),
+            hovertemplate = "%{customdata}<extra></extra>") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = "Authorization Year", dtick = 2, tickformat = "d"),
+                 yaxis = list(title = "Completed Trials"),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_results_by_sponsor <- renderPlotly({
+    df <- compliance_base() %>%
+      filter(!is.na(sponsor_type)) %>%
+      { if ("has_results" %in% names(.))
+          mutate(., results_status = ifelse(has_results, "Results posted", "No results posted"))
+        else
+          mutate(., results_status = "Unknown (rebuild cache)") } %>%
+      group_by(sponsor_type, results_status) %>%
+      summarise(n = n(), .groups = "drop") %>%
+      group_by(sponsor_type) %>%
+      mutate(total = sum(n),
+             pct   = round(n / total * 100, 1)) %>%
+      ungroup()
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      annotations = list(text="No data.", showarrow=FALSE, font=list(size=13, color="#888"))))
+    t <- tc()
+    pal <- c("Results posted"          = t$s_ongoing,
+             "No results posted"       = t$s_other,
+             "Unknown (rebuild cache)" = t$yellow)
+    plot_ly(df, x = ~sponsor_type, y = ~n, color = ~results_status,
+            colors = pal, type = "bar",
+            customdata = ~paste0(results_status, "<br>", n, "/", total,
+                                 " (", pct, "%)"),
+            hovertemplate = "%{customdata}<extra></extra>") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = "Completed Trials"),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
+  output$table_overdue <- DT::renderDataTable({
+    req(rv$data)
+    df <- compliance_base() %>%
+      { if ("has_results" %in% names(.)) filter(., !has_results) else . } %>%
+      mutate(
+        `CT Number` = case_when(
+          register == "EUCTR" ~ paste0(
+            '<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',
+            CT_number, "/", str_extract(`_id`, "[A-Z]{2,3}$"),
+            '" target="_blank">', CT_number, '</a>'),
+          register == "CTIS" ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]);
+            paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1,
+                   '" target="_blank">', ct1, '</a>') },
+          TRUE ~ CT_number)) %>%
+      select(`CT Number`, register, Full_title, sponsor_name, sponsor_type,
+             MEDDRA_organ_class, decision_date) %>%
+      rename(Register = register, Title = Full_title,
+             Sponsor = sponsor_name, `Sponsor Type` = sponsor_type,
+             `Organ Class` = MEDDRA_organ_class,
+             `Authorization Date` = decision_date) %>%
+      arrange(`Authorization Date`)
+    validate(need(nrow(df) > 0, "No completed trials without results for current filters."))
+    datatable(df, rownames = FALSE, class = "compact stripe hover", escape = FALSE,
+              options = list(pageLength = 20, scrollX = TRUE, dom = "lBfrtip",
+                             columnDefs = list(list(width = "300px", targets = 2))))
+  })
+
+  output$dl_overdue_list <- downloadHandler(
+    filename = function() paste0("trials_no_results_", Sys.Date(), ".csv"),
+    content  = function(f) {
+      df <- compliance_base() %>%
+        { if ("has_results" %in% names(.)) filter(., !has_results) else . } %>%
+        select(CT_number, register, Full_title, sponsor_name, sponsor_type,
+               MEDDRA_organ_class, Member_state, decision_date) %>%
+        arrange(decision_date)
+      readr::write_csv(df, f)
+    })
+
 
   output$map_trials_table <- DT::renderDataTable({
     req(input$eu_map_bounds, input$eu_map_zoom)
