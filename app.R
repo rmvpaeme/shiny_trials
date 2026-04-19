@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.6.0 — Sidebar tabbed UI, filter reorder, compact tools)
+# app.R  (v0.6.1 — Data pipeline: dedup improvements, migrated CTIS relabelling, NA status fix)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -831,7 +831,49 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   }
 
   result <- result %>% filter(`_id` %in% unique_ids)
-  message(sprintf("Unique trials: %d", nrow(result)))
+
+  # ── Final cross-register dedup: prefer CTIS over EUCTR ────────────────────
+  # Pass 1: exact CT number match across registers → drop the EUCTR copy
+  ct_dup_euctr <- result %>%
+    mutate(base_ct = str_replace(CT_number, "-[A-Z]{2,3}$", "")) %>%
+    group_by(base_ct) %>%
+    filter(n_distinct(register) > 1) %>%
+    filter(register == "EUCTR") %>%
+    pull(`_id`)
+  if (length(ct_dup_euctr) > 0) {
+    result <- result %>% filter(!(`_id` %in% ct_dup_euctr))
+    message(sprintf("Dropped %d EUCTR record(s) with duplicate CT number in CTIS", length(ct_dup_euctr)))
+  }
+
+  # Pass 2: title_key match across registers → drop the EUCTR copy
+  title_dup_euctr <- result %>%
+    filter(!is.na(title_key), nchar(title_key) >= 20) %>%
+    group_by(title_key) %>%
+    filter(n_distinct(register) > 1) %>%
+    filter(register == "EUCTR") %>%
+    pull(`_id`)
+  if (length(title_dup_euctr) > 0) {
+    result <- result %>% filter(!(`_id` %in% title_dup_euctr))
+    message(sprintf("Dropped %d EUCTR record(s) with title match in CTIS", length(title_dup_euctr)))
+  }
+
+  message(sprintf("Unique trials after cross-register dedup: %d", nrow(result)))
+
+  # ── Relabel migrated CTIS trials as EUCTR ─────────────────────────────────
+  # CTIS launched January 2023. Any CTIS record with a pre-2023 submission
+  # date is a trial originally registered in EudraCT and subsequently migrated
+  # to CTIS. These are real unique trials (their EUCTR copies were already
+  # removed by dedup), but labelling them CTIS creates misleading pre-2023 bars.
+  # Relabel register → "EUCTR" so the submission year chart remains coherent.
+  sub_yr_tmp <- as.integer(format(
+    suppressWarnings(as.Date(lubridate::parse_date_time(
+      result$submission_date, orders = c("ymd","ym","y","ymd HMS")))), "%Y"))
+  n_migrated <- sum(result$register == "CTIS" & !is.na(sub_yr_tmp) & sub_yr_tmp < 2023)
+  result <- result %>%
+    mutate(register = if_else(
+      register == "CTIS" & !is.na(sub_yr_tmp) & sub_yr_tmp < 2023,
+      "EUCTR", register))
+  message(sprintf("Relabelled %d pre-2023 CTIS → EUCTR (migrated trials)", n_migrated))
   
   result <- result %>%
     left_join(clu, by="trial_base_id") %>%
@@ -931,9 +973,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
     }, FUN.VALUE = character(1L), USE.NAMES = FALSE),
     status = case_when(
-      is.na(status_raw_orig) ~ NA_character_,
-      str_detect(status_raw_orig, ongoing_pat) ~ "Ongoing",
-      str_detect(status_raw_orig, completed_pat) ~ "Completed",
+      str_detect(coalesce(status_raw_orig, ""), ongoing_pat) ~ "Ongoing",
+      str_detect(coalesce(status_raw_orig, ""), completed_pat) ~ "Completed",
       TRUE ~ "Other")) %>%
     # Ensure the display column is never blank: fall back to the status category.
     mutate(status_raw = if_else(is.na(status_raw) & !is.na(status), status, status_raw))
@@ -1136,31 +1177,44 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                  menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
+                                     uiOutput("trial_count_bar"),
                                      tags$div(class="sidebar-tabset",
                                        tabsetPanel(id="sidebar_tabs",
                                          tabPanel("Filters",
-                                           tags$div(style="padding:0 4px;",
-                                             dateRangeInput("date_range","Submission Date Range:",
-                                                            start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
-                                             textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma\u2026"),
-                                             selectizeInput("sponsor_filter","Sponsor / Company:",
-                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors")),
-                                             selectizeInput("country_filter","Country / Member State:",
-                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
-                                             selectizeInput("status_filter","Trial Status:",
-                                                            choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
-                                                            multiple=TRUE,options=list(placeholder="All statuses")),
-                                             selectizeInput("register_filter","Source Register:",
-                                                            choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS"),
-                                                            multiple=TRUE,options=list(placeholder="All registers")),
-                                             selectizeInput("phase_filter","Trial Phase:",
-                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
-                                             selectizeInput("organ_class_filter","MedDRA Organ Class:",
-                                                            choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
-                                             selectizeInput("condition_filter","Condition / MedDRA Term:",
-                                                            choices=NULL,multiple=TRUE,options=list(placeholder="Type to search\u2026")),
-                                             selectInput("pip_filter","Part of PIP:",
-                                                         choices=c("All","Yes","No","Unknown"),selected="All")
+                                           tags$div(class="filter-groups",
+                                             tags$details(open=NA,
+                                               tags$summary("Search & Date"),
+                                               dateRangeInput("date_range","Submission Date Range:",
+                                                              start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
+                                               textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma\u2026")
+                                             ),
+                                             tags$details(open=NA,
+                                               tags$summary("Geography & Sponsor"),
+                                               selectizeInput("country_filter","Country / Member State:",
+                                                              choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
+                                               selectizeInput("sponsor_filter","Sponsor / Company:",
+                                                              choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors"))
+                                             ),
+                                             tags$details(
+                                               tags$summary("Trial"),
+                                               selectizeInput("status_filter","Trial Status:",
+                                                              choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
+                                                              multiple=TRUE,options=list(placeholder="All statuses")),
+                                               selectizeInput("register_filter","Source Register:",
+                                                              choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS"),
+                                                              multiple=TRUE,options=list(placeholder="All registers")),
+                                               selectizeInput("phase_filter","Trial Phase:",
+                                                              choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
+                                               selectInput("pip_filter","Part of PIP:",
+                                                           choices=c("All","Yes","No","Unknown"),selected="All")
+                                             ),
+                                             tags$details(
+                                               tags$summary("Therapeutic Area"),
+                                               selectizeInput("organ_class_filter","MedDRA Organ Class:",
+                                                              choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
+                                               selectizeInput("condition_filter","Condition / MedDRA Term:",
+                                                              choices=NULL,multiple=TRUE,options=list(placeholder="Type to search\u2026"))
+                                             )
                                            )
                                          ),
                                          tabPanel("Tools",
@@ -1204,6 +1258,12 @@ ui <- dashboardPage(skin = "blue",
                         .filter-chip { display:inline-flex; align-items:center; border-radius:12px; overflow:hidden; font-size:11.5px; margin:2px 0; gap:0; border: 1px solid #2d7aaa; }
                         .filter-chip-key { background:#2d7aaa; color:rgba(255,255,255,0.85); padding:3px 7px; font-weight:600; letter-spacing:0.2px; }
                         .filter-chip-val { background:#3c8dbc; color:#fff; padding:3px 10px 3px 7px; }
+                        /* ── Trial count bar ── */
+                        .trial-count-bar { padding: 6px 15px; display:flex; align-items:baseline; gap:2px; border-top: 1px solid rgba(128,128,128,0.2); }
+                        .trial-count-n { font-size:18px; font-weight:700; color:#3c8dbc; line-height:1; }
+                        .trial-count-sep { font-size:13px; opacity:0.4; }
+                        .trial-count-tot { font-size:13px; opacity:0.5; }
+                        .trial-count-lbl { font-size:11px; opacity:0.5; margin-left:2px; }
                         /* ── Sidebar tabset ── */
                         .sidebar-tabset { margin-top: 8px; }
                         .sidebar-tabset .nav-tabs { border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; }
@@ -1213,6 +1273,12 @@ ui <- dashboardPage(skin = "blue",
                         .sidebar-tabset .nav-tabs > li > a:hover { opacity: 0.9; background: rgba(255,255,255,0.05) !important; }
                         .sidebar-tabset .tab-content { overflow-y: visible; }
                         .sidebar-tabset .tab-pane { padding-top: 6px; }
+                        /* ── Collapsible filter groups ── */
+                        .filter-groups details { border-bottom: 1px solid rgba(128,128,128,0.2); }
+                        .filter-groups details summary { cursor: pointer; padding: 8px 12px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; opacity: 0.75; user-select: none; }
+                        .filter-groups details summary:hover { opacity: 1; }
+                        .filter-groups details > :not(summary) { padding: 0 12px; }
+                        .filter-groups details[open] > summary { opacity: 1; color: #3c8dbc; }
                         /* ── Compact tool buttons ── */
                         .sidebar-tool-btn { width: 100%; padding: 4px 6px; font-size: 11px; }
                         /* ── Save / Load buttons ── */
@@ -1303,10 +1369,11 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="analytics",
                                 fluidRow(column(12, h4(icon("stethoscope"), " Therapeutic Areas", class="analytics-section-header"))),
                                 fluidRow(
-                                  box(title="Top MedDRA Organ Classes",status="primary",solidHeader=TRUE,width=6,
+                                  box(title="Top MedDRA Organ Classes",status="primary",solidHeader=TRUE,width=12,
                                       sliderInput("top_n_organ","Top N:",min=5,max=30,value=15),
-                                      withSpinner(plotlyOutput("plot_organ",height="420px"),type=6)),
-                                  box(title="Top Conditions / MedDRA Terms",status="info",solidHeader=TRUE,width=6,
+                                      withSpinner(plotlyOutput("plot_organ",height="420px"),type=6))),
+                                fluidRow(
+                                  box(title="Top Conditions / MedDRA Terms",status="info",solidHeader=TRUE,width=12,
                                       sliderInput("top_n_term","Top N:",min=5,max=30,value=15),
                                       withSpinner(plotlyOutput("plot_term",height="420px"),type=6))),
                                 fluidRow(column(12, h4(icon("globe"), " Geography & PIP", class="analytics-section-header"))),
@@ -1400,6 +1467,15 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.6.1 (2026-04-19):"),
+                                          tags$ul(
+                                            tags$li("Data pipeline: trials with NA status now classified as 'Other' instead of being silently excluded from filter results"),
+                                            tags$li("Data pipeline: additional cross-register deduplication pass — EUCTR records with a matching CT number or normalised title in CTIS are now dropped in favour of the CTIS copy"),
+                                            tags$li("Data pipeline: CTIS trials with a pre-2023 submission date (migrated from EudraCT) are relabelled as EUCTR, so the Submissions per Year chart shows CTIS bars only from 2023 onward"),
+                                            tags$li("UI: trial count bar added to sidebar showing filtered / total trials; updates live as filters change"),
+                                            tags$li("Basic Analytics: Top MedDRA Organ Classes and Top Conditions charts each expanded to full width")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.6.0 (2026-04-18):"),
                                           tags$ul(
                                             tags$li("Sidebar: filters and tools split into two tabs (Filters / Tools) to reduce scrolling"),
@@ -1442,7 +1518,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.6.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.6.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1679,6 +1755,19 @@ server <- function(input, output, session) {
       encoded <- base64enc::base64encode(charToRaw(jsonlite::toJSON(fs, auto_unbox = TRUE)))
       updateQueryString(paste0("?f=", encoded), mode = "replace", session = session)
     }, error = function(e) NULL)
+  })
+
+  # ── Trial count bar ───────────────────────────────────────────────────────
+  output$trial_count_bar <- renderUI({
+    req(rv$data)
+    n   <- nrow(filt())
+    tot <- nrow(rv$data)
+    div(class = "trial-count-bar",
+      span(class = "trial-count-n",  format(n, big.mark = ",")),
+      span(class = "trial-count-sep", " / "),
+      span(class = "trial-count-tot", format(tot, big.mark = ",")),
+      span(class = "trial-count-lbl", " trials")
+    )
   })
 
   # ── Active filters badge row ──────────────────────────────────────────────

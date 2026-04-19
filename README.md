@@ -2,7 +2,7 @@
 
 ![Overview](overview.png)
 
-**Version:** `v0.6.0` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
+**Version:** `v0.6.1` | **License:** MIT | **Author:** Ruben Van Paemel & Claude Sonnet 4.6
 
 An interactive R Shiny dashboard providing a unified, searchable view of paediatric clinical trials registered in the European Union. Data is retrieved nightly from two complementary registers and harmonised into a single, consistently coded dataset.
 
@@ -357,6 +357,14 @@ shiny_trials/
 ---
 
 ## Changelog
+
+### v0.6.1 (2026-04-19)
+
+- **Data pipeline — NA status fix:** trials with no raw status value are now classified as "Other" instead of being silently excluded by the status filter
+- **Data pipeline — cross-register dedup:** additional pass drops EUCTR records that have a matching CT number or normalised title in CTIS, preferring the CTIS copy
+- **Data pipeline — migrated CTIS relabelling:** CTIS trials with a pre-2023 submission date (trials originally registered in EudraCT and subsequently migrated) are relabelled as EUCTR, so the Submissions per Year chart shows CTIS bars only from 2023 onward while retaining all trials in the dataset
+- **Sidebar:** live trial count bar between nav menu and filter tabset shows filtered / total trials
+- **Basic Analytics:** Top MedDRA Organ Classes and Top Conditions each expanded to full width
 
 ### v0.6.0 (2026-04-18)
 
