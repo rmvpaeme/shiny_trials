@@ -1,6 +1,11 @@
 ./data/*
 data/*
 
+manuscript/*
+manuscript.md
+CLAUDE.md
+claude.md
+
 # R Markdown / LaTeX render artifacts
 *.tex
 *.knit.md
