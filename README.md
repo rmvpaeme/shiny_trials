@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.7.0** · R Shiny · EUCTR + CTIS · ~6,800 trials · **License:** MIT · **Author:** Ruben Van Paemel
+**v0.7.1** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Author:** Ruben Van Paemel
 
 A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -200,6 +200,10 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.7.1 — 2026-04-20
+
+- **Nord Light theme**: palette and CSS added to codebase (hidden from theme selector while in development).
 
 ### v0.7.0 — 2026-04-19
 

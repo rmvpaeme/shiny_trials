@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.7.0 — Research analytics: Compliance tab, orphan filter, co-participation heatmap, phase pipeline, cohort survival)
+# app.R  (v0.7.1 — Nord Light theme (hidden, in development))
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -117,6 +117,16 @@ CACHE_PATH    <- "pediatric_trials_cache.rds"
 # ══════════════════════════════════════════════════════════════════════════════
 
 THEMES <- list(
+  `Nord Light` = list(
+    bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
+    fg0="#2E3440",fg1="#3B4252",fg2="#434C5E",
+    frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
+    red="#BF616A",orange="#D08770",yellow="#EBCB8B",
+    green="#A3BE8C",purple="#B48EAD",
+    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
+    r_euctr="#5E81AC",r_ctis="#88C0D0",
+    chart_bg="#ECEFF4",chart_fg="#2E3440",chart_grid="#D8DEE9",
+    spinner="#81A1C1"),
   Nord = list(
     bg0="#2E3440",bg1="#3B4252",bg2="#434C5E",bg3="#4C566A",
     fg0="#D8DEE9",fg1="#E5E9F0",fg2="#ECEFF4",
@@ -232,6 +242,12 @@ generate_css <- function(t) {
 }
 
 NORD_CSS <- generate_css(THEMES$Nord)
+NORD_LIGHT_CSS <- paste0(
+  generate_css(THEMES[["Nord Light"]]),
+  '.bg-yellow{color:#2E3440!important}
+   .bg-green{color:#2E3440!important}
+   .bg-blue{color:#2E3440!important}'
+)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 3. COUNTRY CLEANING
@@ -1539,6 +1555,11 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.7.1 (2026-04-20):"),
+                                          tags$ul(
+                                            tags$li("Nord Light theme added (in development, not yet visible in theme selector).")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.7.0 (2026-04-19):"),
                                           tags$ul(
                                             tags$li("New Results Posting tab: value boxes (completed, results posted %, academic/industry without results), bar chart by authorization year, breakdown by sponsor type, and downloadable list of completed trials without results. Results data sourced directly from registry fields (rebuild cache to activate)."),
@@ -1596,7 +1617,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.7.0 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.7.1 — ",Sys.Date())),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1702,7 +1723,11 @@ server <- function(input, output, session) {
   
   tc <- reactive(THEMES[[input$theme_select]])
   output$active_theme <- renderUI({
-    if (input$theme_select=="Nord") tags$style(NORD_CSS) else tags$style("")
+    switch(input$theme_select,
+      "Nord"       = tags$style(NORD_CSS),
+      "Nord Light" = tags$style(NORD_LIGHT_CSS),
+      tags$style("")
+    )
   })
   
   plt_layout <- function(p, ...) {
@@ -2419,19 +2444,27 @@ server <- function(input, output, session) {
       annotations = list(text = "Adjust the sidebar filters to see data here.",
                          showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
     df <- bind_rows(base, mutate(base, register = "All")) %>%
-      mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All")))
+      mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All")),
+             log_days = log10(pmax(days_to_decision, 1)))
     t <- tc()
     pal <- c(register_cols(), All = t$purple)
-    plot_ly(df, x = ~register, y = ~days_to_decision, color = ~register,
+    tick_vals <- c(1, 10, 30, 100, 365, 1000, 3650)
+    plot_ly(df, x = ~register, y = ~log_days, color = ~register,
             colors = pal, type = "violin",
             box = list(visible = TRUE),
             meanline = list(visible = TRUE),
-            points = "outliers") %>%
+            points = "outliers",
+            text = ~paste0(round(days_to_decision), " days"),
+            hoverinfo = "text+x") %>%
       plt_layout(
         xaxis = list(title = "Register"),
-        yaxis = list(title = "Days from Submission to Decision"),
         legend = list(orientation = "h", y = -0.2),
-        showlegend = FALSE)
+        showlegend = FALSE) %>%
+      layout(yaxis = list(
+        title = "Days (log\u2081\u2080 scale)",
+        tickvals = log10(tick_vals),
+        ticktext = as.character(tick_vals)
+      ))
   })
 
   output$plot_decision_time_sponsor <- renderPlotly({
@@ -2445,18 +2478,26 @@ server <- function(input, output, session) {
                          showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
     t <- tc()
     pal <- c("Academic" = t$frost1, "Industry" = t$orange)
-    plot_ly(base, x = ~sponsor_type, y = ~days_to_decision,
+    base <- mutate(base, log_days = log10(pmax(days_to_decision, 1)))
+    tick_vals <- c(1, 10, 30, 100, 365, 1000, 3650)
+    plot_ly(base, x = ~sponsor_type, y = ~log_days,
             color = ~sponsor_type, colors = pal,
             type = "violin",
             box = list(visible = TRUE),
             meanline = list(visible = TRUE),
             points = "outliers",
-            split = ~register) %>%
+            split = ~register,
+            text = ~paste0(round(days_to_decision), " days"),
+            hoverinfo = "text+x") %>%
       plt_layout(
         xaxis = list(title = "Sponsor Type"),
-        yaxis = list(title = "Days from Submission to Decision"),
         legend = list(orientation = "h", y = -0.2),
-        violingap = 0, violingroupgap = 0.2)
+        violingap = 0, violingroupgap = 0.2) %>%
+      layout(yaxis = list(
+        title = "Days (log\u2081\u2080 scale)",
+        tickvals = log10(tick_vals),
+        ticktext = as.character(tick_vals)
+      ))
   })
 
   output$plot_top_sponsors <- renderPlotly({
