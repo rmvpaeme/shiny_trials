@@ -81,10 +81,10 @@ PIP_COLS    <- c(Yes = GREEN, No = RED, Unknown = ORANGE)
 # ── ggplot2 theme ──────────────────────────────────────────────────────────────
 theme_rep <- function(base = 9) {
   theme_minimal(base_size = base, base_family = "Helvetica") %+replace% theme(
-    plot.title       = element_text(size = base + 1, face = "bold",  color = DARK,  hjust = 0),
+    plot.title       = element_text(size = base + 1, face = "bold", color = DARK, hjust = 0),
     plot.subtitle    = element_text(size = base - 0.5, color = GRAY, hjust = 0),
     axis.title       = element_text(size = base - 0.5, color = GRAY),
-    axis.text        = element_text(size = base - 1,   color = GRAY),
+    axis.text        = element_text(size = base - 1, color = GRAY),
     axis.text.y      = element_text(margin = margin(r = 2)),
     panel.grid.major = element_line(color = LIGHT, linewidth = 0.45),
     panel.grid.minor = element_blank(),
@@ -105,14 +105,14 @@ nk <- function(x, cap = NULL, cn = colnames(x), al = NULL, lw = FALSE) {
         col.names = cn, align = al, longtable = lw, escape = TRUE)
 }
 
-fmt_pct  <- function(x) sprintf("%.1f%%", x)
-fmt_n    <- function(x) format(x, big.mark = ",")
-iqr_str  <- function(x) {
+fmt_pct <- function(x) sprintf("%.1f%%", x)
+fmt_n   <- function(x) format(x, big.mark = ",")
+iqr_str <- function(x) {
   q <- quantile(x, c(0.25, 0.75), na.rm = TRUE)
   sprintf("%.1f\u2013%.1f", q[1], q[2])
 }
 
-# ── Pre-compute tables ─────────────────────────────────────────────────────────
+# ── Pre-compute summary tables ─────────────────────────────────────────────────
 status_tab <- df %>%
   mutate(status = coalesce(status, "Unknown")) %>%
   count(status, name = "n") %>%
@@ -130,6 +130,16 @@ pip_tab <- df %>%
   mutate(pct = round(n / N * 100, 1)) %>%
   arrange(match(has_PIP, c("Yes", "No", "Unknown")))
 
+orphan_tab <- if ("is_orphan" %in% names(df)) {
+  df %>%
+    mutate(is_orphan = coalesce(is_orphan, "Unknown")) %>%
+    count(is_orphan, name = "n") %>%
+    mutate(pct = round(n / N * 100, 1)) %>%
+    arrange(match(is_orphan, c("Yes", "No", "Unknown")))
+} else {
+  NULL
+}
+
 sponsor_tab <- df %>%
   filter(!is.na(sponsor_type)) %>%
   count(sponsor_type, name = "n") %>%
@@ -140,10 +150,10 @@ phase_tab <- df %>%
   filter(!is.na(phase), phase != "") %>%
   separate_rows(phase, sep = " / ") %>%
   mutate(phase = str_trim(phase)) %>%
-  filter(phase != "") %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
   count(phase, name = "n") %>%
   mutate(pct = round(n / sum(n) * 100, 1)) %>%
-  arrange(match(phase, c("I", "I-II", "II", "II-III", "III", "III-IV", "IV")))
+  arrange(match(phase, c("Phase I","Phase II","Phase III","Phase IV")))
 
 country_tab <- df %>%
   filter(!is.na(Member_state)) %>%
@@ -179,7 +189,6 @@ year_total <- year_reg %>%
   group_by(year) %>% summarise(n = sum(n), .groups = "drop") %>%
   arrange(year) %>% mutate(cumulative = cumsum(n))
 
-# Continuous per-trial counts
 countries_per_trial <- df %>%
   filter(!is.na(Member_state)) %>%
   rowwise() %>%
@@ -192,14 +201,12 @@ conds_per_trial <- df %>%
   mutate(nc = length(str_trim(str_split(MEDDRA_term, " / ")[[1]]))) %>%
   pull(nc)
 
-# Top sponsors by name
 top_sponsor_tab <- df %>%
   filter(!is.na(sponsor_name)) %>%
   count(sponsor_name, sponsor_type, sort = TRUE) %>%
   slice_head(n = 20) %>%
   mutate(pct = round(n / N * 100, 1))
 
-# Sponsor × register cross-tab
 sponsor_reg <- df %>%
   filter(!is.na(sponsor_type)) %>%
   count(sponsor_type, register) %>%
@@ -207,22 +214,23 @@ sponsor_reg <- df %>%
   mutate(Total = rowSums(across(where(is.numeric)))) %>%
   arrange(desc(Total))
 
-# Phase × register
 phase_reg <- df %>%
   filter(!is.na(phase), phase != "") %>%
   separate_rows(phase, sep = " / ") %>%
   mutate(phase = str_trim(phase)) %>%
-  filter(phase != "") %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
   count(phase, register) %>%
   pivot_wider(names_from = register, values_from = n, values_fill = 0) %>%
   mutate(Total = rowSums(across(where(is.numeric)))) %>%
-  arrange(match(phase, c("I","I-II","II","II-III","III","III-IV","IV")))
+  arrange(match(phase, c("Phase I","Phase II","Phase III","Phase IV")))
 
-# Decision timeline
 decision_df <- df %>%
   filter(!is.na(days_to_decision), is.finite(days_to_decision),
          days_to_decision >= 0, days_to_decision < 3650)
 
+# Results posting (completed trials)
+has_results_col <- "has_results" %in% names(df)
+results_base <- df %>% filter(status == "Completed", !is.na(decision_date))
 ```
 
 # Applied Filters {-}
@@ -230,25 +238,33 @@ decision_df <- df %>%
 The following filters were active when this report was generated.
 
 ```{r filter-table}
-fnames <- c("Trial Status", "Source Register", "Submission Date (from)",
-            "Submission Date (to)", "MedDRA Organ Class", "Condition / MedDRA Term",
-            "Country / Member State", "Trial Phase", "Part of PIP", "Free-text search")
+fnames <- c(
+  "Trial Status", "Source Register",
+  "Submission Date (from)", "Submission Date (to)",
+  "Sponsor / Company", "Country / Member State",
+  "Trial Phase", "Part of PIP", "Orphan Designation",
+  "MedDRA Organ Class", "Condition / MedDRA Term",
+  "Free-text search"
+)
 fvals <- c(
-  if (length(f$status) == 0)   "All" else paste(f$status, collapse = ", "),
+  if (length(f$status)   == 0) "All" else paste(f$status,   collapse = ", "),
   if (length(f$register) == 0) "All" else paste(f$register, collapse = ", "),
-  if (length(f$date_range) >= 1) f$date_range[1] else "—",
-  if (length(f$date_range) >= 2) f$date_range[2] else "—",
-  if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All"
-    else paste(f$organ_class, collapse = "; "),
-  if (length(f$condition) == 0 || identical(f$condition, "All")) "All"
-    else paste(f$condition, collapse = "; "),
+  if (length(f$date_range) >= 1) f$date_range[1] else "\u2014",
+  if (length(f$date_range) >= 2) f$date_range[2] else "\u2014",
+  if (length(f$sponsor) == 0 || identical(f$sponsor, "All")) "All"
+    else paste(f$sponsor, collapse = "; "),
   if (length(f$country) == 0 || identical(f$country, "All")) "All"
     else paste(f$country, collapse = "; "),
   if (length(f$phase) == 0 || identical(f$phase, "All")) "All"
     else paste(f$phase, collapse = ", "),
-  if (is.null(f$pip) || f$pip == "All") "All" else f$pip,
-  if (is.null(f$text_search) || f$text_search == "(none)" || !nzchar(f$text_search)) "(none)"
-    else f$text_search
+  if (is.null(f$pip)    || f$pip    == "All") "All" else f$pip,
+  if (is.null(f$orphan) || f$orphan == "All") "All" else f$orphan,
+  if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All"
+    else paste(f$organ_class, collapse = "; "),
+  if (length(f$condition) == 0 || identical(f$condition, "All")) "All"
+    else paste(f$condition, collapse = "; "),
+  if (is.null(f$text_search) || f$text_search == "(none)" || !nzchar(f$text_search))
+    "(none)" else f$text_search
 )
 nk(data.frame(Filter = fnames, Value = fvals),
    cn = c("Filter", "Value"), al = c("l","l"))
@@ -260,22 +276,31 @@ nk(data.frame(Filter = fnames, Value = fvals),
 
 ```{r overview-summary}
 date_range_str <- if (!all(is.na(df$submission_date_parsed))) {
-  paste(format(min(df$submission_date_parsed, na.rm=TRUE), "%d %b %Y"), "to",
-        format(max(df$submission_date_parsed, na.rm=TRUE), "%d %b %Y"))
+  paste(format(min(df$submission_date_parsed, na.rm = TRUE), "%d %b %Y"), "to",
+        format(max(df$submission_date_parsed, na.rm = TRUE), "%d %b %Y"))
 } else "n/a"
 
-n_countries_unique <- country_tab %>% nrow()
-n_organs_unique    <- organ_tab %>% nrow()
-n_conds_unique     <- cond_tab %>% nrow()
+n_pip_yes     <- sum(df$has_PIP == "Yes",  na.rm = TRUE)
+n_ongoing     <- sum(df$status  == "Ongoing",   na.rm = TRUE)
+n_completed   <- sum(df$status  == "Completed", na.rm = TRUE)
 
 overview_df <- tibble(
-  Metric = c("Total trials in selection", "Submission date range",
-             "Unique member states", "Unique MedDRA organ classes",
-             "Unique MedDRA conditions"),
-  Value = c(fmt_n(N), date_range_str,
-            as.character(n_countries_unique),
-            as.character(n_organs_unique),
-            fmt_n(n_conds_unique))
+  Metric = c(
+    "Total trials in selection", "Submission date range",
+    "Ongoing", "Completed",
+    "Part of a PIP",
+    "Unique member states", "Unique MedDRA organ classes",
+    "Unique MedDRA conditions"
+  ),
+  Value = c(
+    fmt_n(N), date_range_str,
+    paste0(fmt_n(n_ongoing),   " (", round(n_ongoing   / N * 100, 1), "%)"),
+    paste0(fmt_n(n_completed), " (", round(n_completed / N * 100, 1), "%)"),
+    paste0(fmt_n(n_pip_yes),   " (", round(n_pip_yes   / N * 100, 1), "%)"),
+    as.character(nrow(country_tab)),
+    as.character(nrow(organ_tab)),
+    fmt_n(nrow(cond_tab))
+  )
 )
 nk(overview_df, cap = paste("Key metrics for the", fmt_n(N), "selected trials."),
    cn = c("Metric", "Value"), al = c("l","l"))
@@ -284,7 +309,6 @@ nk(overview_df, cap = paste("Key metrics for the", fmt_n(N), "selected trials.")
 ## Trial Status and Register Distribution
 
 ```{r status-register, fig.show='hold', out.width='49%', fig.height=3.2, fig.cap="Left: trial status distribution. Right: source register distribution."}
-# Status chart
 p1 <- status_tab %>%
   mutate(status = factor(status, levels = status),
          label  = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")) %>%
@@ -298,7 +322,6 @@ p1 <- status_tab %>%
   theme_rep()
 print(p1)
 
-# Register chart
 p2 <- reg_tab %>%
   mutate(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")) %>%
   ggplot(aes(x = reorder(register, n), y = n, fill = register)) +
@@ -313,51 +336,50 @@ print(p2)
 ```
 
 ```{r status-register-tables, fig.show='hold', out.width='49%'}
-st <- status_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(st, cn = c("Status", "n", "%"), al = "lrr")
-
-rt <- reg_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(rt, cn = c("Register", "n", "%"), al = "lrr")
+nk(status_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cn = c("Status", "n", "%"), al = "lrr")
+nk(reg_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cn = c("Register", "n", "%"), al = "lrr")
 ```
 
-## Per-trial Continuous Metrics
+## Per-trial Descriptive Statistics
 
 ```{r continuous-table}
 cont_df <- tibble(
-  Metric   = c("Member states per trial", "Conditions (MedDRA terms) per trial",
-               "Submissions per year"),
-  Mean_SD  = c(
+  Metric  = c("Member states per trial", "Conditions (MedDRA terms) per trial",
+              "Submissions per year"),
+  Mean_SD = c(
     sprintf("%.1f \u00b1 %.1f", mean(countries_per_trial), sd(countries_per_trial)),
-    sprintf("%.1f \u00b1 %.1f", mean(conds_per_trial),    sd(conds_per_trial)),
-    sprintf("%.1f \u00b1 %.1f", mean(year_total$n),       sd(year_total$n))
+    sprintf("%.1f \u00b1 %.1f", mean(conds_per_trial),     sd(conds_per_trial)),
+    sprintf("%.1f \u00b1 %.1f", mean(year_total$n),        sd(year_total$n))
   ),
-  Median   = c(
+  Median  = c(
     sprintf("%.1f", median(countries_per_trial)),
     sprintf("%.1f", median(conds_per_trial)),
     sprintf("%.1f", median(year_total$n))
   ),
-  IQR      = c(
+  IQR     = c(
     iqr_str(countries_per_trial),
     iqr_str(conds_per_trial),
     iqr_str(year_total$n)
   ),
-  Min_Max  = c(
+  Min_Max = c(
     sprintf("%d\u2013%d", min(countries_per_trial), max(countries_per_trial)),
-    sprintf("%d\u2013%d", min(conds_per_trial),    max(conds_per_trial)),
-    sprintf("%d\u2013%d", min(year_total$n),        max(year_total$n))
+    sprintf("%d\u2013%d", min(conds_per_trial),     max(conds_per_trial)),
+    sprintf("%d\u2013%d", min(year_total$n),         max(year_total$n))
   )
 )
 nk(cont_df,
-   cap  = "Descriptive statistics for continuous per-trial and per-year metrics.",
-   cn   = c("Metric", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
-   al   = c("l","r","r","r","r"))
+   cap = "Descriptive statistics for continuous per-trial and per-year metrics.",
+   cn  = c("Metric", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
+   al  = c("l","r","r","r","r"))
 ```
 
 \newpage
 
 # Submission Timeline
 
-```{r timeline-bar, fig.height=3.4, fig.cap="Annual trial submissions by source register."}
+```{r timeline-bar, fig.height=3.4, fig.cap="Annual trial submissions by source register. CTIS bars appear from 2023 onward; pre-2023 CTIS records (migrated from EudraCT) are counted as EUCTR."}
 year_reg %>%
   ggplot(aes(x = year, y = n, fill = register)) +
   geom_col(width = 0.75) +
@@ -383,7 +405,7 @@ year_total %>%
 ```{r timeline-table}
 ytbl <- year_total %>%
   mutate(n = fmt_n(n), cumulative = fmt_n(cumulative)) %>%
-  rename(Year = year, `Submissions` = n, `Cumulative` = cumulative)
+  rename(Year = year, Submissions = n, Cumulative = cumulative)
 nk(ytbl, cap = "Submissions and cumulative total by year.", al = c("l","r","r"))
 ```
 
@@ -391,7 +413,7 @@ nk(ytbl, cap = "Submissions and cumulative total by year.", al = c("l","r","r"))
 
 # Geographic Distribution
 
-```{r countries-bar, fig.height=5.5, fig.cap="Top 20 EU member states by number of trials (trials may span multiple countries)."}
+```{r countries-bar, fig.height=5.5, fig.cap="Top 20 EU member states by number of trial participations. A trial spanning multiple countries is counted once per country."}
 country_tab %>%
   head(20) %>%
   mutate(Member_state = factor(Member_state, levels = rev(Member_state))) %>%
@@ -405,11 +427,9 @@ country_tab %>%
 ```
 
 ```{r countries-table}
-ctbl <- country_tab %>%
-  head(20) %>%
-  mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(ctbl, cap = "Top 20 member states: number of trial participations and percentage of all selected trials.",
-   cn = c("Member State", "n", "% of trials"), al = c("l","r","r"))
+nk(country_tab %>% head(20) %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cap = "Top 20 member states: trial participations and percentage of all selected trials.",
+   cn  = c("Member State", "n", "% of trials"), al = c("l","r","r"))
 ```
 
 \newpage
@@ -421,10 +441,8 @@ nk(ctbl, cap = "Top 20 member states: number of trial participations and percent
 ```{r organ-bar, fig.height=4.8, fig.cap="Trials per MedDRA system organ class (top 15). Trials may belong to more than one class."}
 organ_tab %>%
   head(15) %>%
-  mutate(
-    lbl  = str_wrap(MEDDRA_organ_class, 35),
-    lbl  = factor(lbl, levels = rev(lbl))
-  ) %>%
+  mutate(lbl = str_wrap(MEDDRA_organ_class, 35),
+         lbl = factor(lbl, levels = rev(lbl))) %>%
   ggplot(aes(x = n, y = lbl)) +
   geom_col(fill = PURPLE, width = 0.72) +
   geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
@@ -435,12 +453,10 @@ organ_tab %>%
 ```
 
 ```{r organ-table}
-otbl <- organ_tab %>%
-  mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(otbl,
+nk(organ_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
    cap = "All MedDRA system organ classes: number of trials and percentage.",
    cn  = c("MedDRA Organ Class", "n", "% of trials"),
-   al  = c("l","r","r"), lw  = TRUE)
+   al  = c("l","r","r"), lw = TRUE)
 ```
 
 \newpage
@@ -450,10 +466,8 @@ nk(otbl,
 ```{r cond-bar, fig.height=5.2, fig.cap="Top 20 MedDRA conditions. Trials may be classified under more than one condition."}
 cond_tab %>%
   head(20) %>%
-  mutate(
-    lbl = str_trunc(MEDDRA_term, 45),
-    lbl = factor(lbl, levels = rev(lbl))
-  ) %>%
+  mutate(lbl = str_trunc(MEDDRA_term, 45),
+         lbl = factor(lbl, levels = rev(lbl))) %>%
   ggplot(aes(x = n, y = lbl)) +
   geom_col(fill = TEAL, width = 0.72) +
   geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
@@ -464,101 +478,88 @@ cond_tab %>%
 ```
 
 ```{r cond-table}
-ctbl2 <- cond_tab %>%
-  head(30) %>%
-  mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(ctbl2,
+nk(cond_tab %>% head(30) %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
    cap = "Top 30 MedDRA conditions: number of trials and percentage.",
-   cn  = c("MedDRA Condition", "n", "% of trials"),
-   al  = c("l","r","r"))
+   cn  = c("MedDRA Condition", "n", "% of trials"), al = c("l","r","r"))
 ```
 
 \newpage
 
 # Trial Phases
 
-```{r phase-bar, fig.height=3.0, fig.cap="Phase distribution across all selected trials (trials with multiple phases are counted once per phase)."}
+```{r phase-dist, fig.height=3.0, fig.cap="Phase distribution across all selected trials. Trials with combined phase designations (e.g. Phase I/II) are counted once per constituent phase."}
 phase_tab %>%
-  mutate(phase = factor(phase, levels = phase)) %>%
   ggplot(aes(x = phase, y = n, fill = phase)) +
   geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = paste0(fmt_n(n), "\n", fmt_pct(pct))),
+  geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
             vjust = -0.3, size = 2.6, color = GRAY) +
-  scale_fill_manual(values = setNames(NORD8, phase_tab$phase)) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.18)), labels = comma) +
-  labs(title = "Trial Phase Distribution", x = "Phase", y = "Number of trials") +
+  scale_fill_manual(values = setNames(NORD8[seq_along(phase_tab$phase)], phase_tab$phase)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
+  labs(title = "Phase Distribution", x = NULL, y = "Number of trials") +
   theme_rep()
 ```
 
-```{r phase-reg-bar, fig.height=3.2, fig.cap="Phase distribution split by source register."}
+```{r phase-by-register, fig.show='hold', out.width='49%', fig.height=3.2, fig.cap="Left: phase by source register. Right: phase by trial status."}
 df %>%
   filter(!is.na(phase), phase != "") %>%
   separate_rows(phase, sep = " / ") %>%
   mutate(phase = str_trim(phase)) %>%
-  filter(phase != "") %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
   count(phase, register) %>%
   ggplot(aes(x = phase, y = n, fill = register)) +
   geom_col(position = position_dodge(0.72), width = 0.65) +
   scale_fill_manual(values = REG_COLS) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
-  labs(title = "Phase by Register", x = "Phase", y = "Number of trials") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
+  labs(title = "Phase by Register", x = NULL, y = "Number of trials") +
+  theme_rep()
+
+df %>%
+  filter(!is.na(phase), phase != "", !is.na(status)) %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+  count(phase, status) %>%
+  ggplot(aes(x = phase, y = n, fill = status)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = STATUS_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
+  labs(title = "Phase by Status", x = NULL, y = "Number of trials") +
+  theme_rep()
+```
+
+```{r phase-by-sponsor, fig.height=3.2, fig.cap="Phase distribution by sponsor type (Academic vs Industry)."}
+df %>%
+  filter(!is.na(phase), phase != "", !is.na(sponsor_type)) %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+  count(phase, sponsor_type) %>%
+  ggplot(aes(x = phase, y = n, fill = sponsor_type)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = c(Academic = GREEN, Industry = BLUE)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
+  labs(title = "Phase by Sponsor Type", x = NULL, y = "Number of trials") +
   theme_rep()
 ```
 
 ```{r phase-tables, fig.show='hold', out.width='49%'}
-# Phase summary
-ptbl <- phase_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(ptbl, cn = c("Phase", "n", "%"), al = "lrr")
-
-# Phase × register cross-tab
-prtbl <- phase_reg %>%
-  mutate(across(where(is.numeric), fmt_n))
-nk(prtbl, cap = "Phase by register.", al = c("l", rep("r", ncol(prtbl)-1)))
-```
-
-## Phase Distribution
-
-```{r phase-funnel, fig.height=3.2, fig.cap="Proportional distribution of trials across Phase I–IV. Each bar represents one phase; width is proportional to trial count. Trials with combined phase designations (e.g. Phase I/II) are counted once per constituent phase."}
-funnel_df <- df %>%
-  filter(!is.na(phase), phase != "") %>%
-  separate_rows(phase, sep = " / ") %>%
-  mutate(phase = str_trim(phase)) %>%
-  filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
-  count(phase, name = "n") %>%
-  mutate(
-    phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")),
-    pct   = round(n / sum(n) * 100, 1)
-  ) %>%
-  arrange(phase)
-
-if (nrow(funnel_df) > 0) {
-  pal_funnel <- c("Phase I" = FROST, "Phase II" = BLUE,
-                  "Phase III" = PURPLE, "Phase IV" = ORANGE)
-  funnel_df %>%
-    ggplot(aes(x = phase, y = n, fill = phase)) +
-    geom_col(width = 0.65, show.legend = FALSE) +
-    geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
-              vjust = -0.3, size = 2.6, color = GRAY) +
-    scale_fill_manual(values = pal_funnel) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.22)), labels = comma) +
-    labs(title = "Phase Distribution", x = NULL, y = "Number of trials") +
-    theme_rep()
-}
+nk(phase_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cn = c("Phase", "n", "%"), al = "lrr")
+nk(phase_reg %>% mutate(across(where(is.numeric), fmt_n)),
+   cap = "Phase by register.", al = c("l", rep("r", ncol(phase_reg) - 1)))
 ```
 
 ## Completion Rate by Authorisation Cohort
 
-```{r completion-cohort, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, stratified by source register. Cohorts with fewer than five trials are excluded. More recent cohorts naturally show lower completion rates owing to shorter observation windows."}
+```{r completion-cohort, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, by source register. Cohorts with fewer than five trials are excluded. More recent cohorts naturally show lower completion rates owing to shorter observation windows."}
 cohort_df <- df %>%
   filter(!is.na(decision_date), !is.na(status)) %>%
   mutate(auth_year = year(decision_date)) %>%
   filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
   group_by(auth_year, register) %>%
-  summarise(
-    n_total     = n(),
-    n_completed = sum(status == "Completed", na.rm = TRUE),
-    .groups     = "drop"
-  ) %>%
+  summarise(n_total     = n(),
+            n_completed = sum(status == "Completed", na.rm = TRUE),
+            .groups     = "drop") %>%
   filter(n_total >= 5) %>%
   mutate(pct_completed = n_completed / n_total * 100)
 
@@ -582,13 +583,12 @@ if (nrow(cohort_df) > 0) {
 
 ```{r completion-cohort-table}
 if (nrow(cohort_df) > 0) {
-  cohort_tbl <- cohort_df %>%
-    mutate(pct_completed = sprintf("%.1f%%", pct_completed)) %>%
-    select(auth_year, register, n_total, n_completed, pct_completed) %>%
-    rename(`Year` = auth_year, `Register` = register,
-           `Authorised` = n_total, `Completed` = n_completed, `% Completed` = pct_completed)
-  nk(cohort_tbl,
-     cap = "Completion rates by authorisation year and register (cohorts with ≥ 5 trials).",
+  nk(cohort_df %>%
+       mutate(pct_completed = sprintf("%.1f%%", pct_completed)) %>%
+       select(auth_year, register, n_total, n_completed, pct_completed) %>%
+       rename(Year = auth_year, Register = register,
+              Authorised = n_total, Completed = n_completed, `% Completed` = pct_completed),
+     cap = "Completion rates by authorisation year and register (cohorts with \u2265 5 trials).",
      al  = c("l","l","r","r","r"))
 }
 ```
@@ -597,8 +597,8 @@ if (nrow(cohort_df) > 0) {
 
 # Sponsor Analysis
 
-```{r sponsor-bar, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: sponsor type distribution. Right: sponsor type by source register."}
-p_sp1 <- sponsor_tab %>%
+```{r sponsor-type, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: sponsor type distribution. Right: sponsor type by source register."}
+sponsor_tab %>%
   ggplot(aes(x = reorder(sponsor_type, n), y = n, fill = sponsor_type)) +
   geom_col(width = 0.55, show.legend = FALSE) +
   geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
@@ -608,68 +608,67 @@ p_sp1 <- sponsor_tab %>%
   coord_flip() +
   labs(title = "Sponsor Type", x = NULL, y = "Trials") +
   theme_rep()
-print(p_sp1)
 
-p_sp2 <- df %>%
+df %>%
   filter(!is.na(sponsor_type)) %>%
   count(sponsor_type, register) %>%
   ggplot(aes(x = sponsor_type, y = n, fill = register)) +
   geom_col(position = position_dodge(0.72), width = 0.65) +
   scale_fill_manual(values = REG_COLS) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
   labs(title = "Sponsor Type by Register", x = NULL, y = "Trials") +
   theme_rep()
-print(p_sp2)
 ```
 
-```{r sponsor-table}
-sptbl <- sponsor_reg %>%
-  mutate(across(where(is.numeric), fmt_n))
-nk(sptbl, cap = "Sponsor type by source register.",
-   al = c("l", rep("r", ncol(sptbl)-1)))
+```{r sponsor-reg-table}
+nk(sponsor_reg %>% mutate(across(where(is.numeric), fmt_n)),
+   cap = "Sponsor type by source register.",
+   al  = c("l", rep("r", ncol(sponsor_reg) - 1)))
 ```
 
-## Top Sponsors by Name
+## Top Sponsors
 
-```{r top-sponsor-bar, fig.height=5.5, fig.cap="Top 20 sponsors by number of trials. Colour indicates sponsor type (Academic/Industry)."}
+```{r top-sponsor-bar, fig.height=5.5, fig.cap="Top 20 sponsors by trial count. Sponsor names are normalised (legal suffixes stripped, canonical brand names applied). Colour indicates sponsor type."}
 if (nrow(top_sponsor_tab) > 0) {
-  p_top_sp <- top_sponsor_tab %>%
+  top_sponsor_tab %>%
     mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)),
            sponsor_type = coalesce(sponsor_type, "Unknown")) %>%
     ggplot(aes(x = n, y = sponsor_name, fill = sponsor_type)) +
-    geom_col(width = 0.65, show.legend = TRUE) +
+    geom_col(width = 0.65) +
     geom_text(aes(label = paste0(fmt_n(n), " (", fmt_pct(pct), ")")),
               hjust = -0.1, size = 2.6, color = GRAY) +
     scale_fill_manual(values = c(Academic = GREEN, Industry = BLUE, Unknown = GRAY),
                       name = "Sponsor Type") +
     scale_x_continuous(expand = expansion(mult = c(0, 0.25)), labels = comma) +
     labs(title = "Top 20 Sponsors", x = "Trials", y = NULL) +
-    theme_rep() +
-    theme(legend.position = "bottom")
-  print(p_top_sp)
+    theme_rep()
 } else {
-  cat("No sponsor name data available for this filter selection.")
+  cat("\\textit{No sponsor name data available for this filter selection.}")
 }
 ```
 
 ```{r top-sponsor-table}
 if (nrow(top_sponsor_tab) > 0) {
-  tsp_tbl <- top_sponsor_tab %>%
-    select(sponsor_name, sponsor_type, n, pct) %>%
-    rename(`Sponsor` = sponsor_name, `Type` = sponsor_type,
-           `Trials` = n, `%` = pct) %>%
-    mutate(Trials = fmt_n(Trials), `%` = fmt_pct(`%`))
-  nk(tsp_tbl, cap = "Top 20 sponsors by trial count.",
-     al = c("l", "l", "r", "r"))
+  nk(top_sponsor_tab %>%
+       select(sponsor_name, sponsor_type, n, pct) %>%
+       rename(Sponsor = sponsor_name, Type = sponsor_type,
+              Trials = n, `%` = pct) %>%
+       mutate(Trials = fmt_n(Trials), `%` = fmt_pct(`%`)),
+     cap = "Top 20 sponsors by trial count.",
+     al  = c("l","l","r","r"))
 }
 ```
 
 \newpage
 
-# Paediatric Investigation Plans (PIP)
+# Regulatory Status
 
-```{r pip-bar, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: overall PIP status. Right: PIP status by register."}
-p_pip1 <- pip_tab %>%
+## Paediatric Investigation Plans (PIP)
+
+A Paediatric Investigation Plan (PIP) is a development plan aimed at ensuring that medicines are researched and authorised for use in children. PIP involvement is recorded in the registry at submission.
+
+```{r pip-bar, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: overall PIP status. Right: PIP status by source register."}
+pip_tab %>%
   mutate(has_PIP = factor(has_PIP, levels = c("Yes","No","Unknown"))) %>%
   ggplot(aes(x = has_PIP, y = n, fill = has_PIP)) +
   geom_col(width = 0.6, show.legend = FALSE) +
@@ -679,23 +678,147 @@ p_pip1 <- pip_tab %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.2)), labels = comma) +
   labs(title = "PIP Status", x = NULL, y = "Trials") +
   theme_rep()
-print(p_pip1)
 
-p_pip2 <- df %>%
+df %>%
   mutate(has_PIP = coalesce(has_PIP, "Unknown")) %>%
   count(has_PIP, register) %>%
   ggplot(aes(x = has_PIP, y = n, fill = register)) +
   geom_col(position = position_dodge(0.72), width = 0.65) +
   scale_fill_manual(values = REG_COLS) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
   labs(title = "PIP Status by Register", x = NULL, y = "Trials") +
   theme_rep()
-print(p_pip2)
 ```
 
 ```{r pip-table}
-ptbl2 <- pip_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct))
-nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
+nk(pip_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cn = c("PIP Status", "n", "% of trials"), al = "lrr")
+```
+
+## Orphan Designation
+
+Orphan designation is granted for medicinal products intended for rare diseases (prevalence \(\leq\) 5 per 10,000 in the EU). The designation is derived from EUCTR DIMP field D.2.5 and CTIS orphan designation numbers (EU/3/\ldots format).
+
+```{r orphan-check, include=FALSE}
+has_orphan_col <- !is.null(orphan_tab)
+```
+
+```{r orphan-bar, eval=has_orphan_col, fig.show='hold', out.width='49%', fig.height=3.0, fig.cap="Left: orphan designation status. Right: orphan designation by source register."}
+orphan_tab %>%
+  mutate(is_orphan = factor(is_orphan, levels = c("Yes","No","Unknown"))) %>%
+  ggplot(aes(x = is_orphan, y = n, fill = is_orphan)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt_n(n), "\n(", fmt_pct(pct), ")")),
+            vjust = -0.3, size = 2.6, color = GRAY) +
+  scale_fill_manual(values = PIP_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), labels = comma) +
+  labs(title = "Orphan Designation", x = NULL, y = "Trials") +
+  theme_rep()
+
+df %>%
+  mutate(is_orphan = coalesce(is_orphan, "Unknown")) %>%
+  count(is_orphan, register) %>%
+  ggplot(aes(x = is_orphan, y = n, fill = register)) +
+  geom_col(position = position_dodge(0.72), width = 0.65) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.10)), labels = comma) +
+  labs(title = "Orphan Designation by Register", x = NULL, y = "Trials") +
+  theme_rep()
+```
+
+```{r orphan-table, eval=has_orphan_col}
+nk(orphan_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
+   cn = c("Orphan Designation", "n", "% of trials"), al = "lrr")
+```
+
+```{r orphan-missing, eval=!has_orphan_col, results='asis'}
+cat("\\textit{Orphan designation data requires a cache rebuild (added in v0.7.0). Run rebuild\\_cache.R to activate.}")
+```
+
+\newpage
+
+# Results Posting
+
+This section shows which completed trials have posted results to the registry and which have not. Results are sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`). Trial end dates are not reliably available across registers; authorization date is shown for reference only and is not used as a compliance deadline.
+
+```{r results-summary}
+n_completed_total <- nrow(results_base)
+
+if (has_results_col) {
+  n_posted    <- sum(results_base$has_results, na.rm = TRUE)
+  n_not_posted <- n_completed_total - n_posted
+  pct_posted  <- if (n_completed_total > 0) round(n_posted / n_completed_total * 100, 1) else 0
+
+  res_summary <- tibble(
+    Metric = c("Completed trials", "Results posted", "No results posted",
+               "Results posting rate"),
+    Value  = c(fmt_n(n_completed_total),
+               paste0(fmt_n(n_posted),     " (", pct_posted, "%)"),
+               paste0(fmt_n(n_not_posted), " (", round(100 - pct_posted, 1), "%)"),
+               paste0(pct_posted, "%"))
+  )
+} else {
+  res_summary <- tibble(
+    Metric = "Results data status",
+    Value  = "Not available — rebuild cache to activate (added in v0.7.0)"
+  )
+}
+nk(res_summary, cn = c("Metric", "Value"), al = c("l","l"))
+```
+
+```{r results-by-year, eval=has_results_col, fig.height=3.4, fig.cap="Completed trials by authorization year. Green = results confirmed posted in the registry; red = no results posted."}
+results_base %>%
+  mutate(auth_year     = year(decision_date),
+         results_status = ifelse(has_results, "Results posted", "No results posted"),
+         results_status = factor(results_status,
+           levels = c("Results posted", "No results posted"))) %>%
+  filter(auth_year >= 2004) %>%
+  count(auth_year, results_status) %>%
+  ggplot(aes(x = auth_year, y = n, fill = results_status)) +
+  geom_col(width = 0.75) +
+  scale_fill_manual(values = c("Results posted" = GREEN, "No results posted" = RED)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  scale_x_continuous(breaks = pretty_breaks(8)) +
+  labs(title = "Results Posting by Authorization Year",
+       x = "Authorization Year", y = "Completed Trials") +
+  theme_rep()
+```
+
+```{r results-by-sponsor, eval=has_results_col, fig.height=3.0, fig.cap="Results posting status for completed trials by sponsor type."}
+results_base %>%
+  filter(!is.na(sponsor_type)) %>%
+  mutate(results_status = ifelse(has_results, "Results posted", "No results posted"),
+         results_status = factor(results_status,
+           levels = c("Results posted", "No results posted"))) %>%
+  count(sponsor_type, results_status) %>%
+  ggplot(aes(x = sponsor_type, y = n, fill = results_status)) +
+  geom_col(width = 0.65) +
+  scale_fill_manual(values = c("Results posted" = GREEN, "No results posted" = RED)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+  labs(title = "Results Posting by Sponsor Type",
+       x = NULL, y = "Completed Trials") +
+  theme_rep()
+```
+
+```{r results-no-post-table, eval=has_results_col}
+no_results_tbl <- results_base %>%
+  filter(!has_results) %>%
+  select(CT_number, register, Full_title, sponsor_name, MEDDRA_organ_class,
+         decision_date) %>%
+  mutate(Full_title = str_trunc(Full_title, 60)) %>%
+  arrange(decision_date) %>%
+  rename(`CT Number` = CT_number, Register = register, Title = Full_title,
+         Sponsor = sponsor_name, `Organ Class` = MEDDRA_organ_class,
+         `Authorization Date` = decision_date)
+
+if (nrow(no_results_tbl) > 0) {
+  nk(head(no_results_tbl, 30),
+     cap = paste0("Completed trials without results posted (first 30 of ",
+                  fmt_n(nrow(no_results_tbl)), "; full list available as CSV download in the dashboard)."),
+     al  = c("l","l","l","l","l","l"), lw = TRUE)
+} else {
+  cat("\\textit{All completed trials in this selection have results posted.}")
+}
 ```
 
 \newpage
@@ -706,7 +829,7 @@ nk(ptbl2, cn = c("PIP Status", "n", "% of trials"), al = "lrr")
 has_decision <- nrow(decision_df) > 0
 ```
 
-```{r decision-violin, eval=has_decision, fig.height=3.8, fig.cap="Distribution of days from submission date to competent authority decision date, by source register and combined. Box shows IQR and median; whiskers extend to 1.5 × IQR."}
+```{r decision-violin, eval=has_decision, fig.height=3.8, fig.cap="Distribution of days from submission date to competent authority decision date, by source register. Box shows IQR and median; whiskers extend to 1.5 x IQR."}
 bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
   mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
   ggplot(aes(x = register, y = days_to_decision, fill = register)) +
@@ -722,20 +845,18 @@ bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
 ```
 
 ```{r decision-table, eval=has_decision}
-dec_stats <- bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
-  mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
-  group_by(Register = register) %>%
-  summarise(
-    n         = fmt_n(n()),
-    Mean_SD   = sprintf("%.1f \u00b1 %.1f", mean(days_to_decision), sd(days_to_decision)),
-    Median    = sprintf("%.0f", median(days_to_decision)),
-    IQR       = iqr_str(days_to_decision),
-    Min_Max   = sprintf("%d\u2013%d", as.integer(min(days_to_decision)),
-                                      as.integer(max(days_to_decision))),
-    .groups = "drop"
-  )
-nk(dec_stats,
-   cap = "Descriptive statistics for days from submission to decision, by register.",
+nk(bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
+     mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
+     group_by(Register = register) %>%
+     summarise(
+       n       = fmt_n(n()),
+       Mean_SD = sprintf("%.1f \u00b1 %.1f", mean(days_to_decision), sd(days_to_decision)),
+       Median  = sprintf("%.0f", median(days_to_decision)),
+       IQR     = iqr_str(days_to_decision),
+       Min_Max = sprintf("%d\u2013%d", as.integer(min(days_to_decision)),
+                                       as.integer(max(days_to_decision))),
+       .groups = "drop"),
+   cap = "Days from submission to decision, by register.",
    cn  = c("Register", "n", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
    al  = c("l","r","r","r","r","r"))
 ```
@@ -743,6 +864,8 @@ nk(dec_stats,
 ```{r decision-missing, eval=!has_decision, results='asis'}
 cat("\\textit{No decision date data available for the current filter selection.}")
 ```
+
+\newpage
 
 # Custom Chart Builder
 
@@ -754,6 +877,7 @@ EXPLORE_LABELS <- c(
   "phase"              = "Phase",
   "sponsor_type"       = "Sponsor Type",
   "has_PIP"            = "PIP Status",
+  "is_orphan"          = "Orphan Designation",
   "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
   "MEDDRA_term"        = "Condition (MedDRA term)",
   "Member_state"       = "Country / Member State"
@@ -769,10 +893,10 @@ chart_x_var   <- chart_ed$x_var
 chart_grp     <- chart_ed$grp
 chart_type    <- params$chart_type
 chart_x_lbl   <- unname(EXPLORE_LABELS[chart_x_var])
-chart_grp_lbl <- if (chart_grp != "None") unname(EXPLORE_LABELS[chart_grp]) else NULL
+chart_grp_lbl <- if (!is.null(chart_grp) && chart_grp != "None")
+                   unname(EXPLORE_LABELS[chart_grp]) else NULL
 has_custom    <- nrow(chart_df) > 0
 
-# Convert year x_val to integer for proper numeric axis
 if (chart_x_var == "year" && has_custom) {
   chart_df <- chart_df %>% mutate(x_val = as.integer(x_val))
 }
@@ -785,7 +909,7 @@ cat("\\textit{No data available for the custom chart selection.}")
 ```{r custom-chart-plot, eval=has_custom, fig.height=3.6}
 y_lbl <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
 
-if (chart_grp == "None") {
+if (is.null(chart_grp) || chart_grp == "None") {
   p <- ggplot(chart_df, aes(x = x_val, y = n))
   if (chart_type == "line") {
     p <- p + geom_line(colour = BLUE, linewidth = 0.8) +
@@ -816,53 +940,50 @@ if (chart_grp == "None") {
   p <- p + labs(x = chart_x_lbl, y = y_lbl)
 }
 
-if (chart_x_var == "year") {
+if (!is.null(chart_x_var) && chart_x_var == "year") {
   p <- p + scale_x_continuous(breaks = scales::breaks_width(1))
 }
 if (chart_type == "bar_pct") {
   p <- p + scale_y_continuous(labels = scales::percent)
 }
-
 p + theme_rep()
 ```
 
 ```{r custom-chart-stats, eval=has_custom}
 grand_total <- sum(chart_df$n)
 
-if (chart_grp == "None") {
-  stats_tbl <- data.frame(
-    Statistic = c("Total", "Mean", "Median", "SD", "Min", "Max"),
-    Value     = c(
-      fmt_n(grand_total),
-      sprintf("%.1f", mean(chart_df$n)),
-      sprintf("%.1f", median(chart_df$n)),
-      sprintf("%.1f", sd(chart_df$n)),
-      fmt_n(min(chart_df$n)),
-      fmt_n(max(chart_df$n))
-    ), stringsAsFactors = FALSE)
-  nk(stats_tbl,
+if (is.null(chart_grp) || chart_grp == "None") {
+  nk(data.frame(
+       Statistic = c("Total", "Mean", "Median", "SD", "Min", "Max"),
+       Value     = c(fmt_n(grand_total),
+                     sprintf("%.1f", mean(chart_df$n)),
+                     sprintf("%.1f", median(chart_df$n)),
+                     sprintf("%.1f", sd(chart_df$n)),
+                     fmt_n(min(chart_df$n)),
+                     fmt_n(max(chart_df$n))),
+       stringsAsFactors = FALSE),
      cap = paste0("Summary statistics for trial counts by ", chart_x_lbl, "."),
-     al  = c("l", "r"))
+     al  = c("l","r"))
 } else {
-  stats_tbl <- chart_df %>%
-    group_by(!!as.name(chart_grp_lbl) := grp_val) %>%
-    summarise(
-      Total    = fmt_n(sum(n)),
-      `% Total` = sprintf("%.1f%%", sum(n) / grand_total * 100),
-      Mean     = sprintf("%.1f", mean(n)),
-      Median   = sprintf("%.1f", median(n)),
-      SD       = sprintf("%.1f", sd(n)),
-      Min      = fmt_n(min(n)),
-      Max      = fmt_n(max(n)),
-      .groups  = "drop") %>%
-    arrange(desc(as.numeric(gsub(",", "", Total))))
-  nk(stats_tbl,
+  nk(chart_df %>%
+       group_by(!!as.name(chart_grp_lbl) := grp_val) %>%
+       summarise(
+         Total    = fmt_n(sum(n)),
+         `% Total` = sprintf("%.1f%%", sum(n) / grand_total * 100),
+         Mean     = sprintf("%.1f", mean(n)),
+         Median   = sprintf("%.1f", median(n)),
+         SD       = sprintf("%.1f", sd(n)),
+         Min      = fmt_n(min(n)),
+         Max      = fmt_n(max(n)),
+         .groups  = "drop") %>%
+       arrange(desc(as.numeric(gsub(",", "", Total)))),
      cap = paste0("Summary statistics by ", chart_grp_lbl,
                   " for trial counts grouped by ", chart_x_lbl, "."),
-     al  = c("l", rep("r", ncol(stats_tbl) - 1)))
+     al  = c("l", rep("r", 7)))
 }
 ```
 
 ---
 *Report generated by the EU Paediatric Clinical Trials dashboard on `r format(Sys.Date(), "%d %B %Y")`.*
 *Data sources: EUCTR (EU Clinical Trials Register) and CTIS (Clinical Trials Information System).*
+*Search query: all trials with at least one subject under 18 in the EU.*
