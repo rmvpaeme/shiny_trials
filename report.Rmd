@@ -52,7 +52,13 @@ suppressPackageStartupMessages({
 })
 
 # ── Data ───────────────────────────────────────────────────────────────────────
-df <- readRDS(params$data_path)
+if (nzchar(params$data_path) && file.exists(params$data_path)) {
+  df <- readRDS(params$data_path)
+} else {
+  cache <- "pediatric_trials_cache.rds"
+  if (!file.exists(cache)) stop("Cache not found. Run rebuild_cache.R first.")
+  df <- readRDS(cache)
+}
 N  <- nrow(df)
 f  <- params$filters
 
@@ -753,7 +759,11 @@ EXPLORE_LABELS <- c(
   "Member_state"       = "Country / Member State"
 )
 
-chart_ed      <- readRDS(params$chart_data_path)
+chart_ed <- if (nzchar(params$chart_data_path) && file.exists(params$chart_data_path)) {
+  readRDS(params$chart_data_path)
+} else {
+  list(data = data.frame(), x_var = "submission_year", grp = "None")
+}
 chart_df      <- chart_ed$data
 chart_x_var   <- chart_ed$x_var
 chart_grp     <- chart_ed$grp
