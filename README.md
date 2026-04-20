@@ -31,7 +31,7 @@ https://www.clinicaltrialsregister.eu/ctr-search/search?query=&age=adolescent&ag
 https://euclinicaltrials.eu/ctis-public/search#searchCriteria={"ageGroupCode":[2]}
 ```
 
-These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. The EUCTR query is fingerprinted on each run; if the query URL has not changed since the last fetch, EUCTR is skipped and only CTIS is refreshed (incremental update, ~5 min). EUCTR results data (`euctrresults = TRUE`) is fetched alongside trial metadata to populate the `has_results` column used by the Compliance tab.
+These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. Both registers are queried on every run. `ctrdata` handles incremental updates internally — on repeat runs it only downloads records that are new or have changed since the last import, so subsequent runs are much faster than the initial load. EUCTR results data (`euctrresults = TRUE`) is fetched alongside trial metadata to populate the `has_results` column used by the Results Posting tab.
 
 ---
 
@@ -119,7 +119,7 @@ install.packages(c(
 Rscript update_data.R
 ```
 
-This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sqlite`. First run takes 30–60 minutes (EUCTR ~30 min, CTIS ~5 min). Subsequent runs are incremental — EUCTR is skipped if the query URL has not changed; only CTIS (~5 min) is refreshed.
+This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sqlite`. First run takes 30–60 minutes (EUCTR ~30 min, CTIS ~5 min). Subsequent runs are much faster — `ctrdata` only downloads records that are new or have changed since the last import.
 
 ### Build the cache
 

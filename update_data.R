@@ -15,30 +15,6 @@ DB_COLLECTION <- "trials"
 db <- nodbi::src_sqlite(dbname = DB_PATH, collection = DB_COLLECTION)
 
 # ============================================================================
-# Helpers: persist EUCTR query URL in a _meta table
-# ============================================================================
-
-meta_get <- function(db_path, key) {
-  con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
-  on.exit(DBI::dbDisconnect(con))
-  if (!DBI::dbExistsTable(con, "_meta")) return(NA_character_)
-  res <- DBI::dbGetQuery(con, "SELECT value FROM _meta WHERE key = ?", list(key))
-  if (nrow(res) == 0) NA_character_ else res$value[[1]]
-}
-
-meta_set <- function(db_path, key, value) {
-  con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
-  on.exit(DBI::dbDisconnect(con))
-  if (!DBI::dbExistsTable(con, "_meta"))
-    DBI::dbExecute(con, "CREATE TABLE _meta (key TEXT PRIMARY KEY, value TEXT)")
-  DBI::dbExecute(con,
-    "INSERT INTO _meta (key, value) VALUES (?, ?)
-     ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-    list(key, value))
-  invisible(NULL)
-}
-
-# ============================================================================
 # Patch dplyr::rows_update (needed for EUCTR euctrresults)
 # ============================================================================
 
@@ -64,8 +40,11 @@ patched_rows_update <- function(x, y, by = NULL, ...,
 }
 
 # ============================================================================
-# 1. EU Clinical Trials Register (EUCTR) — skip if query URL unchanged
+# 1. EU Clinical Trials Register (EUCTR)
 # ============================================================================
+# ctrLoadQueryIntoDb() is incremental: on repeat runs it only downloads
+# records that are new or have changed since the last import. The first run
+# takes ~30 minutes; subsequent runs are much faster.
 message("\n=== 1/2  EUCTR ===")
 
 euctr_url_raw <- paste0(
@@ -74,52 +53,30 @@ euctr_url_raw <- paste0(
 )
 euctr_q <- ctrGetQueryUrl(url = euctr_url_raw)
 
-# Canonical key: the normalised query-term string from ctrdata
-euctr_key <- if (is.data.frame(euctr_q)) euctr_q[["query-term"]][[1]] else as.character(euctr_q)
+assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
 
-stored_key <- meta_get(DB_PATH, "euctr_query_term")
+euctr_loaded <- FALSE
+tryCatch({
+  message("Loading EUCTR with euctrresults = TRUE ...")
+  ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = TRUE, con = db)
+  euctr_loaded <- TRUE
+  message("EUCTR (with results) complete.")
+}, error = function(e) {
+  message("euctrresults = TRUE failed: ", e$message)
+})
 
-if (!is.na(stored_key) && stored_key == euctr_key) {
-  message("EUCTR query unchanged — skipping download.")
-} else {
-  if (is.na(stored_key)) {
-    message("No previous EUCTR query found — running first-time load.")
-  } else {
-    message("EUCTR query changed — re-downloading.")
-    message("  old: ", stored_key)
-    message("  new: ", euctr_key)
-  }
-
-  assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
-
-  euctr_loaded <- FALSE
+if (!euctr_loaded) {
   tryCatch({
-    message("Loading EUCTR with euctrresults = TRUE ...")
-    ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = TRUE, con = db)
+    message("Retrying EUCTR with euctrresults = FALSE ...")
+    ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = FALSE, con = db)
     euctr_loaded <- TRUE
-    message("EUCTR (with results) complete.")
+    message("EUCTR (without results) complete.")
   }, error = function(e) {
-    message("euctrresults = TRUE failed: ", e$message)
+    message("EUCTR load failed entirely: ", e$message)
   })
-
-  if (!euctr_loaded) {
-    tryCatch({
-      message("Retrying EUCTR with euctrresults = FALSE ...")
-      ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = FALSE, con = db)
-      euctr_loaded <- TRUE
-      message("EUCTR (without results) complete.")
-    }, error = function(e) {
-      message("EUCTR load failed entirely: ", e$message)
-    })
-  }
-
-  assignInNamespace("rows_update", original_rows_update, ns = "dplyr")
-
-  if (euctr_loaded) {
-    meta_set(DB_PATH, "euctr_query_term", euctr_key)
-    message("Saved EUCTR query term to _meta table.")
-  }
 }
+
+assignInNamespace("rows_update", original_rows_update, ns = "dplyr")
 message("EUCTR done.\n")
 
 # ============================================================================

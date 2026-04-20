@@ -3273,6 +3273,45 @@ server <- function(input, output, session) {
                                columnDefs = list(list(width = "350px", targets = 2))))
   })
 
+  # ── Lazy tab rendering ───────────────────────────────────────────────────────
+  # By default Shiny renders every output on startup regardless of visibility.
+  # Setting suspendWhenHidden = TRUE defers rendering until the tab is first
+  # opened, so the Overview tab loads immediately and other tabs render on demand.
+  #
+  # Overview tab outputs (vb_total/ongoing/completed/pip, recent_trials_table,
+  # plot_yearly, plot_register, plot_sponsor_top) and global sidebar outputs
+  # are intentionally excluded — they render eagerly.
+  local({
+    lazy <- c(
+      # Chart Builder
+      "explore_note", "plot_explore", "table_explore", "stats_explore",
+      # Map
+      "eu_map", "map_table_ui", "map_trials_table",
+      # Data Explorer
+      "trials_table",
+      # Basic Analytics
+      "plot_organ", "plot_term", "plot_country",
+      "plot_pip", "plot_pip_year",
+      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
+      "plot_top_sponsors", "sponsor_timeline_ui", "plot_sponsor_timeline",
+      # Phase Analytics
+      "plot_phase", "plot_phase_status", "plot_phase_sponsor",
+      "plot_phase_funnel", "plot_completion_cohort",
+      # Sponsor Comparison
+      "sponsor_compare_tab_ui",
+      "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
+      "plot_compare_country", "plot_compare_pip", "plot_compare_year",
+      # Results Posting
+      "vb_completed_total", "vb_results_posted",
+      "vb_overdue_academic", "vb_overdue_industry",
+      "plot_results_compliance_overview", "plot_results_by_sponsor",
+      "table_overdue",
+      # About
+      "meddra_soc_table", "plot_sponsor"
+    )
+    for (nm in lazy) outputOptions(output, nm, suspendWhenHidden = TRUE)
+  })
+
 }
 
 shinyApp(ui, server)
