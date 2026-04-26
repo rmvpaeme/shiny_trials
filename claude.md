@@ -2,6 +2,8 @@ when committing, update the version number everywhere in the code, update the re
 
 update CLAUDE.md every time the project has a git commit (add a section for the version/feature with what was built)
 
+when making a new version, update the rmd file to reflect the most recent changes.
+
 ## Completed: Sponsor / Company feature (v0.2.4) — shipped 2026-04-05
 
 ### What was built
@@ -182,9 +184,36 @@ update CLAUDE.md every time the project has a git commit (add a section for the 
 - Extended changelog back to v0.1.0 (was truncated at v0.2.4)
 - Updated tabs table and example uses to reflect deleted features
 
-## Current version: v0.7.0
+## Completed: Nord Light theme (v0.7.1) — shipped 2026-04-20
+
+### What was built
+- `THEMES[["Nord Light"]]` added to THEMES list in app.R (~line 119)
+  - bg0–bg3: Nord Snow Storm palette reversed (ECEFF4 lightest → C4CEDE darkest) for body, sidebar, inputs, borders
+  - fg0–fg2: Nord Polar Night (2E3440 darkest → 434C5E medium) for text — inverted vs Nord dark
+  - Frost, Aurora, status, register colours identical to Nord dark (work on both light/dark)
+  - chart_bg/chart_fg/chart_grid set for light background rendering
+- `NORD_LIGHT_CSS` pre-computed after `NORD_CSS` (~line 244):
+  - `generate_css(THEMES[["Nord Light"]])` + appended overrides for `.bg-yellow`, `.bg-green`, `.bg-blue` to force `color:#2E3440` (dark text on aurora-coloured value boxes)
+- `output$active_theme` refactored from `if/else` to `switch()` handling Nord / Nord Light / Default
+- Radio buttons: `"Nord Light"` present in choices list but NOT exposed in UI (hidden until development complete)
+- Version bumped to v0.7.1 in app.R header, About tab changelog entry + footer, README header + changelog
+
+## Completed: PDF fix + log-scale violins (v0.7.1 patch) — shipped 2026-04-20
+
+### What was built
+- **PDF LaTeX engine** — `report.Rmd` switched from `pdflatex` to `xelatex` (line 7)
+  - Fixes runtime crash when trial data contains Unicode characters (e.g. `≥`, `–`, `±`) that end up in kable table cells
+  - `\usepackage{helvet}` + `\renewcommand{\familydefault}{\sfdefault}` replaced with `\usepackage{fontspec}` + `\IfFontExistsTF{Helvetica}{...}{...}` fallback to TeX Gyre Heros for Linux/shinyapps.io
+- **Violin plots — log₁₀ scale** — both `plot_decision_time` and `plot_decision_time_sponsor` in app.R, and the `decision-violin` chunk in report.Rmd
+  - Root cause of bad shapes: plotly computes KDE on raw values then stretches axis — violin collapses to a line
+  - Fix: pre-transform data with `log10(pmax(days_to_decision, 1))`, plot on linear axis, use custom `tickvals`/`ticktext` to show readable day labels (1, 10, 30, 100, 365, 1000, 3650)
+  - Hover text shows original day count
+  - report.Rmd uses `scale_y_log10(labels = comma)` (ggplot2 handles KDE correctly on transformed scale)
+
+## Current version: v0.7.1
 
 ## README audit (2026-04-06)
+
 ### Known Issues
 - **EUCTR `rows_update` errors**: still accurate; stale "in-app update button" reference removed
 - **CTIS country field**: still accurate

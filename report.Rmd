@@ -4,7 +4,7 @@ subtitle: "Summary Report"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:
-    latex_engine: pdflatex
+    latex_engine: xelatex
     toc: true
     toc_depth: 2
     number_sections: true
@@ -13,8 +13,8 @@ output:
     keep_tex: false
 classoption: a4paper
 header-includes:
-  - \usepackage{helvet}
-  - \renewcommand{\familydefault}{\sfdefault}
+  - \usepackage{fontspec}
+  - \IfFontExistsTF{Helvetica}{\setmainfont{Helvetica}[BoldFont=Helvetica-Bold, ItalicFont=Helvetica-Oblique, BoldItalicFont=Helvetica-BoldOblique]}{\setmainfont{TeX Gyre Heros}[BoldFont={TeX Gyre Heros Bold}, ItalicFont={TeX Gyre Heros Italic}, BoldItalicFont={TeX Gyre Heros Bold Italic}]}
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
@@ -837,9 +837,9 @@ bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
   geom_boxplot(width = 0.18, outlier.size = 0.8, outlier.alpha = 0.4,
                colour = DARK, fill = "white") +
   scale_fill_manual(values = c(REG_COLS, All = PURPLE)) +
-  scale_y_continuous(labels = comma) +
+  scale_y_log10(labels = comma) +
   labs(title = "Time from Submission to Decision",
-       x = "Register", y = "Days") +
+       x = "Register", y = "Days (log\u2081\u2080 scale)") +
   theme_rep() +
   theme(legend.position = "none")
 ```

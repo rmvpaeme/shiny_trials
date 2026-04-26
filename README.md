@@ -204,6 +204,8 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ### v0.7.1 — 2026-04-20
 
 - **Nord Light theme**: palette and CSS added to codebase (hidden from theme selector while in development).
+- **PDF report**: switched LaTeX engine from pdflatex to xelatex to fix Unicode crash (`≥` and other characters from trial data breaking PDF generation); Helvetica font set via `fontspec` with automatic fallback to TeX Gyre Heros on Linux.
+- **Violin plots (log scale)**: Time from Submission to Decision and Days to Decision by Sponsor Type now use a log₁₀ y-axis; data is pre-transformed before kernel density estimation so violin shapes are correct.
 
 ### v0.7.0 — 2026-04-19
 
