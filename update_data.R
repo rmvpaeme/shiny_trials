@@ -1,5 +1,16 @@
 # ============================================================================
-# update_data.R  (v11 — skip EUCTR when query URL unchanged)
+# update_data.R  (v12 — euctrresults weekly guard + FORCE_RESULTS override)
+# ============================================================================
+# Normal run:  Rscript update_data.R
+#   - Updates EUCTR trial records (always; EUCTR has no incremental API so all
+#     371 pages are fetched, but only changed records are imported)
+#   - Updates CTIS records (always)
+#   - Skips euctrresults if last run was < 7 days ago
+#
+# Force results: FORCE_RESULTS=true Rscript update_data.R
+#   - Runs euctrresults regardless of last-run date
+#
+# Skip EUCTR entirely: SKIP_EUCTR=true Rscript update_data.R
 # ============================================================================
 
 library(ctrdata)
@@ -11,8 +22,19 @@ try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 
 DB_PATH       <- "./data/pediatric_trials.sqlite"
 DB_COLLECTION <- "trials"
+RESULTS_STAMP <- "./data/.last_results_update"
+RESULTS_TTL_DAYS <- 7L
 
 db <- nodbi::src_sqlite(dbname = DB_PATH, collection = DB_COLLECTION)
+
+# ============================================================================
+# Helpers
+# ============================================================================
+
+days_since_stamp <- function(path) {
+  if (!file.exists(path)) return(Inf)
+  as.numeric(difftime(Sys.time(), file.mtime(path), units = "days"))
+}
 
 # ============================================================================
 # Patch dplyr::rows_update (needed for EUCTR euctrresults)
@@ -42,41 +64,68 @@ patched_rows_update <- function(x, y, by = NULL, ...,
 # ============================================================================
 # 1. EU Clinical Trials Register (EUCTR)
 # ============================================================================
-# ctrLoadQueryIntoDb() is incremental: on repeat runs it only downloads
-# records that are new or have changed since the last import. The first run
-# takes ~30 minutes; subsequent runs are much faster.
 message("\n=== 1/2  EUCTR ===")
 
-euctr_url_raw <- paste0(
-  "https://www.clinicaltrialsregister.eu/ctr-search/search?",
-  "query=&age=adolescent&age=children&age=infant-and-toddler&age=newborn&age=preterm-new-born-infants&age=under-18"
-)
-euctr_q <- ctrGetQueryUrl(url = euctr_url_raw)
+skip_euctr <- identical(Sys.getenv("SKIP_EUCTR"), "true")
 
-assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
+if (skip_euctr) {
+  message("SKIP_EUCTR=true — skipping EUCTR update.")
+} else {
+  # Decide whether to fetch euctrresults
+  force_results  <- identical(Sys.getenv("FORCE_RESULTS"), "true")
+  days_since     <- days_since_stamp(RESULTS_STAMP)
+  fetch_results  <- force_results || (days_since >= RESULTS_TTL_DAYS)
 
-euctr_loaded <- FALSE
-tryCatch({
-  message("Loading EUCTR with euctrresults = TRUE ...")
-  ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = TRUE, con = db)
-  euctr_loaded <- TRUE
-  message("EUCTR (with results) complete.")
-}, error = function(e) {
-  message("euctrresults = TRUE failed: ", e$message)
-})
+  if (fetch_results) {
+    message(sprintf(
+      "euctrresults: YES (last run %.1f days ago%s)",
+      days_since,
+      if (force_results) " — FORCE_RESULTS override" else ""
+    ))
+  } else {
+    message(sprintf(
+      "euctrresults: SKIPPED (last run %.1f days ago, TTL=%d days). Set FORCE_RESULTS=true to override.",
+      days_since, RESULTS_TTL_DAYS
+    ))
+  }
 
-if (!euctr_loaded) {
-  tryCatch({
-    message("Retrying EUCTR with euctrresults = FALSE ...")
-    ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = FALSE, con = db)
-    euctr_loaded <- TRUE
-    message("EUCTR (without results) complete.")
-  }, error = function(e) {
-    message("EUCTR load failed entirely: ", e$message)
-  })
+  euctr_url_raw <- paste0(
+    "https://www.clinicaltrialsregister.eu/ctr-search/search?",
+    "query=&age=adolescent&age=children&age=infant-and-toddler&age=newborn&age=preterm-new-born-infants&age=under-18"
+  )
+  euctr_q <- ctrGetQueryUrl(url = euctr_url_raw)
+
+  assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
+
+  euctr_loaded <- FALSE
+  if (fetch_results) {
+    tryCatch({
+      message("Loading EUCTR with euctrresults = TRUE ...")
+      ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = TRUE, con = db)
+      euctr_loaded <- TRUE
+      # Record successful results fetch
+      writeLines(as.character(Sys.time()), RESULTS_STAMP)
+      message("EUCTR (with results) complete.")
+    }, error = function(e) {
+      message("euctrresults = TRUE failed: ", e$message)
+    })
+  }
+
+  if (!euctr_loaded) {
+    tryCatch({
+      msg <- if (fetch_results) "Retrying EUCTR without results ..." else "Loading EUCTR (records only) ..."
+      message(msg)
+      ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = FALSE, con = db)
+      euctr_loaded <- TRUE
+      message("EUCTR (without results) complete.")
+    }, error = function(e) {
+      message("EUCTR load failed entirely: ", e$message)
+    })
+  }
+
+  assignInNamespace("rows_update", original_rows_update, ns = "dplyr")
 }
 
-assignInNamespace("rows_update", original_rows_update, ns = "dplyr")
 message("EUCTR done.\n")
 
 # ============================================================================
@@ -86,10 +135,6 @@ message("=== 2/2  CTIS ===")
 
 ctis_url <- paste0(
   "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={%22ageGroupCode%22:[2]}"
-  #  "https://euclinicaltrials.eu/ctis-public/search#searchCriteria=",
-  #  "{%22containAll%22:%22%22,",
-  #  "%22containAny%22:%22pediatric,infant,neonatal,adolescent,children%22,",
-  #  "%22containNot%22:%22%22}"
 )
 
 ctis_q <- ctrGetQueryUrl(ctis_url)
@@ -114,4 +159,3 @@ message(sprintf(
   normalizePath(DB_PATH),
   format(file.size(DB_PATH), big.mark = ",")
 ))
-

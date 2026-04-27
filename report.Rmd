@@ -14,7 +14,7 @@ output:
 classoption: a4paper
 header-includes:
   - \usepackage{fontspec}
-  - \IfFontExistsTF{Helvetica}{\setmainfont{Helvetica}[BoldFont=Helvetica-Bold, ItalicFont=Helvetica-Oblique, BoldItalicFont=Helvetica-BoldOblique]}{\setmainfont{TeX Gyre Heros}[BoldFont={TeX Gyre Heros Bold}, ItalicFont={TeX Gyre Heros Italic}, BoldItalicFont={TeX Gyre Heros Bold Italic}]}
+  - \IfFontExistsTF{Helvetica}{\setmainfont{Helvetica}[BoldFont=Helvetica-Bold, ItalicFont=Helvetica-Oblique, BoldItalicFont=Helvetica-BoldOblique]}{\IfFontExistsTF{TeX Gyre Heros}{\setmainfont{TeX Gyre Heros}[BoldFont={TeX Gyre Heros Bold}, ItalicFont={TeX Gyre Heros Italic}, BoldItalicFont={TeX Gyre Heros Bold Italic}]}{}}
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
@@ -80,7 +80,7 @@ PIP_COLS    <- c(Yes = GREEN, No = RED, Unknown = ORANGE)
 
 # ── ggplot2 theme ──────────────────────────────────────────────────────────────
 theme_rep <- function(base = 9) {
-  theme_minimal(base_size = base, base_family = "Helvetica") %+replace% theme(
+  theme_minimal(base_size = base, base_family = "sans") %+replace% theme(
     plot.title       = element_text(size = base + 1, face = "bold", color = DARK, hjust = 0),
     plot.subtitle    = element_text(size = base - 0.5, color = GRAY, hjust = 0),
     axis.title       = element_text(size = base - 0.5, color = GRAY),
@@ -839,7 +839,7 @@ bind_rows(decision_df, mutate(decision_df, register = "All")) %>%
   scale_fill_manual(values = c(REG_COLS, All = PURPLE)) +
   scale_y_log10(labels = comma) +
   labs(title = "Time from Submission to Decision",
-       x = "Register", y = "Days (log\u2081\u2080 scale)") +
+       x = "Register", y = "Days (log10 scale)") +
   theme_rep() +
   theme(legend.position = "none")
 ```
