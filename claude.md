@@ -230,6 +230,36 @@ when making a new version, update the rmd file to reflect the most recent change
 ### Residual notes
 - `eulerr` is conditionally loaded in app.R (~line 21) but never used in any chart output — worth removing
 
+## Completed: update_data.R incremental speedup (v0.7.1 patch) — 2026-04-26
+
+### What was added
+
+- `euctrresults` weekly guard added to `update_data.R` (now v12)
+  - Timestamp file `data/.last_results_update` written after every successful euctrresults fetch
+  - On subsequent runs: skip euctrresults if last run was < 7 days ago (configurable via `RESULTS_TTL_DAYS`)
+  - `FORCE_RESULTS=true Rscript update_data.R` — bypasses the guard and forces a full results download
+  - `SKIP_EUCTR=true Rscript update_data.R` — skips EUCTR entirely (CTIS-only run)
+  - `days_since_stamp()` helper reads mtime of stamp file
+  - On skip: message shows days since last run and TTL; on run: records timestamp after success
+- Root cause note: EUCTR base record scan (371 pages) is unavoidable — EUCTR has no incremental API;
+  only the euctrresults step (6596-trial result page fetch) is guarded
+
+## Completed: User feedback batch (v0.8.0) — in progress 2026-04-27
+
+### What was built
+- **Recent trials table** — sorted by `decision_date` descending (was `submission_date_parsed`); box title changed to "5 Most Recently Authorized Trials"; column renamed to "Authorized". Rows are now clickable — opens the same trial detail modal as the Data Explorer (`recent_trials_src` reactive + `observeEvent(input$recent_trials_table_rows_selected, ...)`)
+- **"Register Comparison" renamed** — box title changed to "Trial Status by Register"
+- **Sponsor Comparison note** — italic line added below description: "Note: percentages are calculated within each sponsor's own trial portfolio."
+- **Compliance tab: results-posted table** — new "Completed Trials With Results Posted" box (green) added above the overdue table; `output$table_results_posted` filters `compliance_base() %>% filter(has_results == TRUE)`; `output$dl_results_posted` download handler; added to lazy-render list
+- **Mononational filter** — toggle button (not checkbox) placed in Geography & Sponsor sidebar section, directly below Country filter; state stored in `mono_active <- reactiveVal(FALSE)`; button label: "Mononational only (click to enable)" / "Mononational only ✓" when active; blue styling when active; wired into `filt()`, `reset_filters`, `filter_state`, URL encode/restore, `badge_geo_sponsor`, `active_filters_row`
+- **Clickable KPI value boxes** — CSS `cursor:pointer` + hover opacity; JS `Shiny.setInputValue('vb_click', ...)` on click; server `observeEvent(input$vb_click)` maps Ongoing/Completed → `status_filter`, Total → reset status, PIP box → `pip_filter = "Yes"`
+- **Days to decision — negative values fixed** — `days_to_decision` now set to `NA` when `decision_date < submission_date_parsed` (was stored as negative number); fix is in data prep at line ~1040; requires cache rebuild
+- **Days to Decision by Sponsor Type** — changed from overlapping violin (`split = ~register`) to grouped box plot (`type = "box"`, `boxmode = "group"`, `color = ~register`); EUCTR and CTIS boxes now side-by-side per sponsor type
+- **Trial Phase by Sponsor Type** — changed `barmode = "group"` → `"stack"`, matching style of the two charts above; text labels removed, hover template added
+- **Two new completion rate charts in Phase Analytics**:
+  - "Completion Rate by Sponsor Type": line chart of % completed by auth year, split by Academic/Industry (color = `tc()$frost1` / `tc()$orange`)
+  - "Completion Rate by Phase": bar chart of % completed per Phase I–IV, colored via colorRampPalette; added to lazy-render list
+
 ## Future ideas (not yet implemented)
 
 ### Email notifications on new trials
