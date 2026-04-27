@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.7.1 — Nord Light theme (hidden, in development))
+# app.R  (v0.8.0 — user feedback batch: clickable tables, mononational filter, box plots)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1598,6 +1598,20 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.8.0 (2026-04-27):"),
+                                          tags$ul(
+                                            tags$li("Recent trials table: sorted by authorization date, rows now open trial detail modal on click."),
+                                            tags$li("'Register Comparison' renamed to 'Trial Status by Register'."),
+                                            tags$li("Mononational toggle button added in Geography & Sponsor sidebar section; state encoded in URL."),
+                                            tags$li("KPI value boxes (Total, Ongoing, Completed, PIP) are now clickable and update the active filters."),
+                                            tags$li("Results Posting tab: new 'Completed Trials With Results Posted' table with CSV download."),
+                                            tags$li("Sponsor Comparison: note added explaining within-sponsor percentage calculation."),
+                                            tags$li("Days to decision: negative values (data artefact) now set to NA during cache build."),
+                                            tags$li("Days to Decision by Sponsor Type: converted from overlapping violins to grouped box plot (EUCTR/CTIS side-by-side)."),
+                                            tags$li("Trial Phase by Sponsor Type: converted from grouped to stacked bar chart."),
+                                            tags$li("Phase Analytics: two new completion rate charts — by Sponsor Type and by Phase.")
+                                          )
+                                        ),
                                         tags$li(tags$b("v0.7.1 (2026-04-20):"),
                                           tags$ul(
                                             tags$li("Nord Light theme added (in development, not yet visible in theme selector).")
@@ -1660,7 +1674,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.7.1 — ",Sys.Date())),style="opacity:0.5;")
+                                      p(em(paste0("v0.8.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),

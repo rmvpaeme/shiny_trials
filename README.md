@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.7.1** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Author:** Ruben Van Paemel
+**v0.8.0** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -200,6 +200,19 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.8.0 — 2026-04-27
+
+- **Recent trials table**: sorted by authorization date (was submission date); rows clickable — opens the same trial detail modal as the Data Explorer.
+- **"Register Comparison" renamed** to "Trial Status by Register".
+- **Mononational filter**: toggle button in Geography & Sponsor sidebar section below the Country filter; state encoded in URL; shows active badge and filter chip.
+- **Clickable KPI value boxes**: clicking Ongoing/Completed filters trial status; clicking Total resets; clicking PIP sets PIP filter to Yes.
+- **Results Posting tab**: new "Completed Trials With Results Posted" table with download button, above the existing overdue list.
+- **Sponsor Comparison**: note added explaining that percentages are calculated within each sponsor's own portfolio.
+- **Days to decision — data quality**: negative values (decision before submission, impossible in practice) now set to NA during cache build rather than silently dropped chart-by-chart. Requires cache rebuild.
+- **Days to Decision by Sponsor Type**: changed from overlapping violin plot to grouped box plot (EUCTR / CTIS side-by-side per sponsor type).
+- **Trial Phase by Sponsor Type**: changed from grouped to stacked bar chart, consistent with the other phase charts.
+- **Phase Analytics — two new completion rate charts**: Completion Rate by Sponsor Type (line chart, Academic vs Industry) and Completion Rate by Phase (bar chart, Phase I–IV).
 
 ### v0.7.1 — 2026-04-20
 
