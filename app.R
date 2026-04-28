@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.8.0 — user feedback batch: clickable tables, mononational filter, box plots)
+# app.R  (v0.8.1 — per-million-children normalisation on map and Chart Builder)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -320,6 +320,65 @@ COUNTRY_COORDS <- data.frame(
    -80.78,-58.44,-75.02,122.56, 51.18,105.32, 29.87, 45.08,-14.45, 21.01,
    103.82, 25.08, 80.77,120.96, 34.89,100.99,  9.54, 35.24, 32.29, 31.17,
     53.85,-95.71,-56.17, 64.59,-66.59,108.28, 27.85, 29.15
+  ),
+  stringsAsFactors = FALSE
+)
+
+# Children (0-17) population in thousands.
+# EU/EEA: Eurostat demo_pjan 2023. All others: UN WPP 2022 (0-14 + 3/5 of 15-19).
+# Liechtenstein: no Eurostat 0-17 series -> NA (grey on map in per-million mode).
+EU_CHILD_POP <- data.frame(
+  country = c(
+    # EU-27
+    "Austria","Belgium","Bulgaria","Croatia","Cyprus",
+    "Czech Republic","Denmark","Estonia","Finland","France",
+    "Germany","Greece","Hungary","Ireland","Italy",
+    "Latvia","Lithuania","Luxembourg","Malta","Netherlands",
+    "Poland","Portugal","Romania","Slovakia","Slovenia",
+    "Spain","Sweden",
+    # EEA / associated
+    "Norway","Iceland","Liechtenstein","Switzerland","United Kingdom",
+    # Rest of world (alphabetical)
+    "Albania","Algeria","Argentina","Armenia","Australia","Azerbaijan",
+    "Bangladesh","Belarus","Bolivia","Bosnia and Herzegovina","Brazil",
+    "Canada","Chile","China","Colombia","Cuba","Dominican Republic",
+    "Ecuador","Egypt","Ethiopia","Georgia","Ghana","Guatemala",
+    "India","Indonesia","Iran","Iraq","Israel","Japan","Jordan",
+    "Kazakhstan","Kenya","South Korea","Kuwait","Lebanon","Malaysia",
+    "Mexico","Moldova","Mongolia","Montenegro","Morocco","Mozambique",
+    "Myanmar","Nepal","New Zealand","Nigeria","North Macedonia",
+    "Pakistan","Panama","Paraguay","Peru","Philippines","Qatar",
+    "Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Singapore",
+    "South Africa","Sri Lanka","Taiwan","Tanzania","Thailand",
+    "Tunisia","Turkey","Uganda","Ukraine","United Arab Emirates",
+    "United States","Uruguay","Uzbekistan","Venezuela","Vietnam",
+    "Zambia","Zimbabwe"
+  ),
+  child_pop = c(
+    # EU-27 (Eurostat 2023, thousands)
+    1530, 2404,  986,  694,  181,
+    1907, 1179,  240, 1064,14088,
+   14984, 1706, 1789, 1211, 9468,
+     326,  484,  130,   94, 3369,
+    6777, 1676, 3398, 1005,  360,
+    7908, 2082,
+    # EEA / associated
+    1069,   79,   NA, 1572,13400,
+    # Rest of world (UN WPP 2022, thousands, 0-17)
+     530,12000,11500,  450, 5800, 2100,   # Albania..Azerbaijan
+   47000, 1800, 3900,  500,58000,         # Bangladesh..Brazil
+    7400, 3700,240000,13000, 2000, 3200,  # Canada..Dominican Republic
+    4700,34000,50000,  850,11000, 6700,   # Ecuador..Guatemala
+  451000,68000,20000,22000, 2700,17500, 3400,  # India..Jordan
+    6500,23000, 7500, 1000, 1400, 8100,  # Kazakhstan..Malaysia
+   40000,  640,  900,  120,11000,16000,  # Mexico..Mozambique
+   14000, 9000, 1100,97000,  390,        # Myanmar..North Macedonia
+  100000, 1100, 2300, 9500,33000,  500,  # Pakistan..Qatar
+   32000, 7100, 9000, 7700, 1400,  900,  # Russia..Singapore
+   20000, 4100, 3400,30000,11000,        # South Africa..Thailand
+    3100,22000,24000, 6200, 1900,        # Tunisia..UAE
+   74000,  900,11000, 9000,22000,        # United States..Vietnam
+    9200, 7500                           # Zambia, Zimbabwe
   ),
   stringsAsFactors = FALSE
 )
@@ -1439,6 +1498,7 @@ ui <- dashboardPage(skin = "blue",
                                                              min=3, max=20, value=8, step=1)))
                                       ),
                                       uiOutput("explore_note"),
+                                      uiOutput("explore_per_million_ui"),
                                       withSpinner(plotlyOutput("plot_explore", height="450px"), type=6))
                                 ),
                                 fluidRow(
@@ -1522,6 +1582,11 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Open Trials by Country", status="primary", solidHeader=TRUE, width=12,
                                       p(em("Completed trials are excluded. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      div(style="margin-bottom:8px;",
+                                        radioButtons("map_metric", NULL,
+                                          choices = c("Total trials" = "n_trials",
+                                                      "Per million children (0-17)" = "trials_per_million"),
+                                          selected = "n_trials", inline = TRUE)),
                                       withSpinner(leafletOutput("eu_map", height="520px"), type=6))
                                 ),
                                 uiOutput("map_table_ui")
@@ -1598,6 +1663,11 @@ ui <- dashboardPage(skin = "blue",
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.8.1 (2026-04-28):"),
+                                          tags$ul(
+                                            tags$li("Map: radio button to toggle between total trials and trials per million children (0-17); population data from Eurostat 2023 and UN WPP 2022 for all 108 countries."),
+                                            tags$li("Chart Builder: 'Normalise by child population' checkbox appears when x-axis or group is Country; normalises each country's bar by its own child population.")
+                                          )),
                                         tags$li(tags$b("v0.8.0 (2026-04-27):"),
                                           tags$ul(
                                             tags$li("Recent trials table: sorted by authorization date, rows now open trial detail modal on click."),
@@ -1674,7 +1744,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.8.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.8.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1880,7 +1950,7 @@ server <- function(input, output, session) {
                         str_detect(coalesce(sponsor_name,""),pat))}
     df
   })
-  
+
   # ── URL-based state ──────────────────────────────────────────────────────
   # Restore filters from ?f= query param once data is loaded
   observeEvent(rv$data, {
@@ -3092,40 +3162,85 @@ server <- function(input, output, session) {
       group_by(Member_state) %>%
       summarise(n_trials = n_distinct(`_id`), .groups = "drop") %>%
       left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
-      filter(!is.na(lat))
+      filter(!is.na(lat)) %>%
+      left_join(EU_CHILD_POP, by = c("Member_state" = "country")) %>%
+      mutate(trials_per_million = ifelse(
+        !is.na(child_pop) & child_pop > 0,
+        round(n_trials / (child_pop / 1000), 1),
+        NA_real_
+      ))
   })
 
   output$eu_map <- renderLeaflet({
-    cc <- eu_country_counts()
-    t  <- tc()
+    cc     <- eu_country_counts()
+    t      <- tc()
+    metric <- if (is.null(input$map_metric)) "n_trials" else input$map_metric
+
+    cc_ok <- cc %>% filter(!is.na(.data[[metric]]))
+    cc_na <- cc %>% filter( is.na(.data[[metric]]))
+
+    cc_ok$display_val <- cc_ok[[metric]]
+    cc_ok$popup_html  <- if (metric == "n_trials") {
+      paste0("<b>", cc_ok$Member_state, "</b><br/>", cc_ok$n_trials, " open trial(s)")
+    } else {
+      paste0("<b>", cc_ok$Member_state, "</b><br/>",
+             cc_ok$trials_per_million, " per million children (0-17)<br/>",
+             "(", cc_ok$n_trials, " trial(s))")
+    }
+
+    legend_title <- if (metric == "n_trials") "Open Trials" else "Trials / M children"
+
     pal <- colorNumeric(
       c(t$green, t$yellow, t$orange, t$red),
-      domain = cc$n_trials, na.color = "grey")
+      domain   = cc_ok$display_val,
+      na.color = "grey"
+    )
+
     m <- leaflet(options = leafletOptions(minZoom = 2)) %>%
       addProviderTiles("Esri.WorldTopoMap") %>%
       setView(lng = 15, lat = 52, zoom = 4)
-    if (nrow(cc) > 0) {
+
+    if (nrow(cc_ok) > 0) {
       m <- m %>%
         addCircleMarkers(
-          data = cc,
+          data        = cc_ok,
           lat = ~lat, lng = ~lng,
-          radius = ~pmin(8 + log1p(n_trials) * 4, 35),
+          radius      = ~pmin(8 + log1p(display_val) * 4, 35),
           color = "white", weight = 1,
-          fillColor = ~pal(n_trials),
+          fillColor   = ~pal(display_val),
           fillOpacity = 0.85,
-          label = ~as.character(n_trials),
+          label       = ~as.character(display_val),
           labelOptions = labelOptions(
             noHide = TRUE, textOnly = TRUE, direction = "center",
-            style = list("font-weight" = "bold", "color" = "white",
-                         "font-size" = "11px")),
-          popup = ~paste0("<b>", Member_state, "</b><br/>",
-                          n_trials, " open trial(s)")
+            style  = list("font-weight" = "bold", "color" = "white", "font-size" = "11px")),
+          popup = ~popup_html
         ) %>%
         addLegend(
-          position = "bottomright", pal = pal, values = cc$n_trials,
-          title = "Open Trials", opacity = 0.85
+          position = "bottomright", pal = pal, values = cc_ok$display_val,
+          title = legend_title, opacity = 0.85
         )
     }
+
+    if (metric == "trials_per_million" && nrow(cc_na) > 0) {
+      cc_na$display_val <- cc_na$n_trials
+      cc_na$popup_html  <- paste0("<b>", cc_na$Member_state, "</b><br/>",
+                                  cc_na$n_trials, " open trial(s)<br/>",
+                                  "<i>Population data unavailable</i>")
+      m <- m %>%
+        addCircleMarkers(
+          data        = cc_na,
+          lat = ~lat, lng = ~lng,
+          radius      = ~pmin(8 + log1p(display_val) * 4, 35),
+          color = "white", weight = 1,
+          fillColor   = "grey", fillOpacity = 0.65,
+          label       = ~as.character(display_val),
+          labelOptions = labelOptions(
+            noHide = TRUE, textOnly = TRUE, direction = "center",
+            style  = list("font-weight" = "bold", "color" = "white", "font-size" = "11px")),
+          popup = ~popup_html
+        )
+    }
+
     m
   })
 
@@ -3217,6 +3332,18 @@ server <- function(input, output, session) {
         lapply(notes, function(n) p(style="margin:2px 0;", icon("info-circle"), " ", n)))
   })
 
+  output$explore_per_million_ui <- renderUI({
+    x_var <- input$explore_x
+    grp   <- input$explore_group
+    if (!isTruthy(x_var)) return(NULL)
+    if (x_var == "Member_state" || (isTruthy(grp) && grp == "Member_state")) {
+      div(style="margin-bottom:8px;",
+        checkboxInput("explore_per_million",
+          "Normalise by child population (per million children 0-17)",
+          value = FALSE))
+    }
+  })
+
   output$plot_explore <- renderPlotly({
     t          <- tc()
     chart_type <- input$explore_chart_type
@@ -3229,6 +3356,24 @@ server <- function(input, output, session) {
     x_lbl  <- unname(EXPLORE_LABELS[x_var])
     x_tick  <- if (x_var == "year") list(dtick = 1, tickformat = "d") else list()
     y_lbl  <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
+
+    if (isTRUE(input$explore_per_million) && chart_type != "bar_pct") {
+      if (grp == "Member_state") {
+        d <- d %>%
+          left_join(EU_CHILD_POP, by = c("grp_val" = "country")) %>%
+          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
+                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
+          select(-child_pop)
+        y_lbl <- "Trials per million children (0-17)"
+      } else if (x_var == "Member_state") {
+        d <- d %>%
+          left_join(EU_CHILD_POP, by = c("x_val" = "country")) %>%
+          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
+                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
+          select(-child_pop)
+        y_lbl <- "Trials per million children (0-17)"
+      }
+    }
 
     if (grp == "None") {
       p <- if (chart_type == "line") {
@@ -3282,14 +3427,34 @@ server <- function(input, output, session) {
     grp   <- ed$grp
     validate(need(nrow(d) > 0, "No data available."))
 
-    x_lbl       <- unname(EXPLORE_LABELS[x_var])
-    grand_total  <- sum(d$n)
+    x_lbl     <- unname(EXPLORE_LABELS[x_var])
+    count_lbl <- "Trial Count"
+
+    if (isTRUE(input$explore_per_million)) {
+      if (grp == "Member_state") {
+        d <- d %>%
+          left_join(EU_CHILD_POP, by = c("grp_val" = "country")) %>%
+          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
+                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
+          select(-child_pop)
+        count_lbl <- "Trials / M children"
+      } else if (x_var == "Member_state") {
+        d <- d %>%
+          left_join(EU_CHILD_POP, by = c("x_val" = "country")) %>%
+          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
+                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
+          select(-child_pop)
+        count_lbl <- "Trials / M children"
+      }
+    }
+
+    grand_total <- sum(d$n, na.rm = TRUE)
 
     if (grp == "None") {
       d %>% arrange(x_val) %>%
-        mutate(`% of Total`  = round(n / grand_total * 100, 1),
-               `Cumulative %` = round(cumsum(n) / grand_total * 100, 1)) %>%
-        rename(!!x_lbl := x_val, `Trial Count` = n) %>%
+        mutate(`% of Total`   = round(n / grand_total * 100, 1),
+               `Cumulative %` = round(cumsum(replace(n, is.na(n), 0)) / grand_total * 100, 1)) %>%
+        rename(!!x_lbl := x_val, !!count_lbl := n) %>%
         datatable(rownames = FALSE, class = "compact stripe hover",
                   options = list(pageLength = 20, dom = "ftp", scrollX = TRUE))
     } else {
@@ -3297,7 +3462,7 @@ server <- function(input, output, session) {
       d %>%
         arrange(x_val, grp_val) %>%
         mutate(`% of Total` = round(n / grand_total * 100, 1)) %>%
-        rename(!!x_lbl := x_val, !!grp_label := grp_val, `Trial Count` = n) %>%
+        rename(!!x_lbl := x_val, !!grp_label := grp_val, !!count_lbl := n) %>%
         datatable(rownames = FALSE, class = "compact stripe hover",
                   options = list(pageLength = 20, dom = "ftp", scrollX = TRUE))
     }
@@ -3534,25 +3699,32 @@ server <- function(input, output, session) {
              lng >= bounds$west & lng <= bounds$east) %>%
       pull(`_id`) %>% unique()
     validate(need(length(visible_ids) > 0, "No open trials in current map view."))
+    cc_lookup <- eu_country_counts() %>% select(Member_state, n_trials, trials_per_million)
     rv$data %>%
       filter(`_id` %in% visible_ids) %>%
       arrange(desc(submission_date_parsed)) %>%
-      mutate(`CT Number` = case_when(
-        register == "EUCTR" ~ paste0(
-          '<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',
-          CT_number, "/", str_extract(`_id`, "[A-Z]{2,3}$"),
-          '" target="_blank">', CT_number, "</a>"),
-        register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]);
-                                paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',
-                                       ct1, '" target="_blank">', ct1, '</a>') },
-        TRUE ~ CT_number)) %>%
-      select(`CT Number`, register, Full_title, Member_state, MEDDRA_term,
-             status_raw, submission_date_parsed) %>%
+      mutate(
+        `CT Number` = case_when(
+          register == "EUCTR" ~ paste0(
+            '<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',
+            CT_number, "/", str_extract(`_id`, "[A-Z]{2,3}$"),
+            '" target="_blank">', CT_number, "</a>"),
+          register == "CTIS"  ~ { ct1 <- str_trim(str_split_fixed(CT_number, " / ", 2)[, 1]);
+                                  paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',
+                                         ct1, '" target="_blank">', ct1, '</a>') },
+          TRUE ~ CT_number),
+        primary_country = str_trim(str_split_fixed(Member_state, " / ", 2)[, 1])
+      ) %>%
+      left_join(cc_lookup, by = c("primary_country" = "Member_state")) %>%
+      select(`CT Number`, register, Full_title, Member_state,
+             n_trials, trials_per_million,
+             MEDDRA_term, status_raw, submission_date_parsed) %>%
       rename(Register = register, Title = Full_title, Country = Member_state,
+             `N (country)` = n_trials, `Per M children` = trials_per_million,
              Condition = MEDDRA_term, Status = status_raw, Submitted = submission_date_parsed) %>%
       datatable(rownames = FALSE, class = "compact stripe hover", escape = FALSE,
                 options = list(pageLength = 15, scrollX = TRUE, dom = "lBfrtip",
-                               order = list(list(6, "desc")),
+                               order = list(list(8, "desc")),
                                columnDefs = list(list(width = "350px", targets = 2))))
   })
 

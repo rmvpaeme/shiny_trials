@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.8.0** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.8.1** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -200,6 +200,11 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.8.1 — 2026-04-28
+
+- **Map — per million children**: radio button in the map box toggles between total trial counts and trials per million children (0–17). Population data from Eurostat 2023 (EU/EEA) and UN WPP 2022 (all other countries); covers all 108 countries in the map. Countries with no population data (Liechtenstein) shown in grey with a note.
+- **Chart Builder — normalise by child population**: a "Normalise by child population" checkbox appears below the controls when the x-axis or group is set to "Country / Member State". Divides each country's count by its own child population. Column header in the summary table updates to "Trials / M children".
 
 ### v0.8.0 — 2026-04-27
 
