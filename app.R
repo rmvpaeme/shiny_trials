@@ -1106,7 +1106,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       substr(tt, 1, 80)
     },
     # Age group: derived from EUCTR boolean flags or CTIS ageGroup string.
-    # "Both" means the trial enrolls subjects across the under-18 and 18+ boundary.
+    # "Paediatric & Adult" means the trial enrolls subjects across the under-18 and 18+ boundary.
     age_group = {
       has_paed <- (register == "EUCTR" &
                      str_detect(tolower(coalesce(f11_trial_has_subjects_under_18, "")), "yes|true")) |
@@ -1118,7 +1118,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
                    (register == "CTIS" &
                       str_detect(coalesce(ageGroup, ""), "18-64|65\\+"))
       case_when(
-        has_paed & has_adult ~ "Both",
+        has_paed & has_adult ~ "Paediatric & Adult",
         has_paed             ~ "Paediatric",
         has_adult            ~ "Adult",
         TRUE                 ~ "Unknown")
@@ -1362,11 +1362,11 @@ ui <- dashboardPage(skin = "blue",
                                        tabsetPanel(id="sidebar_tabs",
                                          tabPanel("Filters",
                                            tags$div(class="filter-groups",
-                                             tags$div(style="padding:8px 4px 4px;",
+                                             tags$div(style="padding:8px 12px 4px;",
                                                selectInput("age_group_filter","Age Group:",
                                                            choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
-                                               tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 6px;line-height:1.4;",
-                                                 "Trials enrolling both age groups appear under both filters.")
+                                               tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 8px;line-height:1.4;",
+                                                 "'Paediatric & Adult' trials appear under both filters.")
                                              ),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
@@ -2012,8 +2012,8 @@ server <- function(input, output, session) {
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
     if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df))df<-df%>%filter(is_orphan==input$orphan_filter)
     if(!is.null(input$age_group_filter)&&input$age_group_filter!="All"&&"age_group"%in%names(df)){
-      if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Both"))
-      else if(input$age_group_filter=="≥ 18 years")df<-df%>%filter(age_group%in%c("Adult","Both"))}
+      if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Paediatric & Adult"))
+      else if(input$age_group_filter=="≥ 18 years")df<-df%>%filter(age_group%in%c("Adult","Paediatric & Adult"))}
     if(isTRUE(mono_active())&&"n_countries"%in%names(df))df<-df%>%filter(n_countries==1)
     if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
