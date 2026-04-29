@@ -2,7 +2,7 @@
 
 **v0.9.0** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
-A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
+A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
 ![Dashboard overview](overview.png)
 
@@ -10,28 +10,28 @@ A research dashboard for exploring, analysing, and monitoring paediatric clinica
 
 ## Source data
 
-Trial records are retrieved from two complementary EU registries using the `ctrdata` R package. Both queries target paediatric trials only.
+Trial records are retrieved from two complementary EU registries using the `ctrdata` R package. Both queries fetch **all age groups** — paediatric and adult — so that the two populations can be compared directly in the dashboard.
 
-| Register | URL | Paediatric filter |
-| -------- | --- | ----------------- |
-| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | Age groups: adolescent, children, infant-and-toddler, newborn, preterm-new-born-infants, under-18 |
-| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | Age group code 2 (paediatric) |
+| Register | URL | Query |
+| -------- | --- | ----- |
+| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | All trials (no age filter) |
+| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | All trials (no age filter) |
 
 ### Search strings used
 
-**EUCTR** — advanced search, all age groups under 18 selected:
+**EUCTR** — all trials, no age restriction:
 
 ```text
-https://www.clinicaltrialsregister.eu/ctr-search/search?query=&age=adolescent&age=children&age=infant-and-toddler&age=newborn&age=preterm-new-born-infants&age=under-18
+https://www.clinicaltrialsregister.eu/ctr-search/search?query=
 ```
 
-**CTIS** — age group filter for paediatric (code 2):
+**CTIS** — all trials:
 
 ```text
-https://euclinicaltrials.eu/ctis-public/search#searchCriteria={"ageGroupCode":[2]}
+https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}
 ```
 
-These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. Both registers are queried on every run. `ctrdata` handles incremental updates internally — on repeat runs it only downloads records that are new or have changed since the last import, so subsequent runs are much faster than the initial load. EUCTR results data (`euctrresults = TRUE`) is fetched alongside trial metadata to populate the `has_results` column used by the Results Posting tab.
+These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. EUCTR is fetched in quarterly date-range chunks (2004 → present) with recursive bisection if a chunk exceeds 10 000 trials; completed chunks are logged to `data/done_chunks.txt` so interrupted runs resume from where they left off. `ctrdata` handles incremental updates internally — on repeat runs it only downloads records that are new or have changed. EUCTR results data (`euctrresults`) is **not** fetched by default (very slow); run `FORCE_RESULTS=true Rscript update_data.R` to load results and populate the `has_results` column used by the Results Posting tab.
 
 ---
 
@@ -76,6 +76,7 @@ All charts and tables update simultaneously when filters change. Active filters 
 
 | Filter | Options |
 | ------ | ------- |
+| **Age Group** | `< 18 years` (default) / `≥ 18 years` / `All` — trials enrolling both age groups ("Paediatric & Adult") appear under both |
 | Submission date range | Any date range from 2004 to today |
 | Free-text search | Title, CT number, condition, product name, sponsor |
 | Country / Member State | Multi-select; any EU or EEA country |
@@ -119,7 +120,7 @@ install.packages(c(
 Rscript update_data.R
 ```
 
-This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sqlite`. First run takes 30–60 minutes (EUCTR ~30 min, CTIS ~5 min). Subsequent runs are much faster — `ctrdata` only downloads records that are new or have changed since the last import.
+This downloads all trial records from EUCTR and CTIS into `data/trials.sqlite`. First run takes several hours (EUCTR fetches ~44 000 trials in quarterly chunks; CTIS ~5 min). Subsequent runs are much faster — `ctrdata` only downloads records that are new or have changed. Completed chunks are logged to `data/done_chunks.txt`; delete this file to force a full re-fetch.
 
 ### Build the cache
 
@@ -127,7 +128,7 @@ This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sql
 source("rebuild_cache.R")
 ```
 
-Processes the SQLite database into `pediatric_trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
+Processes the SQLite database into `trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
 
 ### Run the app
 
@@ -149,7 +150,7 @@ A `Dockerfile` and `docker-compose.yml` are included. The image starts the app o
 docker build -t paediatric-trials .
 docker run -p 3838:3838 \
   -v $(pwd)/data:/shiny_trials/shiny_trials/data \
-  -v $(pwd)/pediatric_trials_cache.rds:/shiny_trials/shiny_trials/pediatric_trials_cache.rds \
+  -v $(pwd)/trials_cache.rds:/shiny_trials/shiny_trials/trials_cache.rds \
   paediatric-trials
 ```
 
@@ -176,8 +177,8 @@ After each rebuild the app loads the new RDS on the next session start (or immed
 
 ## Known issues and pipeline limitations
 
-**EUCTR `rows_update` errors during fetch**
-`ctrdata` calls `dplyr::rows_update()` internally, which fails on duplicate or unmatched keys in newer dplyr versions. `update_data.R` monkey-patches this function before each EUCTR load and restores the original afterwards. If the patch fails, the EUCTR load is retried with `euctrresults = FALSE` (results data will be absent from that run).
+**EUCTR first run is slow**
+The initial fetch downloads ~44 000 trials across quarterly date-range chunks (2004 → present). Expect several hours. Progress is logged to `data/done_chunks.txt`; if the run is interrupted, re-running `update_data.R` will skip already-completed chunks automatically.
 
 **CTIS country field**
 CTIS stores member states as a nested JSON array. After flattening, some records return a string of numeric IDs or ISO codes rather than full country names. The `clean_member_state()` function resolves the majority, but edge cases (new member states, non-standard ISO entries) may appear as `NA` in the country column.
