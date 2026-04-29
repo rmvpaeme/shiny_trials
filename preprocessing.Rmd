@@ -177,7 +177,85 @@ datatable(col_df,
 
 ---
 
-# 2 · Field Extraction & Column Mapping
+# 2 · Age Group Coverage {.tabset}
+
+`age_group` classifies each trial as **Paediatric**, **Adult**, **Paediatric & Adult**, or **Unknown**. EUCTR records are derived from the age eligibility flags (`f11_trial_has_subjects_under_18`, `f12_adults_1864_years`, `f13_elderly_65_years`). CTIS records are derived from `ageGroup`, where `"0-17 years"` marks paediatric eligibility and `"18-64 years"` / `"65+ years"` mark adult eligibility.
+
+```{r age-group-stats}
+age_levels <- c("Paediatric", "Adult", "Paediatric & Adult", "Unknown")
+
+age_df <- df %>%
+  mutate(
+    age_group = replace_na(age_group, "Unknown"),
+    age_group = factor(age_group, levels = age_levels)
+  )
+
+age_summary <- age_df %>%
+  count(age_group, name = "Trials", .drop = FALSE) %>%
+  mutate(
+    `% of cache` = fmt_pct(Trials / sum(Trials) * 100),
+    `Included by < 18 filter` = if_else(
+      age_group %in% c("Paediatric", "Paediatric & Adult"),
+      "Yes", "No"
+    ),
+    `Included by ≥ 18 filter` = if_else(
+      age_group %in% c("Adult", "Paediatric & Adult"),
+      "Yes", "No"
+    )
+  )
+
+n_paediatric_filter <- age_df %>%
+  filter(age_group %in% c("Paediatric", "Paediatric & Adult")) %>%
+  nrow()
+n_adult_filter <- age_df %>%
+  filter(age_group %in% c("Adult", "Paediatric & Adult")) %>%
+  nrow()
+n_both <- age_df %>% filter(age_group == "Paediatric & Adult") %>% nrow()
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_paediatric_filter)`</b><br><small>shown by &lt; 18 years filter</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_adult_filter)`</b><br><small>shown by ≥ 18 years filter</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #B48EAD;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_both)`</b><br><small>eligible for both filters</small>
+</div>
+</div>
+
+## Classification Summary
+
+```{r age-group-summary}
+age_summary %>%
+  mutate(Trials = fmt_n(Trials)) %>%
+  nk(cap = "Adult / paediatric classification in the final cache")
+```
+
+## Register Split
+
+```{r age-group-register, fig.height=3.8}
+age_df %>%
+  count(register, age_group, .drop = FALSE) %>%
+  ggplot(aes(register, n, fill = age_group)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(
+    `Paediatric` = BLUE,
+    `Adult` = GREEN,
+    `Paediatric & Adult` = PURPLE,
+    `Unknown` = GRAY
+  ), drop = FALSE) +
+  labs(title = "Age group classification by register",
+       subtitle = "Paediatric & Adult trials are included in both sidebar age filters",
+       x = NULL, y = "Proportion of trials") +
+  theme_pre()
+```
+
+---
+
+# 3 · Field Extraction & Column Mapping
 
 `prepare_trial_data()` pulls separate field lists for EUCTR and CTIS from the SQLite database, then unites them into unified columns via `dplyr::unite()`.
 
@@ -190,6 +268,7 @@ field_map <- tribble(
   "MEDDRA_term",           "e12_meddra_classification.e12_term",                              "meddraConditionTerms.termName",
   "MEDDRA_organ_class",    "e12_meddra_classification.e12_system_organ_class",                "meddraConditionTerms.organClass",
   "Member_state",          "a1_member_state_concerned",                                       "memberStatesConcerned",
+  "age_group",             "f11/f12/f13 age eligibility flags",                               "ageGroup",
   "PIP_status",            "a7_trial_is_part_of_a_paediatric_investigation_plan",             "scientificAdviceAndPip.paediatricInvestigationPlan",
   "trial_status_raw",      "x5_trial_status",                                                 "applicationInfo.trialStatus",
   "submission_date",       "x6_date_on_which_…_first_entered_in_the_eudract_database",        "applicationInfo.submissionDate",
@@ -209,7 +288,7 @@ nk(field_map, cap = "Raw source fields unified into output columns")
 
 ---
 
-# 3 · Deduplication Pipeline {.tabset}
+# 4 · Deduplication Pipeline {.tabset}
 
 The raw database may contain multiple rows per trial: EUCTR stores one row per **member state** (e.g., 2020-001234-56-BE, -DE, -FR), and CTIS stores multiple **amendment versions** (e.g., …-00, -01, -02). Cross-register overlaps exist when a trial appears in both registers (EudraCT trials that transitioned to CTIS). The pipeline resolves all of these in six sequential steps.
 
@@ -217,7 +296,7 @@ The raw database may contain multiple rows per trial: EUCTR stores one row per *
 library(DBI)
 library(RSQLite)
 
-db_path <- "data/pediatric_trials.sqlite"
+db_path <- "data/trials.sqlite"
 has_db  <- file.exists(db_path)
 
 is_euctr_id <- function(x) str_detect(x, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]")
@@ -264,6 +343,7 @@ make_title_key <- function(title) {
 }
 
 cache_ids <- df[["_id"]]
+cache_euctr_base <- str_replace(cache_ids[is_euctr_id(cache_ids)], "-[A-Z]{2,3}$", "")
 
 # ── Step counts ────────────────────────────────────────────────────────────────
 euctr_all  <- all_ids[is_euctr_id(all_ids)]
@@ -279,22 +359,20 @@ ctis_base_all    <- str_replace(ctis_all,   "-\\d{2}$", "")
 n_ctis_base      <- n_distinct(ctis_base_all)
 n_ctis_amended   <- sum(table(ctis_base_all) > 1)   # bases with >1 version
 
-# After step 1+2: basic per-country + per-version collapse
-n_after_basic <- n_euctr_base + n_ctis_base
+# Waterfall steps computed from first principles so the chart always decreases:
+#   Step 1: unique EUCTR base trials + ALL CTIS records (country-variant collapse only)
+#   Step 2: unique EUCTR base + unique CTIS base (CTIS amendment collapse)
+#   Step 3+: final cache (cross-register dedup + any other drops)
+# This avoids the DB-minus-cache diff approach which inflates n_drop_ctis_versions
+# whenever the DB and cache are built at different times.
+n_raw                  <- length(all_ids)
+n_step1                <- n_euctr_base + length(ctis_all)   # after EUCTR country dedup
+n_step2                <- n_euctr_base + n_ctis_base        # after CTIS amendment dedup
+n_final                <- nrow(df)
 
-# Dropped IDs analysis
-dropped_ids   <- setdiff(all_ids, cache_ids)
-dropped_euctr <- dropped_ids[is_euctr_id(dropped_ids)]
-dropped_ctis  <- dropped_ids[!is_euctr_id(dropped_ids)]
-
-# EUCTR dropped: country variants (base still in cache as EUCTR)
-cache_euctr_base       <- str_replace(cache_ids[is_euctr_id(cache_ids)], "-[A-Z]{2,3}$", "")
-dropped_euctr_base     <- str_replace(dropped_euctr, "-[A-Z]{2,3}$", "")
-n_drop_country_variant <- sum(dropped_euctr_base %in% cache_euctr_base)
-n_drop_cross_register  <- length(dropped_euctr) - n_drop_country_variant
-
-# CTIS dropped = older amendment versions
-n_drop_ctis_versions   <- length(dropped_ctis)
+n_drop_country_variant <- n_raw    - n_step1
+n_drop_ctis_versions   <- n_step1  - n_step2
+n_drop_cross_register  <- n_step2  - n_final    # cross-register + any other drops
 
 # Pre-2023 CTIS relabelled as EUCTR (register changed, count unchanged)
 n_pre2023 <- df %>%
@@ -302,14 +380,6 @@ n_pre2023 <- df %>%
   mutate(yr = year(submission_date_parsed)) %>%
   filter(!is.na(yr) & yr < 2023) %>%
   nrow()
-
-# Waterfall cumulative
-n_raw          <- length(all_ids)
-n_step1        <- n_raw - n_drop_country_variant
-n_step2        <- n_step1 - n_drop_ctis_versions
-n_step3_5      <- n_step2 - n_drop_cross_register   # transitioned + CT# + title dedup combined
-n_final        <- nrow(df)
-n_other_drops  <- n_step3_5 - n_final               # residual (rounding / other)
 ```
 
 ## Waterfall
@@ -327,7 +397,7 @@ wf <- tibble(
     n_raw,
     -n_drop_country_variant,
     -n_drop_ctis_versions,
-    -(n_drop_cross_register + n_other_drops),
+    -n_drop_cross_register,
     NA
   ),
   cumul = c(
@@ -362,8 +432,8 @@ tribble(
     fmt_n(n_drop_country_variant), fmt_n(n_step1),
   "2. CTIS latest amendment",     paste0("Keep highest version suffix per base ID; ", fmt_n(n_ctis_amended), " base trials had ≥ 2 versions"),
     fmt_n(n_drop_ctis_versions), fmt_n(n_step2),
-  "3–5. Cross-register dedup",    "EUCTR rows dropped when same trial found in CTIS (by CT#, title_key, or 'transitioned' status)",
-    fmt_n(n_drop_cross_register + n_other_drops), fmt_n(n_final),
+  "3–5. Cross-register / final dedup",    "EUCTR rows dropped when same trial found in CTIS (by CT#, title_key, or 'transitioned' status), plus any final cache exclusions",
+    fmt_n(n_drop_cross_register), fmt_n(n_final),
   "6. Pre-2023 CTIS relabel",     "Register label changed CTIS→EUCTR for migrated EudraCT trials; row count unchanged",
     paste0("0 rows (", fmt_n(n_pre2023), " relabelled)"), fmt_n(n_final)
 ) %>%
@@ -652,7 +722,7 @@ df %>%
 
 ---
 
-# 4 · Country Normalisation {.tabset}
+# 5 · Country Normalisation {.tabset}
 
 `clean_member_state()` splits multi-country strings on `" / "` or `", "`, strips junk tokens (numerics, dates, UUIDs, single characters), resolves aliases via `COUNTRY_LOOKUP`, and rejoins sorted unique values.
 
@@ -733,7 +803,7 @@ tribble(
 
 ---
 
-# 5 · MedDRA Term Normalisation {.tabset}
+# 6 · MedDRA Term Normalisation {.tabset}
 
 `clean_meddra_term()` fixes American → British spelling variants and converts Roman numeral type suffixes to Arabic numerals, then deduplicates within multi-term strings.
 
@@ -812,7 +882,7 @@ log_meddra %>%
 
 ---
 
-# 6 · Organ Class Normalisation {.tabset}
+# 7 · Organ Class Normalisation {.tabset}
 
 `clean_organ_class()` handles two distinct raw formats:
 
@@ -879,7 +949,7 @@ log_organ %>%
 
 ---
 
-# 7 · Sponsor Name Normalisation {.tabset}
+# 8 · Sponsor Name Normalisation {.tabset}
 
 `normalize_sponsor_name()` applies a multi-step pipeline: subsidiary qualifier removal → acronym expansion strip → legal entity suffix removal → title-casing → brand prefix extraction (~120 known pharma brands) → pharma descriptor word removal → country/region name removal → final cleanup.
 
@@ -962,7 +1032,7 @@ log_sponsor %>%
 
 ---
 
-# 8 · Sponsor Type Derivation
+# 9 · Sponsor Type Derivation
 
 `sponsor_type` is pattern-matched from free-text fields:
 
@@ -998,7 +1068,7 @@ df %>%
 
 ---
 
-# 9 · Phase Derivation {.tabset}
+# 10 · Phase Derivation {.tabset}
 
 Phase is derived differently for each register:
 
@@ -1060,7 +1130,7 @@ log_phase %>%
 
 ---
 
-# 10 · Status Derivation {.tabset}
+# 11 · Status Derivation {.tabset}
 
 Status is derived in three layers:
 
@@ -1127,7 +1197,7 @@ log_status_d %>%
 
 ---
 
-# 11 · Date Derivation & Days-to-Decision {.tabset}
+# 12 · Date Derivation & Days-to-Decision {.tabset}
 
 Three date columns are derived:
 
@@ -1210,7 +1280,7 @@ df %>%
 
 ---
 
-# 12 · PIP, Results, and Orphan Status {.tabset}
+# 13 · PIP, Results, and Orphan Status {.tabset}
 
 Three binary/categorical flags are derived from registry-specific fields.
 
@@ -1287,7 +1357,7 @@ df %>%
 
 ---
 
-# 13 · Final Dataset Completeness
+# 14 · Final Dataset Completeness
 
 ```{r completeness-table}
 comp_df <- tibble(
@@ -1339,7 +1409,7 @@ ggplot(miss_df, aes(register, column, fill = pct_missing)) +
 
 ---
 
-# 14 · Data Quality Issues {.tabset}
+# 15 · Data Quality Issues {.tabset}
 
 All anomalies detected during the pipeline audit, ranked by severity. Each subsection gives detail and a concrete suggested fix for `app.R`.
 

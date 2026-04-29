@@ -55,7 +55,7 @@ suppressPackageStartupMessages({
 if (nzchar(params$data_path) && file.exists(params$data_path)) {
   df <- readRDS(params$data_path)
 } else {
-  cache <- "pediatric_trials_cache.rds"
+  cache <- "trials_cache.rds"
   if (!file.exists(cache)) stop("Cache not found. Run rebuild_cache.R first.")
   df <- readRDS(cache)
 }

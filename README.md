@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.0** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.1** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -196,11 +196,18 @@ EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I +
 Cross-register deduplication uses CT number matching first, then normalised title matching (first 80 characters, lowercased, punctuation stripped). Unusual title formatting or very short titles can result in missed matches (same trial counted twice) or false matches (different trials merged). The deduplication log is printed to console during cache rebuild.
 
 **Cache invalidation**
-The cache is invalidated only when the SQLite database file is newer than the RDS. If you edit `prepare_trial_data()` logic without touching the database, delete `pediatric_trials_cache.rds` manually before restarting the app to force a rebuild.
+The cache is invalidated only when the SQLite database file is newer than the RDS. If you edit `prepare_trial_data()` logic without touching the database, delete `trials_cache.rds` manually before restarting the app to force a rebuild.
 
 ---
 
 ## Changelog
+
+### v0.9.1 — 2026-04-29
+
+- **Preprocessing report**: added a standalone Age Group Coverage section for Paediatric / Adult / Paediatric & Adult / Unknown classifications, plus filter inclusion counts and register split.
+- **Preprocessing audit fixes**: corrected the deduplication waterfall after the all-ages cache rename, restored EUCTR cache-base examples, and rendered the updated `www/preprocessing.html`.
+- **Data pipeline**: `update_data.R` v16 now bisects EUCTR failures down to single-day ranges before trial-level fallback, and fallback URL reads use bounded retries/timeouts.
+- **Docs and report paths**: updated remaining cache/database references to `trials.sqlite` and `trials_cache.rds`.
 
 ### v0.9.0 — 2026-04-29
 
@@ -340,11 +347,11 @@ Initial release.
 ├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
 ├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
 ├── report.Rmd                   # PDF report template (rendered on demand)
-├── pediatric_trials_cache.rds   # Processed data cache (git-ignored)
+├── trials_cache.rds             # Processed data cache (git-ignored)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── data/
-│   ├── pediatric_trials.sqlite          # Raw trial data from ctrdata (git-ignored)
+│   ├── trials.sqlite                    # Raw trial data from ctrdata (git-ignored)
 │   ├── sponsor_normalisation_log.csv
 │   ├── country_normalisation_log.csv
 │   ├── meddra_term_normalisation_log.csv
@@ -363,9 +370,9 @@ Initial release.
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
-| `DB_PATH` | `./data/pediatric_trials.sqlite` | SQLite database file |
+| `DB_PATH` | `./data/trials.sqlite` | SQLite database file |
 | `DB_COLLECTION` | `trials` | Collection name within the database |
-| `CACHE_PATH` | `pediatric_trials_cache.rds` | Processed data cache (app root) |
+| `CACHE_PATH` | `trials_cache.rds` | Processed data cache (app root) |
 
 ---
 

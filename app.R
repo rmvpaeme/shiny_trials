@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.9.0 — all-ages dataset + age group filter)
+# app.R  (v0.9.1 — preprocessing age coverage + ingestion hardening)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -48,38 +48,61 @@ ctis_soc_lookup <- c(
   "100000004873" = "Psychiatric disorders"
 )
 
+# Sentence-case a single term string, preserving short all-caps medical acronyms
+# (HIV, COPD, ADHD, ...) that are ≤5 uppercase letters, optionally followed by
+# digits/hyphens (HIV-1, CAR-T). Longer all-caps words (NERVOUS, SYSTEM) are
+# treated as wrongly-cased and lowercased like any other word.
+sentence_case_term <- function(s) {
+  if (is.na(s) || s == "") return(s)
+  words <- strsplit(s, " ")[[1]]
+  acronym <- grepl("^[A-Z]{2,5}([-/][A-Z0-9]+)*$", words)
+  lowered <- tolower(s)
+  out     <- strsplit(lowered, " ")[[1]]
+  out[1]  <- paste0(toupper(substr(out[1], 1, 1)), substr(out[1], 2, nchar(out[1])))
+  out[acronym] <- words[acronym]
+  paste(out, collapse = " ")
+}
+
 clean_meddra_term <- function(x) {
   if (is.na(x) || x == "") return(NA_character_)
   parts <- trimws(strsplit(x, " / ")[[1]])
-  # Normalise American → MedDRA preferred British spelling
-  parts <- gsub("Hemophilia", "Haemophilia", parts)
-  parts <- gsub("hemophilia", "haemophilia", parts)
-  parts <- gsub("Leukemia",   "Leukaemia",   parts)
-  parts <- gsub("leukemia",   "leukaemia",   parts)
-  parts <- gsub("\\bTumors\\b",  "Tumours",  parts)
-  parts <- gsub("\\btumors\\b",  "tumours",  parts)
-  parts <- gsub("\\bTumor\\b",   "Tumour",   parts)
-  parts <- gsub("\\btumor\\b",   "tumour",   parts)
-  parts <- gsub("Diarrhea",   "Diarrhoea",   parts)
-  parts <- gsub("diarrhea",   "diarrhoea",   parts)
-  parts <- gsub("Gastroesophag",    "Gastrooesophag",    parts)
-  parts <- gsub("gastroesophag",    "gastrooesophag",    parts)
-  parts <- gsub("(?<![oO])Esophag", "Oesophag", parts, perl = TRUE)
-  parts <- gsub("(?<![oO])esophag", "oesophag", parts, perl = TRUE)
-  parts <- gsub("Tyrosinemia", "Tyrosinaemia", parts)
-  parts <- gsub("tyrosinemia", "tyrosinaemia", parts)
-  parts <- gsub("Localized",  "Localised",   parts)
-  parts <- gsub("localized",  "localised",   parts)
-  # Roman numeral type notation → Arabic (order: IV before III before II before I)
-  parts <- gsub("\\bType IV\\b",  "Type 4", parts)
-  parts <- gsub("\\bType III\\b", "Type 3", parts)
-  parts <- gsub("\\bType II\\b",  "Type 2", parts)
-  parts <- gsub("\\bType I\\b",   "Type 1", parts)
-  parts <- gsub("\\btype IV\\b",  "type 4", parts)
-  parts <- gsub("\\btype III\\b", "type 3", parts)
-  parts <- gsub("\\btype II\\b",  "type 2", parts)
-  parts <- gsub("\\btype I\\b",   "type 1", parts)
-  parts <- unique(trimws(parts[parts != ""]))
+  # American → MedDRA preferred British spelling (case-insensitive)
+  parts <- gsub("hemophilia",    "haemophilia",    parts, ignore.case = TRUE)
+  parts <- gsub("leukemia",      "leukaemia",      parts, ignore.case = TRUE)
+  parts <- gsub("\\btumors?\\b", "tumour",         parts, ignore.case = TRUE, perl = TRUE)
+  parts <- gsub("diarrhea",      "diarrhoea",      parts, ignore.case = TRUE)
+  parts <- gsub("gastroesophag", "gastrooesophag", parts, ignore.case = TRUE)
+  parts <- gsub("(?<![oO])esophag", "oesophag",    parts, ignore.case = TRUE, perl = TRUE)
+  parts <- gsub("tyrosinemia",   "tyrosinaemia",   parts, ignore.case = TRUE)
+  parts <- gsub("localized",     "localised",      parts, ignore.case = TRUE)
+  # Roman numeral type notation → Arabic (IV before III before II before I)
+  parts <- gsub("\\btype iv\\b",  "type 4", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype iii\\b", "type 3", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype ii\\b",  "type 2", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype i\\b",   "type 1", parts, ignore.case = TRUE)
+  # Collapse staging / disease-state qualifiers to base pathology name.
+  # Leading qualifier (space-separated only — "Relapsing-remitting MS" is untouched
+  # because of the hyphen; "Refractory" excluded here since it can be a core disease
+  # descriptor e.g. "Refractory hypertension").
+  parts <- gsub(
+    "^(metastatic|advanced|recurrent|relapsed|unresectable|locally advanced|progression of)\\s+",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  # Trailing qualifier (refractory safe to strip here — it follows the disease name)
+  parts <- gsub(
+    "\\s+(metastatic|recurrent|refractory|relapse|relapsed)$",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  # WHO clinical stage / NYHA class — run before generic stage so no residue remains
+  parts <- gsub("\\s+WHO\\s+clinical\\s+stage\\s+\\w+", "", parts, ignore.case = TRUE)
+  parts <- gsub("\\s+NYHA\\s+class\\s+\\w+",            "", parts, ignore.case = TRUE)
+  # Trailing stage designation: "stage IV", "stage IIIB", "stage unspecified"
+  # "End stage renal disease" is safe — "renal" is not a Roman/Arabic numeral.
+  parts <- gsub(
+    "\\s+stage\\s+([IVXivx0-9]+[A-Za-z]?|unspecified)(\\s.*)?$",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  parts <- trimws(parts)
+  # Sentence-case: collapses all case variants into one canonical form
+  parts <- vapply(parts, sentence_case_term, character(1))
+  parts <- unique(trimws(parts[!is.na(parts) & parts != ""]))
   if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
 }
 
@@ -99,6 +122,7 @@ clean_organ_class <- function(x) {
   # Normalise "unspecified incl cysts and polyps" (EUCTR) to canonical form with parens (CTIS)
   cleaned <- sub("unspecified incl cysts and polyps",
                  "unspecified (incl cysts and polyps)", cleaned, fixed = TRUE)
+  cleaned <- vapply(cleaned, sentence_case_term, character(1))
   cleaned <- unique(trimws(cleaned[!is.na(cleaned)]))
   if (length(cleaned) == 0) NA_character_ else paste(cleaned, collapse = " / ")
 }
@@ -516,6 +540,7 @@ normalize_sponsor_name <- function(x) {
     c("Merck\\s+Sharp.{0,8}Dohme",     "MSD"),
     c("MSD\\s+Sharp.{0,8}Dohme",       "MSD"),
     c("Merck\\s+KGaA",                 "Merck KGaA"),
+    c("Merck\\s+Serono",               "Merck Serono"),
     c("Merck\\s+&\\s+Co",              "MSD"),
     c("Merck\\s+and\\s+Co",            "MSD"),
     c("MSD",                           "MSD"),
@@ -530,6 +555,7 @@ normalize_sponsor_name <- function(x) {
     c("Roche",                         "Roche"),
     c("Sanofi\\s+Pasteur",             "Sanofi Pasteur"),
     c("Sanofi.Aventis",                "Sanofi"),
+    c("Sanofi.Synthelabo",             "Sanofi"),
     c("Sanofi",                        "Sanofi"),
     c("Servier",                       "Servier"),
     c("Shire",                         "Shire"),
@@ -758,6 +784,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
+  raw_country_for_log <- result %>%
+    select(a1_member_state_concerned, `authorizedApplication.memberStatesConcerned`) %>%
+    unite("Member_state", a1_member_state_concerned,
+          `authorizedApplication.memberStatesConcerned`,
+          na.rm = TRUE, remove = TRUE) %>%
+    pull(Member_state)
+
   # Clean countries
   message("Cleaning countries...")
   result <- result %>% mutate(
@@ -796,7 +829,6 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           `authorizedApplication.applicationInfo.submissionDate`,
           na.rm=TRUE, remove=TRUE)
   
-  raw_country_for_log <- result$Member_state
   result <- result %>% mutate(Member_state = clean_member_state(Member_state))
   write_norm_log(raw_country_for_log, result$Member_state, result$register, "country", dirname(db_path))
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
@@ -1721,6 +1753,12 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.1 (2026-04-29):"),
+                                          tags$ul(
+                                            tags$li("Preprocessing report: standalone Age Group Coverage section added with paediatric/adult/both counts and register split."),
+                                            tags$li("Data pipeline: update_data.R v16 now bisects EUCTR failures to single-day ranges before trial-level fallback and uses bounded retries/timeouts for fallback URL reads."),
+                                            tags$li("Documentation/report paths updated for trials.sqlite and trials_cache.rds.")
+                                          )),
                                         tags$li(tags$b("v0.9.0 (2026-04-29):"),
                                           tags$ul(
                                             tags$li("All-ages dataset: EUCTR and CTIS queries now fetch all age groups (not just paediatric); database renamed to trials.sqlite."),
@@ -1814,7 +1852,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.9.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.9.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -2394,9 +2432,9 @@ server <- function(input, output, session) {
                            columnDefs=list(list(width="350px",targets=2))))
   })
   
-  output$dl_csv<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".csv"),
+  output$dl_csv<-downloadHandler(filename=function()paste0("eu_trials_",Sys.Date(),".csv"),
                                  content=function(f)readr::write_csv(filt(),f))
-  output$dl_excel<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".xlsx"),
+  output$dl_excel<-downloadHandler(filename=function()paste0("eu_trials_",Sys.Date(),".xlsx"),
                                    content=function(f)writexl::write_xlsx(filt(),f))
 
   # ── Trial detail modal ────────────────────────────────────────────────────
