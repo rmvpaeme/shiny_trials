@@ -1366,7 +1366,7 @@ ui <- dashboardPage(skin = "blue",
                                                selectInput("age_group_filter","Age Group:",
                                                            choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
                                                tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 8px;line-height:1.4;",
-                                                 "'Paediatric & Adult' trials appear under both filters.")
+                                                 "Trials enrolling all ages appear under both filters.")
                                              ),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
