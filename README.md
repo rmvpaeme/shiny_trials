@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.8.1** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.0** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -200,6 +200,18 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.9.0 — 2026-04-29
+
+- **All-ages dataset**: EUCTR and CTIS queries now fetch all age groups (not just paediatric). Database renamed from `pediatric_trials.sqlite` → `trials.sqlite`; cache renamed to `trials_cache.rds`. Total trials roughly doubled to ~17 500.
+- **Age Group filter**: selectInput pinned at the top of the sidebar (`< 18 years` / `≥ 18 years` / `All`). Defaults to `< 18 years` to preserve existing behaviour. Trials enrolling both age groups appear under both filters. Wired into URL state, reset, active filter chips, and badge counter.
+- **Chart Builder**: "Age Group" added as an X-axis and Group-by option (Paediatric / Adult / Both / Unknown).
+- **Data pipeline — resilient ingestion engine** (`update_data.R` v15): quarterly date-range splitting with recursive bisection when a range exceeds the 10 000-trial EUCTR limit. Completed and failed chunks logged to `data/done_chunks.txt` / `data/failed_chunks.txt` so interrupted runs resume from where they left off.
+
+### v0.8.2 — 2026-04-28
+
+- **Pipeline audit report**: `preprocessing.Rmd` added — knits to `www/preprocessing.html` (linked from the About tab). Documents every normalisation step, deduplication counts with real intermediate row totals, before/after examples, and a severity-ranked data quality issue list with `app.R` fix suggestions.
+- **Data pipeline**: transitioned EUCTR trials now matched to CTIS counterparts by base ID (strip country/version suffix) as a fallback after title_key matching — catches cases where the trial title changed during the EUCTR→CTIS transition.
 
 ### v0.8.1 — 2026-04-28
 

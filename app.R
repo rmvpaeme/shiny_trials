@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.8.1 — per-million-children normalisation on map and Chart Builder)
+# app.R  (v0.9.0 — all-ages dataset + age group filter)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -108,9 +108,9 @@ clean_organ_class <- function(x) {
 # ══════════════════════════════════════════════════════════════════════════════
 try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 
-DB_PATH       <- "./data/pediatric_trials.sqlite"
+DB_PATH       <- "./data/trials.sqlite"
 DB_COLLECTION <- "trials"
-CACHE_PATH    <- "pediatric_trials_cache.rds"
+CACHE_PATH    <- "trials_cache.rds"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -639,6 +639,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   EUCTR_fields <- c(
     "a2_eudract_number","dimp.d31_product_name",
     "f11_trial_has_subjects_under_18",
+    "f12_adults_1864_years","f13_elderly_65_years",
     "e12_meddra_classification.e12_term",
     "e12_meddra_classification.e12_system_organ_class",
     "a1_member_state_concerned","a3_full_title_of_the_trial",
@@ -674,7 +675,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # Results: TRUE when results have been received by CTIS
     "resultsFirstReceived",
     # Orphan designation numbers (EU/3/... format); non-NA = orphan drug
-    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
+    # Age groups: comma-separated string, e.g. "0-17 years, 18-64 years"
+    "ageGroup")
   
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
@@ -908,8 +911,27 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     if (nrow(ctis_matches) > 0) {
       euctr_drop <- trans_euctr %>% filter(title_key %in% ctis_matches$title_key) %>% pull(`_id`)
       unique_ids <- unique(c(setdiff(unique_ids, euctr_drop), ctis_matches$`_id`))
-      message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s)",
+      message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via title",
                       length(euctr_drop)))
+    }
+    # Fallback: match by base ID — transitioned EudraCT trials retain their
+    # base number in CTIS (e.g. EUCTR 2020-001234-56-BE → CTIS 2020-001234-56-00)
+    still_trans <- trans_euctr %>%
+      filter(`_id` %in% unique_ids) %>%
+      mutate(euctr_base = str_replace(`_id`, "-[A-Z]{2,3}$", ""))
+    if (nrow(still_trans) > 0) {
+      ctis_id_matches <- result %>%
+        filter(register == "CTIS") %>%
+        mutate(ctis_base = str_replace(`_id`, "-\\d{2}$", "")) %>%
+        filter(ctis_base %in% still_trans$euctr_base)
+      if (nrow(ctis_id_matches) > 0) {
+        euctr_base_drop <- still_trans %>%
+          filter(euctr_base %in% ctis_id_matches$ctis_base) %>%
+          pull(`_id`)
+        unique_ids <- unique(c(setdiff(unique_ids, euctr_base_drop), ctis_id_matches$`_id`))
+        message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via base ID",
+                        length(euctr_base_drop)))
+      }
     }
   }
 
@@ -1082,6 +1104,24 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_replace_all(tt, "[^a-z0-9 ]", " ")
       tt <- str_squish(tt)
       substr(tt, 1, 80)
+    },
+    # Age group: derived from EUCTR boolean flags or CTIS ageGroup string.
+    # "Both" means the trial enrolls subjects across the under-18 and 18+ boundary.
+    age_group = {
+      has_paed <- (register == "EUCTR" &
+                     str_detect(tolower(coalesce(f11_trial_has_subjects_under_18, "")), "yes|true")) |
+                  (register == "CTIS" &
+                     str_detect(coalesce(ageGroup, ""), "0-17"))
+      has_adult <- (register == "EUCTR" &
+                      (str_detect(tolower(coalesce(f12_adults_1864_years, "")), "yes|true") |
+                       str_detect(tolower(coalesce(f13_elderly_65_years,  "")), "yes|true"))) |
+                   (register == "CTIS" &
+                      str_detect(coalesce(ageGroup, ""), "18-64|65\\+"))
+      case_when(
+        has_paed & has_adult ~ "Both",
+        has_paed             ~ "Paediatric",
+        has_adult            ~ "Adult",
+        TRUE                 ~ "Unknown")
     })
   
   write_norm_log(result$status_raw_orig, result$status,     result$register, "status_category", dirname(db_path))
@@ -1223,11 +1263,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
         nzchar(str_trim(coalesce(ctis_orphan_raw, "")))                                      ~ "Yes",
       TRUE ~ "Unknown"))
 
-  # Drop raw phase columns and raw results/orphan source columns
+  # Drop raw phase columns, raw results/orphan source columns, and raw age columns
   result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col,
     "endPoints.endPoint.readyForValues", "resultsFirstReceived",
     "dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community",
-    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")))
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
+    "f11_trial_has_subjects_under_18", "f12_adults_1864_years",
+    "f13_elderly_65_years", "ageGroup")))
 
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
@@ -1320,6 +1362,12 @@ ui <- dashboardPage(skin = "blue",
                                        tabsetPanel(id="sidebar_tabs",
                                          tabPanel("Filters",
                                            tags$div(class="filter-groups",
+                                             tags$div(style="padding:8px 4px 4px;",
+                                               selectInput("age_group_filter","Age Group:",
+                                                           choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
+                                               tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 6px;line-height:1.4;",
+                                                 "Trials enrolling both age groups appear under both filters.")
+                                             ),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
                                                  "Search & Date", uiOutput("badge_search_date", inline=TRUE)),
@@ -1465,6 +1513,7 @@ ui <- dashboardPage(skin = "blue",
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
+                                                             "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
                                                              "Country / Member State"="Member_state"),
@@ -1479,6 +1528,7 @@ ui <- dashboardPage(skin = "blue",
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
+                                                             "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
                                                              "Country / Member State"="Member_state"),
@@ -1661,8 +1711,28 @@ ui <- dashboardPage(skin = "blue",
                                       p("Trial data is retrieved from the registries using the ",
                                         tags$a("ctrdata", href="https://cran.r-project.org/package=ctrdata", target="_blank"),
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
+                                      h4(icon("flask")," Pipeline Report"),
+                                      p("A detailed audit of every data preprocessing and normalisation step —
+                                        including per-field statistics, before/after examples, and a ranked
+                                        list of data quality issues with suggested fixes.
+                                        Regenerated automatically on each nightly cache rebuild."),
+                                      p(tags$a(href="preprocessing.html", target="_blank",
+                                               class="btn btn-default btn-sm",
+                                               icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.0 (2026-04-29):"),
+                                          tags$ul(
+                                            tags$li("All-ages dataset: EUCTR and CTIS queries now fetch all age groups (not just paediatric); database renamed to trials.sqlite."),
+                                            tags$li("Age Group filter (< 18 years / ≥ 18 years / All) pinned at the top of the sidebar; defaults to < 18 years to preserve existing behaviour. Mixed-age trials appear under both filters."),
+                                            tags$li("Chart Builder: Age Group added as X-axis and Group-by option."),
+                                            tags$li("Data pipeline: update_data.R rewritten with recursive quarterly splitting engine that automatically bisects date ranges exceeding 10 000 trials and logs completed/failed chunks.")
+                                          )),
+                                        tags$li(tags$b("v0.8.2 (2026-04-28):"),
+                                          tags$ul(
+                                            tags$li("Pipeline audit report (preprocessing.html) added — documents all normalisation steps, deduplication counts, and data quality issues; accessible from this tab."),
+                                            tags$li("Data pipeline: transitioned EUCTR trials now matched to CTIS counterparts by base ID (strip country/version suffix) as a fallback after title_key matching.")
+                                          )),
                                         tags$li(tags$b("v0.8.1 (2026-04-28):"),
                                           tags$ul(
                                             tags$li("Map: radio button to toggle between total trials and trials per million children (0-17); population data from Eurostat 2023 and UN WPP 2022 for all 108 countries."),
@@ -1744,7 +1814,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.8.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.9.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1941,6 +2011,9 @@ server <- function(input, output, session) {
       df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
     if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df))df<-df%>%filter(is_orphan==input$orphan_filter)
+    if(!is.null(input$age_group_filter)&&input$age_group_filter!="All"&&"age_group"%in%names(df)){
+      if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Both"))
+      else if(input$age_group_filter=="≥ 18 years")df<-df%>%filter(age_group%in%c("Adult","Both"))}
     if(isTRUE(mono_active())&&"n_countries"%in%names(df))df<-df%>%filter(n_countries==1)
     if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
@@ -1977,6 +2050,8 @@ server <- function(input, output, session) {
           updateSelectInput(session, "pip_filter",            selected = s$pip_filter)
         if (!is.null(s$orphan_filter))
           updateSelectInput(session, "orphan_filter",         selected = s$orphan_filter)
+        if (!is.null(s$age_group_filter))
+          updateSelectInput(session, "age_group_filter",      selected = s$age_group_filter)
         if (!is.null(s$sponsor_filter))
           updateSelectizeInput(session, "sponsor_filter",     selected = s$sponsor_filter)
         if (!is.null(s$text_search))
@@ -1999,6 +2074,7 @@ server <- function(input, output, session) {
       phase_filter       = input$phase_filter,
       pip_filter         = input$pip_filter,
       orphan_filter      = input$orphan_filter,
+      age_group_filter   = input$age_group_filter,
       sponsor_filter       = input$sponsor_filter,
       text_search          = input$text_search,
       mononational_filter  = mono_active()
@@ -2057,6 +2133,7 @@ server <- function(input, output, session) {
     if (length(input$phase_filter) > 0)                                     n <- n + 1L
     if (!isTRUE(input$pip_filter == "All"))                                  n <- n + 1L
     if (!isTRUE(input$orphan_filter == "All"))                               n <- n + 1L
+    if (!isTRUE(input$age_group_filter == "< 18 years"))                     n <- n + 1L
     mk_filter_badge(n)
   })
 
@@ -2109,6 +2186,9 @@ server <- function(input, output, session) {
     if (!is.null(input$orphan_filter) && input$orphan_filter != "All")
       chips <- c(chips, list(mk_chip("Orphan", input$orphan_filter)))
 
+    if (!is.null(input$age_group_filter) && input$age_group_filter != "< 18 years")
+      chips <- c(chips, list(mk_chip("Age", input$age_group_filter)))
+
     if (isTRUE(mono_active()))
       chips <- c(chips, list(mk_chip("Scope", "Mononational only")))
 
@@ -2144,6 +2224,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "phase_filter",       selected = character(0))
     updateSelectInput(session, "pip_filter", selected = "All")
     updateSelectInput(session, "orphan_filter", selected = "All")
+    updateSelectInput(session, "age_group_filter", selected = "< 18 years")
     updateSelectizeInput(session, "sponsor_filter",     selected = character(0))
     updateTextInput(session, "text_search", value = "")
     mono_active(FALSE)
@@ -3266,6 +3347,7 @@ server <- function(input, output, session) {
     "phase"              = "Phase",
     "sponsor_type"       = "Sponsor Type",
     "has_PIP"            = "PIP Status",
+    "age_group"          = "Age Group",
     "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
     "MEDDRA_term"        = "Condition (MedDRA term)",
     "Member_state"       = "Country / Member State"

@@ -210,7 +210,26 @@ when making a new version, update the rmd file to reflect the most recent change
   - Hover text shows original day count
   - report.Rmd uses `scale_y_log10(labels = comma)` (ggplot2 handles KDE correctly on transformed scale)
 
-## Current version: v0.7.1
+## Completed: Per-million-children normalisation (v0.8.1) — shipped 2026-04-28
+
+### What was built
+- `EU_CHILD_POP` data frame added to app.R (~line 327): 108 countries, `child_pop` in thousands
+  - EU/EEA 27 + Norway/Iceland/Switzerland/UK: Eurostat `demo_pjan` 2023 estimates
+  - All other countries: UN WPP 2022 (0–17 = 0–14 + 3/5 of 15–19 group)
+  - Liechtenstein: `NA` (no Eurostat 0–17 series); shown grey on map in per-million mode
+- **Map tab**: `radioButtons("map_metric", ...)` placed inline above `leafletOutput` in the map box
+  - Choices: "Total trials" (n_trials) / "Per million children (0-17)" (trials_per_million)
+  - `eu_country_counts()` extended: joins EU_CHILD_POP, computes `trials_per_million = round(n / (child_pop / 1000), 1)`
+  - `output$eu_map`: splits cc into cc_ok / cc_na; pre-computes display_val + popup_html columns to avoid leaflet formula scoping issues; grey markers for countries with no pop data (only Liechtenstein); legend title switches to "Trials / M children"
+  - `output$map_trials_table`: adds N (country) and Per M children columns via join on primary_country
+- **Chart Builder tab**: `uiOutput("explore_per_million_ui")` renders a `checkboxInput("explore_per_million", ...)` only when x-axis or group is "Member_state"; hidden for all other selections
+  - `output$plot_explore`: when checkbox ticked and chart_type != "bar_pct", joins EU_CHILD_POP on grp_val (group=country) or x_val (x=country), divides n by child_pop/1000; y-axis label updates
+  - `output$table_explore`: same join + normalisation; column header changes to "Trials / M children"
+- **Removed**: global sidebar "Display mode" section removed; `selected_child_pop_M` reactive removed; `plot_yearly` not affected (not country-split)
+- Branch: `feature/per-million-children` → merged to main
+- Version bumped to v0.8.1 in app.R header, About tab changelog entry + footer, README header + changelog
+
+## Current version: v0.8.1
 
 ## README audit (2026-04-06)
 
@@ -260,12 +279,96 @@ when making a new version, update the rmd file to reflect the most recent change
   - "Completion Rate by Sponsor Type": line chart of % completed by auth year, split by Academic/Industry (color = `tc()$frost1` / `tc()$orange`)
   - "Completion Rate by Phase": bar chart of % completed per Phase I–IV, colored via colorRampPalette; added to lazy-render list
 
+## Completed: preprocessing.Rmd pipeline audit report — 2026-04-28
+
+### What was built
+
+- **`preprocessing.Rmd`** — new R Markdown file that knits to a self-contained HTML report auditing every step of `prepare_trial_data()`
+  - YAML `knit:` hook outputs to `www/preprocessing.html` so Shiny can serve it directly
+  - Renders with `rmarkdown::render('preprocessing.Rmd', output_file='www/preprocessing.html')`
+- **Section 1**: Dataset overview — value cards (total/EUCTR/CTIS/columns), register bar chart, interactive column inventory table
+- **Section 2**: Field extraction & column mapping — full raw-source → unified-output table for both registers
+- **Section 3**: Deduplication pipeline — 5 tabbed sub-sections with real row counts from the SQLite DB:
+  - Waterfall chart + summary table with actual numbers removed at each step
+  - EUCTR country variants: top-15 by variant count, histogram of countries-per-trial
+  - CTIS amendment versions: table of all multi-version trials (old→new), version count histogram
+  - Cross-register duplicates: transitioned EUCTR matched to CTIS via title_key (not CT# — different formats); residual-duplicate check for trials where EUCTR and CTIS both survived dedup
+  - Pre-2023 CTIS→EUCTR relabel: table of relabelled trials, within-EUCTR overlap check (confirms 0 double-counts in the chart)
+- **Sections 4–13**: Per-normalisation-step stats, before/after tables (DT), and distribution charts for country, MedDRA term, organ class, sponsor name, sponsor type, phase, status (3-level), dates/days-to-decision, PIP/results/orphan, and final missingness heatmap
+- **Section 14**: Data Quality Issues — severity-ranked summary table (High/Medium/Low) + per-issue subsection tabs with affected data and concrete `app.R` line-number fix suggestions:
+  - High: residual cross-register duplicates, unmatched transitioned EUCTR (355 flagged, 290 in cache, 196 with misleading "Trial now transitioned" / "Other" status), unmapped CTIS status codes, completed trials with no decision_date
+  - Medium: country normalisation failures, unresolved CTIS organ class codes, duplicate CT numbers, sponsor name residual junk, orphan "Unknown" rate
+  - Low: extreme days_to_decision (>10 years), implausible submission year
+
+### app.R fix applied (transitioned EUCTR fallback)
+
+- Added base-ID fallback inside the transitioned-EUCTR swap block (~line 904)
+- After title_key matching, any still-unmatched transitioned EUCTR trials are now matched against CTIS records by stripping the country suffix (`-BE`) from the EUCTR `_id` and the version suffix (`-00`) from CTIS `_id` — both yield the same base number for trials that originated in EudraCT and transitioned to CTIS
+- Logs: `"Swapped N EUCTR 'transitioned' record(s) for CTIS counterpart(s) via base ID"`
+- Previously only title_key matching was attempted; this fallback catches cases where the title changed during the EUCTR→CTIS transition
+
+### About tab link
+
+- New "Pipeline Report" section added to the About tab in app.R (~line 1664) with a button linking to `preprocessing.html`
+- `www/preprocessing.html` is the served path (Shiny serves `www/` at root)
+
+## Completed: All-ages dataset + Age Group filter (v0.9.0) — shipped 2026-04-29
+
+### Branch: feature/all-ages-filter → main
+
+### What was built
+
+- **All-ages data fetch** — `update_data.R` queries now fetch all age groups from EUCTR and CTIS (previously pediatric only). DB renamed `pediatric_trials.sqlite` → `trials.sqlite`; cache renamed `pediatric_trials_cache.rds` → `trials_cache.rds`. DB_PATH and CACHE_PATH constants updated in both `update_data.R` and `app.R`.
+- **Age field extraction** — `prepare_trial_data()` now extracts `f11_trial_has_subjects_under_18`, `f12_adults_1864_years`, `f13_elderly_65_years` (EUCTR) and `ageGroup` (CTIS; values like "0-17 years, 18-64 years"). Raw fields dropped from final dataframe.
+- **`age_group` derived column** — "Paediatric" / "Adult" / "Both" / "Unknown". EUCTR: f11/f12/f13 boolean flags. CTIS: `str_detect(ageGroup, "0-17")` for paediatric, `str_detect(ageGroup, "18-64|65\\+")` for adult. Mixed-age trials classified as "Both".
+- **Age Group sidebar filter** — `selectInput("age_group_filter")` pinned at top of filter panel (above all `<details>` groups). Choices: `< 18 years` / `≥ 18 years` / `All`. Default: `< 18 years`. Help text: "Trials enrolling both age groups appear under both filters." Wired into: `filt()`, `filter_state`, URL restore, `reset_filters`, `badge_trial`, `active_filters_row`.
+- **Chart Builder** — "Age Group" (`age_group`) added to X-axis and Group-by choices; added to `EXPLORE_LABELS`.
+- **Resilient ingestion engine** (`update_data.R` v15, rewritten by user) — quarterly date-range chunks with recursive bisection when >10 000 trials. Logs completed/failed chunks to `data/done_chunks.txt` / `data/failed_chunks.txt`. `patched_rows_update` from earlier version removed (replaced by simpler engine without monkey-patch).
+
+### Key field names confirmed from DB
+
+- EUCTR adult flags: `f12_adults_1864_years`, `f13_elderly_65_years` (NOT `f12_adults_18_to_64_years`)
+- CTIS age group: `ageGroup` (comma-separated string per trial, e.g. `"0-17 years, 18-64 years"`)
+
+### Current version: v0.9.0
+
+## SQLite / ctrdata DB querying — how to read records
+
+The database (`data/trials.sqlite`, collection `trials`) stores records in **MessagePack** format (not plain JSON). You cannot use `rawToChar()` or `jsonlite::fromJSON()` directly on the blob column. Use ctrdata's own extraction functions instead:
+
+```r
+library(nodbi); library(ctrdata)
+db <- nodbi::src_sqlite(dbname = "./data/trials.sqlite", collection = "trials")
+
+# Find fields matching a name fragment (samples 5 records per register)
+ctrdata::dbFindFields(namepart = "age", con = db)
+
+# Extract specific fields into a dataframe
+df <- ctrdata::dbGetFieldsIntoDf(fields = c("field.path.one", "field.path.two"), con = db)
+
+# Detect register: EUCTR IDs end with a letter country code (e.g. -BE, -GB3)
+#                  CTIS IDs end with a numeric 2-digit segment (e.g. -00, -01)
+is_euctr <- grepl("[A-Z][A-Z0-9]*$", df[["_id"]])
+is_ctis  <- !is_euctr
+```
+
+For raw counts/ID queries only, you can use `DBI::dbGetQuery()` with GLOB patterns:
+
+```r
+library(DBI); library(RSQLite)
+con <- DBI::dbConnect(RSQLite::SQLite(), "./data/trials.sqlite")
+DBI::dbGetQuery(con, "SELECT COUNT(*) FROM trials WHERE _id GLOB '????-??????-??-[0-9][0-9]'")
+DBI::dbDisconnect(con)
+```
+
 ## Future ideas (not yet implemented)
 
 ### Email notifications on new trials
+
 Use `blastula` package in `rebuild_cache.R`. After `prepare_trial_data()` runs, diff new vs old CT numbers; if any new IDs found, compose and send an HTML email via `blastula::smtp_send()`. Credentials stored via `blastula::create_smtp_credentials()` (keychain). Schedule `rebuild_cache.R` via cron (macOS/Linux) or Task Scheduler (Windows). Example code was discussed 2026-04-19.
 
 ### Other pending ideas
+
 - Export Data Explorer to CSV/Excel (download button on DT table)
 - Time-to-decision histogram (days from submission to decision)
 - Trial status over time stacked area chart

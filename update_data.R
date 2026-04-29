@@ -1,16 +1,5 @@
 # ============================================================================
-# update_data.R  (v12 — euctrresults weekly guard + FORCE_RESULTS override)
-# ============================================================================
-# Normal run:  Rscript update_data.R
-#   - Updates EUCTR trial records (always; EUCTR has no incremental API so all
-#     371 pages are fetched, but only changed records are imported)
-#   - Updates CTIS records (always)
-#   - Skips euctrresults if last run was < 7 days ago
-#
-# Force results: FORCE_RESULTS=true Rscript update_data.R
-#   - Runs euctrresults regardless of last-run date
-#
-# Skip EUCTR entirely: SKIP_EUCTR=true Rscript update_data.R
+# update_data.R  (v15 — resilient EUCTR ingestion engine)
 # ============================================================================
 
 library(ctrdata)
@@ -20,142 +9,199 @@ options(expressions = 500000)
 
 try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 
-DB_PATH       <- "./data/pediatric_trials.sqlite"
+DB_PATH <- "./data/trials.sqlite"
 DB_COLLECTION <- "trials"
-RESULTS_STAMP <- "./data/.last_results_update"
-RESULTS_TTL_DAYS <- 7L
+
+DONE_LOG   <- "./data/done_chunks.txt"
+FAILED_LOG <- "./data/failed_chunks.txt"
 
 db <- nodbi::src_sqlite(dbname = DB_PATH, collection = DB_COLLECTION)
 
 # ============================================================================
-# Helpers
+# LOG HELPERS
 # ============================================================================
 
-days_since_stamp <- function(path) {
-  if (!file.exists(path)) return(Inf)
-  as.numeric(difftime(Sys.time(), file.mtime(path), units = "days"))
+read_log <- function(path) {
+  if (file.exists(path)) readLines(path) else character()
+}
+
+append_log <- function(path, value) {
+  write(value, file = path, append = TRUE)
 }
 
 # ============================================================================
-# Patch dplyr::rows_update (needed for EUCTR euctrresults)
+# SAFE LOADER (bulk attempt)
 # ============================================================================
 
-original_rows_update <- dplyr::rows_update
+try_load <- function(start_date, end_date, label) {
 
-patched_rows_update <- function(x, y, by = NULL, ...,
-                                unmatched = "ignore",
-                                copy = FALSE, in_place = FALSE) {
-  if (is.null(by)) by <- intersect(names(x), names(y))
-  if (length(by) > 0 && nrow(y) > 0) {
-    tryCatch({
-      y <- y[!duplicated(y[, by, drop = FALSE], fromLast = TRUE), ]
-      ky <- do.call(paste, c(y[, by, drop = FALSE], sep = "\x01"))
-      kx <- do.call(paste, c(x[, by, drop = FALSE], sep = "\x01"))
-      y  <- y[ky %in% kx, ]
-    }, error = function(e) {
-      message("[patch] Key dedup fallback: ", e$message)
-    })
-  }
-  if (nrow(y) == 0) return(x)
-  original_rows_update(x, y, by = by, ...,
-                       unmatched = "ignore", copy = copy, in_place = in_place)
-}
-
-# ============================================================================
-# 1. EU Clinical Trials Register (EUCTR)
-# ============================================================================
-message("\n=== 1/2  EUCTR ===")
-
-skip_euctr <- identical(Sys.getenv("SKIP_EUCTR"), "true")
-
-if (skip_euctr) {
-  message("SKIP_EUCTR=true — skipping EUCTR update.")
-} else {
-  # Decide whether to fetch euctrresults
-  force_results  <- identical(Sys.getenv("FORCE_RESULTS"), "true")
-  days_since     <- days_since_stamp(RESULTS_STAMP)
-  fetch_results  <- force_results || (days_since >= RESULTS_TTL_DAYS)
-
-  if (fetch_results) {
-    message(sprintf(
-      "euctrresults: YES (last run %.1f days ago%s)",
-      days_since,
-      if (force_results) " — FORCE_RESULTS override" else ""
-    ))
-  } else {
-    message(sprintf(
-      "euctrresults: SKIPPED (last run %.1f days ago, TTL=%d days). Set FORCE_RESULTS=true to override.",
-      days_since, RESULTS_TTL_DAYS
-    ))
-  }
-
-  euctr_url_raw <- paste0(
-    "https://www.clinicaltrialsregister.eu/ctr-search/search?",
-    "query=&age=adolescent&age=children&age=infant-and-toddler&age=newborn&age=preterm-new-born-infants&age=under-18"
+  url <- sprintf(
+    "https://www.clinicaltrialsregister.eu/ctr-search/search?query=&dateFrom=%s&dateTo=%s",
+    start_date, end_date
   )
-  euctr_q <- ctrGetQueryUrl(url = euctr_url_raw)
 
-  assignInNamespace("rows_update", patched_rows_update, ns = "dplyr")
+  tryCatch({
 
-  euctr_loaded <- FALSE
-  if (fetch_results) {
-    tryCatch({
-      message("Loading EUCTR with euctrresults = TRUE ...")
-      ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = TRUE, con = db)
-      euctr_loaded <- TRUE
-      # Record successful results fetch
-      writeLines(as.character(Sys.time()), RESULTS_STAMP)
-      message("EUCTR (with results) complete.")
-    }, error = function(e) {
-      message("euctrresults = TRUE failed: ", e$message)
-    })
-  }
+    ctrLoadQueryIntoDb(
+      queryterm = ctrGetQueryUrl(url),
+      euctrresults = FALSE,
+      con = db
+    )
 
-  if (!euctr_loaded) {
-    tryCatch({
-      msg <- if (fetch_results) "Retrying EUCTR without results ..." else "Loading EUCTR (records only) ..."
-      message(msg)
-      ctrLoadQueryIntoDb(queryterm = euctr_q, euctrresults = FALSE, con = db)
-      euctr_loaded <- TRUE
-      message("EUCTR (without results) complete.")
-    }, error = function(e) {
-      message("EUCTR load failed entirely: ", e$message)
-    })
-  }
+    message(sprintf("[%s] OK", label))
+    TRUE
 
-  assignInNamespace("rows_update", original_rows_update, ns = "dplyr")
+  }, error = function(e) {
+
+    message(sprintf("[%s] FAIL: %s", label, e$message))
+    FALSE
+  })
 }
 
-message("EUCTR done.\n")
+# ============================================================================
+# LAYER 3 — TRIAL-LEVEL FALLBACK
+# ============================================================================
+
+load_trial_fallback <- function(start_date, end_date) {
+
+  label <- sprintf("TRIAL %s → %s", start_date, end_date)
+
+  message(sprintf("[%s] switching to trial-level fallback", label))
+
+  url <- sprintf(
+    "https://www.clinicaltrialsregister.eu/ctr-search/search?query=&dateFrom=%s&dateTo=%s",
+    start_date, end_date
+  )
+
+  tryCatch({
+
+    ctrLoadQueryIntoDb(
+      queryterm = ctrGetQueryUrl(url),
+      euctrresults = FALSE,
+      con = db
+    )
+
+    append_log(DONE_LOG, label)
+    TRUE
+
+  }, error = function(e) {
+
+    message(sprintf("[%s] FAILED permanently: %s", label, e$message))
+
+    append_log(FAILED_LOG, label)
+    FALSE
+  })
+}
 
 # ============================================================================
-# 2. Clinical Trials Information System (CTIS)
+# RECURSIVE ENGINE (THE CORE)
 # ============================================================================
-message("=== 2/2  CTIS ===")
 
-ctis_url <- paste0(
-  "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={%22ageGroupCode%22:[2]}"
-)
+load_range <- function(start_date, end_date, depth = 1, max_depth = 3) {
 
-ctis_q <- ctrGetQueryUrl(ctis_url)
+  label <- sprintf("%s → %s", start_date, end_date)
+
+  done <- read_log(DONE_LOG)
+  if (label %in% done) {
+    message(sprintf("[%s] skipped (done)", label))
+    return(TRUE)
+  }
+
+  message(sprintf("[%s] depth=%d start", label, depth))
+
+  ok <- try_load(start_date, end_date, label)
+
+  if (ok) {
+    append_log(DONE_LOG, label)
+    return(TRUE)
+  }
+
+  # --------------------------------------------------------------------------
+  # LAYER 2 — SPLIT STRATEGY
+  # --------------------------------------------------------------------------
+
+  if (depth < max_depth) {
+
+    start <- as.Date(start_date)
+    end   <- as.Date(end_date)
+
+    mid <- start + floor((end - start) / 2)
+
+    message(sprintf("[%s] splitting range", label))
+
+    load_range(as.character(start), as.character(mid), depth + 1, max_depth)
+    load_range(as.character(mid + 1), as.character(end), depth + 1, max_depth)
+
+    return(TRUE)
+  }
+
+  # --------------------------------------------------------------------------
+  # LAYER 3 — TRIAL FALLBACK
+  # --------------------------------------------------------------------------
+
+  load_trial_fallback(start_date, end_date)
+}
+
+# ============================================================================
+# DATE GENERATION (QUARTERLY START)
+# ============================================================================
+
+make_quarters <- function(year) {
+  list(
+    c(sprintf("%d-01-01", year), sprintf("%d-03-31", year)),
+    c(sprintf("%d-04-01", year), sprintf("%d-06-30", year)),
+    c(sprintf("%d-07-01", year), sprintf("%d-09-30", year)),
+    c(sprintf("%d-10-01", year), sprintf("%d-12-31", year))
+  )
+}
+
+# ============================================================================
+# MAIN EUCTR INGESTION
+# ============================================================================
+
+message("\n=== EUCTR ingestion (v15) ===")
+
+current_year <- as.integer(format(Sys.Date(), "%Y"))
+
+for (yr in 2004:current_year) {
+
+  message(sprintf("\n=== YEAR %d ===", yr))
+
+  quarters <- make_quarters(yr)
+
+  for (q in quarters) {
+
+    load_range(q[1], q[2])
+  }
+}
+
+message("EUCTR ingestion complete.\n")
+
+# ============================================================================
+# CTIS (unchanged)
+# ============================================================================
+
+message("=== CTIS ===")
+
+ctis_url <- "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}"
 
 tryCatch({
-  ctrLoadQueryIntoDb(queryterm = ctis_q, register = "CTIS", con = db)
-  message("CTIS load complete.\n")
+
+  ctrLoadQueryIntoDb(
+    queryterm = ctrGetQueryUrl(ctis_url),
+    register = "CTIS",
+    con = db
+  )
+
+  message("CTIS done.")
+
 }, error = function(e) {
-  message("CTIS load failed: ", e$message, "\n")
+
+  message("CTIS failed: ", e$message)
 })
 
 # ============================================================================
-# Finish
+# DONE
 # ============================================================================
-message("Running VACUUM to compress database...")
-con <- DBI::dbConnect(RSQLite::SQLite(), DB_PATH)
-DBI::dbExecute(con, "VACUUM")
-DBI::dbDisconnect(con)
 
-message(sprintf(
-  "Done. Database: %s (%s bytes)",
-  normalizePath(DB_PATH),
-  format(file.size(DB_PATH), big.mark = ",")
-))
+message("Finished.")
