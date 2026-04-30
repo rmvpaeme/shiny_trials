@@ -31,7 +31,7 @@ https://www.clinicaltrialsregister.eu/ctr-search/search?query=
 https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}
 ```
 
-These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. EUCTR is fetched in quarterly date-range chunks (2004 → present) with recursive bisection if a chunk exceeds 10 000 trials; completed chunks are logged to `data/done_chunks.txt` so interrupted runs resume from where they left off. `ctrdata` handles incremental updates internally — on repeat runs it only downloads records that are new or have changed. EUCTR results data (`euctrresults`) is **not** fetched by default (very slow); run `FORCE_RESULTS=true Rscript update_data.R` to load results and populate the `has_results` column used by the Results Posting tab.
+These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. The default update refreshes **CTIS only**, because EUCTR changes slowly and the full historical EUCTR load has already been captured. To refresh EUCTR explicitly, run `Rscript update_data.R --euctr` or `REFRESH_EUCTR=true Rscript update_data.R`. EUCTR is fetched in quarterly date-range chunks (2004 → present); if a range fails, the script recursively bisects it down toward single-day ranges before falling back to trial-by-trial loading. Completed chunks are logged to `data/done_chunks.txt` and failed chunks/trials to `data/failed_chunks.txt` so interrupted runs can resume. EUCTR result documents (`euctrresults`) are **not** fetched by default because they make ingestion much slower; use `Rscript update_data.R --euctr-results` or `FORCE_RESULTS=true Rscript update_data.R` when you explicitly want to refresh them.
 
 ---
 
@@ -68,7 +68,7 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | **Phase Analytics** | Phase by register / status / sponsor type, phase funnel, completion cohort |
 | **Sponsor Comparison** | Side-by-side comparison of 2–3 selected sponsors across 6 dimensions |
 | **Results Posting** | Results posted vs not posted for completed trials, by year and sponsor type; downloadable list |
-| **About** | Data sources, feature descriptions, changelog, trial status definitions |
+| **About** | Data sources, preprocessing audit report, changelog, trial status definitions |
 
 ### Sidebar filters
 
@@ -79,7 +79,7 @@ All charts and tables update simultaneously when filters change. Active filters 
 | **Age Group** | `< 18 years` (default) / `≥ 18 years` / `All` — trials enrolling both age groups ("Paediatric & Adult") appear under both |
 | Submission date range | Any date range from 2004 to today |
 | Free-text search | Title, CT number, condition, product name, sponsor |
-| Country / Member State | Multi-select; any EU or EEA country |
+| Country / Member State | Multi-select; normalised country names from the registry data |
 | Sponsor / Company | Multi-select; normalised names (legal suffixes stripped) |
 | Trial Status | Ongoing / Completed / Other |
 | Source Register | EUCTR / CTIS |
@@ -107,7 +107,7 @@ install.packages(c(
   "shiny", "shinydashboard", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite", "DBI",
   "dplyr", "tidyr", "stringr", "lubridate",
-  "ggplot2", "plotly", "leaflet",
+  "ggplot2", "plotly", "leaflet", "scales", "forcats",
   "DT", "jsonlite", "base64enc",
   "readr", "writexl",
   "rmarkdown", "knitr", "kableExtra"
@@ -120,7 +120,25 @@ install.packages(c(
 Rscript update_data.R
 ```
 
-This downloads all trial records from EUCTR and CTIS into `data/trials.sqlite`. First run takes several hours (EUCTR fetches ~44 000 trials in quarterly chunks; CTIS ~5 min). Subsequent runs are much faster — `ctrdata` only downloads records that are new or have changed. Completed chunks are logged to `data/done_chunks.txt`; delete this file to force a full re-fetch.
+By default, this refreshes CTIS only and leaves the already-loaded EUCTR history untouched. To include EUCTR, run:
+
+```bash
+Rscript update_data.R --euctr
+# or
+REFRESH_EUCTR=true Rscript update_data.R
+```
+
+To include EUCTR result documents (`euctrresults = TRUE`), run:
+
+```bash
+Rscript update_data.R --euctr-results
+# or, backwards-compatible alias
+FORCE_RESULTS=true Rscript update_data.R
+```
+
+Requesting EUCTR results automatically enables the EUCTR refresh path. It is significantly slower than the normal EUCTR metadata refresh.
+
+The explicit EUCTR refresh can take several hours because it checks ~44 000 registry rows in quarterly chunks. Completed chunks are logged to `data/done_chunks.txt`; delete this file only when you intentionally want a full EUCTR re-check. Failed ranges and trial IDs are written to `data/failed_chunks.txt` for follow-up.
 
 ### Build the cache
 
@@ -144,7 +162,7 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ### Docker
 
-A `Dockerfile` and `docker-compose.yml` are included. The image starts the app on port 3838.
+A `Dockerfile` and `docker-compose.yml` are included, but they have not yet been fully refreshed for the v0.9 all-ages file names. For local development, the R commands above are the canonical path. Before production Docker deployment, confirm the container paths use `data/trials.sqlite` and `trials_cache.rds`.
 
 ```bash
 docker build -t paediatric-trials .
@@ -161,7 +179,7 @@ docker compose up -d
 docker compose exec app Rscript /app/update_data.R  # first-time data load
 ```
 
-The container expects `pdflatex` in `/usr/bin` for PDF report generation; the included image is based on `rocker/verse` which ships with TeX Live.
+The PDF report uses `xelatex` so Unicode registry text (for example `≥`) does not break rendering. TinyTeX or a TeX Live installation with `xelatex` is sufficient.
 
 ### Scheduled data updates
 
@@ -178,7 +196,7 @@ After each rebuild the app loads the new RDS on the next session start (or immed
 ## Known issues and pipeline limitations
 
 **EUCTR first run is slow**
-The initial fetch downloads ~44 000 trials across quarterly date-range chunks (2004 → present). Expect several hours. Progress is logged to `data/done_chunks.txt`; if the run is interrupted, re-running `update_data.R` will skip already-completed chunks automatically.
+The EUCTR refresh is opt-in. The initial explicit fetch downloads ~44 000 registry rows across quarterly date-range chunks (2004 → present). Expect several hours. Progress is logged to `data/done_chunks.txt`; if the run is interrupted, re-running `update_data.R --euctr` will skip already-completed chunks automatically. Some EUCTR date ranges return malformed responses; v18 bisects failing ranges toward single days and then tries individual trial IDs. `--euctr-results` / `FORCE_RESULTS=true` is slower again because it requests EUCTR result documents.
 
 **CTIS country field**
 CTIS stores member states as a nested JSON array. After flattening, some records return a string of numeric IDs or ISO codes rather than full country names. The `clean_member_state()` function resolves the majority, but edge cases (new member states, non-standard ISO entries) may appear as `NA` in the country column.
@@ -187,7 +205,7 @@ CTIS stores member states as a nested JSON array. After flattening, some records
 EUCTR stores MedDRA terms at the condition level; CTIS stores them at the trial level with additional codes. Trials appearing in both registers may show slightly different MedDRA assignments depending on which register version is kept after deduplication. The dashboard always prefers the CTIS record for trials present in both.
 
 **Results and orphan fields require cache rebuild**
-The `has_results` (results posted) and `is_orphan` (orphan designation) columns are derived from registry fields added in v0.7.0.
+The `has_results` (results posted) and `is_orphan` (orphan designation) columns are derived during cache rebuild from registry fields added in v0.7.0. Re-run `rebuild_cache.R` after updating `app.R` pipeline logic.
 
 **Phase assignment for multi-phase trials**
 EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I + Phase II). The dashboard preserves these as `/`-separated values (`Phase I / Phase II`) rather than arbitrarily picking one. Charts that use `separate_rows()` handle this correctly; any external analysis of the exported CSV should account for multi-valued phase cells.
@@ -206,7 +224,7 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 - **Preprocessing report**: added a standalone Age Group Coverage section for Paediatric / Adult / Paediatric & Adult / Unknown classifications, plus filter inclusion counts and register split.
 - **Preprocessing audit fixes**: corrected the deduplication waterfall after the all-ages cache rename, restored EUCTR cache-base examples, and rendered the updated `www/preprocessing.html`.
-- **Data pipeline**: `update_data.R` v16 now bisects EUCTR failures down to single-day ranges before trial-level fallback, and fallback URL reads use bounded retries/timeouts.
+- **Data pipeline**: `update_data.R` v18 refreshes CTIS by default and makes EUCTR opt-in; EUCTR result documents can be refreshed explicitly with `--euctr-results` or `FORCE_RESULTS=true`. Explicit EUCTR refreshes still bisect failures down to single-day ranges before trial-level fallback, with bounded retries/timeouts for fallback URL reads.
 - **Docs and report paths**: updated remaining cache/database references to `trials.sqlite` and `trials_cache.rds`.
 
 ### v0.9.0 — 2026-04-29
@@ -347,6 +365,7 @@ Initial release.
 ├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
 ├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
 ├── report.Rmd                   # PDF report template (rendered on demand)
+├── preprocessing.Rmd            # Pipeline audit report source
 ├── trials_cache.rds             # Processed data cache (git-ignored)
 ├── Dockerfile
 ├── docker-compose.yml
@@ -361,7 +380,8 @@ Initial release.
 │   ├── status_display_normalisation_log.csv
 │   └── deploy/                          # Docker deployment files
 └── www/
-    └── favicon.svg
+    ├── favicon.svg
+    └── preprocessing.html        # Rendered pipeline audit report
 ```
 
 ---

@@ -1,5 +1,5 @@
 # ============================================================================
-# update_data.R  (v16 — resilient EUCTR ingestion engine)
+# update_data.R  (v18 — CTIS default, explicit EUCTR/results refresh)
 # ============================================================================
 
 library(ctrdata)
@@ -19,6 +19,20 @@ HTTP_TIMEOUT_SEC <- 30L
 HTTP_RETRIES <- 2L
 
 options(timeout = max(getOption("timeout"), HTTP_TIMEOUT_SEC))
+
+args <- commandArgs(trailingOnly = TRUE)
+truthy <- function(x) tolower(x) %in% c("1", "true", "t", "yes", "y", "on")
+
+REFRESH_EUCTR_RESULTS <- any(args %in% c("--euctr-results", "--results", "--all")) ||
+  truthy(Sys.getenv("REFRESH_EUCTR_RESULTS", "false")) ||
+  truthy(Sys.getenv("FORCE_RESULTS", "false"))
+
+REFRESH_EUCTR <- any(args %in% c("--euctr", "--refresh-euctr", "--all")) ||
+  truthy(Sys.getenv("REFRESH_EUCTR", "false")) ||
+  REFRESH_EUCTR_RESULTS
+
+REFRESH_CTIS <- !any(args %in% c("--euctr-only", "--only-euctr")) &&
+  !truthy(Sys.getenv("SKIP_CTIS", "false"))
 
 db <- nodbi::src_sqlite(dbname = DB_PATH, collection = DB_COLLECTION)
 
@@ -138,7 +152,7 @@ try_load <- function(start_date, end_date, label) {
 
     ctrLoadQueryIntoDb(
       queryterm = ctrGetQueryUrl(url),
-      euctrresults = FALSE,
+      euctrresults = REFRESH_EUCTR_RESULTS,
       con = db
     )
 
@@ -181,7 +195,7 @@ load_trial_fallback <- function(start_date, end_date) {
         ctrLoadQueryIntoDb(
           queryterm = trial_id,
           register = "EUCTR",
-          euctrresults = FALSE,
+          euctrresults = REFRESH_EUCTR_RESULTS,
           con = db
         )
         message(sprintf("[%s] OK trial %s", label, trial_id))
@@ -280,46 +294,58 @@ make_quarters <- function(year) {
 # MAIN EUCTR INGESTION
 # ============================================================================
 
-message("\n=== EUCTR ingestion (v16) ===")
-
-current_year <- as.integer(format(Sys.Date(), "%Y"))
-
-for (yr in 2004:current_year) {
-
-  message(sprintf("\n=== YEAR %d ===", yr))
-
-  quarters <- make_quarters(yr)
-
-  for (q in quarters) {
-
-    load_range(q[1], q[2])
+if (REFRESH_EUCTR) {
+  message("\n=== EUCTR ingestion (v18) ===")
+  if (REFRESH_EUCTR_RESULTS) {
+    message("EUCTR result documents enabled (slow).")
   }
+  
+  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  
+  for (yr in 2004:current_year) {
+    
+    message(sprintf("\n=== YEAR %d ===", yr))
+    
+    quarters <- make_quarters(yr)
+    
+    for (q in quarters) {
+      
+      load_range(q[1], q[2])
+    }
+  }
+  
+  message("EUCTR ingestion complete.\n")
+} else {
+  message("\n=== EUCTR skipped ===")
+  message("Use REFRESH_EUCTR=true Rscript update_data.R or Rscript update_data.R --euctr to refresh EUCTR.")
 }
 
-message("EUCTR ingestion complete.\n")
-
 # ============================================================================
-# CTIS (unchanged)
+# CTIS
 # ============================================================================
 
-message("=== CTIS ===")
+if (REFRESH_CTIS) {
+  message("=== CTIS ===")
+  
+  ctis_url <- "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}"
+  
+  tryCatch({
 
-ctis_url <- "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}"
-
-tryCatch({
-
-  ctrLoadQueryIntoDb(
-    queryterm = ctrGetQueryUrl(ctis_url),
-    register = "CTIS",
-    con = db
-  )
-
-  message("CTIS done.")
-
-}, error = function(e) {
-
-  message("CTIS failed: ", e$message)
-})
+    ctrLoadQueryIntoDb(
+      queryterm = ctis_url,
+      register = "CTIS",
+      con = db
+    )
+    
+    message("CTIS done.")
+    
+  }, error = function(e) {
+    
+    message("CTIS failed: ", e$message)
+  })
+} else {
+  message("=== CTIS skipped ===")
+}
 
 # ============================================================================
 # DONE

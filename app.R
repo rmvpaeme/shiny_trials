@@ -705,6 +705,19 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # Age groups: comma-separated string, e.g. "0-17 years, 18-64 years"
     "ageGroup")
   
+  # ── DB cleanup: remove records with invalid IDs before any processing ────────
+  raw_con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
+  n_uuid <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id GLOB '????????-????-????-????-????????????'")
+  n_meta <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id = 'meta-info'")
+  n_3rd  <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id GLOB '*-3RD'")
+  DBI::dbDisconnect(raw_con)
+  if (n_uuid + n_meta + n_3rd > 0)
+    message(sprintf("DB cleanup: removed %d UUID(s), %d meta-info, %d -3RD record(s)",
+                    n_uuid, n_meta, n_3rd))
+
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
   
@@ -748,7 +761,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   # CTIS  IDs: YYYY-NNNNNN-NN-NN  (last segment is numeric, e.g. -00)
   # Both share the same numeric prefix — require a letter in the suffix for EUCTR.
   result <- result %>% mutate(register = case_when(
-    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]") ~ "EUCTR",
+    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-([A-Z]|3RD)") ~ "EUCTR",
     TRUE ~ "CTIS"))
   message(sprintf("Registers: %s",
                   paste(names(table(result$register)), table(result$register), sep="=", collapse=", ")))
@@ -834,10 +847,11 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
   
   # ── Dedup ─────────────────────────────────────────────────────────────────
-  unique_ids <- dbFindIdsUniqueTrials(con = db)
   result <- result %>% mutate(trial_base_id = case_when(
     register == "EUCTR" ~ str_replace(`_id`, "-[A-Z]{2,3}$", ""),
     TRUE ~ `_id`))
+
+  unique_ids <- dbFindIdsUniqueTrials(con = db)
   
   agg_field <- function(df, col) {
     df %>% filter(!is.na(!!sym(col)) & !!sym(col) != "") %>%
