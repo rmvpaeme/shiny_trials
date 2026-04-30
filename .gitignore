@@ -2,7 +2,9 @@
 data/*
 
 manuscript/*
+./manuscript/*
 manuscript.md
+MANU.md
 CLAUDE.md
 claude.md
 AGENTS.md

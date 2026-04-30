@@ -153,6 +153,7 @@ try_load <- function(start_date, end_date, label) {
     ctrLoadQueryIntoDb(
       queryterm = ctrGetQueryUrl(url),
       euctrresults = REFRESH_EUCTR_RESULTS,
+      euctrresultshistory = REFRESH_EUCTR_RESULTS,
       con = db
     )
 
@@ -196,6 +197,7 @@ load_trial_fallback <- function(start_date, end_date) {
           queryterm = trial_id,
           register = "EUCTR",
           euctrresults = REFRESH_EUCTR_RESULTS,
+          euctrresultshistory = REFRESH_EUCTR_RESULTS,
           con = db
         )
         message(sprintf("[%s] OK trial %s", label, trial_id))

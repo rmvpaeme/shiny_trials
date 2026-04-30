@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.1** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.4** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -219,6 +219,20 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.9.4 — 2026-04-30
+
+- **Data Explorer**: fixed duplicate tokens in slash-separated fields (e.g. Product name). `deep_flatten_col` now trims whitespace before `unique()` so near-identical values collapse correctly; a dedicated `dedup_slash` pass is applied to `DIMP_product_name` after MedDRA cleaning.
+
+### v0.9.3 — 2026-04-30
+
+- **Compare Paediatric vs Adult report**: new parameterized PDF report (xelatex) downloadable from the Tools tab. Compares both age groups across status, phase, sponsor type, PIP, orphan designation, results posting, submission/decision timelines, therapeutic areas (top 15), and geographic distribution (top 20). Applies all active sidebar filters except age group so both populations are always present.
+
+### v0.9.2 — 2026-04-30
+
+- **CTIS decision date fix**: decision date now uses the earliest per-country member-state decision date (`memberStatesConcerned.firstDecisionDate`) instead of the application-level date, which was NA for many multinational trials.
+- **CTIS submission date fix**: `submissionDate` is a per-amendment list; now takes the minimum (first submission) date, fixing empty `submission_date_parsed` / `year` / `days_to_decision` for many CTIS trials.
+- **New graph**: Decision Date Spread Within CTIS Multinational Trials — violin plot grouped by number of member states (2 / 3 / 4 / 5+), log₁₀ y-axis.
 
 ### v0.9.1 — 2026-04-29
 

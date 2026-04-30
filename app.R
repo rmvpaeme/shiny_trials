@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.9.1 — preprocessing age coverage + ingestion hardening)
+# app.R  (v0.9.4 — deduplicate slash-separated product names)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -624,6 +624,7 @@ deep_flatten_col <- function(x) {
       u
     }, error = function(e) character(0))
     if (length(flat) == 0) return(NA_character_)
+    flat <- trimws(flat)
     paste(unique(flat), collapse = " / ")
   }, USE.NAMES = FALSE)
 }
@@ -703,7 +704,10 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # Orphan designation numbers (EU/3/... format); non-NA = orphan drug
     "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
     # Age groups: comma-separated string, e.g. "0-17 years, 18-64 years"
-    "ageGroup")
+    "ageGroup",
+    # Per-country decision dates (numeric: days since 1970-01-01, one per MS)
+    "authorizedApplication.memberStatesConcerned.firstDecisionDate",
+    "authorizedApplication.memberStatesConcerned.lastDecisionDate")
   
   # ── DB cleanup: remove records with invalid IDs before any processing ────────
   raw_con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
@@ -755,7 +759,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   message(sprintf("After flatten: %d x %d, all character: %s",
                   nrow(result), ncol(result),
                   all(sapply(result, is.character) | names(result) == "_id")))
-  
+
   # Register detection
   # EUCTR IDs: YYYY-NNNNNN-NN-CC  (CC = letter country code, e.g. -BE, -GB3)
   # CTIS  IDs: YYYY-NNNNNN-NN-NN  (last segment is numeric, e.g. -00)
@@ -765,7 +769,33 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     TRUE ~ "CTIS"))
   message(sprintf("Registers: %s",
                   paste(names(table(result$register)), table(result$register), sep="=", collapse=", ")))
-  
+
+  # ── CTIS per-country decision dates ──────────────────────────────────────
+  # firstDecisionDate is a " / "-separated string of numeric values (days since
+  # 1970-01-01), one per member state. Parse to derive the earliest country
+  # decision date and the spread (max - min) across countries.
+  .parse_ctis_date_vec <- function(x) {
+    if (is.na(x) || x == "") return(list(first = NA_character_, spread = NA_real_))
+    parts <- trimws(strsplit(x, "\\s*/\\s*")[[1]])
+    dates <- suppressWarnings(as.Date(parts[parts != ""], format = "%Y-%m-%d"))
+    dates <- dates[!is.na(dates)]
+    if (!length(dates)) return(list(first = NA_character_, spread = NA_real_))
+    list(
+      first  = format(min(dates), "%Y-%m-%d"),
+      spread = as.numeric(max(dates) - min(dates))
+    )
+  }
+  ctis_parsed <- lapply(
+    result$`authorizedApplication.memberStatesConcerned.firstDecisionDate`,
+    .parse_ctis_date_vec
+  )
+  result$ctis_decision_date_first <- vapply(ctis_parsed, `[[`, character(1), "first")
+  result$decision_date_spread_days <- ifelse(
+    result$register == "CTIS",
+    vapply(ctis_parsed, `[[`, numeric(1), "spread"),
+    NA_real_
+  )
+
   # Ensure columns
   all_expected <- c(
     "a2_eudract_number","dimp.d31_product_name",
@@ -842,6 +872,18 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           `authorizedApplication.applicationInfo.submissionDate`,
           na.rm=TRUE, remove=TRUE)
   
+  # For CTIS, submissionDate is a " / "-separated list of per-amendment dates;
+  # keep only the earliest (= first submission to CTIS).
+  result <- result %>% mutate(
+    submission_date = if_else(
+      register == "CTIS" & grepl(" / ", submission_date, fixed = TRUE),
+      vapply(strsplit(submission_date, " / ", fixed = TRUE), function(parts) {
+        dates <- suppressWarnings(as.Date(trimws(parts), format = "%Y-%m-%d"))
+        dates <- dates[!is.na(dates)]
+        if (!length(dates)) NA_character_ else format(min(dates), "%Y-%m-%d")
+      }, character(1)),
+      submission_date))
+
   result <- result %>% mutate(Member_state = clean_member_state(Member_state))
   write_norm_log(raw_country_for_log, result$Member_state, result$register, "country", dirname(db_path))
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
@@ -1040,9 +1082,17 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   raw_meddra_for_log <- result$MEDDRA_term
   raw_organ_for_log  <- result$MEDDRA_organ_class
 
+  dedup_slash <- function(x) {
+    if (is.na(x) || !nzchar(trimws(x))) return(NA_character_)
+    parts <- unique(trimws(strsplit(x, "/", fixed = TRUE)[[1]]))
+    parts <- parts[nzchar(parts)]
+    if (!length(parts)) NA_character_ else paste(parts, collapse = " / ")
+  }
+
   result <- result %>%
     mutate(MEDDRA_term        = vapply(MEDDRA_term, clean_meddra_term, character(1)),
-           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)))
+           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)),
+           DIMP_product_name  = vapply(DIMP_product_name, dedup_slash, character(1)))
 
   write_norm_log(raw_meddra_for_log, result$MEDDRA_term, result$register, "meddra_term", dirname(db_path))
   write_norm_log(raw_organ_for_log,  result$MEDDRA_organ_class, result$register, "organ_class", dirname(db_path))
@@ -1175,10 +1225,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% select(-status_raw_orig)
 
   # ── Decision date & time-to-decision ─────────────────────────────────────
+  # For CTIS: prefer the per-country minimum (earliest MS decision), falling
+  # back to the application-level date when per-country data is absent.
   result <- result %>% mutate(
     decision_date = suppressWarnings(as.Date(parse_date_time(
       case_when(
         register == "EUCTR" ~ as.character(n_date_of_competent_authority_decision),
+        register == "CTIS" & !is.na(ctis_decision_date_first) ~ ctis_decision_date_first,
         register == "CTIS"  ~ as.character(`authorizedApplication.applicationInfo.decisionDate`),
         TRUE ~ NA_character_),
       orders = c("ymd", "ym", "y", "ymd HMS")))),
@@ -1473,6 +1526,10 @@ ui <- dashboardPage(skin = "blue",
                                              downloadButton("dl_report", " Download PDF",
                                                             class="btn-sm btn-warning",
                                                             style="width:100%;margin-bottom:8px;"),
+                                             downloadButton("dl_comparison_report", " Compare Paediatric vs Adult",
+                                                            class="btn-sm btn-info",
+                                                            style="width:100%;margin-bottom:8px;",
+                                                            title="Compare current filters: Paediatric vs Adult, with statistical tests"),
                                              tags$hr(style="margin:8px 0;"),
                                              tags$p(tags$b("Theme"), style="font-size:11px;margin-bottom:4px;"),
                                              radioButtons("theme_select",NULL,choices=c("Nord","Default"),selected="Nord",inline=TRUE),
@@ -1639,6 +1696,9 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Days to Decision by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time_sponsor",height="400px"),type=6))),
                                 fluidRow(
+                                  box(title="Decision Date Spread Within CTIS Multinational Trials (days between first and last MS decision)",status="info",solidHeader=TRUE,width=12,height=460,
+                                      withSpinner(plotlyOutput("plot_ctis_date_spread",height="400px"),type=6))),
+                                fluidRow(
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,height=520,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
                                       withSpinner(plotlyOutput("plot_top_sponsors",height="400px"),type=6))),
@@ -1767,6 +1827,21 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.4 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("Data Explorer: fixed duplicate tokens in slash-separated fields (e.g. Product name) by trimming whitespace before deduplication in deep_flatten_col and adding a dedicated dedup pass on DIMP_product_name.")
+                                          )),
+                                        tags$li(tags$b("v0.9.3 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("New 'Compare Paediatric vs Adult' button in Tools tab generates a parameterized PDF report comparing both groups across status, phase, sponsor type, PIP, orphan, results posting, submission/decision timelines, therapeutic areas, and geography."),
+                                            tags$li("Report applies all active sidebar filters except age group, so both populations are always included.")
+                                          )),
+                                        tags$li(tags$b("v0.9.2 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("CTIS decision date now uses the earliest per-country member-state decision date instead of the application-level date (which was NA for many multinational trials)."),
+                                            tags$li("CTIS submission date fixed: takes the minimum from the per-amendment list, fixing empty submission_date_parsed for many CTIS trials."),
+                                            tags$li("New graph: Decision Date Spread Within CTIS Multinational Trials (violin plot, grouped by number of member states).")
+                                          )),
                                         tags$li(tags$b("v0.9.1 (2026-04-29):"),
                                           tags$ul(
                                             tags$li("Preprocessing report: standalone Age Group Coverage section added with paediatric/adult/both counts and register split."),
@@ -2588,6 +2663,116 @@ server <- function(input, output, session) {
     }
   )
 
+  output$dl_comparison_report <- downloadHandler(
+    filename = function() paste0("paediatric_adult_comparison_", Sys.Date(), ".pdf"),
+    content  = function(file) {
+      notif <- showNotification(
+        "Generating comparison PDF… this may take 30–45 seconds.",
+        duration = NULL, type = "message")
+      on.exit(removeNotification(notif), add = TRUE)
+
+      req(rv$data)
+      df_comp <- rv$data
+
+      # Apply all active filters EXCEPT age_group_filter so both groups are present
+      if(length(input$status_filter)>0)
+        df_comp <- df_comp %>% filter(status %in% input$status_filter)
+      if(length(input$register_filter)>0)
+        df_comp <- df_comp %>% filter(register %in% input$register_filter)
+      if(!is.null(input$date_range))
+        df_comp <- df_comp %>%
+          filter(is.na(submission_date_parsed)|
+                   (submission_date_parsed>=input$date_range[1]&
+                    submission_date_parsed<=input$date_range[2]))
+      if(length(input$organ_class_filter)>0)
+        df_comp <- df_comp %>%
+          filter(str_detect(MEDDRA_organ_class,
+                            regex(paste(input$organ_class_filter,collapse="|"),ignore_case=TRUE)))
+      if(length(input$condition_filter)>0)
+        df_comp <- df_comp %>%
+          filter(str_detect(MEDDRA_term,
+                            regex(paste(input$condition_filter,collapse="|"),ignore_case=TRUE)))
+      if(length(input$country_filter)>0){
+        pat <- paste(str_replace_all(input$country_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
+        df_comp <- df_comp %>%
+          filter(str_detect(Member_state,regex(pat,ignore_case=TRUE)))}
+      if(length(input$phase_filter)>0){
+        pat <- paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
+        df_comp <- df_comp %>%
+          filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
+      if(input$pip_filter!="All")
+        df_comp <- df_comp %>% filter(has_PIP==input$pip_filter)
+      if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df_comp))
+        df_comp <- df_comp %>% filter(is_orphan==input$orphan_filter)
+      # age_group_filter intentionally NOT applied
+      if(isTRUE(mono_active())&&"n_countries"%in%names(df_comp))
+        df_comp <- df_comp %>% filter(n_countries==1)
+      if(length(input$sponsor_filter)>0)
+        df_comp <- df_comp %>% filter(sponsor_name%in%input$sponsor_filter)
+      if(nzchar(input$text_search)){
+        pat <- regex(input$text_search,ignore_case=TRUE)
+        df_comp <- df_comp %>%
+          filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
+                   str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat)|
+                   str_detect(coalesce(sponsor_name,""),pat))}
+
+      tmp_data <- tempfile(fileext = ".rds")
+      saveRDS(df_comp, tmp_data)
+      on.exit(unlink(tmp_data), add = TRUE)
+
+      filters <- list(
+        status      = input$status_filter,
+        register    = input$register_filter,
+        date_range  = as.character(input$date_range),
+        organ_class = if(length(input$organ_class_filter)>0) input$organ_class_filter else "All",
+        condition   = if(length(input$condition_filter)>0)   input$condition_filter   else "All",
+        country     = if(length(input$country_filter)>0)     input$country_filter     else "All",
+        phase       = if(length(input$phase_filter)>0)       input$phase_filter       else "All",
+        pip         = input$pip_filter,
+        orphan      = if(!is.null(input$orphan_filter)) input$orphan_filter else "All",
+        sponsor     = if(length(input$sponsor_filter)>0) input$sponsor_filter else "All",
+        text_search = if(nzchar(input$text_search)) input$text_search else "(none)"
+      )
+
+      if(!nzchar(Sys.which("pdflatex"))){
+        tl_candidates <- c(
+          path.expand("~/Library/TinyTeX/bin"),
+          path.expand("~/.TinyTeX/bin"),
+          "/opt/TinyTeX/bin"
+        )
+        for(d in tl_candidates){
+          subs <- list.files(d, full.names=TRUE)
+          if(length(subs)>0 && file.exists(file.path(subs[[1]],"pdflatex"))){
+            orig_path <- Sys.getenv("PATH")
+            Sys.setenv(PATH=paste(c(subs[[1]],orig_path),collapse=":"))
+            on.exit(Sys.setenv(PATH=orig_path),add=TRUE)
+            break
+          }
+        }
+      }
+
+      if(!nzchar(Sys.which("pdflatex"))){
+        showNotification("pdflatex not found. Install TinyTeX or a system LaTeX distribution.",
+                         type="error", duration=10)
+        return()
+      }
+
+      tryCatch(
+        rmarkdown::render(
+          input       = file.path(getwd(), "comparison_report.Rmd"),
+          output_file = file,
+          params      = list(data_path = tmp_data, filters = filters),
+          envir       = new.env(parent = globalenv()),
+          quiet       = TRUE
+        ),
+        error = function(e) {
+          showNotification(paste("Comparison PDF failed:", conditionMessage(e)),
+                           type = "error", duration = 15)
+        }
+      )
+    }
+  )
+
   observeEvent(input$ul_filters,{
     req(input$ul_filters)
     tryCatch({
@@ -2903,6 +3088,39 @@ server <- function(input, output, session) {
           tickvals = log10(tick_vals),
           ticktext = as.character(tick_vals)
         ))
+  })
+
+  output$plot_ctis_date_spread <- renderPlotly({
+    df <- filt() %>%
+      filter(register == "CTIS", n_countries > 1,
+             !is.na(decision_date_spread_days), is.finite(decision_date_spread_days)) %>%
+      mutate(country_group = factor(
+        case_when(
+          n_countries == 2 ~ "2",
+          n_countries == 3 ~ "3",
+          n_countries == 4 ~ "4",
+          n_countries >= 5 ~ "5+"),
+        levels = c("2", "3", "4", "5+")))
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No multinational CTIS data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters or check that CTIS multinational trials are included.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    tick_vals <- c(1, 10, 100, 1000)
+    df <- df %>% mutate(log_days = log10(pmax(decision_date_spread_days, 1)))
+    plot_ly(df, x = ~country_group, y = ~log_days,
+            type = "violin",
+            box = list(visible = TRUE),
+            meanline = list(visible = TRUE),
+            points = "outliers",
+            text = ~paste0(n_countries, " countries<br>", round(decision_date_spread_days), " days spread"),
+            hoverinfo = "text+x") %>%
+      plt_layout(showlegend = FALSE) %>%
+      layout(
+        xaxis = list(title = "Number of Member States (countries participating in trial)"),
+        yaxis = list(
+          title = "Days (log₁₀ scale)",
+          tickvals = log10(tick_vals),
+          ticktext = as.character(tick_vals)))
   })
 
   output$plot_top_sponsors <- renderPlotly({
@@ -3882,6 +4100,7 @@ server <- function(input, output, session) {
       "plot_organ", "plot_term", "plot_country",
       "plot_pip", "plot_pip_year",
       "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
+      "plot_ctis_date_spread",
       "plot_top_sponsors", "sponsor_timeline_ui", "plot_sponsor_timeline",
       # Phase Analytics
       "plot_phase", "plot_phase_status", "plot_phase_sponsor",
