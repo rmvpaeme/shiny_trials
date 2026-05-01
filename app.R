@@ -1,10 +1,11 @@
 # ============================================================================
-# app.R  (v0.9.4 — deduplicate slash-separated product names)
+# app.R  (v0.9.5 — overview page UI/UX overhaul + fresh theming)
 # ============================================================================
 
 suppressPackageStartupMessages({
   library(shiny)
   library(shinydashboard)
+  library(fresh)
   library(shinycssloaders)
   library(ctrdata)
   library(dplyr)
@@ -140,17 +141,9 @@ CACHE_PATH    <- "trials_cache.rds"
 # 2. THEMES
 # ══════════════════════════════════════════════════════════════════════════════
 
+# R-side colour palette — used by tc() for charts, KPI cards, plot colours.
+# AdminLTE shell theming is handled by the `fresh` package below.
 THEMES <- list(
-  `Nord Light` = list(
-    bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
-    fg0="#2E3440",fg1="#3B4252",fg2="#434C5E",
-    frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
-    red="#BF616A",orange="#D08770",yellow="#EBCB8B",
-    green="#A3BE8C",purple="#B48EAD",
-    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
-    r_euctr="#5E81AC",r_ctis="#88C0D0",
-    chart_bg="#ECEFF4",chart_fg="#2E3440",chart_grid="#D8DEE9",
-    spinner="#81A1C1"),
   Nord = list(
     bg0="#2E3440",bg1="#3B4252",bg2="#434C5E",bg3="#4C566A",
     fg0="#D8DEE9",fg1="#E5E9F0",fg2="#ECEFF4",
@@ -161,10 +154,20 @@ THEMES <- list(
     r_euctr="#5E81AC",r_ctis="#88C0D0",
     chart_bg="#3B4252",chart_fg="#D8DEE9",chart_grid="#434C5E",
     spinner="#88C0D0"),
+  `Nord Light` = list(
+    bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
+    fg0="#2E3440",fg1="#3B4252",fg2="#434C5E",
+    frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
+    red="#BF616A",orange="#D08770",yellow="#EBCB8B",
+    green="#A3BE8C",purple="#B48EAD",
+    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
+    r_euctr="#5E81AC",r_ctis="#88C0D0",
+    chart_bg="#ECEFF4",chart_fg="#2E3440",chart_grid="#D8DEE9",
+    spinner="#81A1C1"),
   Default = list(
     bg0="#ecf0f5",bg1="#ffffff",bg2="#f5f5f5",bg3="#d2d6de",
     fg0="#333333",fg1="#666666",fg2="#000000",
-    frost0="#3c8dbc",frost1="#00c0ef",frost2="#0073b7",frost3="#001f3f",
+    frost0="#3c8dbc",frost1="#00c0ef",frost2="#0073b7",frost3="#3c8dbc",
     red="#dd4b39",orange="#ff851b",yellow="#f39c12",
     green="#00a65a",purple="#605ca8",
     s_ongoing="#00a65a",s_completed="#f39c12",s_other="#dd4b39",
@@ -173,7 +176,142 @@ THEMES <- list(
     spinner="#3c8dbc")
 )
 
-generate_css <- function(t) {
+# ── fresh AdminLTE themes ───────────────────────────────────────────────────
+# Written once at startup into www/; served as static linked stylesheets.
+# fresh compiles AdminLTE SASS variables so box headers, sidebar, body colours
+# are canonical — no !important cascade battles.
+
+.make_fresh_theme <- function(content_bg, box_bg,
+                              sidebar_bg = "#2E3440", sidebar_fg = "#D8DEE9",
+                              sidebar_hover = "#3B4252") {
+  fresh::create_theme(
+    fresh::adminlte_color(
+      light_blue = "#5E81AC", aqua     = "#2E5F8A",
+      green      = "#A3BE8C", yellow   = "#5E81AC",
+      red        = "#BF616A", orange   = "#D08770",
+      purple     = "#B48EAD", navy     = "#2E3440",
+      black      = "#2E3440", gray_lte = "#4C566A"
+    ),
+    fresh::adminlte_sidebar(
+      width                    = "300px",
+      dark_bg                  = sidebar_bg,
+      dark_color               = sidebar_fg,
+      dark_hover_bg            = sidebar_hover,
+      dark_hover_color         = "#ECEFF4",
+      dark_submenu_bg          = sidebar_hover,
+      dark_submenu_color       = sidebar_fg,
+      dark_submenu_hover_color = "#ECEFF4"
+    ),
+    fresh::adminlte_global(
+      content_bg  = content_bg,
+      box_bg      = box_bg,
+      info_box_bg = box_bg
+    ),
+    output_file = NULL
+  )
+}
+
+.NORD_FRESH       <- .make_fresh_theme("#3B4252", "#434C5E")
+.NORD_LIGHT_FRESH <- .make_fresh_theme("#ECEFF4", "#FFFFFF")
+
+# ── Supplement CSS ──────────────────────────────────────────────────────────
+# Covers elements fresh doesn't reach: DataTables, modals, links, sliders,
+# sidebar selectize controls, filter chips, and the header/navbar background.
+generate_supplement_css <- function(t) {
+  sprintf('
+  body{background:%s!important;color:%s}
+  .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700;font-size:15px}
+  .skin-blue .main-header .logo:hover{background:%s!important}
+  .skin-blue .main-header .navbar{background:%s!important}
+  .skin-blue .main-header .navbar .sidebar-toggle{color:%s!important}
+  .sidebar .form-control,.sidebar .selectize-input{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .sidebar .selectize-dropdown{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .sidebar .selectize-dropdown .active{background:%s!important;color:%s!important}
+  .sidebar label,.sidebar .checkbox label,.sidebar .radio label{color:%s!important}
+  .dataTables_wrapper{color:%s!important}
+  table.dataTable{background:%s!important;color:%s!important}
+  table.dataTable thead th,table.dataTable thead td,
+  .dataTables_scrollHead table thead th,.dataTables_scrollHead table thead td{
+    background:%s!important;color:%s!important;border-bottom:2px solid %s!important}
+  table.dataTable thead tr,.dataTables_scrollHead,.dataTables_scrollHeadInner,
+  .dataTables_scrollHead table thead tr{background:%s!important}
+  table.dataTable thead .sorting,table.dataTable thead .sorting_asc,
+  table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,
+  table.dataTable thead .sorting_desc_disabled,
+  .dataTables_scrollHead table thead .sorting,
+  .dataTables_scrollHead table thead .sorting_asc,
+  .dataTables_scrollHead table thead .sorting_desc{background-color:%s!important;color:%s!important}
+  table.dataTable tbody tr{background:%s!important}
+  table.dataTable tbody tr:hover{background:%s!important}
+  table.dataTable tbody td{border-top:1px solid %s!important}
+  .dataTables_info,.dataTables_length,.dataTables_filter,
+  .dataTables_paginate{color:%s!important}
+  .dataTables_filter input,.dataTables_length select{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .paginate_button{color:%s!important}
+  .paginate_button.current{background:%s!important;color:%s!important;border:1px solid %s!important}
+  .dataTables_wrapper thead input,.dataTables_wrapper thead select{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .btn-warning{background:%s!important;border-color:%s!important;color:#fff!important}
+  .btn-warning:hover{opacity:.85}
+  .btn-info{background:%s!important;border-color:%s!important;color:#fff!important}
+  .btn-info:hover{opacity:.85}
+  a{color:%s}a:hover{color:%s}
+  .modal-content{background:%s!important;color:%s!important;border:1px solid %s}
+  .modal-header{border-bottom:1px solid %s!important}
+  .modal-footer{border-top:1px solid %s!important}
+  .irs--shiny .irs-bar{background:%s;border-color:%s}
+  .irs--shiny .irs-handle{background:%s;border:2px solid %s}
+  .irs--shiny .irs-single{background:%s;color:%s}
+  .irs--shiny .irs-line{background:%s}
+  .irs--shiny .irs-grid-text,.irs--shiny .irs-min,.irs--shiny .irs-max{color:%s;background:%s}
+  .filter-chip-row{background:%s!important;border-top-color:%s!important;border-bottom-color:%s!important}
+  .filter-chip{border-color:%s!important}
+  .filter-chip-key{background:%s!important}
+  .filter-chip-val{background:%s!important}
+  td.ellipsis{max-width:350px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    t$bg0, t$fg0,
+    t$bg0, t$fg2, t$bg1, t$bg0, t$fg0,
+    t$bg2, t$fg0, t$bg3,
+    t$bg2, t$fg0, t$bg3, t$frost2, t$fg2, t$fg0,
+    t$fg0, t$bg1, t$fg0,
+    t$bg2, t$fg2, t$bg3, t$bg2,
+    t$bg2, t$fg2,
+    t$bg1, t$bg2, t$bg3,
+    t$fg0, t$bg2, t$fg0, t$bg3,
+    t$fg0, t$bg1, t$fg2, t$bg2,
+    t$bg2, t$fg0, t$bg3,
+    t$orange, t$orange, t$frost3, t$frost3,
+    t$frost1, t$frost0,
+    t$bg1, t$fg0, t$bg3, t$bg2, t$bg2,
+    t$frost2, t$frost2, t$frost1, t$frost3, t$frost2, t$fg2, t$bg3, t$fg0, t$bg2,
+    t$bg1, t$frost2, t$bg2, t$frost3, t$frost3, t$frost2
+  )
+}
+
+NORD_SUPPLEMENT <- generate_supplement_css(THEMES$Nord)
+NORD_LIGHT_SUPPLEMENT <- paste0(
+  generate_supplement_css(THEMES[["Nord Light"]]),
+  # Sidebar stays dark — override the light-theme colours the supplement generates
+  '.sidebar .form-control,.sidebar .selectize-input{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
+   .sidebar .selectize-dropdown{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
+   .sidebar .selectize-dropdown .active{background:#434C5E!important;color:#ECEFF4!important}
+   .sidebar label,.sidebar .checkbox label,.sidebar .radio label{color:#D8DEE9!important}
+   .sidebar-tabset .nav-tabs>li>a{color:#D8DEE9!important}
+   .sidebar-tabset .nav-tabs>li.active>a{color:#ECEFF4!important}
+   .filter-badge{background:#88C0D0!important;color:#2E3440!important}
+   .trial-count-n{color:#88C0D0!important}',
+  # Nav cards — use dark overlay on light main panel background
+  '.qs-card{background:rgba(0,0,0,0.04)!important;border:1px solid rgba(0,0,0,0.1)!important;box-shadow:0 1px 3px rgba(0,0,0,0.08)!important}
+   .qs-card:hover{background:rgba(0,0,0,0.08)!important}',
+  # Misc light-theme corrections
+  '.bg-yellow{color:#2E3440!important}.bg-green{color:#2E3440!important}.bg-blue{color:#2E3440!important}
+   a{color:#5E81AC!important}a:hover{color:#4C6E96!important}'
+)
+
+generate_css_DELETED <- function(t) {
   sprintf('
   body{background:%s!important;color:%s}
   .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700;font-size:15px}
@@ -200,6 +338,9 @@ generate_css <- function(t) {
   .box.box-solid.box-primary{border-top:3px solid %s!important}
   .box.box-solid.box-info{border-top:3px solid %s!important}
   .box.box-solid.box-warning{border-top:3px solid %s!important}
+  .box.box-solid.box-primary>.box-header,.box.box-solid.box-info>.box-header,
+  .box.box-solid.box-warning>.box-header,.box.box-solid.box-success>.box-header,
+  .box.box-solid.box-danger>.box-header{background:%s!important;color:%s!important}
   .box-header.with-border{border-bottom:1px solid %s!important}
   .small-box{border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
   .small-box h3,.small-box p{color:%s!important}
@@ -252,9 +393,9 @@ generate_css <- function(t) {
   .filter-chip-key{background:%s!important}
   .filter-chip-val{background:%s!important}',
           t$bg0,t$fg0,t$bg1,t$frost1,t$bg2,t$bg1,t$fg0,t$bg2,
-          t$bg1,t$fg0,t$bg2,t$frost1,t$frost1,t$fg0,t$frost1,t$bg3,
+          t$bg0,t$fg0,t$bg2,t$frost1,t$frost1,t$fg0,t$frost1,t$bg3,
           t$bg2,t$fg0,t$bg3,t$bg2,t$fg0,t$bg3,t$frost2,t$fg2,t$fg0,
-          t$bg0,t$bg1,t$bg2,t$fg1,t$fg2,t$frost3,t$frost1,t$orange,t$bg2,
+          t$bg1,t$bg1,t$bg2,t$fg1,t$fg2,t$frost3,t$frost1,t$orange,t$frost3,t$fg2,t$bg2,
           t$fg2,t$frost3,t$green,t$yellow,t$bg0,t$purple,
           t$fg0,t$bg1,t$fg0,t$bg2,t$fg2,t$bg3,t$bg2,t$bg2,t$fg2,t$bg1,t$bg2,t$bg2,
           t$fg0,t$bg2,t$fg0,t$bg3,t$fg0,t$frost2,t$fg2,t$frost2,
@@ -265,13 +406,7 @@ generate_css <- function(t) {
           t$bg1,t$frost2,t$bg2,t$frost3,t$frost3,t$frost2)
 }
 
-NORD_CSS <- generate_css(THEMES$Nord)
-NORD_LIGHT_CSS <- paste0(
-  generate_css(THEMES[["Nord Light"]]),
-  '.bg-yellow{color:#2E3440!important}
-   .bg-green{color:#2E3440!important}
-   .bg-blue{color:#2E3440!important}'
-)
+# NORD_CSS / NORD_LIGHT_CSS replaced by fresh themes + generate_supplement_css above.
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 3. COUNTRY CLEANING
@@ -1418,33 +1553,98 @@ ui <- dashboardPage(skin = "blue",
                         tags$title("EU Paediatric Trial Monitor"),
                         tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg"),
                         tags$style(HTML("
-                          #vb_total .small-box, #vb_ongoing .small-box,
-                          #vb_completed .small-box, #vb_pip .small-box {
+                          .kpi-card {
+                            padding: 14px 16px 12px;
+                            border-radius: 6px;
+                            border-top: 3px solid;
                             cursor: pointer;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                            transition: box-shadow 0.15s, transform 0.12s;
+                          }
+                          .kpi-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.4); transform: translateY(-2px); }
+                          .kpi-icon { font-size: 20px; margin-bottom: 6px; }
+                          .kpi-val  { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+                          .kpi-lbl  { font-size: 12px; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; }
+                          .qs-card {
+                            cursor: pointer;
+                            padding: 18px 12px;
+                            border-radius: 6px;
+                            border: 1px solid rgba(0,0,0,0.2);
+                            background: rgba(0,0,0,0.12);
+                            text-align: center;
+                            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+                            transition: box-shadow 0.15s, transform 0.15s, background 0.15s;
+                            height: 100%;
+                          }
+                          .qs-card:hover {
+                            background: rgba(0,0,0,0.22);
+                            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+                            transform: translateY(-3px);
+                          }
+                          .qs-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.85; }
+                          .qs-card strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.2px; }
+                          .qs-card p { font-size: 12px; opacity: 0.6; margin: 0; line-height: 1.4; }
+                          .qs-row { margin-bottom: 12px; }
+                          .insight-strip {
+                            display: flex;
+                            align-items: center;
+                            padding: 14px 4px;
+                            margin-bottom: 10px;
+                          }
+                          .insight-stat {
+                            flex: 1;
+                            display: flex;
+                            align-items: baseline;
+                            gap: 8px;
+                          }
+                          .insight-val { font-size: 26px; font-weight: 700; line-height: 1; }
+                          .insight-lbl { font-size: 12px; opacity: 0.65; }
+                          .insight-divider {
+                            width: 1px;
+                            height: 32px;
+                            background: rgba(255,255,255,0.1);
+                            margin: 0 24px;
+                          }
+                          .preset-btn {
+                            display: inline-block;
+                            margin: 0 6px 4px 0;
+                            padding: 5px 14px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            cursor: pointer;
+                            border: 1px solid;
+                            background: transparent;
                             transition: opacity 0.15s;
                           }
-                          #vb_total .small-box:hover, #vb_ongoing .small-box:hover,
-                          #vb_completed .small-box:hover, #vb_pip .small-box:hover {
-                            opacity: 0.82;
+                          .preset-btn:hover { opacity: 0.7; }
+                          .preset-section-label {
+                            font-size: 11px;
+                            opacity: 0.6;
+                            text-transform: uppercase;
+                            letter-spacing: 0.6px;
+                            margin-bottom: 8px;
                           }
+
                         ")),
                         tags$script(HTML("
-                          $(document).on('click', '#vb_ongoing .small-box', function() {
-                            Shiny.setInputValue('vb_click', 'Ongoing', {priority: 'event'});
+                          $(document).on('click', '#kpi_total',     function() { Shiny.setInputValue('vb_click', '__reset__', {priority:'event'}); });
+                          $(document).on('click', '#kpi_ongoing',   function() { Shiny.setInputValue('vb_click', 'Ongoing',   {priority:'event'}); });
+                          $(document).on('click', '#kpi_completed', function() { Shiny.setInputValue('vb_click', 'Completed', {priority:'event'}); });
+                          $(document).on('click', '#kpi_pip',       function() { Shiny.setInputValue('vb_click', '__pip__',   {priority:'event'}); });
+                          $(document).on('click', '.qs-card', function() {
+                            Shiny.setInputValue('nav_to_tab', $(this).data('tab'), {priority: 'event'});
                           });
-                          $(document).on('click', '#vb_completed .small-box', function() {
-                            Shiny.setInputValue('vb_click', 'Completed', {priority: 'event'});
-                          });
-                          $(document).on('click', '#vb_total .small-box', function() {
-                            Shiny.setInputValue('vb_click', '__reset__', {priority: 'event'});
-                          });
-                          $(document).on('click', '#vb_pip .small-box', function() {
-                            Shiny.setInputValue('vb_click', '__pip__', {priority: 'event'});
+                          $(document).on('click', '.preset-btn', function() {
+                            Shiny.setInputValue('preset_click', $(this).data('preset'), {priority: 'event'});
                           });
                         "))
                       ),
                       icon("child"), " EU Paediatric Trial Monitor"
-                    ), titleWidth = 300),
+                    ), titleWidth = 300,
+                    tags$li(class = "dropdown",
+                      tags$a(style = "cursor:default;font-size:13px;opacity:0.65;padding:15px 20px;pointer-events:none;",
+                             "Browse and analyse authorized paediatric clinical trials in EUCTR and CTIS")
+                    )),
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
                                                  menuItem("Overview",tabName="overview",icon=icon("dashboard")),
@@ -1514,6 +1714,7 @@ ui <- dashboardPage(skin = "blue",
                                              tags$p(tags$b("Save / restore filters"), style="font-size:11px;margin-bottom:6px;"),
                                              downloadButton("dl_filters", " Save",
                                                             class="btn-sm btn-primary sidebar-tool-btn",
+                                                            style="margin-bottom:8px;",
                                                             title="Save filters as JSON"),
                                              tags$button(tagList(icon("upload"), " Load"),
                                                class="btn btn-default btn-sm sidebar-tool-btn",
@@ -1531,8 +1732,8 @@ ui <- dashboardPage(skin = "blue",
                                                             style="width:100%;margin-bottom:8px;",
                                                             title="Compare current filters: Paediatric vs Adult, with statistical tests"),
                                              tags$hr(style="margin:8px 0;"),
-                                             tags$p(tags$b("Theme"), style="font-size:11px;margin-bottom:4px;"),
-                                             radioButtons("theme_select",NULL,choices=c("Nord","Default"),selected="Nord",inline=TRUE),
+                                             tags$div(style="display:none;",
+                                               radioButtons("theme_select",NULL,choices=c("Nord","Nord Light","Default"),selected="Nord",inline=TRUE)),
                                              tags$hr(style="margin:8px 0;"),
                                              textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")
                                            )
@@ -1587,19 +1788,38 @@ ui <- dashboardPage(skin = "blue",
                       tabItems(
                         tabItem(tabName="overview",
                                 uiOutput("no_data_banner"),
-                                fluidRow(valueBoxOutput("vb_total",width=3),valueBoxOutput("vb_ongoing",width=3),
-                                         valueBoxOutput("vb_completed",width=3),valueBoxOutput("vb_pip",width=3)),
+                                uiOutput("kpi_strip"),
+                                fluidRow(class="qs-row",
+                                  column(2, tags$div(class="qs-card", `data-tab`="chartbuilder",
+                                    tags$div(class="qs-icon", icon("chart-line")),
+                                    tags$strong("Chart Builder"),
+                                    tags$p("Build a custom chart from any variable"))),
+                                  column(2, tags$div(class="qs-card", `data-tab`="map",
+                                    tags$div(class="qs-icon", icon("map")),
+                                    tags$strong("Map"),
+                                    tags$p("See trial distribution across member states"))),
+                                  column(2, tags$div(class="qs-card", `data-tab`="analytics",
+                                    tags$div(class="qs-icon", icon("chart-bar")),
+                                    tags$strong("Basic Analytics"),
+                                    tags$p("Explore breakdowns by phase, sponsor, and more"))),
+                                  column(2, tags$div(class="qs-card", `data-tab`="sponsor_compare",
+                                    tags$div(class="qs-icon", icon("exchange")),
+                                    tags$strong("Sponsor Comparison"),
+                                    tags$p("Compare trial portfolios across sponsors"))),
+                                  column(2, tags$div(class="qs-card", `data-tab`="compliance",
+                                    tags$div(class="qs-icon", icon("file-medical-alt")),
+                                    tags$strong("Results Posting"),
+                                    tags$p("Track results posting compliance"))),
+                                  column(2, tags$div(class="qs-card", `data-tab`="data",
+                                    tags$div(class="qs-icon", icon("table")),
+                                    tags$strong("Data Explorer"),
+                                    tags$p("Browse and download the full trial dataset")))
+                                ),
+                                uiOutput("overview_footer"),
                                 fluidRow(
-                                  box(title="5 Most Recently Authorized Trials",status="warning",solidHeader=TRUE,
-                                      width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
-                                fluidRow(
-                                  box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
-                                      width=12,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
-                                fluidRow(
-                                  box(title="Submissions per Year",status="primary",solidHeader=TRUE,
-                                      width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
-                                  box(title="Trial Status by Register",status="info",solidHeader=TRUE,
-                                      width=6,height=400,withSpinner(plotlyOutput("plot_register",height="340px"),type=6))),
+                                  box(title="5 Most Recently Authorized Trials", status="warning",
+                                      solidHeader=TRUE, width=12,
+                                      withSpinner(DT::dataTableOutput("recent_trials_table", height="auto"), type=6))),
                         ),
                         tabItem(tabName="chartbuilder",
                                 fluidRow(
@@ -1827,6 +2047,13 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.5 (2026-05-01):"),
+                                          tags$ul(
+                                            tags$li("Overview page redesigned: hero subtitle moved to navbar, KPI cards with full Nord accent colours, clickable navigation shortcut cards, quick-filter preset buttons, and recent trials table."),
+                                            tags$li("Theming replaced: hand-crafted generate_css() removed and replaced with the 'fresh' package compiling AdminLTE SASS variables, eliminating CSS specificity battles (e.g. box header colours now correct)."),
+                                            tags$li("Nord dark theme polished: muted box headers, white button text, sidebar lighter than main panel, nav card visibility improved."),
+                                            tags$li("Nord Light theme: dark sidebar with light main panel; sidebar controls, labels, and nav cards now correctly themed.")
+                                          )),
                                         tags$li(tags$b("v0.9.4 (2026-04-30):"),
                                           tags$ul(
                                             tags$li("Data Explorer: fixed duplicate tokens in slash-separated fields (e.g. Product name) by trimming whitespace before deduplication in deep_flatten_col and adding a dedicated dedup pass on DIMP_product_name.")
@@ -2066,9 +2293,9 @@ server <- function(input, output, session) {
   tc <- reactive(THEMES[[input$theme_select]])
   output$active_theme <- renderUI({
     switch(input$theme_select,
-      "Nord"       = tags$style(NORD_CSS),
-      "Nord Light" = tags$style(NORD_LIGHT_CSS),
-      tags$style("")
+      "Nord"       = tagList(fresh::use_theme(.NORD_FRESH),       tags$style(NORD_SUPPLEMENT)),
+      "Nord Light" = tagList(fresh::use_theme(.NORD_LIGHT_FRESH), tags$style(NORD_LIGHT_SUPPLEMENT)),
+      NULL
     )
   })
   
@@ -2370,10 +2597,27 @@ server <- function(input, output, session) {
           p("Run ",tags$code("update_data.R")," to populate the database."))
   })
   
-  output$vb_total<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else nrow(filt()),big.mark=","),"Total Trials",icon=icon("flask"),color="blue"))
-  output$vb_ongoing<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Ongoing",na.rm=TRUE),big.mark=","),"Ongoing",icon=icon("play-circle"),color="green"))
-  output$vb_completed<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Completed",na.rm=TRUE),big.mark=","),"Completed",icon=icon("check-circle"),color="yellow"))
-  output$vb_pip<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$has_PIP=="Yes",na.rm=TRUE),big.mark=","),"With PIP",icon=icon("child"),color="purple"))
+  output$kpi_strip <- renderUI({
+    t <- tc()
+    n_total     <- if (is.null(rv$data)) 0 else nrow(filt())
+    n_ongoing   <- if (is.null(rv$data)) 0 else sum(filt()$status == "Ongoing",   na.rm = TRUE)
+    n_completed <- if (is.null(rv$data)) 0 else sum(filt()$status == "Completed", na.rm = TRUE)
+    n_pip       <- if (is.null(rv$data)) 0 else sum(filt()$has_PIP == "Yes",       na.rm = TRUE)
+    make_kpi <- function(id, val, label, ico, col) {
+      tags$div(id = id, class = "kpi-card",
+        style = sprintf("background:%s;border-top:none;", col),
+        tags$div(class = "kpi-icon", style = "color:rgba(255,255,255,0.8);", icon(ico)),
+        tags$div(class = "kpi-val",  style = "color:#fff;", format(val, big.mark = ",")),
+        tags$div(class = "kpi-lbl",  style = "color:rgba(255,255,255,0.9);", label)
+      )
+    }
+    fluidRow(style = "margin:0 -6px 16px;",
+      column(3, style = "padding:0 6px;", make_kpi("kpi_total",     n_total,     "Total Trials", "flask",        t$frost3)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$green)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$yellow)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_pip",       n_pip,       "With PIP",     "child",        t$purple))
+    )
+  })
 
   observeEvent(input$vb_click, {
     if (input$vb_click == "__reset__") {
@@ -2382,6 +2626,71 @@ server <- function(input, output, session) {
       updateSelectInput(session, "pip_filter", selected = "Yes")
     } else {
       updateSelectizeInput(session, "status_filter", selected = input$vb_click)
+    }
+  })
+
+  output$hero_banner <- renderUI({
+    t <- tc()
+    fluidRow(
+      column(12,
+        tags$div(
+          style = sprintf("padding:16px 4px 14px;margin-bottom:8px;border-bottom:1px solid %s;", t$bg3),
+          tags$h2("EU Paediatric Trial Monitor",
+                  style = sprintf("margin:0 0 6px;font-size:28px;font-weight:700;letter-spacing:0.2px;color:%s;", t$fg2)),
+          tags$p("Browse and analyse authorized paediatric clinical trials registered in EUCTR and CTIS. Use the sidebar filters to narrow results, or jump to a feature below.",
+                 style = sprintf("margin:0;font-size:15px;line-height:1.6;color:%s;max-width:700px;", t$fg1))
+        )
+      )
+    )
+  })
+
+  observeEvent(input$nav_to_tab, {
+    req(input$nav_to_tab)
+    updateTabItems(session, "tabs", input$nav_to_tab)
+  })
+
+  output$overview_footer <- renderUI({
+    t <- tc()
+    make_preset <- function(label, preset_id) {
+      tags$button(class = "preset-btn", `data-preset` = preset_id,
+                  style = sprintf("color:%s;border-color:%s;", t$fg0, t$bg3), label)
+    }
+    fluidRow(column(12,
+      tags$div(style = sprintf("background:%s;border-radius:8px;padding:12px 16px;margin-bottom:14px;", t$bg1),
+        tags$div(class = "preset-section-label", style = sprintf("color:%s;", t$fg1),
+                 icon("bolt"), " Quick filters"),
+        tags$div(
+          make_preset("CTIS only",          "ctis_only"),
+          make_preset("EUCTR only",         "euctr_only"),
+          make_preset("Ongoing PIP trials", "ongoing_pip"),
+          make_preset("Orphan designation", "orphan"),
+          make_preset("Completed trials",   "completed")
+        )
+      )
+    ))
+  })
+
+  observeEvent(input$preset_click, {
+    p <- input$preset_click
+    if (p == "ctis_only") {
+      updateSelectizeInput(session, "register_filter", selected = "CTIS")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectInput(session,    "pip_filter",      selected = "All")
+      updateSelectInput(session,    "orphan_filter",   selected = "All")
+    } else if (p == "euctr_only") {
+      updateSelectizeInput(session, "register_filter", selected = "EUCTR")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectInput(session,    "pip_filter",      selected = "All")
+      updateSelectInput(session,    "orphan_filter",   selected = "All")
+    } else if (p == "ongoing_pip") {
+      updateSelectizeInput(session, "status_filter",   selected = "Ongoing")
+      updateSelectInput(session,    "pip_filter",      selected = "Yes")
+    } else if (p == "orphan") {
+      updateSelectInput(session,    "orphan_filter",   selected = "Yes")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+    } else if (p == "completed") {
+      updateSelectizeInput(session, "status_filter",   selected = "Completed")
+      updateSelectInput(session,    "pip_filter",      selected = "All")
     }
   })
 
