@@ -2664,7 +2664,11 @@ server <- function(input, output, session) {
           make_preset("EUCTR only",         "euctr_only"),
           make_preset("Ongoing PIP trials", "ongoing_pip"),
           make_preset("Orphan designation", "orphan"),
-          make_preset("Completed trials",   "completed")
+          make_preset("Completed trials",   "completed"),
+          make_preset("Last 12 months",     "last_12m"),
+          make_preset("Last year",          "last_year"),
+          make_preset("Adult trials",        "adult_only"),
+          make_preset("Paediatric trials",  "paed_only")
         )
       )
     ))
@@ -2691,6 +2695,18 @@ server <- function(input, output, session) {
     } else if (p == "completed") {
       updateSelectizeInput(session, "status_filter",   selected = "Completed")
       updateSelectInput(session,    "pip_filter",      selected = "All")
+    } else if (p == "last_12m") {
+      updateDateRangeInput(session, "date_range",
+                           start = Sys.Date() - 365, end = Sys.Date())
+    } else if (p == "last_year") {
+      yr <- as.integer(format(Sys.Date(), "%Y")) - 1L
+      updateDateRangeInput(session, "date_range",
+                           start = as.Date(paste0(yr, "-01-01")),
+                           end   = as.Date(paste0(yr, "-12-31")))
+    } else if (p == "adult_only") {
+      updateSelectInput(session, "age_group_filter", selected = "≥ 18 years")
+    } else if (p == "paed_only") {
+      updateSelectInput(session, "age_group_filter", selected = "< 18 years")
     }
   })
 

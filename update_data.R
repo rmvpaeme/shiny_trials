@@ -40,6 +40,10 @@ db <- nodbi::src_sqlite(dbname = DB_PATH, collection = DB_COLLECTION)
 # LOG HELPERS
 # ============================================================================
 
+ts <- function() format(Sys.time(), "[%Y-%m-%d %H:%M:%S]")
+
+log_msg <- function(...) message(ts(), " ", ...)
+
 read_log <- function(path) {
   if (file.exists(path)) readLines(path) else character()
 }
@@ -69,7 +73,7 @@ read_url_lines <- function(url, label, timeout_sec = HTTP_TIMEOUT_SEC,
 
     if (!is.null(out)) return(out)
 
-    message(sprintf(
+    log_msg(sprintf(
       "[%s] read failed%s: %s",
       label,
       if (attempt <= retries) sprintf(" (attempt %d/%d)", attempt, retries + 1L) else "",
@@ -157,12 +161,12 @@ try_load <- function(start_date, end_date, label) {
       con = db
     )
 
-    message(sprintf("[%s] OK", label))
+    log_msg(sprintf("[%s] OK", label))
     TRUE
 
   }, error = function(e) {
 
-    message(sprintf("[%s] FAIL: %s", label, e$message))
+    log_msg(sprintf("[%s] FAIL: %s", label, e$message))
     FALSE
   })
 }
@@ -176,14 +180,14 @@ load_trial_fallback <- function(start_date, end_date) {
   label <- sprintf("TRIAL %s → %s", start_date, end_date)
   range_label <- sprintf("%s → %s", start_date, end_date)
 
-  message(sprintf("[%s] switching to trial-level fallback", label))
+  log_msg(sprintf("[%s] switching to trial-level fallback", label))
 
   tryCatch({
 
     trial_ids <- get_euctr_ids_for_range(start_date, end_date)
 
     if (!length(trial_ids)) {
-      message(sprintf("[%s] no trial identifiers found", label))
+      log_msg(sprintf("[%s] no trial identifiers found", label))
       append_log(DONE_LOG, range_label)
       append_log(DONE_LOG, label)
       return(TRUE)
@@ -200,10 +204,10 @@ load_trial_fallback <- function(start_date, end_date) {
           euctrresultshistory = REFRESH_EUCTR_RESULTS,
           con = db
         )
-        message(sprintf("[%s] OK trial %s", label, trial_id))
+        log_msg(sprintf("[%s] OK trial %s", label, trial_id))
         TRUE
       }, error = function(e) {
-        message(sprintf("[%s] FAIL trial %s: %s", label, trial_id, e$message))
+        log_msg(sprintf("[%s] FAIL trial %s: %s", label, trial_id, e$message))
         FALSE
       })
 
@@ -223,11 +227,67 @@ load_trial_fallback <- function(start_date, end_date) {
 
   }, error = function(e) {
 
-    message(sprintf("[%s] FAILED permanently: %s", label, e$message))
+    log_msg(sprintf("[%s] FAILED permanently: %s", label, e$message))
 
     append_log(FAILED_LOG, label)
     FALSE
   })
+}
+
+# ============================================================================
+# RETRY FAILED TRIALS
+# ============================================================================
+
+retry_failed_trials <- function() {
+
+  lines <- read_log(FAILED_LOG)
+  if (!length(lines)) {
+    log_msg("[retry] nothing to retry")
+    return(invisible(NULL))
+  }
+
+  still_failing <- character()
+
+  # Lines with specific trial IDs: "TRIAL <start> → <end> failed trials: <id1>, <id2>"
+  trial_lines <- grep("failed trials:", lines, value = TRUE)
+  for (line in trial_lines) {
+    ids <- trimws(strsplit(sub(".*failed trials: ", "", line), ",")[[1]])
+    for (trial_id in ids) {
+      ok <- tryCatch({
+        ctrLoadQueryIntoDb(
+          queryterm   = trial_id,
+          register    = "EUCTR",
+          euctrresults        = REFRESH_EUCTR_RESULTS,
+          euctrresultshistory = REFRESH_EUCTR_RESULTS,
+          con = db
+        )
+        log_msg(sprintf("[retry] OK: %s", trial_id))
+        TRUE
+      }, error = function(e) {
+        log_msg(sprintf("[retry] FAIL: %s — %s", trial_id, e$message))
+        FALSE
+      })
+      if (!ok) still_failing <- c(still_failing, sprintf("failed trials: %s", trial_id))
+    }
+  }
+
+  # Lines where the whole range failed (no trial IDs): "TRIAL <start> → <end>"
+  range_lines <- grep("^TRIAL .* → .*$", lines, value = TRUE)
+  range_lines  <- range_lines[!grepl("failed trials:", range_lines)]
+  for (line in range_lines) {
+    dates <- regmatches(line, gregexpr("[0-9]{4}-[0-9]{2}-[0-9]{2}", line))[[1]]
+    if (length(dates) < 2L) { still_failing <- c(still_failing, line); next }
+    ok <- load_trial_fallback(dates[1], dates[2])
+    if (!ok) still_failing <- c(still_failing, line)
+  }
+
+  if (!length(still_failing)) {
+    log_msg("[retry] all retries succeeded — clearing failed_chunks.txt")
+    file.remove(FAILED_LOG)
+  } else {
+    log_msg(sprintf("[retry] %d entry/entries still failing", length(still_failing)))
+    writeLines(still_failing, FAILED_LOG)
+  }
 }
 
 # ============================================================================
@@ -240,11 +300,11 @@ load_range <- function(start_date, end_date, depth = 1, max_depth = 8) {
 
   done <- read_log(DONE_LOG)
   if (label %in% done) {
-    message(sprintf("[%s] skipped (done)", label))
+    log_msg(sprintf("[%s] skipped (done)", label))
     return(TRUE)
   }
 
-  message(sprintf("[%s] depth=%d start", label, depth))
+  log_msg(sprintf("[%s] depth=%d start", label, depth))
 
   ok <- try_load(start_date, end_date, label)
 
@@ -264,7 +324,7 @@ load_range <- function(start_date, end_date, depth = 1, max_depth = 8) {
 
     mid <- start + floor((end - start) / 2)
 
-    message(sprintf("[%s] splitting range", label))
+    log_msg(sprintf("[%s] splitting range", label))
 
     load_range(as.character(start), as.character(mid), depth + 1, max_depth)
     load_range(as.character(mid + 1), as.character(end), depth + 1, max_depth)
@@ -297,16 +357,16 @@ make_quarters <- function(year) {
 # ============================================================================
 
 if (REFRESH_EUCTR) {
-  message("\n=== EUCTR ingestion (v18) ===")
+  log_msg("\n=== EUCTR ingestion (v18) ===")
   if (REFRESH_EUCTR_RESULTS) {
-    message("EUCTR result documents enabled (slow).")
+    log_msg("EUCTR result documents enabled (slow).")
   }
-  
+
   current_year <- as.integer(format(Sys.Date(), "%Y"))
-  
+
   for (yr in 2004:current_year) {
-    
-    message(sprintf("\n=== YEAR %d ===", yr))
+
+    log_msg(sprintf("=== YEAR %d ===", yr))
     
     quarters <- make_quarters(yr)
     
@@ -316,10 +376,12 @@ if (REFRESH_EUCTR) {
     }
   }
   
-  message("EUCTR ingestion complete.\n")
+  log_msg("EUCTR ingestion complete.")
+  retry_failed_trials()
 } else {
-  message("\n=== EUCTR skipped ===")
-  message("Use REFRESH_EUCTR=true Rscript update_data.R or Rscript update_data.R --euctr to refresh EUCTR.")
+  log_msg("=== EUCTR skipped ===")
+  log_msg("Use REFRESH_EUCTR=true Rscript update_data.R or Rscript update_data.R --euctr to refresh EUCTR.")
+  if (file.exists(FAILED_LOG)) retry_failed_trials()
 }
 
 # ============================================================================
@@ -327,7 +389,7 @@ if (REFRESH_EUCTR) {
 # ============================================================================
 
 if (REFRESH_CTIS) {
-  message("=== CTIS ===")
+  log_msg("=== CTIS ===")
   
   ctis_url <- "https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}"
   
@@ -339,18 +401,18 @@ if (REFRESH_CTIS) {
       con = db
     )
     
-    message("CTIS done.")
-    
+    log_msg("CTIS done.")
+
   }, error = function(e) {
-    
-    message("CTIS failed: ", e$message)
+
+    log_msg("CTIS failed: ", e$message)
   })
 } else {
-  message("=== CTIS skipped ===")
+  log_msg("=== CTIS skipped ===")
 }
 
 # ============================================================================
 # DONE
 # ============================================================================
 
-message("Finished.")
+log_msg("Finished.")

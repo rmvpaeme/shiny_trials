@@ -89,7 +89,9 @@ GREEN  <- "#A3BE8C"; YELLOW <- "#EBCB8B"; ORANGE <- "#D08770"
 RED    <- "#BF616A"; PURPLE <- "#B48EAD"; GRAY   <- "#4C566A"
 LIGHT  <- "#ECEFF4"; DARK   <- "#2E3440"
 
-GROUP_COLS <- c(Paediatric = BLUE, Adult = GREEN)
+GROUP_COLS   <- c(Paediatric = BLUE, Adult = GREEN)
+SPONSOR_COLS <- c(Academic = TEAL, Industry = ORANGE)
+STATUS_COLS  <- c(Ongoing = BLUE, Completed = GREEN, Other = YELLOW, Unknown = GRAY)
 
 # ── ggplot2 theme ──────────────────────────────────────────────────────────────
 theme_rep <- function(base = 9) {
@@ -233,7 +235,7 @@ ggplot(status_long, aes(x = status, y = pct, fill = group)) +
   labs(title = "Trial Status by Age Group",
        subtitle = sprintf("Paediatric n=%s | Adult n=%s | Paediatric & Adult (not shown) n=%s",
                           fmt_n(n_paed), fmt_n(n_adult), fmt_n(n_both)),
-       x = NULL, y = "% of group") +
+       x = NULL, y = "% of trials") +
   theme_rep()
 ```
 
@@ -282,10 +284,59 @@ if (nrow(phase_plot_df) > 0) {
     labs(title = "Phase Distribution by Age Group",
          subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may appear in multiple phases",
                             fmt_n(n_paed), fmt_n(n_adult)),
-         x = NULL, y = "% of group") +
+         x = NULL, y = "% of trials") +
     theme_rep()
 } else {
   cat("\\textit{No phase data available.}")
+}
+```
+
+# Phase × Sponsor Type
+
+Sponsor type composition within each phase, faceted by age group. Shows whether academic or industry sponsors dominate specific development stages differently between age groups.
+
+```{r phase-sponsor-plot, fig.height=4.0}
+phase_sp_df <- bind_rows(
+  df_paed %>%
+    filter(!is.na(phase), phase != "", !is.na(sponsor_type)) %>%
+    separate_rows(phase, sep = " / ") %>%
+    mutate(phase = str_trim(phase)) %>%
+    filter(phase %in% c("Phase I", "Phase II", "Phase III", "Phase IV")) %>%
+    count(phase, sponsor_type) %>%
+    group_by(phase) %>%
+    mutate(pct = n / sum(n) * 100) %>%
+    ungroup() %>%
+    mutate(group = "Paediatric"),
+  df_adult %>%
+    filter(!is.na(phase), phase != "", !is.na(sponsor_type)) %>%
+    separate_rows(phase, sep = " / ") %>%
+    mutate(phase = str_trim(phase)) %>%
+    filter(phase %in% c("Phase I", "Phase II", "Phase III", "Phase IV")) %>%
+    count(phase, sponsor_type) %>%
+    group_by(phase) %>%
+    mutate(pct = n / sum(n) * 100) %>%
+    ungroup() %>%
+    mutate(group = "Adult")
+) %>%
+  mutate(
+    phase        = factor(phase,        levels = c("Phase I", "Phase II", "Phase III", "Phase IV")),
+    sponsor_type = factor(sponsor_type, levels = c("Academic", "Industry")),
+    group        = factor(group,        levels = c("Paediatric", "Adult"))
+  )
+
+if (nrow(phase_sp_df) > 0) {
+  ggplot(phase_sp_df, aes(x = phase, y = pct, fill = sponsor_type)) +
+    geom_col(width = 0.75) +
+    facet_wrap(~group) +
+    scale_fill_manual(values = SPONSOR_COLS) +
+    scale_y_continuous(labels = function(x) paste0(x, "%"),
+                       expand = expansion(mult = c(0, 0.05))) +
+    labs(title = "Sponsor Type Within Each Phase by Age Group",
+         subtitle = "Trials with known sponsor type; trials may appear in multiple phases",
+         x = NULL, y = "% of trials in phase") +
+    theme_rep()
+} else {
+  cat("\\textit{No phase or sponsor type data available.}")
 }
 ```
 
@@ -314,10 +365,95 @@ if (nrow(sponsor_long) > 0) {
     labs(title = "Sponsor Type by Age Group",
          subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials with known sponsor type",
                             fmt_n(sp_n_paed), fmt_n(sp_n_adult)),
-         x = NULL, y = "% of group") +
+         x = NULL, y = "% of trials") +
     theme_rep()
 } else {
   cat("\\textit{No sponsor type data available.}")
+}
+```
+
+# Sponsor Type Over Time
+
+Annual share of Academic vs Industry sponsorship within each age group (trials with known sponsor type only).
+
+```{r sponsor-trend-plot, fig.height=3.8}
+sp_trend <- bind_rows(
+  df_paed  %>% filter(!is.na(sponsor_type), !is.na(submission_date_parsed)) %>%
+    mutate(year = year(submission_date_parsed), group = "Paediatric"),
+  df_adult %>% filter(!is.na(sponsor_type), !is.na(submission_date_parsed)) %>%
+    mutate(year = year(submission_date_parsed), group = "Adult")
+) %>%
+  count(year, group, sponsor_type) %>%
+  group_by(year, group) %>%
+  mutate(pct = n / sum(n) * 100) %>%
+  ungroup() %>%
+  mutate(
+    group        = factor(group,        levels = c("Paediatric", "Adult")),
+    sponsor_type = factor(sponsor_type, levels = c("Academic", "Industry"))
+  )
+
+if (nrow(sp_trend) > 0) {
+  ggplot(sp_trend, aes(x = year, y = pct, colour = sponsor_type, group = sponsor_type)) +
+    geom_line(linewidth = 0.75) +
+    geom_point(size = 1.6) +
+    facet_wrap(~group) +
+    scale_colour_manual(values = SPONSOR_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(6)) +
+    scale_y_continuous(labels = function(x) paste0(x, "%"),
+                       limits = c(0, 100),
+                       expand = expansion(mult = c(0, 0.05))) +
+    labs(title = "Sponsor Type Share Over Time by Age Group",
+         subtitle = "Annual % within each age group (trials with known sponsor type only)",
+         x = NULL, y = "% of trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No sponsor type trend data available.}")
+}
+```
+
+# Top Sponsors
+
+Top 15 sponsors by number of trials per age group. Reveals whether the same organisations drive both paediatric and adult research or whether different players dominate.
+
+```{r top-sponsors-plot, fig.height=5.0}
+has_sponsor_name <- "sponsor_name" %in% names(df_all)
+
+if (!has_sponsor_name) {
+  cat("\\textit{Sponsor name data not available.}")
+} else {
+  top_sp_paed <- df_paed %>%
+    filter(!is.na(sponsor_name), sponsor_name != "") %>%
+    count(sponsor_name, sort = TRUE) %>%
+    slice_head(n = 15) %>%
+    mutate(group = "Paediatric")
+
+  top_sp_adult <- df_adult %>%
+    filter(!is.na(sponsor_name), sponsor_name != "") %>%
+    count(sponsor_name, sort = TRUE) %>%
+    slice_head(n = 15) %>%
+    mutate(group = "Adult")
+
+  if (nrow(top_sp_paed) == 0 && nrow(top_sp_adult) == 0) {
+    cat("\\textit{No sponsor name data available.}")
+  } else {
+    top_sp_df <- bind_rows(top_sp_paed, top_sp_adult) %>%
+      mutate(group = factor(group, levels = c("Paediatric", "Adult"))) %>%
+      group_by(group) %>%
+      mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name))) %>%
+      ungroup()
+
+    ggplot(top_sp_df, aes(x = n, y = sponsor_name, fill = group)) +
+      geom_col(width = 0.7) +
+      facet_wrap(~group, scales = "free_y") +
+      scale_fill_manual(values = GROUP_COLS) +
+      scale_x_continuous(expand = expansion(mult = c(0, 0.15)), labels = comma) +
+      labs(title = "Top 15 Sponsors by Age Group",
+           subtitle = "As recorded in the source registry",
+           x = "Number of trials", y = NULL) +
+      theme_rep() +
+      theme(legend.position = "none",
+            axis.text.y = element_text(size = 7))
+  }
 }
 ```
 
@@ -345,8 +481,45 @@ ggplot(pip_long, aes(x = has_PIP, y = pct, fill = group)) +
   labs(title = "PIP Status by Age Group",
        subtitle = sprintf("Paediatric n=%s | Adult n=%s",
                           fmt_n(n_paed), fmt_n(n_adult)),
-       x = "Paediatric Investigation Plan", y = "% of group") +
+       x = "Paediatric Investigation Plan", y = "% of trials") +
   theme_rep()
+```
+
+# PIP Coverage by Phase
+
+For paediatric trials only: share with a PIP within each phase. EU regulations require a PIP before Phase III marketing authorisation, so gaps at later phases are clinically notable.
+
+```{r pip-phase-plot, fig.height=3.2}
+pip_phase_df <- df_paed %>%
+  filter(!is.na(phase), phase != "") %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(
+    phase   = str_trim(phase),
+    pip_yes = !is.na(has_PIP) & has_PIP == "Yes"
+  ) %>%
+  filter(phase %in% c("Phase I", "Phase II", "Phase III", "Phase IV")) %>%
+  group_by(phase) %>%
+  summarise(n_total = n(), n_pip = sum(pip_yes),
+            pct = n_pip / n_total * 100, .groups = "drop") %>%
+  mutate(phase = factor(phase, levels = c("Phase I", "Phase II", "Phase III", "Phase IV")))
+
+if (nrow(pip_phase_df) > 0) {
+  ggplot(pip_phase_df, aes(x = phase, y = pct)) +
+    geom_col(fill = BLUE, width = 0.65) +
+    geom_text(aes(label = sprintf("%.1f%%\n(n=%s/%s)",
+                                  pct, format(n_pip, big.mark = ","),
+                                  format(n_total, big.mark = ","))),
+              vjust = -0.3, size = 2.4, color = GRAY) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.22)),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "PIP Coverage Within Each Phase (Paediatric Trials Only)",
+         subtitle = sprintf("Paediatric n=%s | trials may appear in multiple phases", fmt_n(n_paed)),
+         x = NULL, y = "% with PIP") +
+    theme_rep() +
+    theme(legend.position = "none")
+} else {
+  cat("\\textit{No phase or PIP data available.}")
+}
 ```
 
 # Orphan Designation
@@ -373,12 +546,59 @@ ggplot(orphan_long, aes(x = is_orphan, y = pct, fill = group)) +
   labs(title = "Orphan Designation by Age Group",
        subtitle = sprintf("Paediatric n=%s | Adult n=%s",
                           fmt_n(n_paed), fmt_n(n_adult)),
-       x = "Orphan Designation", y = "% of group") +
+       x = "Orphan Designation", y = "% of trials") +
   theme_rep()
 ```
 
 ```{r orphan-absent, results='asis', eval=!has_orphan_col}
 cat("\\textit{Orphan designation data not available in the current dataset.}")
+```
+
+# PIP × Orphan Co-occurrence
+
+For paediatric trials only: how many carry both a PIP and an orphan designation, one, or neither. Trials with missing values for either field are counted as not having that designation.
+
+```{r orphan-pip-plot, fig.height=3.0, eval=has_orphan_col}
+COOC_COLS <- c(
+  "PIP + Orphan" = PURPLE,
+  "PIP only"     = BLUE,
+  "Orphan only"  = ORANGE,
+  "Neither"      = GRAY
+)
+
+cooc_df <- df_paed %>%
+  mutate(
+    pip_flag    = !is.na(has_PIP)   & has_PIP   == "Yes",
+    orphan_flag = !is.na(is_orphan) & is_orphan == "Yes",
+    label = case_when(
+      pip_flag & orphan_flag   ~ "PIP + Orphan",
+      pip_flag & !orphan_flag  ~ "PIP only",
+      !pip_flag & orphan_flag  ~ "Orphan only",
+      TRUE                     ~ "Neither"
+    )
+  ) %>%
+  count(label) %>%
+  mutate(
+    pct   = n / n_paed * 100,
+    label = factor(label, levels = c("PIP + Orphan", "PIP only", "Orphan only", "Neither"))
+  )
+
+ggplot(cooc_df, aes(x = label, y = pct, fill = label)) +
+  geom_col(width = 0.65) +
+  geom_text(aes(label = sprintf("%.1f%%\n(n=%s)", pct, format(n, big.mark = ","))),
+            vjust = -0.3, size = 2.4, color = GRAY) +
+  scale_fill_manual(values = COOC_COLS) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.22)),
+                     labels = function(x) paste0(x, "%")) +
+  labs(title = "PIP and Orphan Designation Co-occurrence (Paediatric Trials Only)",
+       subtitle = sprintf("Paediatric n=%s | missing values treated as absent", fmt_n(n_paed)),
+       x = NULL, y = "% of paediatric trials") +
+  theme_rep() +
+  theme(legend.position = "none")
+```
+
+```{r orphan-pip-absent, results='asis', eval=!has_orphan_col}
+cat("\\textit{Orphan designation data not available; co-occurrence chart skipped.}")
 ```
 
 # Source Register
@@ -403,7 +623,7 @@ ggplot(reg_long, aes(x = register, y = pct, fill = group)) +
   labs(title = "Source Register by Age Group",
        subtitle = sprintf("Paediatric n=%s | Adult n=%s",
                           fmt_n(n_paed), fmt_n(n_adult)),
-       x = NULL, y = "% of group") +
+       x = NULL, y = "% of trials") +
   theme_rep()
 ```
 
@@ -447,6 +667,44 @@ if (nrow(res_plot_df) > 0) {
 ```
 
 ```{r results-absent, results='asis', eval=!has_results_col}
+cat("\\textit{Results posting data not available in the current dataset.}")
+```
+
+# Results Posting Rate Over Time
+
+For completed trials, share with results posted grouped by decision year. Shows whether older completed trials are more likely to have reported results (having had more time) and whether the two groups diverge.
+
+```{r results-by-year-plot, fig.height=3.4, eval=has_results_col}
+res_year_df <- bind_rows(
+  results_paed %>% mutate(group = "Paediatric"),
+  results_adult %>% mutate(group = "Adult")
+) %>%
+  mutate(year = year(decision_date),
+         group = factor(group, levels = c("Paediatric", "Adult"))) %>%
+  group_by(year, group) %>%
+  summarise(n_total = n(), n_results = sum(has_results, na.rm = TRUE),
+            pct = n_results / n_total * 100, .groups = "drop") %>%
+  filter(n_total >= 3)
+
+if (nrow(res_year_df) > 0) {
+  ggplot(res_year_df, aes(x = year, y = pct, colour = group, group = group)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = GROUP_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(limits = c(0, 100),
+                       labels = function(x) paste0(x, "%"),
+                       expand = expansion(mult = c(0, 0.05))) +
+    labs(title = "Results Posting Rate by Decision Year (Completed Trials)",
+         subtitle = "Years with fewer than 3 completed trials excluded",
+         x = NULL, y = "% with results posted") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data for results trend analysis.}")
+}
+```
+
+```{r results-by-year-absent, results='asis', eval=!has_results_col}
 cat("\\textit{Results posting data not available in the current dataset.}")
 ```
 
@@ -526,6 +784,48 @@ nk(dec_tbl, cn = c("Group", "n", "Median (days)", "IQR", "Mean +/- SD"),
 cat("\\textit{No decision timeline data available for the current selection.}")
 ```
 
+# Decision Timeline Trend
+
+Median days from submission to decision per submission year, restricted to years with at least 5 trials. Shows whether regulatory processing times have changed over time.
+
+```{r dec-trend-plot, fig.height=3.4, eval=has_decision}
+dec_trend_df <- bind_rows(
+  df_paed %>%
+    filter(!is.na(days_to_decision), is.finite(days_to_decision),
+           days_to_decision >= 0, days_to_decision < 3650,
+           !is.na(submission_date_parsed)) %>%
+    mutate(year = year(submission_date_parsed), group = "Paediatric"),
+  df_adult %>%
+    filter(!is.na(days_to_decision), is.finite(days_to_decision),
+           days_to_decision >= 0, days_to_decision < 3650,
+           !is.na(submission_date_parsed)) %>%
+    mutate(year = year(submission_date_parsed), group = "Adult")
+) %>%
+  group_by(year, group) %>%
+  filter(n() >= 5) %>%
+  summarise(median_days = median(days_to_decision), n = n(), .groups = "drop") %>%
+  mutate(group = factor(group, levels = c("Paediatric", "Adult")))
+
+if (nrow(dec_trend_df) > 0) {
+  ggplot(dec_trend_df, aes(x = year, y = median_days, colour = group, group = group)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = GROUP_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.12)), labels = comma) +
+    labs(title = "Median Days to Decision Over Time",
+         subtitle = "Years with fewer than 5 trials excluded",
+         x = NULL, y = "Median days to decision") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data for decision timeline trend.}")
+}
+```
+
+```{r dec-trend-absent, results='asis', eval=!has_decision}
+cat("\\textit{No decision timeline data available for the current selection.}")
+```
+
 # Therapeutic Areas
 
 Top 15 MedDRA organ classes within each age group. A trial may belong to multiple organ classes so percentages sum to more than 100\%.
@@ -568,11 +868,116 @@ if (nrow(organ_paed) == 0 && nrow(organ_adult) == 0) {
     scale_x_continuous(expand = expansion(mult = c(0, 0.15)),
                        labels = function(x) paste0(x, "%")) +
     labs(title = "MedDRA Organ Classes - Top 15 per Group",
-         subtitle = sprintf("Paediatric n=%s | Adult n=%s | %% of group (multi-label)",
+         subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may appear in multiple classes",
                             fmt_n(n_paed), fmt_n(n_adult)),
-         x = "% of group", y = NULL) +
+         x = "% of trials", y = NULL) +
     theme_rep() +
     theme(axis.text.y = element_text(size = 7))
+}
+```
+
+# Orphan Rate by Therapeutic Area
+
+For the top 15 organ classes (by total trial count), the percentage carrying orphan designation in each age group. Identifies which disease areas are predominantly rare-disease driven.
+
+```{r orphan-organ-plot, fig.height=5.5, eval=has_orphan_col}
+orphan_organ_df <- bind_rows(
+  df_paed %>% mutate(group = "Paediatric"),
+  df_adult %>% mutate(group = "Adult")
+) %>%
+  filter(!is.na(MEDDRA_organ_class)) %>%
+  separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+  mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class),
+         orphan_yes = !is.na(is_orphan) & is_orphan == "Yes") %>%
+  filter(MEDDRA_organ_class != "") %>%
+  group_by(group, MEDDRA_organ_class) %>%
+  summarise(n_total = n(), n_orphan = sum(orphan_yes),
+            pct = n_orphan / n_total * 100, .groups = "drop")
+
+top_organs_orphan <- orphan_organ_df %>%
+  group_by(MEDDRA_organ_class) %>%
+  summarise(max_n = max(n_total), .groups = "drop") %>%
+  slice_max(max_n, n = 15) %>%
+  pull(MEDDRA_organ_class)
+
+orphan_organ_plot_df <- orphan_organ_df %>%
+  filter(MEDDRA_organ_class %in% top_organs_orphan) %>%
+  mutate(MEDDRA_organ_class = factor(MEDDRA_organ_class, levels = rev(top_organs_orphan)),
+         group = factor(group, levels = c("Paediatric", "Adult")))
+
+if (nrow(orphan_organ_plot_df) > 0) {
+  ggplot(orphan_organ_plot_df, aes(x = pct, y = MEDDRA_organ_class, fill = group)) +
+    geom_col(position = position_dodge(0.8), width = 0.7) +
+    scale_fill_manual(values = GROUP_COLS) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.15)),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Orphan Designation Rate by Therapeutic Area",
+         subtitle = sprintf("Top 15 organ classes by trial count | Paediatric n=%s | Adult n=%s",
+                            fmt_n(n_paed), fmt_n(n_adult)),
+         x = "% of trials with orphan designation", y = NULL) +
+    theme_rep() +
+    theme(axis.text.y = element_text(size = 7))
+} else {
+  cat("\\textit{No data available for orphan burden analysis.}")
+}
+```
+
+```{r orphan-organ-absent, results='asis', eval=!has_orphan_col}
+cat("\\textit{Orphan designation data not available in the current dataset.}")
+```
+
+# Specific Conditions
+
+Top 15 specific MedDRA condition terms within each age group. More granular than organ classes — shows the actual disease areas driving each group. A trial may have multiple conditions so percentages sum to more than 100\%.
+
+```{r meddra-term-plot, fig.height=6.0}
+has_meddra_term <- "MEDDRA_term" %in% names(df_all)
+
+if (!has_meddra_term) {
+  cat("\\textit{Specific MedDRA condition terms not available in the current dataset.}")
+} else {
+  term_paed <- df_paed %>%
+    filter(!is.na(MEDDRA_term)) %>%
+    separate_rows(MEDDRA_term, sep = " / ") %>%
+    mutate(MEDDRA_term = str_trim(MEDDRA_term)) %>%
+    filter(MEDDRA_term != "") %>%
+    count(MEDDRA_term, sort = TRUE) %>%
+    mutate(pct = n / n_paed * 100, group = "Paediatric") %>%
+    slice_head(n = 15)
+
+  term_adult <- df_adult %>%
+    filter(!is.na(MEDDRA_term)) %>%
+    separate_rows(MEDDRA_term, sep = " / ") %>%
+    mutate(MEDDRA_term = str_trim(MEDDRA_term)) %>%
+    filter(MEDDRA_term != "") %>%
+    count(MEDDRA_term, sort = TRUE) %>%
+    mutate(pct = n / n_adult * 100, group = "Adult") %>%
+    slice_head(n = 15)
+
+  if (nrow(term_paed) == 0 && nrow(term_adult) == 0) {
+    cat("\\textit{No MedDRA condition term data available.}")
+  } else {
+    all_terms <- union(term_paed$MEDDRA_term, term_adult$MEDDRA_term)
+
+    term_plot_df <- bind_rows(term_paed, term_adult) %>%
+      complete(MEDDRA_term = all_terms, group, fill = list(n = 0L, pct = 0)) %>%
+      mutate(
+        MEDDRA_term = factor(MEDDRA_term, levels = rev(all_terms)),
+        group       = factor(group, levels = c("Paediatric", "Adult"))
+      )
+
+    ggplot(term_plot_df, aes(x = pct, y = MEDDRA_term, fill = group)) +
+      geom_col(position = position_dodge(0.8), width = 0.7) +
+      scale_fill_manual(values = GROUP_COLS) +
+      scale_x_continuous(expand = expansion(mult = c(0, 0.15)),
+                         labels = function(x) paste0(x, "%")) +
+      labs(title = "MedDRA Conditions - Top 15 per Group",
+           subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may have multiple conditions",
+                              fmt_n(n_paed), fmt_n(n_adult)),
+           x = "% of trials", y = NULL) +
+      theme_rep() +
+      theme(axis.text.y = element_text(size = 7))
+  }
 }
 ```
 
@@ -618,10 +1023,55 @@ if (nrow(geo_paed) == 0 && nrow(geo_adult) == 0) {
     scale_x_continuous(expand = expansion(mult = c(0, 0.15)),
                        labels = function(x) paste0(x, "%")) +
     labs(title = "Geographic Distribution - Top 20 Member States per Group",
-         subtitle = sprintf("Paediatric n=%s | Adult n=%s | %% of group (multi-label)",
+         subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may involve multiple countries",
                             fmt_n(n_paed), fmt_n(n_adult)),
-         x = "% of group", y = NULL) +
+         x = "% of trials", y = NULL) +
     theme_rep() +
     theme(axis.text.y = element_text(size = 7.5))
+}
+```
+
+# Trial Scope
+
+Number of EU member states involved per trial. Paediatric trials often require more sites across more countries to achieve sufficient recruitment — this tests whether that shows up in the data.
+
+```{r scope-plot, fig.height=3.4}
+scope_df <- bind_rows(
+  df_paed %>%
+    mutate(n_countries = ifelse(is.na(Member_state), NA_integer_,
+                                str_count(Member_state, " / ") + 1L),
+           group = "Paediatric"),
+  df_adult %>%
+    mutate(n_countries = ifelse(is.na(Member_state), NA_integer_,
+                                str_count(Member_state, " / ") + 1L),
+           group = "Adult")
+) %>%
+  filter(!is.na(n_countries), n_countries > 0) %>%
+  mutate(group = factor(group, levels = c("Paediatric", "Adult")))
+
+if (nrow(scope_df) > 0) {
+  n_scope_paed  <- sum(scope_df$group == "Paediatric")
+  n_scope_adult <- sum(scope_df$group == "Adult")
+
+  scope_bar <- scope_df %>%
+    mutate(n_cap = ifelse(n_countries >= 10, "10+", as.character(n_countries)),
+           n_cap = factor(n_cap, levels = c(as.character(1:9), "10+"))) %>%
+    count(group, n_cap) %>%
+    group_by(group) %>%
+    mutate(pct = n / sum(n) * 100) %>%
+    ungroup()
+
+  ggplot(scope_bar, aes(x = n_cap, y = pct, fill = group)) +
+    geom_col(position = position_dodge(0.72), width = 0.65) +
+    scale_fill_manual(values = GROUP_COLS) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.15)),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Number of EU Member States per Trial",
+         subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials with geographic data only",
+                            fmt_n(n_scope_paed), fmt_n(n_scope_adult)),
+         x = "Number of member states", y = "% of trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No geographic data available.}")
 }
 ```
