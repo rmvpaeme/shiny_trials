@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.4** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.5** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -60,7 +60,7 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 
 | Tab | What it shows |
 | --- | ------------- |
-| **Overview** | KPI cards, 5 most recent trials, submissions per year, register comparison |
+| **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcuts to all feature tabs; quick-filter preset buttons (CTIS only, EUCTR only, Ongoing PIP, Orphan, Completed, Last 12 months, Last year, Adult trials, Paediatric trials); 5 most recently authorized trials |
 | **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types |
 | **Map** | Open trials by country (circle map); sortable country table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
@@ -104,7 +104,7 @@ Filter state is encoded in the URL (`?f=` query param, base64 JSON) for bookmark
 
 ```r
 install.packages(c(
-  "shiny", "shinydashboard", "shinycssloaders",
+  "shiny", "shinydashboard", "fresh", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite", "DBI",
   "dplyr", "tidyr", "stringr", "lubridate",
   "ggplot2", "plotly", "leaflet", "scales", "forcats",
@@ -219,6 +219,15 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.9.5 — 2026-05-01
+
+- **Overview page redesigned**: KPI cards now use full Nord accent colours (blue / green / yellow / purple) with white text and are sized appropriately. The hero subtitle is displayed in the top navbar. Six clickable navigation shortcut cards link directly to each feature tab. Nine quick-filter preset buttons (CTIS only, EUCTR only, Ongoing PIP trials, Orphan designation, Completed trials, Last 12 months, Last year, Adult trials, Paediatric trials) apply sidebar filters in one click. The 5 most recently authorized trials table is restored at the bottom of the overview.
+- **AdminLTE theming replaced with `fresh`**: removed the hand-crafted 90-line `generate_css()` `sprintf` template that was losing CSS specificity battles against AdminLTE defaults (e.g. box headers rendering in the wrong orange). Replaced with `fresh::create_theme()` which compiles AdminLTE SASS variables at the correct level — box header colours, sidebar background, body background, and button colours are now set at source. A slim `generate_supplement_css()` covers elements `fresh` does not reach (DataTables, modals, sliders, links, filter chips, navbar background, button text).
+- **Nord dark theme polished**: sidebar is now darker (`bg0`) than the main content panel (`bg1`), improving visual depth. Plotly chart backgrounds aligned with their containing box. Muted box solid headers. Download PDF and Compare buttons have white text. Save / Load buttons have proper vertical spacing.
+- **Nord Light theme fixed**: dark sidebar with light main panel now correctly themed throughout — sidebar form controls, labels, tab links, and dropdown backgrounds all use the dark Nord palette; nav cards use a light overlay appropriate for the light main background.
+- **Chart background consistency**: plotly `chart_bg` updated to match the box background (`bg2`), eliminating the visible dark rectangle inside chart boxes.
+- **Theme selector hidden**: app defaults to Nord dark; the radio buttons remain in the DOM for future use but are hidden from the UI.
 
 ### v0.9.4 — 2026-04-30
 
@@ -416,7 +425,7 @@ Initial release.
 | ----- | ---------- | ---- |
 | Data retrieval | [`ctrdata`](https://github.com/rfhb/ctrdata) | Unified access to EUCTR and CTIS |
 | Database | [`nodbi`](https://github.com/ropensci/nodbi) + [`RSQLite`](https://cran.r-project.org/package=RSQLite) | Local document store over SQLite |
-| Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) | Dashboard UI |
+| Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) + [`fresh`](https://dreamrs.github.io/fresh/) | Dashboard UI + AdminLTE theming |
 | Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive + PDF visualisations |
 | Map | [`leaflet`](https://rstudio.github.io/leaflet/) | Country-level interactive map |
 | Tables | [`DT`](https://rstudio.github.io/DT/) | Interactive data tables |

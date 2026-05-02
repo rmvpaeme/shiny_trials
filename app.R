@@ -152,7 +152,7 @@ THEMES <- list(
     green="#A3BE8C",purple="#B48EAD",
     s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
     r_euctr="#5E81AC",r_ctis="#88C0D0",
-    chart_bg="#3B4252",chart_fg="#D8DEE9",chart_grid="#434C5E",
+    chart_bg="#434C5E",chart_fg="#D8DEE9",chart_grid="#4C566A",
     spinner="#88C0D0"),
   `Nord Light` = list(
     bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
