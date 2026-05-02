@@ -1624,9 +1624,12 @@ ui <- dashboardPage(skin = "blue",
                           .qs-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.85; }
                           .qs-card strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.2px; }
                           .qs-card p { font-size: 12px; opacity: 0.6; margin: 0; line-height: 1.4; }
-                          .qs-row { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: stretch; }
-                          .qs-row > div { display: flex; flex-direction: column; }
-                          .qs-card { flex: 1; }
+                          .qs-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                            gap: 12px;
+                            margin-bottom: 14px;
+                          }
                           .insight-strip {
                             display: flex;
                             align-items: stretch;
@@ -1868,42 +1871,38 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="overview",
                                 uiOutput("no_data_banner"),
                                 uiOutput("kpi_strip"),
-                                uiOutput("hero_banner"),
+
                                 fluidRow(column(12,
                                   tags$div(class="analytics-section-header", icon("compass"), " Explore the Dashboard")
                                 )),
-                                fluidRow(class="qs-row",
-                                  column(3, tags$div(class="qs-card", `data-tab`="chartbuilder",
-                                    tags$div(class="qs-icon", icon("chart-line")),
-                                    tags$strong("Chart Builder"),
-                                    tags$p("Build a custom chart from any variable"))),
-                                  column(3, tags$div(class="qs-card", `data-tab`="map",
-                                    tags$div(class="qs-icon", icon("map")),
-                                    tags$strong("Map"),
-                                    tags$p("See trial distribution across member states"))),
-                                  column(3, tags$div(class="qs-card", `data-tab`="analytics",
-                                    tags$div(class="qs-icon", icon("chart-bar")),
-                                    tags$strong("Basic Analytics"),
-                                    tags$p("Explore breakdowns by phase, sponsor, and more"))),
-                                  column(3, tags$div(class="qs-card", `data-tab`="phase",
-                                    tags$div(class="qs-icon", icon("flask")),
-                                    tags$strong("Phase Analytics"),
-                                    tags$p("Phase distribution, completion rates, and trends")))
-                                ),
-                                fluidRow(class="qs-row",
-                                  column(4, tags$div(class="qs-card", `data-tab`="sponsor_compare",
-                                    tags$div(class="qs-icon", icon("exchange")),
-                                    tags$strong("Sponsor Comparison"),
-                                    tags$p("Compare trial portfolios across sponsors"))),
-                                  column(4, tags$div(class="qs-card", `data-tab`="compliance",
-                                    tags$div(class="qs-icon", icon("file-medical-alt")),
-                                    tags$strong("Results Posting"),
-                                    tags$p("Track results posting compliance"))),
-                                  column(4, tags$div(class="qs-card", `data-tab`="data",
-                                    tags$div(class="qs-icon", icon("table")),
-                                    tags$strong("Data Explorer"),
-                                    tags$p("Browse and download the full trial dataset")))
-                                ),
+                                fluidRow(column(12,
+                                  tags$div(class = "qs-grid",
+                                    tags$div(class="qs-card", `data-tab`="chartbuilder",
+                                      tags$div(class="qs-icon", icon("chart-line")),
+                                      tags$strong("Chart Builder"),
+                                      tags$p("Build a custom chart from any variable")),
+                                    tags$div(class="qs-card", `data-tab`="map",
+                                      tags$div(class="qs-icon", icon("map")),
+                                      tags$strong("Map"),
+                                      tags$p("See trial distribution across member states")),
+                                    tags$div(class="qs-card", `data-tab`="analytics",
+                                      tags$div(class="qs-icon", icon("chart-bar")),
+                                      tags$strong("Basic Analytics"),
+                                      tags$p("Explore breakdowns by phase, sponsor, and more")),
+                                    tags$div(class="qs-card", `data-tab`="phase",
+                                      tags$div(class="qs-icon", icon("flask")),
+                                      tags$strong("Phase Analytics"),
+                                      tags$p("Phase distribution, completion rates, and trends")),
+                                    tags$div(class="qs-card", `data-tab`="sponsor_compare",
+                                      tags$div(class="qs-icon", icon("exchange")),
+                                      tags$strong("Sponsor Comparison"),
+                                      tags$p("Compare trial portfolios across sponsors")),
+                                    tags$div(class="qs-card", `data-tab`="compliance",
+                                      tags$div(class="qs-icon", icon("file-medical-alt")),
+                                      tags$strong("Results Posting"),
+                                      tags$p("Track results posting compliance")),
+                                  )
+                                )),
                                 uiOutput("overview_footer"),
                                 fluidRow(
                                   box(title="5 Most Recently Authorized Trials", status="warning",
@@ -2739,29 +2738,6 @@ server <- function(input, output, session) {
     }
   })
 
-  output$hero_banner <- renderUI({
-    t <- tc()
-    ico_col <- if (isTRUE(input$theme_select == "Nord Light")) t$frost3 else t$frost1
-    make_tip <- function(ico, headline, body_text) {
-      tags$div(
-        style = "flex:1;text-align:center;padding:0 12px;display:flex;flex-direction:column;align-items:center;",
-        tags$div(style = sprintf("font-size:22px;margin-bottom:6px;color:%s;", ico_col), icon(ico)),
-        tags$div(style = sprintf("font-size:12px;font-weight:600;color:%s;margin-bottom:3px;", t$fg2), headline),
-        tags$div(style = sprintf("font-size:11px;opacity:0.6;line-height:1.4;color:%s;", t$fg1), body_text)
-      )
-    }
-    fluidRow(column(12,
-      tags$div(
-        class = "insight-strip",
-        style = sprintf("background:%s;border-radius:6px;margin-bottom:12px;padding:12px 8px;", t$bg1),
-        make_tip("filter",     "Use sidebar filters",  "Narrow results by status, phase, country, therapeutic area, and more"),
-        tags$div(class = "insight-divider"),
-        make_tip("share-alt",  "Shareable URL",        "Active filters are encoded in the URL — bookmark or share to restore your exact view"),
-        tags$div(class = "insight-divider"),
-        make_tip("arrow-right","Select a feature below","Explore charts, maps, sponsor comparisons, and the data explorer")
-      )
-    ))
-  })
 
   observeEvent(input$nav_to_tab, {
     req(input$nav_to_tab)
