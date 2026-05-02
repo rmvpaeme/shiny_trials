@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.5** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.7** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -219,6 +219,14 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.9.7 — 2026-05-02
+
+- **Light theme now default**: Nord Light is the default appearance. Theme selector ("Dark" / "Light") in the sidebar Tools tab. Full sidebar theming via JS inline-style override (definitive — survives all CSS cascade). Sidebar nav text, filter group labels, open-state summaries, button text, and link colours all correctly themed for both modes.
+- **Overview page — orientation strip**: a compact 3-column tips bar now appears at the top of the Overview page, pointing users to the sidebar filters, KPI card interactions, and feature navigation.
+- **Overview page — Phase Analytics nav card added**: Phase Analytics was the only feature tab missing from the overview quick-start grid. The 6-card single-row layout is replaced with a 4+3 two-row grid (4 × `column(3)` + 3 × `column(4)`), with a labelled section header "Explore the Dashboard".
+- **Overview page — KPI click hint**: a small right-aligned text line below the KPI strip reads "Click any card to filter the dashboard by that group."
+- **Results Posting — KPI parity**: replaced the four old AdminLTE `valueBox` widgets with the same custom kpi-card style used on the overview. Cards: Completed Trials (green), Results Posted with % (blue), Academic — no results (yellow), Industry — no results (orange). Theme-aware colours via `tc()`.
 
 ### v0.9.5 — 2026-05-01
 

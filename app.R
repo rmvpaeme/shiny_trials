@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.9.5 — overview page UI/UX overhaul + fresh theming)
+# app.R  (v0.9.7 — light theme default, full sidebar/chart/table theming, overview UX)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -162,7 +162,7 @@ THEMES <- list(
     green="#A3BE8C",purple="#B48EAD",
     s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
     r_euctr="#5E81AC",r_ctis="#88C0D0",
-    chart_bg="#ECEFF4",chart_fg="#2E3440",chart_grid="#D8DEE9",
+    chart_bg="#FFFFFF",chart_fg="#2E3440",chart_grid="#E5E9F0",
     spinner="#81A1C1"),
   Default = list(
     bg0="#ecf0f5",bg1="#ffffff",bg2="#f5f5f5",bg3="#d2d6de",
@@ -271,7 +271,11 @@ generate_supplement_css <- function(t) {
   .filter-chip{border-color:%s!important}
   .filter-chip-key{background:%s!important}
   .filter-chip-val{background:%s!important}
-  td.ellipsis{max-width:350px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+  td.ellipsis{max-width:350px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body.skin-blue .main-sidebar,body.skin-blue .left-side,
+  .skin-blue .main-sidebar,.skin-blue .left-side,
+  .main-sidebar,.left-side{background:%s!important;background-color:%s!important}
+  .skin-blue .sidebar,.sidebar-wrapper{background:%s!important;background-color:%s!important}',
     t$bg0, t$fg0,
     t$bg0, t$fg2, t$bg1, t$bg0, t$fg0,
     t$bg2, t$fg0, t$bg3,
@@ -287,7 +291,8 @@ generate_supplement_css <- function(t) {
     t$frost1, t$frost0,
     t$bg1, t$fg0, t$bg3, t$bg2, t$bg2,
     t$frost2, t$frost2, t$frost1, t$frost3, t$frost2, t$fg2, t$bg3, t$fg0, t$bg2,
-    t$bg1, t$frost2, t$bg2, t$frost3, t$frost3, t$frost2
+    t$bg1, t$frost2, t$bg2, t$frost3, t$frost3, t$frost2,
+    t$bg0, t$bg0, t$bg0, t$bg0
   )
 }
 
@@ -308,7 +313,42 @@ NORD_LIGHT_SUPPLEMENT <- paste0(
    .qs-card:hover{background:rgba(0,0,0,0.08)!important}',
   # Misc light-theme corrections
   '.bg-yellow{color:#2E3440!important}.bg-green{color:#2E3440!important}.bg-blue{color:#2E3440!important}
-   a{color:#5E81AC!important}a:hover{color:#4C6E96!important}'
+   .content-wrapper a{color:#5E81AC!important}.content-wrapper a:hover{color:#4C6E96!important}',
+  # Orientation strip divider is white in static CSS — invisible on light bg
+  '.insight-divider{background:rgba(0,0,0,0.15)!important}',
+  # Logo bar background must match the dark sidebar, not the light main panel
+  '.skin-blue .main-header .logo{background:#2E3440!important;color:#D8DEE9!important;font-weight:700;font-size:15px}
+   .skin-blue .main-header .logo:hover{background:#3B4252!important}',
+  # Sidebar p/h4 text inherits body dark colour — force light
+  '.sidebar p,.sidebar h4,.sidebar .tab-content p{color:#D8DEE9!important}',
+  # Filter group summaries: base state inherits dark body text; open state has hardcoded #3c8dbc
+  '.sidebar .filter-groups details>summary{color:#D8DEE9!important}
+   .sidebar .filter-groups details[open]>summary{color:#88C0D0!important}',
+  # Sidebar nav links: global a{color:#5E81AC} bleeds in — restore exact dark-Nord values
+  # Full sidebar copy from dark theme — use body.skin-blue compound selector for maximum specificity
+  'body.skin-blue .main-sidebar,body.skin-blue .left-side,
+   .skin-blue .main-sidebar,.skin-blue .left-side,
+   .main-sidebar,.left-side{background:#2E3440!important;background-color:#2E3440!important}
+   body.skin-blue .sidebar,.skin-blue .sidebar,.sidebar-wrapper{background:#2E3440!important;background-color:#2E3440!important}
+   .skin-blue .sidebar-menu>li>a,.skin-blue .sidebar a{color:#D8DEE9!important}
+   .skin-blue .sidebar-menu>li:hover>a{color:#ECEFF4!important;background:#3B4252!important;background-color:#3B4252!important}
+   .skin-blue .sidebar-menu>li.active>a{color:#ECEFF4!important;background:#3B4252!important;background-color:#3B4252!important;border-left-color:#88C0D0!important}
+   .skin-blue .sidebar-menu>li.header{color:#4C566A!important;background:#2E3440!important;background-color:#2E3440!important}',
+  # DataTable — match white box background; base supplement uses bg1/bg2 (too dark for light theme)
+  'table.dataTable{background:#FFFFFF!important}
+   table.dataTable tbody tr{background:#FFFFFF!important}
+   table.dataTable tbody tr:hover{background:#F0F2F5!important}
+   table.dataTable tbody td{border-top:1px solid #E5E9F0!important}
+   table.dataTable thead th,table.dataTable thead td,
+   .dataTables_scrollHead table thead th,.dataTables_scrollHead table thead td,
+   table.dataTable thead tr,.dataTables_scrollHead,.dataTables_scrollHeadInner,
+   .dataTables_scrollHead table thead tr,
+   table.dataTable thead .sorting,table.dataTable thead .sorting_asc,
+   table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,
+   table.dataTable thead .sorting_desc_disabled,
+   .dataTables_scrollHead table thead .sorting,
+   .dataTables_scrollHead table thead .sorting_asc,
+   .dataTables_scrollHead table thead .sorting_desc{background:#E5E9F0!important;color:#2E3440!important}'
 )
 
 generate_css_DELETED <- function(t) {
@@ -1584,10 +1624,12 @@ ui <- dashboardPage(skin = "blue",
                           .qs-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.85; }
                           .qs-card strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.2px; }
                           .qs-card p { font-size: 12px; opacity: 0.6; margin: 0; line-height: 1.4; }
-                          .qs-row { margin-bottom: 12px; }
+                          .qs-row { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: stretch; }
+                          .qs-row > div { display: flex; flex-direction: column; }
+                          .qs-card { flex: 1; }
                           .insight-strip {
                             display: flex;
-                            align-items: center;
+                            align-items: stretch;
                             padding: 14px 4px;
                             margin-bottom: 10px;
                           }
@@ -1732,8 +1774,10 @@ ui <- dashboardPage(skin = "blue",
                                                             style="width:100%;margin-bottom:8px;",
                                                             title="Compare current filters: Paediatric vs Adult, with statistical tests"),
                                              tags$hr(style="margin:8px 0;"),
-                                             tags$div(style="display:none;",
-                                               radioButtons("theme_select",NULL,choices=c("Nord","Nord Light","Default"),selected="Nord",inline=TRUE)),
+                                             tags$p(tagList(icon("palette"), tags$b(" Appearance")), style="font-size:11px;margin-bottom:6px;"),
+                                             selectInput("theme_select", NULL,
+                                                         choices = c("Dark" = "Nord", "Light" = "Nord Light"),
+                                                         selected = "Nord Light"),
                                              tags$hr(style="margin:8px 0;"),
                                              textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")
                                            )
@@ -1789,28 +1833,38 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="overview",
                                 uiOutput("no_data_banner"),
                                 uiOutput("kpi_strip"),
+                                uiOutput("hero_banner"),
+                                fluidRow(column(12,
+                                  tags$div(class="analytics-section-header", icon("compass"), " Explore the Dashboard")
+                                )),
                                 fluidRow(class="qs-row",
-                                  column(2, tags$div(class="qs-card", `data-tab`="chartbuilder",
+                                  column(3, tags$div(class="qs-card", `data-tab`="chartbuilder",
                                     tags$div(class="qs-icon", icon("chart-line")),
                                     tags$strong("Chart Builder"),
                                     tags$p("Build a custom chart from any variable"))),
-                                  column(2, tags$div(class="qs-card", `data-tab`="map",
+                                  column(3, tags$div(class="qs-card", `data-tab`="map",
                                     tags$div(class="qs-icon", icon("map")),
                                     tags$strong("Map"),
                                     tags$p("See trial distribution across member states"))),
-                                  column(2, tags$div(class="qs-card", `data-tab`="analytics",
+                                  column(3, tags$div(class="qs-card", `data-tab`="analytics",
                                     tags$div(class="qs-icon", icon("chart-bar")),
                                     tags$strong("Basic Analytics"),
                                     tags$p("Explore breakdowns by phase, sponsor, and more"))),
-                                  column(2, tags$div(class="qs-card", `data-tab`="sponsor_compare",
+                                  column(3, tags$div(class="qs-card", `data-tab`="phase",
+                                    tags$div(class="qs-icon", icon("flask")),
+                                    tags$strong("Phase Analytics"),
+                                    tags$p("Phase distribution, completion rates, and trends")))
+                                ),
+                                fluidRow(class="qs-row",
+                                  column(4, tags$div(class="qs-card", `data-tab`="sponsor_compare",
                                     tags$div(class="qs-icon", icon("exchange")),
                                     tags$strong("Sponsor Comparison"),
                                     tags$p("Compare trial portfolios across sponsors"))),
-                                  column(2, tags$div(class="qs-card", `data-tab`="compliance",
+                                  column(4, tags$div(class="qs-card", `data-tab`="compliance",
                                     tags$div(class="qs-icon", icon("file-medical-alt")),
                                     tags$strong("Results Posting"),
                                     tags$p("Track results posting compliance"))),
-                                  column(2, tags$div(class="qs-card", `data-tab`="data",
+                                  column(4, tags$div(class="qs-card", `data-tab`="data",
                                     tags$div(class="qs-icon", icon("table")),
                                     tags$strong("Data Explorer"),
                                     tags$p("Browse and download the full trial dataset")))
@@ -1971,12 +2025,7 @@ ui <- dashboardPage(skin = "blue",
                                 uiOutput("sponsor_compare_tab_ui")
                         ),
                         tabItem(tabName="compliance",
-                                fluidRow(
-                                  valueBoxOutput("vb_completed_total", width=3),
-                                  valueBoxOutput("vb_results_posted",  width=3),
-                                  valueBoxOutput("vb_overdue_academic",width=3),
-                                  valueBoxOutput("vb_overdue_industry",width=3)
-                                ),
+                                uiOutput("kpi_strip_compliance"),
                                 fluidRow(
                                   box(title="Results Posting by Authorization Year",status="primary",solidHeader=TRUE,width=12,height=500,
                                       p(em("Completed trials grouped by authorization year. Green = results confirmed posted in the registry; red = no results posted. Results data is sourced directly from EUCTR (endPoints.endPoint.readyForValues) and CTIS (resultsFirstReceived). Rebuild the cache to reflect the latest registry data."),
@@ -2293,8 +2342,30 @@ server <- function(input, output, session) {
   tc <- reactive(THEMES[[input$theme_select]])
   output$active_theme <- renderUI({
     switch(input$theme_select,
-      "Nord"       = tagList(fresh::use_theme(.NORD_FRESH),       tags$style(NORD_SUPPLEMENT)),
-      "Nord Light" = tagList(fresh::use_theme(.NORD_LIGHT_FRESH), tags$style(NORD_LIGHT_SUPPLEMENT)),
+      "Nord" = tagList(
+        fresh::use_theme(.NORD_FRESH),
+        tags$style(NORD_SUPPLEMENT)
+      ),
+      "Nord Light" = tagList(
+        fresh::use_theme(.NORD_LIGHT_FRESH),
+        tags$style(NORD_LIGHT_SUPPLEMENT),
+        # JS inline-style: bypasses all CSS cascade — sidebar background is definitive
+        tags$script(HTML("
+          (function fixSidebar() {
+            var els = document.querySelectorAll('.main-sidebar,.left-side,.skin-blue .main-sidebar');
+            if (els.length === 0) { setTimeout(fixSidebar, 100); return; }
+            els.forEach(function(el) {
+              el.style.setProperty('background', '#2E3440', 'important');
+              el.style.setProperty('background-color', '#2E3440', 'important');
+            });
+          })();
+        ")),
+        # Button text colour: a{color:#5E81AC} bleeds into .btn text — force white
+        tags$style(HTML("
+          .btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger,
+          .btn-primary a,.btn-success a,.btn-info a,.btn-warning a{color:#fff!important}
+        "))
+      ),
       NULL
     )
   })
@@ -2611,11 +2682,15 @@ server <- function(input, output, session) {
         tags$div(class = "kpi-lbl",  style = "color:rgba(255,255,255,0.9);", label)
       )
     }
-    fluidRow(style = "margin:0 -6px 16px;",
-      column(3, style = "padding:0 6px;", make_kpi("kpi_total",     n_total,     "Total Trials", "flask",        t$frost3)),
-      column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$green)),
-      column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$yellow)),
-      column(3, style = "padding:0 6px;", make_kpi("kpi_pip",       n_pip,       "With PIP",     "child",        t$purple))
+    tagList(
+      fluidRow(style = "margin:0 -6px 4px;",
+        column(3, style = "padding:0 6px;", make_kpi("kpi_total",     n_total,     "Total Trials", "flask",        t$frost3)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$green)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$yellow)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_pip",       n_pip,       "With PIP",     "child",        t$purple))
+      ),
+      tags$p("Click any card to filter the dashboard by that group.",
+             style = sprintf("font-size:11px;opacity:0.55;text-align:right;margin-top:2px;margin-bottom:14px;color:%s;", t$fg1))
     )
   })
 
@@ -2631,17 +2706,26 @@ server <- function(input, output, session) {
 
   output$hero_banner <- renderUI({
     t <- tc()
-    fluidRow(
-      column(12,
-        tags$div(
-          style = sprintf("padding:16px 4px 14px;margin-bottom:8px;border-bottom:1px solid %s;", t$bg3),
-          tags$h2("EU Paediatric Trial Monitor",
-                  style = sprintf("margin:0 0 6px;font-size:28px;font-weight:700;letter-spacing:0.2px;color:%s;", t$fg2)),
-          tags$p("Browse and analyse authorized paediatric clinical trials registered in EUCTR and CTIS. Use the sidebar filters to narrow results, or jump to a feature below.",
-                 style = sprintf("margin:0;font-size:15px;line-height:1.6;color:%s;max-width:700px;", t$fg1))
-        )
+    ico_col <- if (isTRUE(input$theme_select == "Nord Light")) t$frost3 else t$frost1
+    make_tip <- function(ico, headline, body_text) {
+      tags$div(
+        style = "flex:1;text-align:center;padding:0 12px;display:flex;flex-direction:column;align-items:center;",
+        tags$div(style = sprintf("font-size:22px;margin-bottom:6px;color:%s;", ico_col), icon(ico)),
+        tags$div(style = sprintf("font-size:12px;font-weight:600;color:%s;margin-bottom:3px;", t$fg2), headline),
+        tags$div(style = sprintf("font-size:11px;opacity:0.6;line-height:1.4;color:%s;", t$fg1), body_text)
       )
-    )
+    }
+    fluidRow(column(12,
+      tags$div(
+        class = "insight-strip",
+        style = sprintf("background:%s;border-radius:6px;margin-bottom:12px;padding:12px 8px;", t$bg1),
+        make_tip("filter",     "Use sidebar filters",  "Narrow results by status, phase, country, therapeutic area, and more"),
+        tags$div(class = "insight-divider"),
+        make_tip("share-alt",  "Shareable URL",        "Active filters are encoded in the URL — bookmark or share to restore your exact view"),
+        tags$div(class = "insight-divider"),
+        make_tip("arrow-right","Select a feature below","Explore charts, maps, sponsor comparisons, and the data explorer")
+      )
+    ))
   })
 
   observeEvent(input$nav_to_tab, {
@@ -4190,42 +4274,38 @@ server <- function(input, output, session) {
     filt() %>% filter(status == "Completed", !is.na(decision_date))
   })
 
-  output$vb_completed_total <- renderValueBox({
-    n <- nrow(compliance_base())
-    valueBox(format(n, big.mark=","), "Completed Trials", icon=icon("check-circle"), color="green")
-  })
-
-  output$vb_results_posted <- renderValueBox({
-    df <- compliance_base()
-    if ("has_results" %in% names(df)) {
-      n     <- sum(df$has_results, na.rm = TRUE)
-      total <- nrow(df)
-      pct   <- if (total > 0) paste0(round(n / total * 100), "%") else "—"
-      valueBox(paste0(format(n, big.mark=","), " (", pct, ")"),
-               "Results Posted", icon=icon("file-alt"), color="blue")
-    } else {
-      valueBox("N/A", "Results data (rebuild cache)", icon=icon("sync"), color="blue")
+  output$kpi_strip_compliance <- renderUI({
+    t   <- tc()
+    df  <- compliance_base()
+    n_completed <- nrow(df)
+    has_res <- "has_results" %in% names(df)
+    n_posted <- if (has_res) sum(df$has_results, na.rm = TRUE) else NA_integer_
+    n_acad   <- if (has_res) {
+      d <- df %>% filter(!is.na(sponsor_type), sponsor_type == "Academic")
+      sum(!d$has_results, na.rm = TRUE)
+    } else NA_integer_
+    n_ind    <- if (has_res) {
+      d <- df %>% filter(!is.na(sponsor_type), sponsor_type == "Industry")
+      sum(!d$has_results, na.rm = TRUE)
+    } else NA_integer_
+    fmt <- function(x) if (is.na(x)) "N/A" else format(x, big.mark = ",")
+    pct_lbl <- if (!is.na(n_posted) && n_completed > 0)
+      paste0(fmt(n_posted), " (", round(n_posted / n_completed * 100), "%)")
+    else fmt(n_posted)
+    make_kpi <- function(id, val, label, ico, col) {
+      tags$div(id = id, class = "kpi-card",
+        style = sprintf("background:%s;border-top:none;", col),
+        tags$div(class = "kpi-icon", style = "color:rgba(255,255,255,0.8);", icon(ico)),
+        tags$div(class = "kpi-val",  style = "color:#fff;", val),
+        tags$div(class = "kpi-lbl",  style = "color:rgba(255,255,255,0.9);", label)
+      )
     }
-  })
-
-  output$vb_overdue_academic <- renderValueBox({
-    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Academic")
-    if ("has_results" %in% names(df)) {
-      n <- sum(!df$has_results, na.rm = TRUE)
-      valueBox(format(n, big.mark=","), "Academic — no results posted", icon=icon("university"), color="yellow")
-    } else {
-      valueBox("N/A", "Academic — no results (rebuild cache)", icon=icon("university"), color="yellow")
-    }
-  })
-
-  output$vb_overdue_industry <- renderValueBox({
-    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Industry")
-    if ("has_results" %in% names(df)) {
-      n <- sum(!df$has_results, na.rm = TRUE)
-      valueBox(format(n, big.mark=","), "Industry — no results posted", icon=icon("building"), color="orange")
-    } else {
-      valueBox("N/A", "Industry — no results (rebuild cache)", icon=icon("building"), color="orange")
-    }
+    fluidRow(style = "margin:0 -6px 16px;",
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_total",  fmt(n_completed), "Completed Trials",            "check-circle", t$green)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_posted", pct_lbl,          "Results Posted",               "file-alt",     t$frost3)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_acad",   fmt(n_acad),      "Academic — no results posted", "university",   t$yellow)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_ind",    fmt(n_ind),       "Industry — no results posted", "building",     t$orange))
+    )
   })
 
   output$plot_results_compliance_overview <- renderPlotly({
@@ -4436,8 +4516,7 @@ server <- function(input, output, session) {
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
       "plot_compare_country", "plot_compare_pip", "plot_compare_year",
       # Results Posting
-      "vb_completed_total", "vb_results_posted",
-      "vb_overdue_academic", "vb_overdue_industry",
+      "kpi_strip_compliance",
       "plot_results_compliance_overview", "plot_results_by_sponsor",
       "table_results_posted", "table_overdue",
       # About
