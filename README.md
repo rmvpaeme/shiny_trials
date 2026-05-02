@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.7** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.8** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -60,7 +60,7 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 
 | Tab | What it shows |
 | --- | ------------- |
-| **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcuts to all feature tabs; quick-filter preset buttons (CTIS only, EUCTR only, Ongoing PIP, Orphan, Completed, Last 12 months, Last year, Adult trials, Paediatric trials); 5 most recently authorized trials |
+| **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcut cards (CSS grid, mobile-friendly); example questions that apply filters in one click; prominent "Compare Paediatric vs Adult" button in sidebar; 5 most recently authorized trials |
 | **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types |
 | **Map** | Open trials by country (circle map); sortable country table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
@@ -219,6 +219,13 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 ---
 
 ## Changelog
+
+### v0.9.8 — 2026-05-02
+
+- **Example questions replace quick filters**: the overview footer now shows four conversational example questions instead of pill-shaped preset buttons. Each question applies the relevant sidebar filters in one click: "Which trials have been authorized in the last 12 months?", "What are the open trials for neuroblastoma in Belgium?", "How is the evolution of the PIPs in the past 10 years?", and "How does the portfolio of Novartis differ between paediatrics and adults?" (sets sponsor filter; see the Compare button). The Novartis preset uses server-side selectize correctly (choices + selected passed together).
+- **Compare Paediatric vs Adult button promoted**: the button is now displayed prominently in the main sidebar directly below the navigation menu, always visible without switching to the Tools tab. The existing Tools tab button is retained.
+- **Navigation cards — CSS grid**: the two mismatched `fluidRow`/`column` blocks (4 × col-3 + 3 × col-4) are replaced with a single `display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))` container. Cards reflow cleanly at any screen width. Data Explorer card removed from the grid.
+- **Removed orientation tips strip**: the three-column "Use sidebar filters / Shareable URL / Select a feature below" banner is removed from the overview page.
 
 ### v0.9.7 — 2026-05-02
 
