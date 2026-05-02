@@ -1761,12 +1761,10 @@ ui <- dashboardPage(skin = "blue",
                                        tabsetPanel(id="sidebar_tabs",
                                          tabPanel("Filters",
                                            tags$div(class="filter-groups",
-                                             tags$div(style="padding:8px 12px 4px;",
-                                               selectInput("age_group_filter","Age Group:",
-                                                           choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
-                                               tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 8px;line-height:1.4;",
-                                                 "Trials enrolling all ages appear under both filters.")
-                                             ),
+                                             selectInput("age_group_filter","Age Group:",
+                                                         choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
+                                             tags$p(class="age-group-hint",
+                                               "Trials enrolling all ages appear under both filters."),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
                                                  "Search & Date", uiOutput("badge_search_date", inline=TRUE)),
@@ -1878,6 +1876,8 @@ ui <- dashboardPage(skin = "blue",
                         .filter-groups details summary:hover { opacity: 1; }
                         .filter-groups details > :not(summary) { padding: 0 12px; }
                         .filter-groups details[open] > summary { opacity: 1; color: #3c8dbc; }
+                        .filter-groups > .shiny-input-container { padding: 0 12px; }
+                        .age-group-hint { font-size:11px; opacity:0.7; margin:-8px 12px 8px; line-height:1.4; padding-bottom:8px; border-bottom:1px solid rgba(128,128,128,0.2); }
                         /* ── Compact tool buttons ── */
                         .sidebar-tool-btn { width: 100%; padding: 4px 6px; font-size: 11px; }
                         /* ── Save / Load buttons ── */
@@ -2109,7 +2109,7 @@ ui <- dashboardPage(skin = "blue",
                         ),
                         tabItem(tabName="about",
                                 fluidRow(
-                                  box(title="About This Dashboard",width=8,status="primary",solidHeader=TRUE,
+                                  box(title="About This Dashboard",width=12,status="primary",solidHeader=TRUE,
                                       h3(icon("child")," EU Paediatric Clinical Trials Dashboard"),
                                       p("This dashboard provides a comprehensive view of paediatric clinical trials
                                         registered in the European Union. It integrates data from two official EU
@@ -2273,27 +2273,6 @@ ui <- dashboardPage(skin = "blue",
                                       hr(),
                                       p(em(paste0("v0.9.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
-                                  box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
-                                      h4(icon("code")," Built With"),
-                                      tags$ul(
-                                        tags$li(tags$b("R Shiny"), " + ", tags$b("shinydashboard")),
-                                        tags$li(tags$b("ctrdata"), " — registry data retrieval"),
-                                        tags$li(tags$b("plotly"), " — interactive visualisations"),
-                                        tags$li(tags$b("DT"), " — interactive data tables"),
-                                        tags$li(tags$b("dplyr / tidyr"), " — data wrangling"),
-                                        tags$li(tags$b("SQLite"), " — local data storage")
-                                      ),
-                                      h4(icon("chart-bar")," Dashboard Tabs"),
-                                      tags$ul(
-                                        tags$li(tags$b("Overview:"), " Summary statistics, cumulative trends, sponsor type breakdown, registry overlap, and yearly submission charts. CT numbers link directly to their registry."),
-                                        tags$li(tags$b("Data Explorer:"), " Searchable, filterable table of all trials with CSV/Excel export."),
-                                        tags$li(tags$b("Analytics:"), " MedDRA term breakdowns, country-level activity, PIP status by register and by year, and quarterly timeline."),
-                                        tags$li(tags$b("Phase Analysis:"), " Trial phase breakdown by register, status, and sponsor type (Academic vs Industry).")
-                                      ),
-                                      h4(icon("info-circle")," Notes"),
-                                      p("Trials covering multiple countries or conditions may appear in multiple filter categories.
-                                        Data reflects the state of the registries at the time of the last database update.")
-                                  )
                                 ),
                                 fluidRow(
                                   box(title="Trial Status Definitions", width=12, status="warning", solidHeader=TRUE,
