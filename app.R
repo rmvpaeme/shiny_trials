@@ -313,7 +313,9 @@ NORD_LIGHT_SUPPLEMENT <- paste0(
    .qs-card:hover{background:rgba(0,0,0,0.08)!important}',
   # Misc light-theme corrections
   '.bg-yellow{color:#2E3440!important}.bg-green{color:#2E3440!important}.bg-blue{color:#2E3440!important}
-   .content-wrapper a{color:#5E81AC!important}.content-wrapper a:hover{color:#4C6E96!important}',
+   .content-wrapper a:not(.btn){color:#5E81AC!important}.content-wrapper a:not(.btn):hover{color:#4C6E96!important}
+   .skin-blue .main-header .navbar .dropdown>a{color:#2E3440!important}
+   #nav_subtitle{color:#2E3440!important}',
   # Orientation strip divider is white in static CSS — invisible on light bg
   '.insight-divider{background:rgba(0,0,0,0.15)!important}',
   # Logo bar background must match the dark sidebar, not the light main panel
@@ -865,6 +867,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.organClass",
     "authorizedApplication.memberStatesConcerned",
     "authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle",
+    "authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle",
     "authorizedApplication.authorizedPartI.trialDetails.scientificAdviceAndPip.paediatricInvestigationPlan",
     "authorizedApplication.applicationInfo.trialStatus",
     "authorizedApplication.applicationInfo.submissionDate",
@@ -986,6 +989,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.organClass",
     "authorizedApplication.memberStatesConcerned",
     "authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle",
+    "authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle",
     "authorizedApplication.authorizedPartI.trialDetails.scientificAdviceAndPip.paediatricInvestigationPlan",
     "authorizedApplication.applicationInfo.trialStatus",
     "authorizedApplication.applicationInfo.submissionDate",
@@ -1016,6 +1020,14 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     `authorizedApplication.memberStatesConcerned` =
       clean_member_state(`authorizedApplication.memberStatesConcerned`))
   
+  # Coalesce CTIS title: prefer fullTitle, fall back to publicTitle
+  result <- result %>% mutate(
+    `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle` = coalesce(
+      `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle`,
+      `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle`
+    )
+  ) %>% select(-`authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle`)
+
   # Unite
   result <- result %>%
     unite("CT_number", a2_eudract_number,
@@ -1605,6 +1617,14 @@ ui <- dashboardPage(skin = "blue",
                           .kpi-icon { font-size: 20px; margin-bottom: 6px; }
                           .kpi-val  { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
                           .kpi-lbl  { font-size: 12px; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; }
+                          @media (max-width: 767px) {
+                            #kpi_strip .col-sm-3,
+                            #kpi_strip_compliance .col-sm-3 { width: 50% !important; float: left !important; padding: 0 5px 10px !important; }
+                            .kpi-card { padding: 8px 10px 7px; }
+                            .kpi-icon { font-size: 14px; margin-bottom: 3px; }
+                            .kpi-val  { font-size: 20px; }
+                            .kpi-lbl  { font-size: 10px; letter-spacing: 0.3px; }
+                          }
                           .qs-card {
                             cursor: pointer;
                             padding: 18px 12px;
@@ -1711,7 +1731,7 @@ ui <- dashboardPage(skin = "blue",
                       icon("child"), " EU Paediatric Trial Monitor"
                     ), titleWidth = 300,
                     tags$li(class = "dropdown",
-                      tags$a(style = "cursor:default;font-size:13px;opacity:0.65;padding:15px 20px;pointer-events:none;",
+                      tags$a(id = "nav_subtitle", style = "cursor:default;font-size:13px;opacity:0.65;padding:15px 20px;pointer-events:none;",
                              "Browse and analyse authorized paediatric clinical trials in EUCTR and CTIS")
                     )),
                     dashboardSidebar(width = 300,

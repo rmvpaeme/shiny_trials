@@ -24,7 +24,12 @@ Rscript rebuild_cache.R >> "$LOG_FILE" 2>&1
 # 3. Sync app.R and cache to deploy/
 log "Step 3/4: Syncing files to deploy/..."
 cp app.R deploy/app.R
+cp report.Rmd deploy/report.Rmd
 cp pediatric_trials_cache.rds deploy/pediatric_trials_cache.rds
+cp trials_cache.rds deploy/trials_cache.rds
+cp comparison_report.Rmd deploy/comparison_report.Rmd
+cp preprocessing.Rmd deploy/preprocessing.Rmd
+cp www/preprocessing.html deploy/www/preprocessing.html
 
 # 4. Deploy to shinyapps.io
 log "Step 4/4: Deploying to shinyapps.io..."
