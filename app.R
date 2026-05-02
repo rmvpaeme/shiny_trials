@@ -1659,6 +1659,30 @@ ui <- dashboardPage(skin = "blue",
                             transition: opacity 0.15s;
                           }
                           .preset-btn:hover { opacity: 0.7; }
+                          .example-q-btn {
+                            display: block;
+                            width: 100%;
+                            text-align: left;
+                            padding: 10px 14px;
+                            margin: 0 0 8px 0;
+                            border-radius: 8px;
+                            font-size: 13px;
+
+                            cursor: pointer;
+                            border: 1px solid;
+                            border-left-width: 4px;
+                            background: transparent;
+                            transition: background 0.15s, opacity 0.15s;
+                            line-height: 1.4;
+                          }
+                          .example-q-btn:hover { opacity: 0.8; background: rgba(128,128,128,0.08); }
+                          .example-q-hint {
+                            display: block;
+                            font-size: 11px;
+                            font-style: normal;
+                            opacity: 0.6;
+                            margin-top: 3px;
+                          }
                           .preset-section-label {
                             font-size: 11px;
                             opacity: 0.6;
@@ -1698,6 +1722,17 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
+                                     tags$div(style="padding:10px 14px 6px;",
+                                       tags$button(
+                                         tagList(icon("exchange"), " Compare Paediatric vs Adult"),
+                                         class = "btn btn-info btn-block",
+                                         style = "width:100%;font-size:13px;font-weight:600;padding:9px 12px;",
+                                         title = "Generate a side-by-side comparison report: Paediatric vs Adult",
+                                         onclick = "document.getElementById('dl_comparison_report').click();"
+                                       ),
+                                       tags$p(style="font-size:10px;opacity:0.6;margin:4px 0 0;text-align:center;",
+                                              "Generates a PDF comparing paediatric vs adult trials under the current filters")
+                                     ),
                                      uiOutput("trial_count_bar"),
                                      tags$div(class="sidebar-tabset",
                                        tabsetPanel(id="sidebar_tabs",
@@ -2735,24 +2770,31 @@ server <- function(input, output, session) {
 
   output$overview_footer <- renderUI({
     t <- tc()
-    make_preset <- function(label, preset_id) {
-      tags$button(class = "preset-btn", `data-preset` = preset_id,
-                  style = sprintf("color:%s;border-color:%s;", t$fg0, t$bg3), label)
+    make_question <- function(label, preset_id, hint = NULL) {
+      tags$button(
+        class = "preset-btn example-q-btn",
+        `data-preset` = preset_id,
+        style = sprintf("color:%s;border-color:%s;", t$fg0, t$frost2),
+        tagList(
+          label,
+          if (!is.null(hint)) tags$span(class = "example-q-hint", hint)
+        )
+      )
     }
     fluidRow(column(12,
-      tags$div(style = sprintf("background:%s;border-radius:8px;padding:12px 16px;margin-bottom:14px;", t$bg1),
+      tags$div(style = sprintf("background:%s;border-radius:8px;padding:14px 16px;margin-bottom:14px;", t$bg1),
         tags$div(class = "preset-section-label", style = sprintf("color:%s;", t$fg1),
-                 icon("bolt"), " Quick filters"),
+                 icon("lightbulb"), " Example Questions (click to search)"),
         tags$div(
-          make_preset("CTIS only",          "ctis_only"),
-          make_preset("EUCTR only",         "euctr_only"),
-          make_preset("Ongoing PIP trials", "ongoing_pip"),
-          make_preset("Orphan designation", "orphan"),
-          make_preset("Completed trials",   "completed"),
-          make_preset("Last 12 months",     "last_12m"),
-          make_preset("Last year",          "last_year"),
-          make_preset("Adult trials",        "adult_only"),
-          make_preset("Paediatric trials",  "paed_only")
+          make_question("Which trials have been authorized in the last 12 months?",
+                        "last_12m"),
+          make_question("What are the open trials for neuroblastoma in Belgium?",
+                        "neuroblastoma_belgium"),
+          make_question("How is the evolution of the PIPs in the past 10 years?",
+                        "pip_10y"),
+          make_question('How does the portfolio of Novartis differ between paediatrics and adults?',
+                        "novartis_compare",
+                        hint = 'Apply the filter, then press “Compare Paediatric vs Adult” in the side panel')
         )
       )
     ))
@@ -2791,6 +2833,20 @@ server <- function(input, output, session) {
       updateSelectInput(session, "age_group_filter", selected = "≥ 18 years")
     } else if (p == "paed_only") {
       updateSelectInput(session, "age_group_filter", selected = "< 18 years")
+    } else if (p == "neuroblastoma_belgium") {
+      updateSelectizeInput(session, "status_filter",  selected = "Ongoing")
+      updateTextInput(session,      "text_search",    value    = "neuroblastoma")
+      updateSelectizeInput(session, "country_filter", selected = "Belgium")
+    } else if (p == "pip_10y") {
+      updateSelectInput(session,    "pip_filter",  selected = "Yes")
+      updateDateRangeInput(session, "date_range",
+                           start = Sys.Date() - 3650, end = Sys.Date())
+    } else if (p == "novartis_compare") {
+      req(rv$data)
+      updateSelectizeInput(session, "sponsor_filter",
+                           choices  = sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),
+                           selected = "Novartis",
+                           server   = TRUE)
     }
   })
 
