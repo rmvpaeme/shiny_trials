@@ -1,10 +1,11 @@
 # ============================================================================
-# app.R  (v0.8.1 — per-million-children normalisation on map and Chart Builder)
+# app.R  (v0.9.7 — light theme default, full sidebar/chart/table theming, overview UX)
 # ============================================================================
 
 suppressPackageStartupMessages({
   library(shiny)
   library(shinydashboard)
+  library(fresh)
   library(shinycssloaders)
   library(ctrdata)
   library(dplyr)
@@ -48,38 +49,61 @@ ctis_soc_lookup <- c(
   "100000004873" = "Psychiatric disorders"
 )
 
+# Sentence-case a single term string, preserving short all-caps medical acronyms
+# (HIV, COPD, ADHD, ...) that are ≤5 uppercase letters, optionally followed by
+# digits/hyphens (HIV-1, CAR-T). Longer all-caps words (NERVOUS, SYSTEM) are
+# treated as wrongly-cased and lowercased like any other word.
+sentence_case_term <- function(s) {
+  if (is.na(s) || s == "") return(s)
+  words <- strsplit(s, " ")[[1]]
+  acronym <- grepl("^[A-Z]{2,5}([-/][A-Z0-9]+)*$", words)
+  lowered <- tolower(s)
+  out     <- strsplit(lowered, " ")[[1]]
+  out[1]  <- paste0(toupper(substr(out[1], 1, 1)), substr(out[1], 2, nchar(out[1])))
+  out[acronym] <- words[acronym]
+  paste(out, collapse = " ")
+}
+
 clean_meddra_term <- function(x) {
   if (is.na(x) || x == "") return(NA_character_)
   parts <- trimws(strsplit(x, " / ")[[1]])
-  # Normalise American → MedDRA preferred British spelling
-  parts <- gsub("Hemophilia", "Haemophilia", parts)
-  parts <- gsub("hemophilia", "haemophilia", parts)
-  parts <- gsub("Leukemia",   "Leukaemia",   parts)
-  parts <- gsub("leukemia",   "leukaemia",   parts)
-  parts <- gsub("\\bTumors\\b",  "Tumours",  parts)
-  parts <- gsub("\\btumors\\b",  "tumours",  parts)
-  parts <- gsub("\\bTumor\\b",   "Tumour",   parts)
-  parts <- gsub("\\btumor\\b",   "tumour",   parts)
-  parts <- gsub("Diarrhea",   "Diarrhoea",   parts)
-  parts <- gsub("diarrhea",   "diarrhoea",   parts)
-  parts <- gsub("Gastroesophag",    "Gastrooesophag",    parts)
-  parts <- gsub("gastroesophag",    "gastrooesophag",    parts)
-  parts <- gsub("(?<![oO])Esophag", "Oesophag", parts, perl = TRUE)
-  parts <- gsub("(?<![oO])esophag", "oesophag", parts, perl = TRUE)
-  parts <- gsub("Tyrosinemia", "Tyrosinaemia", parts)
-  parts <- gsub("tyrosinemia", "tyrosinaemia", parts)
-  parts <- gsub("Localized",  "Localised",   parts)
-  parts <- gsub("localized",  "localised",   parts)
-  # Roman numeral type notation → Arabic (order: IV before III before II before I)
-  parts <- gsub("\\bType IV\\b",  "Type 4", parts)
-  parts <- gsub("\\bType III\\b", "Type 3", parts)
-  parts <- gsub("\\bType II\\b",  "Type 2", parts)
-  parts <- gsub("\\bType I\\b",   "Type 1", parts)
-  parts <- gsub("\\btype IV\\b",  "type 4", parts)
-  parts <- gsub("\\btype III\\b", "type 3", parts)
-  parts <- gsub("\\btype II\\b",  "type 2", parts)
-  parts <- gsub("\\btype I\\b",   "type 1", parts)
-  parts <- unique(trimws(parts[parts != ""]))
+  # American → MedDRA preferred British spelling (case-insensitive)
+  parts <- gsub("hemophilia",    "haemophilia",    parts, ignore.case = TRUE)
+  parts <- gsub("leukemia",      "leukaemia",      parts, ignore.case = TRUE)
+  parts <- gsub("\\btumors?\\b", "tumour",         parts, ignore.case = TRUE, perl = TRUE)
+  parts <- gsub("diarrhea",      "diarrhoea",      parts, ignore.case = TRUE)
+  parts <- gsub("gastroesophag", "gastrooesophag", parts, ignore.case = TRUE)
+  parts <- gsub("(?<![oO])esophag", "oesophag",    parts, ignore.case = TRUE, perl = TRUE)
+  parts <- gsub("tyrosinemia",   "tyrosinaemia",   parts, ignore.case = TRUE)
+  parts <- gsub("localized",     "localised",      parts, ignore.case = TRUE)
+  # Roman numeral type notation → Arabic (IV before III before II before I)
+  parts <- gsub("\\btype iv\\b",  "type 4", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype iii\\b", "type 3", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype ii\\b",  "type 2", parts, ignore.case = TRUE)
+  parts <- gsub("\\btype i\\b",   "type 1", parts, ignore.case = TRUE)
+  # Collapse staging / disease-state qualifiers to base pathology name.
+  # Leading qualifier (space-separated only — "Relapsing-remitting MS" is untouched
+  # because of the hyphen; "Refractory" excluded here since it can be a core disease
+  # descriptor e.g. "Refractory hypertension").
+  parts <- gsub(
+    "^(metastatic|advanced|recurrent|relapsed|unresectable|locally advanced|progression of)\\s+",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  # Trailing qualifier (refractory safe to strip here — it follows the disease name)
+  parts <- gsub(
+    "\\s+(metastatic|recurrent|refractory|relapse|relapsed)$",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  # WHO clinical stage / NYHA class — run before generic stage so no residue remains
+  parts <- gsub("\\s+WHO\\s+clinical\\s+stage\\s+\\w+", "", parts, ignore.case = TRUE)
+  parts <- gsub("\\s+NYHA\\s+class\\s+\\w+",            "", parts, ignore.case = TRUE)
+  # Trailing stage designation: "stage IV", "stage IIIB", "stage unspecified"
+  # "End stage renal disease" is safe — "renal" is not a Roman/Arabic numeral.
+  parts <- gsub(
+    "\\s+stage\\s+([IVXivx0-9]+[A-Za-z]?|unspecified)(\\s.*)?$",
+    "", parts, ignore.case = TRUE, perl = TRUE)
+  parts <- trimws(parts)
+  # Sentence-case: collapses all case variants into one canonical form
+  parts <- vapply(parts, sentence_case_term, character(1))
+  parts <- unique(trimws(parts[!is.na(parts) & parts != ""]))
   if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
 }
 
@@ -99,6 +123,7 @@ clean_organ_class <- function(x) {
   # Normalise "unspecified incl cysts and polyps" (EUCTR) to canonical form with parens (CTIS)
   cleaned <- sub("unspecified incl cysts and polyps",
                  "unspecified (incl cysts and polyps)", cleaned, fixed = TRUE)
+  cleaned <- vapply(cleaned, sentence_case_term, character(1))
   cleaned <- unique(trimws(cleaned[!is.na(cleaned)]))
   if (length(cleaned) == 0) NA_character_ else paste(cleaned, collapse = " / ")
 }
@@ -108,25 +133,17 @@ clean_organ_class <- function(x) {
 # ══════════════════════════════════════════════════════════════════════════════
 try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 
-DB_PATH       <- "./data/pediatric_trials.sqlite"
+DB_PATH       <- "./data/trials.sqlite"
 DB_COLLECTION <- "trials"
-CACHE_PATH    <- "pediatric_trials_cache.rds"
+CACHE_PATH    <- "trials_cache.rds"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
 # ══════════════════════════════════════════════════════════════════════════════
 
+# R-side colour palette — used by tc() for charts, KPI cards, plot colours.
+# AdminLTE shell theming is handled by the `fresh` package below.
 THEMES <- list(
-  `Nord Light` = list(
-    bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
-    fg0="#2E3440",fg1="#3B4252",fg2="#434C5E",
-    frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
-    red="#BF616A",orange="#D08770",yellow="#EBCB8B",
-    green="#A3BE8C",purple="#B48EAD",
-    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
-    r_euctr="#5E81AC",r_ctis="#88C0D0",
-    chart_bg="#ECEFF4",chart_fg="#2E3440",chart_grid="#D8DEE9",
-    spinner="#81A1C1"),
   Nord = list(
     bg0="#2E3440",bg1="#3B4252",bg2="#434C5E",bg3="#4C566A",
     fg0="#D8DEE9",fg1="#E5E9F0",fg2="#ECEFF4",
@@ -135,12 +152,22 @@ THEMES <- list(
     green="#A3BE8C",purple="#B48EAD",
     s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
     r_euctr="#5E81AC",r_ctis="#88C0D0",
-    chart_bg="#3B4252",chart_fg="#D8DEE9",chart_grid="#434C5E",
+    chart_bg="#434C5E",chart_fg="#D8DEE9",chart_grid="#4C566A",
     spinner="#88C0D0"),
+  `Nord Light` = list(
+    bg0="#ECEFF4",bg1="#E5E9F0",bg2="#D8DEE9",bg3="#C4CEDE",
+    fg0="#2E3440",fg1="#3B4252",fg2="#434C5E",
+    frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
+    red="#BF616A",orange="#D08770",yellow="#EBCB8B",
+    green="#A3BE8C",purple="#B48EAD",
+    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
+    r_euctr="#5E81AC",r_ctis="#88C0D0",
+    chart_bg="#FFFFFF",chart_fg="#2E3440",chart_grid="#E5E9F0",
+    spinner="#81A1C1"),
   Default = list(
     bg0="#ecf0f5",bg1="#ffffff",bg2="#f5f5f5",bg3="#d2d6de",
     fg0="#333333",fg1="#666666",fg2="#000000",
-    frost0="#3c8dbc",frost1="#00c0ef",frost2="#0073b7",frost3="#001f3f",
+    frost0="#3c8dbc",frost1="#00c0ef",frost2="#0073b7",frost3="#3c8dbc",
     red="#dd4b39",orange="#ff851b",yellow="#f39c12",
     green="#00a65a",purple="#605ca8",
     s_ongoing="#00a65a",s_completed="#f39c12",s_other="#dd4b39",
@@ -149,7 +176,182 @@ THEMES <- list(
     spinner="#3c8dbc")
 )
 
-generate_css <- function(t) {
+# ── fresh AdminLTE themes ───────────────────────────────────────────────────
+# Written once at startup into www/; served as static linked stylesheets.
+# fresh compiles AdminLTE SASS variables so box headers, sidebar, body colours
+# are canonical — no !important cascade battles.
+
+.make_fresh_theme <- function(content_bg, box_bg,
+                              sidebar_bg = "#2E3440", sidebar_fg = "#D8DEE9",
+                              sidebar_hover = "#3B4252") {
+  fresh::create_theme(
+    fresh::adminlte_color(
+      light_blue = "#5E81AC", aqua     = "#2E5F8A",
+      green      = "#A3BE8C", yellow   = "#5E81AC",
+      red        = "#BF616A", orange   = "#D08770",
+      purple     = "#B48EAD", navy     = "#2E3440",
+      black      = "#2E3440", gray_lte = "#4C566A"
+    ),
+    fresh::adminlte_sidebar(
+      width                    = "300px",
+      dark_bg                  = sidebar_bg,
+      dark_color               = sidebar_fg,
+      dark_hover_bg            = sidebar_hover,
+      dark_hover_color         = "#ECEFF4",
+      dark_submenu_bg          = sidebar_hover,
+      dark_submenu_color       = sidebar_fg,
+      dark_submenu_hover_color = "#ECEFF4"
+    ),
+    fresh::adminlte_global(
+      content_bg  = content_bg,
+      box_bg      = box_bg,
+      info_box_bg = box_bg
+    ),
+    output_file = NULL
+  )
+}
+
+.NORD_FRESH       <- .make_fresh_theme("#3B4252", "#434C5E")
+.NORD_LIGHT_FRESH <- .make_fresh_theme("#ECEFF4", "#FFFFFF")
+
+# ── Supplement CSS ──────────────────────────────────────────────────────────
+# Covers elements fresh doesn't reach: DataTables, modals, links, sliders,
+# sidebar selectize controls, filter chips, and the header/navbar background.
+generate_supplement_css <- function(t) {
+  sprintf('
+  body{background:%s!important;color:%s}
+  .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700;font-size:15px}
+  .skin-blue .main-header .logo:hover{background:%s!important}
+  .skin-blue .main-header .navbar{background:%s!important}
+  .skin-blue .main-header .navbar .sidebar-toggle{color:%s!important}
+  .sidebar .form-control,.sidebar .selectize-input{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .sidebar .selectize-dropdown{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .sidebar .selectize-dropdown .active{background:%s!important;color:%s!important}
+  .sidebar label,.sidebar .checkbox label,.sidebar .radio label{color:%s!important}
+  .dataTables_wrapper{color:%s!important}
+  table.dataTable{background:%s!important;color:%s!important}
+  table.dataTable thead th,table.dataTable thead td,
+  .dataTables_scrollHead table thead th,.dataTables_scrollHead table thead td{
+    background:%s!important;color:%s!important;border-bottom:2px solid %s!important}
+  table.dataTable thead tr,.dataTables_scrollHead,.dataTables_scrollHeadInner,
+  .dataTables_scrollHead table thead tr{background:%s!important}
+  table.dataTable thead .sorting,table.dataTable thead .sorting_asc,
+  table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,
+  table.dataTable thead .sorting_desc_disabled,
+  .dataTables_scrollHead table thead .sorting,
+  .dataTables_scrollHead table thead .sorting_asc,
+  .dataTables_scrollHead table thead .sorting_desc{background-color:%s!important;color:%s!important}
+  table.dataTable tbody tr{background:%s!important}
+  table.dataTable tbody tr:hover{background:%s!important}
+  table.dataTable tbody td{border-top:1px solid %s!important}
+  .dataTables_info,.dataTables_length,.dataTables_filter,
+  .dataTables_paginate{color:%s!important}
+  .dataTables_filter input,.dataTables_length select{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .paginate_button{color:%s!important}
+  .paginate_button.current{background:%s!important;color:%s!important;border:1px solid %s!important}
+  .dataTables_wrapper thead input,.dataTables_wrapper thead select{
+    background:%s!important;color:%s!important;border:1px solid %s!important}
+  .btn-warning{background:%s!important;border-color:%s!important;color:#fff!important}
+  .btn-warning:hover{opacity:.85}
+  .btn-info{background:%s!important;border-color:%s!important;color:#fff!important}
+  .btn-info:hover{opacity:.85}
+  a{color:%s}a:hover{color:%s}
+  .modal-content{background:%s!important;color:%s!important;border:1px solid %s}
+  .modal-header{border-bottom:1px solid %s!important}
+  .modal-footer{border-top:1px solid %s!important}
+  .irs--shiny .irs-bar{background:%s;border-color:%s}
+  .irs--shiny .irs-handle{background:%s;border:2px solid %s}
+  .irs--shiny .irs-single{background:%s;color:%s}
+  .irs--shiny .irs-line{background:%s}
+  .irs--shiny .irs-grid-text,.irs--shiny .irs-min,.irs--shiny .irs-max{color:%s;background:%s}
+  .filter-chip-row{background:%s!important;border-top-color:%s!important;border-bottom-color:%s!important}
+  .filter-chip{border-color:%s!important}
+  .filter-chip-key{background:%s!important}
+  .filter-chip-val{background:%s!important}
+  td.ellipsis{max-width:350px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body.skin-blue .main-sidebar,body.skin-blue .left-side,
+  .skin-blue .main-sidebar,.skin-blue .left-side,
+  .main-sidebar,.left-side{background:%s!important;background-color:%s!important}
+  .skin-blue .sidebar,.sidebar-wrapper{background:%s!important;background-color:%s!important}',
+    t$bg0, t$fg0,
+    t$bg0, t$fg2, t$bg1, t$bg0, t$fg0,
+    t$bg2, t$fg0, t$bg3,
+    t$bg2, t$fg0, t$bg3, t$frost2, t$fg2, t$fg0,
+    t$fg0, t$bg1, t$fg0,
+    t$bg2, t$fg2, t$bg3, t$bg2,
+    t$bg2, t$fg2,
+    t$bg1, t$bg2, t$bg3,
+    t$fg0, t$bg2, t$fg0, t$bg3,
+    t$fg0, t$bg1, t$fg2, t$bg2,
+    t$bg2, t$fg0, t$bg3,
+    t$orange, t$orange, t$frost3, t$frost3,
+    t$frost1, t$frost0,
+    t$bg1, t$fg0, t$bg3, t$bg2, t$bg2,
+    t$frost2, t$frost2, t$frost1, t$frost3, t$frost2, t$fg2, t$bg3, t$fg0, t$bg2,
+    t$bg1, t$frost2, t$bg2, t$frost3, t$frost3, t$frost2,
+    t$bg0, t$bg0, t$bg0, t$bg0
+  )
+}
+
+NORD_SUPPLEMENT <- generate_supplement_css(THEMES$Nord)
+NORD_LIGHT_SUPPLEMENT <- paste0(
+  generate_supplement_css(THEMES[["Nord Light"]]),
+  # Sidebar stays dark — override the light-theme colours the supplement generates
+  '.sidebar .form-control,.sidebar .selectize-input{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
+   .sidebar .selectize-dropdown{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
+   .sidebar .selectize-dropdown .active{background:#434C5E!important;color:#ECEFF4!important}
+   .sidebar label,.sidebar .checkbox label,.sidebar .radio label{color:#D8DEE9!important}
+   .sidebar-tabset .nav-tabs>li>a{color:#D8DEE9!important}
+   .sidebar-tabset .nav-tabs>li.active>a{color:#ECEFF4!important}
+   .filter-badge{background:#88C0D0!important;color:#2E3440!important}
+   .trial-count-n{color:#88C0D0!important}',
+  # Nav cards — use dark overlay on light main panel background
+  '.qs-card{background:rgba(0,0,0,0.04)!important;border:1px solid rgba(0,0,0,0.1)!important;box-shadow:0 1px 3px rgba(0,0,0,0.08)!important}
+   .qs-card:hover{background:rgba(0,0,0,0.08)!important}',
+  # Misc light-theme corrections
+  '.bg-yellow{color:#2E3440!important}.bg-green{color:#2E3440!important}.bg-blue{color:#2E3440!important}
+   .content-wrapper a{color:#5E81AC!important}.content-wrapper a:hover{color:#4C6E96!important}',
+  # Orientation strip divider is white in static CSS — invisible on light bg
+  '.insight-divider{background:rgba(0,0,0,0.15)!important}',
+  # Logo bar background must match the dark sidebar, not the light main panel
+  '.skin-blue .main-header .logo{background:#2E3440!important;color:#D8DEE9!important;font-weight:700;font-size:15px}
+   .skin-blue .main-header .logo:hover{background:#3B4252!important}',
+  # Sidebar p/h4 text inherits body dark colour — force light
+  '.sidebar p,.sidebar h4,.sidebar .tab-content p{color:#D8DEE9!important}',
+  # Filter group summaries: base state inherits dark body text; open state has hardcoded #3c8dbc
+  '.sidebar .filter-groups details>summary{color:#D8DEE9!important}
+   .sidebar .filter-groups details[open]>summary{color:#88C0D0!important}',
+  # Sidebar nav links: global a{color:#5E81AC} bleeds in — restore exact dark-Nord values
+  # Full sidebar copy from dark theme — use body.skin-blue compound selector for maximum specificity
+  'body.skin-blue .main-sidebar,body.skin-blue .left-side,
+   .skin-blue .main-sidebar,.skin-blue .left-side,
+   .main-sidebar,.left-side{background:#2E3440!important;background-color:#2E3440!important}
+   body.skin-blue .sidebar,.skin-blue .sidebar,.sidebar-wrapper{background:#2E3440!important;background-color:#2E3440!important}
+   .skin-blue .sidebar-menu>li>a,.skin-blue .sidebar a{color:#D8DEE9!important}
+   .skin-blue .sidebar-menu>li:hover>a{color:#ECEFF4!important;background:#3B4252!important;background-color:#3B4252!important}
+   .skin-blue .sidebar-menu>li.active>a{color:#ECEFF4!important;background:#3B4252!important;background-color:#3B4252!important;border-left-color:#88C0D0!important}
+   .skin-blue .sidebar-menu>li.header{color:#4C566A!important;background:#2E3440!important;background-color:#2E3440!important}',
+  # DataTable — match white box background; base supplement uses bg1/bg2 (too dark for light theme)
+  'table.dataTable{background:#FFFFFF!important}
+   table.dataTable tbody tr{background:#FFFFFF!important}
+   table.dataTable tbody tr:hover{background:#F0F2F5!important}
+   table.dataTable tbody td{border-top:1px solid #E5E9F0!important}
+   table.dataTable thead th,table.dataTable thead td,
+   .dataTables_scrollHead table thead th,.dataTables_scrollHead table thead td,
+   table.dataTable thead tr,.dataTables_scrollHead,.dataTables_scrollHeadInner,
+   .dataTables_scrollHead table thead tr,
+   table.dataTable thead .sorting,table.dataTable thead .sorting_asc,
+   table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,
+   table.dataTable thead .sorting_desc_disabled,
+   .dataTables_scrollHead table thead .sorting,
+   .dataTables_scrollHead table thead .sorting_asc,
+   .dataTables_scrollHead table thead .sorting_desc{background:#E5E9F0!important;color:#2E3440!important}'
+)
+
+generate_css_DELETED <- function(t) {
   sprintf('
   body{background:%s!important;color:%s}
   .skin-blue .main-header .logo{background:%s!important;color:%s!important;font-weight:700;font-size:15px}
@@ -176,6 +378,9 @@ generate_css <- function(t) {
   .box.box-solid.box-primary{border-top:3px solid %s!important}
   .box.box-solid.box-info{border-top:3px solid %s!important}
   .box.box-solid.box-warning{border-top:3px solid %s!important}
+  .box.box-solid.box-primary>.box-header,.box.box-solid.box-info>.box-header,
+  .box.box-solid.box-warning>.box-header,.box.box-solid.box-success>.box-header,
+  .box.box-solid.box-danger>.box-header{background:%s!important;color:%s!important}
   .box-header.with-border{border-bottom:1px solid %s!important}
   .small-box{border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
   .small-box h3,.small-box p{color:%s!important}
@@ -228,9 +433,9 @@ generate_css <- function(t) {
   .filter-chip-key{background:%s!important}
   .filter-chip-val{background:%s!important}',
           t$bg0,t$fg0,t$bg1,t$frost1,t$bg2,t$bg1,t$fg0,t$bg2,
-          t$bg1,t$fg0,t$bg2,t$frost1,t$frost1,t$fg0,t$frost1,t$bg3,
+          t$bg0,t$fg0,t$bg2,t$frost1,t$frost1,t$fg0,t$frost1,t$bg3,
           t$bg2,t$fg0,t$bg3,t$bg2,t$fg0,t$bg3,t$frost2,t$fg2,t$fg0,
-          t$bg0,t$bg1,t$bg2,t$fg1,t$fg2,t$frost3,t$frost1,t$orange,t$bg2,
+          t$bg1,t$bg1,t$bg2,t$fg1,t$fg2,t$frost3,t$frost1,t$orange,t$frost3,t$fg2,t$bg2,
           t$fg2,t$frost3,t$green,t$yellow,t$bg0,t$purple,
           t$fg0,t$bg1,t$fg0,t$bg2,t$fg2,t$bg3,t$bg2,t$bg2,t$fg2,t$bg1,t$bg2,t$bg2,
           t$fg0,t$bg2,t$fg0,t$bg3,t$fg0,t$frost2,t$fg2,t$frost2,
@@ -241,13 +446,7 @@ generate_css <- function(t) {
           t$bg1,t$frost2,t$bg2,t$frost3,t$frost3,t$frost2)
 }
 
-NORD_CSS <- generate_css(THEMES$Nord)
-NORD_LIGHT_CSS <- paste0(
-  generate_css(THEMES[["Nord Light"]]),
-  '.bg-yellow{color:#2E3440!important}
-   .bg-green{color:#2E3440!important}
-   .bg-blue{color:#2E3440!important}'
-)
+# NORD_CSS / NORD_LIGHT_CSS replaced by fresh themes + generate_supplement_css above.
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 3. COUNTRY CLEANING
@@ -516,6 +715,7 @@ normalize_sponsor_name <- function(x) {
     c("Merck\\s+Sharp.{0,8}Dohme",     "MSD"),
     c("MSD\\s+Sharp.{0,8}Dohme",       "MSD"),
     c("Merck\\s+KGaA",                 "Merck KGaA"),
+    c("Merck\\s+Serono",               "Merck Serono"),
     c("Merck\\s+&\\s+Co",              "MSD"),
     c("Merck\\s+and\\s+Co",            "MSD"),
     c("MSD",                           "MSD"),
@@ -530,6 +730,7 @@ normalize_sponsor_name <- function(x) {
     c("Roche",                         "Roche"),
     c("Sanofi\\s+Pasteur",             "Sanofi Pasteur"),
     c("Sanofi.Aventis",                "Sanofi"),
+    c("Sanofi.Synthelabo",             "Sanofi"),
     c("Sanofi",                        "Sanofi"),
     c("Servier",                       "Servier"),
     c("Shire",                         "Shire"),
@@ -598,6 +799,7 @@ deep_flatten_col <- function(x) {
       u
     }, error = function(e) character(0))
     if (length(flat) == 0) return(NA_character_)
+    flat <- trimws(flat)
     paste(unique(flat), collapse = " / ")
   }, USE.NAMES = FALSE)
 }
@@ -639,6 +841,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   EUCTR_fields <- c(
     "a2_eudract_number","dimp.d31_product_name",
     "f11_trial_has_subjects_under_18",
+    "f12_adults_1864_years","f13_elderly_65_years",
     "e12_meddra_classification.e12_term",
     "e12_meddra_classification.e12_system_organ_class",
     "a1_member_state_concerned","a3_full_title_of_the_trial",
@@ -674,8 +877,26 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # Results: TRUE when results have been received by CTIS
     "resultsFirstReceived",
     # Orphan designation numbers (EU/3/... format); non-NA = orphan drug
-    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
+    # Age groups: comma-separated string, e.g. "0-17 years, 18-64 years"
+    "ageGroup",
+    # Per-country decision dates (numeric: days since 1970-01-01, one per MS)
+    "authorizedApplication.memberStatesConcerned.firstDecisionDate",
+    "authorizedApplication.memberStatesConcerned.lastDecisionDate")
   
+  # ── DB cleanup: remove records with invalid IDs before any processing ────────
+  raw_con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
+  n_uuid <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id GLOB '????????-????-????-????-????????????'")
+  n_meta <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id = 'meta-info'")
+  n_3rd  <- DBI::dbExecute(raw_con,
+    "DELETE FROM trials WHERE _id GLOB '*-3RD'")
+  DBI::dbDisconnect(raw_con)
+  if (n_uuid + n_meta + n_3rd > 0)
+    message(sprintf("DB cleanup: removed %d UUID(s), %d meta-info, %d -3RD record(s)",
+                    n_uuid, n_meta, n_3rd))
+
   result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
   
@@ -713,17 +934,43 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   message(sprintf("After flatten: %d x %d, all character: %s",
                   nrow(result), ncol(result),
                   all(sapply(result, is.character) | names(result) == "_id")))
-  
+
   # Register detection
   # EUCTR IDs: YYYY-NNNNNN-NN-CC  (CC = letter country code, e.g. -BE, -GB3)
   # CTIS  IDs: YYYY-NNNNNN-NN-NN  (last segment is numeric, e.g. -00)
   # Both share the same numeric prefix — require a letter in the suffix for EUCTR.
   result <- result %>% mutate(register = case_when(
-    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]") ~ "EUCTR",
+    str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-([A-Z]|3RD)") ~ "EUCTR",
     TRUE ~ "CTIS"))
   message(sprintf("Registers: %s",
                   paste(names(table(result$register)), table(result$register), sep="=", collapse=", ")))
-  
+
+  # ── CTIS per-country decision dates ──────────────────────────────────────
+  # firstDecisionDate is a " / "-separated string of numeric values (days since
+  # 1970-01-01), one per member state. Parse to derive the earliest country
+  # decision date and the spread (max - min) across countries.
+  .parse_ctis_date_vec <- function(x) {
+    if (is.na(x) || x == "") return(list(first = NA_character_, spread = NA_real_))
+    parts <- trimws(strsplit(x, "\\s*/\\s*")[[1]])
+    dates <- suppressWarnings(as.Date(parts[parts != ""], format = "%Y-%m-%d"))
+    dates <- dates[!is.na(dates)]
+    if (!length(dates)) return(list(first = NA_character_, spread = NA_real_))
+    list(
+      first  = format(min(dates), "%Y-%m-%d"),
+      spread = as.numeric(max(dates) - min(dates))
+    )
+  }
+  ctis_parsed <- lapply(
+    result$`authorizedApplication.memberStatesConcerned.firstDecisionDate`,
+    .parse_ctis_date_vec
+  )
+  result$ctis_decision_date_first <- vapply(ctis_parsed, `[[`, character(1), "first")
+  result$decision_date_spread_days <- ifelse(
+    result$register == "CTIS",
+    vapply(ctis_parsed, `[[`, numeric(1), "spread"),
+    NA_real_
+  )
+
   # Ensure columns
   all_expected <- c(
     "a2_eudract_number","dimp.d31_product_name",
@@ -755,6 +1002,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
   
+  raw_country_for_log <- result %>%
+    select(a1_member_state_concerned, `authorizedApplication.memberStatesConcerned`) %>%
+    unite("Member_state", a1_member_state_concerned,
+          `authorizedApplication.memberStatesConcerned`,
+          na.rm = TRUE, remove = TRUE) %>%
+    pull(Member_state)
+
   # Clean countries
   message("Cleaning countries...")
   result <- result %>% mutate(
@@ -793,16 +1047,28 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           `authorizedApplication.applicationInfo.submissionDate`,
           na.rm=TRUE, remove=TRUE)
   
-  raw_country_for_log <- result$Member_state
+  # For CTIS, submissionDate is a " / "-separated list of per-amendment dates;
+  # keep only the earliest (= first submission to CTIS).
+  result <- result %>% mutate(
+    submission_date = if_else(
+      register == "CTIS" & grepl(" / ", submission_date, fixed = TRUE),
+      vapply(strsplit(submission_date, " / ", fixed = TRUE), function(parts) {
+        dates <- suppressWarnings(as.Date(trimws(parts), format = "%Y-%m-%d"))
+        dates <- dates[!is.na(dates)]
+        if (!length(dates)) NA_character_ else format(min(dates), "%Y-%m-%d")
+      }, character(1)),
+      submission_date))
+
   result <- result %>% mutate(Member_state = clean_member_state(Member_state))
   write_norm_log(raw_country_for_log, result$Member_state, result$register, "country", dirname(db_path))
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
   
   # ── Dedup ─────────────────────────────────────────────────────────────────
-  unique_ids <- dbFindIdsUniqueTrials(con = db)
   result <- result %>% mutate(trial_base_id = case_when(
     register == "EUCTR" ~ str_replace(`_id`, "-[A-Z]{2,3}$", ""),
     TRUE ~ `_id`))
+
+  unique_ids <- dbFindIdsUniqueTrials(con = db)
   
   agg_field <- function(df, col) {
     df %>% filter(!is.na(!!sym(col)) & !!sym(col) != "") %>%
@@ -908,8 +1174,27 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     if (nrow(ctis_matches) > 0) {
       euctr_drop <- trans_euctr %>% filter(title_key %in% ctis_matches$title_key) %>% pull(`_id`)
       unique_ids <- unique(c(setdiff(unique_ids, euctr_drop), ctis_matches$`_id`))
-      message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s)",
+      message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via title",
                       length(euctr_drop)))
+    }
+    # Fallback: match by base ID — transitioned EudraCT trials retain their
+    # base number in CTIS (e.g. EUCTR 2020-001234-56-BE → CTIS 2020-001234-56-00)
+    still_trans <- trans_euctr %>%
+      filter(`_id` %in% unique_ids) %>%
+      mutate(euctr_base = str_replace(`_id`, "-[A-Z]{2,3}$", ""))
+    if (nrow(still_trans) > 0) {
+      ctis_id_matches <- result %>%
+        filter(register == "CTIS") %>%
+        mutate(ctis_base = str_replace(`_id`, "-\\d{2}$", "")) %>%
+        filter(ctis_base %in% still_trans$euctr_base)
+      if (nrow(ctis_id_matches) > 0) {
+        euctr_base_drop <- still_trans %>%
+          filter(euctr_base %in% ctis_id_matches$ctis_base) %>%
+          pull(`_id`)
+        unique_ids <- unique(c(setdiff(unique_ids, euctr_base_drop), ctis_id_matches$`_id`))
+        message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via base ID",
+                        length(euctr_base_drop)))
+      }
     }
   }
 
@@ -972,9 +1257,17 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   raw_meddra_for_log <- result$MEDDRA_term
   raw_organ_for_log  <- result$MEDDRA_organ_class
 
+  dedup_slash <- function(x) {
+    if (is.na(x) || !nzchar(trimws(x))) return(NA_character_)
+    parts <- unique(trimws(strsplit(x, "/", fixed = TRUE)[[1]]))
+    parts <- parts[nzchar(parts)]
+    if (!length(parts)) NA_character_ else paste(parts, collapse = " / ")
+  }
+
   result <- result %>%
     mutate(MEDDRA_term        = vapply(MEDDRA_term, clean_meddra_term, character(1)),
-           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)))
+           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)),
+           DIMP_product_name  = vapply(DIMP_product_name, dedup_slash, character(1)))
 
   write_norm_log(raw_meddra_for_log, result$MEDDRA_term, result$register, "meddra_term", dirname(db_path))
   write_norm_log(raw_organ_for_log,  result$MEDDRA_organ_class, result$register, "organ_class", dirname(db_path))
@@ -1082,6 +1375,24 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_replace_all(tt, "[^a-z0-9 ]", " ")
       tt <- str_squish(tt)
       substr(tt, 1, 80)
+    },
+    # Age group: derived from EUCTR boolean flags or CTIS ageGroup string.
+    # "Paediatric & Adult" means the trial enrolls subjects across the under-18 and 18+ boundary.
+    age_group = {
+      has_paed <- (register == "EUCTR" &
+                     str_detect(tolower(coalesce(f11_trial_has_subjects_under_18, "")), "yes|true")) |
+                  (register == "CTIS" &
+                     str_detect(coalesce(ageGroup, ""), "0-17"))
+      has_adult <- (register == "EUCTR" &
+                      (str_detect(tolower(coalesce(f12_adults_1864_years, "")), "yes|true") |
+                       str_detect(tolower(coalesce(f13_elderly_65_years,  "")), "yes|true"))) |
+                   (register == "CTIS" &
+                      str_detect(coalesce(ageGroup, ""), "18-64|65\\+"))
+      case_when(
+        has_paed & has_adult ~ "Paediatric & Adult",
+        has_paed             ~ "Paediatric",
+        has_adult            ~ "Adult",
+        TRUE                 ~ "Unknown")
     })
   
   write_norm_log(result$status_raw_orig, result$status,     result$register, "status_category", dirname(db_path))
@@ -1089,10 +1400,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% select(-status_raw_orig)
 
   # ── Decision date & time-to-decision ─────────────────────────────────────
+  # For CTIS: prefer the per-country minimum (earliest MS decision), falling
+  # back to the application-level date when per-country data is absent.
   result <- result %>% mutate(
     decision_date = suppressWarnings(as.Date(parse_date_time(
       case_when(
         register == "EUCTR" ~ as.character(n_date_of_competent_authority_decision),
+        register == "CTIS" & !is.na(ctis_decision_date_first) ~ ctis_decision_date_first,
         register == "CTIS"  ~ as.character(`authorizedApplication.applicationInfo.decisionDate`),
         TRUE ~ NA_character_),
       orders = c("ymd", "ym", "y", "ymd HMS")))),
@@ -1223,11 +1537,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
         nzchar(str_trim(coalesce(ctis_orphan_raw, "")))                                      ~ "Yes",
       TRUE ~ "Unknown"))
 
-  # Drop raw phase columns and raw results/orphan source columns
+  # Drop raw phase columns, raw results/orphan source columns, and raw age columns
   result <- result %>% select(-any_of(c(euctr_phase_cols, ctis_phase_col,
     "endPoints.endPoint.readyForValues", "resultsFirstReceived",
     "dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community",
-    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber")))
+    "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
+    "f11_trial_has_subjects_under_18", "f12_adults_1864_years",
+    "f13_elderly_65_years", "ageGroup")))
 
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
@@ -1277,33 +1593,127 @@ ui <- dashboardPage(skin = "blue",
                         tags$title("EU Paediatric Trial Monitor"),
                         tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg"),
                         tags$style(HTML("
-                          #vb_total .small-box, #vb_ongoing .small-box,
-                          #vb_completed .small-box, #vb_pip .small-box {
+                          .kpi-card {
+                            padding: 14px 16px 12px;
+                            border-radius: 6px;
+                            border-top: 3px solid;
                             cursor: pointer;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                            transition: box-shadow 0.15s, transform 0.12s;
+                          }
+                          .kpi-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.4); transform: translateY(-2px); }
+                          .kpi-icon { font-size: 20px; margin-bottom: 6px; }
+                          .kpi-val  { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+                          .kpi-lbl  { font-size: 12px; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; }
+                          .qs-card {
+                            cursor: pointer;
+                            padding: 18px 12px;
+                            border-radius: 6px;
+                            border: 1px solid rgba(0,0,0,0.2);
+                            background: rgba(0,0,0,0.12);
+                            text-align: center;
+                            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+                            transition: box-shadow 0.15s, transform 0.15s, background 0.15s;
+                            height: 100%;
+                          }
+                          .qs-card:hover {
+                            background: rgba(0,0,0,0.22);
+                            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+                            transform: translateY(-3px);
+                          }
+                          .qs-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.85; }
+                          .qs-card strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.2px; }
+                          .qs-card p { font-size: 12px; opacity: 0.6; margin: 0; line-height: 1.4; }
+                          .qs-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                            gap: 12px;
+                            margin-bottom: 14px;
+                          }
+                          .insight-strip {
+                            display: flex;
+                            align-items: stretch;
+                            padding: 14px 4px;
+                            margin-bottom: 10px;
+                          }
+                          .insight-stat {
+                            flex: 1;
+                            display: flex;
+                            align-items: baseline;
+                            gap: 8px;
+                          }
+                          .insight-val { font-size: 26px; font-weight: 700; line-height: 1; }
+                          .insight-lbl { font-size: 12px; opacity: 0.65; }
+                          .insight-divider {
+                            width: 1px;
+                            height: 32px;
+                            background: rgba(255,255,255,0.1);
+                            margin: 0 24px;
+                          }
+                          .preset-btn {
+                            display: inline-block;
+                            margin: 0 6px 4px 0;
+                            padding: 5px 14px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            cursor: pointer;
+                            border: 1px solid;
+                            background: transparent;
                             transition: opacity 0.15s;
                           }
-                          #vb_total .small-box:hover, #vb_ongoing .small-box:hover,
-                          #vb_completed .small-box:hover, #vb_pip .small-box:hover {
-                            opacity: 0.82;
+                          .preset-btn:hover { opacity: 0.7; }
+                          .example-q-btn {
+                            display: block;
+                            width: 100%;
+                            text-align: left;
+                            padding: 10px 14px;
+                            margin: 0 0 8px 0;
+                            border-radius: 8px;
+                            font-size: 13px;
+
+                            cursor: pointer;
+                            border: 1px solid;
+                            border-left-width: 4px;
+                            background: transparent;
+                            transition: background 0.15s, opacity 0.15s;
+                            line-height: 1.4;
                           }
+                          .example-q-btn:hover { opacity: 0.8; background: rgba(128,128,128,0.08); }
+                          .example-q-hint {
+                            display: block;
+                            font-size: 11px;
+                            font-style: normal;
+                            opacity: 0.6;
+                            margin-top: 3px;
+                          }
+                          .preset-section-label {
+                            font-size: 11px;
+                            opacity: 0.6;
+                            text-transform: uppercase;
+                            letter-spacing: 0.6px;
+                            margin-bottom: 8px;
+                          }
+
                         ")),
                         tags$script(HTML("
-                          $(document).on('click', '#vb_ongoing .small-box', function() {
-                            Shiny.setInputValue('vb_click', 'Ongoing', {priority: 'event'});
+                          $(document).on('click', '#kpi_total',     function() { Shiny.setInputValue('vb_click', '__reset__', {priority:'event'}); });
+                          $(document).on('click', '#kpi_ongoing',   function() { Shiny.setInputValue('vb_click', 'Ongoing',   {priority:'event'}); });
+                          $(document).on('click', '#kpi_completed', function() { Shiny.setInputValue('vb_click', 'Completed', {priority:'event'}); });
+                          $(document).on('click', '#kpi_pip',       function() { Shiny.setInputValue('vb_click', '__pip__',   {priority:'event'}); });
+                          $(document).on('click', '.qs-card', function() {
+                            Shiny.setInputValue('nav_to_tab', $(this).data('tab'), {priority: 'event'});
                           });
-                          $(document).on('click', '#vb_completed .small-box', function() {
-                            Shiny.setInputValue('vb_click', 'Completed', {priority: 'event'});
-                          });
-                          $(document).on('click', '#vb_total .small-box', function() {
-                            Shiny.setInputValue('vb_click', '__reset__', {priority: 'event'});
-                          });
-                          $(document).on('click', '#vb_pip .small-box', function() {
-                            Shiny.setInputValue('vb_click', '__pip__', {priority: 'event'});
+                          $(document).on('click', '.preset-btn', function() {
+                            Shiny.setInputValue('preset_click', $(this).data('preset'), {priority: 'event'});
                           });
                         "))
                       ),
                       icon("child"), " EU Paediatric Trial Monitor"
-                    ), titleWidth = 300),
+                    ), titleWidth = 300,
+                    tags$li(class = "dropdown",
+                      tags$a(style = "cursor:default;font-size:13px;opacity:0.65;padding:15px 20px;pointer-events:none;",
+                             "Browse and analyse authorized paediatric clinical trials in EUCTR and CTIS")
+                    )),
                     dashboardSidebar(width = 300,
                                      sidebarMenu(id = "tabs",
                                                  menuItem("Overview",tabName="overview",icon=icon("dashboard")),
@@ -1315,11 +1725,28 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
                                                  menuItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt")),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
+                                     tags$div(style="padding:10px 14px 6px;",
+                                       tags$button(
+                                         tagList(icon("exchange"), " Compare Paediatric vs Adult"),
+                                         class = "btn btn-info btn-block",
+                                         style = "width:100%;font-size:13px;font-weight:600;padding:9px 12px;",
+                                         title = "Generate a side-by-side comparison report: Paediatric vs Adult",
+                                         onclick = "document.getElementById('dl_comparison_report').click();"
+                                       ),
+                                       tags$p(style="font-size:10px;opacity:0.6;margin:4px 0 0;text-align:center;",
+                                              "Generates a PDF comparing paediatric vs adult trials under the current filters")
+                                     ),
                                      uiOutput("trial_count_bar"),
                                      tags$div(class="sidebar-tabset",
                                        tabsetPanel(id="sidebar_tabs",
                                          tabPanel("Filters",
                                            tags$div(class="filter-groups",
+                                             tags$div(style="padding:8px 12px 4px;",
+                                               selectInput("age_group_filter","Age Group:",
+                                                           choices=c("< 18 years","≥ 18 years","All"),selected="< 18 years"),
+                                               tags$p(style="font-size:11px;opacity:0.7;margin:-4px 0 8px;line-height:1.4;",
+                                                 "Trials enrolling all ages appear under both filters.")
+                                             ),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
                                                  "Search & Date", uiOutput("badge_search_date", inline=TRUE)),
@@ -1367,6 +1794,7 @@ ui <- dashboardPage(skin = "blue",
                                              tags$p(tags$b("Save / restore filters"), style="font-size:11px;margin-bottom:6px;"),
                                              downloadButton("dl_filters", " Save",
                                                             class="btn-sm btn-primary sidebar-tool-btn",
+                                                            style="margin-bottom:8px;",
                                                             title="Save filters as JSON"),
                                              tags$button(tagList(icon("upload"), " Load"),
                                                class="btn btn-default btn-sm sidebar-tool-btn",
@@ -1379,9 +1807,15 @@ ui <- dashboardPage(skin = "blue",
                                              downloadButton("dl_report", " Download PDF",
                                                             class="btn-sm btn-warning",
                                                             style="width:100%;margin-bottom:8px;"),
+                                             downloadButton("dl_comparison_report", " Compare Paediatric vs Adult",
+                                                            class="btn-sm btn-info",
+                                                            style="width:100%;margin-bottom:8px;",
+                                                            title="Compare current filters: Paediatric vs Adult, with statistical tests"),
                                              tags$hr(style="margin:8px 0;"),
-                                             tags$p(tags$b("Theme"), style="font-size:11px;margin-bottom:4px;"),
-                                             radioButtons("theme_select",NULL,choices=c("Nord","Default"),selected="Nord",inline=TRUE),
+                                             tags$p(tagList(icon("palette"), tags$b(" Appearance")), style="font-size:11px;margin-bottom:6px;"),
+                                             selectInput("theme_select", NULL,
+                                                         choices = c("Dark" = "Nord", "Light" = "Nord Light"),
+                                                         selected = "Nord Light"),
                                              tags$hr(style="margin:8px 0;"),
                                              textOutput("data_info")%>%tagAppendAttributes(style="font-size:11px;opacity:0.75;")
                                            )
@@ -1436,19 +1870,44 @@ ui <- dashboardPage(skin = "blue",
                       tabItems(
                         tabItem(tabName="overview",
                                 uiOutput("no_data_banner"),
-                                fluidRow(valueBoxOutput("vb_total",width=3),valueBoxOutput("vb_ongoing",width=3),
-                                         valueBoxOutput("vb_completed",width=3),valueBoxOutput("vb_pip",width=3)),
+                                uiOutput("kpi_strip"),
+
+                                fluidRow(column(12,
+                                  tags$div(class="analytics-section-header", icon("compass"), " Explore the Dashboard")
+                                )),
+                                fluidRow(column(12,
+                                  tags$div(class = "qs-grid",
+                                    tags$div(class="qs-card", `data-tab`="chartbuilder",
+                                      tags$div(class="qs-icon", icon("chart-line")),
+                                      tags$strong("Chart Builder"),
+                                      tags$p("Build a custom chart from any variable")),
+                                    tags$div(class="qs-card", `data-tab`="map",
+                                      tags$div(class="qs-icon", icon("map")),
+                                      tags$strong("Map"),
+                                      tags$p("See trial distribution across member states")),
+                                    tags$div(class="qs-card", `data-tab`="analytics",
+                                      tags$div(class="qs-icon", icon("chart-bar")),
+                                      tags$strong("Basic Analytics"),
+                                      tags$p("Explore breakdowns by phase, sponsor, and more")),
+                                    tags$div(class="qs-card", `data-tab`="phase",
+                                      tags$div(class="qs-icon", icon("flask")),
+                                      tags$strong("Phase Analytics"),
+                                      tags$p("Phase distribution, completion rates, and trends")),
+                                    tags$div(class="qs-card", `data-tab`="sponsor_compare",
+                                      tags$div(class="qs-icon", icon("exchange")),
+                                      tags$strong("Sponsor Comparison"),
+                                      tags$p("Compare trial portfolios across sponsors")),
+                                    tags$div(class="qs-card", `data-tab`="compliance",
+                                      tags$div(class="qs-icon", icon("file-medical-alt")),
+                                      tags$strong("Results Posting"),
+                                      tags$p("Track results posting compliance")),
+                                  )
+                                )),
+                                uiOutput("overview_footer"),
                                 fluidRow(
-                                  box(title="5 Most Recently Authorized Trials",status="warning",solidHeader=TRUE,
-                                      width=12,withSpinner(DT::dataTableOutput("recent_trials_table",height="auto"),type=6))),
-                                fluidRow(
-                                  box(title="Sponsor Type by Register",status="warning",solidHeader=TRUE,
-                                      width=12,height=420,withSpinner(plotlyOutput("plot_sponsor_top",height="360px"),type=6))),
-                                fluidRow(
-                                  box(title="Submissions per Year",status="primary",solidHeader=TRUE,
-                                      width=6,height=400,withSpinner(plotlyOutput("plot_yearly",height="340px"),type=6)),
-                                  box(title="Trial Status by Register",status="info",solidHeader=TRUE,
-                                      width=6,height=400,withSpinner(plotlyOutput("plot_register",height="340px"),type=6))),
+                                  box(title="5 Most Recently Authorized Trials", status="warning",
+                                      solidHeader=TRUE, width=12,
+                                      withSpinner(DT::dataTableOutput("recent_trials_table", height="auto"), type=6))),
                         ),
                         tabItem(tabName="chartbuilder",
                                 fluidRow(
@@ -1465,6 +1924,7 @@ ui <- dashboardPage(skin = "blue",
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
+                                                             "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
                                                              "Country / Member State"="Member_state"),
@@ -1479,6 +1939,7 @@ ui <- dashboardPage(skin = "blue",
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
+                                                             "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
                                                              "Country / Member State"="Member_state"),
@@ -1543,6 +2004,9 @@ ui <- dashboardPage(skin = "blue",
                                   box(title="Days to Decision by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time_sponsor",height="400px"),type=6))),
                                 fluidRow(
+                                  box(title="Decision Date Spread Within CTIS Multinational Trials (days between first and last MS decision)",status="info",solidHeader=TRUE,width=12,height=460,
+                                      withSpinner(plotlyOutput("plot_ctis_date_spread",height="400px"),type=6))),
+                                fluidRow(
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,height=520,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
                                       withSpinner(plotlyOutput("plot_top_sponsors",height="400px"),type=6))),
@@ -1595,12 +2059,7 @@ ui <- dashboardPage(skin = "blue",
                                 uiOutput("sponsor_compare_tab_ui")
                         ),
                         tabItem(tabName="compliance",
-                                fluidRow(
-                                  valueBoxOutput("vb_completed_total", width=3),
-                                  valueBoxOutput("vb_results_posted",  width=3),
-                                  valueBoxOutput("vb_overdue_academic",width=3),
-                                  valueBoxOutput("vb_overdue_industry",width=3)
-                                ),
+                                uiOutput("kpi_strip_compliance"),
                                 fluidRow(
                                   box(title="Results Posting by Authorization Year",status="primary",solidHeader=TRUE,width=12,height=500,
                                       p(em("Completed trials grouped by authorization year. Green = results confirmed posted in the registry; red = no results posted. Results data is sourced directly from EUCTR (endPoints.endPoint.readyForValues) and CTIS (resultsFirstReceived). Rebuild the cache to reflect the latest registry data."),
@@ -1661,8 +2120,56 @@ ui <- dashboardPage(skin = "blue",
                                       p("Trial data is retrieved from the registries using the ",
                                         tags$a("ctrdata", href="https://cran.r-project.org/package=ctrdata", target="_blank"),
                                         " R package and stored in a local SQLite database. The database is refreshed automatically every night."),
+                                      h4(icon("flask")," Pipeline Report"),
+                                      p("A detailed audit of every data preprocessing and normalisation step —
+                                        including per-field statistics, before/after examples, and a ranked
+                                        list of data quality issues with suggested fixes.
+                                        Regenerated automatically on each nightly cache rebuild."),
+                                      p(tags$a(href="preprocessing.html", target="_blank",
+                                               class="btn btn-default btn-sm",
+                                               icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.5 (2026-05-01):"),
+                                          tags$ul(
+                                            tags$li("Overview page redesigned: hero subtitle moved to navbar, KPI cards with full Nord accent colours, clickable navigation shortcut cards, quick-filter preset buttons, and recent trials table."),
+                                            tags$li("Theming replaced: hand-crafted generate_css() removed and replaced with the 'fresh' package compiling AdminLTE SASS variables, eliminating CSS specificity battles (e.g. box header colours now correct)."),
+                                            tags$li("Nord dark theme polished: muted box headers, white button text, sidebar lighter than main panel, nav card visibility improved."),
+                                            tags$li("Nord Light theme: dark sidebar with light main panel; sidebar controls, labels, and nav cards now correctly themed.")
+                                          )),
+                                        tags$li(tags$b("v0.9.4 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("Data Explorer: fixed duplicate tokens in slash-separated fields (e.g. Product name) by trimming whitespace before deduplication in deep_flatten_col and adding a dedicated dedup pass on DIMP_product_name.")
+                                          )),
+                                        tags$li(tags$b("v0.9.3 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("New 'Compare Paediatric vs Adult' button in Tools tab generates a parameterized PDF report comparing both groups across status, phase, sponsor type, PIP, orphan, results posting, submission/decision timelines, therapeutic areas, and geography."),
+                                            tags$li("Report applies all active sidebar filters except age group, so both populations are always included.")
+                                          )),
+                                        tags$li(tags$b("v0.9.2 (2026-04-30):"),
+                                          tags$ul(
+                                            tags$li("CTIS decision date now uses the earliest per-country member-state decision date instead of the application-level date (which was NA for many multinational trials)."),
+                                            tags$li("CTIS submission date fixed: takes the minimum from the per-amendment list, fixing empty submission_date_parsed for many CTIS trials."),
+                                            tags$li("New graph: Decision Date Spread Within CTIS Multinational Trials (violin plot, grouped by number of member states).")
+                                          )),
+                                        tags$li(tags$b("v0.9.1 (2026-04-29):"),
+                                          tags$ul(
+                                            tags$li("Preprocessing report: standalone Age Group Coverage section added with paediatric/adult/both counts and register split."),
+                                            tags$li("Data pipeline: update_data.R v16 now bisects EUCTR failures to single-day ranges before trial-level fallback and uses bounded retries/timeouts for fallback URL reads."),
+                                            tags$li("Documentation/report paths updated for trials.sqlite and trials_cache.rds.")
+                                          )),
+                                        tags$li(tags$b("v0.9.0 (2026-04-29):"),
+                                          tags$ul(
+                                            tags$li("All-ages dataset: EUCTR and CTIS queries now fetch all age groups (not just paediatric); database renamed to trials.sqlite."),
+                                            tags$li("Age Group filter (< 18 years / ≥ 18 years / All) pinned at the top of the sidebar; defaults to < 18 years to preserve existing behaviour. Mixed-age trials appear under both filters."),
+                                            tags$li("Chart Builder: Age Group added as X-axis and Group-by option."),
+                                            tags$li("Data pipeline: update_data.R rewritten with recursive quarterly splitting engine that automatically bisects date ranges exceeding 10 000 trials and logs completed/failed chunks.")
+                                          )),
+                                        tags$li(tags$b("v0.8.2 (2026-04-28):"),
+                                          tags$ul(
+                                            tags$li("Pipeline audit report (preprocessing.html) added — documents all normalisation steps, deduplication counts, and data quality issues; accessible from this tab."),
+                                            tags$li("Data pipeline: transitioned EUCTR trials now matched to CTIS counterparts by base ID (strip country/version suffix) as a fallback after title_key matching.")
+                                          )),
                                         tags$li(tags$b("v0.8.1 (2026-04-28):"),
                                           tags$ul(
                                             tags$li("Map: radio button to toggle between total trials and trials per million children (0-17); population data from Eurostat 2023 and UN WPP 2022 for all 108 countries."),
@@ -1744,7 +2251,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.8.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.9.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                   box(title="Technical Details",width=4,status="info",solidHeader=TRUE,
                                       h4(icon("code")," Built With"),
@@ -1869,9 +2376,31 @@ server <- function(input, output, session) {
   tc <- reactive(THEMES[[input$theme_select]])
   output$active_theme <- renderUI({
     switch(input$theme_select,
-      "Nord"       = tags$style(NORD_CSS),
-      "Nord Light" = tags$style(NORD_LIGHT_CSS),
-      tags$style("")
+      "Nord" = tagList(
+        fresh::use_theme(.NORD_FRESH),
+        tags$style(NORD_SUPPLEMENT)
+      ),
+      "Nord Light" = tagList(
+        fresh::use_theme(.NORD_LIGHT_FRESH),
+        tags$style(NORD_LIGHT_SUPPLEMENT),
+        # JS inline-style: bypasses all CSS cascade — sidebar background is definitive
+        tags$script(HTML("
+          (function fixSidebar() {
+            var els = document.querySelectorAll('.main-sidebar,.left-side,.skin-blue .main-sidebar');
+            if (els.length === 0) { setTimeout(fixSidebar, 100); return; }
+            els.forEach(function(el) {
+              el.style.setProperty('background', '#2E3440', 'important');
+              el.style.setProperty('background-color', '#2E3440', 'important');
+            });
+          })();
+        ")),
+        # Button text colour: a{color:#5E81AC} bleeds into .btn text — force white
+        tags$style(HTML("
+          .btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger,
+          .btn-primary a,.btn-success a,.btn-info a,.btn-warning a{color:#fff!important}
+        "))
+      ),
+      NULL
     )
   })
   
@@ -1941,6 +2470,9 @@ server <- function(input, output, session) {
       df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
     if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df))df<-df%>%filter(is_orphan==input$orphan_filter)
+    if(!is.null(input$age_group_filter)&&input$age_group_filter!="All"&&"age_group"%in%names(df)){
+      if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Paediatric & Adult"))
+      else if(input$age_group_filter=="≥ 18 years")df<-df%>%filter(age_group%in%c("Adult","Paediatric & Adult"))}
     if(isTRUE(mono_active())&&"n_countries"%in%names(df))df<-df%>%filter(n_countries==1)
     if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
@@ -1977,6 +2509,8 @@ server <- function(input, output, session) {
           updateSelectInput(session, "pip_filter",            selected = s$pip_filter)
         if (!is.null(s$orphan_filter))
           updateSelectInput(session, "orphan_filter",         selected = s$orphan_filter)
+        if (!is.null(s$age_group_filter))
+          updateSelectInput(session, "age_group_filter",      selected = s$age_group_filter)
         if (!is.null(s$sponsor_filter))
           updateSelectizeInput(session, "sponsor_filter",     selected = s$sponsor_filter)
         if (!is.null(s$text_search))
@@ -1999,6 +2533,7 @@ server <- function(input, output, session) {
       phase_filter       = input$phase_filter,
       pip_filter         = input$pip_filter,
       orphan_filter      = input$orphan_filter,
+      age_group_filter   = input$age_group_filter,
       sponsor_filter       = input$sponsor_filter,
       text_search          = input$text_search,
       mononational_filter  = mono_active()
@@ -2057,6 +2592,7 @@ server <- function(input, output, session) {
     if (length(input$phase_filter) > 0)                                     n <- n + 1L
     if (!isTRUE(input$pip_filter == "All"))                                  n <- n + 1L
     if (!isTRUE(input$orphan_filter == "All"))                               n <- n + 1L
+    if (!isTRUE(input$age_group_filter == "< 18 years"))                     n <- n + 1L
     mk_filter_badge(n)
   })
 
@@ -2109,6 +2645,9 @@ server <- function(input, output, session) {
     if (!is.null(input$orphan_filter) && input$orphan_filter != "All")
       chips <- c(chips, list(mk_chip("Orphan", input$orphan_filter)))
 
+    if (!is.null(input$age_group_filter) && input$age_group_filter != "< 18 years")
+      chips <- c(chips, list(mk_chip("Age", input$age_group_filter)))
+
     if (isTRUE(mono_active()))
       chips <- c(chips, list(mk_chip("Scope", "Mononational only")))
 
@@ -2144,6 +2683,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "phase_filter",       selected = character(0))
     updateSelectInput(session, "pip_filter", selected = "All")
     updateSelectInput(session, "orphan_filter", selected = "All")
+    updateSelectInput(session, "age_group_filter", selected = "< 18 years")
     updateSelectizeInput(session, "sponsor_filter",     selected = character(0))
     updateTextInput(session, "text_search", value = "")
     mono_active(FALSE)
@@ -2162,10 +2702,31 @@ server <- function(input, output, session) {
           p("Run ",tags$code("update_data.R")," to populate the database."))
   })
   
-  output$vb_total<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else nrow(filt()),big.mark=","),"Total Trials",icon=icon("flask"),color="blue"))
-  output$vb_ongoing<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Ongoing",na.rm=TRUE),big.mark=","),"Ongoing",icon=icon("play-circle"),color="green"))
-  output$vb_completed<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$status=="Completed",na.rm=TRUE),big.mark=","),"Completed",icon=icon("check-circle"),color="yellow"))
-  output$vb_pip<-renderValueBox(valueBox(format(if(is.null(rv$data))0 else sum(filt()$has_PIP=="Yes",na.rm=TRUE),big.mark=","),"With PIP",icon=icon("child"),color="purple"))
+  output$kpi_strip <- renderUI({
+    t <- tc()
+    n_total     <- if (is.null(rv$data)) 0 else nrow(filt())
+    n_ongoing   <- if (is.null(rv$data)) 0 else sum(filt()$status == "Ongoing",   na.rm = TRUE)
+    n_completed <- if (is.null(rv$data)) 0 else sum(filt()$status == "Completed", na.rm = TRUE)
+    n_pip       <- if (is.null(rv$data)) 0 else sum(filt()$has_PIP == "Yes",       na.rm = TRUE)
+    make_kpi <- function(id, val, label, ico, col) {
+      tags$div(id = id, class = "kpi-card",
+        style = sprintf("background:%s;border-top:none;", col),
+        tags$div(class = "kpi-icon", style = "color:rgba(255,255,255,0.8);", icon(ico)),
+        tags$div(class = "kpi-val",  style = "color:#fff;", format(val, big.mark = ",")),
+        tags$div(class = "kpi-lbl",  style = "color:rgba(255,255,255,0.9);", label)
+      )
+    }
+    tagList(
+      fluidRow(style = "margin:0 -6px 4px;",
+        column(3, style = "padding:0 6px;", make_kpi("kpi_total",     n_total,     "Total Trials", "flask",        t$frost3)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$green)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$yellow)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_pip",       n_pip,       "With PIP",     "child",        t$purple))
+      ),
+      tags$p("Click any card to filter the dashboard by that group.",
+             style = sprintf("font-size:11px;opacity:0.55;text-align:right;margin-top:2px;margin-bottom:14px;color:%s;", t$fg1))
+    )
+  })
 
   observeEvent(input$vb_click, {
     if (input$vb_click == "__reset__") {
@@ -2174,6 +2735,94 @@ server <- function(input, output, session) {
       updateSelectInput(session, "pip_filter", selected = "Yes")
     } else {
       updateSelectizeInput(session, "status_filter", selected = input$vb_click)
+    }
+  })
+
+
+  observeEvent(input$nav_to_tab, {
+    req(input$nav_to_tab)
+    updateTabItems(session, "tabs", input$nav_to_tab)
+  })
+
+  output$overview_footer <- renderUI({
+    t <- tc()
+    make_question <- function(label, preset_id, hint = NULL) {
+      tags$button(
+        class = "preset-btn example-q-btn",
+        `data-preset` = preset_id,
+        style = sprintf("color:%s;border-color:%s;", t$fg0, t$frost2),
+        tagList(
+          label,
+          if (!is.null(hint)) tags$span(class = "example-q-hint", hint)
+        )
+      )
+    }
+    fluidRow(column(12,
+      tags$div(style = sprintf("background:%s;border-radius:8px;padding:14px 16px;margin-bottom:14px;", t$bg1),
+        tags$div(class = "preset-section-label", style = sprintf("color:%s;", t$fg1),
+                 icon("lightbulb"), " Example Questions (click to search)"),
+        tags$div(
+          make_question("Which trials have been authorized in the last 12 months?",
+                        "last_12m"),
+          make_question("What are the open trials for neuroblastoma in Belgium?",
+                        "neuroblastoma_belgium"),
+          make_question("How is the evolution of the PIPs in the past 10 years?",
+                        "pip_10y"),
+          make_question('How does the portfolio of Novartis differ between paediatrics and adults?',
+                        "novartis_compare",
+                        hint = 'Apply the filter, then press “Compare Paediatric vs Adult” in the side panel')
+        )
+      )
+    ))
+  })
+
+  observeEvent(input$preset_click, {
+    p <- input$preset_click
+    if (p == "ctis_only") {
+      updateSelectizeInput(session, "register_filter", selected = "CTIS")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectInput(session,    "pip_filter",      selected = "All")
+      updateSelectInput(session,    "orphan_filter",   selected = "All")
+    } else if (p == "euctr_only") {
+      updateSelectizeInput(session, "register_filter", selected = "EUCTR")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectInput(session,    "pip_filter",      selected = "All")
+      updateSelectInput(session,    "orphan_filter",   selected = "All")
+    } else if (p == "ongoing_pip") {
+      updateSelectizeInput(session, "status_filter",   selected = "Ongoing")
+      updateSelectInput(session,    "pip_filter",      selected = "Yes")
+    } else if (p == "orphan") {
+      updateSelectInput(session,    "orphan_filter",   selected = "Yes")
+      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+    } else if (p == "completed") {
+      updateSelectizeInput(session, "status_filter",   selected = "Completed")
+      updateSelectInput(session,    "pip_filter",      selected = "All")
+    } else if (p == "last_12m") {
+      updateDateRangeInput(session, "date_range",
+                           start = Sys.Date() - 365, end = Sys.Date())
+    } else if (p == "last_year") {
+      yr <- as.integer(format(Sys.Date(), "%Y")) - 1L
+      updateDateRangeInput(session, "date_range",
+                           start = as.Date(paste0(yr, "-01-01")),
+                           end   = as.Date(paste0(yr, "-12-31")))
+    } else if (p == "adult_only") {
+      updateSelectInput(session, "age_group_filter", selected = "≥ 18 years")
+    } else if (p == "paed_only") {
+      updateSelectInput(session, "age_group_filter", selected = "< 18 years")
+    } else if (p == "neuroblastoma_belgium") {
+      updateSelectizeInput(session, "status_filter",  selected = "Ongoing")
+      updateTextInput(session,      "text_search",    value    = "neuroblastoma")
+      updateSelectizeInput(session, "country_filter", selected = "Belgium")
+    } else if (p == "pip_10y") {
+      updateSelectInput(session,    "pip_filter",  selected = "Yes")
+      updateDateRangeInput(session, "date_range",
+                           start = Sys.Date() - 3650, end = Sys.Date())
+    } else if (p == "novartis_compare") {
+      req(rv$data)
+      updateSelectizeInput(session, "sponsor_filter",
+                           choices  = sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),
+                           selected = "Novartis",
+                           server   = TRUE)
     }
   })
 
@@ -2313,9 +2962,9 @@ server <- function(input, output, session) {
                            columnDefs=list(list(width="350px",targets=2))))
   })
   
-  output$dl_csv<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".csv"),
+  output$dl_csv<-downloadHandler(filename=function()paste0("eu_trials_",Sys.Date(),".csv"),
                                  content=function(f)readr::write_csv(filt(),f))
-  output$dl_excel<-downloadHandler(filename=function()paste0("pediatric_trials_",Sys.Date(),".xlsx"),
+  output$dl_excel<-downloadHandler(filename=function()paste0("eu_trials_",Sys.Date(),".xlsx"),
                                    content=function(f)writexl::write_xlsx(filt(),f))
 
   # ── Trial detail modal ────────────────────────────────────────────────────
@@ -2449,6 +3098,116 @@ server <- function(input, output, session) {
         ),
         error = function(e) {
           showNotification(paste("PDF generation failed:", conditionMessage(e)),
+                           type = "error", duration = 15)
+        }
+      )
+    }
+  )
+
+  output$dl_comparison_report <- downloadHandler(
+    filename = function() paste0("paediatric_adult_comparison_", Sys.Date(), ".pdf"),
+    content  = function(file) {
+      notif <- showNotification(
+        "Generating comparison PDF… this may take 30–45 seconds.",
+        duration = NULL, type = "message")
+      on.exit(removeNotification(notif), add = TRUE)
+
+      req(rv$data)
+      df_comp <- rv$data
+
+      # Apply all active filters EXCEPT age_group_filter so both groups are present
+      if(length(input$status_filter)>0)
+        df_comp <- df_comp %>% filter(status %in% input$status_filter)
+      if(length(input$register_filter)>0)
+        df_comp <- df_comp %>% filter(register %in% input$register_filter)
+      if(!is.null(input$date_range))
+        df_comp <- df_comp %>%
+          filter(is.na(submission_date_parsed)|
+                   (submission_date_parsed>=input$date_range[1]&
+                    submission_date_parsed<=input$date_range[2]))
+      if(length(input$organ_class_filter)>0)
+        df_comp <- df_comp %>%
+          filter(str_detect(MEDDRA_organ_class,
+                            regex(paste(input$organ_class_filter,collapse="|"),ignore_case=TRUE)))
+      if(length(input$condition_filter)>0)
+        df_comp <- df_comp %>%
+          filter(str_detect(MEDDRA_term,
+                            regex(paste(input$condition_filter,collapse="|"),ignore_case=TRUE)))
+      if(length(input$country_filter)>0){
+        pat <- paste(str_replace_all(input$country_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
+        df_comp <- df_comp %>%
+          filter(str_detect(Member_state,regex(pat,ignore_case=TRUE)))}
+      if(length(input$phase_filter)>0){
+        pat <- paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
+        df_comp <- df_comp %>%
+          filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
+      if(input$pip_filter!="All")
+        df_comp <- df_comp %>% filter(has_PIP==input$pip_filter)
+      if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df_comp))
+        df_comp <- df_comp %>% filter(is_orphan==input$orphan_filter)
+      # age_group_filter intentionally NOT applied
+      if(isTRUE(mono_active())&&"n_countries"%in%names(df_comp))
+        df_comp <- df_comp %>% filter(n_countries==1)
+      if(length(input$sponsor_filter)>0)
+        df_comp <- df_comp %>% filter(sponsor_name%in%input$sponsor_filter)
+      if(nzchar(input$text_search)){
+        pat <- regex(input$text_search,ignore_case=TRUE)
+        df_comp <- df_comp %>%
+          filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
+                   str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat)|
+                   str_detect(coalesce(sponsor_name,""),pat))}
+
+      tmp_data <- tempfile(fileext = ".rds")
+      saveRDS(df_comp, tmp_data)
+      on.exit(unlink(tmp_data), add = TRUE)
+
+      filters <- list(
+        status      = input$status_filter,
+        register    = input$register_filter,
+        date_range  = as.character(input$date_range),
+        organ_class = if(length(input$organ_class_filter)>0) input$organ_class_filter else "All",
+        condition   = if(length(input$condition_filter)>0)   input$condition_filter   else "All",
+        country     = if(length(input$country_filter)>0)     input$country_filter     else "All",
+        phase       = if(length(input$phase_filter)>0)       input$phase_filter       else "All",
+        pip         = input$pip_filter,
+        orphan      = if(!is.null(input$orphan_filter)) input$orphan_filter else "All",
+        sponsor     = if(length(input$sponsor_filter)>0) input$sponsor_filter else "All",
+        text_search = if(nzchar(input$text_search)) input$text_search else "(none)"
+      )
+
+      if(!nzchar(Sys.which("pdflatex"))){
+        tl_candidates <- c(
+          path.expand("~/Library/TinyTeX/bin"),
+          path.expand("~/.TinyTeX/bin"),
+          "/opt/TinyTeX/bin"
+        )
+        for(d in tl_candidates){
+          subs <- list.files(d, full.names=TRUE)
+          if(length(subs)>0 && file.exists(file.path(subs[[1]],"pdflatex"))){
+            orig_path <- Sys.getenv("PATH")
+            Sys.setenv(PATH=paste(c(subs[[1]],orig_path),collapse=":"))
+            on.exit(Sys.setenv(PATH=orig_path),add=TRUE)
+            break
+          }
+        }
+      }
+
+      if(!nzchar(Sys.which("pdflatex"))){
+        showNotification("pdflatex not found. Install TinyTeX or a system LaTeX distribution.",
+                         type="error", duration=10)
+        return()
+      }
+
+      tryCatch(
+        rmarkdown::render(
+          input       = file.path(getwd(), "comparison_report.Rmd"),
+          output_file = file,
+          params      = list(data_path = tmp_data, filters = filters),
+          envir       = new.env(parent = globalenv()),
+          quiet       = TRUE
+        ),
+        error = function(e) {
+          showNotification(paste("Comparison PDF failed:", conditionMessage(e)),
                            type = "error", duration = 15)
         }
       )
@@ -2770,6 +3529,39 @@ server <- function(input, output, session) {
           tickvals = log10(tick_vals),
           ticktext = as.character(tick_vals)
         ))
+  })
+
+  output$plot_ctis_date_spread <- renderPlotly({
+    df <- filt() %>%
+      filter(register == "CTIS", n_countries > 1,
+             !is.na(decision_date_spread_days), is.finite(decision_date_spread_days)) %>%
+      mutate(country_group = factor(
+        case_when(
+          n_countries == 2 ~ "2",
+          n_countries == 3 ~ "3",
+          n_countries == 4 ~ "4",
+          n_countries >= 5 ~ "5+"),
+        levels = c("2", "3", "4", "5+")))
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No multinational CTIS data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Adjust the sidebar filters or check that CTIS multinational trials are included.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    tick_vals <- c(1, 10, 100, 1000)
+    df <- df %>% mutate(log_days = log10(pmax(decision_date_spread_days, 1)))
+    plot_ly(df, x = ~country_group, y = ~log_days,
+            type = "violin",
+            box = list(visible = TRUE),
+            meanline = list(visible = TRUE),
+            points = "outliers",
+            text = ~paste0(n_countries, " countries<br>", round(decision_date_spread_days), " days spread"),
+            hoverinfo = "text+x") %>%
+      plt_layout(showlegend = FALSE) %>%
+      layout(
+        xaxis = list(title = "Number of Member States (countries participating in trial)"),
+        yaxis = list(
+          title = "Days (log₁₀ scale)",
+          tickvals = log10(tick_vals),
+          ticktext = as.character(tick_vals)))
   })
 
   output$plot_top_sponsors <- renderPlotly({
@@ -3266,6 +4058,7 @@ server <- function(input, output, session) {
     "phase"              = "Phase",
     "sponsor_type"       = "Sponsor Type",
     "has_PIP"            = "PIP Status",
+    "age_group"          = "Age Group",
     "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
     "MEDDRA_term"        = "Condition (MedDRA term)",
     "Member_state"       = "Country / Member State"
@@ -3513,42 +4306,38 @@ server <- function(input, output, session) {
     filt() %>% filter(status == "Completed", !is.na(decision_date))
   })
 
-  output$vb_completed_total <- renderValueBox({
-    n <- nrow(compliance_base())
-    valueBox(format(n, big.mark=","), "Completed Trials", icon=icon("check-circle"), color="green")
-  })
-
-  output$vb_results_posted <- renderValueBox({
-    df <- compliance_base()
-    if ("has_results" %in% names(df)) {
-      n     <- sum(df$has_results, na.rm = TRUE)
-      total <- nrow(df)
-      pct   <- if (total > 0) paste0(round(n / total * 100), "%") else "—"
-      valueBox(paste0(format(n, big.mark=","), " (", pct, ")"),
-               "Results Posted", icon=icon("file-alt"), color="blue")
-    } else {
-      valueBox("N/A", "Results data (rebuild cache)", icon=icon("sync"), color="blue")
+  output$kpi_strip_compliance <- renderUI({
+    t   <- tc()
+    df  <- compliance_base()
+    n_completed <- nrow(df)
+    has_res <- "has_results" %in% names(df)
+    n_posted <- if (has_res) sum(df$has_results, na.rm = TRUE) else NA_integer_
+    n_acad   <- if (has_res) {
+      d <- df %>% filter(!is.na(sponsor_type), sponsor_type == "Academic")
+      sum(!d$has_results, na.rm = TRUE)
+    } else NA_integer_
+    n_ind    <- if (has_res) {
+      d <- df %>% filter(!is.na(sponsor_type), sponsor_type == "Industry")
+      sum(!d$has_results, na.rm = TRUE)
+    } else NA_integer_
+    fmt <- function(x) if (is.na(x)) "N/A" else format(x, big.mark = ",")
+    pct_lbl <- if (!is.na(n_posted) && n_completed > 0)
+      paste0(fmt(n_posted), " (", round(n_posted / n_completed * 100), "%)")
+    else fmt(n_posted)
+    make_kpi <- function(id, val, label, ico, col) {
+      tags$div(id = id, class = "kpi-card",
+        style = sprintf("background:%s;border-top:none;", col),
+        tags$div(class = "kpi-icon", style = "color:rgba(255,255,255,0.8);", icon(ico)),
+        tags$div(class = "kpi-val",  style = "color:#fff;", val),
+        tags$div(class = "kpi-lbl",  style = "color:rgba(255,255,255,0.9);", label)
+      )
     }
-  })
-
-  output$vb_overdue_academic <- renderValueBox({
-    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Academic")
-    if ("has_results" %in% names(df)) {
-      n <- sum(!df$has_results, na.rm = TRUE)
-      valueBox(format(n, big.mark=","), "Academic — no results posted", icon=icon("university"), color="yellow")
-    } else {
-      valueBox("N/A", "Academic — no results (rebuild cache)", icon=icon("university"), color="yellow")
-    }
-  })
-
-  output$vb_overdue_industry <- renderValueBox({
-    df <- compliance_base() %>% filter(!is.na(sponsor_type), sponsor_type == "Industry")
-    if ("has_results" %in% names(df)) {
-      n <- sum(!df$has_results, na.rm = TRUE)
-      valueBox(format(n, big.mark=","), "Industry — no results posted", icon=icon("building"), color="orange")
-    } else {
-      valueBox("N/A", "Industry — no results (rebuild cache)", icon=icon("building"), color="orange")
-    }
+    fluidRow(style = "margin:0 -6px 16px;",
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_total",  fmt(n_completed), "Completed Trials",            "check-circle", t$green)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_posted", pct_lbl,          "Results Posted",               "file-alt",     t$frost3)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_acad",   fmt(n_acad),      "Academic — no results posted", "university",   t$yellow)),
+      column(3, style = "padding:0 6px;", make_kpi("kpi_c_ind",    fmt(n_ind),       "Industry — no results posted", "building",     t$orange))
+    )
   })
 
   output$plot_results_compliance_overview <- renderPlotly({
@@ -3748,6 +4537,7 @@ server <- function(input, output, session) {
       "plot_organ", "plot_term", "plot_country",
       "plot_pip", "plot_pip_year",
       "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
+      "plot_ctis_date_spread",
       "plot_top_sponsors", "sponsor_timeline_ui", "plot_sponsor_timeline",
       # Phase Analytics
       "plot_phase", "plot_phase_status", "plot_phase_sponsor",
@@ -3758,8 +4548,7 @@ server <- function(input, output, session) {
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
       "plot_compare_country", "plot_compare_pip", "plot_compare_year",
       # Results Posting
-      "vb_completed_total", "vb_results_posted",
-      "vb_overdue_academic", "vb_overdue_industry",
+      "kpi_strip_compliance",
       "plot_results_compliance_overview", "plot_results_by_sponsor",
       "table_results_posted", "table_overdue",
       # About

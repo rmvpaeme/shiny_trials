@@ -1,0 +1,1685 @@
+---
+title: "Data Preprocessing Report"
+subtitle: "EU Paediatric Clinical Trials — Pipeline Audit"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding,
+                    output_file = "www/preprocessing.html") })
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
+    code_folding: hide
+    theme: flatly
+    self_contained: true
+    fig_width: 9
+    fig_height: 4.5
+params:
+  cache_path: "trials_cache.rds"
+  log_dir:    "data"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(stringr)
+  library(lubridate)
+  library(scales)
+  library(knitr)
+  library(kableExtra)
+  library(readr)
+  library(DT)
+  library(plotly)
+})
+
+# ── Colour palette (Nord) ──────────────────────────────────────────────────────
+BLUE   <- "#5E81AC"; FROST  <- "#81A1C1"; TEAL   <- "#88C0D0"
+GREEN  <- "#A3BE8C"; YELLOW <- "#EBCB8B"; ORANGE <- "#D08770"
+RED    <- "#BF616A"; PURPLE <- "#B48EAD"; GRAY   <- "#4C566A"
+LIGHT  <- "#ECEFF4"; DARK   <- "#2E3440"
+NORD8  <- c(BLUE, GREEN, YELLOW, RED, PURPLE, ORANGE, TEAL, FROST)
+
+STATUS_COLS <- c(Ongoing = GREEN, Completed = BLUE, Other = ORANGE)
+REG_COLS    <- c(EUCTR = BLUE, CTIS = TEAL)
+
+# ── ggplot theme ───────────────────────────────────────────────────────────────
+theme_pre <- function(base = 11) {
+  theme_minimal(base_size = base, base_family = "sans") %+replace% theme(
+    plot.title       = element_text(size = base + 1, face = "bold", color = DARK, hjust = 0),
+    plot.subtitle    = element_text(size = base - 0.5, color = GRAY, hjust = 0),
+    axis.title       = element_text(size = base - 0.5, color = GRAY),
+    axis.text        = element_text(size = base - 1,   color = GRAY),
+    axis.text.y      = element_text(margin = margin(r = 2)),
+    panel.grid.major = element_line(color = LIGHT, linewidth = 0.45),
+    panel.grid.minor = element_blank(),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    legend.key.size  = unit(0.4, "cm"),
+    legend.text      = element_text(size = base - 1.5, color = GRAY),
+    plot.margin      = margin(6, 8, 6, 6),
+    plot.background  = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    strip.text       = element_text(size = base - 0.5, face = "bold", color = DARK)
+  )
+}
+
+# ── Helpers ────────────────────────────────────────────────────────────────────
+fmt_n   <- function(x) format(x, big.mark = ",")
+fmt_pct <- function(x) sprintf("%.1f%%", x)
+
+nk <- function(x, cap = NULL, cn = colnames(x)) {
+  kable(x, booktabs = TRUE, linesep = "", caption = cap, col.names = cn, escape = FALSE) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                  full_width = FALSE, position = "left", font_size = 13)
+}
+
+# ── Load data ──────────────────────────────────────────────────────────────────
+cache_file <- params$cache_path
+log_dir    <- params$log_dir
+
+if (!file.exists(cache_file))
+  stop("Cache not found at: ", cache_file, ". Run rebuild_cache.R first.")
+
+t0 <- proc.time()
+df <- readRDS(cache_file)
+load_sec <- round((proc.time() - t0)["elapsed"], 1)
+
+load_log <- function(name) {
+  p <- file.path(log_dir, paste0(name, "_normalisation_log.csv"))
+  if (file.exists(p)) read_csv(p, show_col_types = FALSE) else NULL
+}
+
+log_country  <- load_log("country")
+log_meddra   <- load_log("meddra_term")
+log_organ    <- load_log("organ_class")
+log_sponsor  <- load_log("sponsor")
+log_phase    <- load_log("phase")
+log_status_c <- load_log("status_category")
+log_status_d <- load_log("status_display")
+```
+
+---
+
+# 1 · Dataset Overview {.tabset}
+
+The cache was loaded in **`r load_sec` s** and contains **`r fmt_n(nrow(df))`** deduplicated trials across **`r ncol(df)`** columns.
+
+```{r overview-cards}
+reg_counts <- df %>% count(register)
+n_tot   <- nrow(df)
+n_euctr <- reg_counts$n[reg_counts$register == "EUCTR"]
+n_ctis  <- reg_counts$n[reg_counts$register == "CTIS"]
+```
+
+<div style="display:flex;gap:24px;margin:12px 0 20px;">
+<div style="background:#5E81AC;color:#fff;border-radius:8px;padding:16px 28px;min-width:160px;text-align:center;">
+  <div style="font-size:2.2em;font-weight:700;">`r fmt_n(n_tot)`</div>
+  <div style="font-size:0.95em;opacity:0.9;">Total trials</div>
+</div>
+<div style="background:#81A1C1;color:#fff;border-radius:8px;padding:16px 28px;min-width:160px;text-align:center;">
+  <div style="font-size:2.2em;font-weight:700;">`r fmt_n(n_euctr)`</div>
+  <div style="font-size:0.95em;opacity:0.9;">EUCTR</div>
+</div>
+<div style="background:#88C0D0;color:#fff;border-radius:8px;padding:16px 28px;min-width:160px;text-align:center;">
+  <div style="font-size:2.2em;font-weight:700;">`r fmt_n(n_ctis)`</div>
+  <div style="font-size:0.95em;opacity:0.9;">CTIS</div>
+</div>
+<div style="background:#A3BE8C;color:#fff;border-radius:8px;padding:16px 28px;min-width:160px;text-align:center;">
+  <div style="font-size:2.2em;font-weight:700;">`r ncol(df)`</div>
+  <div style="font-size:0.95em;opacity:0.9;">Columns</div>
+</div>
+</div>
+
+## Register Distribution
+
+```{r reg-bar, fig.height=3.5}
+df %>%
+  count(register) %>%
+  ggplot(aes(register, n, fill = register)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = fmt_n(n)), vjust = -0.4, size = 3.5, color = DARK) +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Trials by register", x = NULL, y = "Count") +
+  theme_pre()
+```
+
+## Column Inventory
+
+```{r col-inventory}
+col_df <- tibble(
+  Column  = names(df),
+  Type    = sapply(df, function(x) class(x)[1]),
+  NonMiss = sapply(df, function(x) sum(!is.na(x))),
+  Pct     = round(NonMiss / nrow(df) * 100, 1)
+) %>% arrange(Pct)
+
+datatable(col_df,
+  colnames  = c("Column", "Type", "Non-missing (n)", "Complete (%)"),
+  rownames  = FALSE,
+  filter    = "top",
+  options   = list(pageLength = 20, scrollX = TRUE),
+  caption   = "All columns in the final cache, sorted by completeness (ascending)"
+)
+```
+
+---
+
+# 2 · Age Group Coverage {.tabset}
+
+`age_group` classifies each trial as **Paediatric**, **Adult**, **Paediatric & Adult**, or **Unknown**. EUCTR records are derived from the age eligibility flags (`f11_trial_has_subjects_under_18`, `f12_adults_1864_years`, `f13_elderly_65_years`). CTIS records are derived from `ageGroup`, where `"0-17 years"` marks paediatric eligibility and `"18-64 years"` / `"65+ years"` mark adult eligibility.
+
+```{r age-group-stats}
+age_levels <- c("Paediatric", "Adult", "Paediatric & Adult", "Unknown")
+
+age_df <- df %>%
+  mutate(
+    age_group = replace_na(age_group, "Unknown"),
+    age_group = factor(age_group, levels = age_levels)
+  )
+
+age_summary <- age_df %>%
+  count(age_group, name = "Trials", .drop = FALSE) %>%
+  mutate(
+    `% of cache` = fmt_pct(Trials / sum(Trials) * 100),
+    `Included by < 18 filter` = if_else(
+      age_group %in% c("Paediatric", "Paediatric & Adult"),
+      "Yes", "No"
+    ),
+    `Included by ≥ 18 filter` = if_else(
+      age_group %in% c("Adult", "Paediatric & Adult"),
+      "Yes", "No"
+    )
+  )
+
+n_paediatric_filter <- age_df %>%
+  filter(age_group %in% c("Paediatric", "Paediatric & Adult")) %>%
+  nrow()
+n_adult_filter <- age_df %>%
+  filter(age_group %in% c("Adult", "Paediatric & Adult")) %>%
+  nrow()
+n_both <- age_df %>% filter(age_group == "Paediatric & Adult") %>% nrow()
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_paediatric_filter)`</b><br><small>shown by &lt; 18 years filter</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_adult_filter)`</b><br><small>shown by ≥ 18 years filter</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #B48EAD;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_both)`</b><br><small>eligible for both filters</small>
+</div>
+</div>
+
+## Classification Summary
+
+```{r age-group-summary}
+age_summary %>%
+  mutate(Trials = fmt_n(Trials)) %>%
+  nk(cap = "Adult / paediatric classification in the final cache")
+```
+
+## Register Split
+
+```{r age-group-register, fig.height=3.8}
+age_df %>%
+  count(register, age_group, .drop = FALSE) %>%
+  ggplot(aes(register, n, fill = age_group)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(
+    `Paediatric` = BLUE,
+    `Adult` = GREEN,
+    `Paediatric & Adult` = PURPLE,
+    `Unknown` = GRAY
+  ), drop = FALSE) +
+  labs(title = "Age group classification by register",
+       subtitle = "Paediatric & Adult trials are included in both sidebar age filters",
+       x = NULL, y = "Proportion of trials") +
+  theme_pre()
+```
+
+---
+
+# 3 · Field Extraction & Column Mapping
+
+`prepare_trial_data()` pulls separate field lists for EUCTR and CTIS from the SQLite database, then unites them into unified columns via `dplyr::unite()`.
+
+```{r field-map}
+field_map <- tribble(
+  ~`Output column`,        ~`EUCTR source field`,                                             ~`CTIS source field`,
+  "CT_number",             "a2_eudract_number",                                               "applicationInfo.ctNumber",
+  "Full_title",            "a3_full_title_of_the_trial",                                      "clinicalTrialIdentifiers.fullTitle",
+  "DIMP_product_name",     "dimp.d31_product_name",                                           "products.productName",
+  "MEDDRA_term",           "e12_meddra_classification.e12_term",                              "meddraConditionTerms.termName",
+  "MEDDRA_organ_class",    "e12_meddra_classification.e12_system_organ_class",                "meddraConditionTerms.organClass",
+  "Member_state",          "a1_member_state_concerned",                                       "memberStatesConcerned",
+  "age_group",             "f11/f12/f13 age eligibility flags",                               "ageGroup",
+  "PIP_status",            "a7_trial_is_part_of_a_paediatric_investigation_plan",             "scientificAdviceAndPip.paediatricInvestigationPlan",
+  "trial_status_raw",      "x5_trial_status",                                                 "applicationInfo.trialStatus",
+  "submission_date",       "x6_date_on_which_…_first_entered_in_the_eudract_database",        "applicationInfo.submissionDate",
+  "decision_date",         "n_date_of_competent_authority_decision",                          "applicationInfo.decisionDate",
+  "sponsor_name",          "b1_sponsor.b11_name_of_sponsor",                                  "sponsors.organisation.name",
+  "sponsor_type",          "b1_sponsor.b31_and_b32_status_of_the_sponsor",                   "sponsors.commercial",
+  "phase",                 "e71/e72/e73/e74_phase_i–iv (boolean flags)",                     "trialPhase (text)",
+  "has_results",           "endPoints.endPoint.readyForValues (non-NA)",                      "resultsFirstReceived (TRUE)",
+  "is_orphan",             "dimp.d25_…_orphan_drug_…_community (Yes/No text)",               "products.orphanDrugDesigNumber (EU/3/… code)",
+  "start_date",            "n_date_of_competent_authority_decision / recruitmentStartDate",   "estimatedRecruitmentStartDate"
+)
+
+nk(field_map, cap = "Raw source fields unified into output columns")
+```
+
+**All `unite()` calls use `na.rm = TRUE` and `remove = TRUE`** — so the EUCTR value is kept when the CTIS field is NA, and vice versa.  List-typed columns are first collapsed by `deep_flatten_col()`, which recursively unlists nested JSON, removes NA/NULL/numeric-only tokens, and joins unique values with `" / "`.
+
+---
+
+# 4 · Deduplication Pipeline {.tabset}
+
+The raw database may contain multiple rows per trial: EUCTR stores one row per **member state** (e.g., 2020-001234-56-BE, -DE, -FR), and CTIS stores multiple **amendment versions** (e.g., …-00, -01, -02). Cross-register overlaps exist when a trial appears in both registers (EudraCT trials that transitioned to CTIS). The pipeline resolves all of these in six sequential steps.
+
+```{r dedup-db}
+library(DBI)
+library(RSQLite)
+
+db_path <- "data/trials.sqlite"
+has_db  <- file.exists(db_path)
+
+is_euctr_id <- function(x) str_detect(x, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]")
+
+if (has_db) {
+  con     <- dbConnect(RSQLite::SQLite(), db_path)
+  all_ids <- dbGetQuery(con, 'SELECT "_id" FROM trials')[["_id"]]
+
+  # EUCTR "transitioned" status — also fetch titles for later title-key matching
+  trans_df <- dbGetQuery(con, '
+    SELECT "_id",
+      json_extract(json, "$.x5_trial_status")        AS trial_status,
+      json_extract(json, "$.p_end_of_trial_status")  AS end_status,
+      json_extract(json, "$.a3_full_title_of_the_trial") AS title
+    FROM trials
+    WHERE lower(json_extract(json, "$.x5_trial_status"))       LIKE "%transition%"
+       OR lower(json_extract(json, "$.p_end_of_trial_status")) LIKE "%transition%"
+  ')
+  transitioned_ids <- trans_df[["_id"]]
+
+  # EUCTR per-country raw IDs
+  euctr_raw_ids <- all_ids[is_euctr_id(all_ids)]
+
+  # CTIS raw IDs
+  ctis_raw_ids <- all_ids[!is_euctr_id(all_ids)]
+
+  dbDisconnect(con)
+} else {
+  all_ids          <- character(0)
+  trans_df         <- data.frame(`_id`=character(), trial_status=character(),
+                                  end_status=character(), title=character(),
+                                  check.names=FALSE)
+  transitioned_ids <- character(0)
+  euctr_raw_ids    <- character(0)
+  ctis_raw_ids     <- character(0)
+}
+
+# title_key helper (mirrors app.R logic)
+make_title_key <- function(title) {
+  tt <- tolower(as.character(title))
+  tt <- str_replace_all(tt, "[^a-z0-9 ]", " ")
+  tt <- str_squish(tt)
+  substr(tt, 1, 80)
+}
+
+cache_ids <- df[["_id"]]
+cache_euctr_base <- str_replace(cache_ids[is_euctr_id(cache_ids)], "-[A-Z]{2,3}$", "")
+
+# ── Step counts ────────────────────────────────────────────────────────────────
+euctr_all  <- all_ids[is_euctr_id(all_ids)]
+ctis_all   <- all_ids[!is_euctr_id(all_ids)]
+
+# EUCTR base IDs (strip 2–3-letter country code)
+euctr_base_all   <- str_replace(euctr_all,  "-[A-Z]{2,3}$", "")
+n_euctr_base     <- n_distinct(euctr_base_all)
+avg_countries    <- round(length(euctr_all) / n_euctr_base, 1)
+
+# CTIS base IDs (strip 2-digit version suffix)
+ctis_base_all    <- str_replace(ctis_all,   "-\\d{2}$", "")
+n_ctis_base      <- n_distinct(ctis_base_all)
+n_ctis_amended   <- sum(table(ctis_base_all) > 1)   # bases with >1 version
+
+# Waterfall steps computed from first principles so the chart always decreases:
+#   Step 1: unique EUCTR base trials + ALL CTIS records (country-variant collapse only)
+#   Step 2: unique EUCTR base + unique CTIS base (CTIS amendment collapse)
+#   Step 3+: final cache (cross-register dedup + any other drops)
+# This avoids the DB-minus-cache diff approach which inflates n_drop_ctis_versions
+# whenever the DB and cache are built at different times.
+n_raw                  <- length(all_ids)
+n_step1                <- n_euctr_base + length(ctis_all)   # after EUCTR country dedup
+n_step2                <- n_euctr_base + n_ctis_base        # after CTIS amendment dedup
+n_final                <- nrow(df)
+
+n_drop_country_variant <- n_raw    - n_step1
+n_drop_ctis_versions   <- n_step1  - n_step2
+n_drop_cross_register  <- n_step2  - n_final    # cross-register + any other drops
+
+# Pre-2023 CTIS relabelled as EUCTR (register changed, count unchanged)
+n_pre2023 <- df %>%
+  filter(register == "EUCTR") %>%
+  mutate(yr = year(submission_date_parsed)) %>%
+  filter(!is.na(yr) & yr < 2023) %>%
+  nrow()
+```
+
+## Waterfall
+
+```{r dedup-waterfall, fig.height=4.5}
+wf <- tibble(
+  step  = c(
+    "Raw DB rows",
+    "− EUCTR country variants",
+    "− CTIS older amendments",
+    "− Cross-register duplicates",
+    "= Final cache"
+  ),
+  delta = c(
+    n_raw,
+    -n_drop_country_variant,
+    -n_drop_ctis_versions,
+    -n_drop_cross_register,
+    NA
+  ),
+  cumul = c(
+    n_raw,
+    n_raw - n_drop_country_variant,
+    n_raw - n_drop_country_variant - n_drop_ctis_versions,
+    n_final,
+    n_final
+  ),
+  type  = c("start", "drop", "drop", "drop", "end")
+)
+
+ggplot(wf, aes(x = forcats::fct_inorder(step), y = cumul, fill = type)) +
+  geom_col(width = 0.55) +
+  geom_text(aes(label = fmt_n(cumul)), vjust = -0.4, size = 3.5, color = DARK) +
+  scale_fill_manual(values = c(start = BLUE, drop = RED, end = GREEN),
+                    guide  = "none") +
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Deduplication waterfall: rows removed at each step",
+       subtitle = "Blue = raw start; red = rows removed; green = final",
+       x = NULL, y = "Cumulative rows remaining") +
+  theme_pre() +
+  theme(axis.text.x = element_text(size = 9, angle = 15, hjust = 1))
+```
+
+```{r dedup-summary-table}
+tribble(
+  ~Step, ~Logic, ~`Rows removed`, ~`Rows remaining`,
+  "Raw DB",                 "All records fetched from SQLite",
+    "—", fmt_n(n_raw),
+  "1. EUCTR per-country collapse", paste0("One row per member state → keep 1 per base ID; ", fmt_n(n_euctr_base), " unique EUCTR trials (avg ", avg_countries, " countries each)"),
+    fmt_n(n_drop_country_variant), fmt_n(n_step1),
+  "2. CTIS latest amendment",     paste0("Keep highest version suffix per base ID; ", fmt_n(n_ctis_amended), " base trials had ≥ 2 versions"),
+    fmt_n(n_drop_ctis_versions), fmt_n(n_step2),
+  "3–5. Cross-register / final dedup",    "EUCTR rows dropped when same trial found in CTIS (by CT#, title_key, or 'transitioned' status), plus any final cache exclusions",
+    fmt_n(n_drop_cross_register), fmt_n(n_final),
+  "6. Pre-2023 CTIS relabel",     "Register label changed CTIS→EUCTR for migrated EudraCT trials; row count unchanged",
+    paste0("0 rows (", fmt_n(n_pre2023), " relabelled)"), fmt_n(n_final)
+) %>%
+  nk(cap = "Deduplication steps with real row counts")
+```
+
+## EUCTR Country Variants {.tabset}
+
+Each EUCTR trial protocol was submitted per member state, generating one row per country in the DB. The pipeline collapses these to a single row and aggregates country lists.
+
+```{r dedup-euctr-before-after}
+# Show top 12 trials with most country variants; compare raw DB vs cache
+euctr_variant_tbl <- tibble(raw_id = euctr_raw_ids) %>%
+  mutate(base = str_replace(raw_id, "-[A-Z]{2,3}$", ""),
+         country = str_extract(raw_id, "[A-Z]{2,3}$")) %>%
+  group_by(base) %>%
+  summarise(
+    n_countries   = n(),
+    country_list  = paste(sort(country), collapse = ", "),
+    kept_in_cache = base %in% cache_euctr_base,
+    .groups = "drop"
+  ) %>%
+  filter(kept_in_cache) %>%
+  arrange(desc(n_countries)) %>%
+  slice_head(n = 15) %>%
+  select(`Base trial ID` = base,
+         `# countries in DB` = n_countries,
+         `Country variants` = country_list)
+
+datatable(euctr_variant_tbl,
+  rownames = FALSE,
+  options  = list(pageLength = 15, scrollX = TRUE),
+  caption  = "Top 15 EUCTR trials by number of per-country rows in raw DB (collapsed to 1 row in cache)"
+)
+```
+
+```{r dedup-euctr-dist, fig.height=3.5}
+tibble(raw_id = euctr_raw_ids) %>%
+  mutate(base = str_replace(raw_id, "-[A-Z]{2,3}$", "")) %>%
+  count(base, name = "n_countries") %>%
+  count(n_countries, name = "n_trials") %>%
+  filter(n_countries <= 30) %>%
+  ggplot(aes(n_countries, n_trials)) +
+  geom_col(fill = BLUE, width = 0.8) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Distribution of per-country DB rows per EUCTR trial",
+       subtitle = "Most trials are submitted in 1–5 member states",
+       x = "Country variants (rows in raw DB)", y = "Number of trials") +
+  theme_pre()
+```
+
+## CTIS Amendment Versions {.tabset}
+
+CTIS assigns a version suffix (`-00`, `-01`, `-02`, …) to each amendment. Only the latest version is retained.
+
+```{r dedup-ctis-versions}
+ctis_version_tbl <- tibble(raw_id = ctis_all) %>%
+  mutate(base    = str_replace(raw_id, "-\\d{2}$", ""),
+         version = as.integer(str_extract(raw_id, "\\d{2}$"))) %>%
+  group_by(base) %>%
+  filter(n() > 1) %>%                           # only amended trials
+  summarise(
+    versions     = paste(sort(raw_id), collapse = " → "),
+    n_versions   = n(),
+    max_version  = max(version),
+    kept_in_cache = any(raw_id %in% cache_ids),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(n_versions)) %>%
+  slice_head(n = 20) %>%
+  select(`Base CTIS ID` = base,
+         `# versions` = n_versions,
+         `Latest version kept` = max_version,
+         `All versions (old → new)` = versions)
+
+datatable(ctis_version_tbl,
+  rownames = FALSE,
+  options  = list(pageLength = 20, scrollX = TRUE),
+  caption  = paste0("CTIS trials with multiple amendment versions (", fmt_n(n_ctis_amended), " total). Only latest kept in cache.")
+)
+```
+
+```{r dedup-ctis-version-dist, fig.height=3}
+tibble(raw_id = ctis_all) %>%
+  mutate(base = str_replace(raw_id, "-\\d{2}$", "")) %>%
+  count(base, name = "n_versions") %>%
+  count(n_versions, name = "n_trials") %>%
+  ggplot(aes(n_versions, n_trials)) +
+  geom_col(fill = TEAL, width = 0.7) +
+  scale_y_continuous(labels = comma) +
+  scale_x_continuous(breaks = 1:10) +
+  labs(title = "Distribution of amendment versions per CTIS trial",
+       x = "Amendment versions in raw DB", y = "Number of base trials") +
+  theme_pre()
+```
+
+## Cross-Register Duplicates {.tabset}
+
+When the same trial appears in both EUCTR and CTIS, the EUCTR copy is dropped in favour of the CTIS record. This covers three overlap types: (a) "Trial now transitioned" status in EUCTR, (b) same CT number base in both registers, (c) matching title_key.
+
+```{r dedup-transitioned}
+# Match transitioned EUCTR → CTIS via title_key (same logic as app.R)
+n_transitioned <- n_distinct(transitioned_ids)
+
+ctis_by_tk <- df %>%
+  filter(register == "CTIS") %>%
+  mutate(tk = make_title_key(Full_title)) %>%
+  filter(!is.na(tk) & nchar(tk) >= 20) %>%
+  select(ctis_id = `_id`, tk, ctis_title = Full_title,
+         ctis_status = status, ctis_phase = phase)
+
+trans_matched <- trans_df %>%
+  as_tibble() %>%
+  rename(euctr_id = `_id`) %>%
+  mutate(
+    euctr_base = str_replace(euctr_id, "-[A-Z]{2,3}$", ""),
+    tk         = make_title_key(title)
+  ) %>%
+  filter(!is.na(tk) & nchar(tk) >= 20) %>%
+  distinct(euctr_base, tk, trial_status, end_status) %>%
+  left_join(ctis_by_tk, by = "tk")
+
+n_matched   <- sum(!is.na(trans_matched$ctis_id))
+n_unmatched <- sum( is.na(trans_matched$ctis_id))
+
+trans_matched %>%
+  arrange(!is.na(ctis_id), euctr_base) %>%
+  #slice_head(n = 800) %>%
+  mutate(
+    euctr_status_disp = coalesce(end_status, trial_status),
+    ctis_id_disp      = coalesce(ctis_id, "— no CTIS match found"),
+    ctis_status_disp  = coalesce(ctis_status, "—")
+  ) %>%
+  select(
+    `EUCTR base ID (dropped)` = euctr_base,
+    `EUCTR status`            = euctr_status_disp,
+    `CTIS ID (kept)`          = ctis_id_disp,
+    `CTIS title`              = ctis_title,
+    `CTIS status`             = ctis_status_disp
+  ) %>%
+  datatable(
+    rownames = FALSE,
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = paste0(
+      fmt_n(n_transitioned), " unique EUCTR base trials flagged 'transitioned' in DB. ",
+      fmt_n(n_matched), " matched to a CTIS counterpart by title_key; ",
+      fmt_n(n_unmatched), " unmatched."
+    )
+  )
+```
+
+```{r dedup-cross-reg-examples}
+# Residual cross-register duplicates: same title_key in both EUCTR and CTIS in the cache.
+# These are trials that slipped through all dedup steps and exist in both registers.
+euctr_by_tk <- df %>%
+  filter(register == "EUCTR") %>%
+  mutate(tk = make_title_key(Full_title)) %>%
+  filter(!is.na(tk) & nchar(tk) >= 20) %>%
+  select(euctr_id = `_id`, tk, euctr_title = Full_title, euctr_status = status)
+
+cross_reg_tbl <- ctis_by_tk %>%
+  inner_join(euctr_by_tk, by = "tk") %>%
+  filter(ctis_id != euctr_id) %>%
+  select(
+    `EUCTR ID (still in cache)` = euctr_id,
+    `CTIS ID (still in cache)`  = ctis_id,
+    `Shared title_key`          = tk,
+    `EUCTR status`              = euctr_status,
+    `CTIS status`               = ctis_status
+  ) %>%
+  slice_head(n = 50)
+
+if (nrow(cross_reg_tbl) > 0) {
+  datatable(cross_reg_tbl,
+    rownames = FALSE,
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = paste0(
+      fmt_n(nrow(cross_reg_tbl)), " trial(s) where the same title_key appears in both ",
+      "EUCTR and CTIS in the final cache — potential residual duplicates not caught by dedup."
+    )
+  )
+} else {
+  cat("No residual cross-register title_key duplicates in final cache — deduplication is complete.")
+}
+```
+
+## Pre-2023 CTIS → EUCTR Relabel {.tabset}
+
+CTIS launched in January 2023. Records in CTIS with a submission date before 2023 are migrated EudraCT trials; their `register` label is corrected to `"EUCTR"` (the row count does not change).
+
+```{r dedup-pre2023}
+pre2023_tbl <- df %>%
+  filter(register == "EUCTR") %>%
+  mutate(yr = year(submission_date_parsed)) %>%
+  filter(!is.na(yr) & yr < 2023) %>%
+  filter(str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-\\d")) %>%  # CTIS-style ID (not EUCTR)
+  select(`CTIS ID` = `_id`,
+         `Submission year` = yr,
+         `Trial title` = Full_title,
+         `Sponsor` = sponsor_name,
+         `Status` = status) %>%
+  arrange(`Submission year`) %>%
+  slice_head(n = 30)
+
+if (nrow(pre2023_tbl) > 0) {
+  datatable(pre2023_tbl,
+    rownames = FALSE,
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = paste0(fmt_n(n_pre2023), " trials with CTIS-style IDs but submission year < 2023, relabelled register='EUCTR'")
+  )
+} else {
+  # Fallback: show by year
+  df %>%
+    filter(register == "EUCTR") %>%
+    mutate(yr = year(submission_date_parsed)) %>%
+    filter(!is.na(yr) & yr < 2023) %>%
+    count(yr) %>%
+    nk(cap = paste0(fmt_n(n_pre2023), " pre-2023 CTIS records relabelled as EUCTR, by year"))
+}
+```
+
+```{r dedup-pre2023-overlap}
+# Check: do any relabelled CTIS trials share a title_key with an EUCTR-original trial?
+# That would mean the same real-world trial appears twice in the cache.
+euctr_orig_tk <- df %>%
+  filter(register == "EUCTR",
+         str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]")) %>%
+  mutate(tk = make_title_key(Full_title)) %>%
+  filter(!is.na(tk) & nchar(tk) >= 20) %>%
+  select(euctr_orig_id = `_id`, tk, euctr_title = Full_title, euctr_status = status)
+
+euctr_relab_tk <- df %>%
+  filter(register == "EUCTR",
+         str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-\\d")) %>%
+  mutate(tk = make_title_key(Full_title)) %>%
+  filter(!is.na(tk) & nchar(tk) >= 20) %>%
+  select(relab_id = `_id`, tk, relab_title = Full_title, relab_yr = year)
+
+overlap_tbl <- euctr_orig_tk %>%
+  inner_join(euctr_relab_tk, by = "tk") %>%
+  select(`EUCTR original ID`         = euctr_orig_id,
+         `CTIS-relabelled ID`        = relab_id,
+         `Shared title_key`          = tk,
+         `Submission year (relabelled)` = relab_yr,
+         `EUCTR status`              = euctr_status)
+
+n_overlap <- nrow(overlap_tbl)
+
+if (n_overlap > 0) {
+  overlap_tbl %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(
+        "⚠️  ", fmt_n(n_overlap), " trial(s) appear as BOTH 'EUCTR (original)' AND ",
+        "'EUCTR (relabelled from CTIS)' in the cache — same real-world trial counted ",
+        "TWICE in the bar chart below. These are dedup failures."
+      ))
+} else {
+  cat("✓ No overlap between EUCTR-original and CTIS-relabelled trials — the bar chart below is not double-counting.")
+}
+```
+
+```{r dedup-pre2023-bar, fig.height=3.5}
+df %>%
+  mutate(yr = year(submission_date_parsed)) %>%
+  filter(!is.na(yr), yr >= 2000, yr <= 2024) %>%
+  mutate(source = case_when(
+    register == "CTIS" ~ "CTIS (native)",
+    register == "EUCTR" & str_detect(`_id`, "^\\d{4}-\\d{6}-\\d{2}-[A-Z]") ~ "EUCTR (original)",
+    TRUE ~ "EUCTR (relabelled from CTIS)"
+  )) %>%
+  count(yr, source) %>%
+  ggplot(aes(yr, n, fill = source)) +
+  geom_col() +
+  scale_fill_manual(values = c(
+    `EUCTR (original)`             = BLUE,
+    `EUCTR (relabelled from CTIS)` = FROST,
+    `CTIS (native)`                = TEAL
+  )) +
+  scale_y_continuous(labels = comma) +
+  scale_x_continuous(breaks = seq(2000, 2025, 2)) +
+  labs(title = "Trials by authorization year and data origin",
+       subtitle = "Frost = CTIS-style IDs relabelled as EUCTR (pre-2023 migrated records)",
+       x = NULL, y = "Trials") +
+  theme_pre()
+```
+
+---
+
+# 5 · Country Normalisation {.tabset}
+
+`clean_member_state()` splits multi-country strings on `" / "` or `", "`, strips junk tokens (numerics, dates, UUIDs, single characters), resolves aliases via `COUNTRY_LOOKUP`, and rejoins sorted unique values.
+
+```{r country-stats}
+lc <- log_country %>% filter(!is.na(raw) & raw != "")
+n_raw    <- nrow(lc)
+n_uniq_r <- n_distinct(lc$raw)
+n_uniq_n <- n_distinct(lc$normalised, na.rm = TRUE)
+n_chg    <- sum(lc$changed, na.rm = TRUE)
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_raw)`</b><br><small>raw log entries</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #88C0D0;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_r)`</b><br><small>unique raw values</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_n)`</b><br><small>unique normalised values</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_chg)`</b> (`r fmt_pct(n_chg/n_raw*100)`)<br><small>entries changed</small>
+</div>
+</div>
+
+## Top Countries
+
+```{r country-bar, fig.height=5}
+df %>%
+  filter(!is.na(Member_state)) %>%
+  separate_rows(Member_state, sep = " / ") %>%
+  filter(str_trim(Member_state) != "") %>%
+  count(Member_state, sort = TRUE) %>%
+  slice_head(n = 25) %>%
+  mutate(Member_state = forcats::fct_reorder(Member_state, n)) %>%
+  ggplot(aes(n, Member_state, fill = n)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_gradient(low = FROST, high = BLUE) +
+  scale_x_continuous(labels = comma) +
+  labs(title = "Top 25 countries after normalisation",
+       subtitle = "Counts are trial-country combinations (one trial can appear in multiple countries)",
+       x = "Trial–country combinations", y = NULL) +
+  theme_pre() +
+  theme(axis.text.y = element_text(size = 9))
+```
+
+## Changed Entries
+
+```{r country-changed}
+log_country %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw value", "Normalised", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "Country entries that were changed during normalisation"
+  )
+```
+
+## Alias Examples
+
+Key alias resolutions hard-coded in `COUNTRY_LOOKUP`:
+
+```{r country-aliases}
+tribble(
+  ~`Raw alias`,          ~`Canonical name`,
+  "uk, u.k., great britain", "United Kingdom",
+  "us, usa, u.s.a., united states of america", "United States",
+  "czechia",              "Czech Republic",
+  "republic of korea, korea", "South Korea",
+  "russian federation",   "Russia",
+  "türkiye",              "Turkey"
+) %>% nk(cap = "Alias mappings in COUNTRY_LOOKUP")
+```
+
+---
+
+# 6 · MedDRA Term Normalisation {.tabset}
+
+`clean_meddra_term()` fixes American → British spelling variants and converts Roman numeral type suffixes to Arabic numerals, then deduplicates within multi-term strings.
+
+```{r meddra-stats}
+lm <- log_meddra %>% filter(!is.na(raw))
+n_raw_m  <- nrow(lm)
+n_uniq_rm <- n_distinct(lm$raw)
+n_uniq_nm <- n_distinct(lm$normalised, na.rm = TRUE)
+n_chg_m  <- sum(lm$changed, na.rm = TRUE)
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_raw_m)`</b><br><small>raw log entries</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_rm)`</b> → <b>`r fmt_n(n_uniq_nm)`</b><br><small>unique raw → normalised</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_chg_m)`</b> (`r fmt_pct(n_chg_m/n_raw_m*100)`)<br><small>entries changed</small>
+</div>
+</div>
+
+## Top MedDRA Terms
+
+```{r meddra-bar, fig.height=5.5}
+df %>%
+  filter(!is.na(MEDDRA_term)) %>%
+  separate_rows(MEDDRA_term, sep = " / ") %>%
+  mutate(MEDDRA_term = str_trim(MEDDRA_term)) %>%
+  filter(MEDDRA_term != "") %>%
+  count(MEDDRA_term, sort = TRUE) %>%
+  slice_head(n = 25) %>%
+  mutate(MEDDRA_term = forcats::fct_reorder(MEDDRA_term, n)) %>%
+  ggplot(aes(n, MEDDRA_term, fill = n)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_gradient(low = TEAL, high = BLUE) +
+  scale_x_continuous(labels = comma) +
+  labs(title = "Top 25 MedDRA condition terms after normalisation",
+       x = "Trial count", y = NULL) +
+  theme_pre() +
+  theme(axis.text.y = element_text(size = 8.5))
+```
+
+## Spelling Fixes
+
+```{r meddra-spelling}
+log_meddra %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  filter(!str_detect(normalised, "\\d")) %>%  # not Roman→Arabic
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw term", "Normalised", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "MedDRA terms changed by spelling normalisation"
+  )
+```
+
+## Roman → Arabic Numerals
+
+```{r meddra-roman}
+log_meddra %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  filter(str_detect(raw, "Type (I|II|III|IV)|type (i|ii|iii|iv)")) %>%
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw (Roman)", "Normalised (Arabic)", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "MedDRA terms where Roman numeral type suffixes were converted to Arabic"
+  )
+```
+
+---
+
+# 7 · Organ Class Normalisation {.tabset}
+
+`clean_organ_class()` handles two distinct raw formats:
+
+- **EUCTR**: `"10021881 - Infections and infestations"` → strip numeric prefix
+- **CTIS**: `"10021881"` (code only) → lookup in `ctis_soc_lookup` table
+
+```{r organ-stats}
+lo <- log_organ %>% filter(!is.na(raw))
+n_raw_o  <- nrow(lo)
+n_uniq_ro <- n_distinct(lo$raw)
+n_uniq_no <- n_distinct(lo$normalised, na.rm = TRUE)
+n_chg_o  <- sum(lo$changed, na.rm = TRUE)
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_raw_o)`</b><br><small>raw log entries</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_ro)`</b> → <b>`r fmt_n(n_uniq_no)`</b><br><small>unique raw → normalised</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_chg_o)`</b> (`r fmt_pct(n_chg_o/n_raw_o*100)`)<br><small>entries changed</small>
+</div>
+</div>
+
+## Distribution by Organ Class
+
+```{r organ-bar, fig.height=5}
+df %>%
+  filter(!is.na(MEDDRA_organ_class)) %>%
+  separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+  mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
+  filter(MEDDRA_organ_class != "") %>%
+  count(MEDDRA_organ_class, sort = TRUE) %>%
+  slice_head(n = 20) %>%
+  mutate(MEDDRA_organ_class = forcats::fct_reorder(MEDDRA_organ_class, n)) %>%
+  ggplot(aes(n, MEDDRA_organ_class, fill = n)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_gradient(low = FROST, high = PURPLE) +
+  scale_x_continuous(labels = comma) +
+  labs(title = "Top 20 MedDRA System Organ Classes after normalisation",
+       x = "Trial count", y = NULL) +
+  theme_pre() +
+  theme(axis.text.y = element_text(size = 9))
+```
+
+## Changed Entries
+
+```{r organ-changed}
+log_organ %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  mutate(type = if_else(str_detect(raw, "^[0-9]+ - "), "EUCTR prefix strip",
+                        if_else(str_detect(raw, "^[0-9]+$"), "CTIS code lookup", "Other"))) %>%
+  arrange(type, desc(n_trials)) %>%
+  select(register, type, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Change type", "Raw", "Normalised", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "Organ class entries changed during normalisation, by change type"
+  )
+```
+
+---
+
+# 8 · Sponsor Name Normalisation {.tabset}
+
+`normalize_sponsor_name()` applies a multi-step pipeline: subsidiary qualifier removal → acronym expansion strip → legal entity suffix removal → title-casing → brand prefix extraction (~120 known pharma brands) → pharma descriptor word removal → country/region name removal → final cleanup.
+
+```{r sponsor-stats}
+ls <- log_sponsor %>% filter(!is.na(raw) & raw != "")
+n_raw_s  <- nrow(ls)
+n_uniq_rs <- n_distinct(ls$raw)
+n_uniq_ns <- n_distinct(ls$normalised, na.rm = TRUE)
+n_chg_s  <- sum(ls$changed, na.rm = TRUE)
+reduction <- round((1 - n_uniq_ns / n_uniq_rs) * 100, 1)
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_rs)`</b><br><small>unique raw names</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_uniq_ns)`</b><br><small>unique normalised names</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #EBCB8B;border-radius:4px;padding:10px 18px;">
+  <b>`r reduction`%</b> reduction<br><small>in unique name count</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_chg_s)`</b> (`r fmt_pct(n_chg_s/n_raw_s*100)`)<br><small>entries changed</small>
+</div>
+</div>
+
+## Top Sponsors
+
+```{r sponsor-bar, fig.height=5}
+df %>%
+  filter(!is.na(sponsor_name)) %>%
+  count(sponsor_name, sort = TRUE) %>%
+  slice_head(n = 25) %>%
+  mutate(sponsor_name = forcats::fct_reorder(sponsor_name, n)) %>%
+  ggplot(aes(n, sponsor_name, fill = n)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_gradient(low = YELLOW, high = ORANGE) +
+  scale_x_continuous(labels = comma) +
+  labs(title = "Top 25 sponsors after normalisation",
+       x = "Trials", y = NULL) +
+  theme_pre() +
+  theme(axis.text.y = element_text(size = 9))
+```
+
+## Change Type Breakdown
+
+```{r sponsor-change-types}
+ls_chg <- log_sponsor %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  mutate(
+    change_type = case_when(
+      str_detect(raw, regex("GmbH|\\bInc\\.?\\b|\\bLtd\\.?\\b|\\bS\\.A\\.?\\b|\\bN\\.V\\.?\\b|\\bB\\.V\\.?\\b|\\bAG\\b|\\bSE\\b|\\bPLC\\b|\\bLLC\\b|\\bCorp\\.?\\b", ignore_case = FALSE)) ~ "Legal suffix removal",
+      str_detect(raw, regex("Pharmaceuticals|Pharma|Biotech|Biosciences|Therapeutics|Laboratories|Healthcare", ignore_case = TRUE)) ~ "Pharma descriptor removal",
+      str_detect(raw, regex("Germany|France|Europe|Deutschland|España|Italia|Netherlands|Belgium|Switzerland|Austria|Sweden|Denmark|Norway|Finland", ignore_case = TRUE)) ~ "Country/region removal",
+      str_detect(raw, regex("wholly.owned|subsidiary|filial|indirect subsidiary", ignore_case = TRUE)) ~ "Subsidiary qualifier removal",
+      TRUE ~ "Brand / canonical form"
+    )
+  ) %>%
+  count(change_type, sort = TRUE)
+
+nk(ls_chg, cap = "Number of sponsor entries changed, by change type",
+   cn = c("Change type", "Entries changed"))
+```
+
+## Changed Entries Table
+
+```{r sponsor-changed}
+log_sponsor %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw sponsor name", "Normalised", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = "Sponsor entries changed during normalisation (sorted by trial count)"
+  )
+```
+
+---
+
+# 9 · Sponsor Type Derivation
+
+`sponsor_type` is pattern-matched from free-text fields:
+
+- **EUCTR**: `b1_sponsor.b31_and_b32_status_of_the_sponsor` — patterns `"non.commercial|non commercial|academic"` → Academic; `"commercial"` → Industry
+- **CTIS**: `sponsors.commercial` — same patterns
+
+```{r sponsor-type-bar, fig.height=3.5}
+df %>%
+  mutate(sponsor_type = replace_na(sponsor_type, "Unknown / NA")) %>%
+  count(register, sponsor_type) %>%
+  ggplot(aes(register, n, fill = sponsor_type)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(Academic = BLUE, Industry = GREEN,
+                               `Unknown / NA` = GRAY)) +
+  labs(title = "Sponsor type by register",
+       x = NULL, y = "Proportion of trials") +
+  theme_pre()
+```
+
+```{r sponsor-type-coverage}
+df %>%
+  group_by(register) %>%
+  summarise(
+    Total    = n(),
+    Academic = sum(sponsor_type == "Academic", na.rm = TRUE),
+    Industry = sum(sponsor_type == "Industry", na.rm = TRUE),
+    Unknown  = sum(is.na(sponsor_type)),
+    `% classified` = fmt_pct((Academic + Industry) / Total * 100)
+  ) %>%
+  nk(cap = "Sponsor type coverage by register")
+```
+
+---
+
+# 10 · Phase Derivation {.tabset}
+
+Phase is derived differently for each register:
+
+- **EUCTR**: four boolean flag columns (`e71_…_phase_i` through `e74_…_phase_iv`) — `TRUE/YES/1` → label; multiple flags possible → joined with `" / "`
+- **CTIS**: free-text `trialPhase` field parsed by keyword matching (e.g., "Therapeutic confirmatory (Phase III)" → "Phase III")
+
+```{r phase-stats}
+lp <- log_phase %>% filter(!is.na(raw))
+n_raw_p  <- nrow(lp)
+n_chg_p  <- sum(lp$changed, na.rm = TRUE)
+```
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_raw_p)`</b><br><small>raw log entries</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>`r fmt_n(n_chg_p)`</b> (`r fmt_pct(n_chg_p/n_raw_p*100)`)<br><small>entries changed (CTIS text → label)</small>
+</div>
+</div>
+
+## Phase Distribution
+
+```{r phase-bar, fig.height=4}
+df %>%
+  filter(!is.na(phase)) %>%
+  separate_rows(phase, sep = " / ") %>%
+  mutate(phase = str_trim(phase)) %>%
+  filter(str_detect(phase, "^Phase")) %>%
+  count(register, phase) %>%
+  ggplot(aes(phase, n, fill = register)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Trial phase distribution by register", x = NULL, y = "Trials") +
+  theme_pre()
+```
+
+```{r phase-multiphase}
+n_multi <- df %>% filter(str_detect(phase, " / ")) %>% nrow()
+```
+
+**Multi-phase EUCTR trials** (multiple boolean flags set simultaneously): **`r fmt_n(n_multi)`** trials (`r fmt_pct(n_multi/nrow(df)*100)`).
+
+## CTIS Text → Phase Mapping
+
+```{r phase-ctis-mapping}
+log_phase %>%
+  filter(register == "CTIS", !is.na(raw)) %>%
+  arrange(desc(n_trials)) %>%
+  select(raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("CTIS raw text", "Mapped phase", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = "CTIS trialPhase text values and their parsed phase labels"
+  )
+```
+
+---
+
+# 11 · Status Derivation {.tabset}
+
+Status is derived in three layers:
+
+1. **`status_raw_orig`** — coalesce of EUCTR end-of-trial status, CTIS status code, and EUCTR trial status; CTIS numeric codes (1–6) mapped to labels
+2. **`status_raw`** — standardised display string: splits multi-country aggregations, removes numeric tokens, normalises casing
+3. **`status`** — three-category classification: `Ongoing`, `Completed`, `Other`
+
+```{r status-dist, fig.height=3.5}
+df %>%
+  mutate(status = replace_na(status, "Other")) %>%
+  count(register, status) %>%
+  ggplot(aes(register, n, fill = status)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = STATUS_COLS) +
+  labs(title = "Trial status distribution by register", x = NULL, y = "Proportion") +
+  theme_pre()
+```
+
+## CTIS Numeric Code Mapping
+
+```{r status-ctis-codes}
+tribble(
+  ~Code, ~Label,
+  "1", "Authorised",
+  "2", "In Progress → Ongoing",
+  "3", "Completed",
+  "4", "Terminated",
+  "5", "Temporarily halted",
+  "6", "Withdrawn",
+  "8", "Other (unmapped code → 'Other' category)"
+) %>% nk(cap = "CTIS numeric status codes and their label mappings")
+```
+
+## Status Category Log
+
+```{r status-cat-log}
+log_status_c %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw (status_raw_orig)", "Category (status)", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "Status entries changed when mapping to Ongoing / Completed / Other"
+  )
+```
+
+## Status Display Log
+
+```{r status-disp-log}
+log_status_d %>%
+  filter(changed == TRUE, !is.na(raw)) %>%
+  arrange(desc(n_trials)) %>%
+  select(register, raw, normalised, n_trials) %>%
+  datatable(
+    colnames = c("Register", "Raw (status_raw_orig)", "Display (status_raw)", "N trials"),
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 15, scrollX = TRUE),
+    caption  = "Status entries changed when standardising the display string"
+  )
+```
+
+---
+
+# 12 · Date Derivation & Days-to-Decision {.tabset}
+
+Three date columns are derived:
+
+| Column | Source | Notes |
+|---|---|---|
+| `submission_date_parsed` | `submission_date` (united) | Parsed via `lubridate::parse_date_time()` with `orders = c("ymd","ym","y","ymd HMS")` |
+| `decision_date` | Register-specific field | EUCTR: `n_date_of_competent_authority_decision`; CTIS: `applicationInfo.decisionDate` |
+| `start_date` | Multiple fields | Max of available dates across sources |
+| `days_to_decision` | `decision_date − submission_date_parsed` | Set to `NA` if negative (data entry errors) |
+
+## Trials by Year
+
+```{r year-bar, fig.height=4}
+df %>%
+  filter(!is.na(year), year >= 2000, year <= year(Sys.Date())) %>%
+  count(year, register) %>%
+  ggplot(aes(year, n, fill = register)) +
+  geom_col() +
+  scale_fill_manual(values = REG_COLS) +
+  scale_y_continuous(labels = comma) +
+  scale_x_continuous(breaks = seq(2000, 2025, 2)) +
+  labs(title = "Trials authorized per year by register",
+       subtitle = "Based on submission_date_parsed year",
+       x = NULL, y = "Trials") +
+  theme_pre()
+```
+
+## Date Parse Coverage
+
+```{r date-coverage}
+df %>%
+  group_by(register) %>%
+  summarise(
+    Total               = n(),
+    `submission parsed` = fmt_pct(sum(!is.na(submission_date_parsed)) / Total * 100),
+    `decision date`     = fmt_pct(sum(!is.na(decision_date)) / Total * 100),
+    `start date`        = fmt_pct(sum(!is.na(start_date)) / Total * 100),
+    `days_to_decision`  = fmt_pct(sum(!is.na(days_to_decision)) / Total * 100)
+  ) %>%
+  nk(cap = "Date parse success rate by register (% non-NA)")
+```
+
+## Days-to-Decision Distribution
+
+```{r days-hist, fig.height=4}
+d2d <- df %>%
+  filter(!is.na(days_to_decision), days_to_decision > 0) %>%
+  mutate(log_days = log10(days_to_decision))
+
+tick_vals <- log10(c(1, 10, 30, 100, 365, 1000, 3650))
+tick_lbls <- c("1", "10", "30", "100", "365", "1000", "3650")
+
+d2d %>%
+  ggplot(aes(log_days, fill = register)) +
+  geom_histogram(bins = 50, alpha = 0.75, position = "identity") +
+  scale_x_continuous(breaks = tick_vals, labels = tick_lbls) +
+  scale_fill_manual(values = REG_COLS) +
+  labs(title = "Days from submission to decision (log₁₀ scale)",
+       subtitle = "Negative values set to NA; zero-day records excluded from this view",
+       x = "Days", y = "Trials") +
+  theme_pre()
+```
+
+```{r days-summary}
+df %>%
+  filter(!is.na(days_to_decision)) %>%
+  group_by(register) %>%
+  summarise(
+    N        = fmt_n(n()),
+    Median   = round(median(days_to_decision), 0),
+    Q1       = round(quantile(days_to_decision, 0.25), 0),
+    Q3       = round(quantile(days_to_decision, 0.75), 0),
+    Min      = min(days_to_decision),
+    Max      = max(days_to_decision),
+    `% NA`   = fmt_pct(sum(is.na(df$days_to_decision[df$register == register[1]])) /
+                         nrow(df[df$register == register[1],]) * 100)
+  ) %>%
+  nk(cap = "Days-to-decision summary statistics by register")
+```
+
+---
+
+# 13 · PIP, Results, and Orphan Status {.tabset}
+
+Three binary/categorical flags are derived from registry-specific fields.
+
+| Column | EUCTR source | CTIS source | Categories |
+|---|---|---|---|
+| `has_PIP` | `a7_…_paediatric_investigation_plan` text | PIP record presence | Yes / No / Unknown |
+| `has_results` | `endPoints.endPoint.readyForValues` (non-NA) | `resultsFirstReceived` (= "true") | TRUE / FALSE |
+| `is_orphan` | `dimp.d25_…_orphan_drug_…` ("yes"/"no") | `orphanDrugDesigNumber` (non-empty) | Yes / No / Unknown |
+
+## PIP Status
+
+```{r pip-bar, fig.height=3.5}
+df %>%
+  count(register, has_PIP) %>%
+  ggplot(aes(register, n, fill = has_PIP)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(Yes = GREEN, No = RED, Unknown = YELLOW)) +
+  labs(title = "PIP (Paediatric Investigation Plan) status by register",
+       x = NULL, y = "Proportion") +
+  theme_pre()
+```
+
+## Results Posted
+
+```{r results-bar, fig.height=3.5}
+df %>%
+  mutate(has_results = if_else(has_results, "Results posted", "No results")) %>%
+  count(register, has_results) %>%
+  ggplot(aes(register, n, fill = has_results)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(`Results posted` = GREEN, `No results` = RED)) +
+  labs(title = "Results posted by register", x = NULL, y = "Proportion") +
+  theme_pre()
+```
+
+```{r results-by-status}
+df %>%
+  filter(!is.na(status)) %>%
+  group_by(status) %>%
+  summarise(
+    Trials         = fmt_n(n()),
+    `With results` = fmt_n(sum(has_results, na.rm = TRUE)),
+    `% with results` = fmt_pct(mean(has_results, na.rm = TRUE) * 100)
+  ) %>%
+  nk(cap = "Results posted rate by trial status")
+```
+
+## Orphan Status
+
+```{r orphan-bar, fig.height=3.5}
+df %>%
+  count(register, is_orphan) %>%
+  ggplot(aes(register, n, fill = is_orphan)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = c(Yes = PURPLE, No = BLUE, Unknown = GRAY)) +
+  labs(title = "Orphan drug designation by register", x = NULL, y = "Proportion") +
+  theme_pre()
+```
+
+```{r orphan-x-sponsor}
+df %>%
+  filter(!is.na(sponsor_type), !is.na(is_orphan)) %>%
+  count(sponsor_type, is_orphan) %>%
+  group_by(sponsor_type) %>%
+  mutate(pct = n / sum(n)) %>%
+  select(-n) %>%
+  pivot_wider(names_from = is_orphan, values_from = pct, values_fill = 0) %>%
+  mutate(across(where(is.numeric), fmt_pct)) %>%
+  nk(cap = "Orphan designation distribution by sponsor type (% within sponsor type)")
+```
+
+---
+
+# 14 · Final Dataset Completeness
+
+```{r completeness-table}
+comp_df <- tibble(
+  Column   = names(df),
+  Type     = sapply(df, function(x) class(x)[1]),
+  NonMiss  = sapply(df, function(x) sum(!is.na(x))),
+  Pct      = round(NonMiss / nrow(df) * 100, 1)
+) %>% arrange(Pct)
+
+datatable(comp_df,
+  colnames  = c("Column", "Type", "Non-missing (n)", "Complete (%)"),
+  rownames  = FALSE,
+  filter    = "top",
+  options   = list(pageLength = 25, scrollX = TRUE),
+  caption   = paste0("Completeness of all ", ncol(df), " columns in the final cache (",
+                     fmt_n(nrow(df)), " trials total)")
+)
+```
+
+## Missingness Heatmap by Register
+
+```{r missingness-heatmap, fig.height=8, fig.width=10}
+key_cols <- c("CT_number", "Full_title", "MEDDRA_term", "MEDDRA_organ_class",
+              "Member_state", "sponsor_name", "sponsor_type", "phase", "status",
+              "status_raw", "has_PIP", "has_results", "is_orphan",
+              "submission_date_parsed", "decision_date", "start_date",
+              "days_to_decision", "year", "DIMP_product_name")
+
+key_cols <- key_cols[key_cols %in% names(df)]
+
+miss_df <- df %>%
+  select(register, all_of(key_cols)) %>%
+  group_by(register) %>%
+  summarise(across(all_of(key_cols), ~ mean(is.na(.x)) * 100), .groups = "drop") %>%
+  pivot_longer(-register, names_to = "column", values_to = "pct_missing")
+
+ggplot(miss_df, aes(register, column, fill = pct_missing)) +
+  geom_tile(color = "white", linewidth = 0.5) +
+  geom_text(aes(label = sprintf("%.0f%%", pct_missing)), size = 3, color = DARK) +
+  scale_fill_gradient2(low = GREEN, mid = YELLOW, high = RED,
+                       midpoint = 50, name = "% missing") +
+  labs(title = "Missingness (%) by column and register",
+       subtitle = "Green = complete, red = fully missing",
+       x = NULL, y = NULL) +
+  theme_pre() +
+  theme(axis.text.y = element_text(size = 9),
+        legend.position = "right")
+```
+
+---
+
+# 15 · Data Quality Issues {.tabset}
+
+All anomalies detected during the pipeline audit, ranked by severity. Each subsection gives detail and a concrete suggested fix for `app.R`.
+
+```{r issues-compute, include=FALSE}
+pct_na   <- function(x) mean(is.na(x) | (is.character(x) & x == "")) * 100
+count_na <- function(x) sum(is.na(x)  | (is.character(x) & x == ""))
+
+# 1. Residual cross-register duplicates (computed in dedup-cross-reg-examples)
+n_resid_dupes <- nrow(cross_reg_tbl)
+
+# 1b. Within-EUCTR duplicates: EUCTR-original + CTIS-relabelled sharing title_key
+#     (these cause double-counting in the bar chart)
+n_within_euctr_overlap <- nrow(overlap_tbl)
+
+# 2. n_unmatched already set in dedup-transitioned chunk
+
+# 3. CTIS status codes outside the 1-6 mapping
+unmapped_status_codes <- log_status_c %>%
+  filter(register == "CTIS", !is.na(raw)) %>%
+  filter(str_detect(raw, "^\\d+$") & !(raw %in% c("1","2","3","4","5","6"))) %>%
+  arrange(desc(n_trials))
+n_ctis_unmapped_status <- unmapped_status_codes %>% summarise(n = sum(n_trials)) %>% pull(n)
+
+# 4. Completed trials with no decision_date
+n_completed_no_date <- df %>% filter(status == "Completed", is.na(decision_date)) %>% nrow()
+
+# 5. Country strings that normalise to NA
+country_fail_examples <- log_country %>%
+  filter(!is.na(raw) & raw != "" & is.na(normalised)) %>%
+  arrange(desc(n_trials)) %>% slice_head(n = 30)
+n_country_fail <- log_country %>%
+  filter(!is.na(raw) & raw != "" & is.na(normalised)) %>%
+  summarise(n = sum(n_trials)) %>% pull(n)
+
+# 6. CTIS organ class codes not in lookup (normalised still numeric)
+organ_unresolved_examples <- log_organ %>%
+  filter(!is.na(normalised) & str_detect(normalised, "^\\d+$")) %>%
+  arrange(desc(n_trials)) %>% slice_head(n = 20)
+n_organ_unresolved <- log_organ %>%
+  filter(!is.na(normalised) & str_detect(normalised, "^\\d+$")) %>%
+  summarise(n = sum(n_trials)) %>% pull(n)
+
+# 7. Duplicate CT numbers in final cache
+ct_dupes_examples <- df %>%
+  filter(!is.na(CT_number) & CT_number != "") %>%
+  add_count(CT_number) %>%
+  filter(n > 1) %>%
+  arrange(CT_number) %>%
+  select(`_id`, register, CT_number, sponsor_name, status)
+n_ct_dupes <- n_distinct(ct_dupes_examples$CT_number)
+
+# 8. Sponsor names still containing legal suffixes after normalisation
+junk_pat <- regex("\\bGmbH\\b|\\bInc\\.?\\b|\\bLtd\\.?\\b|\\bS\\.A\\.\\b|\\bAG\\b|\\bB\\.V\\.\\b|\\bLLC\\b|\\bPLC\\b")
+sponsor_junk_ex <- df %>%
+  filter(!is.na(sponsor_name), str_detect(sponsor_name, junk_pat)) %>%
+  count(sponsor_name, sort = TRUE) %>% slice_head(n = 20)
+n_sponsor_junk <- df %>%
+  filter(!is.na(sponsor_name), str_detect(sponsor_name, junk_pat)) %>% nrow()
+
+# 9. Extreme days_to_decision (> 10 years)
+days_extreme_examples <- df %>%
+  filter(!is.na(days_to_decision), days_to_decision > 3650) %>%
+  arrange(desc(days_to_decision)) %>%
+  select(`_id`, register, sponsor_name, submission_date_parsed,
+         decision_date, days_to_decision) %>% slice_head(n = 20)
+n_days_extreme <- nrow(days_extreme_examples)
+
+# 10. Implausible submission year
+cur_yr <- year(Sys.Date())
+year_implaus_ex <- df %>%
+  filter(!is.na(year), year < 1990 | year > cur_yr) %>%
+  select(`_id`, register, submission_date, submission_date_parsed, year, sponsor_name) %>%
+  slice_head(n = 20)
+n_year_implaus <- nrow(year_implaus_ex)
+
+# 11. Status "Other" and orphan "Unknown" — counts for summary table
+n_status_other   <- sum(df$status    == "Other",   na.rm = TRUE)
+n_orphan_unknown <- sum(df$is_orphan == "Unknown",  na.rm = TRUE)
+
+# Summary table
+issue_tbl <- tribble(
+  ~Severity,   ~Category,       ~Issue,                                                                          ~`N affected`,                ~`Suggested fix in app.R`,
+  "High",      "Deduplication", "EUCTR-original + CTIS-relabelled share same title_key (double-counted in chart)", fmt_n(n_within_euctr_overlap),"Dedup must run before the pre-2023 relabel step; or re-check relabelled trials against EUCTR originals",
+  "High",      "Deduplication", "Residual cross-register duplicates (same title_key in EUCTR + CTIS cache)",     fmt_n(n_resid_dupes),         "Lower title_key min-length threshold; add EudraCT-CTIS number cross-reference",
+  "High",      "Deduplication", "Transitioned EUCTR with no CTIS counterpart found",                             fmt_n(n_unmatched),           "Match by EudraCT number in CTIS ctNumber field; re-fetch CTIS after transition",
+  "High",      "Status",        "CTIS status codes outside the 1-6 mapping -> classified as 'Other'",            fmt_n(n_ctis_unmapped_status),"Add missing codes to ctis_status_map (~line 1023)",
+  "High",      "Dates",         "Completed trials with no decision_date (breaks compliance calculations)",        fmt_n(n_completed_no_date),   "Add fallback date field for CTIS completed trials (~line 1091)",
+  "Medium",    "Country",       "Country strings that normalise to NA (location data silently lost)",             fmt_n(n_country_fail),        "Add unresolved strings to COUNTRY_LOOKUP (~line 386)",
+  "Medium",    "Organ class",   "CTIS organ class codes not in ctis_soc_lookup (stored as raw numbers)",          fmt_n(n_organ_unresolved),    "Extend ctis_soc_lookup (~line 22) with missing MedDRA SOC codes",
+  "Medium",    "Identifiers",   "Duplicate CT numbers in final cache",                                           fmt_n(n_ct_dupes),            "Add CT_number dedup pass after cross-register reconciliation",
+  "Medium",    "Normalisation", "Sponsor names still contain legal-entity tokens after normalisation",            fmt_n(n_sponsor_junk),        "Extend normalize_sponsor_name() legal-suffix regex (~line 441)",
+  "Medium",    "Orphan",        "Orphan designation classified as 'Unknown' (unresolvable from source data)",    fmt_n(n_orphan_unknown),      "Improve CTIS orphan detection; extend EUCTR No-pattern",
+  "Low",       "Status",        "Trials with status='Other' (no Ongoing/Completed pattern match)",               fmt_n(n_status_other),        "Review and extend ongoing_pat / completed_pat (~line 1012)",
+  "Low",       "Dates",         "days_to_decision > 10 years (likely source data entry error)",                  fmt_n(n_days_extreme),        "Add upper cap: if_else(d > 3650, NA_real_, d) alongside negative guard (~line 1100)",
+  "Low",       "Dates",         paste0("Implausible submission year (< 1990 or > ", cur_yr, ")"),                fmt_n(n_year_implaus),        "Set year to NA when outside [1990, current year] after parsing (~line 1070)"
+)
+```
+
+## Summary
+
+```{r issues-summary}
+issue_tbl %>%
+  datatable(
+    rownames = FALSE,
+    escape   = FALSE,
+    filter   = "top",
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = "All data quality issues detected during pipeline audit"
+  ) %>%
+  formatStyle("Severity",
+    backgroundColor = styleEqual(
+      c("High", "Medium", "Low"),
+      c("#FFEBEB", "#FFF3E0", "#FFFDE7")
+    )
+  )
+```
+
+## High: Residual Duplicates
+
+```{r issue-residual-dupes}
+if (nrow(cross_reg_tbl) > 0) {
+  cross_reg_tbl %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(nrow(cross_reg_tbl)),
+        " trials with matching title_key in both EUCTR and CTIS — should have been collapsed by dedup."))
+} else {
+  cat("No residual cross-register duplicates detected.")
+}
+```
+
+**Root cause:** Title_key matching uses a 20-char minimum and exact 80-char match. Trials with short or register-divergent titles escape detection.
+
+**Fix:** Lower min-length threshold and/or add a fallback match by `authorizedApplication.applicationInfo.ctNumber` in CTIS against EUCTR `a2_eudract_number`.
+
+## High: Unmatched Transitioned
+
+```{r issue-unmatched-trans}
+trans_matched %>%
+  filter(is.na(ctis_id)) %>%
+  select(`EUCTR base ID` = euctr_base,
+         `Trial status`  = trial_status,
+         `End status`    = end_status) %>%
+  slice_head(n = 50) %>%
+  datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+    caption = paste0(fmt_n(n_unmatched),
+      " EUCTR trials marked transitioned in the DB with no CTIS counterpart found — potential data loss."))
+```
+
+**Root cause:** Matching CTIS record (a) not yet fetched, (b) has divergent title, or (c) EUCTR flag is a false positive.
+
+**Fix:** Add fallback lookup by EudraCT number in CTIS `ctNumber` field. Run fresh `update_data.R` to ensure CTIS is current.
+
+## High: Unmapped Status Codes
+
+```{r issue-ctis-status}
+if (nrow(unmapped_status_codes) > 0) {
+  unmapped_status_codes %>%
+    select(register, `Raw code` = raw, `Mapped to` = normalised, `N trials` = n_trials) %>%
+    nk(cap = paste0("CTIS numeric status codes not in ctis_status_map, classified as Other. Affects ",
+                    fmt_n(n_ctis_unmapped_status), " trials."))
+} else {
+  cat("All CTIS numeric status codes are mapped.")
+}
+```
+
+**Fix in `app.R`:** Extend `ctis_status_map` around line 1023 with the codes shown above.
+
+## High: Completed — No Decision Date
+
+```{r issue-completed-no-date}
+df %>%
+  filter(status == "Completed", is.na(decision_date)) %>%
+  count(register) %>%
+  nk(cap = paste0(fmt_n(n_completed_no_date),
+    " completed trials have no decision_date. Compliance overdue calculations are broken for these."))
+```
+
+**Fix in `app.R`:** In `decision_date` derivation (~line 1091), add a fallback for CTIS using the `decisionDate` field; also try deriving from the trial status change timestamp.
+
+## Medium: Country Failures
+
+```{r issue-country-fail}
+if (nrow(country_fail_examples) > 0) {
+  country_fail_examples %>%
+    select(register, `Raw string` = raw, `N trials` = n_trials) %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_country_fail),
+        " trial-country strings normalised to NA — location data silently lost."))
+} else {
+  cat("No country normalisation failures.")
+}
+```
+
+**Fix in `app.R`:** Add the raw strings to `COUNTRY_LOOKUP` (~line 386).
+
+## Medium: Unresolved Organ Codes
+
+```{r issue-organ-codes}
+if (nrow(organ_unresolved_examples) > 0) {
+  organ_unresolved_examples %>%
+    select(register, `Raw code` = raw, `Stored as` = normalised, `N trials` = n_trials) %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_organ_unresolved),
+        " CTIS organ class codes not in ctis_soc_lookup — stored as raw numbers, breaking filters."))
+} else {
+  cat("All CTIS organ class codes resolved.")
+}
+```
+
+**Fix in `app.R`:** Extend `ctis_soc_lookup` (~line 22) with missing MedDRA SOC code-label pairs.
+
+## Medium: Duplicate CT Numbers
+
+```{r issue-ct-dupes}
+if (nrow(ct_dupes_examples) > 0) {
+  ct_dupes_examples %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_ct_dupes), " CT numbers appear more than once in the final cache."))
+} else {
+  cat("No duplicate CT numbers found.")
+}
+```
+
+## Medium: Sponsor Name Junk
+
+```{r issue-sponsor-junk}
+if (nrow(sponsor_junk_ex) > 0) {
+  sponsor_junk_ex %>%
+    rename(`Sponsor name (normalised)` = sponsor_name, `N trials` = n) %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_sponsor_junk),
+        " trials with legal-entity tokens remaining after normalize_sponsor_name()."))
+} else {
+  cat("No residual legal suffixes found.")
+}
+```
+
+**Fix in `app.R`:** Add the patterns above to the legal-suffix removal block in `normalize_sponsor_name()` (~line 441). Check for Unicode non-breaking spaces or punctuation that break the regex.
+
+## Low: Extreme Days-to-Decision
+
+```{r issue-days-extreme}
+if (nrow(days_extreme_examples) > 0) {
+  days_extreme_examples %>%
+    mutate(days_to_decision = fmt_n(round(days_to_decision))) %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_days_extreme),
+        " trials with days_to_decision > 10 years — likely source data entry errors."))
+} else {
+  cat("No extreme days_to_decision values.")
+}
+```
+
+**Fix in `app.R`:** Extend guard at ~line 1100: `if_else(!is.na(d) & d >= 0 & d <= 3650, d, NA_real_)`.
+
+## Low: Implausible Year
+
+```{r issue-year}
+if (nrow(year_implaus_ex) > 0) {
+  year_implaus_ex %>%
+    datatable(rownames = FALSE, options = list(pageLength = 20, scrollX = TRUE),
+      caption = paste0(fmt_n(n_year_implaus),
+        " trials with submission year before 1990 or after ", cur_yr, "."))
+} else {
+  cat("No implausible submission years found.")
+}
+```
+
+**Fix in `app.R`:** After `year = year(submission_date_parsed)` (~line 1070), add `year = if_else(year < 1990 | year > year(Sys.Date()), NA_integer_, year)`.
+
+---
+
+*Generated by `preprocessing.Rmd` — `r format(Sys.time(), "%Y-%m-%d %H:%M:%S")`*

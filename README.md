@@ -1,8 +1,8 @@
 # EU Paediatric Trial Monitor
 
-**v0.8.1** · R Shiny · EUCTR + CTIS · ~8000 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.9.8** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
-A research dashboard for exploring, analysing, and monitoring paediatric clinical trials registered in the European Union. Pulls live data from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
+A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
 ![Dashboard overview](overview.png)
 
@@ -10,28 +10,28 @@ A research dashboard for exploring, analysing, and monitoring paediatric clinica
 
 ## Source data
 
-Trial records are retrieved from two complementary EU registries using the `ctrdata` R package. Both queries target paediatric trials only.
+Trial records are retrieved from two complementary EU registries using the `ctrdata` R package. Both queries fetch **all age groups** — paediatric and adult — so that the two populations can be compared directly in the dashboard.
 
-| Register | URL | Paediatric filter |
-| -------- | --- | ----------------- |
-| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | Age groups: adolescent, children, infant-and-toddler, newborn, preterm-new-born-infants, under-18 |
-| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | Age group code 2 (paediatric) |
+| Register | URL | Query |
+| -------- | --- | ----- |
+| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | All trials (no age filter) |
+| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | All trials (no age filter) |
 
 ### Search strings used
 
-**EUCTR** — advanced search, all age groups under 18 selected:
+**EUCTR** — all trials, no age restriction:
 
 ```text
-https://www.clinicaltrialsregister.eu/ctr-search/search?query=&age=adolescent&age=children&age=infant-and-toddler&age=newborn&age=preterm-new-born-infants&age=under-18
+https://www.clinicaltrialsregister.eu/ctr-search/search?query=
 ```
 
-**CTIS** — age group filter for paediatric (code 2):
+**CTIS** — all trials:
 
 ```text
-https://euclinicaltrials.eu/ctis-public/search#searchCriteria={"ageGroupCode":[2]}
+https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}
 ```
 
-These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. Both registers are queried on every run. `ctrdata` handles incremental updates internally — on repeat runs it only downloads records that are new or have changed since the last import, so subsequent runs are much faster than the initial load. EUCTR results data (`euctrresults = TRUE`) is fetched alongside trial metadata to populate the `has_results` column used by the Results Posting tab.
+These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. The default update refreshes **CTIS only**, because EUCTR changes slowly and the full historical EUCTR load has already been captured. To refresh EUCTR explicitly, run `Rscript update_data.R --euctr` or `REFRESH_EUCTR=true Rscript update_data.R`. EUCTR is fetched in quarterly date-range chunks (2004 → present); if a range fails, the script recursively bisects it down toward single-day ranges before falling back to trial-by-trial loading. Completed chunks are logged to `data/done_chunks.txt` and failed chunks/trials to `data/failed_chunks.txt` so interrupted runs can resume. EUCTR result documents (`euctrresults`) are **not** fetched by default because they make ingestion much slower; use `Rscript update_data.R --euctr-results` or `FORCE_RESULTS=true Rscript update_data.R` when you explicitly want to refresh them.
 
 ---
 
@@ -60,7 +60,7 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 
 | Tab | What it shows |
 | --- | ------------- |
-| **Overview** | KPI cards, 5 most recent trials, submissions per year, register comparison |
+| **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcut cards (CSS grid, mobile-friendly); example questions that apply filters in one click; prominent "Compare Paediatric vs Adult" button in sidebar; 5 most recently authorized trials |
 | **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types |
 | **Map** | Open trials by country (circle map); sortable country table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
@@ -68,7 +68,7 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | **Phase Analytics** | Phase by register / status / sponsor type, phase funnel, completion cohort |
 | **Sponsor Comparison** | Side-by-side comparison of 2–3 selected sponsors across 6 dimensions |
 | **Results Posting** | Results posted vs not posted for completed trials, by year and sponsor type; downloadable list |
-| **About** | Data sources, feature descriptions, changelog, trial status definitions |
+| **About** | Data sources, preprocessing audit report, changelog, trial status definitions |
 
 ### Sidebar filters
 
@@ -76,9 +76,10 @@ All charts and tables update simultaneously when filters change. Active filters 
 
 | Filter | Options |
 | ------ | ------- |
+| **Age Group** | `< 18 years` (default) / `≥ 18 years` / `All` — trials enrolling both age groups ("Paediatric & Adult") appear under both |
 | Submission date range | Any date range from 2004 to today |
 | Free-text search | Title, CT number, condition, product name, sponsor |
-| Country / Member State | Multi-select; any EU or EEA country |
+| Country / Member State | Multi-select; normalised country names from the registry data |
 | Sponsor / Company | Multi-select; normalised names (legal suffixes stripped) |
 | Trial Status | Ongoing / Completed / Other |
 | Source Register | EUCTR / CTIS |
@@ -103,10 +104,10 @@ Filter state is encoded in the URL (`?f=` query param, base64 JSON) for bookmark
 
 ```r
 install.packages(c(
-  "shiny", "shinydashboard", "shinycssloaders",
+  "shiny", "shinydashboard", "fresh", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite", "DBI",
   "dplyr", "tidyr", "stringr", "lubridate",
-  "ggplot2", "plotly", "leaflet",
+  "ggplot2", "plotly", "leaflet", "scales", "forcats",
   "DT", "jsonlite", "base64enc",
   "readr", "writexl",
   "rmarkdown", "knitr", "kableExtra"
@@ -119,7 +120,25 @@ install.packages(c(
 Rscript update_data.R
 ```
 
-This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sqlite`. First run takes 30–60 minutes (EUCTR ~30 min, CTIS ~5 min). Subsequent runs are much faster — `ctrdata` only downloads records that are new or have changed since the last import.
+By default, this refreshes CTIS only and leaves the already-loaded EUCTR history untouched. To include EUCTR, run:
+
+```bash
+Rscript update_data.R --euctr
+# or
+REFRESH_EUCTR=true Rscript update_data.R
+```
+
+To include EUCTR result documents (`euctrresults = TRUE`), run:
+
+```bash
+Rscript update_data.R --euctr-results
+# or, backwards-compatible alias
+FORCE_RESULTS=true Rscript update_data.R
+```
+
+Requesting EUCTR results automatically enables the EUCTR refresh path. It is significantly slower than the normal EUCTR metadata refresh.
+
+The explicit EUCTR refresh can take several hours because it checks ~44 000 registry rows in quarterly chunks. Completed chunks are logged to `data/done_chunks.txt`; delete this file only when you intentionally want a full EUCTR re-check. Failed ranges and trial IDs are written to `data/failed_chunks.txt` for follow-up.
 
 ### Build the cache
 
@@ -127,7 +146,7 @@ This downloads trial records from EUCTR and CTIS into `data/pediatric_trials.sql
 source("rebuild_cache.R")
 ```
 
-Processes the SQLite database into `pediatric_trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
+Processes the SQLite database into `trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
 
 ### Run the app
 
@@ -143,13 +162,13 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ### Docker
 
-A `Dockerfile` and `docker-compose.yml` are included. The image starts the app on port 3838.
+A `Dockerfile` and `docker-compose.yml` are included, but they have not yet been fully refreshed for the v0.9 all-ages file names. For local development, the R commands above are the canonical path. Before production Docker deployment, confirm the container paths use `data/trials.sqlite` and `trials_cache.rds`.
 
 ```bash
 docker build -t paediatric-trials .
 docker run -p 3838:3838 \
   -v $(pwd)/data:/shiny_trials/shiny_trials/data \
-  -v $(pwd)/pediatric_trials_cache.rds:/shiny_trials/shiny_trials/pediatric_trials_cache.rds \
+  -v $(pwd)/trials_cache.rds:/shiny_trials/shiny_trials/trials_cache.rds \
   paediatric-trials
 ```
 
@@ -160,7 +179,7 @@ docker compose up -d
 docker compose exec app Rscript /app/update_data.R  # first-time data load
 ```
 
-The container expects `pdflatex` in `/usr/bin` for PDF report generation; the included image is based on `rocker/verse` which ships with TeX Live.
+The PDF report uses `xelatex` so Unicode registry text (for example `≥`) does not break rendering. TinyTeX or a TeX Live installation with `xelatex` is sufficient.
 
 ### Scheduled data updates
 
@@ -176,8 +195,8 @@ After each rebuild the app loads the new RDS on the next session start (or immed
 
 ## Known issues and pipeline limitations
 
-**EUCTR `rows_update` errors during fetch**
-`ctrdata` calls `dplyr::rows_update()` internally, which fails on duplicate or unmatched keys in newer dplyr versions. `update_data.R` monkey-patches this function before each EUCTR load and restores the original afterwards. If the patch fails, the EUCTR load is retried with `euctrresults = FALSE` (results data will be absent from that run).
+**EUCTR first run is slow**
+The EUCTR refresh is opt-in. The initial explicit fetch downloads ~44 000 registry rows across quarterly date-range chunks (2004 → present). Expect several hours. Progress is logged to `data/done_chunks.txt`; if the run is interrupted, re-running `update_data.R --euctr` will skip already-completed chunks automatically. Some EUCTR date ranges return malformed responses; v18 bisects failing ranges toward single days and then tries individual trial IDs. `--euctr-results` / `FORCE_RESULTS=true` is slower again because it requests EUCTR result documents.
 
 **CTIS country field**
 CTIS stores member states as a nested JSON array. After flattening, some records return a string of numeric IDs or ISO codes rather than full country names. The `clean_member_state()` function resolves the majority, but edge cases (new member states, non-standard ISO entries) may appear as `NA` in the country column.
@@ -186,7 +205,7 @@ CTIS stores member states as a nested JSON array. After flattening, some records
 EUCTR stores MedDRA terms at the condition level; CTIS stores them at the trial level with additional codes. Trials appearing in both registers may show slightly different MedDRA assignments depending on which register version is kept after deduplication. The dashboard always prefers the CTIS record for trials present in both.
 
 **Results and orphan fields require cache rebuild**
-The `has_results` (results posted) and `is_orphan` (orphan designation) columns are derived from registry fields added in v0.7.0.
+The `has_results` (results posted) and `is_orphan` (orphan designation) columns are derived during cache rebuild from registry fields added in v0.7.0. Re-run `rebuild_cache.R` after updating `app.R` pipeline logic.
 
 **Phase assignment for multi-phase trials**
 EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I + Phase II). The dashboard preserves these as `/`-separated values (`Phase I / Phase II`) rather than arbitrarily picking one. Charts that use `separate_rows()` handle this correctly; any external analysis of the exported CSV should account for multi-valued phase cells.
@@ -195,11 +214,68 @@ EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I +
 Cross-register deduplication uses CT number matching first, then normalised title matching (first 80 characters, lowercased, punctuation stripped). Unusual title formatting or very short titles can result in missed matches (same trial counted twice) or false matches (different trials merged). The deduplication log is printed to console during cache rebuild.
 
 **Cache invalidation**
-The cache is invalidated only when the SQLite database file is newer than the RDS. If you edit `prepare_trial_data()` logic without touching the database, delete `pediatric_trials_cache.rds` manually before restarting the app to force a rebuild.
+The cache is invalidated only when the SQLite database file is newer than the RDS. If you edit `prepare_trial_data()` logic without touching the database, delete `trials_cache.rds` manually before restarting the app to force a rebuild.
 
 ---
 
 ## Changelog
+
+### v0.9.8 — 2026-05-02
+
+- **Example questions replace quick filters**: the overview footer now shows four conversational example questions instead of pill-shaped preset buttons. Each question applies the relevant sidebar filters in one click: "Which trials have been authorized in the last 12 months?", "What are the open trials for neuroblastoma in Belgium?", "How is the evolution of the PIPs in the past 10 years?", and "How does the portfolio of Novartis differ between paediatrics and adults?" (sets sponsor filter; see the Compare button). The Novartis preset uses server-side selectize correctly (choices + selected passed together).
+- **Compare Paediatric vs Adult button promoted**: the button is now displayed prominently in the main sidebar directly below the navigation menu, always visible without switching to the Tools tab. The existing Tools tab button is retained.
+- **Navigation cards — CSS grid**: the two mismatched `fluidRow`/`column` blocks (4 × col-3 + 3 × col-4) are replaced with a single `display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))` container. Cards reflow cleanly at any screen width. Data Explorer card removed from the grid.
+- **Removed orientation tips strip**: the three-column "Use sidebar filters / Shareable URL / Select a feature below" banner is removed from the overview page.
+
+### v0.9.7 — 2026-05-02
+
+- **Light theme now default**: Nord Light is the default appearance. Theme selector ("Dark" / "Light") in the sidebar Tools tab. Full sidebar theming via JS inline-style override (definitive — survives all CSS cascade). Sidebar nav text, filter group labels, open-state summaries, button text, and link colours all correctly themed for both modes.
+- **Overview page — orientation strip**: a compact 3-column tips bar now appears at the top of the Overview page, pointing users to the sidebar filters, KPI card interactions, and feature navigation.
+- **Overview page — Phase Analytics nav card added**: Phase Analytics was the only feature tab missing from the overview quick-start grid. The 6-card single-row layout is replaced with a 4+3 two-row grid (4 × `column(3)` + 3 × `column(4)`), with a labelled section header "Explore the Dashboard".
+- **Overview page — KPI click hint**: a small right-aligned text line below the KPI strip reads "Click any card to filter the dashboard by that group."
+- **Results Posting — KPI parity**: replaced the four old AdminLTE `valueBox` widgets with the same custom kpi-card style used on the overview. Cards: Completed Trials (green), Results Posted with % (blue), Academic — no results (yellow), Industry — no results (orange). Theme-aware colours via `tc()`.
+
+### v0.9.5 — 2026-05-01
+
+- **Overview page redesigned**: KPI cards now use full Nord accent colours (blue / green / yellow / purple) with white text and are sized appropriately. The hero subtitle is displayed in the top navbar. Six clickable navigation shortcut cards link directly to each feature tab. Nine quick-filter preset buttons (CTIS only, EUCTR only, Ongoing PIP trials, Orphan designation, Completed trials, Last 12 months, Last year, Adult trials, Paediatric trials) apply sidebar filters in one click. The 5 most recently authorized trials table is restored at the bottom of the overview.
+- **AdminLTE theming replaced with `fresh`**: removed the hand-crafted 90-line `generate_css()` `sprintf` template that was losing CSS specificity battles against AdminLTE defaults (e.g. box headers rendering in the wrong orange). Replaced with `fresh::create_theme()` which compiles AdminLTE SASS variables at the correct level — box header colours, sidebar background, body background, and button colours are now set at source. A slim `generate_supplement_css()` covers elements `fresh` does not reach (DataTables, modals, sliders, links, filter chips, navbar background, button text).
+- **Nord dark theme polished**: sidebar is now darker (`bg0`) than the main content panel (`bg1`), improving visual depth. Plotly chart backgrounds aligned with their containing box. Muted box solid headers. Download PDF and Compare buttons have white text. Save / Load buttons have proper vertical spacing.
+- **Nord Light theme fixed**: dark sidebar with light main panel now correctly themed throughout — sidebar form controls, labels, tab links, and dropdown backgrounds all use the dark Nord palette; nav cards use a light overlay appropriate for the light main background.
+- **Chart background consistency**: plotly `chart_bg` updated to match the box background (`bg2`), eliminating the visible dark rectangle inside chart boxes.
+- **Theme selector hidden**: app defaults to Nord dark; the radio buttons remain in the DOM for future use but are hidden from the UI.
+
+### v0.9.4 — 2026-04-30
+
+- **Data Explorer**: fixed duplicate tokens in slash-separated fields (e.g. Product name). `deep_flatten_col` now trims whitespace before `unique()` so near-identical values collapse correctly; a dedicated `dedup_slash` pass is applied to `DIMP_product_name` after MedDRA cleaning.
+
+### v0.9.3 — 2026-04-30
+
+- **Compare Paediatric vs Adult report**: new parameterized PDF report (xelatex) downloadable from the Tools tab. Compares both age groups across status, phase, sponsor type, PIP, orphan designation, results posting, submission/decision timelines, therapeutic areas (top 15), and geographic distribution (top 20). Applies all active sidebar filters except age group so both populations are always present.
+
+### v0.9.2 — 2026-04-30
+
+- **CTIS decision date fix**: decision date now uses the earliest per-country member-state decision date (`memberStatesConcerned.firstDecisionDate`) instead of the application-level date, which was NA for many multinational trials.
+- **CTIS submission date fix**: `submissionDate` is a per-amendment list; now takes the minimum (first submission) date, fixing empty `submission_date_parsed` / `year` / `days_to_decision` for many CTIS trials.
+- **New graph**: Decision Date Spread Within CTIS Multinational Trials — violin plot grouped by number of member states (2 / 3 / 4 / 5+), log₁₀ y-axis.
+
+### v0.9.1 — 2026-04-29
+
+- **Preprocessing report**: added a standalone Age Group Coverage section for Paediatric / Adult / Paediatric & Adult / Unknown classifications, plus filter inclusion counts and register split.
+- **Preprocessing audit fixes**: corrected the deduplication waterfall after the all-ages cache rename, restored EUCTR cache-base examples, and rendered the updated `www/preprocessing.html`.
+- **Data pipeline**: `update_data.R` v18 refreshes CTIS by default and makes EUCTR opt-in; EUCTR result documents can be refreshed explicitly with `--euctr-results` or `FORCE_RESULTS=true`. Explicit EUCTR refreshes still bisect failures down to single-day ranges before trial-level fallback, with bounded retries/timeouts for fallback URL reads.
+- **Docs and report paths**: updated remaining cache/database references to `trials.sqlite` and `trials_cache.rds`.
+
+### v0.9.0 — 2026-04-29
+
+- **All-ages dataset**: EUCTR and CTIS queries now fetch all age groups (not just paediatric). Database renamed from `pediatric_trials.sqlite` → `trials.sqlite`; cache renamed to `trials_cache.rds`. Total trials roughly doubled to ~17 500.
+- **Age Group filter**: selectInput pinned at the top of the sidebar (`< 18 years` / `≥ 18 years` / `All`). Defaults to `< 18 years` to preserve existing behaviour. Trials enrolling both age groups appear under both filters. Wired into URL state, reset, active filter chips, and badge counter.
+- **Chart Builder**: "Age Group" added as an X-axis and Group-by option (Paediatric / Adult / Both / Unknown).
+- **Data pipeline — resilient ingestion engine** (`update_data.R` v15): quarterly date-range splitting with recursive bisection when a range exceeds the 10 000-trial EUCTR limit. Completed and failed chunks logged to `data/done_chunks.txt` / `data/failed_chunks.txt` so interrupted runs resume from where they left off.
+
+### v0.8.2 — 2026-04-28
+
+- **Pipeline audit report**: `preprocessing.Rmd` added — knits to `www/preprocessing.html` (linked from the About tab). Documents every normalisation step, deduplication counts with real intermediate row totals, before/after examples, and a severity-ranked data quality issue list with `app.R` fix suggestions.
+- **Data pipeline**: transitioned EUCTR trials now matched to CTIS counterparts by base ID (strip country/version suffix) as a fallback after title_key matching — catches cases where the trial title changed during the EUCTR→CTIS transition.
 
 ### v0.8.1 — 2026-04-28
 
@@ -327,11 +403,12 @@ Initial release.
 ├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
 ├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
 ├── report.Rmd                   # PDF report template (rendered on demand)
-├── pediatric_trials_cache.rds   # Processed data cache (git-ignored)
+├── preprocessing.Rmd            # Pipeline audit report source
+├── trials_cache.rds             # Processed data cache (git-ignored)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── data/
-│   ├── pediatric_trials.sqlite          # Raw trial data from ctrdata (git-ignored)
+│   ├── trials.sqlite                    # Raw trial data from ctrdata (git-ignored)
 │   ├── sponsor_normalisation_log.csv
 │   ├── country_normalisation_log.csv
 │   ├── meddra_term_normalisation_log.csv
@@ -341,7 +418,8 @@ Initial release.
 │   ├── status_display_normalisation_log.csv
 │   └── deploy/                          # Docker deployment files
 └── www/
-    └── favicon.svg
+    ├── favicon.svg
+    └── preprocessing.html        # Rendered pipeline audit report
 ```
 
 ---
@@ -350,9 +428,9 @@ Initial release.
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
-| `DB_PATH` | `./data/pediatric_trials.sqlite` | SQLite database file |
+| `DB_PATH` | `./data/trials.sqlite` | SQLite database file |
 | `DB_COLLECTION` | `trials` | Collection name within the database |
-| `CACHE_PATH` | `pediatric_trials_cache.rds` | Processed data cache (app root) |
+| `CACHE_PATH` | `trials_cache.rds` | Processed data cache (app root) |
 
 ---
 
@@ -362,7 +440,7 @@ Initial release.
 | ----- | ---------- | ---- |
 | Data retrieval | [`ctrdata`](https://github.com/rfhb/ctrdata) | Unified access to EUCTR and CTIS |
 | Database | [`nodbi`](https://github.com/ropensci/nodbi) + [`RSQLite`](https://cran.r-project.org/package=RSQLite) | Local document store over SQLite |
-| Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) | Dashboard UI |
+| Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) + [`fresh`](https://dreamrs.github.io/fresh/) | Dashboard UI + AdminLTE theming |
 | Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive + PDF visualisations |
 | Map | [`leaflet`](https://rstudio.github.io/leaflet/) | Country-level interactive map |
 | Tables | [`DT`](https://rstudio.github.io/DT/) | Interactive data tables |

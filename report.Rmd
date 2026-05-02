@@ -55,7 +55,7 @@ suppressPackageStartupMessages({
 if (nzchar(params$data_path) && file.exists(params$data_path)) {
   df <- readRDS(params$data_path)
 } else {
-  cache <- "pediatric_trials_cache.rds"
+  cache <- "trials_cache.rds"
   if (!file.exists(cache)) stop("Cache not found. Run rebuild_cache.R first.")
   df <- readRDS(cache)
 }
@@ -800,26 +800,6 @@ results_base %>%
   theme_rep()
 ```
 
-```{r results-no-post-table, eval=has_results_col}
-no_results_tbl <- results_base %>%
-  filter(!has_results) %>%
-  select(CT_number, register, Full_title, sponsor_name, MEDDRA_organ_class,
-         decision_date) %>%
-  mutate(Full_title = str_trunc(Full_title, 60)) %>%
-  arrange(decision_date) %>%
-  rename(`CT Number` = CT_number, Register = register, Title = Full_title,
-         Sponsor = sponsor_name, `Organ Class` = MEDDRA_organ_class,
-         `Authorization Date` = decision_date)
-
-if (nrow(no_results_tbl) > 0) {
-  nk(head(no_results_tbl, 30),
-     cap = paste0("Completed trials without results posted (first 30 of ",
-                  fmt_n(nrow(no_results_tbl)), "; full list available as CSV download in the dashboard)."),
-     al  = c("l","l","l","l","l","l"), lw = TRUE)
-} else {
-  cat("\\textit{All completed trials in this selection have results posted.}")
-}
-```
 
 \newpage
 
