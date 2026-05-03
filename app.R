@@ -1618,6 +1618,7 @@ ui <- dashboardPage(skin = "blue",
                           .kpi-val  { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
                           .kpi-lbl  { font-size: 12px; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; }
                           @media (max-width: 767px) {
+                            #nav_subtitle { display: none !important; }
                             #kpi_strip .col-sm-3,
                             #kpi_strip_compliance .col-sm-3 { width: 50% !important; float: left !important; padding: 0 5px 10px !important; }
                             .kpi-card { padding: 8px 10px 7px; }
