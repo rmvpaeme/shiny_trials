@@ -4,7 +4,27 @@ update AGENTS.md every time the project has a git commit (add a section for the 
 
 when making a new version, update the rmd file to reflect the most recent changes.
 
-## Current version: v0.9.7
+when bumping the version, always update CHANGELOG.md with the new entry (full detail). README.md and the About tab in app.R only keep the most recent entry and link to CHANGELOG.md for older history.
+
+## Current version: v0.9.9
+
+---
+
+## Completed: Grouped sidebar navigation (v0.9.9) — shipped 2026-05-03
+
+### What was built
+
+- **Collapsible "Analysis" group** — `menuItem("Analysis", startExpanded=FALSE)` with four `menuSubItem` children: Basic Analytics, Phase Analytics, Sponsor Comparison, Results Posting. Reduces the flat 9-item sidebar to 6 top-level entries.
+- **Data Explorer repositioned** — remains a standalone `menuItem` immediately below Map (not grouped).
+- **Submenu CSS** — `SIDEBAR_SUBMENU_CSS` constant with Nord-palette colors for `.treeview-menu` links (hover, active, indent). Appended to both `NORD_SUPPLEMENT` and `NORD_LIGHT_SUPPLEMENT`.
+- **CHANGELOG.md created** — full version history moved out of README.md; README and About tab now show only the latest entry with a link.
+- **AGENTS.md rule added** — always update CHANGELOG.md when bumping version.
+
+### Key files changed
+- `app.R` — sidebarMenu restructured; `SIDEBAR_SUBMENU_CSS`; About tab changelog trimmed to latest only.
+- `CHANGELOG.md` — new file with full history from v0.2.2 to v0.9.8.
+- `README.md` — version badge, Dashboard tabs table, changelog section updated.
+- `AGENTS.md` — this entry + versioning rule.
 
 ---
 
