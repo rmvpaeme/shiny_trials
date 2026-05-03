@@ -1632,6 +1632,17 @@ ui <- dashboardPage(skin = "blue",
                             .kpi-icon { font-size: 14px; margin-bottom: 3px; }
                             .kpi-val  { font-size: 20px; }
                             .kpi-lbl  { font-size: 10px; letter-spacing: 0.3px; }
+                            .skin-blue .main-header .logo, .main-header > .logo {
+                              width: 100% !important; float: none !important;
+                            }
+                            .skin-blue .main-header .navbar, .main-header .navbar {
+                              position: absolute !important; top: 0 !important; right: 0 !important;
+                              float: none !important; width: auto !important;
+                              min-height: 0 !important; background: transparent !important; margin: 0 !important;
+                            }
+                            .skin-blue .main-header .navbar .sidebar-toggle {
+                              height: 50px !important; padding: 15px !important; color: inherit !important;
+                            }
                           }
                           .qs-card {
                             cursor: pointer;
