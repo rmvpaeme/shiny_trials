@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.9.7 — light theme default, full sidebar/chart/table theming, overview UX)
+# app.R  (v0.9.9 — grouped sidebar navigation: Analysis collapsible group)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -296,9 +296,16 @@ generate_supplement_css <- function(t) {
   )
 }
 
-NORD_SUPPLEMENT <- generate_supplement_css(THEMES$Nord)
+SIDEBAR_SUBMENU_CSS <- '
+  .skin-blue .sidebar-menu .treeview-menu>li>a{color:#B0BAC9!important;padding-left:38px!important}
+  .skin-blue .sidebar-menu .treeview-menu>li:hover>a{color:#ECEFF4!important;background:#3B4252!important}
+  .skin-blue .sidebar-menu .treeview-menu>li.active>a{color:#ECEFF4!important;background:#3B4252!important;border-left:3px solid #88C0D0!important}
+  .skin-blue .sidebar-menu .treeview>a>.fa-angle-left{color:#B0BAC9!important}
+'
+NORD_SUPPLEMENT <- paste0(generate_supplement_css(THEMES$Nord), SIDEBAR_SUBMENU_CSS)
 NORD_LIGHT_SUPPLEMENT <- paste0(
   generate_supplement_css(THEMES[["Nord Light"]]),
+  SIDEBAR_SUBMENU_CSS,
   # Sidebar stays dark — override the light-theme colours the supplement generates
   '.sidebar .form-control,.sidebar .selectize-input{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
    .sidebar .selectize-dropdown{background:#3B4252!important;color:#D8DEE9!important;border:1px solid #4C566A!important}
@@ -1741,10 +1748,12 @@ ui <- dashboardPage(skin = "blue",
                                                  menuItem("Chart Builder",tabName="chartbuilder",icon=icon("chart-line")),
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
-                                                 menuItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
-                                                 menuItem("Phase Analytics",tabName="phase",icon=icon("flask")),
-                                                 menuItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange")),
-                                                 menuItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt")),
+                                                 menuItem("Analysis",icon=icon("chart-bar"),startExpanded=FALSE,
+                                                   menuSubItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
+                                                   menuSubItem("Phase Analytics",tabName="phase",icon=icon("flask")),
+                                                   menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt")),
+                                                   menuSubItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt"))
+                                                 ),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      tags$div(style="padding:10px 14px 6px;",
                                        tags$button(
@@ -2151,6 +2160,10 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.9.9 (2026-05-03):"),
+                                          tags$ul(
+                                            tags$li("Sidebar navigation grouped: Basic Analytics, Phase Analytics, Sponsor Comparison, and Results Posting collapsed into a single expandable 'Analysis' section; Data Explorer remains a standalone item below Map.")
+                                          )),
                                         tags$li(tags$b("v0.9.5 (2026-05-01):"),
                                           tags$ul(
                                             tags$li("Overview page redesigned: hero subtitle moved to navbar, KPI cards with full Nord accent colours, clickable navigation shortcut cards, quick-filter preset buttons, and recent trials table."),
@@ -2272,7 +2285,7 @@ ui <- dashboardPage(skin = "blue",
                                         )
                                       ),
                                       hr(),
-                                      p(em(paste0("v0.9.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.9.9 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
