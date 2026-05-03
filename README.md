@@ -227,36 +227,6 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
-### v0.2.1 — 2026-03-29
-
-- MedDRA spelling normalisation (leukemia → leukaemia, tumor → tumour, etc.) and Roman numeral type notation converted to Arabic (Type I → Type 1).
-
-### v0.2.0 — 2026-03-29
-
-- Filter save/restore: download active filter settings as JSON; re-upload to restore in any session.
-- PDF report: full summary PDF for any filter selection via sidebar.
-
-### v0.1.5 — 2026-03-29
-
-- Analytics split into Analytics and Phase Analysis tabs.
-
-### v0.1.4 — 2026-03-28
-
-- Sidebar: Trial Phase filter added.
-- Analytics: Phase charts by register, status, and sponsor type.
-
-### v0.1.3 — 2026-03-28
-
-- Map tab: interactive Leaflet map of ongoing trials by country; trial table at zoom ≥ 5.
-
-### v0.1.1 — 2026-03-28
-
-- Overview: Sponsor Type by Register chart; CT numbers as clickable links.
-- Analytics: PIP Status by Year chart; MedDRA SOC code resolution.
-
-### v0.1.0
-
-Initial release.
 
 ---
 
