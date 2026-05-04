@@ -627,7 +627,7 @@ ggplot(reg_long, aes(x = register, y = pct, fill = group)) +
   theme_rep()
 ```
 
-# Results Posting
+# Result Reporting
 
 Restricted to completed trials with a recorded decision date.
 
@@ -656,7 +656,7 @@ if (nrow(res_plot_df) > 0) {
     scale_fill_manual(values = c("Results posted" = GREEN, "No results posted" = RED)) +
     scale_y_continuous(labels = function(x) paste0(x, "%"),
                        expand = expansion(mult = c(0, 0.05))) +
-    labs(title = "Results Posting by Age Group (Completed Trials)",
+    labs(title = "Result Reporting by Age Group (Completed Trials)",
          subtitle = sprintf("Paediatric completed n=%s | Adult completed n=%s",
                             fmt_n(nr_p), fmt_n(nr_a)),
          x = NULL, y = "% of completed trials") +
@@ -670,7 +670,7 @@ if (nrow(res_plot_df) > 0) {
 cat("\\textit{Results posting data not available in the current dataset.}")
 ```
 
-# Results Posting Rate Over Time
+# Result Reporting Rate Over Time
 
 For completed trials, share with results posted grouped by decision year. Shows whether older completed trials are more likely to have reported results (having had more time) and whether the two groups diverge.
 
@@ -695,7 +695,7 @@ if (nrow(res_year_df) > 0) {
     scale_y_continuous(limits = c(0, 100),
                        labels = function(x) paste0(x, "%"),
                        expand = expansion(mult = c(0, 0.05))) +
-    labs(title = "Results Posting Rate by Decision Year (Completed Trials)",
+    labs(title = "Result Reporting Rate by Decision Year (Completed Trials)",
          subtitle = "Years with fewer than 3 completed trials excluded",
          x = NULL, y = "% with results posted") +
     theme_rep()

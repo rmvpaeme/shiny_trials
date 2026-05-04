@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.9.9** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.10.1** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -42,8 +42,8 @@ The dashboard is designed for specific analytical workflows, not just browsing. 
 **Tracking a disease area over time**
 Select a MedDRA organ class or specific condition, set a date range, and see how trial activity has changed year by year — including which sponsors are most active, whether the Phase I → Phase III pipeline is growing or stalling, and which EU member states participate most. The Chart Builder lets you cross any two dimensions without writing code.
 
-**Results posting overview**
-The Results Posting tab shows which completed trials have posted results to the registry and which have not. Results data is sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`) — not estimated. Charts break down by authorization year and sponsor type; the full list of completed trials without results is downloadable as CSV.
+**Result reporting overview**
+The Result Reporting tab shows which completed trials have reported results to the registry and which have not. Results data is sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`) — not estimated. KPI cards show total completed trials, results reported (% of total), Academic without results (% of total), and Industry without results (% of total). Charts break down by authorization year and sponsor type; the full list of completed trials without results is downloadable as CSV.
 
 **Comparing sponsor portfolios**
 Select 2–3 sponsors and the Sponsor Comparison tab renders side-by-side breakdowns of phase distribution, trial status, therapeutic areas, geographic reach, PIP involvement, and submission volume over time. Useful for competitive intelligence, partnership scoping, or regulatory submissions that require landscape context.
@@ -67,8 +67,9 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | **Analysis** *(collapsible group)* | |
 | &nbsp;&nbsp;Basic Analytics | Top organ classes, top MedDRA terms, country bar chart, PIP status, regulatory timeline |
 | &nbsp;&nbsp;Phase Analytics | Phase by register / status / sponsor type, phase funnel, completion cohort |
-| &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 6 dimensions |
-| &nbsp;&nbsp;Results Posting | Results posted vs not posted for completed trials, by year and sponsor type; downloadable list |
+| &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 7 dimensions including result reporting |
+| &nbsp;&nbsp;Country Comparison | Side-by-side comparison of 2–3 selected countries across 7 dimensions including result reporting |
+| &nbsp;&nbsp;Result Reporting | Results reported vs not reported for completed trials, by year and sponsor type; downloadable list |
 | **About** | Data sources, preprocessing audit report, changelog, trial status definitions |
 
 ### Sidebar filters
@@ -221,9 +222,13 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 ## Changelog
 
-### v0.9.9 — 2026-05-03
+### v0.10.1 — 2026-05-04
 
-- **Grouped sidebar navigation**: Basic Analytics, Phase Analytics, Sponsor Comparison, and Results Posting are now nested under a collapsible "Analysis" parent item. Data Explorer remains a standalone item below Map.
+- **UI fixes**: Top Sponsors box auto-sizes to the Top N slider value; CTIS multinational violin box height set to auto — no more chart overflow.
+- **Violin/box plot hover**: tooltips now show Q1, median, Q3, min, max by default; axis labels use plain "log10" text.
+- **Result Reporting KPIs**: Academic and Industry "no results" cards now show percentage of all completed trials.
+- **Renamed "Results Posting" → "Result Reporting"** throughout the app.
+- **Loading screen timing**: startup overlay now waits for the initial Shiny render to go idle before fading, preventing the half-themed default loading screen from showing on shinyapps/Posit Cloud.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 

@@ -737,7 +737,7 @@ cat("\\textit{Orphan designation data requires a cache rebuild (added in v0.7.0)
 
 \newpage
 
-# Results Posting
+# Result Reporting
 
 This section shows which completed trials have posted results to the registry and which have not. Results are sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`). Trial end dates are not reliably available across registers; authorization date is shown for reference only and is not used as a compliance deadline.
 
@@ -779,7 +779,7 @@ results_base %>%
   scale_fill_manual(values = c("Results posted" = GREEN, "No results posted" = RED)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
   scale_x_continuous(breaks = pretty_breaks(8)) +
-  labs(title = "Results Posting by Authorization Year",
+  labs(title = "Result Reporting by Authorization Year",
        x = "Authorization Year", y = "Completed Trials") +
   theme_rep()
 ```
@@ -795,7 +795,7 @@ results_base %>%
   geom_col(width = 0.65) +
   scale_fill_manual(values = c("Results posted" = GREEN, "No results posted" = RED)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
-  labs(title = "Results Posting by Sponsor Type",
+  labs(title = "Result Reporting by Sponsor Type",
        x = NULL, y = "Completed Trials") +
   theme_rep()
 ```

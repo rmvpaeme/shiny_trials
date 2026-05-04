@@ -3,11 +3,14 @@ data/*
 
 manuscript/*
 ./manuscript/*
+manuscript/session_notes.md
 manuscript.md
 MANU.md
 CLAUDE.md
 claude.md
 AGENTS.md
+
+INFRA.md
 
 # R Markdown / LaTeX render artifacts
 *.tex

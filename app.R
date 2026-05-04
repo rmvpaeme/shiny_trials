@@ -1869,7 +1869,7 @@ ui <- dashboardPage(skin = "blue",
                     dashboardBody(
                       # ── Loading overlay ──────────────────────────────────────
                       # Shown immediately (pure CSS) before Shiny/theme loads;
-                      # hidden via JS once the session connects.
+                      # hidden via JS once initial Shiny rendering is idle.
                       tags$head(tags$style(HTML("
                         #app-loading-overlay {
                           position: fixed; top: 0; left: 0;
@@ -1907,12 +1907,29 @@ ui <- dashboardPage(skin = "blue",
                         tags$div(class = "loading-spinner")
                       ),
                       tags$script(HTML("
-                        $(document).on('shiny:connected', function() {
-                          var ov = document.getElementById('app-loading-overlay');
-                          if (!ov) return;
-                          ov.classList.add('fade-out');
-                          setTimeout(function() { ov.style.display = 'none'; }, 1000);
-                        });
+                        (function() {
+                          var shownAt = Date.now();
+                          var hidden = false;
+
+                          function hideLoadingOverlay() {
+                            if (hidden) return;
+                            var ov = document.getElementById('app-loading-overlay');
+                            if (!ov) return;
+
+                            hidden = true;
+                            ov.classList.add('fade-out');
+                            setTimeout(function() { ov.style.display = 'none'; }, 520);
+                          }
+
+                          function hideAfterInitialRender() {
+                            var minVisibleMs = 900;
+                            var remaining = Math.max(0, minVisibleMs - (Date.now() - shownAt));
+                            setTimeout(hideLoadingOverlay, remaining);
+                          }
+
+                          $(document).one('shiny:idle', hideAfterInitialRender);
+                          setTimeout(hideLoadingOverlay, 15000);
+                        })();
                       ")),
                       # ── End loading overlay ──────────────────────────────────
                       tags$head(tags$style(HTML("
@@ -2242,16 +2259,8 @@ ui <- dashboardPage(skin = "blue",
                                             tags$li("Top Sponsors box auto-sizes to Top N slider; CTIS violin box height set to auto."),
                                             tags$li("Violin/box plot tooltips show Q1, median, Q3, min, max by default (removed hoverinfo override); axis labels use plain 'log10'."),
                                             tags$li("Result Reporting KPI boxes 3 and 4 now show % of all completed trials."),
-                                            tags$li("Renamed 'Results Posting' to 'Result Reporting' throughout.")
-                                          )),
-                                        tags$li(tags$b("v0.10.0 (2026-05-04):"),
-                                          tags$ul(
-                                            tags$li("Country Comparison tab: compare trial activity across 2–3 countries (phase distribution, trial status, sponsor type, PIP status, top organ classes, submissions per year)."),
-                                            tags$li("Example questions updated: 'How do the clinical trials between Belgium and Croatia differ?' navigates to Country Comparison; 'How does the portfolio of GSK, Novartis and Roche compare?' navigates to Sponsor Comparison.")
-                                          )),
-                                        tags$li(tags$b("v0.9.9 (2026-05-03):"),
-                                          tags$ul(
-                                            tags$li("Sidebar navigation grouped: Basic Analytics, Phase Analytics, Sponsor Comparison, and Result Reporting collapsed into a single expandable 'Analysis' section; Data Explorer remains a standalone item below Map.")
+                                            tags$li("Renamed 'Results Posting' to 'Result Reporting' throughout."),
+                                            tags$li("Loading screen now waits for initial Shiny rendering to go idle before fading out.")
                                           ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",

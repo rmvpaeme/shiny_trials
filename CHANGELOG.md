@@ -1,9 +1,24 @@
 # Changelog
 
+## v0.10.1 — 2026-05-04
+
+- **Dynamic plot container heights**: the Top Sponsors box now auto-sizes to the selected Top N slider value so larger sponsor lists do not overflow their containing box. The CTIS multinational decision-date spread chart box now uses automatic height instead of clipping the violin plot.
+- **Violin/box plot hover details**: removed the custom `hoverinfo` override so Plotly's default box/violin summaries are visible again, including Q1, median, Q3, minimum, and maximum. Log-axis labels now use plain `log10` text for clearer rendering.
+- **Result Reporting KPI percentages**: the Academic and Industry "no results" KPI cards now show each group's percentage of all completed trials, matching the Results Posted card's denominator and making the compliance strip easier to compare.
+- **Terminology cleanup**: renamed "Results Posting" to "Result Reporting" throughout the app UI and documentation for clearer wording.
+- **Initial loading overlay timing**: the custom startup overlay now hides after the initial Shiny render reaches `shiny:idle`, with a short minimum display time and a 15-second fallback. This avoids exposing the half-themed default AdminLTE screen on shinyapps/Posit Cloud while still preventing a stuck overlay if startup fails.
+
 ## v0.10.0 — 2026-05-04
 
-- **Country Comparison tab**: new Analysis sub-tab to compare trial activity across 2–3 EU member states side-by-side. Shows phase distribution, trial status, sponsor type, PIP status, top organ classes, and submissions per year. Mirrors the Sponsor Comparison layout with a Count/Percentage toggle.
+- **Country Comparison tab**: new Analysis sub-tab to compare trial activity across 2–3 EU member states side-by-side. Shows phase distribution, trial status, sponsor type, PIP status, top organ classes, submissions per year, and result reporting. Mirrors the Sponsor Comparison layout with a Count/Percentage toggle.
 - **Example questions — tab redirect**: "How do the clinical trials between Belgium and Croatia differ?" applies the country filter and navigates directly to Country Comparison. "How does the portfolio of GSK, Novartis and Roche compare?" selects all three sponsors and navigates to Sponsor Comparison.
+
+## v0.9.9 — 2026-05-03
+
+- **Grouped sidebar navigation**: Basic Analytics, Phase Analytics, Sponsor Comparison, Country Comparison, and Result Reporting are nested under a collapsible "Analysis" parent item. Data Explorer remains a standalone top-level item below Map.
+- **Submenu theming**: added dedicated sidebar submenu CSS for dark and light Nord themes, including hover, active, and indentation styling.
+- **Changelog split**: full version history moved into `CHANGELOG.md`; README and the About tab now keep only the latest release entry and link to the full changelog.
+- **Project instructions**: `AGENTS.md` now requires `CHANGELOG.md` updates whenever the project version is bumped.
 
 ## v0.9.8 — 2026-05-02
 
