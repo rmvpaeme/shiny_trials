@@ -6,7 +6,58 @@ when making a new version, update the rmd file to reflect the most recent change
 
 when bumping the version, always update CHANGELOG.md with the new entry (full detail). README.md and the About tab in app.R only keep the most recent entry and link to CHANGELOG.md for older history.
 
-## Current version: v0.9.9
+## Current version: v0.10.2
+
+---
+
+## Completed: Age-aware population normalisation (v0.10.2) — shipped 2026-05-04
+
+### What was built
+
+- **Map age-aware per-million mode** — Map normalisation now follows the Age Group filter: `< 18 years` uses children 0–17, `≥ 18 years` uses adults 18+, and `All` uses total population.
+- **Chart Builder age-aware country normalisation** — Country/member-state per-million charts use the same denominator selection, with checkbox labels, y-axis titles, and table headers updated dynamically.
+- **Population denominators expanded** — `EU_CHILD_POP` now includes 2026 total-population values from Worldometer/UN Population Division and derives adult population as total minus child population.
+- **Visible map table labels** — zoomed-in map trial table now labels the active per-million denominator instead of always showing children.
+
+### Key files changed
+- `app.R` — version v0.10.2; added total/adult denominators; age-aware Map and Chart Builder normalisation.
+- `README.md` — version badge and latest changelog entry updated.
+- `CHANGELOG.md` — v0.10.2 full entry added.
+- `report.Rmd`, `comparison_report.Rmd` — report subtitles updated to Dashboard v0.10.2.
+- `AGENTS.md` — current version and this entry.
+
+---
+
+## Completed: UI fixes + result reporting wording (v0.10.1) — shipped 2026-05-04
+
+### What was built
+
+- **Dynamic plot heights** — Top Sponsors box auto-sizes to the selected Top N slider value; CTIS multinational decision-date spread chart box height no longer clips the plot.
+- **Violin/box hover details restored** — Plotly default hover summaries now show Q1, median, Q3, min, and max; log-axis labels use plain `log10` text.
+- **Result Reporting KPI percentages** — Academic and Industry "no results" KPI cards now show percentages of all completed trials.
+- **Terminology cleanup** — "Results Posting" renamed to "Result Reporting" throughout the app and docs.
+- **Loading overlay timing** — startup overlay hides after the initial Shiny render reaches `shiny:idle`, with a 15-second fallback, preventing the half-themed default screen from showing on shinyapps/Posit Cloud.
+
+### Key files changed
+- `app.R` — version v0.10.1; plot sizing/hover/KPI wording updates; About tab latest-only changelog; loading overlay waits for `shiny:idle`.
+- `README.md` — version badge and latest changelog entry updated.
+- `CHANGELOG.md` — v0.10.1 full entry added.
+- `report.Rmd`, `comparison_report.Rmd` — Result Reporting terminology updated.
+- `AGENTS.md` — current version and this entry.
+
+---
+
+## Completed: Country Comparison tab (v0.10.0) — shipped 2026-05-04
+
+### What was built
+
+- **Country Comparison analysis tab** — compare 2–3 selected countries side-by-side across phase, status, sponsor type, PIP status, top organ classes, submissions per year, and result reporting.
+- **Example question routing** — Belgium vs Croatia preset applies the country filter and opens Country Comparison; GSK/Novartis/Roche preset applies sponsor filters and opens Sponsor Comparison.
+- **Overview navigation** — Country Comparison card added to the overview quick navigation grid.
+
+### Key files changed
+- `app.R` — Country Comparison UI/server outputs and lazy-render list.
+- `README.md`, `CHANGELOG.md`, `AGENTS.md` — documentation/version notes.
 
 ---
 

@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.10.1 — UI fixes: dynamic plot heights, log10 hover stats, KPI percentages)
+# app.R  (v0.10.2 — age-aware map and Chart Builder population normalisation)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -532,9 +532,10 @@ COUNTRY_COORDS <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Children (0-17) population in thousands.
+# Population denominators in thousands.
 # EU/EEA: Eurostat demo_pjan 2023. All others: UN WPP 2022 (0-14 + 3/5 of 15-19).
 # Liechtenstein: no Eurostat 0-17 series -> NA (grey on map in per-million mode).
+# Total population: Worldometer 2026, based on latest UN Population Division estimates.
 EU_CHILD_POP <- data.frame(
   country = c(
     # EU-27
@@ -588,8 +589,39 @@ EU_CHILD_POP <- data.frame(
    74000,  900,11000, 9000,22000,        # United States..Vietnam
     9200, 7500                           # Zambia, Zimbabwe
   ),
+  total_pop = c(
+    # EU-27
+     9107, 11775,  6668,  3822,  1382,
+    10528,  6024,  1331,  5622, 66746,
+    83644,  9897,  9586,  5357, 58926,
+     1836,  2797,   687,   549, 18449,
+    37843, 10395, 18801,  5451,  2115,
+    47851, 10701,
+    # EEA / associated
+     5653,   402,    40,  9008, 69932,
+    # Rest of world (Worldometer 2026, thousands)
+     2751, 48028, 46004,  2931, 27227, 10455,
+   177818,  8937, 12749,  3114,213563,
+    40468, 19946,1412914, 53936, 10893, 11610,
+    18445,120101,138902,  3805, 35698, 18968,
+  1476626,287887, 93168, 48007,  9648,122428, 11590,
+    21084, 58636, 51600,  5103,  5897, 36385,
+   132998,  2961,  3557,   626, 38762, 36640,
+    55185, 29629,  5287,242432,  1804,
+   259300,  4626,  7095, 34922,117724,  3174,
+   143394, 14890, 35166, 19367,  6642,  5906,
+    65453, 23348, 23011, 72564, 71560,
+    12415, 87926, 52761, 39536, 11575,
+   349035,  3383, 37724, 28634,102177,
+    22522, 17274
+  ),
   stringsAsFactors = FALSE
 )
+EU_CHILD_POP$adult_pop <- with(EU_CHILD_POP, ifelse(
+  !is.na(child_pop) & !is.na(total_pop) & total_pop > child_pop,
+  total_pop - child_pop,
+  NA_real_
+))
 
 COUNTRY_LOOKUP <- setNames(KNOWN_COUNTRIES, tolower(KNOWN_COUNTRIES))
 COUNTRY_LOOKUP[c("uk","u.k.","great britain")] <- "United Kingdom"
@@ -2168,10 +2200,7 @@ ui <- dashboardPage(skin = "blue",
                                       p(em("Completed trials are excluded. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       div(style="margin-bottom:8px;",
-                                        radioButtons("map_metric", NULL,
-                                          choices = c("Total trials" = "n_trials",
-                                                      "Per million children (0-17)" = "trials_per_million"),
-                                          selected = "n_trials", inline = TRUE)),
+                                        uiOutput("map_metric_ui")),
                                       withSpinner(leafletOutput("eu_map", height="520px"), type=6))
                                 ),
                                 uiOutput("map_table_ui")
@@ -2254,19 +2283,17 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
-                                        tags$li(tags$b("v0.10.1 (2026-05-04):"),
+                                        tags$li(tags$b("v0.10.2 (2026-05-04):"),
                                           tags$ul(
-                                            tags$li("Top Sponsors box auto-sizes to Top N slider; CTIS violin box height set to auto."),
-                                            tags$li("Violin/box plot tooltips show Q1, median, Q3, min, max by default (removed hoverinfo override); axis labels use plain 'log10'."),
-                                            tags$li("Result Reporting KPI boxes 3 and 4 now show % of all completed trials."),
-                                            tags$li("Renamed 'Results Posting' to 'Result Reporting' throughout."),
-                                            tags$li("Loading screen now waits for initial Shiny rendering to go idle before fading out.")
+                                            tags$li("Map per-million option now follows the selected Age Group filter: children, adults, or total population."),
+                                            tags$li("Chart Builder country/member-state normalisation uses the same age-aware denominator and updates labels accordingly."),
+                                            tags$li("Adult and total denominators use 2026 total-population estimates from Worldometer/UN Population Division; adult population is derived from total minus child population.")
                                           ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-                                      p(em(paste0("v0.10.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.10.2 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
@@ -4281,17 +4308,66 @@ server <- function(input, output, session) {
       left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
       filter(!is.na(lat)) %>%
       left_join(EU_CHILD_POP, by = c("Member_state" = "country")) %>%
-      mutate(trials_per_million = ifelse(
+      mutate(
+        trials_per_million_children = ifelse(
         !is.na(child_pop) & child_pop > 0,
         round(n_trials / (child_pop / 1000), 1),
         NA_real_
-      ))
+        ),
+        trials_per_million_adults = ifelse(
+          !is.na(adult_pop) & adult_pop > 0,
+          round(n_trials / (adult_pop / 1000), 1),
+          NA_real_
+        ),
+        trials_per_million_total = ifelse(
+          !is.na(total_pop) & total_pop > 0,
+          round(n_trials / (total_pop / 1000), 1),
+          NA_real_
+        )
+      )
+  })
+
+  map_metric_choices <- reactive({
+    age_group <- if (is.null(input$age_group_filter)) "< 18 years" else input$age_group_filter
+    normalised_choice <- if (age_group == "≥ 18 years") {
+      c("Per million adults (18+)" = "trials_per_million_adults")
+    } else if (age_group == "All") {
+      c("Per million total population" = "trials_per_million_total")
+    } else {
+      c("Per million children (0-17)" = "trials_per_million_children")
+    }
+    c("Total trials" = "n_trials", normalised_choice)
+  })
+
+  output$map_metric_ui <- renderUI({
+    choices <- map_metric_choices()
+    selected <- if (!is.null(input$map_metric) && input$map_metric %in% unname(choices)) {
+      input$map_metric
+    } else {
+      "n_trials"
+    }
+    radioButtons("map_metric", NULL, choices = choices, selected = selected, inline = TRUE)
   })
 
   output$eu_map <- renderLeaflet({
     cc     <- eu_country_counts()
     t      <- tc()
     metric <- if (is.null(input$map_metric)) "n_trials" else input$map_metric
+    if (!metric %in% c("n_trials", "trials_per_million_children", "trials_per_million_adults", "trials_per_million_total"))
+      metric <- "n_trials"
+
+    metric_label <- switch(metric,
+      trials_per_million_children = "per million children (0-17)",
+      trials_per_million_adults   = "per million adults (18+)",
+      trials_per_million_total    = "per million total population",
+      "open trial(s)"
+    )
+    legend_title <- switch(metric,
+      trials_per_million_children = "Trials / M children",
+      trials_per_million_adults   = "Trials / M adults",
+      trials_per_million_total    = "Trials / M population",
+      "Open Trials"
+    )
 
     cc_ok <- cc %>% filter(!is.na(.data[[metric]]))
     cc_na <- cc %>% filter( is.na(.data[[metric]]))
@@ -4301,11 +4377,9 @@ server <- function(input, output, session) {
       paste0("<b>", cc_ok$Member_state, "</b><br/>", cc_ok$n_trials, " open trial(s)")
     } else {
       paste0("<b>", cc_ok$Member_state, "</b><br/>",
-             cc_ok$trials_per_million, " per million children (0-17)<br/>",
+             cc_ok$display_val, " ", metric_label, "<br/>",
              "(", cc_ok$n_trials, " trial(s))")
     }
-
-    legend_title <- if (metric == "n_trials") "Open Trials" else "Trials / M children"
 
     pal <- colorNumeric(
       c(t$green, t$yellow, t$orange, t$red),
@@ -4338,7 +4412,7 @@ server <- function(input, output, session) {
         )
     }
 
-    if (metric == "trials_per_million" && nrow(cc_na) > 0) {
+    if (metric != "n_trials" && nrow(cc_na) > 0) {
       cc_na$display_val <- cc_na$n_trials
       cc_na$popup_html  <- paste0("<b>", cc_na$Member_state, "</b><br/>",
                                   cc_na$n_trials, " open trial(s)<br/>",
@@ -4455,12 +4529,47 @@ server <- function(input, output, session) {
     grp   <- input$explore_group
     if (!isTruthy(x_var)) return(NULL)
     if (x_var == "Member_state" || (isTruthy(grp) && grp == "Member_state")) {
+      pop <- explore_population_metric()
       div(style="margin-bottom:8px;",
         checkboxInput("explore_per_million",
-          "Normalise by child population (per million children 0-17)",
+          pop$checkbox_label,
           value = FALSE))
     }
   })
+
+  explore_population_metric <- reactive({
+    age_group <- if (is.null(input$age_group_filter)) "< 18 years" else input$age_group_filter
+    if (age_group == "≥ 18 years") {
+      list(
+        pop_col = "adult_pop",
+        checkbox_label = "Normalise by adult population (per million adults 18+)",
+        y_label = "Trials per million adults (18+)",
+        table_label = "Trials / M adults"
+      )
+    } else if (age_group == "All") {
+      list(
+        pop_col = "total_pop",
+        checkbox_label = "Normalise by total population (per million people)",
+        y_label = "Trials per million total population",
+        table_label = "Trials / M population"
+      )
+    } else {
+      list(
+        pop_col = "child_pop",
+        checkbox_label = "Normalise by child population (per million children 0-17)",
+        y_label = "Trials per million children (0-17)",
+        table_label = "Trials / M children"
+      )
+    }
+  })
+
+  normalise_explore_country <- function(d, key_col, pop_col) {
+    d %>%
+      left_join(EU_CHILD_POP, by = setNames("country", key_col)) %>%
+      mutate(n = ifelse(!is.na(.data[[pop_col]]) & .data[[pop_col]] > 0,
+                        round(n / (.data[[pop_col]] / 1000), 1), NA_real_)) %>%
+      select(-any_of(c("child_pop", "adult_pop", "total_pop")))
+  }
 
   output$plot_explore <- renderPlotly({
     t          <- tc()
@@ -4476,20 +4585,13 @@ server <- function(input, output, session) {
     y_lbl  <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
 
     if (isTRUE(input$explore_per_million) && chart_type != "bar_pct") {
+      pop <- explore_population_metric()
       if (grp == "Member_state") {
-        d <- d %>%
-          left_join(EU_CHILD_POP, by = c("grp_val" = "country")) %>%
-          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
-                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
-          select(-child_pop)
-        y_lbl <- "Trials per million children (0-17)"
+        d <- normalise_explore_country(d, "grp_val", pop$pop_col)
+        y_lbl <- pop$y_label
       } else if (x_var == "Member_state") {
-        d <- d %>%
-          left_join(EU_CHILD_POP, by = c("x_val" = "country")) %>%
-          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
-                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
-          select(-child_pop)
-        y_lbl <- "Trials per million children (0-17)"
+        d <- normalise_explore_country(d, "x_val", pop$pop_col)
+        y_lbl <- pop$y_label
       }
     }
 
@@ -4549,20 +4651,13 @@ server <- function(input, output, session) {
     count_lbl <- "Trial Count"
 
     if (isTRUE(input$explore_per_million)) {
+      pop <- explore_population_metric()
       if (grp == "Member_state") {
-        d <- d %>%
-          left_join(EU_CHILD_POP, by = c("grp_val" = "country")) %>%
-          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
-                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
-          select(-child_pop)
-        count_lbl <- "Trials / M children"
+        d <- normalise_explore_country(d, "grp_val", pop$pop_col)
+        count_lbl <- pop$table_label
       } else if (x_var == "Member_state") {
-        d <- d %>%
-          left_join(EU_CHILD_POP, by = c("x_val" = "country")) %>%
-          mutate(n = ifelse(!is.na(child_pop) & child_pop > 0,
-                            round(n / (child_pop / 1000), 1), NA_real_)) %>%
-          select(-child_pop)
-        count_lbl <- "Trials / M children"
+        d <- normalise_explore_country(d, "x_val", pop$pop_col)
+        count_lbl <- pop$table_label
       }
     }
 
@@ -4817,7 +4912,18 @@ server <- function(input, output, session) {
              lng >= bounds$west & lng <= bounds$east) %>%
       pull(`_id`) %>% unique()
     validate(need(length(visible_ids) > 0, "No open trials in current map view."))
-    cc_lookup <- eu_country_counts() %>% select(Member_state, n_trials, trials_per_million)
+    metric <- if (is.null(input$map_metric)) "n_trials" else input$map_metric
+    if (!metric %in% c("n_trials", "trials_per_million_children", "trials_per_million_adults", "trials_per_million_total"))
+      metric <- "n_trials"
+    metric_col <- switch(metric,
+      trials_per_million_children = "Per M children",
+      trials_per_million_adults   = "Per M adults",
+      trials_per_million_total    = "Per M population",
+      "Map metric"
+    )
+    cc_lookup <- eu_country_counts() %>%
+      mutate(map_metric_value = .data[[metric]]) %>%
+      select(Member_state, n_trials, map_metric_value)
     rv$data %>%
       filter(`_id` %in% visible_ids) %>%
       arrange(desc(submission_date_parsed)) %>%
@@ -4835,10 +4941,10 @@ server <- function(input, output, session) {
       ) %>%
       left_join(cc_lookup, by = c("primary_country" = "Member_state")) %>%
       select(`CT Number`, register, Full_title, Member_state,
-             n_trials, trials_per_million,
+             n_trials, map_metric_value,
              MEDDRA_term, status_raw, submission_date_parsed) %>%
       rename(Register = register, Title = Full_title, Country = Member_state,
-             `N (country)` = n_trials, `Per M children` = trials_per_million,
+             `N (country)` = n_trials, `:=`(!!metric_col, map_metric_value),
              Condition = MEDDRA_term, Status = status_raw, Submitted = submission_date_parsed) %>%
       datatable(rownames = FALSE, class = "compact stripe hover", escape = FALSE,
                 options = list(pageLength = 15, scrollX = TRUE, dom = "lBfrtip",

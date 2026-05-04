@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.2 — 2026-05-04
+
+- **Map normalisation by selected age group**: the Map tab now changes its per-million option according to the sidebar Age Group filter. Paediatric mode keeps the existing "Per million children (0-17)" denominator, adult mode uses "Per million adults (18+)", and All uses "Per million total population". Adult and total denominators use 2026 total-population estimates from Worldometer/UN Population Division, with adult population derived as total minus the existing child-population denominator.
+- **Chart Builder age-aware country normalisation**: the country/member-state per-million checkbox now uses the same denominator as the selected Age Group filter: children for paediatric, adults for adult, and total population for All. Plot y-axis labels and summary-table headers update with the chosen denominator.
+
 ## v0.10.1 — 2026-05-04
 
 - **Dynamic plot container heights**: the Top Sponsors box now auto-sizes to the selected Top N slider value so larger sponsor lists do not overflow their containing box. The CTIS multinational decision-date spread chart box now uses automatic height instead of clipping the violin plot.

@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.10.1** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.10.2** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -61,8 +61,8 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | Tab | What it shows |
 | --- | ------------- |
 | **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcut cards (CSS grid, mobile-friendly); example questions that apply filters in one click; prominent "Compare Paediatric vs Adult" button in sidebar; 5 most recently authorized trials |
-| **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types |
-| **Map** | Open trials by country (circle map); sortable country table at zoom ≥ 5 |
+| **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types; age-aware country per-million normalisation |
+| **Map** | Open trials by country (circle map); age-aware per-million normalisation; sortable country table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
 | **Analysis** *(collapsible group)* | |
 | &nbsp;&nbsp;Basic Analytics | Top organ classes, top MedDRA terms, country bar chart, PIP status, regulatory timeline |
@@ -222,13 +222,11 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 ## Changelog
 
-### v0.10.1 — 2026-05-04
+### v0.10.2 — 2026-05-04
 
-- **UI fixes**: Top Sponsors box auto-sizes to the Top N slider value; CTIS multinational violin box height set to auto — no more chart overflow.
-- **Violin/box plot hover**: tooltips now show Q1, median, Q3, min, max by default; axis labels use plain "log10" text.
-- **Result Reporting KPIs**: Academic and Industry "no results" cards now show percentage of all completed trials.
-- **Renamed "Results Posting" → "Result Reporting"** throughout the app.
-- **Loading screen timing**: startup overlay now waits for the initial Shiny render to go idle before fading, preventing the half-themed default loading screen from showing on shinyapps/Posit Cloud.
+- **Age-aware map normalisation**: the Map tab now changes its per-million option based on the Age Group filter: children for `< 18 years`, adults for `≥ 18 years`, and total population for `All`.
+- **Age-aware Chart Builder normalisation**: country/member-state charts use the same selected-age denominator, with matching checkbox labels, y-axis labels, and summary-table headers.
+- **Population denominators**: adult and total modes use 2026 total-population estimates from Worldometer/UN Population Division; adult population is derived as total minus the existing child-population denominator.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
