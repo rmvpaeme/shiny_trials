@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.3 — 2026-05-04
+
+- **Persistent sidebar comparison report button**: replaced the custom sidebar shortcut that attempted to click the Tools-tab download link with a real Shiny `downloadButton`, so "Compare Paediatric vs Adult" works from the side panel even when the Tools tab is not active.
+- **Shared comparison report handler**: extracted the comparison PDF `downloadHandler` into a reusable helper and wired both the persistent sidebar button and the Tools-tab button to it. The generated filename, active filter handling, age-group exclusion logic, TinyTeX/PDF checks, and `comparison_report.Rmd` rendering path now stay identical for both entry points.
+
 ## v0.10.2 — 2026-05-04
 
 - **Map normalisation by selected age group**: the Map tab now changes its per-million option according to the sidebar Age Group filter. Paediatric mode keeps the existing "Per million children (0-17)" denominator, adult mode uses "Per million adults (18+)", and All uses "Per million total population". Adult and total denominators use 2026 total-population estimates from Worldometer/UN Population Division, with adult population derived as total minus the existing child-population denominator.

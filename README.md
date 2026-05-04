@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.10.2** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.10.3** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -222,11 +222,10 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 ## Changelog
 
-### v0.10.2 — 2026-05-04
+### v0.10.3 — 2026-05-04
 
-- **Age-aware map normalisation**: the Map tab now changes its per-million option based on the Age Group filter: children for `< 18 years`, adults for `≥ 18 years`, and total population for `All`.
-- **Age-aware Chart Builder normalisation**: country/member-state charts use the same selected-age denominator, with matching checkbox labels, y-axis labels, and summary-table headers.
-- **Population denominators**: adult and total modes use 2026 total-population estimates from Worldometer/UN Population Division; adult population is derived as total minus the existing child-population denominator.
+- **Sidebar comparison report button**: the persistent Compare Paediatric vs Adult button now starts the PDF download directly, matching the working Tools-tab button.
+- **Shared report handler**: both comparison-report buttons use the same download handler, keeping filters, filenames, and report generation behaviour consistent.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 

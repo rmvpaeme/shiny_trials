@@ -1,6 +1,6 @@
 ---
 title: "EU Paediatric Clinical Trials"
-subtitle: "Summary Report · Dashboard v0.10.2"
+subtitle: "Summary Report · Dashboard v0.10.3"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:

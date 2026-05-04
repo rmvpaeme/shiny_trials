@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.10.2 — age-aware map and Chart Builder population normalisation)
+# app.R  (v0.10.3 — sidebar comparison report button fix)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1802,12 +1802,12 @@ ui <- dashboardPage(skin = "blue",
                                                  ),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      tags$div(style="padding:10px 14px 6px;",
-                                       tags$button(
+                                       downloadButton(
+                                         "dl_comparison_report_sidebar",
                                          tagList(icon("exchange"), " Compare Paediatric vs Adult"),
                                          class = "btn btn-info btn-block",
                                          style = "width:100%;font-size:13px;font-weight:600;padding:9px 12px;",
-                                         title = "Generate a side-by-side comparison report: Paediatric vs Adult",
-                                         onclick = "document.getElementById('dl_comparison_report').click();"
+                                         title = "Generate a side-by-side comparison report: Paediatric vs Adult"
                                        ),
                                        tags$p(style="font-size:10px;opacity:0.6;margin:4px 0 0;text-align:center;",
                                               "Generates a PDF comparing paediatric vs adult trials under the current filters")
@@ -2283,17 +2283,16 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
-                                        tags$li(tags$b("v0.10.2 (2026-05-04):"),
+                                        tags$li(tags$b("v0.10.3 (2026-05-04):"),
                                           tags$ul(
-                                            tags$li("Map per-million option now follows the selected Age Group filter: children, adults, or total population."),
-                                            tags$li("Chart Builder country/member-state normalisation uses the same age-aware denominator and updates labels accordingly."),
-                                            tags$li("Adult and total denominators use 2026 total-population estimates from Worldometer/UN Population Division; adult population is derived from total minus child population.")
+                                            tags$li("The persistent sidebar Compare Paediatric vs Adult button now starts the PDF download directly."),
+                                            tags$li("Both sidebar comparison-report buttons share the same download handler, so fixes and filters stay consistent.")
                                           ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-                                      p(em(paste0("v0.10.2 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.10.3 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
@@ -3140,7 +3139,8 @@ server <- function(input, output, session) {
     }
   )
 
-  output$dl_comparison_report <- downloadHandler(
+  make_comparison_report_handler <- function() {
+    downloadHandler(
     filename = function() paste0("paediatric_adult_comparison_", Sys.Date(), ".pdf"),
     content  = function(file) {
       notif <- showNotification(
@@ -3248,7 +3248,11 @@ server <- function(input, output, session) {
         }
       )
     }
-  )
+    )
+  }
+
+  output$dl_comparison_report <- make_comparison_report_handler()
+  output$dl_comparison_report_sidebar <- make_comparison_report_handler()
 
   observeEvent(input$ul_filters,{
     req(input$ul_filters)

@@ -6,7 +6,23 @@ when making a new version, update the rmd file to reflect the most recent change
 
 when bumping the version, always update CHANGELOG.md with the new entry (full detail). README.md and the About tab in app.R only keep the most recent entry and link to CHANGELOG.md for older history.
 
-## Current version: v0.10.2
+## Current version: v0.10.3
+
+---
+
+## Completed: Sidebar comparison report button fix (v0.10.3) — shipped 2026-05-04
+
+### What was built
+
+- **Persistent side-panel report button fixed** — The sidebar "Compare Paediatric vs Adult" button is now a real Shiny download button instead of a custom DOM click shortcut to the Tools-tab button.
+- **Shared comparison report handler** — Both comparison-report buttons use the same reusable `downloadHandler`, keeping active filter logic, age-group exclusion, filenames, PDF checks, and report rendering consistent.
+
+### Key files changed
+- `app.R` — version v0.10.3; replaced the persistent sidebar shortcut with `dl_comparison_report_sidebar`; shared the comparison report handler across both buttons; About latest changelog updated.
+- `README.md` — version badge and latest changelog entry updated.
+- `CHANGELOG.md` — v0.10.3 full entry added.
+- `report.Rmd`, `comparison_report.Rmd` — report subtitles updated to Dashboard v0.10.3.
+- `AGENTS.md` — current version and this entry.
 
 ---
 
