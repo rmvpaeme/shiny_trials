@@ -1637,26 +1637,27 @@ extract_choices <- function(x, sep = " / ") {
 # 8. UI
 # ══════════════════════════════════════════════════════════════════════════════
 
-ui <- dashboardPage(skin = "blue",
+ui <- tagList(
+  tags$head(tags$style(HTML("
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      background: #2E3440;
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.5s ease;
+    }
+    html.app-ready body::before {
+      opacity: 0;
+      pointer-events: none;
+    }
+  "))),
+  dashboardPage(skin = "blue",
                     title = "EU Paediatric Trial Monitor",
                     dashboardHeader(title = tagList(
                       tags$head(
-                        tags$style(HTML("
-                          #app-startup-mask {
-                            position: fixed;
-                            inset: 0;
-                            z-index: 99998;
-                            background: #2E3440;
-                          }
-                          #app-startup-mask.fade-out {
-                            opacity: 0;
-                            pointer-events: none;
-                            transition: opacity 0.5s ease;
-                          }
-                        ")),
-                        tags$script(HTML("
-                          document.write('<div id=\"app-startup-mask\"></div>');
-                        ")),
                         tags$title("EU Paediatric Trial Monitor"),
                         tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg"),
                         tags$style(HTML("
@@ -1962,15 +1963,13 @@ ui <- dashboardPage(skin = "blue",
                           function hideLoadingOverlay() {
                             if (hidden) return;
                             var ov = document.getElementById('app-loading-overlay');
-                            var mask = document.getElementById('app-startup-mask');
                             if (!ov) return;
 
                             hidden = true;
-                            if (mask) mask.classList.add('fade-out');
+                            document.documentElement.classList.add('app-ready');
                             ov.classList.add('fade-out');
                             setTimeout(function() {
                               ov.style.display = 'none';
-                              if (mask) mask.remove();
                             }, 520);
                           }
 
@@ -2387,7 +2386,7 @@ ui <- dashboardPage(skin = "blue",
                                 ))
                       )
                     )
-)
+))
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 9. SERVER
