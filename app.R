@@ -1641,6 +1641,22 @@ ui <- dashboardPage(skin = "blue",
                     title = "EU Paediatric Trial Monitor",
                     dashboardHeader(title = tagList(
                       tags$head(
+                        tags$style(HTML("
+                          #app-startup-mask {
+                            position: fixed;
+                            inset: 0;
+                            z-index: 99998;
+                            background: #2E3440;
+                          }
+                          #app-startup-mask.fade-out {
+                            opacity: 0;
+                            pointer-events: none;
+                            transition: opacity 0.5s ease;
+                          }
+                        ")),
+                        tags$script(HTML("
+                          document.write('<div id=\"app-startup-mask\"></div>');
+                        ")),
                         tags$title("EU Paediatric Trial Monitor"),
                         tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg"),
                         tags$style(HTML("
@@ -1946,11 +1962,16 @@ ui <- dashboardPage(skin = "blue",
                           function hideLoadingOverlay() {
                             if (hidden) return;
                             var ov = document.getElementById('app-loading-overlay');
+                            var mask = document.getElementById('app-startup-mask');
                             if (!ov) return;
 
                             hidden = true;
+                            if (mask) mask.classList.add('fade-out');
                             ov.classList.add('fade-out');
-                            setTimeout(function() { ov.style.display = 'none'; }, 520);
+                            setTimeout(function() {
+                              ov.style.display = 'none';
+                              if (mask) mask.remove();
+                            }, 520);
                           }
 
                           function hideAfterInitialRender() {
