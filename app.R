@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.9.9 — grouped sidebar navigation: Analysis collapsible group)
+# app.R  (v0.10.0 — country comparison tab; example questions with tab redirect)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -1763,6 +1763,7 @@ ui <- dashboardPage(skin = "blue",
                                                    menuSubItem("Basic Analytics",tabName="analytics",icon=icon("chart-bar")),
                                                    menuSubItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                    menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt")),
+                                                   menuSubItem("Country Comparison",tabName="country_compare",icon=icon("globe")),
                                                    menuSubItem("Results Posting",tabName="compliance",icon=icon("file-medical-alt"))
                                                  ),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
@@ -1804,7 +1805,7 @@ ui <- dashboardPage(skin = "blue",
                                              ),
                                              tags$details(
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
-                                                 "Trial", uiOutput("badge_trial", inline=TRUE)),
+                                                 tags$span("Trial", tags$span(" (click to expand)", style="font-size:10px;opacity:0.6;font-weight:normal;")), uiOutput("badge_trial", inline=TRUE)),
                                                selectizeInput("status_filter","Trial Status:",
                                                               choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
                                                               multiple=TRUE,options=list(placeholder="All statuses")),
@@ -1820,7 +1821,7 @@ ui <- dashboardPage(skin = "blue",
                                              ),
                                              tags$details(
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
-                                                 "Therapeutic Area", uiOutput("badge_therapeutic", inline=TRUE)),
+                                                 tags$span("Therapeutic Area", tags$span(" (click to expand)", style="font-size:10px;opacity:0.6;font-weight:normal;")), uiOutput("badge_therapeutic", inline=TRUE)),
                                                selectizeInput("organ_class_filter","MedDRA Organ Class:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All organ classes")),
                                                selectizeInput("condition_filter","Condition / MedDRA Term:",
@@ -1938,6 +1939,10 @@ ui <- dashboardPage(skin = "blue",
                                       tags$div(class="qs-icon", icon("exchange")),
                                       tags$strong("Sponsor Comparison"),
                                       tags$p("Compare trial portfolios across sponsors")),
+                                    tags$div(class="qs-card", `data-tab`="country_compare",
+                                      tags$div(class="qs-icon", icon("globe")),
+                                      tags$strong("Country Comparison"),
+                                      tags$p("Compare trial activity across countries")),
                                     tags$div(class="qs-card", `data-tab`="compliance",
                                       tags$div(class="qs-icon", icon("file-medical-alt")),
                                       tags$strong("Results Posting"),
@@ -2099,6 +2104,9 @@ ui <- dashboardPage(skin = "blue",
                         tabItem(tabName="sponsor_compare",
                                 uiOutput("sponsor_compare_tab_ui")
                         ),
+                        tabItem(tabName="country_compare",
+                                uiOutput("country_compare_tab_ui")
+                        ),
                         tabItem(tabName="compliance",
                                 uiOutput("kpi_strip_compliance"),
                                 fluidRow(
@@ -2171,6 +2179,11 @@ ui <- dashboardPage(skin = "blue",
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+                                        tags$li(tags$b("v0.10.0 (2026-05-04):"),
+                                          tags$ul(
+                                            tags$li("Country Comparison tab: compare trial activity across 2–3 countries (phase distribution, trial status, sponsor type, PIP status, top organ classes, submissions per year)."),
+                                            tags$li("Example questions updated: 'How do the clinical trials between Belgium and Croatia differ?' navigates to Country Comparison; 'How does the portfolio of GSK, Novartis and Roche compare?' navigates to Sponsor Comparison.")
+                                          )),
                                         tags$li(tags$b("v0.9.9 (2026-05-03):"),
                                           tags$ul(
                                             tags$li("Sidebar navigation grouped: Basic Analytics, Phase Analytics, Sponsor Comparison, and Results Posting collapsed into a single expandable 'Analysis' section; Data Explorer remains a standalone item below Map.")
@@ -2179,7 +2192,7 @@ ui <- dashboardPage(skin = "blue",
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-                                      p(em(paste0("v0.9.9 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+                                      p(em(paste0("v0.10.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
@@ -2677,7 +2690,11 @@ server <- function(input, output, session) {
                         "pip_10y"),
           make_question('How does the portfolio of Novartis differ between paediatrics and adults?',
                         "novartis_compare",
-                        hint = 'Apply the filter, then press “Compare Paediatric vs Adult” in the side panel')
+                        hint = 'Apply the filter, then press “Compare Paediatric vs Adult” in the side panel'),
+          make_question('How do the clinical trials between Belgium and Croatia differ?',
+                        "belgium_croatia_compare"),
+          make_question('How does the portfolio of GSK, Novartis and Roche compare?',
+                        "gsk_novartis_compare")
         )
       )
     ))
@@ -2730,6 +2747,17 @@ server <- function(input, output, session) {
                            choices  = sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),
                            selected = "Novartis",
                            server   = TRUE)
+    } else if (p == "belgium_croatia_compare") {
+      updateSelectizeInput(session, "country_filter", selected = c("Belgium", "Croatia"))
+      updateTabItems(session, "tabs", "country_compare")
+    } else if (p == "gsk_novartis_compare") {
+      req(rv$data)
+      all_sponsors <- sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)]))
+      updateSelectizeInput(session, "sponsor_filter",
+                           choices  = all_sponsors,
+                           selected = c("GSK", "Novartis", "Roche"),
+                           server   = TRUE)
+      updateTabItems(session, "tabs", "sponsor_compare")
     }
   })
 
@@ -3784,6 +3812,248 @@ server <- function(input, output, session) {
         legend = list(orientation = "h", y = -0.2))
   })
 
+  # ── Country Comparison tab ─────────────────────────────────────────────────
+  output$country_compare_tab_ui <- renderUI({
+    n <- length(input$country_filter)
+
+    help_box <- function(icon_name, icon_color = "#3c8dbc", title, lines) {
+      fluidRow(column(12, div(
+        style = "padding:60px 20px;text-align:center;",
+        tags$i(class = paste0("fa fa-", icon_name),
+               style = paste0("font-size:48px;color:", icon_color, ";margin-bottom:16px;")),
+        h3(title),
+        tagList(lines))))
+    }
+
+    if (n == 0) return(help_box("globe", title = "Country Comparison", lines = tagList(
+      p("Use the ", tags$b("Country / Member State"), " filter in the sidebar to select ",
+        tags$b("2 or 3 countries"), " and compare their trial activity side-by-side."),
+      p(em("The comparison will show phase distribution, trial status, sponsor types, top organ classes, PIP status, and yearly submissions."),
+        style = "color:#888;"))))
+
+    if (n == 1) return(help_box("globe", title = "Country Comparison", lines = tagList(
+      p(tags$b(input$country_filter[[1]]), " is selected."),
+      p("Select ", tags$b("one or two more countries"), " in the sidebar to start the comparison."),
+      p(em("You can compare 2 or 3 countries at a time."), style = "color:#888;"))))
+
+    if (n > 3) return(help_box("exclamation-triangle", icon_color = "#e67e22",
+      title = "Too many countries selected", lines = tagList(
+        p(paste0(n, " countries are currently selected.")),
+        p("Narrow it down to ", tags$b("2 or 3"), " to enable the comparison."))))
+
+    ttl <- paste(input$country_filter, collapse = " vs. ")
+    tagList(
+      fluidRow(column(12,
+        div(
+          div(style = "display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:12px;",
+            h3(style = "margin:0;", icon("globe"), " ", ttl),
+            div(style = "flex-shrink:0;",
+              radioButtons("country_compare_pct", NULL,
+                choices = c("Count" = "n", "Percentage" = "pct"),
+                selected = isolate(if (!is.null(input$country_compare_pct)) input$country_compare_pct else "n"),
+                inline = TRUE)
+            )
+          ),
+          p(em("Phase distribution, trial status, sponsor types, organ classes, PIP status, and yearly submissions for selected countries."),
+            style = "font-size:12px;opacity:0.7;margin:4px 0 4px;"),
+          p(em("Note: percentages are calculated within each country's own trial portfolio."),
+            style = "font-size:11px;opacity:0.6;margin:0 0 8px;font-style:italic;")
+        )
+      )),
+      fluidRow(
+        box(title = "Phase Distribution", status = "primary", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_cc_phase", height = "320px"), type = 6)),
+        box(title = "Trial Status", status = "info", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_cc_status", height = "320px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Sponsor Type", status = "warning", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_cc_sponsor_type", height = "320px"), type = 6)),
+        box(title = "PIP Status", status = "info", solidHeader = TRUE,
+            width = 6, height = 400,
+            withSpinner(plotlyOutput("plot_cc_pip", height = "320px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Top Organ Classes", status = "warning", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_cc_organ", height = "340px"), type = 6))
+      ),
+      fluidRow(
+        box(title = "Submissions per Year", status = "primary", solidHeader = TRUE,
+            width = 12, height = 420,
+            withSpinner(plotlyOutput("plot_cc_year", height = "340px"), type = 6))
+      )
+    )
+  })
+
+  country_compare_pal <- reactive({
+    countries <- input$country_filter
+    t <- tc()
+    setNames(
+      colorRampPalette(c(t$frost1, t$orange, t$green, t$purple))(length(countries)),
+      countries)
+  })
+
+  cc_data <- reactive({
+    req(length(input$country_filter) >= 2)
+    filt() %>%
+      filter(!is.na(Member_state)) %>%
+      separate_rows(Member_state, sep = " / ") %>%
+      mutate(Member_state = str_trim(Member_state)) %>%
+      filter(Member_state %in% input$country_filter)
+  })
+
+  output$plot_cc_phase <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    use_pct <- isTRUE(input$country_compare_pct == "pct")
+    df <- cc_data() %>%
+      filter(!is.na(phase), nzchar(str_trim(phase))) %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(phase = str_trim(phase)) %>%
+      filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
+      count(Member_state, phase) %>%
+      group_by(Member_state) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup() %>%
+      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
+    validate(need(nrow(df) > 0, "No phase data for selected countries."))
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~phase, y = y_col, color = ~Member_state, colors = country_compare_pal(),
+            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = y_lbl),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_cc_status <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    use_pct <- isTRUE(input$country_compare_pct == "pct")
+    df <- cc_data() %>%
+      filter(!is.na(status)) %>%
+      count(Member_state, status) %>%
+      group_by(Member_state) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
+    validate(need(nrow(df) > 0, "No status data for selected countries."))
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~status, y = y_col, color = ~Member_state, colors = country_compare_pal(),
+            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = y_lbl),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_cc_sponsor_type <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    use_pct <- isTRUE(input$country_compare_pct == "pct")
+    df <- cc_data() %>%
+      filter(!is.na(sponsor_type)) %>%
+      count(Member_state, sponsor_type) %>%
+      group_by(Member_state) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
+    validate(need(nrow(df) > 0, "No sponsor type data for selected countries."))
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    t <- tc()
+    stype_pal <- c("Academic" = t$frost1, "Industry" = t$orange)
+    plot_ly(df, x = ~Member_state, y = y_col, color = ~sponsor_type, colors = stype_pal,
+            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = y_lbl),
+                 legend = list(orientation = "h", y = -0.25))
+  })
+
+  output$plot_cc_pip <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    use_pct <- isTRUE(input$country_compare_pct == "pct")
+    df <- cc_data() %>%
+      filter(!is.na(has_PIP)) %>%
+      count(Member_state, has_PIP) %>%
+      group_by(Member_state) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
+    validate(need(nrow(df) > 0, "No PIP data for selected countries."))
+    t <- tc()
+    pip_pal <- c("Yes" = t$green, "No" = t$red, "Unknown" = t$yellow)
+    y_col <- if (use_pct) ~pct else ~n
+    y_lbl <- if (use_pct) "% of Trials" else "Trials"
+    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
+    plot_ly(df, x = ~Member_state, y = y_col,
+            color = ~has_PIP, colors = pip_pal,
+            type = "bar", text = txt, textposition = "outside",
+            hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "stack",
+                 xaxis = list(title = ""),
+                 yaxis = list(title = y_lbl,
+                              range = if (use_pct) list(0, 110) else NULL),
+                 legend = list(orientation = "h", y = -0.2))
+  })
+
+  output$plot_cc_organ <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    use_pct <- isTRUE(input$country_compare_pct == "pct")
+    df <- cc_data() %>%
+      filter(!is.na(MEDDRA_organ_class)) %>%
+      separate_rows(MEDDRA_organ_class, sep = " / ") %>%
+      mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
+      filter(nzchar(MEDDRA_organ_class)) %>%
+      count(Member_state, MEDDRA_organ_class) %>%
+      group_by(Member_state) %>%
+      mutate(pct = round(n / sum(n) * 100, 1)) %>%
+      ungroup()
+    top_oc <- df %>%
+      group_by(MEDDRA_organ_class) %>%
+      summarise(total = sum(n), .groups = "drop") %>%
+      slice_max(total, n = 8) %>%
+      pull(MEDDRA_organ_class)
+    df <- df %>%
+      filter(MEDDRA_organ_class %in% top_oc) %>%
+      mutate(sort_val = if (use_pct) pct else n)
+    validate(need(nrow(df) > 0, "No organ class data for selected countries."))
+    x_col <- if (use_pct) ~pct else ~n
+    x_lbl <- if (use_pct) "% of Trials" else "Trials"
+    plot_ly(df,
+            y = ~reorder(MEDDRA_organ_class, sort_val), x = x_col,
+            color = ~Member_state, colors = country_compare_pal(),
+            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = x_lbl),
+                 yaxis = list(title = ""),
+                 legend = list(orientation = "h", y = -0.2),
+                 margin = list(l = 240))
+  })
+
+  output$plot_cc_year <- renderPlotly({
+    req(length(input$country_filter) >= 2)
+    df <- cc_data() %>%
+      filter(!is.na(submission_date_parsed)) %>%
+      mutate(year = year(submission_date_parsed)) %>%
+      count(Member_state, year)
+    validate(need(nrow(df) > 0, "No submission date data for selected countries."))
+    plot_ly(df, x = ~year, y = ~n,
+            color = ~Member_state, colors = country_compare_pal(),
+            type = "scatter", mode = "lines+markers",
+            line = list(width = 2), marker = list(size = 6),
+            text = ~paste0(Member_state, " ", year, "<br>", n, " trial(s)"),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Submission Year", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "Trials", rangemode = "tozero"),
+        legend = list(orientation = "h", y = -0.2))
+  })
+
   output$plot_sponsor_top <- renderPlotly({
     df<-filt()%>%filter(!is.na(sponsor_type))%>%count(sponsor_type,register)
     validate(need(nrow(df)>0,"No sponsor type data available."))
@@ -4454,6 +4724,10 @@ server <- function(input, output, session) {
       "sponsor_compare_tab_ui",
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
       "plot_compare_country", "plot_compare_pip", "plot_compare_year",
+      # Country Comparison
+      "country_compare_tab_ui",
+      "plot_cc_phase", "plot_cc_status", "plot_cc_sponsor_type",
+      "plot_cc_pip", "plot_cc_organ", "plot_cc_year",
       # Results Posting
       "kpi_strip_compliance",
       "plot_results_compliance_overview", "plot_results_by_sponsor",
