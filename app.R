@@ -1639,19 +1639,20 @@ extract_choices <- function(x, sep = " / ") {
 
 ui <- tagList(
   tags$head(tags$style(HTML("
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 2147483647;
-      background: #2E3440;
-      opacity: 1;
-      pointer-events: all;
-      transition: opacity 0.5s ease;
+    html:not(.app-ready) body {
+      background: #2E3440 !important;
     }
-    html.app-ready body::before {
-      opacity: 0;
-      pointer-events: none;
+    html:not(.app-ready) .main-header,
+    html:not(.app-ready) .main-sidebar,
+    html:not(.app-ready) .left-side {
+      visibility: hidden !important;
+    }
+    html:not(.app-ready) .content-wrapper,
+    html:not(.app-ready) .right-side {
+      background: #2E3440 !important;
+    }
+    html:not(.app-ready) .content-wrapper > .content > :not(#app-loading-overlay) {
+      visibility: hidden !important;
     }
   "))),
   dashboardPage(skin = "blue",
