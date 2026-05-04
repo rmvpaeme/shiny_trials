@@ -1871,41 +1871,6 @@ ui <- dashboardPage(skin = "blue",
                       # Shown immediately (pure CSS) before Shiny/theme loads;
                       # hidden via JS once initial Shiny rendering is idle.
                       tags$head(tags$style(HTML("
-                        /* Critical startup shell theme: applied before Shiny renders
-                           active_theme so AdminLTE's default blue skin never flashes. */
-                        body.skin-blue,
-                        body.skin-blue .wrapper {
-                          background: #ECEFF4 !important;
-                        }
-                        body.skin-blue .main-header .navbar,
-                        body.skin-blue .main-header .logo,
-                        body.skin-blue .main-header .logo:hover {
-                          background-color: #5E81AC !important;
-                        }
-                        body.skin-blue .main-header .navbar .sidebar-toggle,
-                        body.skin-blue .main-header .navbar .navbar-custom-menu,
-                        body.skin-blue .main-header .navbar .navbar-right {
-                          color: #ECEFF4 !important;
-                        }
-                        body.skin-blue .main-sidebar,
-                        body.skin-blue .left-side {
-                          background: #2E3440 !important;
-                          background-color: #2E3440 !important;
-                        }
-                        body.skin-blue .sidebar-menu > li > a,
-                        body.skin-blue .sidebar a {
-                          color: #D8DEE9 !important;
-                        }
-                        body.skin-blue .sidebar-menu > li.active > a,
-                        body.skin-blue .sidebar-menu > li:hover > a {
-                          background: #3B4252 !important;
-                          border-left-color: #5E81AC !important;
-                          color: #ECEFF4 !important;
-                        }
-                        body.skin-blue .content-wrapper,
-                        body.skin-blue .right-side {
-                          background: #ECEFF4 !important;
-                        }
                         #app-loading-overlay {
                           position: fixed; top: 0; left: 0;
                           width: 100%; height: 100%;
