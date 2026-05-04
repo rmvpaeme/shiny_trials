@@ -1911,7 +1911,7 @@ ui <- dashboardPage(skin = "blue",
                           var ov = document.getElementById('app-loading-overlay');
                           if (!ov) return;
                           ov.classList.add('fade-out');
-                          setTimeout(function() { ov.style.display = 'none'; }, 520);
+                          setTimeout(function() { ov.style.display = 'none'; }, 1000);
                         });
                       ")),
                       # ── End loading overlay ──────────────────────────────────
