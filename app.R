@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.10.3 — sidebar comparison report button fix)
+# app.R  (v0.10.4 — CTIS transition deduplication aliases)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -666,6 +666,11 @@ normalize_sponsor_name <- function(x) {
   x[x %in% c("NA", "", "NULL")] <- NA_character_
   # Collapse multiple spaces (raw EUCTR data has "GmbH  Co. KG" with double space)
   x <- str_replace_all(x, "\\s{2,}", " ")
+  # Protect hyphenated brand names before the generic "- long expansion" cleanup.
+  x <- ifelse(!is.na(x) & str_detect(x, regex("\\bBristol\\s*[-.]?\\s*M(ey|y)ers\\s+Squibb\\b|\\bBristol\\s*[-.]\\s*M\\.?\\s*Squibb\\b", ignore_case = TRUE)),
+              "BMS", x)
+  x <- ifelse(!is.na(x) & str_detect(x, regex("\\bALK\\s*[- ]?\\s*Abell[óo]?\\b|\\bALK\\s*[- ]?\\s*Abell\\b", ignore_case = TRUE)),
+              "ALK-Abello", x)
 
   # ── Pre-step: structural cleanup before any token removal ─────────────────
   # Strip "a wholly[-owned] subsidiary of..." and similar sub-company noise
@@ -696,6 +701,263 @@ normalize_sponsor_name <- function(x) {
   # Title-case everything EXCEPT dotted abbreviations (A.I.E.O.P., A.O., etc.)
   is_abbrev <- !is.na(x) & str_detect(x, "[A-Za-z]\\.[A-Za-z]")
   x <- ifelse(!is.na(x) & !is_abbrev, str_to_title(x), x)
+
+  # Curated aliases for high-frequency register spelling variants.
+  sponsor_aliases <- list(
+    c("\\bH\\.?\\s*Lundbeck\\b", "Lundbeck"),
+    c("\\bMerck\\s*(Amp\\s*)?&?\\s*Co\\b|\\bMerck\\s+And\\s+Co\\b", "MSD"),
+    c("\\b(UZ|Universitair\\s+Ziekenhuis|University\\s+Hospital)\\s+Brussel(s)?\\b|\\bUZBrussel\\b|\\bUZ\\s+Brussel\\s+VUB\\b|\\bCrg\\s+UZ\\s+Brussel\\b", "UZ Brussel"),
+    c("\\bRigshospitalet\\b|\\bCopenhagen\\s+University\\s+Hospital\\s*,?\\s*Rigshospitalet\\b|\\bRigshospitalet\\s*,?\\s*Copenhagen\\s+University\\s+Hospitals?\\b", "Rigshospitalet"),
+    c("\\b(Policlinico\\s+(Universitario\\s+)?(Agostino\\s+)?A\\.?\\s*Gemelli|Fondazione\\s+Policlinico\\s+Universitario\\s+Agostino\\s+Gemelli|Universit\\s+Cattolica\\s+Del\\s+Sacro\\s+Cuore\\s*[- ]\\s*Policlinico\\s+A\\.?\\s*Gemelli)\\b", "Policlinico Universitario Agostino Gemelli"),
+    c("\\b(Institut\\s+)?Gustave\\s+Roussy\\b|\\bInstitut\\s+De\\s+Cancrologie\\s+Gustave\\s+Roussy\\b", "Gustave Roussy"),
+    c("\\b(S?Tichting\\s+)?Het\\s+Nederlands\\s+Kanker\\s+Instituut(?=\\b|_)|\\bNederlands\\s+Kanker\\s+Instutuut\\b", "Het Nederlands Kanker Instituut"),
+    c("\\bFundaci[oó]?\\s+(Privada\\s+)?(Cl[ií]n?ic|Cln[ií]c)\\s+((Per\\s+A\\s+(La\\s+)?)|Per\\s+La\\s+)?Recerca\\s+Biom[èe]?dica(\\s+FCRB)?\\b|\\bFundaci[oó]?\\s+(Privada\\s+)?(Cl[ií]n?ic|Cln[ií]c)\\b|\\bFundaci[oó]?\\s+De\\s+Recerca\\s+(Cl[ií]n?ic|Cln[ií]c)\\s+Barcelona\\b|\\bFundaci[oó]?\\s+(Privada\\s+)?Clinic\\s+Per\\s+A\\s+La\\s+Recerca\\s+Biomedica\\b", "Fundacio Clinic Per A La Recerca Biomedica"),
+    c("\\bCentre\\s+(Leon|Lon)\\s+B[ée]?rard\\b", "Centre Leon Berard"),
+    c("\\b(Irccs\\s+)?Istituto\\s+Giannina\\s+Gaslini\\b|\\bGiannina\\s+Gaslini\\s+Institute\\b", "Istituto Giannina Gaslini"),
+    c("\\b(Irccs\\s+)?Istituto\\s+Clinico\\s+Humanitas\\b|\\bInstituto\\s+Clinico\\s+Humanitas\\b|\\bHumanitas\\s+Mirasole\\b", "Istituto Clinico Humanitas"),
+    c("\\bKing'?s?\\s+College\\s+Hospital(\\s+Foundtion)?\\s+(Nhs\\s+)?(Foundation\\s+)?Trust\\b|\\bKing'?s?\\s+College\\s+Hospital\\s+Trust\\b", "Kings College Hospital NHS Foundation Trust"),
+    c("\\bBMS\\b|\\bBristol\\s*[-.]?\\s*M(ey|y)ers\\s+Squibb\\b|\\bBRISTOL\\s*[-.]\\s*M\\.?\\s*Squibb\\b", "BMS"),
+    c("\\b(SCS\\s+)?Boehringer\\s*[- ]?\\s*Ing(elheim)?\\b", "Boehringer Ingelheim"),
+    c("\\bF\\.?\\s*Hoff?mann?\\s*[- ]?\\s*La\\s*[- ]?\\s*Roche\\b|\\bHoff?mann?\\s*[- ]?\\s*La\\s*[- ]?\\s*Roche\\b", "Roche"),
+    c("\\bF\\.?\\s*Hoff?mann?\\b", "Roche"),
+    c("\\bImperial\\s+College\\s+(Healthcare\\s+)?Nhs\\s+Trust\\b", "Imperial College Healthcare NHS Trust"),
+    c("\\bImperial\\s+College\\s*,?\\s*London\\b|^Imperial\\s+College$", "Imperial College London"),
+    c("\\bQueen\\s+Mary\\s*,?\\s+University\\s+Of\\s+London\\b|\\bQueen\\s+Mary\\s+University\\s+London\\b|\\bQueen\\s+Marys?\\s*,?\\s+University\\s+Of\\s+London\\b", "Queen Mary University Of London"),
+    c("\\bUniversity\\s+College\\s+London\\s+UCL\\b|\\bUCL\\s+University\\s+College\\s+London\\b|^UCL$", "University College London"),
+    c("\\bErasmus\\s*MC\\b|\\bErasmusM?C\\b|\\bErasmus\\s+Medical\\s+Cent(re|er)\\b|\\bErasmus\\s+University\\s+Medical\\s+Cent(re|er)\\b|\\bErasmus\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bErasmusMedical\\s+Cent(re|er)\\b", "Erasmus MC"),
+    c("\\bRadboud\\s*UMC\\b|\\bRadboudUMC\\b|\\bRadboud\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bRadboud\\s+University\\s+(Nijmegen\\s+)?Medical\\s+Cent(re|er)\\b|\\bUMCN?\\s+St\\s+Radboud\\b|\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+(Nijmegen\\s+)?(St|Sint)\\.?\\s+Radboud\\b|\\bUniversity\\s+Hospital\\s+Sint\\s+Radboud\\b", "Radboudumc"),
+    c("\\bLUMC\\b|\\bLeid[se]n?\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bLeiden\\s+Univer(si|is|sti)ty\\s+Medical\\s+Cent(re|er)\\b|\\bLeiden\\s+University\\s+Medical\\s+Cent(re|er)\\b|\\bAcademisch\\s+Ziekenhuis\\s+Leiden\\b", "Leiden University Medical Center"),
+    c("\\bUZ\\s*Leuven\\b|\\bUniversitaire\\s+Ziekenhuis\\s+Leuven\\b|\\bUniver(sity|ity)\\s+Hospitals?\\s+(Of\\s+)?Leuven\\b", "UZ Leuven"),
+    c("\\bKU\\s*Leuven\\b|\\bK\\.U\\.\\s*Leuven\\b|\\bKatholieke\\s+Universiteit\\s+Leuven\\b", "KU Leuven"),
+    c("\\b(Academic|Academical|Academisch|Acedemic)\\s+(Medical|Medisch)\\s+Cent(re|er|rum)(\\s+Amsterdam|\\s+AMC)?\\b|\\bAMC\\s*,?\\s*Amsterdam\\b|\\bAMC\\s+Amsterdam\\b|\\bAMC\\b|\\bAMC\\s*[- ]\\s*UVA\\b|\\bAmsterdam\\s+AMC\\b", "Amsterdam UMC"),
+    c("\\bKarolinska\\s+Institutet\\b|\\bKarolinska\\s+Institute\\b", "Karolinska Institutet"),
+    c("\\bPierre\\s+Fabre\\s+M[ée]?dicament\\b|\\bPierre\\s+Fabre\\s+Medicament\\b", "Pierre Fabre Medicament"),
+    c("\\bALK\\s*[- ]?\\s*Abell[óo]?\\b|\\bALK\\s*[- ]?\\s*Abell\\b", "ALK-Abello"),
+    c("\\bLaboratoires\\s+Th[éea]a?\\b", "Laboratoires Thea"),
+    c("\\bInstitut\\s+De\\s+Recherches?\\s+Internationales?\\s+Servier(\\s+I\\.?R\\.?I\\.?S\\.?)?\\b|\\bInstitut\\s+De\\s+Recherche\\s+International\\s+Servier\\b", "Institut De Recherches Internationales Servier IRIS"),
+    c("\\bEutherapie\\s+Pour\\s+Le\\s+Compte\\s+Du\\s+Promoteur\\s+Les\\s+Laboratoires\\s+Servier\\b|\\bLaboratorios\\s+Servier\\b", "Servier"),
+    c("\\bHOVON\\b|\\bHovon\\s+Foundation\\b|\\b(Stichting\\s+)?Hemato\\s*[- ]\\s*Oncologie\\s+Voor\\s+Volwassenen(\\s+Nederland)?\\s*\\(?Hovon\\)?(\\s+Stichting)?\\b|\\bDutch\\s+Belgian\\s+Cooperative\\s+(Group\\s+)?For\\s+Hematology\\s+Oncology\\s*[- ]\\s*Hovon\\b", "HOVON"),
+    c("\\bRegion\\s+Sk[aå]?ne\\b", "Region Skane"),
+    c("\\bRegion\\s+Oe?stergoe?tland\\b", "Region Ostergotland"),
+    c("\\bSankt\\s+Antonius\\s+Hospital\\b|\\bSt\\.?\\s+Antonius\\s+Hospital\\b|\\bSint\\s+Antonius\\s+Ziekenhuis(\\s+Stichting)?\\b|\\bSt\\.?\\s+Antonius\\s+Ziekenhuis\\b", "St Antonius Hospital"),
+    c("\\bCliniques\\s+Universitaires\\s+Saint\\s*[- ]\\s*Luc\\b", "Cliniques Universitaires Saint-Luc"),
+    c("\\bGuys\\s+(And\\s+)?St\\.?\\s+Thomas'?\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bGuys\\s+And\\s+St\\.?\\s+Thomas\\s+Nhs\\s+Foundation\\s+Trust\\b", "Guys And St Thomas NHS Foundation Trust"),
+    c("\\bInstitut\\s+Paoli\\s*[- ]\\s*Calmettes\\b", "Institut Paoli-Calmettes"),
+    c("\\bIBSA\\s*,?\\s+Institut\\s+Biochimique\\b", "IBSA Institut Biochimique"),
+    c("\\bSchering\\s*[- ]\\s*Plough\\s+(Institute|Institution|Reserach\\s+Institute)\\b|\\bSchering\\s*[- ]\\s*Plough\\b", "Schering-Plough"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Saint\\s*[- ]\\s*Etienne\\b", "CHU Saint-Etienne"),
+    c("\\bFundaci[oó]?\\s+(Privada\\s+)?(De\\s+L)?Institut\\s+De\\s+Recerca.*Santa\\s+Creu.*Sant\\s+Pau\\b|\\bInstitut\\s+De\\s+Recerca.*Santa\\s+Creu.*Sant\\s+Pau\\b|\\bInstitut\\s+De\\s+Recerca\\s+H\\.?\\s*(De\\s+La\\s+Santa\\s+Creu\\s+I\\s+Sant\\s+Pau)?\\b|\\bInstitut\\s+De\\s+Recerca\\s+HSCSP\\b", "Institut De Recerca Sant Pau"),
+    c("\\bGE\\s*\\.?\\s+And\\s+Its\\s+Affiliates\\b", "GE And Its Affiliates"),
+    c("\\bLaboratorios\\s+Leti(\\s*,?\\s*\\.?\\s*Unipersonal|\\s*,?\\s*U)?\\b", "Laboratorios Leti"),
+    c("\\bZiekenhuis\\s+Oost\\s*[- ]\\s*Limburg\\b", "Ziekenhuis Oost-Limburg"),
+    c("\\bSt\\.?\\s+Georges\\s*,?\\s+University\\s+Of\\s+London\\b", "St Georges University Of London"),
+    c("\\bKing'?s?\\s+College\\s+London(\\s+IoP|\\s+Institute\\s+Of\\s+Pyschiatry)?\\b|\\bKingss\\s+College\\s+London\\b", "Kings College London"),
+    c("\\b(AOU|Azienda\\s+Ospedaliera\\s+Di\\s+Bologna)\\s*,?\\s*Policlinico\\s+S\\.?\\s*Orsola\\s*[- ]\\s*Malpighi\\b|\\bAOU\\s+DI\\s+BOLOGNA\\s+POLICLINICO\\s+S\\.?ORSOLA\\s*[- ]\\s*MALPIGHI\\b", "Azienda Ospedaliera Di Bologna Policlinico S. Orsola M. Malpighi"),
+    c("\\b(AOU|Azienda\\s+Ospedalier[ao](\\s+Universitaria)?)\\s+Policlinico\\s+Di\\s+Modena\\b", "Azienda Ospedaliera Policlinico Di Modena"),
+    c("\\b(Policlinico\\s+(Universitario\\s+)?(Agostino\\s+)?A?\\.?\\s*Gemelli|Fondazione\\s+Policlinico\\s+Universitario\\s+Agostino\\s+Gemelli|Universit\\s+Cattolica\\s+Del\\s+Sacro\\s+Cuore\\s*[- ]\\s*Policlinico\\s+A\\.?\\s*Gemelli)\\b", "Policlinico Universitario Agostino Gemelli"),
+    c("\\bUniversity\\s+Of\\s+Dundee\\s*/?\\s*(And\\s+)?Nhs\\s+Tayside\\b|\\bTayside\\s+Medical\\s+Centre\\s+On\\s+Behalf\\s+Of\\s+University\\s+Of\\s+Dundee\\s+Nhs\\s+Tayside\\b", "University Of Dundee NHS Tayside"),
+    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+Hamburg\\s*[- ]\\s*Eppendorf\\b|\\bUniversit[aä]tsklinikum\\s+Hamburg\\s*[- ]\\s*Eppendorf\\b", "University Medical Center Hamburg-Eppendorf"),
+    c("\\bAarhus\\s+University\\b(?!\\s+Hospital)|\\bAarhus\\s+Universitet\\b(?!s?hospital)|\\bUniversity\\s+Of\\s+Aarhus\\b|\\bInstitut\\s+For\\s+Klinisk\\s+Medicin\\s*,?\\s*Aarhus\\s+Universitet\\b|\\bInstitute\\s+Of\\s+Pharmacology\\s*,?\\s*Aarhus\\s+University\\b", "Aarhus University"),
+    c("\\bAarhus\\s+Universit(y|et)s?\\s*Hospital\\b|\\bAarhus\\s+University\\s+Hospiotal\\b|\\bAarhus\\s+Unversity\\s+Hospital\\b|\\bAarhus\\s+Universityhospital\\b|\\bAarhus\\s+Universitetshospital\\b|\\bUniversity\\s+Hospital\\s+Of\\s+Aarhus\\b|\\bAarhus\\s+Sygehus\\b|\\bDepartment.*Aarhus\\s+University\\s+Hospital\\b|\\bDept\\.? .*Aarhus\\s+University\\s*Hospital\\b|\\bKlinisk.*Aarhus\\s+Universitetshospital\\b", "Aarhus University Hospital"),
+    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+(Of\\s+)?Groningen\\b|\\bUniversity\\s+Medial\\s+Cent(re|er)\\s+Groningen\\b|\\bUniveristy\\s+Medical\\s+Cent(re|er)\\s+Groningen\\b|\\bUniversitair\\s+Medisch\\s+Centrum\\s+Groningen\\b|\\bUMCG\\b", "University Medical Center Groningen"),
+    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniveristy\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniverstiy\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniversitair\\s+Medisch\\s+Cen?trum\\s+Utrecht\\b|\\bUMC\\s*[- ]?\\s*Utrecht\\b|\\bUMCU\\b", "University Medical Center Utrecht"),
+    c("\\bAmsterdam\\s+UMC(\\s+Stichting)?\\b|\\bStichting\\s+Amsterdam\\s+UMC\\b|\\bAmsterdam\\s+University\\s+Medical\\s+Cent(re|er)s?\\b|\\bAmsterdam\\s+Univeristy\\s+Medical\\s+Cent(re|er)\\b|\\bAUMC\\b|\\bAmsterdam\\s+UMC\\s*,?\\s*(Location\\s+)?(AMC|VUMC)\\b|\\bAmsterdam\\s+UMC\\s*[-,]?\\s*(AMC|VUMC)\\b|\\bVU\\s+University\\s+Medical\\s+Cent(re|er)(\\s+Amsterdam|\\s+VUMC)?\\b|\\bVU\\s+Medical\\s+Cent(re|er)\\s*,?\\s*Amsterdam\\b|\\bVUMC\\b", "Amsterdam UMC"),
+    c("\\bMaastricht\\s+University\\s+Medical\\s+Cent(re|er)\\+?\\b|\\bMaastricht\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bMaastricht\\s+Universitary\\s+Medical\\s+Cent(re|er)\\b|\\bMaastricht\\s+UMC\\+?\\b|\\bMUMC\\+?\\b|\\bAcademic\\s+Hospital\\s+Maastricht(\\s+AZM)?\\b|\\bAcademisch\\s+Ziekenhuis\\s+Maastricht\\b|\\bUniversity\\s+Hospital\\s+Maastricht\\b", "Maastricht University Medical Center"),
+    c("\\bCambridge\\s+University\\s+Hospitals?\\s+Nhs\\s+(Foundation\\s+)?Trust.*\\b|\\bAddenbrookes\\s+(Hospital\\s+)?(Cambridge\\s+University\\s+Hospitals?\\s+)?Nhs\\s+(Foundation\\s+)?Trust\\b", "Cambridge University Hospitals NHS Foundation Trust"),
+    c("\\b(The\\s+)?Royal\\s+Marsden\\s+Nhsf?\\s+(Foundation\\s+)?Trust\\b", "The Royal Marsden NHS Foundation Trust"),
+    c("\\b(The\\s+)?Newcastle\\s+[- ]?\\s*Upon\\s+[- ]?\\s*Tyne\\s+(Hospitals\\s+)?Nhs\\s+(Foundation\\s+)?Trust\\b|\\bNewcastle\\s*[- ]\\s*Upon\\b", "Newcastle Upon Tyne Hospitals NHS Foundation Trust"),
+    c("\\bNorth\\s+Bristol\\s+Nhs(\\s+Trust)?(\\s+NBT)?\\b|\\bNorth\\s+Bristol\\s+Trust\\b|\\bNorth\\s+Bristol\\s+Nhs\\s+Trust\\s+(Innovation|Office)\\b", "North Bristol NHS Trust"),
+    c("\\bUniversity\\s+Hospitals?\\s+Bristol\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bUniversity\\s+Hospital\\s+Bristol\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bUniversity\\s+Hosptial\\s+Bristol\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bUniversity\\s+Hospitals\\s+Bristol\\b", "University Hospitals Bristol NHS Foundation Trust"),
+    c("\\bUnited\\s+Bristol\\s+(Healthcare\\s+)?(Nhs\\s+)?Trust\\b", "University Hospitals Bristol NHS Foundation Trust"),
+    c("\\bUniversity\\s+Hospitals?\\s+Bristol\\s+And\\s+Weston\\s+Nhs\\s+Foundation\\s+Trust\\b", "University Hospitals Bristol And Weston NHS Foundation Trust"),
+    c("\\bBarts\\s+(And\\s+)?The\\s+London\\s+Nhs\\s+Trust\\b|\\bBarts\\s+Health\\s+Nhs\\s+Trust\\b", "Barts Health NHS Trust"),
+    c("\\bLeeds\\s+Teaching\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bThe\\s+Leeds\\s+Teaching\\s+Hospitals\\s+Nhs\\s+Trust\\b", "Leeds Teaching Hospitals NHS Trust"),
+    c("\\bChristie\\s+Hospital\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bThe\\s+Christie\\s+Nhs\\s+Foundation\\s+Trust\\b", "The Christie NHS Foundation Trust"),
+    c("\\bNhs\\s+Greater\\s+Glasgow(\\s+And)?\\s+Clyde(\\s+Health\\s+Board)?\\b|\\bGreater\\s+Glasgow\\s+Nhs\\s+Health\\s+Board\\b|\\bNhs\\s+Greater\\s+Glasgow\\s+Health\\s+Board\\b", "NHS Greater Glasgow And Clyde"),
+    c("\\bUniversity\\s+Hospital\\s+Southampton\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bSouthampton\\s+University\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bUniversity\\s+Southampton\\s+Hospital\\s+Nhs\\s+Foundation\\s+Trust\\b", "University Hospital Southampton NHS Foundation Trust"),
+    c("\\bHull\\s+(And\\s+)?East\\s+Yorkshire\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bHull\\s+University\\s+Teaching\\s+Hospitals\\s+Nhs\\s+Trust\\b", "Hull And East Yorkshire Hospitals NHS Trust"),
+    c("\\bBelfast\\s+Health\\s+(And\\s+)?Social\\s+Care\\s+Trust\\b|\\bBelfast\\s+City\\s+Hospital\\s+Trust\\b", "Belfast Health And Social Care Trust"),
+    c("\\bRoyal\\s+Brompton\\s+(And\\s+)?Harefield\\s+Nhs\\s+(Foundation\\s+)?Trust\\b", "Royal Brompton And Harefield NHS Foundation Trust"),
+    c("\\bGreat\\s+Ormond\\s+Street\\s+Hospital\\s+For\\s+Children\\s+Nhs\\s+(Foundation\\s+)?Trust\\b", "Great Ormond Street Hospital For Children NHS Foundation Trust"),
+    c("\\bSheffield\\s+Teaching\\s+Hospitals?(\\s+Nhs\\s+Foundation\\s+Trust)?\\b", "Sheffield Teaching Hospitals NHS Foundation Trust"),
+    c("\\bUniversity\\s+Hospitals?\\s+(Of\\s+)?Leicester(\\s+Nhs\\s+Trust)?(\\s+Department)?\\b|\\bUniversity\\s+Hospital\\s+Leicester\\b", "University Hospitals Of Leicester NHS Trust"),
+    c("\\bUniversity\\s+Hospitals?\\s+Birmingham(\\s+Nhs\\s+Foundation\\s+Trust)?\\b|\\bUniversity\\s+Hospital\\s+Birmingham(\\s+Nhs\\s+Foundation\\s+Trust)?\\b|\\bUniversity\\s+Hospital\\s+Of\\s+Birmingham\\s+Foundation\\s+Trust\\b", "University Hospitals Birmingham NHS Foundation Trust"),
+    c("\\b(The\\s+)?University\\s+Of\\s+Birmingham\\b|\\bUniversity\\s+Of\\s+Birmingham\\s*,?\\s*Enterprise\\s+Services\\b", "University Of Birmingham"),
+    c("\\b(The\\s+)?University\\s+Of\\s+Oxford\\b|\\bUniversity\\s+Of\\s+Oxford\\s*,?\\s*(CTRG|NDM|Nuffield\\s+Department\\s+Of\\s+Medicine)\\b|\\bClinical\\s+Trials\\s+And\\s+(Research\\s+)?Governance(\\s+CTRG)?\\s*,?\\s*University\\s+Of\\s+Oxford\\b", "University Of Oxford"),
+    c("\\bUniversity\\s+Hospital\\s+(Ghent|Gent)\\b|\\bUZ\\s+Gent\\b", "University Hospital Ghent"),
+    c("\\bGhent\\s+University\\s+Hospital\\b|\\bUniversitair\\s+Ziekenhuis\\s+Gent\\b", "University Hospital Ghent"),
+    c("\\bGhent\\s+University\\b|\\bUniversity\\s+Ghent\\b|\\bUniversiteit\\s+Gent\\b", "Ghent University"),
+    c("\\bMedical\\s+University\\s+(Of\\s+)?Vienna\\b", "Medical University Of Vienna"),
+    c("\\bMedizinische\\s+Universit[aäe]?t?t?\\s+Wien\\b|\\bVienna\\s+Medical\\s+University\\b", "Medical University Of Vienna"),
+    c("\\bMedical\\s+University\\s+(Of\\s+)?Graz\\b|\\bMed\\s+Uni\\s+Graz\\b|\\bGraz\\s+Medical\\s+University\\b|\\bMedizinische\\s+Universit[aäe]?t?t?\\s+Graz\\b", "Medical University Of Graz"),
+    c("\\bMedical\\s+University\\s+(Of\\s+)?Innsbruck\\b|\\bInnsbruck\\s+Medical\\s+University\\b|\\bMedizinische\\s+Universit(aet|[aäe]?t?t?)\\s+Innsbruck\\b", "Medical University Of Innsbruck"),
+    c("\\bOspedale\\s+S\\.?\\s+Raffaele\\b|\\bOspedale\\s+San\\s+Raffaele\\b|\\bIrccs\\s+Ospedale\\s+San\\s+Raffaele\\b", "Ospedale San Raffaele"),
+    c("\\bOslo\\s+University\\s+Hospital(\\s+HF|\\s+OUS)?\\b", "Oslo University Hospital"),
+    c("\\bInstitut\\s+De\\s+Recherches\\s+Internationales\\s+Servier\\s+Iris\\b|\\bInstitut\\s+de\\s+Recherches\\s+Internationales\\s+Servier\\s+I[.]R[.]I[.]S\\b|\\bI[.]R[.]I[.]S[.]?\\s+Institut\\s+de\\s+Recherches\\s+Internationales\\s+Servier\\b", "Institut De Recherches Internationales Servier IRIS"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Nice\\b|\\bNice\\s+CHU\\b", "CHU De Nice"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Lille\\b|\\bLille\\s+CHU\\b", "CHU De Lille"),
+    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Toulouse\\b|\\bToulouse\\s+University\\s+Hospital\\b|\\bToulouse\\s+Hospital\\b|\\bUHToulouse\\b", "CHU De Toulouse"),
+    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*)\\s+(De\\s+|Of\\s+)?Lille\\b|\\bCHRU?\\s+(Of\\s+)?Lille\\b", "CHU De Lille"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Clermont\\s*[- ]\\s*Ferrand\\b|\\bCHU\\s+Clermont\\s+Ferrand\\b", "CHU De Clermont-Ferrand"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Limoges\\b|\\bUniversity\\s+Hospital\\s*,\\s*Limoges\\b|\\bLimoges\\s+Hospital\\b", "CHU De Limoges"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|Rennes\\s+University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Rennes\\b|\\bCHU\\s+Of\\s+Rennes\\b", "CHU De Rennes"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*)\\s+(De\\s+)?Dijon(\\s+Bourgogne)?\\b|\\bCHU\\s+Dijon\\s+Bourgogne\\b", "CHU De Dijon"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|Rouen\\s+University\\s+Hospital)\\s+(De\\s+)?Rouen\\b", "CHU De Rouen"),
+    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital|UH)\\s+(De\\s+|Of\\s+)?Montpellier\\b", "CHU De Montpellier"),
+    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Grenoble(\\s+Alpes)?\\b|\\bGrenoble\\s+(Alps\\s+)?University\\s+Hospital\\b|\\bUniversityHospitalGrenoble\\b", "CHU De Grenoble"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+|Of\\s+)?Nantes\\b|\\bNantes\\s+CHU\\b", "CHU De Nantes"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire|Nimes\\s+University\\s+Hospital)\\s*(De\\s+)?N[iî]?mes\\b|\\bCHU\\s+De\\s+Nmes\\b", "CHU De Nimes"),
+    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Bordeaux\\b|\\bBordeaux\\s+CHU\\b", "CHU De Bordeaux"),
+    c("\\bCharit[eé]?\\s*[-,]?\\s*(Universit[aä]tsmedizin|Universitaetsmedizin|University\\s+Medicine)?\\s*(Berlin)?\\b", "Charite Universitaetsmedizin Berlin"),
+    c("\\b(Universit[aä]tsklinikum|Universitaetsklinikum|Uniklinikum|University\\s+(Hospital|Clinic|Clinical\\s+Center|Clinics))\\s+(Of\\s+)?T[uü]?bingen\\b|\\bUniversity\\s+Of\\s+T[uü]?bingen\\b|\\bUniversit[aä]t\\s+T[uü]?bingen\\b", "Universitaetsklinikum Tuebingen"),
+    c("\\bOrganisation\\s+For\\s+(The\\s+)?(And\\s+)?Treatment\\s+Of\\s+Cancer(\\s+EORTC)?\\b|\\bEORTC\\s+Organisation\\s+For\\s+And\\s+Treatment\\s+Of\\s+Cancer\\b", "EORTC"),
+    c("\\b(SAKK\\s+)?Swiss\\s+For\\s+Clinical\\s+Cancer(\\s+SAKK|\\s+Reaserch\\s+SAKK)?\\b", "SAKK"),
+    c("\\bGroupe\\s+Francophone\\s+Des\\s+Mye?lodysplasies(\\s+GFM)?\\b|\\bGroupe\\s+Fran[cç]ais\\s+Des\\s+Mye?lodysplasies\\b", "Groupe Francophone Des Myelodysplasies"),
+    c("\\bMedica\\s+Scientia\\s+Innovation(\\s*[,.]?\\s*Medsir(\\s+Aro)?)?\\b", "Medica Scientia Innovation"),
+    c("\\bOspedale\\s+Pediatrico\\s+Bambino\\s+Gesu'?((\\s+Di\\s+Roma)?)\\b|\\bBambino\\s+Gesu\\s+Childrens\\s+Hospital\\b", "Ospedale Pediatrico Bambino Gesu"),
+    c("\\b(Universit[aä]tsklinikum|Universitaetsklinikum|University\\s+Hospital)\\s+Erlangen\\b", "Universitaetsklinikum Erlangen"),
+    c("^KU Leuven$", "UZ Leuven"),
+    c("^Leiden University$", "Leiden University Medical Center"),
+    c("^Aarhus University$", "Aarhus University Hospital"),
+    c("^Ghent University$", "University Hospital Ghent"),
+    c("^Servier$", "Institut De Recherches Internationales Servier IRIS"),
+    c("^Merck Serono$", "Merck"),
+    c("^Laboratoires Merck Sharp Dohme - Chibret$", "Merck"),
+    c("^Schering$", "Schering-Plough"),
+    c("^Karolinska University Hospital, Huddinge$", "Karolinska University Hospital"),
+    c("^Karolinska University Hospital Huddinge$", "Karolinska University Hospital"),
+    c("^Department Of Neurology, Odense University Hospital$", "Odense University Hospital"),
+    c("^Beaufour Ipsen$", "Ipsen"),
+    c("^Eortc$", "EORTC"),
+    c("^Maastricht University$", "Maastricht University Medical Center"),
+    c("^Shire-Movetis$", "Shire"),
+    c("^University Of Dundee NHS Tayside$", "University Of Dundee"),
+    c("^Istituto Nazionale Tumori$", "Fondazione Irccs Istituto Nazionale Dei Tumori"),
+    c("^The University Of Leeds$", "University Of Leeds"),
+    c("^University Of Leicester$", "University Hospitals Of Leicester NHS Trust"),
+    c("^Universiteit Maastricht$", "Maastricht University Medical Center"),
+    c("^Serono$", "Merck Serono"),
+    c("^Istituto Nazionale Tumori$", "Istituto Nazionale Per La Cura Tumori"),
+    c("^Helsinki University Hospital$", "Helsinki University Central Hospital"),
+    c("^Almirall Hermal$", "Almirall"),
+    c("^Irccs Istituto Nazionale Tumori Fondazione Pascale$", "Istituto Nazionale Per Lo Studio E La Cura Dei Tumori - Fondazione G. Pascale"),
+    c("^Universittsklinikum Erlangen$", "Universitaetsklinikum Erlangen"),
+    c("^Argenx Bvba$", "Argenx"),
+    c("^Fundacion Pethema$", "Fundacin Pethema"),
+    c("^Universitaetsklinikum Tuebingen$", "Universitaetsklinikum Erlangen"),
+    c("^Turku University Central Hospital$", "Turku University Hospital"),
+    c("^Royal Marsden Hospital$", "The Royal Marsden NHS Foundation Trust"),
+    c("^Laboratorios Almirall$", "Almirall"),
+    c("^Almirall Prodesfarma$", "Almirall"),
+    c("^FONDAZIONE I\\.R\\.C\\.C\\.S\\. POLICLINICO SAN MATTEO$", "Ospedale Policlinico S. Matteo"),
+    c("^Bispebjerg University Hospital$", "Bispebjerg Hospital"),
+    c("^Inserm-Anrs$", "Inserm"),
+    c("^University Of Antwerp$", "Antwerp University Hospital"),
+    c("^Tibotec Bvba$", "Tibotec"),
+    c("^Les Hopitaux Universitaires De Strasbourg$", "Hpitaux Universitaires De Strasbourg"),
+    c("^Department Of Dermatology D92, Bispebjerg Hospital$", "Bispebjerg Hospital"),
+    c("^Zealand University Hospital$", "Zealand University Hospital"),
+    c("^Umberto I$", "Azienda Universitaria Policlinico Umberto I Di Roma"),
+    c("^Fundaci De Lluita Contra La Sida$", "Fundaci Lluita Contra La Sida"),
+    c("^Steno Diabetes Center$", "Steno Diabetes Center Copenhagen"),
+    c("^Verona$", "Azienda Ospedaliera Universitaria Integrata Verona"),
+    c("^Consorci Mar Parc De Salut De Barcelona$", "Consorci Mar Parc De Salut De Barcelona Parc De Salut Mar"),
+    c("^The University Of Liverpool$", "University Of Liverpool"),
+    c("^A\\.O\\. UNIVERSITARIA INTEGRATA DI VERONA$", "Azienda Ospedaliera Universitaria Integrata Verona"),
+    c("^Universitt Leipzig$", "University Of Leipzig"),
+    c("^I\\.F\\.O\\. Istituti Fisioterapici Ospitalieri$", "Istituti Fisioterapici Ospitalieri"),
+    c("^Bracco Altana$", "Altana"),
+    c("^Orion Orion$", "Orion"),
+    c("^Grifols$", "Instituto Grifols"),
+    c("^Fondazione Irccs Ca Granda Ospedale Maggiore Policlinico Di Milano$", "Fondazione Irccs Ca Granda Ospedale Maggiore Policlinico"),
+    c("^Universittsklinikum Heidelberg$", "Universitaetsklinikum Heidelberg Aör"),
+    c("^The Institute of Cancer$", "The Institute of Caner"),
+    c("^Fondazione Irccs Istituto Neurologico Carlo Besta$", "Istituto Neurologico Carlo Besta"),
+    c("^Istituto Scientifico Romagnolo Per Lo Studio E La Cura Dei Tumori Irst \\. Irccs$", "Istituto Scientifico Romagnolo Per Lo Studio E La Cura Dei Tumori"),
+    c("^Chru Nancy$", "Chru De Nancy"),
+    c("^Technical University Dresden$", "Technische Universitt Dresden"),
+    c("^Klinikum Der Universitaet Muenchen Aör$", "Klinikum Der Universitt Mnchen"),
+    c("^Fresenius$", "Fresenius Kabi"),
+    c("^Technische Universitat Dresden$", "Technische Universitt Dresden"),
+    c("^Mech-Sense, Aalborg University Hospital$", "Aalborg University Hospital"),
+    c("^Azienda Ospedaliera Universitaria Senese$", "Azienda Ospedaliera Senese"),
+    c("^Bracco$", "Bracco Imaging"),
+    c("^Moorfields Eye Hospital Nhs Foundation Trust$", "Moorfields Eye Hospital"),
+    c("^Heidelberg$", "Universitaetsklinikum Heidelberg Aör"),
+    c("^Centre Hospitalier Regional Universitaire$", "Centre Hospitalier Regional De Marseille"),
+    c("^Gruppo Oncologico Italiano Di Ricerca$", "Gruppo Oncologico Italiano Di Ricerca Clinica Goirc"),
+    c("^Herlev Gentofte Hospital$", "Herlev Hospital"),
+    c("^Zambon Spa$", "Zambon"),
+    c("^Department Of Surgery, Herlev Hospital$", "Herlev Hospital"),
+    c("^Department Of , Herlev Gentofte Hospital$", "Herlev Hospital"),
+    c("^Chu De Caen$", "Chu Caen"),
+    c("^Fundaci Sant Joan De Du$", "Hospital Sant Joan De Du"),
+    c("^Fundacin Pblica Andaluza Progreso Y Salud$", "Fundacin Progreso Y Salud"),
+    c("^Manchester University Nhs Foundation Trust$", "Central Manchester University Hospitals Nhs Foundation Trust"),
+    c("^Association Gercor$", "Gercor"),
+    c("^Dompe' Farmaceutici$", "Domp Farmaceutici"),
+    c("^Bial - Portela C$", "Bial - Portela Ca"),
+    c("^Chu De Brest$", "Chru De Brest"),
+    c("^Universitaetsklinikum Essen Aör$", "Universittsklinikum Essen"),
+    c("^Herlev Gentofte Hospital$", "Gentofte Hospital"),
+    c("^Erasme Hospital$", "Hopital Erasme"),
+    c("^Herlev And Gentofte Hospital$", "Gentofte Hospital"),
+    c("^Odense Universitetshospital$", "Odense University Hospital"),
+    c("^Parc De Salut Mar$", "Consorci Mar Parc De Salut De Barcelona Parc De Salut Mar"),
+    c("^Hpital Erasme$", "Hopital Erasme"),
+    c("^Allergopharma$", "Allergopharma Joachim Ganzer"),
+    c("^Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Paz$", "Hospital Universitario La Paz"),
+    c("^Chu Amiens-Picardie$", "Chu Amiens"),
+    c("^Institut De Cancerologie De Louest$", "Institut De Cancerologie De L Ouest"),
+    c("^Instituto De Investigacion Sanitaria La Fe$", "Instituto De Investigacin Sanitaria La Fe"),
+    c("^Fdration Francophone De Cancrologie Digestive Ffcd$", "Fdration Francophone De Cancrologie Digestive"),
+    c("^Hellenic Cooperative Hecog$", "Hellenic Cooperative"),
+    c("^Nycomed Aps$", "Nycomed"),
+    c("^University Hospital Of Heidelberg$", "University Hospital Heidelberg"),
+    c("^The University Of Manchester$", "University Of Manchester"),
+    c("^Mitsubishi Tanabe$", "Mitsubishi Tanabe Mtpc"),
+    c("^Azienda Ospedaliera Arcispedale Santa Maria Nuova/Irccs Di Reggio Emilia$", "Azienda Ospedaliera Arcispedale S. Maria Nuova"),
+    c("^Chiron Behring$", "Chiron"),
+    c("^Martin-Luther-Universitaet Halle-Wittenberg$", "Martin-Luther-Universitt Halle-Wittenberg"),
+    c("^Hospital Foch$", "Hopital Foch"),
+    c("^Centre Francois Baclesse$", "Centre Franois Baclesse"),
+    c("^Istituto Nazionale Delle Malattie Infettive Lazzaro Spallanzani$", "Istituto Nazionale Per Le Malattie Infettive Lazzaro Spallanzani"),
+    c("^Universittsklinikum Schleswig-Holstein$", "Universitaetsklinikum Schleswig-Holstein Aör"),
+    c("^Friedrich-Schiller-Universitt Jena$", "Friedrich-Schiller"),
+    c("^Heidelberg University$", "University Of Heidelberg"),
+    c("^Azienda Ospedaliera S\\. Gerardo Di Monza$", "Azienda Ospedaliera San Gerardo Di Monza"),
+    c("^Fondazione Ricerca Traslazionale$", "Fondazione Ricerca Traslazionale Fort"),
+    c("^Fundacion Para La Formacion E Investigacion Sanitaria De La Region De Murcia$", "Fundacin Para La Formacin E Investigacin Sanitarias De La Regin De Murcia"),
+    c("^Rheinische Friedrich-Wilhelms-Universitt Bonn$", "Rheinische Friedrich-Wilhelms"),
+    c("^Ume University Hospital$", "Ume University"),
+    c("^Newron Spa$", "Newron"),
+    c("^Oryzon Genomics S\\. A$", "Oryzon Genomics"),
+    c("^Azienda Ospedaliera Ospedali Galliera$", "Ente Ospedaliero Ospedali Galliera"),
+    c("^Arcagy-Gineco$", "Arcagy"),
+    c("^Royal College Of Surgeons$", "Royal College Of Surgeons"),
+    c("^Pierre Fabre Dermatologie Represented By Institut De Recherche Pierre Fabre$", "Pierre Fabre Dermatologie"),
+    c("^Institut Fr Klinische Krebsforschung Ikf At Krankenhaus Nordwest$", "Krankenhaus Nordwest"),
+    c("^Air Liquide Sante$", "Air Liquide Sant"),
+    c("^Fundacin Pblica Andaluza Para La Gestin En Salud De Sevilla Fisevi$", "Fundacin Pblica Andaluza Para La Gestin De La Investigacin En Salud De Sevilla Fisevi"),
+    c("^Technische Universitt Mnchen, Fakultt Fr Medizin$", "Technische Universitt Mnchen"),
+    c("^Fondation A De Rothschild$", "Hopital Fondation Adolphe De Rothschild"),
+    c("^Protalix Biotherapeutics$", "Protalix"),
+    c("^Istituto Ortopedico Rizzoli$", "Istituti Ortopedici Rizzoli"),
+    c("^Grupo Espaol De Investigacin En Sarcomas Geis$", "Grupo Espaol De Investigacin En Sarcomas"),
+    c("^Professor Jrgen Berg Dahl$", "Professor Jrgen B. Dahl"),
+    c("^Ascendis$", "Ascendis Growth Disorders"),
+    c("^Centre Hospitalier Intercommunal De Crteil$", "Centre Hospitalier Intercommunal Creteil"),
+    c("^Institut Catal Doncologia Ico$", "Institut Catal Doncologia"),
+    c("^Horizon Usa$", "Horizon"),
+    c("^Ascendis Endocrinology$", "Ascendis")
+  )
+  apply_sponsor_aliases <- function(vals) {
+    for (alias in sponsor_aliases) {
+      vals <- ifelse(!is.na(vals) & str_detect(vals, regex(alias[[1]], ignore_case = TRUE)), alias[[2]], vals)
+    }
+    vals
+  }
+  x <- apply_sponsor_aliases(x)
 
   # ── Step 1: prefix-brand extraction ───────────────────────────────────────
   # For known pharma brands: if the string STARTS WITH the brand name
@@ -819,6 +1081,7 @@ normalize_sponsor_name <- function(x) {
   x <- str_replace_all(x, "(^[,\\.\\-/\\s]+|[,\\.\\-/\\s]+$)", "")
   x <- str_replace_all(x, "\\s{2,}", " ")
   x <- str_trim(x)
+  x <- apply_sponsor_aliases(x)
 
   x[x %in% c("Na", "NA", "")] <- NA_character_
   x
@@ -833,8 +1096,9 @@ deep_flatten_col <- function(x) {
       u <- unlist(el, recursive = TRUE)
       u <- as.character(u)
       u <- u[!is.na(u) & u != "" & u != "NULL" & u != "NA"]
-      # Remove numeric-only tokens (IDs, timestamps from CTIS)
-      u <- u[!grepl("^[0-9.]+$", u)]
+      # Remove numeric-only IDs/timestamps from CTIS, but keep MedDRA SOC codes
+      # so clean_organ_class() can resolve them via ctis_soc_lookup.
+      u <- u[!grepl("^[0-9.]+$", u) | u %in% names(ctis_soc_lookup)]
       u <- u[!grepl("\\d{4}-\\d{2}-\\d{2}T", u)]
       u <- u[nchar(u) > 1]
       u
@@ -901,6 +1165,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   CTIS_fields <- c(
     "authorizedApplication.applicationInfo.ctNumber",
+    "authorizedApplication.eudraCt.eudraCtCode",
     "authorizedApplication.authorizedPartI.products.productName",
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.termName",
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.organClass",
@@ -1021,9 +1286,10 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "a7_trial_is_part_of_a_paediatric_investigation_plan","x5_trial_status",
     "x6_date_on_which_this_record_was_first_entered_in_the_eudract_database",
     "n_date_of_competent_authority_decision","trialInformation.recruitmentStartDate",
-    "p_end_of_trial_status",
-    "authorizedApplication.applicationInfo.ctNumber",
-    "authorizedApplication.authorizedPartI.products.productName",
+	    "p_end_of_trial_status",
+	    "authorizedApplication.applicationInfo.ctNumber",
+	    "authorizedApplication.eudraCt.eudraCtCode",
+	    "authorizedApplication.authorizedPartI.products.productName",
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.termName",
     "authorizedApplication.authorizedPartI.trialDetails.trialInformation.medicalCondition.meddraConditionTerms.organClass",
     "authorizedApplication.memberStatesConcerned",
@@ -1059,16 +1325,28 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     `authorizedApplication.memberStatesConcerned` =
       clean_member_state(`authorizedApplication.memberStatesConcerned`))
   
-  # Coalesce CTIS title: prefer fullTitle, fall back to publicTitle
-  result <- result %>% mutate(
-    `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle` = coalesce(
+	  # Coalesce CTIS title: prefer fullTitle, fall back to publicTitle
+	  result <- result %>% mutate(
+	    `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle` = coalesce(
       `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.fullTitle`,
       `authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle`
-    )
-  ) %>% select(-`authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle`)
+	    )
+	  ) %>% select(-`authorizedApplication.authorizedPartI.trialDetails.clinicalTrialIdentifiers.publicTitle`)
 
-  # Unite
-  result <- result %>%
+	  clean_identifier_list <- function(x) {
+	    if (is.na(x) || !nzchar(trimws(x))) return(NA_character_)
+	    parts <- unique(str_squish(strsplit(x, " / ", fixed = TRUE)[[1]]))
+	    parts <- parts[nzchar(parts)]
+	    if (!length(parts)) NA_character_ else paste(parts, collapse = " / ")
+	  }
+
+	  result <- result %>%
+	    mutate(transition_eudract_number =
+	             vapply(`authorizedApplication.eudraCt.eudraCtCode`,
+	                    clean_identifier_list, character(1)))
+
+	  # Unite
+	  result <- result %>%
     unite("CT_number", a2_eudract_number,
           `authorizedApplication.applicationInfo.ctNumber`,
           na.rm=TRUE, remove=TRUE) %>%
@@ -1115,9 +1393,11 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   result <- result %>% mutate(across(where(is.character), ~ na_if(str_trim(.x), "")))
   
   # ── Dedup ─────────────────────────────────────────────────────────────────
-  result <- result %>% mutate(trial_base_id = case_when(
-    register == "EUCTR" ~ str_replace(`_id`, "-[A-Z]{2,3}$", ""),
-    TRUE ~ `_id`))
+	  result <- result %>% mutate(trial_base_id = case_when(
+	    register == "EUCTR" ~ str_replace(`_id`, "-[A-Z]{2,3}$", ""),
+	    register == "CTIS" & !is.na(transition_eudract_number) ~
+	      str_trim(str_split_fixed(transition_eudract_number, " / ", 2)[, 1]),
+	    TRUE ~ `_id`))
 
   unique_ids <- dbFindIdsUniqueTrials(con = db)
   
@@ -1153,6 +1433,38 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_squish(tt)
       substr(tt, 1, 80)
     })
+  latest_ctis_rows <- function(df) {
+    df %>%
+      filter(register == "CTIS") %>%
+      mutate(
+        ctis_base = str_replace(`_id`, "-\\d+$", ""),
+        version = as.integer(str_extract(`_id`, "\\d+$"))
+      ) %>%
+      group_by(ctis_base) %>%
+      slice_max(version, n = 1, with_ties = FALSE) %>%
+      ungroup()
+  }
+
+  latest_ctis_ids <- function(ids, lookup = latest_ctis_rows(result)) {
+    tibble(`_id` = unique(ids)) %>%
+      left_join(
+        lookup %>%
+          transmute(`_id`, latest_id = `_id`,
+                    ctis_base = str_replace(`_id`, "-\\d+$", "")),
+        by = "_id"
+      ) %>%
+      mutate(
+        ctis_base = coalesce(ctis_base, str_replace(`_id`, "-\\d+$", "")),
+        latest_id = coalesce(
+          latest_id,
+          lookup$`_id`[match(ctis_base, lookup$ctis_base)],
+          `_id`
+        )
+      ) %>%
+      pull(latest_id) %>%
+      unique()
+  }
+
   # Identify EUCTR "transitioned" title_keys — used below to prefer CTIS records
   raw_status_cols_pre <- intersect(c("trial_status_raw", "p_end_of_trial_status"), names(result))
   trans_pat_pre <- regex("transitioned", ignore_case = TRUE)
@@ -1209,8 +1521,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   trans_pat <- regex("transitioned", ignore_case = TRUE)
   raw_status_cols <- intersect(c("trial_status_raw", "p_end_of_trial_status"), names(result))
   trans_euctr <- result %>%
-    filter(register == "EUCTR", `_id` %in% unique_ids,
-           !is.na(title_key), nchar(title_key) >= 20)
+    filter(register == "EUCTR", `_id` %in% unique_ids)
   if (length(raw_status_cols) > 0) {
     is_trans <- Reduce(`|`, lapply(raw_status_cols, function(col)
       str_detect(coalesce(as.character(trans_euctr[[col]]), ""), trans_pat)))
@@ -1221,7 +1532,14 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   if (nrow(trans_euctr) > 0) {
     ctis_matches <- result %>%
       filter(register == "CTIS", !is.na(title_key), nchar(title_key) >= 20,
-             title_key %in% trans_euctr$title_key)
+             title_key %in% trans_euctr$title_key) %>%
+      mutate(
+        ctis_base = str_replace(`_id`, "-\\d+$", ""),
+        version = as.integer(str_extract(`_id`, "\\d+$"))
+      ) %>%
+      group_by(ctis_base, title_key) %>%
+      slice_max(version, n = 1, with_ties = FALSE) %>%
+      ungroup()
     if (nrow(ctis_matches) > 0) {
       euctr_drop <- trans_euctr %>% filter(title_key %in% ctis_matches$title_key) %>% pull(`_id`)
       unique_ids <- unique(c(setdiff(unique_ids, euctr_drop), ctis_matches$`_id`))
@@ -1233,26 +1551,79 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     still_trans <- trans_euctr %>%
       filter(`_id` %in% unique_ids) %>%
       mutate(euctr_base = str_replace(`_id`, "-[A-Z]{2,3}$", ""))
-    if (nrow(still_trans) > 0) {
+	    if (nrow(still_trans) > 0) {
       ctis_id_matches <- result %>%
         filter(register == "CTIS") %>%
-        mutate(ctis_base = str_replace(`_id`, "-\\d{2}$", "")) %>%
-        filter(ctis_base %in% still_trans$euctr_base)
+        mutate(
+          ctis_base = str_replace(`_id`, "-\\d{2}$", ""),
+          version = as.integer(str_extract(`_id`, "\\d+$"))
+        ) %>%
+        filter(ctis_base %in% still_trans$euctr_base) %>%
+        group_by(ctis_base) %>%
+        slice_max(version, n = 1, with_ties = FALSE) %>%
+        ungroup()
       if (nrow(ctis_id_matches) > 0) {
         euctr_base_drop <- still_trans %>%
           filter(euctr_base %in% ctis_id_matches$ctis_base) %>%
           pull(`_id`)
         unique_ids <- unique(c(setdiff(unique_ids, euctr_base_drop), ctis_id_matches$`_id`))
-        message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via base ID",
-                        length(euctr_base_drop)))
-      }
-    }
-  }
+	        message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via base ID",
+	                        length(euctr_base_drop)))
+	      }
+	    }
+	    still_trans <- trans_euctr %>%
+	      filter(`_id` %in% unique_ids) %>%
+	      mutate(euctr_base = str_replace(`_id`, "-[A-Z]{2,3}$", ""))
+	    if (nrow(still_trans) > 0) {
+	      ctis_transition_matches <- result %>%
+	        filter(register == "CTIS", !is.na(transition_eudract_number)) %>%
+	        separate_rows(transition_eudract_number, sep = " / ") %>%
+	        mutate(
+	          transition_eudract_number = str_trim(transition_eudract_number),
+	          ctis_base = str_replace(`_id`, "-\\d{2}$", ""),
+	          version = as.integer(str_extract(`_id`, "\\d+$"))
+	        ) %>%
+	        filter(transition_eudract_number %in% still_trans$euctr_base) %>%
+	        group_by(ctis_base, transition_eudract_number) %>%
+	        slice_max(version, n = 1, with_ties = FALSE) %>%
+	        ungroup()
+	      if (nrow(ctis_transition_matches) > 0) {
+	        euctr_transition_drop <- still_trans %>%
+	          filter(euctr_base %in% ctis_transition_matches$transition_eudract_number) %>%
+	          pull(`_id`)
+	        unique_ids <- unique(c(setdiff(unique_ids, euctr_transition_drop),
+	                               ctis_transition_matches$`_id`))
+	        message(sprintf("Swapped %d EUCTR 'transitioned' record(s) for CTIS counterpart(s) via transition EudraCT number",
+	                        length(euctr_transition_drop)))
+	      }
+	    }
+	  }
 
-  result <- result %>% filter(`_id` %in% unique_ids)
+	  result <- result %>% filter(`_id` %in% unique_ids)
 
-  # ── Final cross-register dedup: prefer CTIS over EUCTR ────────────────────
-  # Pass 1: exact CT number match across registers → drop the EUCTR copy
+	  # ── Final cross-register dedup: prefer CTIS over EUCTR ────────────────────
+	  # Pass 0: CTIS transition applications carry the old EudraCT number in
+	  # authorizedApplication.eudraCt.eudraCtCode, while their CTIS IDs can be new
+	  # EU trial numbers (for example 2024-... rather than 2008-...).
+	  transition_dup_euctr <- result %>%
+	    filter(register == "CTIS", !is.na(transition_eudract_number)) %>%
+	    separate_rows(transition_eudract_number, sep = " / ") %>%
+	    mutate(transition_eudract_number = str_trim(transition_eudract_number)) %>%
+	    inner_join(
+	      result %>%
+	        filter(register == "EUCTR") %>%
+	        transmute(euctr_id = `_id`, euctr_base = str_replace(`_id`, "-[A-Z]{2,3}$", "")),
+	      by = c("transition_eudract_number" = "euctr_base")
+	    ) %>%
+	    pull(euctr_id) %>%
+	    unique()
+	  if (length(transition_dup_euctr) > 0) {
+	    result <- result %>% filter(!(`_id` %in% transition_dup_euctr))
+	    message(sprintf("Dropped %d EUCTR record(s) with CTIS transition EudraCT match",
+	                    length(transition_dup_euctr)))
+	  }
+
+	  # Pass 1: exact CT number match across registers → drop the EUCTR copy
   ct_dup_euctr <- result %>%
     mutate(base_ct = str_replace(CT_number, "-[A-Z]{2,3}$", "")) %>%
     group_by(base_ct) %>%
@@ -1264,9 +1635,12 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     message(sprintf("Dropped %d EUCTR record(s) with duplicate CT number in CTIS", length(ct_dup_euctr)))
   }
 
-  # Pass 2: title_key match across registers → drop the EUCTR copy
+  # Pass 2: title_key match across registers → drop the EUCTR copy only for
+  # records explicitly flagged as transitioned. Generic trial titles are common
+  # enough that title-only deduplication is otherwise too aggressive.
   title_dup_euctr <- result %>%
     filter(!is.na(title_key), nchar(title_key) >= 20) %>%
+    filter(title_key %in% trans_tks) %>%
     group_by(title_key) %>%
     filter(n_distinct(register) > 1) %>%
     filter(register == "EUCTR") %>%
@@ -1278,21 +1652,19 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   message(sprintf("Unique trials after cross-register dedup: %d", nrow(result)))
 
-  # ── Relabel migrated CTIS trials as EUCTR ─────────────────────────────────
-  # CTIS launched January 2023. Any CTIS record with a pre-2023 submission
-  # date is a trial originally registered in EudraCT and subsequently migrated
-  # to CTIS. These are real unique trials (their EUCTR copies were already
-  # removed by dedup), but labelling them CTIS creates misleading pre-2023 bars.
-  # Relabel register → "EUCTR" so the submission year chart remains coherent.
-  sub_yr_tmp <- as.integer(format(
-    suppressWarnings(as.Date(lubridate::parse_date_time(
-      result$submission_date, orders = c("ymd","ym","y","ymd HMS")))), "%Y"))
-  n_migrated <- sum(result$register == "CTIS" & !is.na(sub_yr_tmp) & sub_yr_tmp < 2023)
+  # ── Analysis register label for migrated CTIS trials ──────────────────────
+  # CTIS records with a transition EudraCT number were originally registered in
+  # EudraCT and subsequently migrated to CTIS. Use transition_eudract_number as
+  # the definitive signal rather than submission date (CTIS stores its own
+  # authorization date, not the original EudraCT registration date).
+  n_migrated <- sum(result$register == "CTIS" & !is.na(result$transition_eudract_number))
   result <- result %>%
-    mutate(register = if_else(
-      register == "CTIS" & !is.na(sub_yr_tmp) & sub_yr_tmp < 2023,
-      "EUCTR", register))
-  message(sprintf("Relabelled %d pre-2023 CTIS → EUCTR (migrated trials)", n_migrated))
+    mutate(
+      analysis_register = if_else(
+        register == "CTIS" & !is.na(transition_eudract_number),
+        "EUCTR", register)
+    )
+  message(sprintf("Labelled %d CTIS record(s) with EudraCT transition number as EUCTR-era", n_migrated))
   
   result <- result %>%
     left_join(clu, by="trial_base_id") %>%
@@ -1315,10 +1687,18 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     if (!length(parts)) NA_character_ else paste(parts, collapse = " / ")
   }
 
-  result <- result %>%
-    mutate(MEDDRA_term        = vapply(MEDDRA_term, clean_meddra_term, character(1)),
-           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)),
-           DIMP_product_name  = vapply(DIMP_product_name, dedup_slash, character(1)))
+	  result <- result %>%
+	    mutate(MEDDRA_term        = vapply(MEDDRA_term, clean_meddra_term, character(1)),
+	           MEDDRA_organ_class = vapply(MEDDRA_organ_class, clean_organ_class, character(1)),
+	           DIMP_product_name  = vapply(DIMP_product_name, dedup_slash, character(1)),
+	           CT_number          = vapply(CT_number, clean_identifier_list, character(1)),
+	           transition_eudract_number =
+	             vapply(transition_eudract_number, clean_identifier_list, character(1)),
+	           trial_identifiers  = if_else(
+	             register == "CTIS" & !is.na(transition_eudract_number),
+	             paste0(CT_number, " / EudraCT ", transition_eudract_number),
+	             CT_number),
+	           canonical_trial_id = trial_base_id)
 
   write_norm_log(raw_meddra_for_log, result$MEDDRA_term, result$register, "meddra_term", dirname(db_path))
   write_norm_log(raw_organ_for_log,  result$MEDDRA_organ_class, result$register, "organ_class", dirname(db_path))
@@ -1411,6 +1791,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     submission_date_parsed = suppressWarnings(
       as.Date(parse_date_time(submission_date, orders = c("ymd","ym","y","ymd HMS")))),
     year = year(submission_date_parsed),
+    # For migrated CTIS trials, use the year encoded in the EudraCT number
+    # (format YYYY-NNNNNN-NN) as the original registration year.
+    analysis_year = if_else(
+      register == "CTIS" & !is.na(transition_eudract_number),
+      suppressWarnings(as.integer(substr(transition_eudract_number, 1, 4))),
+      year
+    ),
     has_PIP = case_when(
       str_detect(tolower(PIP_status), "yes|true") ~ "Yes",
       str_detect(tolower(PIP_status), "no|false") ~ "No",
@@ -1605,13 +1992,17 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
-  file.exists(cp) && (!file.exists(dp) || file.mtime(cp) > file.mtime(dp))
+  if (!file.exists(cp) || (file.exists(dp) && file.mtime(cp) <= file.mtime(dp))) return(FALSE)
+  d <- tryCatch(readRDS(cp), error = function(e) NULL)
+  required_cols <- c("transition_eudract_number", "trial_identifiers",
+                     "canonical_trial_id", "analysis_register", "analysis_year")
+  !is.null(d) && all(required_cols %in% names(d))
 }
 
 load_trial_data <- function(force_rebuild = FALSE) {
   if (!force_rebuild && cache_is_valid()) {
-    message("Loading cache..."); t0 <- Sys.time()
-    d <- readRDS(CACHE_PATH)
+	    message("Loading cache..."); t0 <- Sys.time()
+	    d <- readRDS(CACHE_PATH)
     message(sprintf("Cached: %s trials in %.1fs",
                     format(nrow(d), big.mark=","),
                     as.numeric(Sys.time()-t0, units="secs")))
@@ -1810,9 +2201,10 @@ ui <- tagList(
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analysis",icon=icon("chart-bar"),startExpanded=FALSE,
-                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope")),
-                                                   menuSubItem("Geography & PIP",tabName="analytics_geo",icon=icon("globe")),
-                                                   menuSubItem("Sponsors",tabName="analytics_sponsors",icon=icon("building")),
+	                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope")),
+	                                                   menuSubItem("Geography & PIP",tabName="analytics_geo",icon=icon("globe")),
+	                                                   menuSubItem("Register Migration",tabName="migration",icon=icon("route")),
+	                                                   menuSubItem("Sponsors",tabName="analytics_sponsors",icon=icon("building")),
                                                    menuSubItem("Phase Analytics",tabName="phase",icon=icon("flask")),
                                                    menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt")),
                                                    menuSubItem("Country Comparison",tabName="country_compare",icon=icon("globe")),
@@ -2051,11 +2443,15 @@ ui <- tagList(
                                       tags$div(class="qs-icon", icon("stethoscope")),
                                       tags$strong("Therapeutic Areas"),
                                       tags$p("Top MedDRA organ classes and conditions")),
-                                    tags$div(class="qs-card", `data-tab`="analytics_geo",
-                                      tags$div(class="qs-icon", icon("globe")),
-                                      tags$strong("Geography & PIP"),
-                                      tags$p("Trial distribution by country and PIP status")),
-                                    tags$div(class="qs-card", `data-tab`="analytics_sponsors",
+	                                    tags$div(class="qs-card", `data-tab`="analytics_geo",
+	                                      tags$div(class="qs-icon", icon("globe")),
+	                                      tags$strong("Geography & PIP"),
+	                                      tags$p("Trial distribution by country and PIP status")),
+	                                    tags$div(class="qs-card", `data-tab`="migration",
+	                                      tags$div(class="qs-icon", icon("route")),
+	                                      tags$strong("Register Migration"),
+	                                      tags$p("Track EUCTR-era records now sourced from CTIS")),
+	                                    tags$div(class="qs-card", `data-tab`="analytics_sponsors",
                                       tags$div(class="qs-icon", icon("building")),
                                       tags$strong("Sponsors"),
                                       tags$p("Top sponsors and time-to-decision analytics")),
@@ -2077,10 +2473,10 @@ ui <- tagList(
                                       tags$p("Track result reporting")),
                                   )
                                 )),
-                                uiOutput("overview_footer"),
-                                fluidRow(
-                                  box(title="5 Most Recently Authorized Trials", status="warning",
-                                      solidHeader=TRUE, width=12,
+		                                uiOutput("overview_footer"),
+		                                fluidRow(
+	                                  box(title="5 Most Recently Authorized Trials", status="warning",
+	                                      solidHeader=TRUE, width=12,
                                       withSpinner(DT::dataTableOutput("recent_trials_table", height="auto"), type=6))),
                         ),
                         tabItem(tabName="chartbuilder",
@@ -2159,19 +2555,33 @@ ui <- tagList(
                                       sliderInput("top_n_term","Top N:",min=5,max=30,value=15),
                                       withSpinner(plotlyOutput("plot_term",height="420px"),type=6)))
                         ),
-                        tabItem(tabName="analytics_geo",
-                                fluidRow(box(title="Trials by Country",status="primary",solidHeader=TRUE,width=12,height=460,
-                                             withSpinner(plotlyOutput("plot_country",height="400px"),type=6))),
+	                        tabItem(tabName="analytics_geo",
+	                                fluidRow(box(title="Trials by Country",status="primary",solidHeader=TRUE,width=12,height=460,
+	                                             withSpinner(plotlyOutput("plot_country",height="400px"),type=6))),
                                 fluidRow(
                                   box(title="PIP Status",status="info",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_pip",height="360px"),type=6)),
                                   box(title="Start-Date Timeline (quarterly)",status="primary",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_timeline_q",height="360px"),type=6))),
                                 fluidRow(
-                                  box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
-                                      withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6)))
-                        ),
-                        tabItem(tabName="analytics_sponsors",
+	                                  box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=12,height=420,
+	                                      withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6)))
+	                        ),
+	                        tabItem(tabName="migration",
+	                                fluidRow(
+	                                  box(title="EUCTR to CTIS Migration Signal", status="primary",
+	                                      solidHeader=TRUE, width=12, height=420,
+	                                      p(em("CTIS records carrying a transition EudraCT number are shown at their original EudraCT registration year. Trials without a transition number are native CTIS-era registrations."),
+	                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+	                                      withSpinner(plotlyOutput("plot_migration_signal", height="340px"), type=6))),
+	                                fluidRow(
+	                                  box(title="Migration Timeline", status="primary",
+	                                      solidHeader=TRUE, width=12, height=380,
+	                                      p(em("CTIS authorization date of migrated trials — bars show new migrations per month; line shows cumulative total."),
+	                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+	                                      withSpinner(plotlyOutput("plot_migration_timeline", height="290px"), type=6)))
+	                        ),
+	                        tabItem(tabName="analytics_sponsors",
                                 fluidRow(
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
@@ -2183,7 +2593,7 @@ ui <- tagList(
                                 fluidRow(
                                   box(title="Days to Decision by Sponsor Type",status="warning",solidHeader=TRUE,width=6,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time_sponsor",height="400px"),type=6)),
-                                  box(title="Decision Date Spread Within CTIS Multinational Trials (days between first and last MS decision)",status="info",solidHeader=TRUE,width=6,
+                                  box(title="Days Between First and Last Member State Decision in CTIS Multinational Trials",status="info",solidHeader=TRUE,width=6,
                                       withSpinner(plotlyOutput("plot_ctis_date_spread",height="400px"),type=6)))
                         ),
                         tabItem(tabName="phase",
@@ -2304,16 +2714,20 @@ ui <- tagList(
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
-                                        tags$li(tags$b("v0.10.3 (2026-05-04):"),
-                                          tags$ul(
-                                            tags$li("The persistent sidebar Compare Paediatric vs Adult button now starts the PDF download directly."),
-                                            tags$li("Both sidebar comparison-report buttons share the same download handler, so fixes and filters stay consistent.")
-                                          ))
+	                                        tags$li(tags$b("v0.10.4 (2026-05-05):"),
+		                                          tags$ul(
+		                                            tags$li("CTIS transition trials now deduplicate against EUCTR using the embedded transition EudraCT number."),
+		                                            tags$li("Transitioned CTIS records keep the old EudraCT number as a searchable alias, so trials remain findable by either identifier."),
+		                                            tags$li("A new Register Migration analysis tab highlights EUCTR-era records now sourced from CTIS."),
+		                                            tags$li("Title-only deduplication is now restricted to explicitly transitioned records, and CTIS fallback swaps keep the latest amendment version."),
+		                                            tags$li("CTIS MedDRA organ-class charts now resolve numeric EMA SOC codes instead of dropping them during flattening."),
+		                                            tags$li("Sponsor curation tooling now supports resumable review, CSV approval, self-service alias application, cache/log regeneration, and baseline updates.")
+		                                          ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-                                      p(em(paste0("v0.10.3 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+	                                      p(em(paste0("v0.10.4 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
@@ -2518,9 +2932,10 @@ server <- function(input, output, session) {
     if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
-      df<-df%>%filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
-                        str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat)|
-                        str_detect(coalesce(sponsor_name,""),pat))}
+	      df<-df%>%filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
+	                        str_detect(coalesce(trial_identifiers, CT_number),pat)|
+	                        str_detect(MEDDRA_term,pat)|
+	                        str_detect(coalesce(sponsor_name,""),pat))}
     df
   })
 
@@ -2928,10 +3343,13 @@ server <- function(input, output, session) {
       tags$dl(
         tags$dt("Full Title"),
         tags$dd(style = "margin-bottom:10px;", coalesce(row$Full_title, "—")),
-        tags$dt("CT Number"),
-        tags$dd(style = "margin-bottom:10px;",
-                tags$a(ct_display, href = link, target = "_blank")),
-        fluidRow(
+	        tags$dt("CT Number"),
+	        tags$dd(style = "margin-bottom:10px;",
+	                tags$a(ct_display, href = link, target = "_blank")),
+	        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
+	          tagList(tags$dt("Transition EudraCT Number"),
+	                  tags$dd(style = "margin-bottom:10px;", row$transition_eudract_number)),
+	        fluidRow(
           column(6,
             tags$dt("Register"),      tags$dd(coalesce(reg, "—")),
             tags$dt("Status"),        tags$dd(coalesce(row$status_raw, "—")),
@@ -2971,14 +3389,102 @@ server <- function(input, output, session) {
       plt_layout(showlegend=TRUE,legend=list(orientation="v"))
   })
   
-  output$plot_yearly <- renderPlotly({
-    df<-filt()%>%filter(!is.na(year))%>%count(year,register)
+	  output$plot_yearly <- renderPlotly({
+	    df<-filt()%>%
+	      filter(!is.na(analysis_year))%>%
+	      mutate(register = coalesce(analysis_register, register)) %>%
+	      count(analysis_year, register)
     validate(need(nrow(df)>0,"No data."))
-    plot_ly(df,x=~year,y=~n,color=~register,colors=register_cols(),type="bar")%>%
-      plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
+    plot_ly(df,x=~analysis_year,y=~n,color=~register,colors=register_cols(),type="bar")%>%
+	      plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
+	  })
+
+	  output$plot_migration_signal <- renderPlotly({
+	    df <- filt() %>%
+	      filter(!is.na(analysis_year)) %>%
+	      mutate(
+	        source_type = case_when(
+	          register == "CTIS" & coalesce(analysis_register, register) == "EUCTR" ~
+	            "CTIS source, EUCTR-era migrated",
+	          register == "CTIS" ~ "CTIS source, native CTIS-era",
+	          register == "EUCTR" ~ "EUCTR source",
+	          TRUE ~ "Other"
+	        ),
+	        source_type = factor(source_type, levels = c(
+	          "EUCTR source",
+	          "CTIS source, EUCTR-era migrated",
+	          "CTIS source, native CTIS-era",
+	          "Other"
+	        ))
+	      ) %>%
+	      count(analysis_year, source_type, name = "n")
+	    validate(need(nrow(df) > 0, "No submission-year data for the current filters."))
+	    t <- tc()
+	    pal <- c(
+	      "EUCTR source" = t$r_euctr,
+	      "CTIS source, EUCTR-era migrated" = t$orange,
+	      "CTIS source, native CTIS-era" = t$r_ctis,
+	      "Other" = t$bg3
+	    )
+	    max_y <- max(rowsum(df$n, df$analysis_year), na.rm = TRUE)
+	    plot_ly(
+	      df, x = ~analysis_year, y = ~n, color = ~source_type, colors = pal,
+	      type = "bar",
+	      hovertemplate = paste(
+	        "%{fullData.name}",
+	        "<br>Submission year: %{x}",
+	        "<br>Trials: %{y}<extra></extra>"
+	      )
+	    ) %>%
+	      plt_layout(
+	        barmode = "stack",
+	        xaxis = list(title = "Submission Year", dtick = 2, tickformat = "d"),
+	        yaxis = list(title = "Trials"),
+	        legend = list(orientation = "h", y = -0.25),
+	        shapes = list(list(
+	          type = "line", x0 = 2023, x1 = 2023, y0 = 0, y1 = max_y,
+	          line = list(color = t$fg0, dash = "dot", width = 1)
+	        )),
+	        annotations = list(list(
+	          x = 2023, y = max_y, xref = "x", yref = "y",
+	          text = "CTIS launch", showarrow = FALSE,
+	          xanchor = "left", yanchor = "bottom",
+	          font = list(size = 11, color = t$chart_fg)
+	        ))
+	      )
+	  })
+
+  output$plot_migration_timeline <- renderPlotly({
+    df <- filt() %>%
+      filter(register == "CTIS", !is.na(transition_eudract_number), !is.na(decision_date)) %>%
+      mutate(month = floor_date(as.Date(decision_date), "month")) %>%
+      count(month, name = "n") %>%
+      arrange(month) %>%
+      mutate(cumulative = cumsum(n))
+    validate(need(nrow(df) > 0, "No migration timeline data for current filters."))
+    t <- tc()
+    plot_ly(df) %>%
+      add_bars(x = ~month, y = ~n, name = "New per month",
+               marker = list(color = t$orange),
+               hovertemplate = "%{x|%b %Y}: %{y} trials<extra></extra>") %>%
+      add_lines(x = ~month, y = ~cumulative, name = "Cumulative",
+                yaxis = "y2", line = list(color = t$r_ctis, width = 2),
+                hovertemplate = "%{x|%b %Y}: %{y} total<extra></extra>") %>%
+      plt_layout(
+        xaxis = list(title = "CTIS Authorization Month"),
+        yaxis = list(title = "New migrations / month"),
+        yaxis2 = list(
+          title = "Cumulative",
+          overlaying = "y", side = "right",
+          showgrid = FALSE,
+          tickfont = list(color = t$chart_fg),
+          titlefont = list(color = t$chart_fg)
+        ),
+        legend = list(orientation = "h", y = -0.25)
+      )
   })
-  
-  output$plot_register <- renderPlotly({
+
+	  output$plot_register <- renderPlotly({
     base <- filt() %>% filter(!is.na(status_raw))
     validate(need(nrow(base) > 0, "No data."))
     df2 <- base %>% count(register, status_raw)
@@ -2999,14 +3505,16 @@ server <- function(input, output, session) {
         register=="EUCTR"~paste0('<a href="https://www.clinicaltrialsregister.eu/ctr-search/trial/',CT_number,'/',str_extract(`_id`,"[A-Z]{2,3}$"),'" target="_blank">',CT_number,'</a>'),
         register=="CTIS" ~{ct1=str_trim(str_split_fixed(CT_number," / ",2)[,1]);paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/',ct1,'" target="_blank">',ct1,'</a>')},
         TRUE~CT_number))%>%
-      select(CT_number,register,Full_title,DIMP_product_name,MEDDRA_term,
-             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-             phase,sponsor_name,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
-      select(-CT_number)%>%
-      rename(Register=register,Title=Full_title,
-             Product=DIMP_product_name,Condition=MEDDRA_term,
-             `Organ Class`=MEDDRA_organ_class,Country=Member_state,
-             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
+	      select(CT_number,trial_identifiers,transition_eudract_number,register,
+	             Full_title,DIMP_product_name,MEDDRA_term,
+	             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
+	             phase,sponsor_name,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
+	      select(-CT_number)%>%
+	      rename(Identifiers=trial_identifiers, `Transition EudraCT`=transition_eudract_number,
+	             Register=register,Title=Full_title,
+	             Product=DIMP_product_name,Condition=MEDDRA_term,
+	             `Organ Class`=MEDDRA_organ_class,Country=Member_state,
+	             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
              Phase=phase,`Sponsor Name`=sponsor_name,`Sponsor Type`=sponsor_type,
              Submitted=submission_date_parsed,Started=start_date,
              `Decision Date`=decision_date)%>%
@@ -3047,10 +3555,13 @@ server <- function(input, output, session) {
       tags$dl(
         tags$dt("Full Title"),
         tags$dd(style = "margin-bottom:10px;", coalesce(row$Full_title, "—")),
-        tags$dt("CT Number"),
-        tags$dd(style = "margin-bottom:10px;",
-                tags$a(ct_display, href = link, target = "_blank")),
-        fluidRow(
+	        tags$dt("CT Number"),
+	        tags$dd(style = "margin-bottom:10px;",
+	                tags$a(ct_display, href = link, target = "_blank")),
+	        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
+	          tagList(tags$dt("Transition EudraCT Number"),
+	                  tags$dd(style = "margin-bottom:10px;", row$transition_eudract_number)),
+	        fluidRow(
           column(6,
             tags$dt("Register"),   tags$dd(coalesce(reg, "—")),
             tags$dt("Status"),     tags$dd(coalesce(row$status_raw, "—")),
@@ -3209,10 +3720,11 @@ server <- function(input, output, session) {
         df_comp <- df_comp %>% filter(sponsor_name%in%input$sponsor_filter)
       if(nzchar(input$text_search)){
         pat <- regex(input$text_search,ignore_case=TRUE)
-        df_comp <- df_comp %>%
-          filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
-                   str_detect(CT_number,pat)|str_detect(MEDDRA_term,pat)|
-                   str_detect(coalesce(sponsor_name,""),pat))}
+	        df_comp <- df_comp %>%
+	          filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
+	                   str_detect(coalesce(trial_identifiers, CT_number),pat)|
+	                   str_detect(MEDDRA_term,pat)|
+	                   str_detect(coalesce(sponsor_name,""),pat))}
 
       tmp_data <- tempfile(fileext = ".rds")
       saveRDS(df_comp, tmp_data)
@@ -3439,7 +3951,8 @@ server <- function(input, output, session) {
   output$plot_completion_cohort <- renderPlotly({
     df <- filt() %>%
       filter(!is.na(decision_date), !is.na(status)) %>%
-      mutate(auth_year = year(decision_date)) %>%
+      mutate(auth_year = year(decision_date),
+             register = coalesce(analysis_register, register)) %>%
       filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
       group_by(auth_year, register) %>%
       summarise(n_total = n(),
@@ -4315,9 +4828,10 @@ server <- function(input, output, session) {
       df <- df %>% filter(sponsor_name %in% input$sponsor_filter)
     if(nzchar(input$text_search)) {
       pat <- regex(input$text_search, ignore_case=TRUE)
-      df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
-                            str_detect(CT_number, pat) | str_detect(MEDDRA_term, pat) |
-                            str_detect(coalesce(sponsor_name,""), pat))
+	      df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
+	                            str_detect(coalesce(trial_identifiers, CT_number), pat) |
+	                            str_detect(MEDDRA_term, pat) |
+	                            str_detect(coalesce(sponsor_name,""), pat))
     }
     df %>%
       filter(!is.na(Member_state)) %>%
@@ -4993,10 +5507,11 @@ server <- function(input, output, session) {
       "eu_map", "map_table_ui", "map_trials_table",
       # Data Explorer
       "trials_table",
-      # Basic Analytics
-      "plot_organ", "plot_term", "plot_country",
-      "plot_pip", "plot_pip_year",
-      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
+	      # Basic Analytics
+	      "plot_organ", "plot_term", "plot_country",
+	      "plot_pip", "plot_pip_year",
+	      "plot_migration_signal", "plot_migration_timeline",
+	      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
       "plot_ctis_date_spread",
       "plot_top_sponsors_ui", "plot_top_sponsors", "sponsor_timeline_ui", "plot_sponsor_timeline",
       # Phase Analytics

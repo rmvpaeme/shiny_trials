@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.10.3** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.10.4** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -150,6 +150,36 @@ source("rebuild_cache.R")
 
 Processes the SQLite database into `trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
 
+### Sponsor alias review
+
+Sponsor-name cleanup in the app is deterministic code in `app.R`. The generated file `data/sponsor_alias_candidates.csv` and reviewed file `config/sponsor_aliases.csv` are **manual curation aids**: candidates are not applied to the app data or cache by themselves.
+
+See [sponsor_curation/README.md](sponsor_curation/README.md) for the full guide.
+
+To refresh the candidate review queue:
+
+```bash
+Rscript sponsor_curation/audit_sponsors.R
+```
+
+Review candidates manually; some high-scoring pairs are intentionally separate organisations. To approve rows, set `approved=TRUE` directly in `data/sponsor_alias_candidates.csv`, optionally adjust `canonical_suggestion` or `notes`, then run:
+
+```bash
+Rscript sponsor_curation/approve_sponsor_aliases.R
+```
+
+For a guided review, use the interactive reviewer instead:
+
+```bash
+Rscript sponsor_curation/review_sponsor_aliases.R
+```
+
+It shows one candidate at a time and lets you approve, skip, edit, or quit. The interactive reviewer saves approvals and skips immediately to `config/sponsor_review_decisions.csv`, so reopening it resumes at the next unreviewed candidate. Both approval scripts append approved rows to `config/sponsor_aliases.csv` and regenerate the candidate queue after applying the reviewed aliases, so accepted pairs disappear from later review rounds. The preprocessing audit also reports how many sponsor labels are new since `config/sponsor_curation_baseline.csv`. After review, apply the decisions to `app.R`, refresh the cache, regenerate candidates/logs, update the baseline, and render preprocessing with:
+
+```sh
+Rscript sponsor_curation/apply_sponsor_aliases.R
+```
+
 ### Run the app
 
 ```r
@@ -222,10 +252,14 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 ## Changelog
 
-### v0.10.3 — 2026-05-04
+### v0.10.4 — 2026-05-05
 
-- **Sidebar comparison report button**: the persistent Compare Paediatric vs Adult button now starts the PDF download directly, matching the working Tools-tab button.
-- **Shared report handler**: both comparison-report buttons use the same download handler, keeping filters, filenames, and report generation behaviour consistent.
+- **CTIS transition matching**: transitioned EUCTR trials are now matched to CTIS using the CTIS embedded transition EudraCT number, not only title or CTIS ID assumptions.
+- **Searchable aliases**: CTIS transition rows retain the old EudraCT number as a searchable alias so trials remain findable by either identifier.
+- **Register Migration tab**: a dedicated Analysis view now highlights EUCTR-era records that are sourced from CTIS after migration.
+- **Safer deduplication audit**: title-only duplicate drops are limited to explicitly transitioned records, CTIS swaps keep the latest amendment version, and the preprocessing report audits canonical trial IDs.
+- **CTIS MedDRA organ classes restored**: numeric EMA MedDRA SOC codes are preserved during CTIS flattening so the Top MedDRA Organ Classes chart works when filtering to CTIS.
+- **Sponsor curation workflow**: sponsor alias review tools now live in `sponsor_curation/`, with resumable interactive review, CSV batch approval, self-service alias application to `app.R`, cache/log/candidate regeneration, and baseline updates.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
@@ -239,13 +273,24 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 ├── app.R                        # Main Shiny application
 ├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
 ├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
+├── sponsor_curation/
+│   ├── README.md                        # Sponsor curation guide
+│   ├── audit_sponsors.R                 # Generates sponsor alias review candidates
+│   ├── approve_sponsor_aliases.R        # Promotes approved candidate rows into config
+│   ├── apply_sponsor_aliases.R          # Applies reviewed aliases to app/cache/baseline
+│   ├── review_sponsor_aliases.R         # Interactive sponsor alias reviewer
+│   └── sponsors.md                      # Sponsor normalisation handover notes
 ├── report.Rmd                   # PDF report template (rendered on demand)
 ├── preprocessing.Rmd            # Pipeline audit report source
 ├── trials_cache.rds             # Processed data cache (git-ignored)
+├── config/
+│   ├── sponsor_aliases.csv              # Manual sponsor alias review decisions
+│   └── sponsor_curation_baseline.csv    # Sponsor labels present at last manual curation
 ├── Dockerfile
 ├── docker-compose.yml
 ├── data/
 │   ├── trials.sqlite                    # Raw trial data from ctrdata (git-ignored)
+│   ├── sponsor_alias_candidates.csv     # Generated review queue; not applied automatically
 │   ├── sponsor_normalisation_log.csv
 │   ├── country_normalisation_log.csv
 │   ├── meddra_term_normalisation_log.csv

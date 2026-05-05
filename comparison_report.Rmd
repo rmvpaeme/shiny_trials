@@ -1,6 +1,6 @@
 ---
 title: "EU Paediatric Clinical Trials"
-subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.10.3"
+subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.10.4"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:

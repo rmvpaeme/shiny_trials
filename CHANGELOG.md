@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.10.4 — 2026-05-05
+
+- **CTIS transition EudraCT matching**: CTIS transition applications now extract `authorizedApplication.eudraCt.eudraCtCode`, the embedded legacy EudraCT number. Cross-register deduplication uses that field to replace EUCTR "Trial now transitioned" rows with the active CTIS record even when the CTIS EU trial number is a new `2024-...` identifier rather than the old EudraCT base.
+- **Searchable transitioned-trial aliases**: transitioned CTIS rows keep their old EudraCT number in `transition_eudract_number` and expose `trial_identifiers`, so users can still find the trial by the legacy EudraCT number after the CTIS row is kept as canonical.
+- **Preprocessing audit corrected**: the Deduplication Pipeline report now checks transition EudraCT number, CTIS base ID, and `title_key` fallbacks before labelling a transitioned EUCTR trial as unmatched. The previous "no CTIS match found" wording has been narrowed to "unmatched by current fallbacks."
+- **Safer deduplication ordering**: transitioned EUCTR rows can now use identifier fallbacks even when their title is short or missing, and title-key-only cross-register drops are limited to records explicitly flagged as transitioned to avoid false merges on generic trial-title prefixes.
+- **Latest CTIS amendment protection**: CTIS title/base fallback swaps now keep only the latest amendment version instead of reintroducing older CTIS versions after the first latest-version pass.
+- **Source provenance preserved**: CTIS rows with pre-2023 submission dates now keep `register == "CTIS"` and use `analysis_register == "EUCTR"` only for timeline grouping, so filters, links, and source-register counts remain truthful.
+- **Register Migration tab**: added a dedicated Analysis tab with a migration signal chart that separates EUCTR source records, CTIS-native records, and CTIS-source records analysed as EUCTR-era migrations over submission year.
+- **Canonical duplicate audit**: the preprocessing report now audits duplicate `canonical_trial_id` values rather than exact display `CT_number` strings, catching transition-alias duplicates that exact CT-number checks miss.
+- **Cache schema guard**: cached data now rebuilds automatically when the transition alias columns are absent, preventing old caches from masking the new deduplication behavior.
+- **CTIS MedDRA organ classes restored**: the CTIS flattener now preserves known numeric EMA MedDRA SOC codes instead of dropping them as generic numeric IDs, allowing `clean_organ_class()` to resolve CTIS organ classes and repopulate the Top MedDRA Organ Classes chart when the Source Register filter is set to CTIS.
+- **Migration detection corrected**: `analysis_register` now uses `transition_eudract_number` as the definitive migration signal instead of the CTIS submission date. CTIS stores its own authorization date (2023+) rather than the original EudraCT registration date, so the pre-2023 date heuristic only caught 402 of 3,955 migrated trials.
+- **`analysis_year` column**: migrated CTIS trials now carry an `analysis_year` derived from the year encoded in the EudraCT number format (`YYYY-NNNNNN-NN`), placing them in their original registration year in timeline charts instead of 2023–2025.
+- **Yearly submission chart corrected**: `plot_yearly` now groups by `analysis_year`, so migrated CTIS trials appear alongside original EUCTR registrations in the correct pre-2023 bars.
+- **Migration Completeness gauge**: new plotly indicator on the Register Migration tab showing the fraction of EudraCT-era trials (EUCTR source + CTIS-migrated) that have transitioned to CTIS; filter-aware.
+- **Migration Timeline chart**: new dual-axis chart on the Register Migration tab showing new migrations per CTIS authorization month (bars) and cumulative total (line).
+- **Sponsor curation workflow tooling**: sponsor alias review scripts were moved into `sponsor_curation/` with a dedicated guide. The workflow now supports interactive review, CSV batch approval, applying approved aliases back into `app.R`, refreshing sponsor names in `trials_cache.rds`, regenerating sponsor logs/candidates, and updating the manual-curation baseline without needing Codex.
+- **Resumable sponsor review**: `sponsor_curation/review_sponsor_aliases.R` now saves both approvals and skips to `config/sponsor_review_decisions.csv`, resumes after previously reviewed candidates, reports how many candidates remain, and avoids killing the R session when sourced from RStudio.
+
 ## v0.10.3 — 2026-05-04
 
 - **Persistent sidebar comparison report button**: replaced the custom sidebar shortcut that attempted to click the Tools-tab download link with a real Shiny `downloadButton`, so "Compare Paediatric vs Adult" works from the side panel even when the Tools tab is not active.
