@@ -1690,34 +1690,11 @@ df %>%
 
 ---
 
-# 13 · PIP, Waiver, Results, and Orphan Status {.tabset}
+# 13 · Substance Name Normalisation {.tabset}
 
-Three binary/categorical flags are derived from registry-specific fields.
+Raw INN and product-name fields often contain concentrations, formulation descriptors, salt suffixes, and multi-substance strings. `norm_pip_substance()` normalises them to clean tokens used by the **Active Substances** tab and the **EMA compound reference tables** (Compounds with Multiple EMA Decisions and Linked EMA Decisions for Selected Compound).
 
-| Column | EUCTR source | CTIS source | Categories |
-|---|---|---|---|
-| `has_PIP` | `a7_…_paediatric_investigation_plan` text | PIP record presence | Yes / No / Unknown |
-| `pip_decision_number` | `a8_…_paediatric_investigation_plan` cleaned to `P/…/YYYY` | EMA lookup match by decision number when available | EMA decision number / NA |
-| `pip_procedure_number` | EMA lookup match by decision number when available | `paediatricInvestigationPlan` cleaned to `EMEA-…-PIP…` | EMA PIP procedure number / NA |
-| `DIMP_inn_name` | `dimp.d38_…_d38_inn__proposed_inn`; fallback `dimp.d391_inn_generic_name` | NA | INN / generic name used for substance fallback |
-| `has_pip_waiver` | EMA PIP decisions lookup | EMA PIP decisions lookup | Yes / No / Unknown |
-| `has_pip_deferral` | EMA PIP decisions lookup | EMA PIP decisions lookup | Yes / No / Unknown |
-| `has_results` | `endPoints.endPoint.readyForValues` (non-NA) | `resultsFirstReceived` (= "true") | TRUE / FALSE |
-| `is_orphan` | `dimp.d25_…_orphan_drug_…` ("yes"/"no") | `orphanDrugDesigNumber` (non-empty) | Yes / No / Unknown |
-
-PIP waiver enrichment is offline and cache-based. `helper_scripts/update_pip_decisions.R` refreshes
-`config/pip_decisions.csv` from EMA's official PIP decisions JSON feed; the Shiny
-app then joins that CSV during cache rebuild. EMA `W` decision types are treated as
-full waivers. Generic `P` records remain `Unknown` for waiver/deferral detail because
-the bulk feed only states that partial waivers or deferrals may be present.
-
-### Substance-name normalisation
-
-Because most trials do not fill in the A.8 decision-number field, the pipeline falls back to
-matching trials to EMA PIP decisions via active substance name. EUCTR rows use the INN/proposed
-INN from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` when available and also tokenise `DIMP_product_name`;
-CTIS rows use product names. The same normalisation is applied to all trial-side tokens and
-EMA `active_substance` values:
+Normalisation steps:
 
 1. **Lowercase and squish** whitespace.
 2. **Strip concentrations** — patterns like `150 mg/mL`, `5%`, `10 mg` are removed.
@@ -1729,16 +1706,7 @@ EMA `active_substance` values:
    split; each component is matched independently.
 5. **Minimum token length 4 characters** — very short tokens are discarded.
 
-The resulting INN and product-name tokens are deduplicated per trial and looked up in a pre-built
-index of normalised EMA `active_substance` values. Tokens that match exactly one EMA record produce an unambiguous link
-(`pip_parse_confidence = "substance_name"`). Tokens that match multiple records are flagged as
-ambiguous (`pip_parse_confidence = "substance_name_ambiguous"`); ambiguous matches are always
-classified `"Unknown"` for waiver status — no waiver flag is propagated when it is unclear
-which of N decisions applies.
-
-This INN-assisted fallback closes many trade-name gaps where EUCTR product names are branded
-("Skyrizi", "Humira") but the EMA feed stores the active substance. Ambiguity is still expected
-for common substances with many historical PIP decisions.
+EUCTR rows use the INN/proposed INN from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` when available and also tokenise `DIMP_product_name`; CTIS rows use product names. Tokens are looked up against the normalised EMA `active_substance` values from `config/pip_decisions.csv` to identify substances with multiple EMA PIP decisions.
 
 ```{r substance-norm-summary}
 log_sub <- {
@@ -1933,6 +1901,17 @@ subplot(ggplotly(p1), ggplotly(p2), nrows = 1, margin = 0.05, shareY = TRUE) %>%
   layout(showlegend = TRUE)
 ```
 
+---
+
+# 14 · PIP Status, Results, and Orphan Status {.tabset}
+
+| Column | EUCTR source | CTIS source | Categories |
+|---|---|---|---|
+| `has_PIP` | `a7_…_paediatric_investigation_plan` text | PIP record presence | Yes / No / Unknown |
+| `DIMP_inn_name` | `dimp.d38_…_d38_inn__proposed_inn`; fallback `dimp.d391_inn_generic_name` | NA | INN / generic name |
+| `has_results` | `endPoints.endPoint.readyForValues` (non-NA) | `resultsFirstReceived` (= "true") | TRUE / FALSE |
+| `is_orphan` | `dimp.d25_…_orphan_drug_…` ("yes"/"no") | `orphanDrugDesigNumber` (non-empty) | Yes / No / Unknown |
+
 ## PIP Status
 
 ```{r pip-bar, fig.height=3.5}
@@ -1945,82 +1924,6 @@ df %>%
   labs(title = "PIP (Paediatric Investigation Plan) status by register",
        x = NULL, y = "Proportion") +
   theme_pre()
-```
-
-## PIP Waiver Enrichment
-
-```{r pip-waiver-bar, fig.height=3.5}
-if (all(c("pip_waiver_status", "has_pip_waiver") %in% names(df))) {
-  df %>%
-    count(register, pip_waiver_status) %>%
-    ggplot(aes(register, n, fill = pip_waiver_status)) +
-    geom_col(position = "fill") +
-    scale_y_continuous(labels = percent) +
-    scale_fill_manual(values = c(
-      `Full waiver` = RED,
-      `PIP with waiver` = ORANGE,
-      `No waiver indicated` = GREEN,
-      Unknown = YELLOW
-    )) +
-    labs(title = "EMA PIP waiver enrichment by register",
-         x = NULL, y = "Proportion", fill = "Waiver status") +
-    theme_pre()
-}
-```
-
-```{r pip-lookup-summary}
-if (all(c("pip_lookup_match", "pip_decision_number", "pip_procedure_number",
-          "pip_parse_confidence") %in% names(df))) {
-  id_matches  <- sum(!is.na(df$pip_lookup_match) &
-                     coalesce(df$pip_parse_confidence, "") %in%
-                       c("ema_bulk_table", "ema_per_page"), na.rm = TRUE)
-  sub_single  <- sum(coalesce(df$pip_parse_confidence, "") == "substance_name",  na.rm = TRUE)
-  sub_ambig   <- sum(coalesce(df$pip_parse_confidence, "") == "substance_name_ambiguous", na.rm = TRUE)
-
-  tibble(
-    metric = c(
-      "Rows with EUCTR A.8 decision number",
-      "Rows with CTIS PIP procedure number",
-      "Matched by identifier (decision or procedure number)",
-      "Matched by substance name — unambiguous (1 EMA record)",
-      "Matched by substance name — ambiguous (≥2 EMA records)",
-      "Total rows with any EMA PIP match"
-    ),
-    value = c(
-      sum(!is.na(df$pip_decision_number)),
-      sum(!is.na(df$pip_procedure_number)),
-      id_matches,
-      sub_single,
-      sub_ambig,
-      sum(!is.na(df$pip_lookup_match))
-    )
-  ) %>%
-    nk(cap = "PIP identifier and EMA lookup coverage")
-}
-```
-
-```{r pip-substance-ambiguity, fig.height=3.5}
-if ("pip_parse_confidence" %in% names(df)) {
-  df %>%
-    mutate(match_method = case_when(
-      pip_parse_confidence %in% c("ema_bulk_table","ema_per_page") ~ "Identifier match",
-      pip_parse_confidence == "substance_name"                     ~ "Substance name (unambiguous)",
-      pip_parse_confidence == "substance_name_ambiguous"           ~ "Substance name (ambiguous)",
-      TRUE                                                         ~ "No match"
-    )) %>%
-    count(register, match_method) %>%
-    ggplot(aes(register, n, fill = match_method)) +
-    geom_col(position = "dodge") +
-    scale_fill_manual(values = c(
-      `Identifier match`               = GREEN,
-      `Substance name (unambiguous)`   = "#5E81AC",
-      `Substance name (ambiguous)`     = YELLOW,
-      `No match`                       = GRAY
-    )) +
-    labs(title = "EMA PIP match method by register",
-         x = NULL, y = "Trials", fill = "Match method") +
-    theme_pre()
-}
 ```
 
 ## Results Posted

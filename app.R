@@ -16,6 +16,7 @@ suppressPackageStartupMessages({
   library(DT)
   library(plotly)
   library(leaflet)
+  library(stringdist)
 })
 
 
@@ -128,23 +129,6 @@ clean_organ_class <- function(x) {
   if (length(cleaned) == 0) NA_character_ else paste(cleaned, collapse = " / ")
 }
 
-clean_pip_decision_number <- function(x) {
-  x <- as.character(x)
-  out <- str_extract(x, regex("P/[0-9]{1,4}/[0-9]{4}", ignore_case = TRUE))
-  out <- if_else(is.na(out), NA_character_, toupper(out))
-  str_replace(out, "^P/0*([0-9]+)/", "P/\\1/")
-}
-
-clean_pip_procedure_number <- function(x) {
-  x <- as.character(x)
-  out <- str_extract(
-    x,
-    regex("(EMEA-[0-9]{6}-PIP[0-9]{2}-[0-9]{2}(?:-M[0-9]{2})?|EMA/PE/[0-9]{10})",
-          ignore_case = TRUE)
-  )
-  if_else(is.na(out), NA_character_, toupper(out))
-}
-
 # Normalise a raw substance string to lowercase tokens suitable for joining.
 # Strips concentrations, common salt/formulation suffixes, then splits on ; and /.
 # Returns a character vector (length 0 for empty input).
@@ -165,17 +149,58 @@ clean_active_substance_label <- function(x) {
   x <- str_remove_all(x, regex("\\b\\d+[,.]?\\d*\\s*(mg|mcg|micrograms?|microgram|µg|ug|g|ml|l|%|units?|i\\.?u\\.?)\\b",
                                ignore_case = TRUE))
   x <- str_remove(x, regex("\\s+\\b[A-Z][A-Z0-9&.-]{2,}\\b$", ignore_case = FALSE))
-  x <- str_remove(x, regex("\\s+\\b(accord|teva|viatris|aristo|normon|altan|efg|jenapharm|galen|sandoz|mylan|krka|zentiva|aurobindo|fresenius|hospira|stada|ratiopharm|cinfa|arrow|acis|pharma|allergan|allergan units?|aerosphere|kwikpen)\\b.*$",
+  x <- str_remove(x, regex("\\s+\\b(accord|teva|viatris|aristo|normon|altan|efg|jenapharm|galen|sandoz|mylan|krka|zentiva|aurobindo|fresenius|hospira|stada|ratiopharm|cinfa|arrow|acis|pharma|allergan|allergan units?|aerosphere|kwikpen|ebewe|medac|hexal|hikma|pliva|haupt|winthrop|nycomed|faulding|curatis|chemo|generics|generic|biochemie|pharmachemie|pharmos|lannacher|orion|apotex|torrent|sun|meda|almirall|dr\\.?reddy|amneal|actavis|teva generics|pfizer generics|rpc)\\b.*$",
                            ignore_case = TRUE))
   x <- str_remove_all(x, regex("\\b(etexilate|pentahydrate|hydrochloride|hydrobromide|sulfate|sulphate|phosphate|acetate|maleate|fumarate|tartrate|citrate|mesylate|tosylate|besylate|monohydrate|dihydrate|trihydrate|sesquihydrate|sodium|potassium|calcium|magnesium|zinc|aluminum|aluminium|monosodium|disodium)\\b",
                                ignore_case = TRUE))
-  x <- str_remove(x, regex("[,;:-]?\\s*\\b(concentrate|solution|suspension|powder|film-coated|hard capsules?|capsules?|tablets?|injection|infusion|pre-filled syringes?|vials?|oral|intravenous|subcutaneous|injectable|inyectable|injektionslösung|injektionsloesung|iniettabile|solución|solucion|poudre|polvere|polvo|solvant|solvente|comprimidos|recubiertos|pel[ií]cula|jeringas?|precargadas|zachte|pressurised inhalation)\\b.*$",
+  x <- str_remove(x, regex("[,;:-]?\\s*\\b(concentrate|solution|suspension|powder|film-coated|hard capsules?|capsules?|tablets?|injection|infusion|pre-filled syringes?|vials?|oral|intravenous|subcutaneous|injectable|inyectable|injektionslösung|injektionsloesung|iniettabile|solución|solucion|poudre|polvere|polvo|solvant|solvente|comprimidos|recubiertos|pel[ií]cula|jeringas?|precargadas|zachte|pressurised inhalation|gel|cream|ointment|patch|spray|drops|lotion|enema|suppository|syrup|emulsion|pellets|granules|aerosol|lozenge|pessary|implant|depot|foam|rinse|shampoo|collyre|unguent)\\b.*$",
                            ignore_case = TRUE))
+  # Strip trailing numeric abbreviations like "5-fu", "6-mp", "5fu" appended after full name
+  x <- str_remove(x, regex("\\s+\\d+-?[a-z]{1,4}$", ignore_case = TRUE))
   x <- str_remove(x, regex("\\s+\\d+[,.]?\\d*$", ignore_case = TRUE))
   x <- str_remove(x, regex("\\s+(and|\\+)$", ignore_case = TRUE))
   x <- str_remove_all(x, regex("\\b(of|w|w/v|v/v)\\b", ignore_case = TRUE))
   x <- str_remove_all(x, "[[:punct:]]+$")
   str_squish(str_to_sentence(str_to_lower(x)))
+}
+
+# Named vector brand_name_clean → substance_clean from EPAR index.
+# Only loaded if config/epar_brand_inn.csv exists; empty otherwise (graceful degradation).
+# Restricted to unambiguous entries (one substance per brand name).
+epar_exact_map <- local({
+  p <- file.path("config", "epar_brand_inn.csv")
+  if (!file.exists(p)) return(character(0))
+  m <- readr::read_csv(p, show_col_types = FALSE) %>%
+    group_by(brand_name_clean) %>%
+    filter(n_distinct(substance_clean) == 1) %>%
+    slice(1) %>%
+    ungroup()
+  setNames(m$substance_clean, m$brand_name_clean)
+})
+
+# Canonicalise a raw substance string to a clean EMA INN label. Vectorized.
+# Strategy:
+#   1. EPAR exact match on the raw string ("5-fluorouracil ebewe" → "fluorouracil" directly)
+#   2. EPAR exact match on the regex-cleaned string ("5-fluorouracil" → "fluorouracil")
+#   3. Regex-cleaned string (covers INNs and investigational compounds not in EPAR)
+resolve_substance_label <- function(x) {
+  raw_tok <- tolower(str_squish(str_remove_all(as.character(x), "[®™]")))
+
+  result <- if (length(epar_exact_map) > 0) unname(epar_exact_map[raw_tok])
+            else                             rep(NA_character_, length(x))
+
+  unresolved <- is.na(result)
+  if (any(unresolved)) {
+    cleaned <- clean_active_substance_label(x[unresolved])
+    if (length(epar_exact_map) > 0) {
+      via_clean <- unname(epar_exact_map[tolower(str_squish(cleaned))])
+      result[unresolved] <- dplyr::if_else(!is.na(via_clean), via_clean, cleaned)
+    } else {
+      result[unresolved] <- cleaned
+    }
+  }
+
+  str_to_sentence(result)
 }
 
 is_exploratory_substance <- function(x) {
@@ -186,30 +211,10 @@ is_exploratory_substance <- function(x) {
                            ignore_case = TRUE))
 }
 
-normalise_logical_text <- function(x) {
-  if (is.logical(x)) return(x)
-  x_chr <- tolower(coalesce(as.character(x), ""))
-  case_when(
-    str_detect(x_chr, "^(true|yes|1)$") ~ TRUE,
-    str_detect(x_chr, "^(false|no|0)$") ~ FALSE,
-    TRUE ~ NA
-  )
-}
-
-parse_pip_date <- function(x) {
-  suppressWarnings(as.Date(parse_date_time(
-    as.character(x),
-    orders = c("dmy", "ymd", "ymd HMS", "ymd HM", "ym", "y")
-  )))
-}
-
 load_pip_decisions <- function(path = PIP_DECISIONS_PATH) {
   required <- c(
     "pip_procedure_number", "pip_decision_number", "ema_url",
-    "decision_type_code", "decision_type_text", "decision_title",
-    "decision_date", "active_substance", "condition",
-    "has_full_waiver", "has_partial_waiver",
-    "has_deferral", "pdf_url", "parse_confidence", "fetched_at"
+    "decision_type_code", "decision_date", "active_substance", "condition"
   )
   if (!file.exists(path)) {
     return(tibble(!!!setNames(rep(list(character()), length(required)), required)))
@@ -225,12 +230,9 @@ load_pip_decisions <- function(path = PIP_DECISIONS_PATH) {
   for (col in setdiff(required, names(df))) df[[col]] <- NA_character_
   df %>%
     mutate(
-      pip_procedure_number = clean_pip_procedure_number(pip_procedure_number),
-      pip_decision_number = clean_pip_decision_number(pip_decision_number),
-      decision_type_code = toupper(str_trim(decision_type_code)),
-      has_full_waiver = normalise_logical_text(has_full_waiver),
-      has_partial_waiver = normalise_logical_text(has_partial_waiver),
-      has_deferral = normalise_logical_text(has_deferral)
+      pip_procedure_number = toupper(str_trim(as.character(pip_procedure_number))),
+      pip_decision_number  = toupper(str_trim(as.character(pip_decision_number))),
+      decision_type_code   = toupper(str_trim(decision_type_code))
     ) %>%
     select(all_of(required)) %>%
     distinct()
@@ -1820,231 +1822,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 	             CT_number),
 	           canonical_trial_id = trial_base_id)
 
-  pip_lookup <- load_pip_decisions() %>%
-    mutate(
-      pip_lookup_id = row_number(),
-      pip_decision_date_parsed = parse_pip_date(decision_date)
-    )
-  pip_by_procedure <- pip_lookup %>%
-    filter(!is.na(pip_procedure_number)) %>%
-    arrange(desc(!is.na(decision_date))) %>%
-    distinct(pip_procedure_number, .keep_all = TRUE) %>%
-    rename_with(~ paste0(.x, "_ema"), -pip_procedure_number)
-  pip_by_decision <- pip_lookup %>%
-    filter(!is.na(pip_decision_number)) %>%
-    arrange(desc(!is.na(decision_date))) %>%
-    distinct(pip_decision_number, .keep_all = TRUE) %>%
-    rename_with(~ paste0(.x, "_ema_decision"), -pip_decision_number)
 
-  # ── Substance-name index (one row per EMA decision/token pair) ─────────────
-  pip_substance_index <- pip_lookup %>%
-    filter(!is.na(active_substance), nchar(str_trim(active_substance)) > 0) %>%
-    rowwise() %>%
-    mutate(sub_tok = list(norm_pip_substance(active_substance))) %>%
-    ungroup() %>%
-    unnest(sub_tok) %>%
-    filter(!is.na(sub_tok), nchar(sub_tok) >= 4) %>%
-    distinct(pip_lookup_id, sub_tok, .keep_all = TRUE)
-
-  # Token-level summary used for the normalisation audit log.
-  pip_by_substance <- pip_substance_index %>%
-    group_by(sub_tok) %>%
-    summarise(
-      sub_n     = n_distinct(pip_lookup_id),
-      sub_codes = paste(sort(unique(decision_type_code)), collapse = ";"),
-      sub_url   = if_else(n_distinct(pip_lookup_id) == 1, first(ema_url), NA_character_),
-      sub_dtc   = if_else(n_distinct(pip_lookup_id) == 1, first(decision_type_code), NA_character_),
-      sub_dtt   = if_else(n_distinct(pip_lookup_id) == 1, first(decision_type_text), NA_character_),
-      sub_title = if_else(n_distinct(pip_lookup_id) == 1, first(decision_title), NA_character_),
-      sub_date  = if_else(n_distinct(pip_lookup_id) == 1, first(decision_date), NA_character_),
-      sub_pdf   = if_else(n_distinct(pip_lookup_id) == 1, first(pdf_url), NA_character_),
-      sub_hfw   = if_else(n_distinct(pip_lookup_id) == 1, first(has_full_waiver), NA),
-      sub_hpw   = if_else(n_distinct(pip_lookup_id) == 1, first(has_partial_waiver), NA),
-      sub_hd    = if_else(n_distinct(pip_lookup_id) == 1, first(has_deferral), NA),
-      .groups   = "drop"
-    )
-
-  result <- result %>%
-    mutate(
-      pip_decision_number_raw =
-        `a8_ema_decision_number_of_paediatric_investigation_plan`,
-      pip_decision_number = clean_pip_decision_number(pip_decision_number_raw),
-      pip_procedure_number = clean_pip_procedure_number(PIP_status),
-      trial_pip_reference_date = parse_pip_date(case_when(
-        register == "CTIS" & !is.na(ctis_decision_date_first) ~ ctis_decision_date_first,
-        !is.na(n_date_of_competent_authority_decision)        ~ n_date_of_competent_authority_decision,
-        TRUE                                                  ~ submission_date
-      ))
-    ) %>%
-    left_join(pip_by_procedure, by = "pip_procedure_number") %>%
-    left_join(pip_by_decision, by = "pip_decision_number") %>%
-    mutate(
-      pip_lookup_match       = case_when(
-        !is.na(ema_url_ema)          ~ "PIP procedure number",
-        !is.na(ema_url_ema_decision) ~ "EMA decision number",
-        TRUE                         ~ NA_character_
-      ),
-      pip_ema_url            = coalesce(ema_url_ema, ema_url_ema_decision),
-      pip_decision_type_code = coalesce(decision_type_code_ema, decision_type_code_ema_decision),
-      pip_decision_type      = coalesce(decision_type_text_ema, decision_type_text_ema_decision),
-      pip_decision_title     = coalesce(decision_title_ema, decision_title_ema_decision),
-      pip_decision_date      = coalesce(decision_date_ema, decision_date_ema_decision),
-      pip_decision_pdf_url   = coalesce(pdf_url_ema, pdf_url_ema_decision),
-      pip_parse_confidence   = coalesce(parse_confidence_ema, parse_confidence_ema_decision),
-      pip_fetched_at         = coalesce(fetched_at_ema, fetched_at_ema_decision),
-      pip_substance_match_source = NA_character_,
-      pip_has_full_waiver    = coalesce(has_full_waiver_ema, has_full_waiver_ema_decision),
-      pip_has_partial_waiver = coalesce(has_partial_waiver_ema, has_partial_waiver_ema_decision),
-      pip_has_deferral       = coalesce(has_deferral_ema, has_deferral_ema_decision)
-    ) %>%
-    select(-ends_with("_ema"), -ends_with("_ema_decision"))
-
-  # ── Substance-name fallback (trials with no identifier match) ─────────────
-  {
-    unmatched_mask <- is.na(result$pip_lookup_match)
-    if (any(unmatched_mask)) {
-      trial_tokens <- result %>%
-        filter(unmatched_mask) %>%
-        select(`_id`, trial_pip_reference_date, DIMP_inn_name, DIMP_product_name) %>%
-        pivot_longer(c(DIMP_inn_name, DIMP_product_name),
-                     names_to = "source_field", values_to = "raw_substance") %>%
-        mutate(source_label = if_else(source_field == "DIMP_inn_name", "INN", "Product")) %>%
-        rowwise() %>%
-        mutate(sub_tok = list(norm_pip_substance(raw_substance))) %>%
-        ungroup() %>%
-        unnest(sub_tok) %>%
-        filter(!is.na(sub_tok), nchar(sub_tok) >= 4) %>%
-        group_by(`_id`, sub_tok) %>%
-        summarise(
-          trial_pip_reference_date = first(trial_pip_reference_date),
-          source_label = paste(sort(unique(source_label)), collapse = " + "),
-          .groups = "drop"
-        ) %>%
-        inner_join(pip_substance_index, by = "sub_tok", relationship = "many-to-many") %>%
-        filter(
-          is.na(trial_pip_reference_date) |
-            is.na(pip_decision_date_parsed) |
-            pip_decision_date_parsed <= trial_pip_reference_date
-        ) %>%
-        group_by(`_id`, pip_lookup_id) %>%
-        summarise(
-          sub_trial_pip_reference_date = first(trial_pip_reference_date),
-          source_label       = paste(sort(unique(source_label)), collapse = " + "),
-          decision_type_code = first(decision_type_code),
-          decision_type_text = first(decision_type_text),
-          decision_title     = first(decision_title),
-          decision_date      = first(decision_date),
-          ema_url            = first(ema_url),
-          pdf_url            = first(pdf_url),
-          has_full_waiver    = first(has_full_waiver),
-          has_partial_waiver = first(has_partial_waiver),
-          has_deferral       = first(has_deferral),
-          .groups = "drop"
-        ) %>%
-        group_by(`_id`) %>%
-        summarise(
-          sub_match_n = n(),
-          sub_trial_pip_reference_date = first(sub_trial_pip_reference_date),
-          sub_source  = case_when(
-            any(str_detect(source_label, "INN")) & any(str_detect(source_label, "Product")) ~ "INN + Product",
-            any(str_detect(source_label, "INN")) ~ "INN",
-            TRUE ~ "Product"
-          ),
-          # For ambiguous: aggregate all codes; for single: the one code.
-          sub_dtc   = if_else(
-            n() == 1,
-            first(decision_type_code),
-            paste(sort(unique(decision_type_code)), collapse = ";")),
-          sub_url   = if_else(n() == 1, first(ema_url), NA_character_),
-          sub_dtt   = if_else(n() == 1, first(decision_type_text), NA_character_),
-          sub_title = if_else(n() == 1, first(decision_title), NA_character_),
-          sub_date  = if_else(n() == 1, first(decision_date), NA_character_),
-          sub_pdf   = if_else(n() == 1, first(pdf_url), NA_character_),
-          # Waiver flags: only propagate for unambiguous single match
-          sub_hfw   = if_else(n() == 1, first(has_full_waiver), NA),
-          sub_hpw   = if_else(n() == 1, first(has_partial_waiver), NA),
-          sub_hd    = if_else(n() == 1, first(has_deferral), NA),
-          sub_conf  = if_else(n() == 1, "substance_name", "substance_name_ambiguous"),
-          .groups = "drop"
-        )
-
-      if (nrow(trial_tokens) > 0) {
-        result <- result %>%
-          left_join(trial_tokens, by = "_id") %>%
-          mutate(
-            pip_lookup_match = case_when(
-              !is.na(pip_lookup_match) ~ pip_lookup_match,
-              is.na(sub_match_n)       ~ NA_character_,
-              sub_match_n == 1 & sub_source == "INN" & !is.na(sub_trial_pip_reference_date) ~ "INN/substance name/date",
-              sub_match_n == 1 & !is.na(sub_trial_pip_reference_date)                       ~ "Substance name/date",
-              sub_match_n == 1 & sub_source == "INN" ~ "INN/substance name",
-              sub_match_n == 1                       ~ "Substance name",
-              sub_source == "INN" ~ paste0("INN/substance name (", sub_match_n, " decisions)"),
-              TRUE ~ paste0("Substance name (", sub_match_n, " decisions)")
-            ),
-            pip_substance_match_source = coalesce(pip_substance_match_source, sub_source),
-            pip_ema_url            = coalesce(pip_ema_url, sub_url),
-            pip_decision_type_code = coalesce(pip_decision_type_code, sub_dtc),
-            pip_decision_type      = coalesce(pip_decision_type, sub_dtt),
-            pip_decision_title     = coalesce(pip_decision_title, sub_title),
-            pip_decision_date      = coalesce(pip_decision_date, sub_date),
-            pip_decision_pdf_url   = coalesce(pip_decision_pdf_url, sub_pdf),
-            pip_parse_confidence   = coalesce(pip_parse_confidence, sub_conf),
-            pip_has_full_waiver    = coalesce(pip_has_full_waiver, sub_hfw),
-            pip_has_partial_waiver = coalesce(pip_has_partial_waiver, sub_hpw),
-            pip_has_deferral       = coalesce(pip_has_deferral, sub_hd)
-          ) %>%
-          select(-sub_match_n, -sub_source, -sub_dtc, -sub_url, -sub_dtt, -sub_title,
-                 -sub_date, -sub_pdf, -sub_hfw, -sub_hpw, -sub_hd, -sub_conf,
-                 -sub_trial_pip_reference_date)
-        message(sprintf(
-          "Substance-name PIP fallback: %d additional trials linked",
-          sum(!is.na(result$pip_lookup_match) & unmatched_mask, na.rm = TRUE)
-        ))
-      }
-    }
-  }
-
-  result <- result %>% select(-trial_pip_reference_date)
-
-  # ── PIP classification (runs after both identifier and substance joins) ────
-  result <- result %>%
-    mutate(
-      pip_has_full_waiver = if_else(
-        is.na(pip_has_full_waiver) &
-          coalesce(pip_decision_type_code, "") == "W" &
-          coalesce(pip_parse_confidence, "") != "substance_name_ambiguous",
-        TRUE, pip_has_full_waiver),
-      pip_has_partial_waiver = if_else(
-        is.na(pip_has_partial_waiver) &
-          str_detect(tolower(coalesce(pip_decision_title, "")),
-                     "granting of (a )?(partial |product specific )?waiver") &
-          coalesce(pip_decision_type_code, "") != "W" &
-          coalesce(pip_parse_confidence, "") != "substance_name_ambiguous",
-        TRUE, pip_has_partial_waiver),
-      pip_has_deferral = if_else(
-        is.na(pip_has_deferral) &
-          str_detect(tolower(coalesce(pip_decision_title, "")), "granting of (a )?deferral") &
-          coalesce(pip_parse_confidence, "") != "substance_name_ambiguous",
-        TRUE, pip_has_deferral),
-      pip_waiver_status = case_when(
-        # Ambiguous substance match: cannot determine which decision applies — always Unknown
-        coalesce(pip_parse_confidence, "") == "substance_name_ambiguous" ~ "Unknown",
-        pip_has_full_waiver %in% TRUE                              ~ "Full waiver",
-        pip_has_partial_waiver %in% TRUE                           ~ "PIP with waiver",
-        pip_decision_type_code == "P"                              ~ "Unknown",
-        !is.na(pip_lookup_match)                                   ~ "No waiver indicated",
-        TRUE                                                       ~ NA_character_),
-      has_pip_waiver = case_when(
-        pip_waiver_status %in% c("Full waiver", "PIP with waiver") ~ "Yes",
-        pip_waiver_status == "No waiver indicated"                  ~ "No",
-        TRUE                                                        ~ "Unknown"),
-      has_pip_deferral = case_when(
-        pip_has_deferral %in% TRUE                                          ~ "Yes",
-        coalesce(pip_parse_confidence, "") == "substance_name_ambiguous"    ~ "Unknown",
-        !is.na(pip_lookup_match)                                            ~ "No",
-        TRUE                                                                ~ "Unknown")
-    )
 
   write_norm_log(raw_meddra_for_log, result$MEDDRA_term, result$register, "meddra_term", dirname(db_path))
   write_norm_log(raw_organ_for_log,  result$MEDDRA_organ_class, result$register, "organ_class", dirname(db_path))
@@ -2200,7 +1978,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     sub_log <- bind_rows(inn_log_rows, product_log_rows) %>%
       separate_rows(raw_substance, sep = " / ") %>%
       mutate(
-        active_substance = clean_active_substance_label(raw_substance),
+        active_substance = resolve_substance_label(raw_substance),
         exploratory_include = is_exploratory_substance(active_substance)
       ) %>%
       filter(exploratory_include) %>%
@@ -2400,9 +2178,6 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
   required_cols <- c("transition_eudract_number", "trial_identifiers",
                      "canonical_trial_id", "analysis_register", "analysis_year",
                      "DIMP_inn_name",
-                     "pip_decision_number", "pip_procedure_number",
-                     "pip_waiver_status", "has_pip_waiver", "has_pip_deferral",
-                     "pip_substance_match_source",
                      "data_processing_version")
   !is.null(d) && all(required_cols %in% names(d))
 }
@@ -2436,7 +2211,7 @@ extract_product_substance_choices <- function(df) {
     extract_choices(df$DIMP_product_name),
     extract_choices(df$DIMP_inn_name)
   )
-  normalised <- clean_active_substance_label(raw)
+  normalised <- resolve_substance_label(raw)
   sort(unique(normalised[!is.na(normalised) & normalised != ""]))
 }
 
@@ -2445,7 +2220,7 @@ matches_product_substance <- function(product, inn, selected, sep = " / ") {
   if (length(selected) == 0) return(rep(TRUE, length(product)))
   mapply(function(p, i) {
     vals <- unlist(str_split(c(coalesce(p, ""), coalesce(i, "")), fixed(sep)))
-    vals <- vapply(str_trim(vals), clean_active_substance_label, character(1))
+    vals <- vapply(str_trim(vals), resolve_substance_label, character(1))
     any(vals[vals != ""] %in% selected)
   }, product, inn)
 }
@@ -2551,8 +2326,7 @@ ui <- tagList(
                           @media (max-width: 767px) {
                             #nav_subtitle { display: none !important; }
                             #kpi_strip .col-sm-3,
-                            #kpi_strip_compliance .col-sm-3,
-                            #pip_analysis_summary .col-sm-2 { width: 50% !important; float: left !important; padding: 0 5px 10px !important; }
+                            #kpi_strip_compliance .col-sm-3 { width: 50% !important; float: left !important; padding: 0 5px 10px !important; }
                             .kpi-card { padding: 8px 10px 7px; }
                             .kpi-icon { font-size: 14px; margin-bottom: 3px; }
                             .kpi-val  { font-size: 20px; }
@@ -2748,8 +2522,6 @@ ui <- tagList(
                                                selectizeInput("phase_filter","Trial Phase:",
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All phases")),
                                                selectInput("pip_filter","Part of PIP:",
-                                                           choices=c("All","Yes","No","Unknown"),selected="All"),
-                                               selectInput("pip_waiver_filter","PIP Waiver:",
                                                            choices=c("All","Yes","No","Unknown"),selected="All"),
                                                selectInput("orphan_filter","Orphan Designation:",
                                                            choices=c("All","Yes","No","Unknown"),selected="All")
@@ -2989,9 +2761,6 @@ ui <- tagList(
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
-                                                             "PIP Waiver"="has_pip_waiver",
-                                                             "PIP Waiver Status"="pip_waiver_status",
-                                                             "PIP Deferral"="has_pip_deferral",
                                                              "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
@@ -3007,9 +2776,6 @@ ui <- tagList(
                                                              "Phase"="phase",
                                                              "Sponsor Type"="sponsor_type",
                                                              "PIP Status"="has_PIP",
-                                                             "PIP Waiver"="has_pip_waiver",
-                                                             "PIP Waiver Status"="pip_waiver_status",
-                                                             "PIP Deferral"="has_pip_deferral",
                                                              "Age Group"="age_group",
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
@@ -3065,64 +2831,22 @@ ui <- tagList(
                         ),
 	                        tabItem(tabName="analytics_pip",
 	                                fluidRow(
-	                                  box(title="PIP Waiver Evidence at a Glance", status="primary", solidHeader=TRUE, width=12,
-	                                      uiOutput("pip_analysis_summary"),
-	                                      p(em("A PIP waiver is not always a simple trial-level or compound-level property. Identifier matches are strongest; substance-name fallbacks can point to multiple EMA decisions for the same active substance, indication, date, or modification history."),
-	                                        style="font-size:12px;opacity:0.75;margin:8px 0 0;"))),
-	                                fluidRow(
-	                                  box(title="How to Read This Page", status="info", solidHeader=TRUE, width=12,
-	                                      tags$ul(style="font-size:12px;line-height:1.55;margin-bottom:0;",
-	                                        tags$li(tags$b("EMA matched:"), " filtered trials linked to an EMA PIP decision by direct identifier or conservative substance-name fallback."),
-	                                        tags$li(tags$b("Identifier evidence:"), " highest-confidence links from EUCTR A.8 EMA decision numbers or CTIS PIP procedure numbers."),
-	                                        tags$li(tags$b("Single-substance evidence:"), " no identifier, but exactly one applicable EMA decision matched the INN/product token after date gating."),
-	                                        tags$li(tags$b("Ambiguous substance evidence:"), " no identifier and multiple applicable EMA decisions exist for the substance set, so waiver/deferral detail is kept Unknown."),
-	                                        tags$li(tags$b("Full waiver signal:"), " matched EMA decision type is W and the row is not ambiguous."),
-	                                        tags$li(tags$b("Unknown waiver detail:"), " ambiguous matches plus EMA P decisions where the bulk feed does not say whether a partial waiver or deferral applies.")),
-                                      tags$p(tags$b("EMA decision type codes:"), style="font-size:12px;margin:8px 0 2px;"),
-                                      tags$ul(style="font-size:12px;line-height:1.55;margin-bottom:0;",
-                                        tags$li(tags$b("W"), " — Full waiver: exempt from paediatric studies in all age groups and all conditions."),
-                                        tags$li(tags$b("P"), " — Agreed PIP: paediatric studies required (may include partial waiver and/or deferral within the decision)."),
-                                        tags$li(tags$b("PM"), " — Modification of an agreed PIP."),
-                                        tags$li(tags$b("RW"), " — Refused waiver: EMA did not grant the requested waiver."),
-                                        tags$li(tags$b("RP"), " — Refused PIP: EMA did not agree the PIP."),
-                                        tags$li(tags$b("RPM"), " — Refused PIP modification.")))),
-                                fluidRow(
                                   box(title="PIP Status",status="info",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_pip",height="360px"),type=6)),
-                                  box(title="PIP Waiver Status by Evidence Level",status="info",solidHeader=TRUE,width=6,height=420,
-                                      p(em("EMA-matched trials only. Identifier matches are strongest; ambiguous substance matches are intentionally kept Unknown."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:4px;"),
-                                      withSpinner(plotlyOutput("plot_pip_waiver",height="330px"),type=6))),
+                                  box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=6,height=420,
+                                      withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6))),
                                 fluidRow(
-                                  box(title="EMA Match Evidence Over Time",status="primary",solidHeader=TRUE,width=6,height=420,
-                                      p(em("Shows how much of the PIP signal comes from strong identifiers versus conservative substance matching."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:4px;"),
-                                      withSpinner(plotlyOutput("plot_pip_evidence_year",height="330px"),type=6)),
-                                  box(title="PIP Deferral Status by Evidence Level",status="primary",solidHeader=TRUE,width=6,height=420,
-                                      p(em("EMA-matched trials only. In the current bulk feed matches, no row has explicit positive deferral evidence; No means no explicit deferral signal was found, not proof that no deferral exists in the underlying PDF."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:4px;"),
-                                      withSpinner(plotlyOutput("plot_pip_deferral",height="330px"),type=6))),
+                                  box(title="Compounds with Multiple EMA Decisions",status="info",solidHeader=TRUE,width=12,
+                                      p(em("Substances with two or more EMA PIP decisions from the local EMA lookup. A trial cannot reliably be coupled to a single decision for these substances. Counts update with current sidebar filters."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+                                      withSpinner(DT::dataTableOutput("table_pip_compound_complexity"),type=6))),
                                 fluidRow(
-	                                  box(title="PIP Status by Year",status="warning",solidHeader=TRUE,width=6,height=420,
-	                                      withSpinner(plotlyOutput("plot_pip_year",height="360px"),type=6)),
-	                                  box(title="Waiver Status Over Time",status="warning",solidHeader=TRUE,width=6,height=420,
-	                                      p(em("Ambiguous substance matches remain Unknown so the chart does not overclaim waiver evidence for compounds with multiple EMA decisions."),
-	                                        style="font-size:11px;opacity:0.7;margin-bottom:4px;"),
-	                                      withSpinner(plotlyOutput("plot_pip_waiver_year",height="330px"),type=6))),
-	                                fluidRow(
-	                                  box(title="Evidence Breakdown",status="info",solidHeader=TRUE,width=4,
-	                                      withSpinner(DT::dataTableOutput("table_pip_evidence_summary"),type=6)),
-	                                  box(title="Compounds with Multiple EMA Decisions",status="info",solidHeader=TRUE,width=8,
-	                                      p(em("These rows are substance-specific: EMA decisions counts come from the local EMA lookup, not from the full multi-substance trial ambiguity label. Counts update with current sidebar filters."),
-	                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
-	                                      withSpinner(DT::dataTableOutput("table_pip_compound_complexity"),type=6))),
-	                                fluidRow(
-	                                  box(title="Linked EMA Decisions for Selected Compound",status="primary",solidHeader=TRUE,width=12,
-	                                      uiOutput("pip_compound_decision_picker"),
-	                                      p(em("Use this to inspect why a compound-level waiver label can be unsafe. A compound such as dexamethasone can have several EMA PIP decisions covering different indications, combinations, decision types, and years."),
-	                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
-	                                      withSpinner(DT::dataTableOutput("table_pip_compound_decisions"),type=6)))
-	                        ),
+                                  box(title="Linked EMA Decisions for Selected Compound",status="primary",solidHeader=TRUE,width=12,
+                                      uiOutput("pip_compound_decision_picker"),
+                                      p(em("Use this to inspect why a compound-level waiver label can be unsafe. A compound such as dexamethasone can have several EMA PIP decisions covering different indications, combinations, decision types, and years."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:8px;"),
+                                      withSpinner(DT::dataTableOutput("table_pip_compound_decisions"),type=6)))
+                        ),
                         tabItem(tabName="analytics_substances",
                                 fluidRow(
                                   box(title="Top 20 Active Substances by Trial Count",status="primary",solidHeader=TRUE,width=12,height=460,
@@ -3498,8 +3222,6 @@ server <- function(input, output, session) {
       pat<-paste(str_replace_all(input$phase_filter,"([.()\\[\\]{}+*?^$|\\\\])","\\\\\\1"),collapse="|")
       df<-df%>%filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
     if(input$pip_filter!="All")df<-df%>%filter(has_PIP==input$pip_filter)
-    if(!is.null(input$pip_waiver_filter)&&input$pip_waiver_filter!="All"&&"has_pip_waiver"%in%names(df))
-      df<-df%>%filter(has_pip_waiver==input$pip_waiver_filter)
     if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df))df<-df%>%filter(is_orphan==input$orphan_filter)
     if(!is.null(input$age_group_filter)&&input$age_group_filter!="All"&&"age_group"%in%names(df)){
       if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Paediatric & Adult"))
@@ -3542,8 +3264,6 @@ server <- function(input, output, session) {
           updateSelectizeInput(session, "phase_filter",       selected = s$phase_filter)
         if (!is.null(s$pip_filter))
           updateSelectInput(session, "pip_filter",            selected = s$pip_filter)
-        if (!is.null(s$pip_waiver_filter))
-          updateSelectInput(session, "pip_waiver_filter",     selected = s$pip_waiver_filter)
         if (!is.null(s$orphan_filter))
           updateSelectInput(session, "orphan_filter",         selected = s$orphan_filter)
         if (!is.null(s$age_group_filter))
@@ -3571,7 +3291,6 @@ server <- function(input, output, session) {
       country_filter     = input$country_filter,
       phase_filter       = input$phase_filter,
       pip_filter         = input$pip_filter,
-      pip_waiver_filter  = input$pip_waiver_filter,
       orphan_filter      = input$orphan_filter,
       age_group_filter   = input$age_group_filter,
       sponsor_filter       = input$sponsor_filter,
@@ -3633,7 +3352,6 @@ server <- function(input, output, session) {
     if (!setequal(input$register_filter, c("EUCTR","CTIS")))                n <- n + 1L
     if (length(input$phase_filter) > 0)                                     n <- n + 1L
     if (!isTRUE(input$pip_filter == "All"))                                  n <- n + 1L
-    if (!isTRUE(input$pip_waiver_filter == "All"))                           n <- n + 1L
     if (!isTRUE(input$orphan_filter == "All"))                               n <- n + 1L
     if (!isTRUE(input$age_group_filter == "< 18 years"))                     n <- n + 1L
     mk_filter_badge(n)
@@ -3685,9 +3403,6 @@ server <- function(input, output, session) {
     if (!is.null(input$pip_filter) && input$pip_filter != "All")
       chips <- c(chips, list(mk_chip("PIP", input$pip_filter)))
 
-    if (!is.null(input$pip_waiver_filter) && input$pip_waiver_filter != "All")
-      chips <- c(chips, list(mk_chip("PIP waiver", input$pip_waiver_filter)))
-
     if (!is.null(input$orphan_filter) && input$orphan_filter != "All")
       chips <- c(chips, list(mk_chip("Orphan", input$orphan_filter)))
 
@@ -3731,7 +3446,6 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "country_filter",     selected = character(0))
     updateSelectizeInput(session, "phase_filter",       selected = character(0))
     updateSelectInput(session, "pip_filter", selected = "All")
-    updateSelectInput(session, "pip_waiver_filter", selected = "All")
     updateSelectInput(session, "orphan_filter", selected = "All")
     updateSelectInput(session, "age_group_filter", selected = "< 18 years")
     updateSelectizeInput(session, "sponsor_filter",     selected = character(0))
@@ -3784,7 +3498,6 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "status_filter", selected = c("Ongoing","Completed","Other"))
     } else if (input$vb_click == "__pip__") {
       updateSelectInput(session, "pip_filter", selected = "Yes")
-      updateSelectInput(session, "pip_waiver_filter", selected = "All")
     } else {
       updateSelectizeInput(session, "status_filter", selected = input$vb_click)
     }
@@ -3838,25 +3551,25 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "register_filter", selected = "CTIS")
       updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
       updateSelectInput(session,    "pip_filter",      selected = "All")
-      updateSelectInput(session,    "pip_waiver_filter", selected = "All")
+
       updateSelectInput(session,    "orphan_filter",   selected = "All")
     } else if (p == "euctr_only") {
       updateSelectizeInput(session, "register_filter", selected = "EUCTR")
       updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
       updateSelectInput(session,    "pip_filter",      selected = "All")
-      updateSelectInput(session,    "pip_waiver_filter", selected = "All")
+
       updateSelectInput(session,    "orphan_filter",   selected = "All")
     } else if (p == "ongoing_pip") {
       updateSelectizeInput(session, "status_filter",   selected = "Ongoing")
       updateSelectInput(session,    "pip_filter",      selected = "Yes")
-      updateSelectInput(session,    "pip_waiver_filter", selected = "All")
+
     } else if (p == "orphan") {
       updateSelectInput(session,    "orphan_filter",   selected = "Yes")
       updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
     } else if (p == "completed") {
       updateSelectizeInput(session, "status_filter",   selected = "Completed")
       updateSelectInput(session,    "pip_filter",      selected = "All")
-      updateSelectInput(session,    "pip_waiver_filter", selected = "All")
+
     } else if (p == "last_12m") {
       updateDateRangeInput(session, "date_range",
                            start = Sys.Date() - 365, end = Sys.Date())
@@ -3875,7 +3588,7 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "country_filter", selected = "Belgium")
     } else if (p == "pip_10y") {
       updateSelectInput(session,    "pip_filter",  selected = "Yes")
-      updateSelectInput(session,    "pip_waiver_filter", selected = "All")
+
       updateDateRangeInput(session, "date_range",
                            start = Sys.Date() - 3650, end = Sys.Date())
     } else if (p == "novartis_compare") {
@@ -3950,19 +3663,6 @@ server <- function(input, output, session) {
 	        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
 	          tagList(tags$dt("Transition EudraCT Number"),
 	                  tags$dd(style = "margin-bottom:10px;", row$transition_eudract_number)),
-	        if (!is.null(row$pip_decision_number) && !is.na(row$pip_decision_number))
-	          tagList(tags$dt("PIP Decision Number"),
-	                  tags$dd(style = "margin-bottom:10px;", row$pip_decision_number)),
-	        if (!is.null(row$pip_procedure_number) && !is.na(row$pip_procedure_number))
-	          tagList(tags$dt("PIP Procedure Number"),
-	                  tags$dd(style = "margin-bottom:10px;", row$pip_procedure_number)),
-	        if (!is.null(row$pip_waiver_status) && !is.na(row$pip_waiver_status))
-	          tagList(tags$dt("PIP Waiver Status"),
-	                  tags$dd(style = "margin-bottom:10px;", row$pip_waiver_status)),
-	        if (!is.null(row$pip_ema_url) && !is.na(row$pip_ema_url))
-	          tagList(tags$dt("EMA PIP Decision"),
-	                  tags$dd(style = "margin-bottom:10px;",
-	                          tags$a("Open EMA decision", href = row$pip_ema_url, target = "_blank"))),
 	        fluidRow(
           column(6,
             tags$dt("Register"),      tags$dd(coalesce(reg, "—")),
@@ -4124,9 +3824,6 @@ server <- function(input, output, session) {
 	      select(CT_number,trial_identifiers,transition_eudract_number,register,
 	             Full_title,DIMP_product_name,DIMP_inn_name,MEDDRA_term,
 	             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-	             pip_decision_number,pip_procedure_number,pip_waiver_status,
-	             has_pip_waiver,has_pip_deferral,pip_decision_date,pip_ema_url,
-	             pip_substance_match_source,
 	             phase,sponsor_name,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
 	      select(-CT_number)%>%
 	      rename(Identifiers=trial_identifiers, `Transition EudraCT`=transition_eudract_number,
@@ -4134,14 +3831,6 @@ server <- function(input, output, session) {
 	             Product=DIMP_product_name,INN=DIMP_inn_name,Condition=MEDDRA_term,
 	             `Organ Class`=MEDDRA_organ_class,Country=Member_state,
 	             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-	             `PIP Decision Number`=pip_decision_number,
-	             `PIP Procedure Number`=pip_procedure_number,
-	             `PIP Waiver Status`=pip_waiver_status,
-	             `PIP Waiver`=has_pip_waiver,
-	             `PIP Deferral`=has_pip_deferral,
-	             `PIP Decision Date`=pip_decision_date,
-	             `PIP EMA URL`=pip_ema_url,
-	             `PIP Substance Match Source`=pip_substance_match_source,
              Phase=phase,`Sponsor Name`=sponsor_name,`Sponsor Type`=sponsor_type,
              Submitted=submission_date_parsed,Started=start_date,
              `Decision Date`=decision_date)%>%
@@ -4221,7 +3910,6 @@ server <- function(input, output, session) {
         country_filter     = input$country_filter,
         phase_filter       = input$phase_filter,
         pip_filter         = input$pip_filter,
-        pip_waiver_filter  = input$pip_waiver_filter,
         sponsor_filter     = input$sponsor_filter,
         text_search        = input$text_search
       )
@@ -4252,7 +3940,6 @@ server <- function(input, output, session) {
         country     = if (length(input$country_filter)     > 0) input$country_filter     else "All",
         phase       = if (length(input$phase_filter)       > 0) input$phase_filter       else "All",
         pip         = input$pip_filter,
-        pip_waiver  = input$pip_waiver_filter,
         text_search = if (nzchar(input$text_search)) input$text_search else "(none)"
       )
 
@@ -4340,8 +4027,6 @@ server <- function(input, output, session) {
           filter(str_detect(coalesce(phase,""),regex(pat,ignore_case=TRUE)))}
       if(input$pip_filter!="All")
         df_comp <- df_comp %>% filter(has_PIP==input$pip_filter)
-      if(!is.null(input$pip_waiver_filter)&&input$pip_waiver_filter!="All"&&"has_pip_waiver"%in%names(df_comp))
-        df_comp <- df_comp %>% filter(has_pip_waiver==input$pip_waiver_filter)
       if(!is.null(input$orphan_filter)&&input$orphan_filter!="All"&&"is_orphan"%in%names(df_comp))
         df_comp <- df_comp %>% filter(is_orphan==input$orphan_filter)
       # age_group_filter intentionally NOT applied
@@ -4371,7 +4056,6 @@ server <- function(input, output, session) {
         country     = if(length(input$country_filter)>0)     input$country_filter     else "All",
         phase       = if(length(input$phase_filter)>0)       input$phase_filter       else "All",
         pip         = input$pip_filter,
-        pip_waiver  = input$pip_waiver_filter,
         orphan      = if(!is.null(input$orphan_filter)) input$orphan_filter else "All",
         sponsor     = if(length(input$sponsor_filter)>0) input$sponsor_filter else "All",
         text_search = if(nzchar(input$text_search)) input$text_search else "(none)"
@@ -4440,8 +4124,6 @@ server <- function(input, output, session) {
         updateSelectizeInput(session,"phase_filter",selected=s$phase_filter)
       if(!is.null(s$pip_filter))
         updateSelectInput(session,"pip_filter",selected=s$pip_filter)
-      if(!is.null(s$pip_waiver_filter))
-        updateSelectInput(session,"pip_waiver_filter",selected=s$pip_waiver_filter)
       if(!is.null(s$sponsor_filter))
         updateSelectizeInput(session,"sponsor_filter",selected=s$sponsor_filter)
       if(!is.null(s$text_search))
@@ -4487,34 +4169,6 @@ server <- function(input, output, session) {
       plt_layout(margin=list(b=120),xaxis=list(tickangle=-45,tickfont=list(color=tc()$chart_fg)))
   })
 
-  pip_evidence_rows <- reactive({
-    method_desc <- c(
-      "ema_bulk_table"           = "Identifier match",
-      "ema_per_page"             = "Identifier match",
-      "substance_name"           = "Single substance match",
-      "substance_name_ambiguous" = "Ambiguous substance match"
-    )
-    filt() %>%
-      mutate(
-        pip_match_method = case_when(
-          is.na(pip_lookup_match) ~ "No applicable EMA match",
-          !is.na(method_desc[pip_parse_confidence]) ~ unname(method_desc[pip_parse_confidence]),
-          TRUE ~ "Other EMA match"
-        ),
-        pip_match_method = factor(
-          pip_match_method,
-          levels = c("Identifier match", "Single substance match",
-                     "Ambiguous substance match", "Other EMA match",
-                     "No applicable EMA match")
-        ),
-        pip_waiver_display = coalesce(pip_waiver_status, "No applicable EMA match"),
-        pip_waiver_display = factor(
-          pip_waiver_display,
-          levels = c("Full waiver", "PIP with waiver", "No waiver indicated",
-                     "Unknown", "No applicable EMA match")
-        )
-      )
-  })
 
   pip_decision_substance_index <- reactive({
     load_pip_decisions() %>%
@@ -4529,22 +4183,11 @@ server <- function(input, output, session) {
   })
 
   pip_complex_compounds <- reactive({
-    ambiguous_trials <- filt() %>%
-      filter(pip_parse_confidence == "substance_name_ambiguous",
-             !is.na(pip_lookup_match)) %>%
-      mutate(raw_substance = if_else(!is.na(DIMP_inn_name) & nchar(str_trim(DIMP_inn_name)) > 0,
-                                     DIMP_inn_name, DIMP_product_name)) %>%
-      filter(!is.na(raw_substance), nchar(str_trim(raw_substance)) > 0) %>%
-      separate_rows(raw_substance, sep = " / ") %>%
-      mutate(
-        active_substance = clean_active_substance_label(raw_substance),
-        substance_token = lapply(raw_substance, norm_pip_substance)
-      ) %>%
-      unnest(substance_token) %>%
-      filter(is_exploratory_substance(active_substance),
-             !is.na(substance_token), nchar(str_trim(substance_token)) > 0)
+    decision_counts <- pip_decision_substance_index() %>%
+      count(substance_token, name = "EMA decisions for substance") %>%
+      filter(`EMA decisions for substance` >= 2)
 
-    if (nrow(ambiguous_trials) == 0) {
+    if (nrow(decision_counts) == 0) {
       return(tibble(
         active_substance = character(),
         substance_token = character(),
@@ -4556,78 +4199,40 @@ server <- function(input, output, session) {
       ))
     }
 
-    decision_counts <- pip_decision_substance_index() %>%
-      count(substance_token, name = "EMA decisions for substance")
+    trial_tokens <- filt() %>%
+      mutate(raw_substance = if_else(
+        !is.na(DIMP_inn_name) & nchar(str_trim(DIMP_inn_name)) > 0,
+        DIMP_inn_name, DIMP_product_name)) %>%
+      filter(!is.na(raw_substance), nchar(str_trim(raw_substance)) > 0) %>%
+      separate_rows(raw_substance, sep = " / ") %>%
+      mutate(
+        active_substance = resolve_substance_label(raw_substance),
+        substance_token  = lapply(raw_substance, norm_pip_substance)
+      ) %>%
+      unnest(substance_token) %>%
+      filter(is_exploratory_substance(active_substance),
+             !is.na(substance_token), nchar(str_trim(substance_token)) > 0)
 
-    ambiguous_trials %>%
+    trial_tokens %>%
+      inner_join(decision_counts %>% select(substance_token), by = "substance_token") %>%
       group_by(active_substance, substance_token) %>%
       summarise(
         Trials = n_distinct(`_id`),
         Registers = paste(sort(unique(register)), collapse = " / "),
-        `First trial year` = suppressWarnings(min(year, na.rm = TRUE)),
+        `First trial year`  = suppressWarnings(min(year, na.rm = TRUE)),
         `Latest trial year` = suppressWarnings(max(year, na.rm = TRUE)),
         .groups = "drop"
       ) %>%
       left_join(decision_counts, by = "substance_token") %>%
       mutate(
-        `EMA decisions for substance` = coalesce(`EMA decisions for substance`, 0L),
-        `First trial year` = if_else(is.infinite(`First trial year`), NA_integer_, `First trial year`),
+        `First trial year`  = if_else(is.infinite(`First trial year`),  NA_integer_, `First trial year`),
         `Latest trial year` = if_else(is.infinite(`Latest trial year`), NA_integer_, `Latest trial year`)
       ) %>%
       arrange(desc(Trials), desc(`EMA decisions for substance`), active_substance)
   })
 
-  output$pip_analysis_summary <- renderUI({
-    df <- pip_evidence_rows()
-    n_total <- nrow(df)
-    n_matched <- sum(!is.na(df$pip_lookup_match), na.rm = TRUE)
-    n_identifier <- sum(df$pip_match_method == "Identifier match", na.rm = TRUE)
-    n_single <- sum(df$pip_match_method == "Single substance match", na.rm = TRUE)
-    n_ambiguous <- sum(df$pip_match_method == "Ambiguous substance match", na.rm = TRUE)
-    n_full <- sum(df$pip_waiver_status == "Full waiver", na.rm = TRUE)
-    n_unknown <- sum(df$pip_waiver_status == "Unknown", na.rm = TRUE)
-    pct <- function(x, denom = n_total) {
-      if (is.na(denom) || denom == 0) "0%" else paste0(round(100 * x / denom, 1), "%")
-    }
-    fmt <- function(x) format(x, big.mark = ",")
-    make_card <- function(value, label, sublabel, colour, icon_name, title_text) {
-      tags$div(class = "kpi-card", title = title_text,
-        style = sprintf("background:%s;border-top:none;min-height:124px;", colour),
-        tags$div(class = "kpi-icon", style = "color:rgba(255,255,255,0.8);", icon(icon_name)),
-        tags$div(class = "kpi-val", style = "color:#fff;", value),
-        tags$div(class = "kpi-lbl", style = "color:rgba(255,255,255,0.92);", label),
-        tags$div(style = "color:rgba(255,255,255,0.78);font-size:11px;margin-top:4px;", sublabel)
-      )
-    }
-    fluidRow(
-      column(2, make_card(fmt(n_matched), "Trials with any EMA match", pct(n_matched), tc()$frost2, "link",
-                          "Any filtered trial linked to the EMA PIP lookup by identifier or substance fallback.")),
-      column(2, make_card(fmt(n_identifier), "Direct identifier matches", pct(n_identifier, max(n_matched, 1)), tc()$green, "fingerprint",
-                          "Matched by EUCTR EMA decision number or CTIS PIP procedure number.")),
-      column(2, make_card(fmt(n_single), "Single EMA decision via substance", pct(n_single, max(n_matched, 1)), tc()$frost1, "pills",
-                          "No identifier, but exactly one applicable EMA decision matched the trial substance tokens.")),
-      column(2, make_card(fmt(n_ambiguous), "Multiple EMA decisions via substance", pct(n_ambiguous, max(n_matched, 1)), tc()$orange, "question-circle",
-                          "No identifier, and multiple applicable EMA decisions matched the trial substance set.")),
-      column(2, make_card(fmt(n_full), "Conservative full-waiver signal", pct(n_full, max(n_matched, 1)), tc()$red, "ban",
-                          "Matched EMA decision type W, excluding ambiguous substance matches.")),
-      column(2, make_card(fmt(n_unknown), "Unknown waiver detail", pct(n_unknown, max(n_matched, 1)), tc()$bg3, "exclamation-circle",
-                          "Ambiguous matches or EMA P decisions where the bulk feed does not prove partial waiver/deferral detail."))
-    )
-  })
 
-  output$table_pip_evidence_summary <- DT::renderDataTable({
-    df <- pip_evidence_rows() %>%
-      count(pip_match_method, pip_waiver_display, name = "Trials") %>%
-      group_by(pip_match_method) %>%
-      mutate(`% within evidence` = round(100 * Trials / sum(Trials), 1)) %>%
-      ungroup() %>%
-      rename(`EMA evidence` = pip_match_method,
-             `Waiver interpretation` = pip_waiver_display) %>%
-      arrange(`EMA evidence`, desc(Trials))
-    datatable(df, rownames = FALSE, class = "compact stripe hover",
-              options = list(pageLength = 12, dom = "t", scrollX = TRUE))
-  })
-  
+
   output$plot_pip <- renderPlotly({
     df <- filt() %>% count(has_PIP, register) %>% filter(!is.na(has_PIP)) %>%
       mutate(pip_desc = case_when(
@@ -4649,154 +4254,9 @@ server <- function(input, output, session) {
                  yaxis = list(title = "Trials"))
   })
 
-  output$plot_pip_waiver <- renderPlotly({
-    waiver_desc <- c(
-      "Full waiver"         = "EMA granted a full waiver — no paediatric studies required for any age group or indication",
-      "PIP with waiver"     = "PIP agreed with a partial waiver — studies required for some populations, exempt for others",
-      "No waiver indicated" = "PIP or decision matched but no waiver recorded — paediatric studies required",
-      "Unknown"             = "Waiver detail cannot be determined from the EMA bulk feed or because the substance match is ambiguous"
-    )
-    method_desc <- c(
-      "ema_bulk_table"            = "Identifier match",
-      "ema_per_page"              = "Identifier match",
-      "substance_name"            = "Single substance match",
-      "substance_name_ambiguous"  = "Ambiguous substance match"
-    )
-    method_levels <- c("Identifier match", "Single substance match", "Ambiguous substance match")
-    df <- filt() %>%
-      filter(!is.na(pip_waiver_status)) %>%
-      mutate(
-        match_method = factor(coalesce(method_desc[pip_parse_confidence], "Other match"),
-                              levels = c(method_levels, "Other match")),
-        pip_waiver_status = factor(
-          pip_waiver_status,
-          levels = c("Full waiver", "PIP with waiver", "No waiver indicated", "Unknown")
-        ),
-        waiver_note  = coalesce(waiver_desc[as.character(pip_waiver_status)],
-                                as.character(pip_waiver_status))
-      ) %>%
-      count(match_method, pip_waiver_status, waiver_note) %>%
-      filter(n > 0)
-    validate(need(nrow(df) > 0, "No PIP waiver data for current filters."))
-    waiver_pal <- c(
-      "Full waiver"         = tc()$red,
-      "PIP with waiver"     = tc()$orange,
-      "No waiver indicated" = tc()$green,
-      "Unknown"             = tc()$bg3
-    )
-    plot_ly(df, x = ~match_method, y = ~n, color = ~pip_waiver_status,
-            colors = waiver_pal, type = "bar",
-            text = ~n, textposition = "inside",
-            customdata = ~waiver_note,
-            hovertemplate = paste(
-              "<b>%{fullData.name}</b>",
-              "<br>%{customdata}",
-              "<br>Evidence: %{x}",
-              "<br>Trials: %{y}<extra></extra>"
-            )) %>%
-      plt_layout(barmode = "stack",
-                 xaxis = list(title = "EMA match evidence", categoryorder = "array",
-                              categoryarray = method_levels),
-                 yaxis = list(title = "Trials"),
-                 legend = list(orientation = "h", y = -0.25, title = list(text = "Waiver status")))
-  })
 
-  output$plot_pip_evidence_year <- renderPlotly({
-    df <- pip_evidence_rows() %>%
-      filter(!is.na(year)) %>%
-      count(year, pip_match_method) %>%
-      filter(n > 0)
-    validate(need(nrow(df) > 0, "No yearly PIP evidence data for current filters."))
-    pal <- c(
-      "Identifier match" = tc()$green,
-      "Single substance match" = tc()$frost1,
-      "Ambiguous substance match" = tc()$orange,
-      "Other EMA match" = tc()$purple,
-      "No applicable EMA match" = tc()$bg3
-    )
-    plot_ly(df, x = ~year, y = ~n, color = ~pip_match_method, colors = pal,
-            type = "bar",
-            hovertemplate = "<b>%{x}</b><br>%{fullData.name}<br>Trials: %{y}<extra></extra>") %>%
-      plt_layout(barmode = "stack",
-                 xaxis = list(title = "Submission Year"),
-                 yaxis = list(title = "Trials"),
-                 legend = list(orientation = "h", y = -0.25, title = list(text = "Evidence")))
-  })
 
-  output$plot_pip_waiver_year <- renderPlotly({
-    df <- pip_evidence_rows() %>%
-      filter(!is.na(year), !is.na(pip_lookup_match)) %>%
-      count(year, pip_waiver_display) %>%
-      group_by(year) %>%
-      mutate(pct = round(100 * n / sum(n), 1),
-             hover_txt = paste0(pct, "% of EMA-matched trials in ", year)) %>%
-      ungroup()
-    validate(need(nrow(df) > 0, "No yearly PIP waiver data for current filters."))
-    pal <- c(
-      "Full waiver" = tc()$red,
-      "PIP with waiver" = tc()$orange,
-      "No waiver indicated" = tc()$green,
-      "Unknown" = tc()$bg3
-    )
-    plot_ly(df, x = ~year, y = ~n, color = ~pip_waiver_display, colors = pal,
-            type = "bar", customdata = ~hover_txt,
-            hovertemplate = "<b>%{x} — %{fullData.name}</b><br>%{customdata}<br>Trials: %{y}<extra></extra>") %>%
-      plt_layout(barmode = "stack",
-                 xaxis = list(title = "Submission Year"),
-                 yaxis = list(title = "EMA-matched trials"),
-                 legend = list(orientation = "h", y = -0.25, title = list(text = "Waiver status")))
-  })
 
-  output$plot_pip_deferral <- renderPlotly({
-    deferral_desc <- c(
-      "Yes"     = "Deferral granted — adult marketing authorisation can proceed before paediatric studies are complete",
-      "No"      = "No explicit deferral evidence in the bulk fields for this matched EMA decision",
-      "Unknown" = "Deferral status cannot be determined from the EMA bulk feed or because the substance match is ambiguous"
-    )
-    method_desc <- c(
-      "ema_bulk_table"           = "Identifier match",
-      "ema_per_page"             = "Identifier match",
-      "substance_name"           = "Single substance match",
-      "substance_name_ambiguous" = "Ambiguous substance match"
-    )
-    method_levels <- c("Identifier match", "Single substance match", "Ambiguous substance match")
-    df <- filt() %>%
-      filter(!is.na(pip_lookup_match)) %>%
-      mutate(
-        match_method   = factor(coalesce(method_desc[pip_parse_confidence], "Other match"),
-                                levels = c(method_levels, "Other match")),
-        deferral_display = recode(has_pip_deferral,
-                                  "Yes" = "Explicit deferral",
-                                  "No" = "No explicit deferral evidence",
-                                  "Unknown" = "Unknown",
-                                  .default = has_pip_deferral),
-        deferral_display = factor(deferral_display,
-                                  levels = c("Explicit deferral", "No explicit deferral evidence", "Unknown")),
-        deferral_note  = coalesce(deferral_desc[as.character(has_pip_deferral)],
-                                  as.character(has_pip_deferral))
-      ) %>%
-      count(match_method, deferral_display, deferral_note) %>%
-      filter(n > 0)
-    validate(need(nrow(df) > 0, "No PIP deferral data for current filters."))
-    deferral_pal <- c("Explicit deferral" = tc()$purple,
-                      "No explicit deferral evidence" = tc()$green,
-                      "Unknown" = tc()$bg3)
-    plot_ly(df, x = ~match_method, y = ~n, color = ~deferral_display,
-            colors = deferral_pal, type = "bar",
-            text = ~n, textposition = "inside",
-            customdata = ~deferral_note,
-            hovertemplate = paste(
-              "<b>Deferral: %{fullData.name}</b>",
-              "<br>%{customdata}",
-              "<br>Evidence: %{x}",
-              "<br>Trials: %{y}<extra></extra>"
-            )) %>%
-      plt_layout(barmode = "stack",
-                 xaxis = list(title = "EMA match evidence", categoryorder = "array",
-                              categoryarray = method_levels),
-                 yaxis = list(title = "Trials"),
-                 legend = list(orientation = "h", y = -0.25, title = list(text = "Deferral status")))
-  })
 
   output$table_pip_compound_complexity <- DT::renderDataTable({
     df <- pip_complex_compounds() %>%
@@ -4886,7 +4346,7 @@ server <- function(input, output, session) {
       mutate(substance_source = "Product name")
     bind_rows(inn_rows, product_rows) %>%
       mutate(
-        active_substance = clean_active_substance_label(substance_raw)
+        active_substance = resolve_substance_label(substance_raw)
       ) %>%
       filter(is_exploratory_substance(active_substance))
   })
@@ -5948,9 +5408,6 @@ server <- function(input, output, session) {
     }
     if(input$pip_filter != "All")
       df <- df %>% filter(has_PIP == input$pip_filter)
-    if(!is.null(input$pip_waiver_filter) && input$pip_waiver_filter != "All" &&
-       "has_pip_waiver" %in% names(df))
-      df <- df %>% filter(has_pip_waiver == input$pip_waiver_filter)
     if(length(input$sponsor_filter) > 0)
       df <- df %>% filter(sponsor_name %in% input$sponsor_filter)
     if(nzchar(input$text_search)) {
@@ -6124,9 +5581,6 @@ server <- function(input, output, session) {
     "phase"              = "Phase",
     "sponsor_type"       = "Sponsor Type",
     "has_PIP"            = "PIP Status",
-    "has_pip_waiver"     = "PIP Waiver",
-    "pip_waiver_status"  = "PIP Waiver Status",
-    "has_pip_deferral"   = "PIP Deferral",
     "age_group"          = "Age Group",
     "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
     "MEDDRA_term"        = "Condition (MedDRA term)",
@@ -6640,11 +6094,8 @@ server <- function(input, output, session) {
       "trials_table",
 	      # Basic Analytics
 	      "plot_organ", "plot_term", "plot_country",
-	      "pip_analysis_summary", "table_pip_evidence_summary",
 	      "table_pip_compound_complexity", "pip_compound_decision_picker",
-	      "table_pip_compound_decisions", "plot_pip", "plot_pip_waiver",
-	      "plot_pip_evidence_year", "plot_pip_waiver_year",
-	      "plot_pip_deferral", "plot_pip_year",
+	      "table_pip_compound_decisions", "plot_pip", "plot_pip_year",
 	      "plot_top_substances", "plot_substance_timeline",
 	      "plot_substance_register", "plot_substance_age",
 	      "plot_migration_signal", "plot_migration_timeline",
