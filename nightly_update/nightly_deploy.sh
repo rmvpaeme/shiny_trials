@@ -4,6 +4,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOG_FILE="$SCRIPT_DIR/nightly_deploy.log"
 
 log() {
@@ -11,7 +12,7 @@ log() {
 }
 
 log "=== Nightly deploy started ==="
-cd "$SCRIPT_DIR"
+cd "$PROJECT_DIR"
 
 # 1. Update the SQLite database
 log "Step 1/4: Updating database..."
@@ -24,11 +25,12 @@ Rscript rebuild_cache.R >> "$LOG_FILE" 2>&1
 # 3. Sync app.R and cache to deploy/
 log "Step 3/4: Syncing files to deploy/..."
 cp app.R deploy/app.R
-cp report.Rmd deploy/report.Rmd
+mkdir -p deploy/rmarkdown
+cp rmarkdown/report.Rmd deploy/rmarkdown/report.Rmd
 cp pediatric_trials_cache.rds deploy/pediatric_trials_cache.rds
 cp trials_cache.rds deploy/trials_cache.rds
-cp comparison_report.Rmd deploy/comparison_report.Rmd
-cp preprocessing.Rmd deploy/preprocessing.Rmd
+cp rmarkdown/comparison_report.Rmd deploy/rmarkdown/comparison_report.Rmd
+cp rmarkdown/preprocessing.Rmd deploy/rmarkdown/preprocessing.Rmd
 cp www/preprocessing.html deploy/www/preprocessing.html
 
 # 4. Deploy to shinyapps.io

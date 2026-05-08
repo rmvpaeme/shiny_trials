@@ -83,7 +83,7 @@ This command:
 3. Rewrites `data/sponsor_normalisation_log.csv`.
 4. Regenerates `data/sponsor_alias_candidates.csv`.
 5. Updates `config/sponsor_curation_baseline.csv`.
-6. Renders `preprocessing.Rmd`.
+6. Renders `rmarkdown/preprocessing.Rmd`.
 
 Useful variants:
 

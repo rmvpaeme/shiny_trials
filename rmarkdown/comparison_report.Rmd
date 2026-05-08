@@ -1,6 +1,6 @@
 ---
 title: "EU Paediatric Clinical Trials"
-subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.10.4"
+subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.11.0"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:
@@ -53,7 +53,7 @@ suppressPackageStartupMessages({
 if (nzchar(params$data_path) && file.exists(params$data_path)) {
   df_all <- readRDS(params$data_path)
 } else {
-  cache <- "trials_cache.rds"
+  cache <- if (file.exists("trials_cache.rds")) "trials_cache.rds" else file.path("..", "trials_cache.rds")
   if (!file.exists(cache)) stop("Cache not found. Run rebuild_cache.R first.")
   df_all <- readRDS(cache)
 }
@@ -163,7 +163,7 @@ fnames <- c(
   "Trial Status", "Source Register",
   "Submission Date (from)", "Submission Date (to)",
   "Sponsor / Company", "Country / Member State",
-  "Trial Phase", "Part of PIP", "Orphan Designation",
+  "Trial Phase", "Part of PIP", "PIP Waiver", "Orphan Designation",
   "MedDRA Organ Class", "Condition / MedDRA Term",
   "Free-text search", "Age Group filter"
 )
@@ -176,6 +176,7 @@ fvals <- c(
   if (length(f$country)     == 0 || identical(f$country,     "All")) "All" else paste(f$country,     collapse = "; "),
   if (length(f$phase)       == 0 || identical(f$phase,       "All")) "All" else paste(f$phase,       collapse = ", "),
   if (is.null(f$pip)    || f$pip    == "All") "All" else f$pip,
+  if (is.null(f$pip_waiver) || f$pip_waiver == "All") "All" else f$pip_waiver,
   if (is.null(f$orphan) || f$orphan == "All") "All" else f$orphan,
   if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All" else paste(f$organ_class, collapse = "; "),
   if (length(f$condition)   == 0 || identical(f$condition,   "All")) "All" else paste(f$condition,   collapse = "; "),

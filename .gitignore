@@ -1,5 +1,9 @@
 ./data/*
 data/*
+.DS_Store
+data/.DS_Store
+trials_cache_local.rds
+trials_cache_full.rds
 
 manuscript/*
 ./manuscript/*
@@ -9,6 +13,8 @@ MANU.md
 CLAUDE.md
 claude.md
 AGENTS.md
+AGENTS/
+AGENTS/*
 
 INFRA.md
 

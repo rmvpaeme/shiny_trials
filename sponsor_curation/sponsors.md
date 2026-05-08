@@ -4,7 +4,7 @@ Work happened in `/Users/rmvpaeme/Repos/active/rshiny_claude`.
 
 ## Summary
 
-The sponsor normalisation in `app.R` was reviewed against the current cache and expanded with curated aliases for high-frequency duplicate sponsor and institution names. The cache was rebuilt, and `preprocessing.Rmd` was regenerated.
+The sponsor normalisation in `app.R` was reviewed against the current cache and expanded with curated aliases for high-frequency duplicate sponsor and institution names. The cache was rebuilt, and `rmarkdown/preprocessing.Rmd` was regenerated.
 
 ## Follow-up Patch: Remaining Overlap Clusters
 
@@ -59,7 +59,7 @@ The app does **not** read `config/sponsor_aliases.csv` at runtime. That file is 
 - `audit_sponsors.R`: rebuilds the candidate list from `data/sponsor_normalisation_log.csv`. It applies already reviewed aliases so accepted pairs disappear from future candidate lists.
 - `approve_sponsor_aliases.R`: batch approval path. Use this after manually setting `approved=TRUE` in `data/sponsor_alias_candidates.csv`.
 - `review_sponsor_aliases.R`: interactive approval path. This is easiest for the first manual curation.
-- `config/sponsor_curation_baseline.csv`: snapshot of sponsor labels after the last completed manual curation. `preprocessing.Rmd` uses it to show “XX new sponsors since last manual curation”.
+- `config/sponsor_curation_baseline.csv`: snapshot of sponsor labels after the last completed manual curation. `rmarkdown/preprocessing.Rmd` uses it to show “XX new sponsors since last manual curation”.
 
 ### First Manual Curation: Recommended Path
 
@@ -154,7 +154,7 @@ Only after this apply phase should the preprocessing report show `0 new sponsors
 
 ### After Future Trial Loads
 
-After loading new trials and refreshing the cache, open `preprocessing.Rmd` or `www/preprocessing.html` and check the sponsor section. It will show:
+After loading new trials and refreshing the cache, open `rmarkdown/preprocessing.Rmd` or `www/preprocessing.html` and check the sponsor section. It will show:
 
 ```text
 XX new sponsors since last manual curation
@@ -230,7 +230,7 @@ Sponsor spot checks after rebuild:
 - `Charite Universitaetsmedizin Berlin`: `230`
 - `EORTC`: `75`
 
-`www/preprocessing.html` was regenerated successfully from `preprocessing.Rmd` and updated `2026-05-05 10:24`.
+`www/preprocessing.html` was regenerated successfully from `rmarkdown/preprocessing.Rmd` and updated `2026-05-05 10:24`.
 
 ## Rebuild Caveat
 
@@ -242,7 +242,7 @@ The duplicate second pass failed inside `ctrdata` with:
 Error in if (cacheOutdated) { : missing value where TRUE/FALSE needed
 ```
 
-This happened after the fresh cache had already been saved. `preprocessing.Rmd` was then rendered separately against the fresh cache and succeeded.
+This happened after the fresh cache had already been saved. `rmarkdown/preprocessing.Rmd` was then rendered separately against the fresh cache and succeeded.
 
 Future rebuilds should avoid double execution by sourcing in a way that does not auto-run app globals, or by using a dedicated rebuild helper that force-rebuilds only once.
 

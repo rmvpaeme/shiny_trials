@@ -4,7 +4,7 @@
 #   Rscript sponsor_curation/apply_sponsor_aliases.R
 #
 # Useful options:
-#   --no-render   Skip rendering preprocessing.Rmd
+#   --no-render   Skip rendering rmarkdown/preprocessing.Rmd
 #   --no-cache    Only update the alias block in app.R
 #   --no-audit    Skip regenerating data/sponsor_alias_candidates.csv
 #
@@ -234,11 +234,19 @@ if (!skip_audit && file.exists(audit_script)) {
   }
 }
 
-preprocessing_path <- project_path("preprocessing.Rmd")
+preprocessing_path <- project_path("rmarkdown/preprocessing.Rmd")
 if (!skip_render && file.exists(preprocessing_path)) {
   if (requireNamespace("rmarkdown", quietly = TRUE)) {
-    message("Rendering preprocessing.Rmd...")
-    rmarkdown::render(preprocessing_path, quiet = TRUE)
+    message("Rendering rmarkdown/preprocessing.Rmd...")
+    rmarkdown::render(
+      preprocessing_path,
+      output_file = project_path("www/preprocessing.html"),
+      params = list(
+        cache_path = cache_path,
+        log_dir = dirname(log_path)
+      ),
+      quiet = TRUE
+    )
   } else {
     warning("Package rmarkdown is not installed; skipping preprocessing render.")
   }

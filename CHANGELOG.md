@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.11.0 — 2026-05-06
+
+- **EUCTR A.8 extraction**: EUCTR records now extract `a8_ema_decision_number_of_paediatric_investigation_plan`, clean noisy suffix text, and normalise EMA decision numbers such as `P/026/2010` and `P/26/2010` to the same canonical form.
+- **CTIS PIP procedure identifiers**: CTIS `paediatricInvestigationPlan` records are parsed for EMA PIP procedure numbers such as `EMEA-001090-PIP02-21`, giving both registers a matchable PIP identifier path.
+- **Official EMA PIP lookup**: added `helper_scripts/update_pip_decisions.R`, which refreshes `config/pip_decisions.csv` from EMA's official JSON data feed instead of live-scraping pages during app startup.
+- **PIP waiver enrichment**: cache rows now carry `pip_decision_number`, `pip_procedure_number`, `pip_lookup_match`, `pip_ema_url`, `pip_decision_type_code`, `pip_decision_type`, `pip_decision_date`, `pip_waiver_status`, `has_pip_waiver`, and `has_pip_deferral`.
+- **INN-assisted substance fallback**: EUCTR `dimp.d38_imp_identification_details.d38_inn__proposed_inn` and `dimp.d391_inn_generic_name` are extracted as `DIMP_inn_name` and tokenised alongside product names so branded products can still match INN-based EMA PIP decisions when no decision/procedure identifier is present.
+- **Conservative waiver classification**: EMA `W` decision types are classified as full waivers. Generic `P` decision types remain `Unknown` for waiver/deferral detail because the EMA bulk feed only says "with or without" partial waiver(s)/deferral(s), which is not record-level evidence.
+- **Dashboard filtering and exports**: the sidebar Trial group adds a PIP Waiver filter, URL/filter save state preserves it, Data Explorer exports include PIP decision/procedure/waiver/deferral fields, and trial detail modals link to the matched EMA PIP page.
+- **Normalised product/substance filter**: the Product / Substance sidebar field is now a server-backed autocomplete list, populated from normalised product and INN labels rather than free text.
+- **PIP analytics**: PIP Analysis replaces the former combined Geography & PIP subsection and highlights evidence strength, ambiguous same-compound EMA decision matches, waiver status over time, and deferral status alongside existing PIP status charts. Geography remains a separate Analysis subsection for country-level trial distribution.
+- **Active substance exploration**: the Active Substances tab is separated from PIP analysis and now focuses on top active substances, yearly evolution, register mix, and age-group profiles.
+- **CTIS result reporting fix**: CTIS trials with `resultsFirstReceived = TRUE` now use the textual application trial status before numeric `ctStatus`, and code `8` maps to `Ended`, so completed CTIS records appear in the Result Reporting posted-results table.
+- **Cache schema guard**: cache validation now requires the new PIP enrichment columns so old caches rebuild automatically when v0.11.0 pipeline logic is loaded.
+- **Repository layout cleanup**: local agent notes moved into ignored `AGENTS/`, report templates moved into `rmarkdown/`, deploy scripts moved into `nightly_update/`, and maintenance helpers moved into `helper_scripts/`; runtime and deployment paths were updated for the new layout.
+
 ## v0.10.4 — 2026-05-05
 
 - **CTIS transition EudraCT matching**: CTIS transition applications now extract `authorizedApplication.eudraCt.eudraCtCode`, the embedded legacy EudraCT number. Cross-register deduplication uses that field to replace EUCTR "Trial now transitioned" rows with the active CTIS record even when the CTIS EU trial number is a new `2024-...` identifier rather than the old EudraCT base.

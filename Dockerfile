@@ -89,9 +89,9 @@ WORKDIR /app
 
 # Copy application files
 COPY app.R           /app/app.R
-COPY report.Rmd      /app/report.Rmd
+COPY rmarkdown/      /app/rmarkdown/
 COPY update_data.R   /app/update_data.R
-COPY nightly_deploy.sh /app/nightly_deploy.sh
+COPY nightly_update/nightly_deploy.sh /app/nightly_deploy.sh
 COPY rebuild_cache.R /app/rebuild_cache.R
 
 # Environment variables for DB path (overridable at runtime)
@@ -158,4 +158,3 @@ HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:3838/ || exit 1
 
 CMD ["/app/start.sh"]
-

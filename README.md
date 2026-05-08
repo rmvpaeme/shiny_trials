@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.10.4** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.11.0** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -48,6 +48,9 @@ The Result Reporting tab shows which completed trials have reported results to t
 **Comparing sponsor portfolios**
 Select 2–3 sponsors and the Sponsor Comparison tab renders side-by-side breakdowns of phase distribution, trial status, therapeutic areas, geographic reach, PIP involvement, and submission volume over time. Useful for competitive intelligence, partnership scoping, or regulatory submissions that require landscape context.
 
+**PIP waiver landscape**
+EUCTR A.8 EMA PIP decision numbers and CTIS PIP procedure numbers are normalised and joined to EMA's official PIP decision feed. When identifiers are missing, EUCTR INN/proposed INN names and trial product names are used as a conservative substance fallback. The Trial filters and PIP Analysis tab separate full waivers, records with no waiver indicated in the EMA decision type, and records where the bulk feed is ambiguous because the same compound has multiple possible EMA PIP decisions.
+
 **Orphan / rare disease landscape**
 The Orphan Designation filter (sourced from EUCTR DIMP D.2.5 and CTIS orphan designation numbers) narrows the dataset to orphan-designated products. Combined with MedDRA filtering, this surfaces the rare disease trial landscape for a given indication without manual registry searches.
 
@@ -65,7 +68,9 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | **Map** | Open trials by country (circle map); age-aware per-million normalisation; sortable country table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
 | **Analysis** *(collapsible group)* | |
-| &nbsp;&nbsp;Basic Analytics | Top organ classes, top MedDRA terms, country bar chart, PIP status, regulatory timeline |
+| &nbsp;&nbsp;Therapeutic Areas | Top organ classes and top MedDRA terms |
+| &nbsp;&nbsp;Geography | Country-level trial distribution under the active sidebar filters |
+| &nbsp;&nbsp;PIP Analysis | PIP status, waiver/deferral evidence, match ambiguity, and waiver evolution over time |
 | &nbsp;&nbsp;Phase Analytics | Phase by register / status / sponsor type, phase funnel, completion cohort |
 | &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 7 dimensions including result reporting |
 | &nbsp;&nbsp;Country Comparison | Side-by-side comparison of 2–3 selected countries across 7 dimensions including result reporting |
@@ -87,6 +92,7 @@ All charts and tables update simultaneously when filters change. Active filters 
 | Source Register | EUCTR / CTIS |
 | Trial Phase | Phase I / II / III / IV |
 | Part of PIP | Yes / No / Unknown |
+| PIP Waiver | Yes / No / Unknown |
 | Orphan Designation | Yes / No / Unknown |
 | MedDRA Organ Class | Multi-select |
 | Condition / MedDRA Term | Multi-select with server-side search |
@@ -150,6 +156,32 @@ source("rebuild_cache.R")
 
 Processes the SQLite database into `trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
 
+### Refresh EMA PIP decisions
+
+```bash
+Rscript helper_scripts/update_pip_decisions.R
+```
+
+Downloads EMA's official PIP decisions JSON feed into `config/pip_decisions.csv`. The Shiny app joins this local CSV during cache rebuild; it does not fetch EMA pages during startup. EUCTR INN/proposed INN names from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` and `dimp.d391_inn_generic_name` improve substance-name fallback coverage for branded products.
+
+### Local test database
+
+The full SQLite database can be slow to process on the MacBook. For local testing, create an approximate 4 GB random subset without decoding the MessagePack blobs:
+
+```bash
+Rscript helper_scripts/create_local_test_db.R --target-gb=4 --output=./data/trials_local.sqlite
+```
+
+Then rebuild a separate local cache from that smaller database:
+
+```bash
+DB_PATH=./data/trials_local.sqlite CACHE_PATH=trials_cache_local.rds Rscript rebuild_cache.R
+```
+
+Alternatively, back up the full database and temporarily rename/copy the local subset to `data/trials.sqlite` before running the normal cache rebuild.
+
+Both files are local generated artifacts and should stay out of normal commits.
+
 ### Sponsor alias review
 
 Sponsor-name cleanup in the app is deterministic code in `app.R`. The generated file `data/sponsor_alias_candidates.csv` and reviewed file `config/sponsor_aliases.csv` are **manual curation aids**: candidates are not applied to the app data or cache by themselves.
@@ -194,7 +226,7 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ### Docker
 
-A `Dockerfile` and `docker-compose.yml` are included, but they have not yet been fully refreshed for the v0.9 all-ages file names. For local development, the R commands above are the canonical path. Before production Docker deployment, confirm the container paths use `data/trials.sqlite` and `trials_cache.rds`.
+A `Dockerfile` and `docker-compose.yml` are included for container use. For local development, the R commands above are the canonical path. Before production Docker deployment, confirm the runtime `DB_PATH` and `CACHE_PATH` values point at `data/trials.sqlite` and `trials_cache.rds`.
 
 ```bash
 docker build -t paediatric-trials .
@@ -215,11 +247,13 @@ The PDF report uses `xelatex` so Unicode registry text (for example `≥`) does 
 
 ### Scheduled data updates
 
-To refresh overnight, schedule `update_data.R` and `rebuild_cache.R` via cron (macOS/Linux):
+To refresh overnight on a simple cron setup, schedule the root-level `update_data.R` and `rebuild_cache.R` scripts:
 
 ```bash
 0 3 * * * Rscript /path/to/update_data.R && Rscript /path/to/rebuild_cache.R >> /var/log/trials_rebuild.log 2>&1
 ```
+
+The deploy-oriented shell scripts live in `nightly_update/`. The Posit Cloud workflow uses `nightly_update/nightly_deploy_posit.sh` to rebuild the deploy branch from `main`, update the trial data, rebuild the cache and preprocessing report, and push generated deploy artifacts.
 
 After each rebuild the app loads the new RDS on the next session start (or immediately if `force_rebuild = TRUE` is passed to `load_trial_data()`).
 
@@ -252,14 +286,12 @@ The cache is invalidated only when the SQLite database file is newer than the RD
 
 ## Changelog
 
-### v0.10.4 — 2026-05-05
+### v0.11.0 — 2026-05-06
 
-- **CTIS transition matching**: transitioned EUCTR trials are now matched to CTIS using the CTIS embedded transition EudraCT number, not only title or CTIS ID assumptions.
-- **Searchable aliases**: CTIS transition rows retain the old EudraCT number as a searchable alias so trials remain findable by either identifier.
-- **Register Migration tab**: a dedicated Analysis view now highlights EUCTR-era records that are sourced from CTIS after migration.
-- **Safer deduplication audit**: title-only duplicate drops are limited to explicitly transitioned records, CTIS swaps keep the latest amendment version, and the preprocessing report audits canonical trial IDs.
-- **CTIS MedDRA organ classes restored**: numeric EMA MedDRA SOC codes are preserved during CTIS flattening so the Top MedDRA Organ Classes chart works when filtering to CTIS.
-- **Sponsor curation workflow**: sponsor alias review tools now live in `sponsor_curation/`, with resumable interactive review, CSV batch approval, self-service alias application to `app.R`, cache/log/candidate regeneration, and baseline updates.
+- **PIP decision enrichment**: EUCTR A.8 EMA decision numbers and CTIS PIP procedure numbers are extracted, normalised, and matched to EMA's official PIP decisions JSON feed, with EUCTR INN/generic names used as a conservative substance fallback when identifiers are absent.
+- **PIP waiver/deferral fields**: the cache now includes PIP decision/procedure identifiers, EMA URL, decision type, full-waiver status, waiver status, and deferral status.
+- **Dashboard controls**: the sidebar adds a PIP Waiver filter; Data Explorer exports include PIP decision fields; PIP Analysis adds waiver, deferral, evidence-strength, and ambiguity charts.
+- **Offline EMA refresh**: `helper_scripts/update_pip_decisions.R` refreshes `config/pip_decisions.csv` from EMA's bulk JSON feed so the Shiny app does not scrape live pages during startup.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
@@ -273,6 +305,19 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 ├── app.R                        # Main Shiny application
 ├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
 ├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
+├── helper_scripts/
+│   ├── update_pip_decisions.R           # Refreshes local EMA PIP decisions lookup
+│   ├── create_local_test_db.R           # Creates a smaller random SQLite DB for local testing
+│   └── clean_db.R                       # Cleans invalid SQLite records before rebuilds
+├── rmarkdown/
+│   ├── report.Rmd                       # PDF report template (rendered on demand)
+│   ├── comparison_report.Rmd            # Paediatric vs adult PDF report template
+│   └── preprocessing.Rmd                # Pipeline audit report source
+├── nightly_update/
+│   ├── nightly_deploy_posit.sh          # Deploy-branch refresh for Posit Cloud
+│   ├── nightly_deploy.sh                # Legacy shinyapps.io deploy helper
+│   └── nightly_deploy_docker.sh         # Legacy Docker deploy helper
+├── AGENTS/                      # Local agent notes and handovers (git-ignored)
 ├── sponsor_curation/
 │   ├── README.md                        # Sponsor curation guide
 │   ├── audit_sponsors.R                 # Generates sponsor alias review candidates
@@ -280,10 +325,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 │   ├── apply_sponsor_aliases.R          # Applies reviewed aliases to app/cache/baseline
 │   ├── review_sponsor_aliases.R         # Interactive sponsor alias reviewer
 │   └── sponsors.md                      # Sponsor normalisation handover notes
-├── report.Rmd                   # PDF report template (rendered on demand)
-├── preprocessing.Rmd            # Pipeline audit report source
 ├── trials_cache.rds             # Processed data cache (git-ignored)
 ├── config/
+│   ├── pip_decisions.csv                # Cached EMA PIP decisions lookup
 │   ├── sponsor_aliases.csv              # Manual sponsor alias review decisions
 │   └── sponsor_curation_baseline.csv    # Sponsor labels present at last manual curation
 ├── Dockerfile
@@ -297,8 +341,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 │   ├── organ_class_normalisation_log.csv
 │   ├── phase_normalisation_log.csv
 │   ├── status_category_normalisation_log.csv
-│   ├── status_display_normalisation_log.csv
-│   └── deploy/                          # Docker deployment files
+│   └── status_display_normalisation_log.csv
 └── www/
     ├── favicon.svg
     └── preprocessing.html        # Rendered pipeline audit report

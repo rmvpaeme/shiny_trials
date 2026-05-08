@@ -2,9 +2,7 @@
 title: "Data Preprocessing Report"
 subtitle: "EU Paediatric Clinical Trials — Pipeline Audit"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-knit: (function(inputFile, encoding) {
-  rmarkdown::render(inputFile, encoding = encoding,
-                    output_file = "www/preprocessing.html") })
+knit: (function(inputFile, encoding) { out <- file.path(dirname(inputFile), "..", "www", "preprocessing.html"); rmarkdown::render(inputFile, encoding = encoding, output_file = out) })
 output:
   html_document:
     toc: true
@@ -18,8 +16,8 @@ output:
     fig_width: 9
     fig_height: 4.5
 params:
-  cache_path: "trials_cache.rds"
-  log_dir:    "data"
+  cache_path: "../trials_cache.rds"
+  log_dir:    "../data"
 ---
 
 ```{r setup, include=FALSE}
@@ -85,6 +83,34 @@ nk <- function(x, cap = NULL, cn = colnames(x)) {
                   full_width = FALSE, position = "left", font_size = 13)
 }
 
+clean_active_substance_label <- function(x) {
+  x <- str_squish(as.character(x))
+  x <- str_remove_all(x, regex("®|™", ignore_case = TRUE))
+  x <- str_remove(x, regex("^placebo\\s+(matching|for|of|to)?\\s*", ignore_case = TRUE))
+  x <- str_remove_all(x, regex("\\b\\d+[,.]?\\d*\\s*(mg|mcg|micrograms?|microgram|µg|ug|g|ml|l|%|units?|i\\.?u\\.?)\\b",
+                               ignore_case = TRUE))
+  x <- str_remove(x, regex("\\s+\\b[A-Z][A-Z0-9&.-]{2,}\\b$", ignore_case = FALSE))
+  x <- str_remove(x, regex("\\s+\\b(accord|teva|viatris|aristo|normon|altan|efg|jenapharm|galen|sandoz|mylan|krka|zentiva|aurobindo|fresenius|hospira|stada|ratiopharm|cinfa|arrow|acis|pharma|allergan|allergan units?|aerosphere|kwikpen)\\b.*$",
+                           ignore_case = TRUE))
+  x <- str_remove_all(x, regex("\\b(etexilate|pentahydrate|hydrochloride|hydrobromide|sulfate|sulphate|phosphate|acetate|maleate|fumarate|tartrate|citrate|mesylate|tosylate|besylate|monohydrate|dihydrate|trihydrate|sesquihydrate|sodium|potassium|calcium|magnesium|zinc|aluminum|aluminium|monosodium|disodium)\\b",
+                               ignore_case = TRUE))
+  x <- str_remove(x, regex("[,;:-]?\\s*\\b(concentrate|solution|suspension|powder|film-coated|hard capsules?|capsules?|tablets?|injection|infusion|pre-filled syringes?|vials?|oral|intravenous|subcutaneous|injectable|inyectable|injektionslösung|injektionsloesung|iniettabile|solución|solucion|poudre|polvere|polvo|solvant|solvente|comprimidos|recubiertos|pel[ií]cula|jeringas?|precargadas|zachte|pressurised inhalation)\\b.*$",
+                           ignore_case = TRUE))
+  x <- str_remove(x, regex("\\s+\\d+[,.]?\\d*$", ignore_case = TRUE))
+  x <- str_remove(x, regex("\\s+(and|\\+)$", ignore_case = TRUE))
+  x <- str_remove_all(x, regex("\\b(of|w|w/v|v/v)\\b", ignore_case = TRUE))
+  x <- str_remove_all(x, "[[:punct:]]+$")
+  str_squish(str_to_sentence(str_to_lower(x)))
+}
+
+is_exploratory_substance <- function(x) {
+  key <- str_to_lower(coalesce(as.character(x), ""))
+  nchar(key) >= 3 &
+    str_detect(key, "[[:alpha:]]") &
+    !str_detect(key, regex("^\\d+[,.]?\\d*\\s*%?\\s*(w|w/v|v/v)?$|^dose$|^the placebo|\\bplacebo\\b|not yet established|not available|not applicable|^na$|^n/a$|^none$|^ml\\b|^mg\\b|micrograms?|concentrate|solution|solución|solucion|injectable|inyectable|injection|infusion|injektionslösung|iniettabile|comprimidos|recubiertos|pel[ií]cula|capsules?|tablets?|poudre|polvere|polvo|solvant|solvente|sodium chloride|nacl|magnesium stearate|kwikpen",
+                           ignore_case = TRUE))
+}
+
 # ── Load data ──────────────────────────────────────────────────────────────────
 cache_file <- params$cache_path
 log_dir    <- params$log_dir
@@ -95,6 +121,7 @@ if (!file.exists(cache_file))
 t0 <- proc.time()
 df <- readRDS(cache_file)
 load_sec <- round((proc.time() - t0)["elapsed"], 1)
+if (!"DIMP_inn_name" %in% names(df)) df$DIMP_inn_name <- NA_character_
 if (!"transition_eudract_number" %in% names(df)) df$transition_eudract_number <- NA_character_
 if (!"trial_identifiers" %in% names(df)) df$trial_identifiers <- df$CT_number
 if (!"canonical_trial_id" %in% names(df)) {
@@ -138,6 +165,46 @@ sponsor_alias_candidates <- if (file.exists(sponsor_candidate_path)) {
 } else {
   tibble()
 }
+
+ensure_cols <- function(x, defaults) {
+  for (nm in names(defaults)) {
+    if (!nm %in% names(x)) {
+      default <- defaults[[nm]]
+      x[[nm]] <- if (nrow(x) == 0L) default[0] else rep(default, nrow(x))
+    }
+  }
+  x
+}
+
+sponsor_aliases <- ensure_cols(
+  sponsor_aliases,
+  list(
+    priority = NA_integer_,
+    pattern = NA_character_,
+    canonical = NA_character_,
+    match_type = "regex",
+    approved = TRUE,
+    notes = NA_character_
+  )
+)
+sponsor_alias_candidates <- ensure_cols(
+  sponsor_alias_candidates,
+  list(
+    sponsor_a = NA_character_,
+    sponsor_b = NA_character_,
+    canonical_suggestion = NA_character_,
+    suggested_pattern = NA_character_,
+    suggested_match_type = NA_character_,
+    approved = FALSE,
+    total_n = NA_real_,
+    similarity_score = NA_real_,
+    token_overlap = NA_real_
+  )
+)
+sponsor_curation_baseline <- ensure_cols(
+  sponsor_curation_baseline,
+  list(sponsor_name = NA_character_, baseline_date = NA_character_)
+)
 ```
 
 ---
@@ -296,6 +363,7 @@ field_map <- tribble(
   "transition_eudract_number", NA_character_,                                                 "authorizedApplication.eudraCt.eudraCtCode",
   "Full_title",            "a3_full_title_of_the_trial",                                      "clinicalTrialIdentifiers.fullTitle",
   "DIMP_product_name",     "dimp.d31_product_name",                                           "products.productName",
+  "DIMP_inn_name",         "dimp.d38_imp_identification_details.d38_inn__proposed_inn",       NA_character_,
   "MEDDRA_term",           "e12_meddra_classification.e12_term",                              "meddraConditionTerms.termName",
   "MEDDRA_organ_class",    "e12_meddra_classification.e12_system_organ_class",                "meddraConditionTerms.organClass",
   "Member_state",          "a1_member_state_concerned",                                       "memberStatesConcerned",
@@ -1622,15 +1690,248 @@ df %>%
 
 ---
 
-# 13 · PIP, Results, and Orphan Status {.tabset}
+# 13 · PIP, Waiver, Results, and Orphan Status {.tabset}
 
 Three binary/categorical flags are derived from registry-specific fields.
 
 | Column | EUCTR source | CTIS source | Categories |
 |---|---|---|---|
 | `has_PIP` | `a7_…_paediatric_investigation_plan` text | PIP record presence | Yes / No / Unknown |
+| `pip_decision_number` | `a8_…_paediatric_investigation_plan` cleaned to `P/…/YYYY` | EMA lookup match by decision number when available | EMA decision number / NA |
+| `pip_procedure_number` | EMA lookup match by decision number when available | `paediatricInvestigationPlan` cleaned to `EMEA-…-PIP…` | EMA PIP procedure number / NA |
+| `DIMP_inn_name` | `dimp.d38_…_d38_inn__proposed_inn`; fallback `dimp.d391_inn_generic_name` | NA | INN / generic name used for substance fallback |
+| `has_pip_waiver` | EMA PIP decisions lookup | EMA PIP decisions lookup | Yes / No / Unknown |
+| `has_pip_deferral` | EMA PIP decisions lookup | EMA PIP decisions lookup | Yes / No / Unknown |
 | `has_results` | `endPoints.endPoint.readyForValues` (non-NA) | `resultsFirstReceived` (= "true") | TRUE / FALSE |
 | `is_orphan` | `dimp.d25_…_orphan_drug_…` ("yes"/"no") | `orphanDrugDesigNumber` (non-empty) | Yes / No / Unknown |
+
+PIP waiver enrichment is offline and cache-based. `helper_scripts/update_pip_decisions.R` refreshes
+`config/pip_decisions.csv` from EMA's official PIP decisions JSON feed; the Shiny
+app then joins that CSV during cache rebuild. EMA `W` decision types are treated as
+full waivers. Generic `P` records remain `Unknown` for waiver/deferral detail because
+the bulk feed only states that partial waivers or deferrals may be present.
+
+### Substance-name normalisation
+
+Because most trials do not fill in the A.8 decision-number field, the pipeline falls back to
+matching trials to EMA PIP decisions via active substance name. EUCTR rows use the INN/proposed
+INN from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` when available and also tokenise `DIMP_product_name`;
+CTIS rows use product names. The same normalisation is applied to all trial-side tokens and
+EMA `active_substance` values:
+
+1. **Lowercase and squish** whitespace.
+2. **Strip concentrations** — patterns like `150 mg/mL`, `5%`, `10 mg` are removed.
+3. **Strip common salt and formulation suffixes** — hydrochloride, sulfate, sulphate,
+   phosphate, acetate, maleate, fumarate, tartrate, citrate, mesylate, tosylate, besylate,
+   monohydrate, dihydrate, trihydrate, sesquihydrate, sodium, potassium, calcium, magnesium,
+   zinc, aluminum/aluminium, monosodium, disodium.
+4. **Tokenise on `;` and `/`** — multi-substance entries (e.g. `risankizumab / placebo`) are
+   split; each component is matched independently.
+5. **Minimum token length 4 characters** — very short tokens are discarded.
+
+The resulting INN and product-name tokens are deduplicated per trial and looked up in a pre-built
+index of normalised EMA `active_substance` values. Tokens that match exactly one EMA record produce an unambiguous link
+(`pip_parse_confidence = "substance_name"`). Tokens that match multiple records are flagged as
+ambiguous (`pip_parse_confidence = "substance_name_ambiguous"`); ambiguous matches are always
+classified `"Unknown"` for waiver status — no waiver flag is propagated when it is unclear
+which of N decisions applies.
+
+This INN-assisted fallback closes many trade-name gaps where EUCTR product names are branded
+("Skyrizi", "Humira") but the EMA feed stores the active substance. Ambiguity is still expected
+for common substances with many historical PIP decisions.
+
+```{r substance-norm-summary}
+log_sub <- {
+  p <- file.path(log_dir, "substance_normalisation_log.csv")
+  if (file.exists(p)) read_csv(p, show_col_types = FALSE) else NULL
+}
+if (!is.null(log_sub)) {
+  raw_col <- if ("raw_substance" %in% names(log_sub)) "raw_substance" else "raw_product_name"
+  n_raw   <- n_distinct(log_sub[[raw_col]])
+  n_tok   <- n_distinct(log_sub$token)
+  n_match <- n_distinct(log_sub$token[log_sub$ema_match != "no match"])
+  n_unambig <- nrow(log_sub %>% filter(ema_match == "unambiguous") %>% distinct(.data[[raw_col]]))
+}
+```
+
+```{r substance-norm-kpis, results='asis', eval=!is.null(log_sub)}
+cat(sprintf('
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>unique raw substance names tokenised</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>unique normalised tokens generated</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>tokens matched to EMA substance index</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #BF616A;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>raw names with at least one unambiguous match</small>
+</div>
+</div>',
+fmt_n(n_raw), fmt_n(n_tok), fmt_n(n_match), fmt_n(n_unambig)))
+```
+
+```{r substance-norm-table, eval=!is.null(log_sub)}
+log_sub %>%
+  arrange(desc(n_trials), ema_match) %>%
+  mutate(
+    source = if ("source" %in% names(.)) source else NA_character_,
+    raw_substance = if ("raw_substance" %in% names(.)) raw_substance else raw_product_name,
+    active_substance = if ("active_substance" %in% names(.)) active_substance else clean_active_substance_label(raw_substance),
+    exploratory_include = if ("exploratory_include" %in% names(.)) exploratory_include else is_exploratory_substance(active_substance)
+  ) %>%
+  select(
+    Register      = register,
+    Source        = source,
+    `Raw substance name` = raw_substance,
+    `Exploratory label` = active_substance,
+    `In active-substance charts` = exploratory_include,
+    `Normalised token` = token,
+    `EMA match`   = ema_match,
+    `N decisions` = n_decisions,
+    `N trials`    = n_trials
+  ) %>%
+  datatable(
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 20, scrollX = TRUE),
+    caption  = "Substance name normalisation: trial INN/product names → normalised tokens and EMA match result"
+  )
+```
+
+### Active-substance exploration log
+
+The same `data/substance_normalisation_log.csv` file now also records the cleaned exploratory
+substance label used by the dashboard's **Active Substances** tab. This keeps the app and
+preprocessing audit aligned: the report below uses `active_substance`, `source`, `year`,
+`age_group`, and `exploratory_include` from the log when those columns are available.
+
+```{r active-substance-log-prep}
+active_sub_log <- NULL
+if (!is.null(log_sub)) {
+  active_sub_log <- log_sub %>%
+    mutate(
+      source = if ("source" %in% names(.)) source else NA_character_,
+      raw_substance = if ("raw_substance" %in% names(.)) raw_substance else raw_product_name,
+      active_substance = if ("active_substance" %in% names(.)) active_substance else clean_active_substance_label(raw_substance),
+      exploratory_include = if ("exploratory_include" %in% names(.)) exploratory_include else is_exploratory_substance(active_substance),
+      year = if ("year" %in% names(.)) suppressWarnings(as.integer(year)) else NA_integer_,
+      age_group = if ("age_group" %in% names(.)) age_group else NA_character_
+    ) %>%
+    filter(exploratory_include, !is.na(active_substance), nchar(active_substance) > 0)
+}
+```
+
+```{r active-substance-kpis, results='asis', eval=!is.null(active_sub_log)}
+cat(sprintf('
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
+<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>active-substance log rows included</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>unique exploratory substance labels</small>
+</div>
+<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
+  <b>%s</b><br><small>INN/generic-source rows</small>
+</div>
+</div>',
+fmt_n(nrow(active_sub_log)),
+fmt_n(n_distinct(active_sub_log$active_substance)),
+fmt_n(sum(active_sub_log$source == "INN", na.rm = TRUE))))
+```
+
+```{r active-substance-top, fig.height=5, eval=!is.null(active_sub_log)}
+top_sub <- active_sub_log %>%
+  group_by(active_substance, register) %>%
+  summarise(n_trials = sum(n_trials), .groups = "drop")
+
+top20_substances <- top_sub %>%
+  group_by(active_substance) %>%
+  summarise(total = sum(n_trials), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  slice_head(n = 20) %>%
+  pull(active_substance)
+
+top_sub %>%
+  filter(active_substance %in% top20_substances) %>%
+  mutate(active_substance = factor(active_substance, levels = rev(top20_substances))) %>%
+  ggplot(aes(n_trials, active_substance, fill = register)) +
+  geom_col() +
+  scale_fill_manual(values = REG_COLS) +
+  labs(title = "Top 20 active substances by trial count",
+       subtitle = "Uses INN/generic names where available, with product-name fallback",
+       x = "Trials", y = NULL) +
+  theme_pre()
+```
+
+```{r active-substance-timeline, fig.height=4.8, eval=!is.null(active_sub_log)}
+top8_substances <- active_sub_log %>%
+  group_by(active_substance) %>%
+  summarise(total = sum(n_trials), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  slice_head(n = 8) %>%
+  pull(active_substance)
+
+active_sub_log %>%
+  filter(active_substance %in% top8_substances, !is.na(year)) %>%
+  group_by(year, active_substance) %>%
+  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
+  ggplot(aes(year, n_trials, colour = active_substance)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 1.8) +
+  scale_colour_manual(values = setNames(rep(NORD8, length.out = length(top8_substances)), top8_substances)) +
+  scale_x_continuous(breaks = pretty_breaks()) +
+  labs(title = "Active substance evolution over time",
+       x = "Submission year", y = "Trials") +
+  theme_pre()
+```
+
+```{r active-substance-register-age, fig.height=4.8, eval=!is.null(active_sub_log)}
+top10_substances <- active_sub_log %>%
+  group_by(active_substance) %>%
+  summarise(total = sum(n_trials), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  slice_head(n = 10) %>%
+  pull(active_substance)
+
+reg_mix <- active_sub_log %>%
+  filter(active_substance %in% top10_substances) %>%
+  group_by(active_substance, register) %>%
+  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
+  group_by(active_substance) %>%
+  mutate(pct = n_trials / sum(n_trials)) %>%
+  ungroup() %>%
+  mutate(active_substance = factor(active_substance, levels = rev(top10_substances)))
+
+age_mix <- active_sub_log %>%
+  filter(active_substance %in% top10_substances) %>%
+  mutate(age_group = coalesce(age_group, "Unknown")) %>%
+  group_by(active_substance, age_group) %>%
+  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
+  group_by(active_substance) %>%
+  mutate(pct = n_trials / sum(n_trials)) %>%
+  ungroup() %>%
+  mutate(active_substance = factor(active_substance, levels = rev(top10_substances)))
+
+p1 <- ggplot(reg_mix, aes(pct, active_substance, fill = register)) +
+  geom_col() +
+  scale_x_continuous(labels = percent) +
+  scale_fill_manual(values = REG_COLS) +
+  labs(title = "Register mix", x = "% of trials", y = NULL) +
+  theme_pre()
+
+p2 <- ggplot(age_mix, aes(pct, active_substance, fill = age_group)) +
+  geom_col() +
+  scale_x_continuous(labels = percent) +
+  scale_fill_manual(values = c(Paediatric = BLUE, Adult = ORANGE,
+                               `Paediatric & Adult` = GREEN, Unknown = GRAY)) +
+  labs(title = "Age-group profile", x = "% of trials", y = NULL) +
+  theme_pre()
+
+subplot(ggplotly(p1), ggplotly(p2), nrows = 1, margin = 0.05, shareY = TRUE) %>%
+  layout(showlegend = TRUE)
+```
 
 ## PIP Status
 
@@ -1644,6 +1945,82 @@ df %>%
   labs(title = "PIP (Paediatric Investigation Plan) status by register",
        x = NULL, y = "Proportion") +
   theme_pre()
+```
+
+## PIP Waiver Enrichment
+
+```{r pip-waiver-bar, fig.height=3.5}
+if (all(c("pip_waiver_status", "has_pip_waiver") %in% names(df))) {
+  df %>%
+    count(register, pip_waiver_status) %>%
+    ggplot(aes(register, n, fill = pip_waiver_status)) +
+    geom_col(position = "fill") +
+    scale_y_continuous(labels = percent) +
+    scale_fill_manual(values = c(
+      `Full waiver` = RED,
+      `PIP with waiver` = ORANGE,
+      `No waiver indicated` = GREEN,
+      Unknown = YELLOW
+    )) +
+    labs(title = "EMA PIP waiver enrichment by register",
+         x = NULL, y = "Proportion", fill = "Waiver status") +
+    theme_pre()
+}
+```
+
+```{r pip-lookup-summary}
+if (all(c("pip_lookup_match", "pip_decision_number", "pip_procedure_number",
+          "pip_parse_confidence") %in% names(df))) {
+  id_matches  <- sum(!is.na(df$pip_lookup_match) &
+                     coalesce(df$pip_parse_confidence, "") %in%
+                       c("ema_bulk_table", "ema_per_page"), na.rm = TRUE)
+  sub_single  <- sum(coalesce(df$pip_parse_confidence, "") == "substance_name",  na.rm = TRUE)
+  sub_ambig   <- sum(coalesce(df$pip_parse_confidence, "") == "substance_name_ambiguous", na.rm = TRUE)
+
+  tibble(
+    metric = c(
+      "Rows with EUCTR A.8 decision number",
+      "Rows with CTIS PIP procedure number",
+      "Matched by identifier (decision or procedure number)",
+      "Matched by substance name — unambiguous (1 EMA record)",
+      "Matched by substance name — ambiguous (≥2 EMA records)",
+      "Total rows with any EMA PIP match"
+    ),
+    value = c(
+      sum(!is.na(df$pip_decision_number)),
+      sum(!is.na(df$pip_procedure_number)),
+      id_matches,
+      sub_single,
+      sub_ambig,
+      sum(!is.na(df$pip_lookup_match))
+    )
+  ) %>%
+    nk(cap = "PIP identifier and EMA lookup coverage")
+}
+```
+
+```{r pip-substance-ambiguity, fig.height=3.5}
+if ("pip_parse_confidence" %in% names(df)) {
+  df %>%
+    mutate(match_method = case_when(
+      pip_parse_confidence %in% c("ema_bulk_table","ema_per_page") ~ "Identifier match",
+      pip_parse_confidence == "substance_name"                     ~ "Substance name (unambiguous)",
+      pip_parse_confidence == "substance_name_ambiguous"           ~ "Substance name (ambiguous)",
+      TRUE                                                         ~ "No match"
+    )) %>%
+    count(register, match_method) %>%
+    ggplot(aes(register, n, fill = match_method)) +
+    geom_col(position = "dodge") +
+    scale_fill_manual(values = c(
+      `Identifier match`               = GREEN,
+      `Substance name (unambiguous)`   = "#5E81AC",
+      `Substance name (ambiguous)`     = YELLOW,
+      `No match`                       = GRAY
+    )) +
+    labs(title = "EMA PIP match method by register",
+         x = NULL, y = "Trials", fill = "Match method") +
+    theme_pre()
+}
 ```
 
 ## Results Posted
@@ -2025,4 +2402,4 @@ if (nrow(year_implaus_ex) > 0) {
 
 ---
 
-*Generated by `preprocessing.Rmd` — `r format(Sys.time(), "%Y-%m-%d %H:%M:%S")`*
+*Generated by `rmarkdown/preprocessing.Rmd` — `r format(Sys.time(), "%Y-%m-%d %H:%M:%S")`*
