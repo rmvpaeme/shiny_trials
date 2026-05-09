@@ -23,3 +23,27 @@ botulinum toxin type a,botulinum toxin type a,accepted,biological toxin INN
 onabotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN
 abobotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN
 incobotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN
+ciclosporin,ciclosporin,accepted,EU INN (cyclosporine is US spelling)
+cyclosporin,ciclosporin,accepted,variant spelling of ciclosporin
+cyclosporine,ciclosporin,accepted,US spelling of ciclosporin
+glibenclamide,glibenclamide,accepted,EU INN (glyburide is US name)
+glyburide,glibenclamide,accepted,US name for glibenclamide
+aciclovir,aciclovir,accepted,EU INN (acyclovir is US spelling)
+acyclovir,aciclovir,accepted,US spelling of aciclovir
+paracetamol,paracetamol,accepted,INN (acetaminophen is US name)
+acetaminophen,paracetamol,accepted,US name for paracetamol
+fampridine,fampridine,accepted,INN (dalfampridine is US brand-INN)
+dalfampridine,fampridine,accepted,US name for fampridine
+flucloxacillin,flucloxacillin,accepted,INN (floxacillin is synonym)
+floxacillin,flucloxacillin,accepted,synonym for flucloxacillin
+adrenaline,adrenaline,accepted,INN (epinephrine is US name)
+epinephrine,adrenaline,accepted,US name for adrenaline
+noradrenaline,noradrenaline,accepted,INN (norepinephrine is US name)
+norepinephrine,noradrenaline,accepted,US name for noradrenaline
+salbutamol,salbutamol,accepted,INN (albuterol is US name)
+albuterol,salbutamol,accepted,US name for salbutamol
+botox,botulinum toxin type a,accepted,brand name for botulinum toxin type a
+dysport,botulinum toxin type a,accepted,brand name for botulinum toxin type a
+xeomin,botulinum toxin type a,accepted,brand name for botulinum toxin type a
+human normal immunoglobulin,human normal immunoglobulin,accepted,INN for pooled immunoglobulin
+ivig,human normal immunoglobulin,accepted,abbreviation for intravenous immunoglobulin

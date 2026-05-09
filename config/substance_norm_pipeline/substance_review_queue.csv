@@ -1,41 +1,22 @@
 raw_substance,active_substance_clean,match_status,match_score,match_source,match_reason,n_occurrences,decision,canonical_substance,comment
-Not available yet,NA,unknown,0,NA,no reliable match,10,NA,NA,NA
-not assigned yet,NA,unknown,0,NA,no reliable match,7,NA,NA,NA
 AMG 386,trebananib,review,64,chembl,alias match (chembl_synonym): 'amg 386' → 'trebananib',6,NA,NA,NA
-Human normal immunoglobulin,human immunoglobulin g,review,64,chembl,alias match (chembl_synonym): 'human normal immunoglobulin' → 'human immunoglobulin g',6,NA,NA,NA
 AFQ056,mavoglurant,review,64,chembl,alias match (chembl_synonym): 'afq056' → 'mavoglurant',5,NA,NA,NA
 AIN457,secukinumab,review,64,chembl,alias match (chembl_synonym): 'ain457' → 'secukinumab',5,NA,NA,NA
-Eslicarbazepine Acetate,NA,review,84,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
-FENFLURAMINE HYDROCHLORIDE,NA,review,84,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
 GSK1605786A,vercirnon sodium,review,64,chembl,alias match (chembl_synonym): 'gsk1605786a' → 'vercirnon sodium',5,NA,NA,NA
 Lu AA21004,vortioxetine,review,64,chembl,alias match (chembl_synonym): 'lu aa21004' → 'vortioxetine',5,NA,NA,NA
 PF-04965842,abrocitinib,review,64,chembl,alias match (chembl_synonym): 'pf-04965842' → 'abrocitinib',5,NA,NA,NA
-dabigatran etexilate,NA,review,84,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
-masitinib mesylate,NA,review,64,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
-not available yet,NA,unknown,0,NA,no reliable match,5,NA,NA,NA
-strontium ranelate,NA,review,64,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
 5-Aminolevulinic acid hydrochloride,aminolevulinic acid hydrochloride,review,64,chembl,alias match (chembl_synonym): '5-aminolevulinic acid hydrochloride' → 'aminolevulinic acid hydrochloride',4,NA,NA,NA
 ABT-450 / RITONAVIR / ABT-267 / ABT-333 / RIBAVIRIN,paritaprevir,review,63,chembl,alias match (chembl_synonym): 'abt-450' → 'paritaprevir',4,NA,NA,NA
 ABT-493 / ABT-530,glecaprevir,review,63,chembl,alias match (chembl_synonym): 'abt-493' → 'glecaprevir',4,NA,NA,NA
 ABX464,obefazimod,review,64,chembl,alias match (chembl_synonym): 'abx464' → 'obefazimod',4,NA,NA,NA
 AMG 416,etelcalcetide hydrochloride,review,64,chembl,alias match (chembl_synonym): 'amg 416' → 'etelcalcetide hydrochloride',4,NA,NA,NA
 AMG 827,brodalumab,review,64,chembl,alias match (chembl_synonym): 'amg 827' → 'brodalumab',4,NA,NA,NA
-Anti-MAdCAM antibody,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
-Apomorphine hydrochloride,NA,review,64,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
 BEZ235,dactolisib,review,64,chembl,alias match (chembl_synonym): 'bez235' → 'dactolisib',4,NA,NA,NA
 BIBF 1120,nintedanib,review,64,chembl,alias match (chembl_synonym): 'bibf 1120' → 'nintedanib',4,NA,NA,NA
 BMS-986165,deucravacitinib,review,64,chembl,alias match (chembl_synonym): 'bms-986165' → 'deucravacitinib',4,NA,NA,NA
-BOTOX,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
-CICLOSPORIN,cyclosporine,review,84,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',4,NA,NA,NA
 COLCHICINA,colchicine,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),4,NA,NA,NA
-Erythropoietin,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
-FAMPRIDINE,dalfampridine,review,64,chembl,alias match (chembl_synonym): 'fampridine' → 'dalfampridine',4,NA,NA,NA
-GLIBENCLAMIDE,glyburide,review,84,chembl,alias match (ban): 'glibenclamide' → 'glyburide',4,NA,NA,NA
 Hyperpolarized [1-13C]pyruvate,peralopride,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
 MK-5172 / MK-8742,grazoprevir anhydrous,review,63,chembl,alias match (chembl_synonym): 'mk-5172' → 'grazoprevir anhydrous',4,NA,NA,NA
-PARACETAMOL,acetaminophen,review,64,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',4,NA,NA,NA
-not established,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
-not yet defined,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
 68GaGa-FAPI-46,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 ABBV-154,adalimumab fosimdesonide,review,64,chembl,alias match (chembl_synonym): 'abbv-154' → 'adalimumab fosimdesonide',3,NA,NA,NA
 ACT-128800,ponesimod,review,64,chembl,alias match (chembl_synonym): 'act-128800' → 'ponesimod',3,NA,NA,NA
@@ -43,63 +24,42 @@ ALXN1210,ravulizumab,review,64,chembl,alias match (chembl_synonym): 'alxn1210' �
 AMG 145,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 AMG 531,romiplostim,review,64,chembl,alias match (chembl_synonym): 'amg 531' → 'romiplostim',3,NA,NA,NA
 Albumin,albumin human,review,64,chembl,alias match (chembl_synonym): 'albumin' → 'albumin human',3,NA,NA,NA
-BALOXAVIR MARBOXIL,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 BCX7353,berotralstat,review,64,chembl,alias match (chembl_synonym): 'bcx7353' → 'berotralstat',3,NA,NA,NA
-BECLOMETASONE DIPROPIONATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 BMS-354825-03,dasatinib,review,64,chembl,alias match (chembl_synonym): 'bms-354825-03' → 'dasatinib',3,NA,NA,NA
 CAMOSTAT MESILATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 "CP-690,550",tofacitinib,review,64,chembl,"alias match (chembl_synonym): 'cp-690,550' → 'tofacitinib'",3,NA,NA,NA
-Ciclosporin Ciclosporinium,cyclosporine,review,83,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',3,NA,NA,NA
-DABIGATRAN ETEXILATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 DCR-L1360,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 DIBOTERMIN ALPHA,dibotermin alfa,review,63,chembl,alias match (chembl_synonym): 'dibotermin' → 'dibotermin alfa',3,NA,NA,NA
 Dimebon dihydrochloride,latrepirdine,review,63,chembl,alias match (chembl_synonym): 'dimebon' → 'latrepirdine',3,NA,NA,NA
 EVP-6124,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 Efgartigimod,efgartigimod alfa,review,64,chembl,alias match (chembl_synonym): 'efgartigimod' → 'efgartigimod alfa',3,NA,NA,NA
-Enzastaurin Hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
-FXIIa inhibitor monoclonal antibody,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Fostamatinib disodium,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 GS-5745,andecaliximab,review,64,chembl,alias match (chembl_synonym): 'gs-5745' → 'andecaliximab',3,NA,NA,NA
 GW685698X,fluticasone furoate,review,64,chembl,alias match (chembl_synonym): 'gw685698x' → 'fluticasone furoate',3,NA,NA,NA
 Human Fibrinogen,"fibrinogen, human",review,64,chembl,"alias match (chembl_synonym): 'human fibrinogen' → 'fibrinogen, human'",3,NA,NA,NA
-Human Normal Immunoglobulin,human immunoglobulin g,review,64,chembl,alias match (chembl_synonym): 'human normal immunoglobulin' → 'human immunoglobulin g',3,NA,NA,NA
 INSULIN GLARGINE / INSULIN DEGLUDEC,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',3,NA,NA,NA
 ISIS 678354,olezarsen,review,64,chembl,alias match (chembl_synonym): 'isis 678354' → 'olezarsen',3,NA,NA,NA
 "Influenza, purified antigen",enflurane,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),3,NA,NA,NA
-Interferon beta-1a,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 L-asparaginase encapsulated in erythrocytes,asparaginase,review,63,chembl,alias match (chembl_synonym): 'l-asparaginase' → 'asparaginase',3,NA,NA,NA
-MARALIXIBAT CHLORIDE,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 MK-0974,telcagepant,review,64,chembl,alias match (chembl_synonym): 'mk-0974' → 'telcagepant',3,NA,NA,NA
-Masitinib mesylate,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 Microplasmin,ocriplasmin,review,64,chembl,alias match (chembl_synonym): 'microplasmin' → 'ocriplasmin',3,NA,NA,NA
 N / A / ADALIMUMAB,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 NBI-921352,zandatrigine,review,64,chembl,alias match (chembl_synonym): 'nbi-921352' → 'zandatrigine',3,NA,NA,NA
 NICOTINAMIDE,niacinamide,review,64,chembl,alias match (chembl_synonym): 'nicotinamide' → 'niacinamide',3,NA,NA,NA
-No INN or proposed INN available,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Nonacog alfa,coagulation factor ix recombinant human,review,84,chembl,alias match (ban): 'nonacog alfa' → 'coagulation factor ix recombinant human',3,NA,NA,NA
 Nonavalent HPV VLP Vaccine,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Not assigned yet,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Not established,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Not yet defined,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-Paracetamol,acetaminophen,review,64,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',3,NA,NA,NA
 S44121,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 SYL1001,tivanisiran,review,64,chembl,alias match (chembl_synonym): 'syl1001' → 'tivanisiran',3,NA,NA,NA
 TAK-475,lapaquistat acetate,review,64,chembl,alias match (chembl_synonym): 'tak-475' → 'lapaquistat acetate',3,NA,NA,NA
 TAK-861,tak-186,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),3,NA,NA,NA
-TREPROSTINIL PALMITIL,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 TRIAMCINOLONE ACETONIDE,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 Tetrahydrocannabinol Botanical Drug Substance THC BDS / Cannabidiol Botanical Drug Substance CBD BDS,dronabinol,review,63,chembl,alias match (chembl_synonym): 'tetrahydrocannabinol' → 'dronabinol',3,NA,NA,NA
 VX-659 / TEZACAFTOR / IVACAFTOR,bamocaftor,review,63,chembl,alias match (chembl_synonym): 'vx-659' → 'bamocaftor',3,NA,NA,NA
-Xeomin,hemin,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),3,NA,NA,NA
-anti-IL-36R monoclonal antibody,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 eptacog alfa activated,eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),3,NA,NA,NA
 gE recombinant protein formulated in AS01B Adjuvant System,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
 mongersen,tominersen,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),3,NA,NA,NA
 not available / ADALIMUMAB,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
-tisotumab vedotin,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
 "+-S,S-Reboxetine Succinate",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 18F flutemetamol,NA,review,63,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-5-AMINOLEVULINIC ACID,aminolevulinic acid,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),2,NA,NA,NA
+5-AMINOLEVULINIC ACID,aminolevulinic acid,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
 68-Ga-NODAGA-K40-Exendin4,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 68Ga-NODAGA-EcRGDyK2,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 68Ga-NODAGA-K40-Exendin-4,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -117,7 +77,6 @@ AMG 785,romosozumab,review,64,chembl,alias match (chembl_synonym): 'amg 785' →
 ANX005,anx-005,review,64,chembl,alias match (chembl_synonym): 'anx005' → 'anx-005',2,NA,NA,NA
 APRAGLUTIDE,apalutamide,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),2,NA,NA,NA
 ASTX727,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-Aciclovir,acyclovir,review,84,chembl,alias match (ban): 'aciclovir' → 'acyclovir',2,NA,NA,NA
 Albutropin / somatropin,albusomatropin,review,63,chembl,alias match (chembl_synonym): 'albutropin' → 'albusomatropin',2,NA,NA,NA
 Allergovit 6-grasses,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Alpha1-Proteinase Inhibitor Human,.alpha.1-proteinase inhibitor human,review,98,fuzzy:chembl,fuzzy match (jw similarity 98%),2,NA,NA,NA
@@ -127,9 +86,7 @@ Antithymocyte immunoglobulin rabbit,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 "Apexxnar suspension for injection in pre-filled syringe Pneumococcal polysaccharide conjugate vaccine (20-valent, adsorbed)",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 ApoA-I / Sph / DPPG,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Autologous Chondrocytes,autologous cultured chondrocytes,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
-Avatrombopag maleate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 BAY 2433334,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM BROMIDE,NA,review,63,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 BEMIPARIN SODIUM,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 BI 1356,linagliptin,review,64,chembl,alias match (chembl_synonym): 'bi 1356' → 'linagliptin',2,NA,NA,NA
 BI 1744 2.5 g Solution for Inhalation / BI 1744 5 g Solution for Inhalation,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -138,18 +95,14 @@ BI 655066 90 mg / ml,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 BIVV020,riliprubart,review,64,chembl,alias match (chembl_synonym): 'bivv020' → 'riliprubart',2,NA,NA,NA
 BM32 4 API components,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 BMS-986165 / Apremilast,deucravacitinib,review,63,chembl,alias match (chembl_synonym): 'bms-986165' → 'deucravacitinib',2,NA,NA,NA
-Bardoxolone Methyl,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-Beraprost Sodium,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Bevacizumab-IRDye800CW,bevacizumab,unknown,83,fuzzy:manual,fuzzy match (jw similarity 83%),2,NA,NA,NA
 "Botulinum Toxin Type A, purified Neurotoxin Complex / Clostridium Botulinum Neurotoxin Type A",abobotulinumtoxina,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
 CDX-0159,barzolvolimab,review,64,chembl,alias match (chembl_synonym): 'cdx-0159' → 'barzolvolimab',2,NA,NA,NA
-CENICRIVIROC MESYLATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 CHOLINE,choline c-11,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
 CNTO328,siltuximab,review,64,chembl,alias match (chembl_synonym): 'cnto328' → 'siltuximab',2,NA,NA,NA
 COLESTYRAMINE,cholestyramine,review,64,chembl,alias match (chembl_synonym): 'colestyramine' → 'cholestyramine',2,NA,NA,NA
 CRN00808,paltusotine,review,64,chembl,alias match (chembl_synonym): 'crn00808' → 'paltusotine',2,NA,NA,NA
 CUV1647,afamelanotide,review,64,chembl,alias match (chembl_synonym): 'cuv1647' → 'afamelanotide',2,NA,NA,NA
-Ciclosporin,cyclosporine,review,84,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',2,NA,NA,NA
 Ciprofloxacin Hydrochloride,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Clostridium botulinum type A toxin - haemagglutinin complex,toliodium,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
 Clulas troncales mesenquimales autlogas derivadas de tejido adiposo expandidas ASC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -162,18 +115,13 @@ Diamyd,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 "E-3-2,6-Dichloro-4-4-3-S-1-hexyloxyethyl-2-methoxyphenyl-thiazol-2-ylcarbamoyl-phenyl-2-methylacrylic acid",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 EDP-938,zelicapavir,review,64,chembl,alias match (chembl_synonym): 'edp-938' → 'zelicapavir',2,NA,NA,NA
 EPTACOG ALFA ACTIVATED,eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),2,NA,NA,NA
-ESLICARBAZEPINE ACETATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Eptacog alfa activated,eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),2,NA,NA,NA
-Eslicarbazepine acetate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-Estetrol monohydrate,estetrol,review,84,chembl,alias match (usan): 'estetrol monohydrate' → 'estetrol',2,NA,NA,NA
 FE 999049 / FOLLITROPIN ALFA,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 FLT190,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 FX06,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-Flucloxacillin,floxacillin,review,84,chembl,alias match (ban): 'flucloxacillin' → 'floxacillin',2,NA,NA,NA
 Fluorescein lisicol,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Fluval AB Influenza Vaccine,fluoxetine,review,63,chembl,alias match (chembl_synonym): 'fluval' → 'fluoxetine',2,NA,NA,NA
 Follitropin alfa,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-Fostamatinib Disodium,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 GLPG1205,glpg-1205,review,64,chembl,alias match (chembl_synonym): 'glpg1205' → 'glpg-1205',2,NA,NA,NA
 GRT6005 hard capsules  liquid filled with SEDDS_0708,cebranopadol,review,62,chembl,alias match (chembl_synonym): 'grt6005' → 'cebranopadol',2,NA,NA,NA
 GSK2190915 Oral Solution,fiboflapon,review,63,chembl,alias match (chembl_synonym): 'gsk2190915' → 'fiboflapon',2,NA,NA,NA
@@ -208,16 +156,13 @@ ISIS 396443,nusinersen,review,64,chembl,alias match (chembl_synonym): 'isis 3964
 ISIS 420915,inotersen,review,64,chembl,alias match (chembl_synonym): 'isis 420915' → 'inotersen',2,NA,NA,NA
 ISIS 721744,donidalorsen sodium,review,64,chembl,alias match (chembl_synonym): 'isis 721744' → 'donidalorsen sodium',2,NA,NA,NA
 IVA337,lanifibranor,review,64,chembl,alias match (chembl_synonym): 'iva337' → 'lanifibranor',2,NA,NA,NA
-Imetelstat sodium,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 "Immune Globulin Human, 10 Caprylate / Chromatography Purified IGIV-C",resimmune,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),2,NA,NA,NA
 "Immunoglobulins, normal human, for extravascular adm.",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 "Immunoglobulins, normal human, for intravascular adm.",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Inactivated Varicella Zoster Virus Vaccine,inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
-Indacaterol maleate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Innate repair activator peptide,vinconate,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),2,NA,NA,NA
 Insulin detemir / Insulin aspart / Insulin human,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',2,NA,NA,NA
 Insulin icodec / SEMAGLUTIDE,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',2,NA,NA,NA
-Interferon beta-1b,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 Interferon-beta 1a,interferon beta,review,63,chembl,alias match (chembl_synonym): 'interferon-beta' → 'interferon beta',2,NA,NA,NA
 Intradermal Influenza Vaccine,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 JNJ-53718678,rilematovir,review,64,chembl,alias match (chembl_synonym): 'jnj-53718678' → 'rilematovir',2,NA,NA,NA
@@ -238,7 +183,6 @@ Lactic acid producing organisms,lactic acid,review,85,fuzzy:chembl,fuzzy match (
 Lamazym,velmanase alfa,review,64,chembl,alias match (chembl_synonym): 'lamazym' → 'velmanase alfa',2,NA,NA,NA
 Lenalidomid,lenalidomide,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
 Lipopolysaccharide,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-Loncastuximab Tesirine,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 M0003,revexepride,review,64,chembl,alias match (chembl_synonym): 'm0003' → 'revexepride',2,NA,NA,NA
 M281,nipocalimab,review,64,chembl,alias match (chembl_synonym): 'm281' → 'nipocalimab',2,NA,NA,NA
 M7824,bintrafusp alfa,review,64,chembl,alias match (chembl_synonym): 'm7824' → 'bintrafusp alfa',2,NA,NA,NA
@@ -274,8 +218,8 @@ Novartis Meningooccal B Recombinant + OMV NZ Vaccine,NA,unknown,0,NA,no reliable
 OG1953 / AFLIBERCEPT,tarcocimab tedromer,review,63,chembl,alias match (chembl_synonym): 'og1953' → 'tarcocimab tedromer',2,NA,NA,NA
 OPC-34712,brexpiprazole,review,64,chembl,alias match (chembl_synonym): 'opc-34712' → 'brexpiprazole',2,NA,NA,NA
 Org 25935,org-25935,review,64,chembl,alias match (chembl_synonym): 'org 25935' → 'org-25935',2,NA,NA,NA
-PEGINTERFERON ALFA 2A / RIBAVIRINA,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),2,NA,NA,NA
-PEGINTERFERON ALFA-2A / RIBAVIRIN,peginterferon alfa-2a,review,88,fuzzy:epar,fuzzy match (jw similarity 88%),2,NA,NA,NA
+PEGINTERFERON ALFA 2A / RIBAVIRINA,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),2,NA,NA,NA
+PEGINTERFERON ALFA-2A / RIBAVIRIN,peginterferon alfa-2a,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),2,NA,NA,NA
 PF-06700841,brepocitinib,review,64,chembl,alias match (chembl_synonym): 'pf-06700841' → 'brepocitinib',2,NA,NA,NA
 PF-06741086,marstacimab,review,64,chembl,alias match (chembl_synonym): 'pf-06741086' → 'marstacimab',2,NA,NA,NA
 PF-06823859,dazukibart,review,64,chembl,alias match (chembl_synonym): 'pf-06823859' → 'dazukibart',2,NA,NA,NA
@@ -285,12 +229,11 @@ PPA904 sterile gel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 PRGF-ENDORET,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 PRP 2012,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Peanut allergen extract,pexantel,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
-Peginterferon alfa-2a / Ribavirin,peginterferon alfa-2a,review,88,fuzzy:epar,fuzzy match (jw similarity 88%),2,NA,NA,NA
+Peginterferon alfa-2a / Ribavirin,peginterferon alfa-2a,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),2,NA,NA,NA
 Pneumococcal Polysaccharide Serotype 1 / Pneumococcal Polysaccharide Serotype 3 / Pneumococcal Polysaccharide Serotype 4 / Pneumococcal Polysaccharide Serotype 5 / Pneumococcal Polysaccharide Serotype 6A / Pneumococcal Polysaccharide Serotype 6B / Pneumococcal Polysaccharide Serotype 7F / Pneumococcal Polysaccharide Serotype 9V / Pneumococcal Polysaccharide Serotype 14 / Pneumococcal Polysaccharide Serotype 18C / Pneumococcal Polysaccharide Serotype 19A / Pneumococcal Polysaccharide Serotype 19F / Pneumococcal Polysaccharide Serotype 23F,pneumococcal polysaccharide serotype 1|pneumococcal polysaccharide serotype 3|pneumococcal polysaccharide serotype 4|pneumococcal polysaccharide serotype 5|pneumococcal polysaccharide serotype 6a|pneumococcal polysaccharide serotype 6b|pneumococcal polysaccharide serotype 7f|pneumococcal polysaccharide serotype 9v|pneumococcal polysaccharide serotype 14|pneumococcal polysaccharide serotype 18c|pneumococcal polysaccharide serotype 19a|pneumococcal polysaccharide serotype 19f|pneumococcal polysaccharide serotype 23f,unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),2,NA,NA,NA
 Preflucel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Prevotella histicola,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Proposed INN - Orteronel / PREDNISONE,propisergide,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
-Quizartinib dihydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 R+ Verapamil,verapamil,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
 REN001,mavodelpar,review,64,chembl,alias match (chembl_synonym): 'ren001' → 'mavodelpar',2,NA,NA,NA
 RIFAMPICIN,rifampin,review,84,chembl,alias match (ban): 'rifampicin' → 'rifampin',2,NA,NA,NA
@@ -299,7 +242,6 @@ Radium-223 dichloride,NA,review,64,chembl,ambiguous alias maps to multiple subst
 Recombinant coagulation FVIII Fc  von Willebrand factor  XTEN fusion protein,mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
 Recombinant human Pentraxin-2,zinpentraxin alfa,review,64,chembl,alias match (chembl_synonym): 'recombinant human pentraxin-2' → 'zinpentraxin alfa',2,NA,NA,NA
 S47445,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-SALBUTAMOL,albuterol,review,84,chembl,alias match (ban): 'salbutamol' → 'albuterol',2,NA,NA,NA
 SAR439774,sar-439459,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
 SCH 420814,preladenant,review,64,chembl,alias match (chembl_synonym): 'sch 420814' → 'preladenant',2,NA,NA,NA
 SCH 527123,navarixin,review,64,chembl,alias match (chembl_synonym): 'sch 527123' → 'navarixin',2,NA,NA,NA
@@ -308,14 +250,12 @@ SGN-35,brentuximab vedotin,review,64,chembl,alias match (chembl_synonym): 'sgn-3
 SODIUM CROMOGLICATE,cromolyn sodium,review,64,chembl,alias match (chembl_synonym): 'sodium cromoglicate' → 'cromolyn sodium',2,NA,NA,NA
 SODIUM PYRUVATE,sodium butyrate,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
 SSR150106XB,ssr-150106,review,64,chembl,alias match (chembl_synonym): 'ssr150106xb' → 'ssr-150106',2,NA,NA,NA
-Salbutamol,albuterol,review,84,chembl,alias match (ban): 'salbutamol' → 'albuterol',2,NA,NA,NA
 Softisan 378 / Cannabidiol,safotibant,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
 Sunphenon,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 TAK-242,resatorvid,review,64,chembl,alias match (chembl_synonym): 'tak-242' → 'resatorvid',2,NA,NA,NA
 TBC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 TC-5214 S-mecamylamine,NA,review,63,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 TIMOLOL MALEATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-TISOTUMAB VEDOTIN,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 TMC125,etravirine,review,64,chembl,alias match (chembl_synonym): 'tmc125' → 'etravirine',2,NA,NA,NA
 TOVOK,afatinib,review,64,chembl,alias match (chembl_synonym): 'tovok' → 'afatinib',2,NA,NA,NA
 TOXINA BOTULINICA TIPO A,treloxinate,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
@@ -333,7 +273,6 @@ WVE-210201,suvodirsen,review,64,chembl,alias match (chembl_synonym): 'wve-210201
 YKP3089,cenobamate,review,64,chembl,alias match (chembl_synonym): 'ykp3089' → 'cenobamate',2,NA,NA,NA
 YM178 OCAS tablet 50 mg / - / YM178 OCAS tablet 100 mg,mirabegron,review,61,chembl,alias match (chembl_synonym): 'ym178' → 'mirabegron',2,NA,NA,NA
 ampreloxetine hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
-bardoxolone methyl,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 colestilan,colestilan chloride,review,64,chembl,alias match (chembl_synonym): 'colestilan' → 'colestilan chloride',2,NA,NA,NA
 corifollitropin alfa / follitropin beta,corifollitropin alfa,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),2,NA,NA,NA
 deforolimus,ridaforolimus,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
@@ -455,9 +394,9 @@ recMAGE-A3 recombinant protein formulated in AS15 adjuvant,NA,unknown,0,NA,no re
 4-diphenylmethoxy-1 3-4-ter-butylbenzoyl-propyl piperidine,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 "5-4-2-5-1-Hydroxyethyl-2-pyridinylethoxyphenylmethyl-2,4-thiazolidinedione hydrochloride",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 5-ALA,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-5-Aminolaevulinic acid,aminolevulinic acid,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
+5-Aminolaevulinic acid,aminolevulinic acid,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
 5-Aminolaevulinic acid / methyl aminolevulinate,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-5-Aminolevulinic acid hydrochloride / Methyl-5-amino-4-oxopentanoathydrochlorid,aminolevulinic acid,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
+5-Aminolevulinic acid hydrochloride / Methyl-5-amino-4-oxopentanoathydrochlorid,aminolevulinic acid,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
 5-FLUOROURACILE / SORAFENIB,fluorouracil,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
 5-METHYLTETRAHYDROFOLATE DI CALCIUM PENTAHYDRATE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 "5-Methoxy-N,N-Dimethyltryptamine",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -546,14 +485,13 @@ ACT-179811,cadazolid,review,64,chembl,alias match (chembl_synonym): 'act-179811'
 ACT-246475,selatogrel,review,64,chembl,alias match (chembl_synonym): 'act-246475' → 'selatogrel',1,NA,NA,NA
 ACT-293987,selexipag,review,64,chembl,alias match (chembl_synonym): 'act-293987' → 'selexipag',1,NA,NA,NA
 ADE CTP-12-001,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-ADRENALINE / NORADRENALINE,epinephrine,review,63,chembl,alias match (chembl_synonym): 'adrenaline' → 'epinephrine',1,NA,NA,NA
 "ADRIGYL 10 000 UI / ml, solution buvable en gouttes / UVEDOSE 100 000 UI, solution buvable en ampoule",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 ADS-001,fazirsiran,review,64,chembl,alias match (chembl_synonym): 'ads-001' → 'fazirsiran',1,NA,NA,NA
 ADS-013,aes-103,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 AF35700,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 AF35700 / OLANZAPINE / Risperidone,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 AF37702 injection / Darbepoetina alfa,NA,review,62,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-AFLIBERCET,aflibercept,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
+AFLIBERCET,aflibercept,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),1,NA,NA,NA
 AG10 HCl,acoramidis,review,63,chembl,alias match (chembl_synonym): 'ag10' → 'acoramidis',1,NA,NA,NA
 AGI-1067,succinobucol,review,64,chembl,alias match (chembl_synonym): 'agi-1067' → 'succinobucol',1,NA,NA,NA
 "AGRIPPAL S1 Surface Antigen, Inactivated, Influenza Vaccine",aripiprazole,unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),1,NA,NA,NA
@@ -720,7 +658,6 @@ Actinomycin D,dactinomycin,review,64,chembl,alias match (chembl_synonym): 'actin
 Actinomycin D / Carboplatin / CYCLOPHOSPHAMIDE / DOXORUBICIN / Etoposid / IFOSFAMIDE / THIOTEPA / VINCRISTINE / Methotrexat / AUTOLOGOUS CD34+ HEMATOPOIETIC STEM CELLS,dactinomycin,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 "Adenovirus type 26 encoding the SARS-CoV-2 spike glycoprotein Ad26.COV2-S / Single-stranded, 5-capped messenger RNA mRNA produced using a cell-free in vitro transcription from the corresponding DNA templates, encoding the v / Chimpanzee Adenovirus encoding the SARS-CoV-2 Spike glycoprotein ChAdOx1-S / Tixagevimab / Cilgavimab",adefovir,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
 Adrecizumab,enibarcimab,review,64,chembl,alias match (chembl_synonym): 'adrecizumab' → 'enibarcimab',1,NA,NA,NA
-Adrenaline tartrate / Amiodarone hydrochloride,epinephrine,review,63,chembl,alias match (chembl_synonym): 'adrenaline' → 'epinephrine',1,NA,NA,NA
 Adsorbed Tetanus Toxoid / Adsorbed Diphtheria Toxoid / Acellular Pertussis Adsorbed PT Antigen / Acellular Pertussis Adsorbed FHA Antigen / Acellular Pertussis Adsorbed PRN Antigen / Tetanus toxoid / Diphtheria toxoid / Bordetella pertussis-Antigene,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Adult allogeneic expanded and criopreserved umbilical cord WJ-derived mesenchymal stromal cells,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Aerosolized human Alpha-1 Antitrypsin,adrogolide,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
@@ -834,16 +771,6 @@ BCX9930 / Eculizumab / RAVULIZUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BDTX-189,tuxobertinib,review,64,chembl,alias match (chembl_synonym): 'bdtx-189' → 'tuxobertinib',1,NA,NA,NA
 BE461173,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BEAM-302,ea-230,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
-BECLOMETASONE / FLUTICASONE / BUDESONIDE / SALBUTAMOL,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM BROMIDE / FLUTICASONE FUROATE / VILANTEROL TRIFENATATE / TIOTROPIUM BROMIDE,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM BROMIDE / INDACATEROL,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM BROMIDE / TIOTROPIUM BROMIDE,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE / GLYCOPYRRONIUM BROMIDE / TIOTROPIUM BROMIDE MONOHYDRATE,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE DIHYDRATE / Glycopyrronium bromide / Beclometasone dipropionate / Formoterol fumarate dihydrate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / Formoterol Fumarate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-BECLOMETASONE DIPROPIONATE / Formoterol Fumarate / GLYCOPYRRONIUM BROMIDE / FORMOTEROL FUMARATE,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 BECLOMETHASONE DIPROPIONATE / Formoterol fumarate dihydrate / GLYCOPYRRONIUM BROMIDE / BECLOMETASONE DIPROPIONATE,beclomethasone dipropionate,review,83,chembl,alias match (ban): 'beclomethasone' → 'beclomethasone dipropionate',1,NA,NA,NA
 BEMPEDOIC ACID / EZETIMIBE,bempedoic acid|ezetimibe,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),1,NA,NA,NA
 "BENDAFOLIN 10 mg / ml Injektionslösung / Irinotecan Bendalis 20 mg / ml Konzentrat zur Herstellung einer Infusionslösung / 5-FLUOROURACIL–EBEWE, 50 MG / ML, ROZTWÓR DO WSTRZYKIWAN I INFUZJI / Napabucasin",bendazol,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
@@ -915,10 +842,6 @@ BNT162b3,ganulameran,review,64,chembl,alias match (chembl_synonym): 'bnt162b3' �
 BNT314,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BNT327 / DOCETAXEL,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BOSWELAN,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-BOTOX 100 Allergan Units Powder for Solution for Injection,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-BOTOX 100 Allergan Units Powder for solution for injection / 0.9% sodium chloride solution for injection (NaCl 0.9%).,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-"BOTOX 200 UNITS ALLERGAN, poudre pour solution injectable",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-"BOTOX 50 UNITÉS ALLERGAN, poudre pour solution injectable / SODIUM CHLORIDE",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BP CC 001,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 BRENTUXIMAB VEDOTIN / DOXORUBICINHYDROCHLORID / CYCLOPHOSPHAMIDMONOHYDRAT / PREDNISOLONE,girentuximab,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),1,NA,NA,NA
 BRENTUXIMAB VEDOTIN / LENALIDOMIDE / RITUXIMAB,girentuximab,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),1,NA,NA,NA
@@ -930,11 +853,6 @@ BT8009 / Zelenectide Pevedotin,zelenectide pevedotin,review,63,chembl,alias matc
 BUPIVACAINA HIDROCLORURO,bupivacaine,review,63,chembl,alias match (chembl_synonym): 'bupivacaina' → 'bupivacaine',1,NA,NA,NA
 BUSULFANO / FLUDARABINA / CICLOFOSFAMIDE / CICLOSPORINA / TACROLIMUS / MICOFENOLATO MOFETILE,busulfan,review,63,chembl,alias match (chembl_synonym): 'busulfano' → 'busulfan',1,NA,NA,NA
 BXL628,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Beclometasone,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Beclometasone dipropionate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Beclometasone dipropionate / Formoterol / Tiotropium bromide / Bisoprolol fumarate / Carvedilol,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Beclometasone dipropionate / Formoterol fumarate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Beclometasone dipropionate / Formoterol fumerate / beclometasone dipropionate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Beclomethasone Dipropionate / Formoterol Fumarate / BECLOMETASONE DIPROPIONATE / FORMOTEROL FUMARATE,beclomethasone dipropionate,review,83,chembl,alias match (ban): 'beclomethasone' → 'beclomethasone dipropionate',1,NA,NA,NA
 Beclomethasone Dipropionate / Formoterol Fumarate / Fluticasone Proprionate / Salmeterol Xinafoate,beclomethasone dipropionate,review,83,chembl,alias match (ban): 'beclomethasone' → 'beclomethasone dipropionate',1,NA,NA,NA
 Begrivac,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -1041,8 +959,6 @@ CHF6532,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 CHR-2797,tosedostat,review,64,chembl,alias match (chembl_synonym): 'chr-2797' → 'tosedostat',1,NA,NA,NA
 CHX A-DTPA anti-CD66 antibody / Indium 111-radiolabelled anti-CD66 / Yttrium90 radiolabelled antiCD66,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 CIANOCOBALAMINA,cyanocobalamin,review,64,chembl,alias match (chembl_synonym): 'cianocobalamina' → 'cyanocobalamin',1,NA,NA,NA
-CICLOSPORIN / METHOTREXATE / Methotrexate,cyclosporine,review,83,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',1,NA,NA,NA
-CICLOSPORIN / Methotrexate / CYCLOPHOSPHAMIDE,cyclosporine,review,83,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',1,NA,NA,NA
 CICLOSPORINA,cyclosporine,review,64,chembl,alias match (chembl_synonym): 'ciclosporina' → 'cyclosporine',1,NA,NA,NA
 CISNAF,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 CISPLATINE,cisplatin,review,64,chembl,alias match (chembl_synonym): 'cisplatine' → 'cisplatin',1,NA,NA,NA
@@ -1292,8 +1208,8 @@ Dibondrin - Ampullen / Ketanest® S 25 mg / ml - Ampullen,NA,unknown,0,NA,no rel
 Diclofenac-Natrium,diclofenac,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Diclofenac-sodium,diclofenac sodium,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),1,NA,NA,NA
 "DigiFab® (referred to as DIGIFAB) 40 mg / vial digoxin immune Fab, Powder for solution for infusion / Lanoxin MD 0,125 mg comprimido / Norit Carbomix 50 g granulado para suspensão oral",dusigitumab,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
-Dimethylfumarat,dimethyl fumarate,review,96,fuzzy:epar,fuzzy match (jw similarity 96%),1,NA,NA,NA
-Dimethylfumarat / Ethylhydrogenfumarat-Calcium / Ethylhydrogenfumarat-Magnesium / Ethylhydrogenfumarat-Zink,dimethyl fumarate,review,96,fuzzy:epar,fuzzy match (jw similarity 96%),1,NA,NA,NA
+Dimethylfumarat,dimethyl fumarate,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),1,NA,NA,NA
+Dimethylfumarat / Ethylhydrogenfumarat-Calcium / Ethylhydrogenfumarat-Magnesium / Ethylhydrogenfumarat-Zink,dimethyl fumarate,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),1,NA,NA,NA
 "Diphtheria toxoid / Tetanus toxoid / Bordetella pertussis 3 Antigens / Hepatitis B surface antigen / Poliovirus inactivated, 3 types / Haemophilus B polysaccharide conjugated to tetanus toxoid",diphtheria toxoid,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
 Diprobase Cream / Doublebase gel,pronase,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
 Diprophos,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -1312,7 +1228,6 @@ Drotrecogin alfa activated,drotrecogin alfa (activated),review,64,chembl,alias m
 DuoNEN solution for injection,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Duobrii,daunorubicin,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),1,NA,NA,NA
 Dymista,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Dysport,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 E10030,pegpleranib sodium,review,64,chembl,alias match (chembl_synonym): 'e10030' → 'pegpleranib sodium',1,NA,NA,NA
 E2007,perampanel,review,64,chembl,alias match (chembl_synonym): 'e2007' → 'perampanel',1,NA,NA,NA
 E2007 / Entacapone,perampanel,review,63,chembl,alias match (chembl_synonym): 'e2007' → 'perampanel',1,NA,NA,NA
@@ -1345,7 +1260,7 @@ EPI-743,vatiquinone,review,64,chembl,alias match (chembl_synonym): 'epi-743' →
 EPIRUBICINA HIDROCLORURO / Ifosfamida / Gemcitabina / Docetaxel / Etoposido / Doxorubicina / Dacarbazina,epirubicin,review,63,chembl,alias match (chembl_synonym): 'epirubicina' → 'epirubicin',1,NA,NA,NA
 EPLERENON SANDOZ 50 MG / EPLERENON-SANDOZ 25 MG,eplerenone,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 EPOETIN BETA / EPOETIN ALFA,seproxetine,review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),1,NA,NA,NA
-EPOIETINE ALFA,epoetin alfa,review,91,fuzzy:epar,fuzzy match (jw similarity 91%),1,NA,NA,NA
+EPOIETINE ALFA,epoetin alfa,review,91,fuzzy:manual,fuzzy match (jw similarity 91%),1,NA,NA,NA
 EPTACOG ALFA ACTIVADO,eptacog alfa (activated),review,93,fuzzy:epar,fuzzy match (jw similarity 93%),1,NA,NA,NA
 ERB-041,prinaberel,review,64,chembl,alias match (chembl_synonym): 'erb-041' → 'prinaberel',1,NA,NA,NA
 ERIBULINA,eribulin,review,64,chembl,alias match (chembl_synonym): 'eribulina' → 'eribulin',1,NA,NA,NA
@@ -1389,8 +1304,6 @@ Epcidina-25 umana,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Epoetin beta / Micofenolato mofetilo,seproxetine,review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),1,NA,NA,NA
 Epoietin Pliva / EPREX Epoietin alfa,seproxetine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
 Eritromicina DCI lactobionato de eritromicina,erythromycin,review,63,chembl,alias match (chembl_synonym): 'eritromicina' → 'erythromycin',1,NA,NA,NA
-Erythropoietin EPO,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Erythropoietin alpha,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Esketamine Hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Esomeprazole magnesium trihydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 "Espididol 400 mg granulado para solución oral sabor menta / Adolonta 100 mg / ml solución oral / PL 1
@@ -1409,8 +1322,8 @@ Ethyl-nicotinate / ethyleneglycol-monosalicylate / Capsaicin,NA,unknown,0,NA,no 
 Etinilestradiol / Gestodeno,ethinyl estradiol,review,63,chembl,alias match (chembl_synonym): 'etinilestradiol' → 'ethinyl estradiol',1,NA,NA,NA
 "Eufilina Venosa 200 mg solución inyectable / Clariscan 0,5 mmol / mL solución inyectable EFG / Rapiscan 400 microgram solution for injection",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 European house dust mite / Phleum pratense / Olea europaea / Felis domesticus / 2-1H-imidazol-5-ylethanamine dihydrochloride,ubrogepant,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
-Everolismus,everolimus,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
-Everolismus / Ciclosporin / Mycophenolate sodium / Tacrolimus,everolimus,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
+Everolismus,everolimus,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),1,NA,NA,NA
+Everolismus / Ciclosporin / Mycophenolate sodium / Tacrolimus,everolimus,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),1,NA,NA,NA
 ExPEC10V,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Expanded Tregs_04 / RoActemra 162 mg solution for injection in pre-filled syringe.,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Extracto alergnico de Chortoglyphus arcuatus / HISTAMINE DIHYDROCHLORIDE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -1455,7 +1368,6 @@ FOLIC ACID / INFLIXIMAB / ETANERCEPT / methotrexate,NA,unknown,0,NA,no reliable 
 FOLINATO CALCICO,leucovorin calcium,review,64,chembl,alias match (chembl_synonym): 'folinato calcico' → 'leucovorin calcium',1,NA,NA,NA
 FOLINIC ACID / CAPECITABINE / FLUOROURACIL / OXALIPLATIN,foslinanib,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 FOLLITROPIN ALFA,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-FORMOTEROL FUMARATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 FOSAMAX / Fosamax,NA,review,88,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 FSH / Follitropin alfa,menotropins,review,63,chembl,alias match (chembl_synonym): 'fsh' → 'menotropins',1,NA,NA,NA
 "FSME-IMMUN Vuxen, injektionsvätska, suspension i förfylld spruta Vaccin mot fästingburen encefalit (helvirus inaktiverat) / Encepur (0,5 ml)
@@ -1496,13 +1408,12 @@ Fluarix,fluparoxan,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,
 Fluor-18-Prostate Specific membrane Antigen F18-PSMA,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Fluorescine sodique Faure 10,fluorescein,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),1,NA,NA,NA
 Fluorochrome-labeled anti-carcino-embryonic antigen,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Fluticasonpropionat / Salmeterol,fluticasone propionate,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),1,NA,NA,NA
+Fluticasonpropionat / Salmeterol,fluticasone propionate,review,95,fuzzy:manual,fuzzy match (jw similarity 95%),1,NA,NA,NA
 Fluval AB-like influenza vaccine / Fluval AB influenza vaccine,fluoxetine,review,63,chembl,alias match (chembl_synonym): 'fluval' → 'fluoxetine',1,NA,NA,NA
 Folinato cálcico Altan 50 mg polvo para solución inyectable EFG / Tarlatamab / Irinotecán Hospira 20 mg / mL concentrado para solución para perfusión EFG. / Fluorouracilo Accord 50 mg / ml solución inyectable o para perfusión EFG,tolindate,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
 Follicle stimulating hormone / Urofollitropin Fostimon 150,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Fondaparinux-Sodium / Enoxaparin-Sodium,fondaparinux sodium,review,96,fuzzy:epar,fuzzy match (jw similarity 96%),1,NA,NA,NA
-Formoterol fumarate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Formoteroli fumaras dihydricus / Tiotropium,formoterol,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
+Formoteroli fumaras dihydricus / Tiotropium,formoterol,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),1,NA,NA,NA
 Forodesine Hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Forodesine hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Fosgemcitabine palabenamide / Gemcitabine / Cisplatin / GEMCITABINE,gemcitabine,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
@@ -1642,7 +1553,6 @@ HUMAN FIBRINOGEN,"fibrinogen, human",review,64,chembl,"alias match (chembl_synon
 HUMAN FIBRINOGEN / HUMAN THROMBIN / CALCIUM CHLORIDE / APROTININ,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 HUMAN LEUCOCYTE INTERFERON-ALPHA / INTERFERON BETA-1A / INTERFERON BETA-1B,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 HUMAN MESENCHYMAL STEM CELLS,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-HUMAN NORMAL IMMUNOGLOBULIN FOR INTRAVENOUS USE,human immunoglobulin g,review,63,chembl,alias match (chembl_synonym): 'human normal immunoglobulin' → 'human immunoglobulin g',1,NA,NA,NA
 HUMAN NORMAL IMMUNOGLOBULIN IV,human normal immunoglobulin,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
 HUMAN PAPILLOMAVIRUS TYPE 11  L1 PROTEIN / HUMAN PAPILLOMAVIRUS TYPE 16 L1 PROTEIN / HUMAN PAPILLOMAVIRUS TYPE 18 L1 PROTEIN / HUMAN PAPILLOMAVIRUS TYPE 6 L1 PROTEIN,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 "HUMAN PAPILLOMAVIRUS VACCINE TYPES 6, 11, 16, 18 RECOMBINANT, ADSORBED / IMIQUIMOD / podophyllotoxin",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -1789,8 +1699,7 @@ INSULIN HUMAN / INSULIN GLARGINE,insulin human,review,63,chembl,alias match (che
 INSULIN LISPRO / INSULIN ASPART,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',1,NA,NA,NA
 INSULIN LISPRO / INSULIN GLARGINE,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',1,NA,NA,NA
 INSULIN LISPRO / METFORMIN HYDROCHLORIDE,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',1,NA,NA,NA
-INSULINA GLARGINE,insulin glargine,review,94,fuzzy:epar,fuzzy match (jw similarity 94%),1,NA,NA,NA
-INTERFERON BETA-1A,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
+INSULINA GLARGINE,insulin glargine,review,94,fuzzy:manual,fuzzy match (jw similarity 94%),1,NA,NA,NA
 INTERFERON GAMMA-1B,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 INTERFERONE BETA 1A,interferon,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 INTERLEUKIN-2,aldesleukin,review,64,chembl,alias match (chembl_synonym): 'interleukin-2' → 'aldesleukin',1,NA,NA,NA
@@ -1867,11 +1776,11 @@ Insulin glulisine / Insulin glargine / insulin lispro / Insulin Human Injection 
 Insulin icodec / Semaglutide / Insulin glargine / Insulin aspart,insulin human,review,63,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',1,NA,NA,NA
 Insulina / Metformina,inulin,review,92,fuzzy:chembl,fuzzy match (jw similarity 92%),1,NA,NA,NA
 "Interferon-beta 1a FBS-free / HSA-free, RNF",interferon beta,review,63,chembl,alias match (chembl_synonym): 'interferon-beta' → 'interferon beta',1,NA,NA,NA
-Interferon-beta-1a,interferon beta-1a,review,91,fuzzy:epar,fuzzy match (jw similarity 91%),1,NA,NA,NA
+Interferon-beta-1a,interferon beta-1a,review,91,fuzzy:manual,fuzzy match (jw similarity 91%),1,NA,NA,NA
 Intradermal Influenza Vaccine / Vaxigrip,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Intradermal Influenza Vaccine 9g / Intradermal Influenza Vaccine 15g,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Invivac / Influvac / Fluad,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Ipratropiumbromide,ipratropium bromide,review,98,fuzzy:chembl,fuzzy match (jw similarity 98%),1,NA,NA,NA
+Ipratropiumbromide,ipratropium bromide,review,98,fuzzy:manual,fuzzy match (jw similarity 98%),1,NA,NA,NA
 Iron III hydroxide hydroxyethyl starch glucoheptonic acid complex / FERRIC CARBOXYMALTOSE / FERROUS II GLYCINE SULFATE COMPLEX,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Iron Isomaltoside 1000 / Iron Sulphate,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Iron Isomaltoside 1000 / ferrous sulphate,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -2174,7 +2083,7 @@ MOR103,otilimab,review,64,chembl,alias match (chembl_synonym): 'mor103' → 'oti
 MOR106,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MORAb-003,farletuzumab,review,64,chembl,alias match (chembl_synonym): 'morab-003' → 'farletuzumab',1,NA,NA,NA
 MORF-057 Capsule,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-MOROCTOCOG-ALFA,moroctocog alfa,review,96,fuzzy:epar,fuzzy match (jw similarity 96%),1,NA,NA,NA
+MOROCTOCOG-ALFA,moroctocog alfa,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),1,NA,NA,NA
 MP-513,teneligliptin,review,64,chembl,alias match (chembl_synonym): 'mp-513' → 'teneligliptin',1,NA,NA,NA
 MPDL3280A,atezolizumab,review,64,chembl,alias match (chembl_synonym): 'mpdl3280a' → 'atezolizumab',1,NA,NA,NA
 MRx-4DP0004,mrx-4,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
@@ -2185,8 +2094,8 @@ MSV-CMT / P-PRP,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MUSREDO / Tibsovo 250 mg film-coated tablets,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MVA-MUC1-IL2,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MVA.HTI / CHADOX1.HTI / VESATOLIMOD,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-MYCOPHENOLIC ACID / - / MYCOPHENOLATE MOFETIL / VAY736 / TENOFOVIR ALAFENAMIDE / ENTECAVIR / TENOFOVIR DISOPROXIL,mycophenolic acid,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
-MYCOPHENOLIC ACID / ISTEM-01,mycophenolic acid,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
+MYCOPHENOLIC ACID / - / MYCOPHENOLATE MOFETIL / VAY736 / TENOFOVIR ALAFENAMIDE / ENTECAVIR / TENOFOVIR DISOPROXIL,mycophenolic acid,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
+MYCOPHENOLIC ACID / ISTEM-01,mycophenolic acid,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
 Macrodex / Sodium chlorid / Calcium chloride dihydrate / Potassium chloride / Sodium lactate,dextran 70,review,63,chembl,alias match (chembl_synonym): 'macrodex' → 'dextran 70',1,NA,NA,NA
 Macrogol,polyethylene glycol,review,64,chembl,alias match (chembl_synonym): 'macrogol' → 'polyethylene glycol',1,NA,NA,NA
 Macrogol 3350 / Potassium Chloride / Sodium Chloride / Sodium Hydrogen Carbonate,polyethylene glycol,review,63,chembl,alias match (chembl_synonym): 'macrogol' → 'polyethylene glycol',1,NA,NA,NA
@@ -2200,8 +2109,7 @@ Maleimide-activated polyethylene glycol-modfied hemoglobin / PolyO-2-hydroxyethy
 Maleimide-activated polyethylene glycol-modified human hemoglobin / PolyO-2-hydroxyethylstarch,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Mangoral,manganese chloride,review,64,chembl,alias match (chembl_synonym): 'mangoral' → 'manganese chloride',1,NA,NA,NA
 Marzeptacog alfa activated / Eptacog alfa activated,marzeptacog alfa (activated),unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
-Masitinib Mesylate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-Mastinib mesylate,masitinib mesylate,review,94,fuzzy:chembl,fuzzy match (jw similarity 94%),1,NA,NA,NA
+Mastinib mesylate,masitinib mesylate,review,94,fuzzy:manual,fuzzy match (jw similarity 94%),1,NA,NA,NA
 Matches test film-coated tablets / Wakix 4.5 mg film-coated tablets / Wakix 18 mg film-coated tablets,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Mecasermin rinfabate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 "Medical Air / KALINOX 50% / 50%, gaz médicinal comprimé",meciadanol,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
@@ -2218,7 +2126,7 @@ Mesenchymal stem cells and microporous Bi-phasic calcium phosphate MBCP+,NA,unkn
 Mesenchymal stromal cells MSC,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MesoPher,semorphone,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
 Mesoglicano,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Metformin-Hydrochlorid,metformin hydrochloride,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),1,NA,NA,NA
+Metformin-Hydrochlorid,metformin hydrochloride,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),1,NA,NA,NA
 Methadon / Morphine sulfate,methadone,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),1,NA,NA,NA
 Methionin 11C methyl UJV 100  1500 MBq / ml injekn roztok,methionine,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 "Methyl 2,2,3,3,4,6,6-hepta-O-sulfonato--cellobioside heptasodium salt",methylone,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
@@ -2269,10 +2177,10 @@ Motesanib diphosphate,NA,review,84,chembl,ambiguous alias maps to multiple subst
 MultiStem,muplestim,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
 Multipeptide vaccine + XS15,letimide,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
 Mycophenolate mofetil / CYCLOPHOSPHAMIDE,mycophenolic acid,review,63,chembl,alias match (chembl_synonym): 'mycophenolate' → 'mycophenolic acid',1,NA,NA,NA
-Mycophenolatmofetil / Prednisolone,mycophenolate mofetil,review,93,fuzzy:epar,fuzzy match (jw similarity 93%),1,NA,NA,NA
-Mycophenolic acid / Ciclosporin,mycophenolic acid,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
-Mycophenolic acid / Cyclophosphamide / Azathioprine,mycophenolic acid,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
-Mycophenolic acid / Daclizumab,mycophenolic acid,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
+Mycophenolatmofetil / Prednisolone,mycophenolate mofetil,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
+Mycophenolic acid / Ciclosporin,mycophenolic acid,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
+Mycophenolic acid / Cyclophosphamide / Azathioprine,mycophenolic acid,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
+Mycophenolic acid / Daclizumab,mycophenolic acid,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
 Mylan Bevacizumab / BEVACIZUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 MyoCell,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 N / A / 68GA-PSMA HBED-CC,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -2338,10 +2246,7 @@ NKTR-358 / Sodium Chloride 0.9% solution,rezpegaldesleukin,review,62,chembl,alia
 NMRA-335140,navacaprant,review,64,chembl,alias match (chembl_synonym): 'nmra-335140' → 'navacaprant',1,NA,NA,NA
 NNC0142-0000-0002,nnc0114-0006,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
 NNC151-0000,nnc0114-0006,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
-NONACOG ALFA,coagulation factor ix recombinant human,review,84,chembl,alias match (ban): 'nonacog alfa' → 'coagulation factor ix recombinant human',1,NA,NA,NA
 NONACOG GAMMA,coagulation factor ix recombinant human,review,64,chembl,alias match (chembl_synonym): 'nonacog gamma' → 'coagulation factor ix recombinant human',1,NA,NA,NA
-NORADRENALINE,norepinephrine,review,64,chembl,alias match (chembl_synonym): 'noradrenaline' → 'norepinephrine',1,NA,NA,NA
-NORADRENALINE TARTRATE / DOBUTAMINE,norepinephrine,review,63,chembl,alias match (chembl_synonym): 'noradrenaline' → 'norepinephrine',1,NA,NA,NA
 NOT APPLICABLE / not assigned,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 NOVOCART 3D plus,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 NRL001 5mg / 2g / NRL001 7.5mg / NRL001 10mg,methoxamine,review,62,chembl,alias match (chembl_synonym): 'nrl001' → 'methoxamine',1,NA,NA,NA
@@ -2411,7 +2316,6 @@ Not Available / Pioglitazone / Not available,NA,unknown,0,NA,no reliable match,1
 Not Available / darbepoetin alfa,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Not Available / paclitaxel / Paclitaxel / Pemetrexed / CISPLATIN / Carboplatin / Cisplatin,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Not Yet assigned / CHLORAMBUCIL / Obinutuzumab,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-Not Yet defined,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Not Yet defined / BEVACIZUMAB / ATEZOLIZUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Not Yet defined / GEMCITABINE / CARBOPLATIN / CISPLATIN / PEMETREXED,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Not Yet defined / PACLITAXEL,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -2524,7 +2428,7 @@ Octaplex 500 I.E. Pulver und Lösungsmittel zur Herstellung einer Infusionslösu
 "Octavalent HPV VLP Vaccine / GARDASILQuadrivalent Human Papillomavirus Types 6, 11, 16, 18 Recombinant Vaccine",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Octerotide,octreotide,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 Octocog alfa.,octocog alfa,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
-Ofatumimab,ofatumumab,review,93,fuzzy:epar,fuzzy match (jw similarity 93%),1,NA,NA,NA
+Ofatumimab,ofatumumab,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Oligonucleotido Antisentido de Survivina / Docetaxel,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Olimel N9,lime,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
 Omega-3,omega-3 fatty acids,review,64,chembl,alias match (chembl_synonym): 'omega-3' → 'omega-3 fatty acids',1,NA,NA,NA
@@ -2551,12 +2455,6 @@ Oxcarbazepin,oxcarbazepine,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%
 Oxofulleram,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 P1736-05,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 PAR,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-PARACETAMOL / HYDROXYZINE HYDROCHLORIDE / FAMOTIDINE / CETIRIZINE DIHYDROCHLORIDE / IBUPROFEN / DEXAMETHASONE PHOSPHATE / SODIUM CHLORIDE SOLUTION 0.9% / DIPHENHYDRAMINE HYDROCHLORIDE / mRNA-3705 / DEXAMETHASONE / FEXOFENADINE HYDROCHLORIDE,acetaminophen,review,62,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-PARACETAMOL / IBUPROFEN,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-PARACETAMOL / IBUPROFEN / KETAMINE,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-PARACETAMOL / MK-2870 / - / CAPECITABINE / DEXAMETHASONE / KEYTRUDA 25 mg / mL concentrate for solution for infusion,acetaminophen,review,61,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-PARACETAMOL / OXYGEN / NITROUS OXIDE,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-PARACETAMOL / SEMAGLUTIDE,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
 PARACETAMOLO / DIFENIDRAMINA CLORIDRATO / PREDNISONE,plosaracetam,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
 PARNAPARIN SODIUM,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 PBS Solution / AD04,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -2564,12 +2462,12 @@ PC14586,rezatapopt,review,64,chembl,alias match (chembl_synonym): 'pc14586' → 
 PD-L1 9-28,programmed cell death 1 ligand 1,review,63,chembl,alias match (chembl_synonym): 'pd-l1' → 'programmed cell death 1 ligand 1',1,NA,NA,NA
 PDNO,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 PDR001,spartalizumab,review,64,chembl,alias match (chembl_synonym): 'pdr001' → 'spartalizumab',1,NA,NA,NA
-PEGINTERFERON ALFA 2A / LAMIVUDINE / ENTECAVIR,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-PEGINTERFERON ALFA 2A / RIBAVIRIN,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-PEGINTERFERON ALFA 2A / RIBAVIRINA / METFORMINA CLORHIDRATO,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-PEGINTERFERON ALFA 2A / Ribavirina,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-PEGINTERFERON ALFA-2A / RIBAVIRIN / BOCEPREVIR,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-PEGINTERFERON LAMBDA-1a / daclatasvir / RIBAVIRIN / PEGINTERFERON ALFA-2A,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON ALFA 2A / LAMIVUDINE / ENTECAVIR,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON ALFA 2A / RIBAVIRIN,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON ALFA 2A / RIBAVIRINA / METFORMINA CLORHIDRATO,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON ALFA 2A / Ribavirina,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON ALFA-2A / RIBAVIRIN / BOCEPREVIR,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+PEGINTERFERON LAMBDA-1a / daclatasvir / RIBAVIRIN / PEGINTERFERON ALFA-2A,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
 PEGINTERFERONE LAMBDA-1A / INTERFERON BETA - 1A,peginterferon beta-1a,review,89,fuzzy:epar,fuzzy match (jw similarity 89%),1,NA,NA,NA
 PEGYLATED INTERFERON LAMBDA / DACLATASVIR / RIBAVIRIN,eglumetad,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
 PEGYLATED RFVIII / Pegylated RFVIII,eglumetad,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
@@ -2652,22 +2550,13 @@ PankoMab-GEX,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Pankreatin,pancreatin,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Panthenyl Ester of DHA,panthenol,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Paracet Weifa / Norspan patch / Buprenorphine,plosaracetam,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
-Paracetamol / AMOXICILLIN / VALSARTAN,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / CEFTRIAXONE / METOCLOPRAMIDE,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / Caffeine,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / DEXTROMETHORPHAN / caffeine citrate / CHLORPHENAMINE / ASCORBIC ACID / INDOCYANINE GREEN,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / Diclofenac / Tramadol / Morphine,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / IBUPROFEN,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / Ibuprofen,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol / paracetamol,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-Paracetamol 10 mg / ml solution for infusion,acetaminophen,review,61,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
 Parathyroideahormon,parathyroid hormone,review,90,fuzzy:epar,fuzzy match (jw similarity 90%),1,NA,NA,NA
 Passiflora incarnata dry extract preparation 5-7:1,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Patritumab deruxtecan,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Pegaptanib Sodium / PEGAPTANIB SODIUM,pegaptanib,review,100,fuzzy:epar,fuzzy match (jw similarity 100%),1,NA,NA,NA
 Pegcetacoplam,pegcetacoplan,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),1,NA,NA,NA
-Peginterferon alfa-2a / peginterferon alfa-2a / Ribavirin,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-Peginterferon alpha-2b,peginterferon alfa-2b,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),1,NA,NA,NA
+Peginterferon alfa-2a / peginterferon alfa-2a / Ribavirin,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+Peginterferon alpha-2b,peginterferon alfa-2b,review,95,fuzzy:manual,fuzzy match (jw similarity 95%),1,NA,NA,NA
 Pegunigalsidase alpha,pegunigalsidase alfa,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),1,NA,NA,NA
 Pegunigalsidase alpha / AGALSIDASE BETA,pegunigalsidase alfa,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
 Pegylated Arginine Deiminase,pegargiminase,review,64,chembl,alias match (chembl_synonym): 'pegylated arginine deiminase' → 'pegargiminase',1,NA,NA,NA
@@ -2881,9 +2770,6 @@ S65487 / AZACITIDINE,vob-560,review,63,chembl,alias match (chembl_synonym): 's65
 S90098,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 S95011,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 SA4503,sar-405838,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
-"SALBUTAMOL / Natrium chloratum 0,9% Kabi, 9 mg / ml, rozpuszczalnik do sporzqdzania lekow parenteralnych",albuterol,review,82,chembl,alias match (ban): 'salbutamol' → 'albuterol',1,NA,NA,NA
-"SALBUTAMOL / Trimbow 172 micrograms / 5 micrograms / 9 micrograms pressurised inhalation, solution",albuterol,review,81,chembl,alias match (ban): 'salbutamol' → 'albuterol',1,NA,NA,NA
-"SALBUTAMOL / VFEND 200 mg film-coated tablets / AmBisome liposomal 50 mg Pulver zur Herstellung einer Infusionsdispersion / CHLORURE DE SODIUM PROAMP 0,9 %, solution injectable / SPORANOX 100 mg capsule rigide / Noxafil 100 mg gastro-resistant tablets",albuterol,review,81,chembl,alias match (ban): 'salbutamol' → 'albuterol',1,NA,NA,NA
 SAR439859 / PALBOCICLIB / LETROZOLE,amcenestrant,review,63,chembl,alias match (chembl_synonym): 'sar439859' → 'amcenestrant',1,NA,NA,NA
 SAR443820,oditrasertib,review,64,chembl,alias match (chembl_synonym): 'sar443820' → 'oditrasertib',1,NA,NA,NA
 SAR444245 / Pembrolizumab / Cetuximab,pegenzileukin,review,63,chembl,alias match (chembl_synonym): 'sar444245' → 'pegenzileukin',1,NA,NA,NA
@@ -2950,8 +2836,6 @@ SVF 8 inj prep / thawed SVF 8 inj prep,NA,unknown,0,NA,no reliable match,1,NA,NA
 SYR110322,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Saccharomyces boulardii / Amoxycillin,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 SagaPro,agar,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
-Salbutamol Sulphate,albuterol,review,83,chembl,alias match (ban): 'salbutamol' → 'albuterol',1,NA,NA,NA
-Salmeterol xinafoate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Same solution and presentation that active treatment but without active ingredients / Mannan-conjugated allergoid (polymerized) Dermatophagoides pteronyssinus and Dermatophagoides farinae parenteral vaccine,ademetionine,review,62,chembl,alias match (chembl_synonym): 'same' → 'ademetionine',1,NA,NA,NA
 Saw palmetto liposterolic fruit extract / saw palmetto liposterolic fruit extract,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Schwefelhexaflourid / DOBUTAMINE HYDROCHLORIDE / ATROPINE SULFATE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -2967,14 +2851,13 @@ Sevoflurano Baxter 100% líquido para inhalación del vapor EFG / Propofol Frese
 Sevorane / ciclosporine A,sevoflurane,review,63,chembl,alias match (chembl_synonym): 'sevorane' → 'sevoflurane',1,NA,NA,NA
 SiF - Alin - TATE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Silicones,psilocin,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
-Simoctolog alfa,simoctocog alfa,review,90,fuzzy:epar,fuzzy match (jw similarity 90%),1,NA,NA,NA
+Simoctolog alfa,simoctocog alfa,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
 Simvastatina NORMON 10 mg comprimidos recubiertos con película EFG / Atorvastatina NORMON 20 mg comprimidos recubiertos con película EFG / Simvastatina NORMON 40 mg comprimidos recubiertos con película EFG / Atorvastatina NORMON 40 mg comprimidos recubiertos con película EFG / Atorvastatina NORMON 10 mg comprimidos recubiertos con película EFG / Atorvastatina Normon 60 mg comprimidos recubiertos con película / Simvastatina NORMON 20 mg comprimidos recubiertos con película EFG,simvastatin,review,62,chembl,alias match (chembl_synonym): 'simvastatina' → 'simvastatin',1,NA,NA,NA
 Sinemet 125,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Sinupret extract coated tablets,sunepitron,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
-Siponimid / Siponimod,siponimod,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,NA,NA
-Sitagliptin Phosphate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
+Siponimid / Siponimod,siponimod,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Sitagliptinphosphat / METFORMIN HYDROCHLORIDE,sitagliptin phosphate,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
-Sitaglptin / Metformin HCl / Sitagliptin / Pioglitazone,sitagliptin,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
+Sitaglptin / Metformin HCl / Sitagliptin / Pioglitazone,sitagliptin,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),1,NA,NA,NA
 Sitaxsentan Sodium / Sildenafil Citrate,sitaxentan,review,63,chembl,alias match (chembl_synonym): 'sitaxsentan' → 'sitaxentan',1,NA,NA,NA
 Skin equivalent graft genetically corrected with a COL7A1-encoding SIN retroviral vector,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 "Slinda 4 mg kalvopäällysteinen tabletti / Drovelis 3 mg / 14.2 mg film-coated tablets / Daylette 0,02 mg / 3 mg tabletti, kalvopäällysteinen",sulindac,review,92,fuzzy:chembl,fuzzy match (jw similarity 92%),1,NA,NA,NA
@@ -3127,8 +3010,6 @@ Thymoglobuline / Thymoglobulin,thyroglobulin,review,93,fuzzy:chembl,fuzzy match 
 Thymoglobuline 25 mg powder for solution for infusion,thyroglobulin,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Ti-061 / Pembrolizumab,itx-5061,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
 Tinzeparin / Enoxaparin / Dalteparin,tinzaparin,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
-Tiotropium Bromide monohydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-To Be Determined,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 To be confirmed / GEMCITABINE / DOCETAXEL,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 To be determined / TALAZOPARIB / GEMCITABINE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 To be required,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3164,7 +3045,7 @@ Povidone K30
 Krospovidone
 Magnesium stearate / Espiro, 25 mg, tabletki powlekane / Spironol, 25 mg, tabletki / Elestar HCT, 40 mg + 5 mg + 12,5 mg, tabletki powlekane / Elestar HCT, 40 mg + 10 mg + 25 mg, tabletki powlekane / Triplixam, 5 mg + 1,25 mg + 5 mg, tabletki powlekane",toripalimab,unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),1,NA,NA,NA
 Triptorelin-6-month,triptorelin,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
-"Trprostinil / CHLORURE DE SODIUM AGUETTANT 0,9  sol inj",treprostinil,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
+"Trprostinil / CHLORURE DE SODIUM AGUETTANT 0,9  sol inj",treprostinil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),1,NA,NA,NA
 Tusamitamab ravtansine,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Twinrix / Proleukin,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 U3-1287 AMG 888,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
@@ -3181,7 +3062,7 @@ UTA2-1 loaded PD-L silenced Dendritic cells,NA,unknown,0,NA,no reliable match,1,
 UVEDOSE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 UX701,rivunatpagene miziparvovec,review,64,chembl,alias match (chembl_synonym): 'ux701' → 'rivunatpagene miziparvovec',1,NA,NA,NA
 Ulobetasol,halobetasol propionate,review,64,chembl,alias match (chembl_synonym): 'ulobetasol' → 'halobetasol propionate',1,NA,NA,NA
-Umeclinidium bromide / Vilanterol Trifenatate / Fluticasone Furoate / NA / SALMETEROL / tiotropium bromide,umeclidinium,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
+Umeclinidium bromide / Vilanterol Trifenatate / Fluticasone Furoate / NA / SALMETEROL / tiotropium bromide,umeclidinium,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),1,NA,NA,NA
 Unavailable,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 Undetermined,intermedine,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
 Upifitamab Rilsodotin,xmt-1536,review,64,chembl,alias match (chembl_synonym): 'upifitamab rilsodotin' → 'xmt-1536',1,NA,NA,NA
@@ -3272,7 +3153,6 @@ Wilate,water,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 Wilms tumor 1 WT1 mRNA-electroporated dendritic cell vaccine,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 X VIVO EXPANDED WHARTONS JELLY DERIVED MESENCHYMAL STEM CELLS / ALBUMIN / SODIUM CHLORIDE SOLUTION 0.9 / CITRIC ACID MONOHYDRATE / TRISODIUM CITRATE DIHYDRATE / GLUCOSE MONOHYDRATE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 XEN1101,azetukalner,review,64,chembl,alias match (chembl_synonym): 'xen1101' → 'azetukalner',1,NA,NA,NA
-XEOMIN,hemin,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 XL092 / EVEROLIMUS,zanzalintinib,review,63,chembl,alias match (chembl_synonym): 'xl092' → 'zanzalintinib',1,NA,NA,NA
 XL184 25mg / XL184 100mg,cabozantinib s-malate,review,62,chembl,alias match (chembl_synonym): 'xl184' → 'cabozantinib s-malate',1,NA,NA,NA
 XmAb5871,obexelimab,review,64,chembl,alias match (chembl_synonym): 'xmab5871' → 'obexelimab',1,NA,NA,NA
@@ -3338,7 +3218,6 @@ anti-IL-33 monoclonal antibody,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 anti-fucosyl-GM1,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 antibody-drug conjugate ADC XB002 / NIVOLUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 apadamtase alfa / Octaplas / apademtase alfa,apadamtase alfa,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
-apomorphine hydrochloride,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 ara-C-elaidate,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 artikaiinihydrokloridi / glukoosi,articaine hydrochloride,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
 atorvastatine,atorvastatin,review,64,chembl,alias match (chembl_synonym): 'atorvastatine' → 'atorvastatin',1,NA,NA,NA
@@ -3350,9 +3229,6 @@ axicabtagene ciloleucel / KTE-X19,axicabtagene ciloleucel,review,90,fuzzy:epar,f
 azaepothilone B,ixabepilone,review,64,chembl,alias match (chembl_synonym): 'azaepothilone b' → 'ixabepilone',1,NA,NA,NA
 azithromycine,azithromycin,review,64,chembl,alias match (chembl_synonym): 'azithromycine' → 'azithromycin',1,NA,NA,NA
 bIAP,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-beclometasone dipropionate / formoterol fumarate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-beclometasone dipropionate / formoterol fumarate / Beclomethasone dipropionate / Formoterol fumarate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
-beclometasone dipropionate / formoterol fumarate / fluticasone propionate / salmeterol xinafoate,NA,review,63,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 beclomethasone dipropionate / formoterol fumerate / formoterol fumerat,beclomethasone dipropionate,review,83,chembl,alias match (ban): 'beclomethasone' → 'beclomethasone dipropionate',1,NA,NA,NA
 belantamab mafodotin,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 benzoylperoxide,benzoyl peroxide,review,98,fuzzy:chembl,fuzzy match (jw similarity 98%),1,NA,NA,NA
@@ -3388,7 +3264,6 @@ chlorydrate de clonidine / levobupivacaine chlorhydrate / sufentanil base,chlora
 chondroitin sulfate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 choriongonadotropin / progesterone,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 ciclofosfamid / Cytarabine / Daunorubicin / Dexamethasone / Mercaptopurine / Methotrexate / Tioguanine / Vincristine / Prednisone / Asparaginase / Doxorubicin,cilostamide,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
-ciclosporin / Tacrolimus,cyclosporine,review,83,chembl,alias match (ban): 'ciclosporin' → 'cyclosporine',1,NA,NA,NA
 ciclosporina / Tacrolimus,cyclosporine,review,63,chembl,alias match (chembl_synonym): 'ciclosporina' → 'cyclosporine',1,NA,NA,NA
 ciclosporina / infliximab,cyclosporine,review,63,chembl,alias match (chembl_synonym): 'ciclosporina' → 'cyclosporine',1,NA,NA,NA
 cido gadoxtico disdico,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3431,7 +3306,6 @@ epinefrina,epinephrine,review,64,chembl,alias match (chembl_synonym): 'epinefrin
 "eplerenona cinfa 50 mg comprimidos recubiertos con película EFG / eplerenona cinfa 25 mg comprimidos recubiertos con película EFG / Diován Cardio 40 mg comprimidos recubiertos con película / Diován 320 mg comprimidos recubiertos con película / Bisoprolol Cor Aristo 10 mg comprimidos recubiertos con película EFG / Bisoprolol Cor Aristo 5 mg comprimidos recubiertos con película EFG / Furosemida KERN PHARMA 40 mg comprimidos EFG / Bisoprolol Cor Aristo 2,5 mg comprimidos recubiertos con película EFG / Diován 80 mg comprimidos recubiertos con película / Diován 160 mg comprimidos recubiertos con película",eplerenone,review,62,chembl,alias match (chembl_synonym): 'eplerenona' → 'eplerenone',1,NA,NA,NA
 epoetin beta recombinant human erythropoietin,seproxetine,review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),1,NA,NA,NA
 eptacog alfa activado,eptacog alfa (activated),review,93,fuzzy:epar,fuzzy match (jw similarity 93%),1,NA,NA,NA
-eslicarbazepine acetate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 ethinylestradiol / gestodene / Norelgestromin,ethinyl estradiol,review,63,chembl,alias match (chembl_synonym): 'ethinylestradiol' → 'ethinyl estradiol',1,NA,NA,NA
 etoricoxibe,etoricoxib,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 "exact match to the active tablets in size, color and marking without the active ingredient d-methadone HCl",NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3449,7 +3323,6 @@ gE antigen,gp-100 antigen,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%)
 gadofosveset-trisodium,gadofosveset trisodium,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
 gadoxetic acid disodium,gadoxetate disodium,review,64,chembl,alias match (chembl_synonym): 'gadoxetic acid disodium' → 'gadoxetate disodium',1,NA,NA,NA
 garadacimab,garadacimab,review,100,fuzzy:epar,fuzzy match (jw similarity 100%),1,NA,NA,NA
-glibenclamide,glyburide,review,84,chembl,alias match (ban): 'glibenclamide' → 'glyburide',1,NA,NA,NA
 glycerol / White soft paraffin / Liquid paraffin / Desonide,glycerin,review,63,chembl,alias match (chembl_synonym): 'glycerol' → 'glycerin',1,NA,NA,NA
 glycerylmonocaprylate,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 gpASIT+,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3541,14 +3414,13 @@ magnesium oxide,NA,review,64,chembl,ambiguous alias maps to multiple substances,
 magnesium sulphate,NA,review,64,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 malate de sunitiib,malic acid,review,63,chembl,alias match (chembl_synonym): 'malate' → 'malic acid',1,NA,NA,NA
 mannitoli / Natriumkloridi,mannitol,review,96,fuzzy:epar,fuzzy match (jw similarity 96%),1,NA,NA,NA
-maralixibat chloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 mathra / CORTANCYL 20 mg,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 melperon,melperone,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),1,NA,NA,NA
 mesenchymale stem cells,mesna,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
 meta-iodobenzylguanidine131I / Topotecan / THIOTEPA,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 meta-tetrahydroxy chlorin,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-metformiini / isofaani-insuliini / aspartinsuliini / lisproinsuliini,metformin,review,94,fuzzy:chembl,fuzzy match (jw similarity 94%),1,NA,NA,NA
-metforminhydrochloride / dapagliflozin,metformin hydrochloride,review,99,fuzzy:chembl,fuzzy match (jw similarity 99%),1,NA,NA,NA
+metformiini / isofaani-insuliini / aspartinsuliini / lisproinsuliini,metformin,review,94,fuzzy:manual,fuzzy match (jw similarity 94%),1,NA,NA,NA
+metforminhydrochloride / dapagliflozin,metformin hydrochloride,review,99,fuzzy:manual,fuzzy match (jw similarity 99%),1,NA,NA,NA
 methoxy polyethylene glycol-epoetin beta / darbepoetin alfa,methoxy polyethylene glycol-epoetin beta,review,89,fuzzy:epar,fuzzy match (jw similarity 89%),1,NA,NA,NA
 methoxy polyethylene glycol-epoetin beta / darbepoetin alfa / epoetin alfa / epoetin beta,methoxyamine,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
 methoxy polyethylene glycol-epoetin beta / epoetin alfa / proposed: pegzerepoetin alfa,methoxyamine,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
@@ -3562,9 +3434,9 @@ micoryx,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 microencapsulated grass pollen extract,capreomycin sulfate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),1,NA,NA,NA
 mistletoe extract,timelotem,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
 modified cobratoxin,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-morfinhydrochlorid / morfin / natriumklorid,metformin hydrochloride,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
-moroctocog alfa / octocog alfa,moroctocog alfa,review,89,fuzzy:epar,fuzzy match (jw similarity 89%),1,NA,NA,NA
-mycophenolatmofetil / Prednisolone,mycophenolate mofetil,review,93,fuzzy:epar,fuzzy match (jw similarity 93%),1,NA,NA,NA
+morfinhydrochlorid / morfin / natriumklorid,metformin hydrochloride,review,90,fuzzy:manual,fuzzy match (jw similarity 90%),1,NA,NA,NA
+moroctocog alfa / octocog alfa,moroctocog alfa,review,89,fuzzy:manual,fuzzy match (jw similarity 89%),1,NA,NA,NA
+mycophenolatmofetil / Prednisolone,mycophenolate mofetil,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
 n / a / ECULIZUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 n / a / PEMBROLIZUMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 n / a / RITUXIMAB,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3585,7 +3457,7 @@ nicotinic acid / Laropiprant / simvastatin / atorvastatin,nicotine,review,88,fuz
 no recommended INN,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 no trade name hematopoietic stem cells,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 non-typeable Haemophilus influenzae PD / non-typeable Haemophilus influenzae PE-PilA / Moraxella catarrhalis UspA2 / Varicella Zoster Virus glycoprotein E antigen,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-nonacog alfa / Human plasma-derived factor IX,nonacog alfa,review,86,fuzzy:epar,fuzzy match (jw similarity 86%),1,NA,NA,NA
+nonacog alfa / Human plasma-derived factor IX,nonacog alfa,review,86,fuzzy:manual,fuzzy match (jw similarity 86%),1,NA,NA,NA
 norpinphrine tartrate / phdrine chlorhydrate,norepinephrine,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
 norursodeoxycholic acid,norucholic acid,review,64,chembl,alias match (chembl_synonym): 'norursodeoxycholic acid' → 'norucholic acid',1,NA,NA,NA
 not applicable / EZETIMIBE,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3630,7 +3502,7 @@ not yet established / sevelamer hydrochloride,NA,unknown,0,NA,no reliable match,
 not yet known / DEFACTINIB HCl,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 obeticholic acid / BEZAFIBRATE,obeticholic acid,review,90,fuzzy:epar,fuzzy match (jw similarity 90%),1,NA,NA,NA
 obeticholic acid / Obeticholic Acid,obeticholic acid,review,90,fuzzy:epar,fuzzy match (jw similarity 90%),1,NA,NA,NA
-obyoctocog alfa,lonoctocog alfa,review,91,fuzzy:epar,fuzzy match (jw similarity 91%),1,NA,NA,NA
+obyoctocog alfa,moroctocog alfa,review,91,fuzzy:manual,fuzzy match (jw similarity 91%),1,NA,NA,NA
 octocog,octocog alfa,review,86,fuzzy:epar,fuzzy match (jw similarity 86%),1,NA,NA,NA
 octocog alpha,octocog alfa,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
 octocog alpha / octocog  alpha,octocog alfa,review,86,fuzzy:epar,fuzzy match (jw similarity 86%),1,NA,NA,NA
@@ -3654,16 +3526,13 @@ pGX3001 / pGX3002,mavilimogene ralaplasmid,review,63,chembl,alias match (chembl_
 palmitoylethanolamide,palmidrol,review,64,chembl,alias match (chembl_synonym): 'palmitoylethanolamide' → 'palmidrol',1,NA,NA,NA
 pamidronat,pamidronic acid,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
 pancreatic enzymes,pancreatin,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,NA,NA
-paracetamol,acetaminophen,review,64,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-paracetamol / pseudoephedrine,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
-paracetamol+caffeine / Naproxen,acetaminophen,review,63,chembl,alias match (chembl_synonym): 'paracetamol' → 'acetaminophen',1,NA,NA,NA
 peanut allergen extract,pexantel,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
-peginterfern alfa-2a / Ribavirina,peginterferon beta-1a,review,86,fuzzy:epar,fuzzy match (jw similarity 86%),1,NA,NA,NA
-peginterferon alfa-2a / Ribavirin,peginterferon alfa-2a,review,88,fuzzy:epar,fuzzy match (jw similarity 88%),1,NA,NA,NA
-peginterferon alfa-2a / albumin interferon alfa-2b / ribavirin,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-peginterferon alfa-2a / ribavirin,peginterferon alfa-2a,review,88,fuzzy:epar,fuzzy match (jw similarity 88%),1,NA,NA,NA
-peginterferon alfa-2a / ribavirine,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
-peginterferon alfa-2a PEG-IFN / Ribavirin RIV,peginterferon beta-1a,review,87,fuzzy:epar,fuzzy match (jw similarity 87%),1,NA,NA,NA
+peginterfern alfa-2a / Ribavirina,peginterferon alfa-2a,review,86,fuzzy:manual,fuzzy match (jw similarity 86%),1,NA,NA,NA
+peginterferon alfa-2a / Ribavirin,peginterferon alfa-2a,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),1,NA,NA,NA
+peginterferon alfa-2a / albumin interferon alfa-2b / ribavirin,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+peginterferon alfa-2a / ribavirin,peginterferon alfa-2a,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),1,NA,NA,NA
+peginterferon alfa-2a / ribavirine,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+peginterferon alfa-2a PEG-IFN / Ribavirin RIV,peginterferon alfa-2a,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
 pegpleranib sodium / BEVACIZUMAB / AFLIBERCEPT,pegpleranib sodium,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
 pegylated interferon alfa-2a / ribavirin,eglumetad,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),1,NA,NA,NA
 pending,pegdinetanib,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),1,NA,NA,NA
@@ -3711,7 +3580,6 @@ rilpivirine hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple s
 ropivacain / SUFENTANIL CITRATE,ropivacaine,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),1,NA,NA,NA
 rurioctocog alfa pegol,"antihemophilic factor, pegylated (mw 20000) human sequence recombinant",review,64,chembl,"alias match (chembl_synonym): 'rurioctocog alfa pegol' → 'antihemophilic factor, pegylated (mw 20000) human sequence recombinant'",1,NA,NA,NA
 sNN0031,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-salbutamol sulphate / Ventolin Evohaler / 100 micrograms,albuterol,review,82,chembl,alias match (ban): 'salbutamol' → 'albuterol',1,NA,NA,NA
 same as IMP (Tildacerfont) minus the active substance / PREDNISOLONE / Tildacerfont / Prednisolon 1 mg JENAPHARM® / Hydrocortisone,ademetionine,review,62,chembl,alias match (chembl_synonym): 'same' → 'ademetionine',1,NA,NA,NA
 sandostatine,dasotraline,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 scAAV9.U1A.SGSH,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
@@ -3719,7 +3587,6 @@ see D.3.9.3 Other descriptive name below / Methotrexate,NA,unknown,0,NA,no relia
 see D.3.9.3. / see D.3.9.3,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 sertindolum,sertindole,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),1,NA,NA,NA
 sevorane / MIDAZOLAM,sevoflurane,review,63,chembl,alias match (chembl_synonym): 'sevorane' → 'sevoflurane',1,NA,NA,NA
-sitagliptin phosphate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
 "sodium chloride, sól fizjologiczna (0,9%NaCl) / CLADRIBINE",opium,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 sodium clorhide / sodium lactate,opium,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 solsolifenacin-sukcint solifenacini succinas,solifenacin,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),1,NA,NA,NA
@@ -3748,9 +3615,8 @@ timrepigene emparvovec / Cotoretigene Toliparvovec,timrepigene emparvovec,unknow
 tisagenlecleucel-T,tisagenlecleucel,review,84,chembl,alias match (usan): 'tisagenlecleucel-t' → 'tisagenlecleucel',1,NA,NA,NA
 tividenofusp alfa / Idursulfase,tividenofusp alfa,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
 to be considered,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-to be determined,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
 to be requested,NA,unknown,0,NA,no reliable match,1,NA,NA,NA
-tolicizumab,tocilizumab,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),1,NA,NA,NA
+tolicizumab,tocilizumab,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),1,NA,NA,NA
 tranexamic acid / levocetirizine,tranexamic acid,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
 trifluridine-tipiracil,trifluridine,review,85,fuzzy:manual,fuzzy match (jw similarity 85%),1,NA,NA,NA
 ulipristal acetate,NA,review,84,chembl,ambiguous alias maps to multiple substances,1,NA,NA,NA
@@ -3773,6 +3639,5 @@ vitamin C,vitamin k,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),1,NA,
 vonicog alfa / OCTOCOG ALFA,vonicog alfa,review,86,fuzzy:epar,fuzzy match (jw similarity 86%),1,NA,NA,NA
 vorsoritide,vosoritide,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
 vortioxetina,vortioxetine,review,64,chembl,alias match (chembl_synonym): 'vortioxetina' → 'vortioxetine',1,NA,NA,NA
-xeomin,hemin,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),1,NA,NA,NA
 zoledronic acid / calcium / vitamin D,zoledronic acid,review,63,chembl,alias match (chembl_synonym): 'zoledronic' → 'zoledronic acid',1,NA,NA,NA
 zoledronic acid / risedronate,zoledronic acid,review,63,chembl,alias match (chembl_synonym): 'zoledronic' → 'zoledronic acid',1,NA,NA,NA

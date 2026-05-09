@@ -73,3 +73,25 @@ ringer,formulation excipient
 lactated ringer,formulation excipient
 dextrose,formulation excipient
 glucose,formulation excipient
+not available yet,missing data
+not assigned yet,missing data
+not yet defined,missing data
+not established,missing data
+not yet established,missing data
+no inn or proposed inn available,missing data
+no inn assigned,missing data
+no inn,missing data
+to be determined,missing data
+to be assigned,missing data
+anti-madcam antibody,mechanism class not substance
+anti-il-36r monoclonal antibody,mechanism class not substance
+anti-il-6r monoclonal antibody,mechanism class not substance
+anti-vegf antibody,mechanism class not substance
+anti-pd-1 antibody,mechanism class not substance
+anti-pd-l1 antibody,mechanism class not substance
+fxiia inhibitor monoclonal antibody,mechanism class not substance
+monoclonal antibody,mechanism class not substance — too generic
+bispecific antibody,mechanism class not substance — too generic
+recombinant protein,mechanism class not substance — too generic
+vlp vaccine,vaccine component — not a substance
+adjuvant system,vaccine component — not a substance
