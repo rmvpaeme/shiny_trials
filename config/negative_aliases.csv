@@ -51,3 +51,25 @@ best supportive care,non-specific treatment phrase
 not yet established,missing data
 not available,missing data
 not applicable,missing data
+n/a,missing data
+n / a,missing data
+na,missing data
+n.a.,missing data
+n.a,missing data
+-,missing data
+- -,missing data
+---,missing data
+.,missing data
+not assigned,missing data
+not yet assigned,missing data
+not yet assigned / not yet assigned,missing data
+not yet available,missing data
+none,missing data
+unknown,missing data
+tbd,missing data
+0.9 nacl,formulation excipient
+saline,formulation excipient
+ringer,formulation excipient
+lactated ringer,formulation excipient
+dextrose,formulation excipient
+glucose,formulation excipient

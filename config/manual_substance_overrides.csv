@@ -9,3 +9,17 @@ ara-c,cytarabine,accepted,common abbreviation
 mtx,methotrexate,accepted,common abbreviation
 cpt-11,irinotecan,accepted,research code
 vp-16,etoposide,accepted,research code
+mesalazine,mesalazine,accepted,European INN (mesalamine is US name)
+mesalamine,mesalazine,accepted,US name for mesalazine
+colecalciferol,colecalciferol,accepted,INN (cholecalciferol is synonym)
+cholecalciferol,colecalciferol,accepted,synonym for colecalciferol
+fingolimod,fingolimod,accepted,INN
+acetylsalicylic acid,acetylsalicylic acid,accepted,INN for aspirin
+aspirin,acetylsalicylic acid,accepted,common name for acetylsalicylic acid
+glycopyrronium,glycopyrronium,accepted,INN
+glycopyrronium bromide,glycopyrronium,accepted,salt form
+clostridium botulinum toxin type a,botulinum toxin type a,accepted,biological toxin INN
+botulinum toxin type a,botulinum toxin type a,accepted,biological toxin INN
+onabotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN
+abobotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN
+incobotulinumtoxina,botulinum toxin type a,accepted,brand-derived INN

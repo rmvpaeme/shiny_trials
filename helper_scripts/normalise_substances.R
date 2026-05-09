@@ -247,11 +247,14 @@ check_alias <- function(candidates, cfg) {
     ))
   }
 
-  hit    <- hits |> dplyr::slice(1)
-  status <- if (hit$match_score >= 85) "accepted" else "review"
+  hit <- hits |> dplyr::slice(1)
+  # Identity match: alias IS the substance — always accepted regardless of confidence
+  is_identity <- hit$alias_clean == hit$substance_clean
+  score  <- if (is_identity) 100 else hit$match_score
+  status <- if (score >= 85 || is_identity) "accepted" else "review"
   .result(
     hit$substance_clean,
-    status = status, score = hit$match_score,
+    status = status, score = score,
     source = hit$source,
     reason = paste0(
       "alias match (", hit$alias_type, "): '",
@@ -274,6 +277,7 @@ check_alias <- function(candidates, cfg) {
 .fuzzy_eligible <- function(candidates) {
   any(purrr::map_lgl(candidates, function(c) {
     nchar(c) >= 6 &&
+      stringr::str_count(c, "\\s+") <= 3 &&   # reject long multi-word phrases
       !stringr::str_detect(
         c, stringr::regex(.dose_pattern, ignore_case = TRUE)
       ) &&
@@ -376,12 +380,23 @@ normalise_substances <- function(raw_vec,
                                  config_dir = "config",
                                  configs    = NULL,
                                  allow_fuzzy = TRUE) {
-  if (!exists("%||%", mode = "function", envir = parent.env(environment()))) {
-    `%||%` <- function(a, b) if (!is.null(a)) a else b
-  }
+  `%||%` <- function(a, b) if (!is.null(a)) a else b
   cfg         <- configs %||% load_substance_configs(config_dir)
   unique_vals <- unique(as.character(raw_vec))
-  lookup      <- purrr::map_dfr(
+
+  if (length(unique_vals) == 0) {
+    return(tibble::tibble(
+      raw_substance           = character(),
+      active_substance_clean  = character(),
+      active_substance_parent = character(),
+      match_status            = character(),
+      match_score             = numeric(),
+      match_source            = character(),
+      match_reason            = character()
+    ))
+  }
+
+  lookup <- purrr::map_dfr(
     unique_vals, ~ normalise_one(.x, cfg = cfg, allow_fuzzy = allow_fuzzy)
   )
   tibble::tibble(raw_substance = as.character(raw_vec)) |>
@@ -410,28 +425,48 @@ if (!interactive() && sys.nframe() == 0L) {
     stop("Provide --output=path/to/result.csv")
   }
 
-  df  <- readr::read_csv(input_csv, show_col_types = FALSE)
+  df <- readr::read_csv(input_csv, show_col_types = FALSE)
+  if (!"raw_substance" %in% names(df)) {
+    stop(
+      "Input CSV has no 'raw_substance' column.\n",
+      "Columns found: ", paste(names(df), collapse = ", "), "\n",
+      "Tip: this should be your trial data, not the brand index."
+    )
+  }
   out <- normalise_substances(
     df$raw_substance,
     config_dir  = config_dir,
     allow_fuzzy = !no_fuzzy
   )
+  if ("n_trials" %in% names(df)) {
+    out <- dplyr::left_join(
+      out,
+      dplyr::select(df, raw_substance, n_trials),
+      by = "raw_substance"
+    )
+  }
   readr::write_csv(out, output_csv)
   message(sprintf("Wrote %d rows to %s", nrow(out), output_csv))
 
   if (write_queue) {
     queue_path <- file.path(config_dir, "substance_review_queue.csv")
-    queue <- out |>
+    out_q <- if ("n_trials" %in% names(out)) {
+      out
+    } else {
+      dplyr::mutate(out, n_trials = 1L)
+    }
+    queue <- out_q |>
       dplyr::filter(match_status %in% c("review", "unknown")) |>
-      dplyr::count(
+      dplyr::group_by(
         raw_substance, active_substance_clean,
-        match_status, match_source, match_reason,
-        sort = TRUE, name = "n_occurrences"
+        match_status, match_score, match_source, match_reason
       ) |>
+      dplyr::summarise(n_occurrences = sum(n_trials), .groups = "drop") |>
+      dplyr::arrange(dplyr::desc(n_occurrences)) |>
       dplyr::mutate(
-        decision           = NA_character_,
+        decision            = NA_character_,
         canonical_substance = NA_character_,
-        comment            = NA_character_
+        comment             = NA_character_
       )
     readr::write_csv(queue, queue_path)
     message(sprintf(

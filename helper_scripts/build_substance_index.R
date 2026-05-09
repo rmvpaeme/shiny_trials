@@ -164,9 +164,9 @@ if (!no_chembl) {
         TRUE                     ~ "chembl_synonym"
       )
       confidence <- dplyr::case_when(
-        syn_type == "TRADE_NAME" ~ 0.85,
-        syn_type == "USAN"       ~ 0.80,
-        syn_type == "BAN"        ~ 0.80,
+        syn_type == "TRADE_NAME" ~ 0.90,
+        syn_type == "USAN"       ~ 0.85,
+        syn_type == "BAN"        ~ 0.85,
         TRUE                     ~ 0.65
       )
 
