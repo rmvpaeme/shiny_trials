@@ -1,0 +1,11 @@
+raw_clean,substance_clean,match_status,reason
+gemcitabine100 mg,gemcitabine,accepted,dose glued to INN
+5-fluorouracil,fluorouracil,accepted,numerical prefix synonym
+5fu,fluorouracil,accepted,abbreviated synonym
+5-fu,fluorouracil,accepted,abbreviated synonym
+6-mercaptopurine,mercaptopurine,accepted,numerical prefix synonym
+6mp,mercaptopurine,accepted,abbreviated synonym
+ara-c,cytarabine,accepted,common abbreviation
+mtx,methotrexate,accepted,common abbreviation
+cpt-11,irinotecan,accepted,research code
+vp-16,etoposide,accepted,research code

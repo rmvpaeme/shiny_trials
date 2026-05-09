@@ -1,0 +1,53 @@
+alias_clean,reason
+placebo,placebo — handled by placebo rule not this table
+toothpaste,cosmetic product
+fluoride,cosmetic/dental ingredient
+hydrocolloid dressing,medical device
+wound dressing,medical device
+dressing,medical device
+bandage,medical device
+catheter,medical device
+stent,medical device
+test product,trial blinding phrase
+blinded to the test product,trial blinding phrase
+blinded product,trial blinding phrase
+study drug,trial blinding phrase
+investigational product,non-specific trial phrase
+investigational medicinal product,non-specific trial phrase
+imp,non-specific trial phrase
+vehicle,vehicle control not substance
+vehicle control,vehicle control not substance
+excipient,formulation excipient
+magnesium stearate,formulation excipient
+microcrystalline cellulose,formulation excipient
+lactose,formulation excipient
+sodium chloride,formulation excipient
+sodium chloride 0.9%,formulation excipient
+normal saline,formulation excipient
+water for injection,formulation excipient
+dose dispersion for,incomplete formulation phrase
+lpa1 antagonist,mechanism class not substance
+pd-1 inhibitor,mechanism class not substance
+pd-l1 inhibitor,mechanism class not substance
+ctla-4 inhibitor,mechanism class not substance
+vegf inhibitor,mechanism class not substance
+egfr inhibitor,mechanism class not substance
+her2 inhibitor,mechanism class not substance
+cdk4/6 inhibitor,mechanism class not substance
+bcl-2 inhibitor,mechanism class not substance
+parp inhibitor,mechanism class not substance
+pi3k inhibitor,mechanism class not substance
+mtor inhibitor,mechanism class not substance
+jak inhibitor,mechanism class not substance
+btk inhibitor,mechanism class not substance
+braf inhibitor,mechanism class not substance
+mek inhibitor,mechanism class not substance
+alk inhibitor,mechanism class not substance
+immunotherapy,mechanism class not substance
+chemotherapy,non-specific treatment phrase
+targeted therapy,non-specific treatment phrase
+standard of care,non-specific treatment phrase
+best supportive care,non-specific treatment phrase
+not yet established,missing data
+not available,missing data
+not applicable,missing data

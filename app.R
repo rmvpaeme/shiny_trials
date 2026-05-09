@@ -142,65 +142,12 @@ norm_pip_substance <- function(x) {
   unique(tokens[nchar(tokens) >= 4])
 }
 
-clean_active_substance_label <- function(x) {
-  x <- str_squish(as.character(x))
-  x <- str_remove_all(x, regex("®|™", ignore_case = TRUE))
-  x <- str_remove(x, regex("^placebo\\s+(matching|for|of|to)?\\s*", ignore_case = TRUE))
-  x <- str_remove_all(x, regex("\\b\\d+[,.]?\\d*\\s*(mg|mcg|micrograms?|microgram|µg|ug|g|ml|l|%|units?|i\\.?u\\.?)\\b",
-                               ignore_case = TRUE))
-  x <- str_remove(x, regex("\\s+\\b[A-Z][A-Z0-9&.-]{2,}\\b$", ignore_case = FALSE))
-  x <- str_remove(x, regex("\\s+\\b(accord|teva|viatris|aristo|normon|altan|efg|jenapharm|galen|sandoz|mylan|krka|zentiva|aurobindo|fresenius|hospira|stada|ratiopharm|cinfa|arrow|acis|pharma|allergan|allergan units?|aerosphere|kwikpen|ebewe|medac|hexal|hikma|pliva|haupt|winthrop|nycomed|faulding|curatis|chemo|generics|generic|biochemie|pharmachemie|pharmos|lannacher|orion|apotex|torrent|sun|meda|almirall|dr\\.?reddy|amneal|actavis|teva generics|pfizer generics|rpc)\\b.*$",
-                           ignore_case = TRUE))
-  x <- str_remove_all(x, regex("\\b(etexilate|pentahydrate|hydrochloride|hydrobromide|sulfate|sulphate|phosphate|acetate|maleate|fumarate|tartrate|citrate|mesylate|tosylate|besylate|monohydrate|dihydrate|trihydrate|sesquihydrate|sodium|potassium|calcium|magnesium|zinc|aluminum|aluminium|monosodium|disodium)\\b",
-                               ignore_case = TRUE))
-  x <- str_remove(x, regex("[,;:-]?\\s*\\b(concentrate|solution|suspension|powder|film-coated|hard capsules?|capsules?|tablets?|injection|infusion|pre-filled syringes?|vials?|oral|intravenous|subcutaneous|injectable|inyectable|injektionslösung|injektionsloesung|iniettabile|solución|solucion|poudre|polvere|polvo|solvant|solvente|comprimidos|recubiertos|pel[ií]cula|jeringas?|precargadas|zachte|pressurised inhalation|gel|cream|ointment|patch|spray|drops|lotion|enema|suppository|syrup|emulsion|pellets|granules|aerosol|lozenge|pessary|implant|depot|foam|rinse|shampoo|collyre|unguent)\\b.*$",
-                           ignore_case = TRUE))
-  # Strip trailing numeric abbreviations like "5-fu", "6-mp", "5fu" appended after full name
-  x <- str_remove(x, regex("\\s+\\d+-?[a-z]{1,4}$", ignore_case = TRUE))
-  x <- str_remove(x, regex("\\s+\\d+[,.]?\\d*$", ignore_case = TRUE))
-  x <- str_remove(x, regex("\\s+(and|\\+)$", ignore_case = TRUE))
-  x <- str_remove_all(x, regex("\\b(of|w|w/v|v/v)\\b", ignore_case = TRUE))
-  x <- str_remove_all(x, "[[:punct:]]+$")
-  str_squish(str_to_sentence(str_to_lower(x)))
-}
+source("helper_scripts/normalise_substances.R", local = FALSE)
+.substance_cfg <- load_substance_configs()
 
-# Named vector brand_name_clean → substance_clean from EPAR index.
-# Only loaded if config/epar_brand_inn.csv exists; empty otherwise (graceful degradation).
-# Restricted to unambiguous entries (one substance per brand name).
-epar_exact_map <- local({
-  p <- file.path("config", "epar_brand_inn.csv")
-  if (!file.exists(p)) return(character(0))
-  m <- readr::read_csv(p, show_col_types = FALSE) %>%
-    group_by(brand_name_clean) %>%
-    filter(n_distinct(substance_clean) == 1) %>%
-    slice(1) %>%
-    ungroup()
-  setNames(m$substance_clean, m$brand_name_clean)
-})
-
-# Canonicalise a raw substance string to a clean EMA INN label. Vectorized.
-# Strategy:
-#   1. EPAR exact match on the raw string ("5-fluorouracil ebewe" → "fluorouracil" directly)
-#   2. EPAR exact match on the regex-cleaned string ("5-fluorouracil" → "fluorouracil")
-#   3. Regex-cleaned string (covers INNs and investigational compounds not in EPAR)
 resolve_substance_label <- function(x) {
-  raw_tok <- tolower(str_squish(str_remove_all(as.character(x), "[®™]")))
-
-  result <- if (length(epar_exact_map) > 0) unname(epar_exact_map[raw_tok])
-            else                             rep(NA_character_, length(x))
-
-  unresolved <- is.na(result)
-  if (any(unresolved)) {
-    cleaned <- clean_active_substance_label(x[unresolved])
-    if (length(epar_exact_map) > 0) {
-      via_clean <- unname(epar_exact_map[tolower(str_squish(cleaned))])
-      result[unresolved] <- dplyr::if_else(!is.na(via_clean), via_clean, cleaned)
-    } else {
-      result[unresolved] <- cleaned
-    }
-  }
-
-  str_to_sentence(result)
+  result <- normalise_substances(as.character(x), configs = .substance_cfg)
+  stringr::str_to_sentence(result$active_substance_clean)
 }
 
 is_exploratory_substance <- function(x) {

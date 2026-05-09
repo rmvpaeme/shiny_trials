@@ -1,0 +1,200 @@
+substance_clean,parent_substance,substance_type,source
+pembrolizumab,pembrolizumab,inn,manual
+nivolumab,nivolumab,inn,manual
+atezolizumab,atezolizumab,inn,manual
+durvalumab,durvalumab,inn,manual
+avelumab,avelumab,inn,manual
+ipilimumab,ipilimumab,inn,manual
+cemiplimab,cemiplimab,inn,manual
+dostarlimab,dostarlimab,inn,manual
+adalimumab,adalimumab,inn,manual
+bevacizumab,bevacizumab,inn,manual
+trastuzumab,trastuzumab,inn,manual
+rituximab,rituximab,inn,manual
+cetuximab,cetuximab,inn,manual
+panitumumab,panitumumab,inn,manual
+ramucirumab,ramucirumab,inn,manual
+denosumab,denosumab,inn,manual
+pertuzumab,pertuzumab,inn,manual
+ado-trastuzumab emtansine,trastuzumab,inn,manual
+trastuzumab deruxtecan,trastuzumab,inn,manual
+sacituzumab govitecan,sacituzumab govitecan,inn,manual
+enfortumab vedotin,enfortumab vedotin,inn,manual
+osimertinib,osimertinib,inn,manual
+osimertinib mesylate,osimertinib,salt,manual
+erlotinib,erlotinib,inn,manual
+erlotinib hydrochloride,erlotinib,salt,manual
+gefitinib,gefitinib,inn,manual
+afatinib,afatinib,inn,manual
+afatinib dimaleate,afatinib,salt,manual
+dacomitinib,dacomitinib,inn,manual
+lapatinib,lapatinib,inn,manual
+lapatinib ditosylate,lapatinib,salt,manual
+neratinib,neratinib,inn,manual
+neratinib maleate,neratinib,salt,manual
+tucatinib,tucatinib,inn,manual
+ibrutinib,ibrutinib,inn,manual
+acalabrutinib,acalabrutinib,inn,manual
+acalabrutinib maleate,acalabrutinib,salt,manual
+zanubrutinib,zanubrutinib,inn,manual
+idelalisib,idelalisib,inn,manual
+copanlisib,copanlisib,inn,manual
+copanlisib hydrochloride,copanlisib,salt,manual
+alpelisib,alpelisib,inn,manual
+olaparib,olaparib,inn,manual
+niraparib,niraparib,inn,manual
+niraparib tosylate monohydrate,niraparib,salt,manual
+rucaparib,rucaparib,inn,manual
+rucaparib camsylate,rucaparib,salt,manual
+talazoparib,talazoparib,inn,manual
+talazoparib tosylate,talazoparib,salt,manual
+imatinib,imatinib,inn,manual
+imatinib mesylate,imatinib,salt,manual
+dasatinib,dasatinib,inn,manual
+nilotinib,nilotinib,inn,manual
+nilotinib hydrochloride monohydrate,nilotinib,salt,manual
+bosutinib,bosutinib,inn,manual
+ponatinib,ponatinib,inn,manual
+ponatinib hydrochloride,ponatinib,salt,manual
+asciminib,asciminib,inn,manual
+asciminib hydrochloride,asciminib,salt,manual
+crizotinib,crizotinib,inn,manual
+alectinib,alectinib,inn,manual
+alectinib hydrochloride,alectinib,salt,manual
+brigatinib,brigatinib,inn,manual
+lorlatinib,lorlatinib,inn,manual
+ceritinib,ceritinib,inn,manual
+cabozantinib,cabozantinib,inn,manual
+cabozantinib (s)-malate,cabozantinib,salt,manual
+sunitinib,sunitinib,inn,manual
+sunitinib malate,sunitinib,salt,manual
+sorafenib,sorafenib,inn,manual
+sorafenib tosylate,sorafenib,salt,manual
+regorafenib,regorafenib,inn,manual
+lenvatinib,lenvatinib,inn,manual
+lenvatinib mesylate,lenvatinib,salt,manual
+axitinib,axitinib,inn,manual
+pazopanib,pazopanib,inn,manual
+pazopanib hydrochloride,pazopanib,salt,manual
+vandetanib,vandetanib,inn,manual
+palbociclib,palbociclib,inn,manual
+ribociclib,ribociclib,inn,manual
+ribociclib succinate,ribociclib,salt,manual
+abemaciclib,abemaciclib,inn,manual
+venetoclax,venetoclax,inn,manual
+bortezomib,bortezomib,inn,manual
+carfilzomib,carfilzomib,inn,manual
+ixazomib,ixazomib,inn,manual
+ixazomib citrate,ixazomib,salt,manual
+thalidomide,thalidomide,inn,manual
+lenalidomide,lenalidomide,inn,manual
+pomalidomide,pomalidomide,inn,manual
+ruxolitinib,ruxolitinib,inn,manual
+ruxolitinib phosphate,ruxolitinib,salt,manual
+midostaurin,midostaurin,inn,manual
+gilteritinib,gilteritinib,inn,manual
+gilteritinib fumarate,gilteritinib,salt,manual
+enasidenib,enasidenib,inn,manual
+ivosidenib,ivosidenib,inn,manual
+olutasidenib,olutasidenib,inn,manual
+glasdegib,glasdegib,inn,manual
+glasdegib maleate,glasdegib,salt,manual
+vismodegib,vismodegib,inn,manual
+sonidegib,sonidegib,inn,manual
+sonidegib phosphate,sonidegib,salt,manual
+fluorouracil,fluorouracil,inn,manual
+capecitabine,capecitabine,inn,manual
+gemcitabine,gemcitabine,inn,manual
+gemcitabine hydrochloride,gemcitabine,salt,manual
+cytarabine,cytarabine,inn,manual
+decitabine,decitabine,inn,manual
+azacitidine,azacitidine,inn,manual
+clofarabine,clofarabine,inn,manual
+fludarabine,fludarabine,inn,manual
+fludarabine phosphate,fludarabine,salt,manual
+mercaptopurine,mercaptopurine,inn,manual
+thioguanine,thioguanine,inn,manual
+methotrexate,methotrexate,inn,manual
+pemetrexed,pemetrexed,inn,manual
+pemetrexed disodium,pemetrexed,salt,manual
+raltitrexed,raltitrexed,inn,manual
+doxorubicin,doxorubicin,inn,manual
+doxorubicin hydrochloride,doxorubicin,salt,manual
+epirubicin,epirubicin,inn,manual
+epirubicin hydrochloride,epirubicin,salt,manual
+daunorubicin,daunorubicin,inn,manual
+idarubicin,idarubicin,inn,manual
+idarubicin hydrochloride,idarubicin,salt,manual
+mitoxantrone,mitoxantrone,inn,manual
+mitoxantrone hydrochloride,mitoxantrone,salt,manual
+bleomycin,bleomycin,inn,manual
+cisplatin,cisplatin,inn,manual
+carboplatin,carboplatin,inn,manual
+oxaliplatin,oxaliplatin,inn,manual
+cyclophosphamide,cyclophosphamide,inn,manual
+ifosfamide,ifosfamide,inn,manual
+melphalan,melphalan,inn,manual
+melphalan hydrochloride,melphalan,salt,manual
+chlorambucil,chlorambucil,inn,manual
+bendamustine,bendamustine,inn,manual
+bendamustine hydrochloride,bendamustine,salt,manual
+temozolomide,temozolomide,inn,manual
+dacarbazine,dacarbazine,inn,manual
+carmustine,carmustine,inn,manual
+lomustine,lomustine,inn,manual
+busulfan,busulfan,inn,manual
+vincristine,vincristine,inn,manual
+vincristine sulfate,vincristine,salt,manual
+vinblastine,vinblastine,inn,manual
+vinblastine sulfate,vinblastine,salt,manual
+vinorelbine,vinorelbine,inn,manual
+vinorelbine tartrate,vinorelbine,salt,manual
+vindesine,vindesine,inn,manual
+paclitaxel,paclitaxel,inn,manual
+docetaxel,docetaxel,inn,manual
+cabazitaxel,cabazitaxel,inn,manual
+etoposide,etoposide,inn,manual
+topotecan,topotecan,inn,manual
+topotecan hydrochloride,topotecan,salt,manual
+irinotecan,irinotecan,inn,manual
+irinotecan hydrochloride trihydrate,irinotecan,salt,manual
+trabectedin,trabectedin,inn,manual
+eribulin,eribulin,inn,manual
+eribulin mesylate,eribulin,salt,manual
+anastrozole,anastrozole,inn,manual
+letrozole,letrozole,inn,manual
+exemestane,exemestane,inn,manual
+fulvestrant,fulvestrant,inn,manual
+tamoxifen,tamoxifen,inn,manual
+tamoxifen citrate,tamoxifen,salt,manual
+goserelin,goserelin,inn,manual
+goserelin acetate,goserelin,salt,manual
+leuprorelin,leuprorelin,inn,manual
+leuprorelin acetate,leuprorelin,salt,manual
+abiraterone,abiraterone,inn,manual
+abiraterone acetate,abiraterone,salt,manual
+enzalutamide,enzalutamide,inn,manual
+apalutamide,apalutamide,inn,manual
+darolutamide,darolutamide,inn,manual
+bicalutamide,bicalutamide,inn,manual
+dexamethasone,dexamethasone,inn,manual
+prednisone,prednisone,inn,manual
+prednisolone,prednisolone,inn,manual
+methylprednisolone,methylprednisolone,inn,manual
+tipiracil,tipiracil,inn,manual
+tipiracil hydrochloride,tipiracil,salt,manual
+trifluridine,trifluridine,inn,manual
+bictegravir,bictegravir,inn,manual
+emtricitabine,emtricitabine,inn,manual
+tenofovir alafenamide,tenofovir alafenamide,inn,manual
+tenofovir disoproxil,tenofovir disoproxil,inn,manual
+tenofovir disoproxil fumarate,tenofovir disoproxil,salt,manual
+sacubitril,sacubitril,inn,manual
+valsartan,valsartan,inn,manual
+dapagliflozin,dapagliflozin,inn,manual
+dapagliflozin propanediol monohydrate,dapagliflozin,salt,manual
+empagliflozin,empagliflozin,inn,manual
+canagliflozin,canagliflozin,inn,manual
+semaglutide,semaglutide,inn,manual
+liraglutide,liraglutide,inn,manual
+trastuzumab emtansine,trastuzumab,inn,manual
