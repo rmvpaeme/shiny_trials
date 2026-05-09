@@ -1,0 +1,852 @@
+alias_clean,substances_all,n_substances,sources
+18f,fludeoxyglucose f 18|fluorodopa f 18,2,chembl
+32p,chromic phosphate p 32|sodium phosphate p 32,2,chembl
+51cr,"albumin, chromated cr 51 serum|sodium chromate cr 51",2,chembl
+57co,cobaltous chloride co 57|cyanocobalamin co 57,2,chembl
+60co,cobaltous chloride co 60|cyanocobalamin co 60,2,chembl
+a1443,afoxolaner|fluralaner,2,chembl
+abbv-321,serclutamab|serclutamab talirine,2,chembl
+abrysvo,"respiratory syncytial virus pre-fusion glycoprotein f|respiratory syncytial virus vaccine (bivalent, recombinant)",2,chembl|epar
+abt-492,delafloxacin|delafloxacin meglumine,2,chembl
+ac0137,pramlintide|pramlintide acetate,2,chembl
+ac220,quizartinib|quizartinib dihydrochloride,2,chembl
+ac2307,davalintide|davalintide acetate,2,chembl
+aceneuramic acid,aceneuramic acid|sialic acid,2,chembl
+aceon,perindopril erbumine|tramadol hydrochloride,2,chembl
+achn-490,plazomicin|plazomicin sulfate,2,chembl
+achromycin v,tetracycline|tetracycline hydrochloride,2,chembl
+acrescent,memantine hydrochloride|memantine hydrochloride|donepezil hydrochloride,2,chembl|epar
+activyl tick plus,indoxacarb|permethrin|permethrin,2,chembl|epar
+actoxumab,actoxumab|mk-3415,2,chembl
+actrapid,human insulin|insulin human,2,chembl|epar
+adct-301,camidanlumab|camidanlumab tesirine,2,chembl
+adct-402,loncastuximab|loncastuximab tesirine,2,chembl
+"adjupanrix (previously pandemic influenza vaccine (h5n1) (split virion, inactivated, adjuvanted) glaxosmithkline biologicals)","influenza a virus, split virion|split influenza virus, inactivated, containing antigen: a|vietnam|1194|2004 (h5n1) like strain used (nibrg-14)",2,chembl|epar
+adriamycin,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
+adrovance,alendronate sodium|colecalciferol|alendronic acid (as sodium trihydrate),2,chembl|epar
+advil,ibuprofen|ibuprofen sodium,2,chembl
+adynovi,"antihemophilic factor, pegylated (mw 20000) human sequence recombinant|rurioctocog alfa pegol",2,chembl|epar
+adzynma,apadamtase alfa|radamts13,2,chembl|epar
+aeb071,sotrastaurin|sotrastaurin acetate,2,chembl
+aegr-733,lomitapide|lomitapide mesylate,2,chembl
+aerivio spiromax,fluticasone propionate|salmeterol xinafoate|fluticasone propionate,2,chembl|epar
+af37702,peginesatide|peginesatide acetate,2,chembl
+aflunov,a|vietnam|1194|2004|influenza virus surface antigens (haemagglutinin and neuraminidase) of strain: a|turkey|turkey|1|05 (h5n1)-like strain (nibrg-23),2,epar
+agilus,"dantrolene sodium|dantrolene sodium, hemiheptahydrate",2,chembl|epar
+agn-151607,botulinum toxin type a|gemibotulinumtoxin a,2,chembl
+ah252723,afoxolaner|fluralaner,2,chembl
+akineton,biperiden hydrochloride|biperiden lactate,2,chembl
+aldomet,methyldopa|methyldopate hydrochloride,2,chembl
+alecensa,alectinib|alectinib hydrochloride,2,chembl|epar|manual
+alimta,pemetrexed|pemetrexed disodium,2,chembl|epar
+aliqopa,copanlisib|copanlisib dihydrochloride|copanlisib hydrochloride,3,chembl|epar|manual
+alkeran,melphalan|melphalan hydrochloride,2,chembl|manual
+aln-ttrsc02,vutrisiran|vutrisiran sodium,2,chembl
+alpheon,interferon alfa-2a|recombinant human interferon alfa-2a,2,chembl|epar
+altumomab,altumomab|indium in 111 altumomab pentetate,2,chembl
+ambirix,hepatitis a virus (inactivated)|hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+ameile,aumolertinib|aumolertinib mesylate,2,chembl
+ameluz,5-aminolevulinic acid hydrochloride|aminolevulinic acid hydrochloride,2,chembl|epar
+amerol,aumolertinib|aumolertinib mesylate,2,chembl
+amg 706,motesanib|motesanib diphosphate,2,chembl
+amglidia,glibenclamide|glyburide,2,chembl|epar
+amyvid,florbetapir (18f)|florbetapir f 18,2,chembl|epar
+anavex,blarcamesine|blarcamesine hydrochloride,2,chembl
+antepar,piperazine|piperazine citrate,2,chembl
+apd791,temanogrel|temanogrel hydrochloride,2,chembl
+aqneursa,l-acetylleucine|levacetylleucine,2,chembl|epar
+aqumeldi,enalapril (maleate)|enalapril maleate,2,chembl|epar
+ar-13324,netarsudil|netarsudil dimesylate,2,chembl
+arepanrix,"influenza a virus, split virion|split influenza virus, inactivated, containing antigen*: a|california|7|2009 (h1n1)v like strain (x-179a)*propagated in eggs.",2,chembl|epar
+ariclaim,duloxetine|duloxetine hydrochloride,2,chembl|epar
+aristocort,triamcinolone|triamcinolone acetonide|triamcinolone diacetate,3,chembl
+armisarte (previously pemetrexed actavis),pemetrexed diacid monohydrate|pemetrexed monohydrate,2,chembl|epar
+asparaginase erwinia chrysanthemi (recombinant),asparaginase erwinia chrysanthemi|crisantaspase,2,chembl
+atazanavir krka,atazanavir (as sulfate)|atazanavir sulfate,2,chembl|epar
+atazanavir viatris (previously atazanavir mylan),atazanavir (as sulfate)|atazanavir sulfate,2,chembl|epar
+ati-5923,tecarfarin|tecarfarin sodium,2,chembl
+atosiban sun,atosiban (as acetate)|atosiban acetate,2,chembl|epar
+av-951,tivozanib|tivozanib hydrochloride,2,chembl
+avandamet,rosiglitazone|rosiglitazone|metformin hydrochloride,2,chembl|epar
+avandia,rosiglitazone|rosiglitazone maleate,2,chembl|epar
+avelox,moxifloxacin|moxifloxacin hydrochloride,2,chembl
+aventyl,nortriptyline|nortriptyline hydrochloride,2,chembl
+avonex,interferon beta|interferon beta-1a,2,chembl|epar
+axumin,fluciclovine (18f)|fluciclovine f18,2,chembl|epar
+ay-5710,magaldrate|magaldrate anhydrous,2,chembl
+azilect,rasagiline|rasagiline mesylate,2,chembl|epar
+bactroban,mupirocin|mupirocin calcium,2,chembl
+balaxur,memantine hydrochloride|memantine hydrochloride|donepezil hydrochloride,2,chembl|epar
+bbr 2778,pixantrone|pixantrone dimaleate,2,chembl
+bcx-1777,forodesine|forodesine hydrochloride,2,chembl
+beclometasone,beclomethasone|beclomethasone dipropionate,2,chembl
+beclomethasone,beclomethasone|beclomethasone dipropionate,2,chembl
+benefix,coagulation factor ix recombinant human|nonacog alfa,2,chembl|epar
+besponsa,inotuzumab|inotuzumab ozogamicin,2,chembl|epar
+beta-galactosidase (aspergillus),lactase|tilactase,2,chembl
+betoptic,betaxolol|betaxolol hydrochloride,2,chembl
+bicillin,penicillin g benzathine|procaine benzylpenicillin,2,chembl
+biktarvy,bictegravir|emtricitabine|tenofovir alafenamide|bictegravir|emtricitabine|tenofovir alafenamide|fumarate,2,epar|manual
+bimervax,sars-cov-2 virus recombinant spike (s) protein receptor binding domain (rbd) fusion dimer produced by recombinant dna technology|selvacovatein,2,chembl|epar
+bindren,colestilan|colestilan chloride,2,chembl|epar
+binosto,alendronate sodium|alendronic acid,2,chembl
+bismuth subcitrate,bismuth subcitrate|bismuth subcitrate potassium,2,chembl
+blenoxane,bleomycin|bleomycin sulfate,2,chembl|manual
+blocadren,timolol|timolol maleate,2,chembl
+bodyfolin,levomefolate calcium|levomefolic acid,2,chembl
+bondenza (previously ibandronic acid roche),ibandronate sodium|ibandronic acid,2,chembl|epar
+bondronat,ibandronate sodium|ibandronic acid,2,chembl|epar
+bonviva,ibandronate sodium|ibandronic acid,2,chembl|epar
+bortezomib accord,bortezomib|bortezomib d-mannitol,2,chembl|epar
+bortezomib fresenius kabi,bortezomib|bortezomib d-mannitol,2,chembl|epar
+bortezomib hospira,bortezomib|bortezomib d-mannitol,2,chembl|epar
+bortezomib sun,bortezomib|bortezomib d-mannitol,2,chembl|epar
+bosulif,bosutinib|bosutinib (as monohydrate)|bosutinib monohydrate,3,chembl|epar|manual
+bri 7013,astodrimer|astodrimer sodium,2,chembl
+bri-7013,astodrimer|astodrimer sodium,2,chembl
+bri7013,astodrimer|astodrimer sodium,2,chembl
+bridion,sugammadex|sugammadex sodium,2,chembl|epar
+brintellix,vortioxetine|vortioxetine hydrobromide,2,chembl|epar
+buccolam,midazolam|midazolam hydrochloride,2,chembl|epar
+byfavo,remimazolam besilate|remimazolam besylate,2,chembl|epar
+bylvay,odevixibat|odevixibat sesquihydrate,2,chembl|epar
+cabometyx,cabozantinib|cabozantinib (s)-malate|cabozantinib s-malate,3,chembl|epar|manual
+caelyx,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
+calquence,acalabrutinib|acalabrutinib maleate|acalabrutinib|acalabrutinib maleate,3,chembl|epar|manual
+camcevi,leuprolide mesylate|leuprorelin mesilate,2,chembl|epar
+camptosar,irinotecan|irinotecan hydrochloride,2,chembl|manual
+cancidas (previously caspofungin msd),caspofungin (as acetate)|caspofungin acetate,2,chembl|epar
+capromab pendetide,capromab pendetide|indium in 111 capromab pendetide,2,chembl
+carphenazine,carphenazine|carphenazine maleate,2,chembl
+cb-01-11,rifamycin|rifamycin sodium,2,chembl
+cc-220,iberdomide|iberdomide hydrochloride,2,chembl
+cea-scan,arcitumomab|technetium tc 99m arcitumomab,2,chembl|epar
+cefalexin,cephalexin|cephalexin anhydrous,2,chembl
+ceftobiprole medocaril,ceftobiprole medocaril free acid|ceftobiprole medocaril sodium,2,chembl
+cefuroxime,cefuroxime|cefuroxime sodium,2,chembl
+celestone,betamethasone|betamethasone sodium phosphate,2,chembl
+celsunax,ioflupane (123i)|ioflupane i 123,2,chembl|epar
+celvapan,"influenza a virus, inactivated whole virion|whole virion influenza vaccine, inactivated containing antigen of strain a|california|07|2009 (h1n1)v",2,chembl|epar
+cend-1,certepetide|irgd,2,chembl
+ceprotin,human protein c|protein c concentrate (human),2,chembl|epar
+cerdelga,eliglustat (tartrate)|eliglustat tartrate,2,chembl|epar
+certifect,amitraz|fipronil|amitraz|(s)-methoprene,2,chembl|epar
+cerubidine,daunorubicin|daunorubicin hydrochloride,2,chembl|manual
+cervarix,"human papillomavirus, l1 protein virus like particles|human papillomavirus1 type 16 l1 protein|human papillomavirus type 18 l1 protein",2,chembl|epar
+cetraxal,ciprofloxacin|ciprofloxacin hydrochloride,2,chembl
+cetrorelix,cetrorelix|cetrorelix acetate,2,chembl
+cetrotide,cetrorelix|cetrorelix (as acetate)|cetrorelix acetate,3,chembl|epar
+cg-315e,tramadol|tramadol hydrochloride,2,chembl
+cg250,cg250 111in|cg250 177lu|girentuximab,3,chembl
+champix,varenicline|varenicline tartrate,2,chembl|epar
+chir-258,dovitinib|dovitinib lactate,2,chembl
+chloromycetin,chloramphenicol|chloramphenicol sodium succinate,2,chembl
+cholestagel,colesevelam (as hydrochloride)|colesevelam hydrochloride,2,chembl|epar
+chondroitin sulfate,chondroitin sulfate|chondroitin sulfate sodium,2,chembl
+cinryze,c1 inhibitor (human)|human c1-esterase inhibitor,2,chembl|epar
+cipro,ciprofloxacin|ciprofloxacin hydrochloride,2,chembl
+citicoline,citicoline|citicoline sodium,2,chembl
+"cl 297,939",bisoprolol|bisoprolol fumarate,2,chembl
+cleocin,clindamycin hydrochloride|clindamycin palmitate hydrochloride|clindamycin phosphate,3,chembl
+clobetasol,clobetasol|clobetasol propionate,2,chembl
+clomicalm,clomipramine|clomipramine hydrochloride,2,chembl|epar
+clopidogrel 1a pharma,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel acino,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel acino pharma,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel acino pharma gmbh,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel bgr (previously zylagren),clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,2,chembl|epar
+clopidogrel bms,clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,2,chembl|epar
+clopidogrel dura,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel hcs,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel hexal,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel krka,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel krka d.d. (previously zopya),clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel qualimed,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel ratiopharm,clopidogrel|clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,3,chembl|epar
+clopidogrel ratiopharm gmbh,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel sandoz,clopidogrel|clopidogrel besilate,2,chembl|epar
+clopidogrel tad,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel teva (hydrogen sulphate),clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,2,chembl|epar
+clopidogrel teva generics b.v.,clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel teva pharma,clopidogrel|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel teva pharma (previously clopidogrel hcs),clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar
+clopidogrel teva pharma b.v.,clopidogrel (as hydrobromide)|clopidogrel hydrobromide,2,chembl|epar
+clopidogrel zentiva (previously clopidogrel winthrop),clopidogrel|clopidogrel bisulfate,2,chembl|epar
+coagadex,coagulation factor x human|human coagulation factor x,2,chembl|epar
+cometriq,cabozantinib|cabozantinib s-malate,2,chembl|epar|manual
+comirnaty,"single-stranded, 5'-capped messenger rna produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2|tozinameran",2,chembl|epar
+compazine,prochlorperazine|prochlorperazine edisylate|prochlorperazine maleate,3,chembl
+compleheal,centella asiatica extract|plectranthus amboinicus extract,2,chembl
+conbriza,bazedoxifene|bazedoxifene acetate,2,chembl|epar
+controloc control,pantoprazole|pantoprazole sodium,2,chembl|epar
+convenia,cefovecin|cefovecin (as sodium salt),2,chembl|epar
+copiktra,duvelisib|duvelisib monohydrate,2,chembl|epar
+cortef,hydrocortisone|hydrocortisone cypionate,2,chembl
+cortisone,cortisone|cortisone acetate,2,chembl
+cortril,hydrocortisone|hydrocortisone acetate,2,chembl
+cotara,iodine i 131 derlotuximab biotin|tnt-1b,2,chembl
+cotellic,cobimetinib fumarate|cobimetinib hemifumarate,2,chembl|epar
+"covid-19 vaccine (inactivated, adjuvanted) valneva","covid-19 vaccine (inactivated, adjuvanted, adsorbed)|sars-cov-2 virus, inactivated",2,chembl|epar
+cresemba,isavuconazole|isavuconazonium sulfate,2,chembl|epar
+crixivan,indinavir sulfate|indinavir sulfate ethanolate,2,chembl|epar
+cufence,trientine dihydrochloride|trientine hydrochloride,2,chembl|epar
+cuprymina,copper (64cu) chloride|cupric chloride cu-64,2,chembl|epar
+cymbalta,duloxetine|duloxetine hydrochloride,2,chembl|epar
+cystadane,betaine|betaine anhydrous,2,chembl|epar
+cystadrops,cysteamine hydrochloride|mercaptamine hydrochloride,2,chembl|epar
+cystagon,cysteamine|cysteamine bitartrate|mercaptamine bitartrate,3,chembl|epar
+cyt387,momelotinib|momelotinib dihydrochloride,2,chembl
+cytovene,ganciclovir|ganciclovir sodium,2,chembl
+d-600,gallopamil|methoxyverapamil,2,chembl
+dabigatran etexilate accord,dabigatran etexilate mesilate|dabigatran etexilate mesylate,2,chembl|epar
+dalnacogen ponparvovec,comsaleucel|dalnacogene ponparvovec,2,chembl
+daquiran,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+daronrix,"influenza a virus, inactivated whole virion|whole virion, inactivated, containing antigen*: a|vietnam|1194|2004 (h5n1)* produced in eggs",2,chembl|epar
+dasatinib accord,dasatinib|dasatinib anhydrous,2,chembl|epar
+dasatinib accord healthcare,dasatinib|dasatinib monohydrate,2,chembl|epar
+dasatinib accordpharma,dasatinib|dasatinib anhydrous,2,chembl|epar
+datscan,ioflupane (123l)|ioflupane i 123,2,chembl|epar
+daunoxome,daunorubicin|daunorubicin citrate,2,chembl
+daurismo,glasdegib|glasdegib maleate,2,chembl|epar|manual
+decadron,dexamethasone|dexamethasone sodium phosphate,2,chembl
+dectova,zanamivir|zanamivir hydrate,2,chembl|epar
+defitelio,defibrotide|defibrotide sodium,2,chembl|epar
+delsym,dextromethorphan hydrobromide|dextromethorphan polistirex,2,chembl
+dengvaxia,"chimeric yellow fever dengue virus serotype 1 (live, attenuated)|chimeric yellow fever dengue virus serotype 2 (live, attenuated)|chimeric yellow fever dengue virus serotype 3 (live, attenuated)|chimeric yellow fever dengue virus serotype 4 (live, attenuated)|chimeric yellow fever dengue virus, live attenuated",2,chembl|epar
+depakote,divalproex sodium|valproic acid,2,chembl
+destara,ibandronate sodium|ibandronic acid,2,chembl|epar
+dextran,dextran|dextran 1,2,chembl
+dextran 40,dextran|dextran 40,2,chembl
+dextropropoxyphene,propoxyphene|propoxyphene hydrochloride,2,chembl
+diamox,acetazolamide|acetazolamide sodium,2,chembl
+dilantin,phenytoin|phenytoin sodium,2,chembl
+dimesna,"2,2'-dithiodiethanesulfonic acid|dimesna",2,chembl
+dimethisterone,dimethisterone|dimethisterone anhydrous,2,chembl
+diractin,ketoprofen|ketoprofen sodium,2,chembl|epar
+diuril,chlorothiazide|chlorothiazide sodium,2,chembl
+dl-d-600,gallopamil|methoxyverapamil,2,chembl
+dm199,recombinant human kallikrein-1|rinvecalinase alfa,2,chembl
+docefrez,docetaxel|docetaxel anhydrous,2,chembl|epar
+docetaxel kabi,docetaxel|docetaxel anhydrous,2,chembl|epar
+docetaxel mylan,docetaxel|docetaxel anhydrous,2,chembl|epar
+docetaxel teva pharma,docetaxel|docetaxel anhydrous,2,chembl|epar
+doribax,doripenem|doripenem monohydrate,2,chembl|epar
+"dov 216,419",centanafadine|centanafadine hydrochloride,2,chembl
+dov 21947,amitifadine|amitifadine hydrochloride,2,chembl
+dovato,dolutegravir sodium|dolutegravir sodium|lamivudine,2,chembl|epar
+doxil,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
+dtpa,pentetic acid|technetium tc 99m pentetate,2,chembl
+duavive,bazedoxifene acetate|oestrogens conjugated|bazedoxifene,2,chembl|epar
+duloxetine boehringer ingelheim,duloxetine|duloxetine hydrochloride,2,chembl|epar
+duloxetine lilly,duloxetine|duloxetine hydrochloride,2,chembl|epar
+duloxetine zentiva,duloxetine|duloxetine hydrochloride,2,chembl|epar
+duoresp spiromax,budesonide|budesonide|formoterol fumarate dihydrate,2,chembl|epar
+durapatite,"calcium phosphate, tribasic|durapatite",2,chembl
+duvyzat,givinostat hydrochloride|givinostat hydrochloride monohydrate,2,chembl|epar
+e-3810,lucitanib|rabeprazole sodium,2,chembl
+e-z scrub,chlorhexidine gluconate|hexachlorophene,2,chembl
+e5555,atopaxar|atopaxar hydrobromide,2,chembl
+eb-1020,centanafadine|centanafadine hydrochloride,2,chembl
+ebilfumin,oseltamivir|oseltamivir phosphate,2,chembl|epar
+echogen,dodecafluoropentane|perflenapent,2,chembl|epar
+edarbi,azilsartan kamedoxomil|azilsartan medoxomil,2,chembl|epar
+edecrin,ethacrynate sodium|ethacrynic acid,2,chembl
+edistride,dapagliflozin propanediol|dapagliflozin propanediol monohydrate,2,chembl|epar
+edurant,rilpivirine|rilpivirine hydrochloride,2,chembl|epar
+effentora,fentanyl|fentanyl citrate,2,chembl|epar
+efient,prasugrel|prasugrel hydrochloride,2,chembl|epar
+eligard,leuprolide acetate|leuprorelin,2,chembl|manual
+ellaone,ulipristal|ulipristal acetate,2,chembl|epar
+ellence,epirubicin|epirubicin hydrochloride,2,chembl|manual
+emd 1195686,safinamide|safinamide mesylate,2,chembl
+emend,aprepitant|fosaprepitant dimeglumine,2,chembl|epar
+endolucinbeta,lutetium (177lu) chloride|lutetium chloride lu-177,2,chembl|epar
+entecavir viatris (previously entecavir mylan),entecavir|entecavir monohydrate,2,chembl|epar
+enviage,aliskiren|aliskiren fumarate,2,chembl|epar
+enzepi,"pancreas powder|pancreas powder, porcine",2,chembl|epar
+episalvan,betulae cortex|birch triterpenes,2,chembl|epar
+erelib,eslicarbazepine|eslicarbazepine acetate,2,chembl
+ertugliflozin,ertugliflozin|ertugliflozin pidolate,2,chembl
+ervebo,"recombinant vesicular stomatitis virus (strain indiana) with a deletion of the envelope glycoprotein, replaced with the zaire ebolavirus (strain kikwit 1995) surface glycoprotein|vesicular stomatitis virus encoding ebola virus glycoprotein",2,chembl|epar
+evarrest,"fibrinogen, human|human fibrinogen|human thrombin",2,chembl|epar
+evotopin,topotecan|topotecan hydrochloride,2,chembl|epar
+evp-6124,encenicline|encenicline hydrochloride,2,chembl
+exblifep,cefepime dihydrochloride monohydrate|enmetazobactam|cefepime hydrochloride,2,chembl|epar
+exelon,rivastigmine|rivastigmine tartrate,2,chembl|epar
+exkivity,mobocertinib|mobocertinib succinate,2,chembl|epar
+extavia,interferon beta|interferon beta-1b,2,chembl|epar
+exviera,dasabuvir sodium|dasabuvir sodium monohydrate,2,chembl|epar
+f2695,levomilnacipran|levomilnacipran hydrochloride,2,chembl
+fabhalta,iptacopan hydrochloride|iptacopan hydrochloride monohydrate,2,chembl|epar
+fampridine accord,dalfampridine|fampridine,2,chembl|epar
+fampyra,dalfampridine|fampridine,2,chembl|epar
+fareston,toremifene|toremifene citrate,2,chembl|epar
+farydak,panobinostat|panobinostat lactate|panobinostat lactate anhydrous,3,chembl|epar
+"fbs0701, spd602",deferitazole|deferitazole magnesium,2,chembl
+fc41-12 (perflenapent/perflisopent mixture),perflenapent|perflisopent,2,chembl
+fendrix,hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+ferric hydroxide,ferric hydroxide|ferric oxyhydroxide,2,chembl
+fespixon,centella asiatica extract|plectranthus amboinicus extract,2,chembl
+fetcroja,cefiderocol sulfate tosilate|cefiderocol sulfate tosylate,2,chembl|epar
+fexeric,ferric citrate|ferric citrate coordination complex,2,chembl|epar
+filsuvez,"birch triterpenes|dry extract from birch bark (der 5-10 : 1), extraction solvent n-heptane 95% (w|w)",2,chembl|epar
+fingolimod,fingolimod|fingolimod hydrochloride,2,chembl
+fingolimod mylan,fingolimod|fingolimod hydrochloride,2,chembl|epar
+finlee,dabrafenib mesilate|dabrafenib mesylate,2,chembl|epar
+firazyr,icatibant|icatibant acetate,2,chembl|epar
+firdapse (previously zenas),amifampridine|amifampridine phosphate,2,chembl|epar
+firmagon,degarelix|degarelix acetate,2,chembl|epar
+flebogamma dif (previously flebogammadif),human immunoglobulin g|human normal immunoglobulin,2,chembl|epar
+fluenz,"influenza virus a|victoria|4897|2022 (h1n1)pdm09 - like strain (a|norway|31694|2022, medi 369815), a a|croatia|10136rv|2023 (h3n2)-like strain (a|perth|722|2024, medi 392611) b|austria|1359417|2021 - like strain (b|austria|1359417|2021, medi 355292)|reassortant influenza virus (live attenuated) of the following strains:a|california|7|2009 (h1n1)pdm09 like strain, a|victoria|361|2011 (h3n2) like strain, b|massachusetts|2|2012 like strain",2,epar
+fluocinolone,fluocinolone|fluocinolone acetonide,2,chembl
+flurazepam,flurazepam|flurazepam hydrochloride,2,chembl
+forcaltonin,calcitonin salmon|recombinant salmon calcitonin,2,chembl|epar
+fortical,calcitonin salmon|maltodextrin,2,chembl
+forxiga,dapagliflozin propanediol|dapagliflozin propanediol monohydrate,2,chembl|epar
+fosamax,alendronate sodium|alendronic acid,2,chembl
+fosavance,alendronate sodium|alendronic acid|colecalciferol,2,chembl|epar
+fosfomycin sodium,fosfomycin|fosfomycin sodium,2,chembl
+fotivda,tivozanib|tivozanib hydrochloride,2,chembl|epar
+g9s0vv191i,lactase|tilactase,2,chembl
+gabitril,tiagabine|tiagabine hydrochloride,2,chembl
+galafold,migalastat|migalastat hydrochloride,2,chembl|epar
+gallopamil,gallopamil|methoxyverapamil,2,chembl
+gamophen,hexachlorophene|triclosan,2,chembl
+gantrisin,sulfisoxazole|sulfisoxazole acetyl|sulfisoxazole diolamine,3,chembl
+gardasil,"human papillomavirus type 6 l1 protein|human papillomavirus type 11 l1 protein|human papillomavirus type 16 l1 protein|human papillomavirus type 18 l1 protein|human papillomavirus, l1 protein virus like particles",2,chembl|epar
+gardasil 9,"human papillomavirus vaccine [types 6, 11, 16, 18, 31, 33, 45, 52, 58] (recombinant, adsorbed)|human papillomavirus, l1 protein virus like particles",2,chembl|epar
+gemzar,gemcitabine|gemcitabine hydrochloride,2,chembl|manual
+genasense,oblimersen|oblimersen sodium,2,chembl|epar
+geodon,ziprasidone hydrochloride|ziprasidone mesylate,2,chembl
+gilotrif,afatinib|afatinib dimaleate,2,chembl
+giotrif,afatinib|afatinib dimaleate,2,chembl|epar
+givlaari,givosiran|givosiran sodium,2,chembl|epar
+gleevec,imatinib|imatinib mesylate,2,chembl|manual
+gliolan,5-aminolevulinic acid hydrochloride|aminolevulinic acid hydrochloride,2,chembl|epar
+glivec,imatinib|imatinib mesylate,2,chembl|epar|manual
+glp-1,glp-1|glucagon-like peptide 1,2,chembl
+glucosulfone,glucosulfone|sodium glucosulfone,2,chembl
+gmi-1070,rivipansel|rivipansel sodium,2,chembl
+granupas (previously para-aminosalicylic acid lucane),aminosalicylic acid|para-aminosalicylic acid,2,chembl|epar
+grepid,clopidogrel (as besilate)|clopidogrel besilate,2,chembl|epar
+grn163l,imetelstat|imetelstat sodium,2,chembl
+gs-9883,bictegravir|bictegravir sodium,2,chembl
+gs-9883-01,bictegravir|bictegravir sodium,2,chembl
+gsk1349572a,dolutegravir|dolutegravir sodium,2,chembl
+gsk557296b,epelsiban|epelsiban besylate,2,chembl
+halaven,eribulin|eribulin mesylate,2,chembl|epar|manual
+haldol,haloperidol|haloperidol decanoate|haloperidol lactate,3,chembl
+hb-201,esepapogene zalarnarepvec|hb-201,2,chembl
+hb-202,hb-202|ninsipapogene sibarnarepvec,2,chembl
+hbvaxpro,"hepatitis b virus hbsag surface protein antigen|hepatitis b, recombinant surface antigen",2,chembl|epar
+helicobacter test infai,urea (13c)|urea c 13,2,chembl|epar
+hemabate,carboprost|carboprost tromethamine,2,chembl
+hepacare,"hepatitis b surface antigens recombinant (s, pre-s1, pre-s2) adsorbed on aluminium hydroxide [produced on genetically engineered murine (c127i) cells]|hepatitis b virus s protein, pre-s1 protein and pre-s2 protein virus like particles",2,chembl|epar
+hepcludex,bulevirtide|bulevirtide acetate,2,chembl|epar
+heplisav b,hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+hesperidin,diosmin|hesperidin,2,chembl
+hexadrol,dexamethasone|dexamethasone sodium phosphate,2,chembl
+hizentra,human immunoglobulin g|human normal immunoglobulin (scig),2,chembl|epar
+hl 275,alvocidib|alvocidib hydrochloride,2,chembl
+hmr 1275,alvocidib|alvocidib hydrochloride,2,chembl
+htf 919,tegaserod|tegaserod maleate,2,chembl
+huj591,huj591 111in|huj591 177lu,2,chembl
+huj591-gs,j591|j591 177lu,2,chembl
+humenza,"influenza a virus, split virion|split influenza virus, inactivated, containing antigen*: a|california|7|2009 (h1n1)v like strain (x-179a)*propagated in eggs.",2,chembl|epar
+hycamtin,topotecan|topotecan hydrochloride,2,chembl|epar|manual
+hydrocortone,hydrocortisone|hydrocortisone acetate|hydrocortisone sodium phosphate,3,chembl
+hypaque,diatrizoate meglumine|diatrizoate sodium,2,chembl
+iasibon,ibandronate sodium|ibandronic acid,2,chembl|epar
+ib1001,levacetylleucine|trenonacog alfa,2,chembl
+ibandronic acid accord,ibandronate sodium|ibandronic acid,2,chembl|epar
+ibandronic acid sandoz,ibandronate sodium|ibandronic acid,2,chembl|epar
+ibandronic acid teva,ibandronate sodium|ibandronic acid,2,chembl|epar
+iclusig,ponatinib|ponatinib hydrochloride,2,chembl|epar|manual
+idamycin,idarubicin|idarubicin hydrochloride,2,chembl|manual
+idec-159,idec-159|idec-159 111in|idec-159 90y,3,chembl
+idhifa,enasidenib|enasidenib mesylate,2,chembl|manual
+ikervis,ciclosporin|cyclosporine,2,chembl|epar
+im051,crexavibart|ogalvibart,2,chembl
+imatinib accord,imatinib|imatinib mesylate,2,chembl|epar
+imatinib actavis,imatinib|imatinib mesylate,2,chembl|epar
+imatinib koanaa,imatinib mesilate|imatinib mesylate,2,chembl|epar
+imatinib medac,imatinib|imatinib mesylate,2,chembl|epar
+imatinib teva,imatinib|imatinib mesylate,2,chembl|epar
+imatinib teva b.v.,imatinib mesilate|imatinib mesylate,2,chembl|epar
+imciromab,imciromab|imciromab pentetate,2,chembl
+imcivree,setmelanotide|setmelanotide acetate,2,chembl|epar
+imitrex,sumatriptan|sumatriptan succinate,2,chembl
+immu-107,clivatuzumab tetraxetan|yttrium y 90 clivatuzumab tetraxetan,2,chembl
+immunogam,hepatitis b immune globulin|human hepatitis b immunoglobulin,2,chembl|epar
+imuran,azathioprine|azathioprine sodium,2,chembl
+imvanex,"modified vaccinia ankara - bavarian nordic (mva-bn) virus|vaccinia virus, live modified",2,chembl|epar
+indocin,indomethacin|indomethacin sodium,2,chembl
+inno-206,aldoxorubicin|aldoxorubicin hydrochloride,2,chembl
+inpremzia,insulin human|insulin human (rdna),2,chembl|epar
+inrebic,fedratinib dihydrochloride monohydrate|fedratinib hydrochloride,2,chembl|epar
+insulatard,"insulin human|insulin human, isophane",2,chembl|epar
+insulin human winthrop,"insulin human|insulin, neutral",2,chembl|epar
+insulin zinc injection,"insulin zinc, extended|insulin zinc, prompt",2,chembl
+insulin zinc suspension,"insulin zinc, extended|insulin zinc, prompt",2,chembl
+intuniv,guanfacine|guanfacine hydrochloride,2,chembl|epar
+invirase,saquinavir|saquinavir mesylate,2,chembl|epar
+ioa,nomegestrol acetate|nomegestrol acetate|estradiol,2,chembl|epar
+ion-957943,fesomersen|fesomersen sodium,2,chembl
+iopidine,apraclonidine|apraclonidine hydrochloride,2,chembl
+ipi-504,retaspimycin|retaspimycin hydrochloride,2,chembl
+ipp 201101,forigerimod|forigerimod acetate,2,chembl
+ipreziv,azilsartan kamedoxomil|azilsartan medoxomil,2,chembl|epar
+iron dextran,ferric oxyhydroxide|iron dextran,2,chembl
+iscover,clopidogrel|clopidogrel bisulfate,2,chembl|epar
+isemid,torasemide|torsemide,2,chembl|epar
+isentress,raltegravir|raltegravir potassium,2,chembl|epar
+isis 304801,volanesorsen|volanesorsen sodium,2,chembl
+ivabradine anpharm,ivabradine|ivabradine hydrochloride,2,chembl|epar
+ivemend,fosaprepitant|fosaprepitant dimeglumine,2,chembl|epar
+ixchiq,"chikungunya virus, live attenuated|chikungunya virus, strain chikv lr2006-opy1, live attenuated",2,chembl|epar
+ixiaro,"japanese encephalitis virus, inactivated|japanese-encephalitis virus, inactivated (attenuated strain sa14-14-2 grown in vero cells)",2,chembl|epar
+jakafi,ruxolitinib|ruxolitinib phosphate,2,chembl|manual
+jakavi,ruxolitinib|ruxolitinib phosphate,2,chembl|epar|manual
+januvia,sitagliptin|sitagliptin phosphate,2,chembl|epar
+javlor,vinflunine|vinflunine ditartrate,2,chembl|epar
+jcovden (previously covid-19 vaccine janssen),adenovirus type 26 encoding sars-cov-2 spike glycoprotein|adenovirus type 26 encoding the sars-cov-2 spike glycoprotein (ad26.cov2-s),2,chembl|epar
+jnj-38518168,toreforant|toreforant tartrate,2,chembl
+jzp-458,asparaginase erwinia chrysanthemi|crisantaspase,2,chembl
+kadcyla,ado-trastuzumab emtansine|trastuzumab|trastuzumab emtansine,3,chembl|epar|manual
+kapruvia,difelikefalin|difelikefalin acetate,2,chembl|epar
+karenitecin,cositecan|karenitecin,2,chembl
+kc8857,tedisamil|tedisamil sesquifumarate,2,chembl
+kenacort,triamcinolone|triamcinolone diacetate,2,chembl
+kengrexal,cangrelor|cangrelor tetrasodium,2,chembl|epar
+ketalar,ketamine|ketamine hydrochloride,2,chembl
+kexxtone,monensin (as monensin sodium)|monensin sodium,2,chembl|epar
+kinpeygo,"budesonide|budesonide, micronised",2,chembl|epar
+kiovig,human immunoglobulin g|human normal immunoglobulin (ivig),2,chembl|epar
+kisplyx,lenvatinib|lenvatinib mesilate|lenvatinib mesylate,3,chembl|epar
+kisqali,ribociclib|ribociclib succinate,2,chembl|epar|manual
+l 86 8275,alvocidib|alvocidib hydrochloride,2,chembl
+l19il2,darleukin|l19il2,2,chembl
+la-6023,metformin|metformin hydrochloride,2,chembl
+laam,levomethadyl acetate|levomethadyl acetate hydrochloride,2,chembl
+lamisil,terbinafine|terbinafine hydrochloride,2,chembl
+lamisil at,terbinafine|terbinafine hydrochloride,2,chembl
+latuda,lurasidone|lurasidone hydrochloride,2,chembl|epar
+lazcluze,lazertinib mesilate monohydrate|lazertinib mesylate,2,chembl|epar
+ledaga,chlormethine|mechlorethamine,2,chembl|epar
+lenalidomide krka d.d.,lenalidomide hydrochloride hydrate|lenalidomide hydrochloride monohydrate,2,chembl|epar
+lenomorelin,ghrelin|lenomorelin,2,chembl
+lenvima,lenvatinib|lenvatinib mesilate|lenvatinib mesylate,3,chembl|epar|manual
+leqvio,inclisiran|inclisiran sodium,2,chembl|epar
+leritine,anileridine hydrochloride|anileridine phosphate,2,chembl
+leucogen,leucogen|purified p45 felv-envelope antigen,2,chembl|epar
+levitra,vardenafil|vardenafil hydrochloride,2,chembl|epar
+lipitor,atorvastatin|atorvastatin calcium,2,chembl
+litfulo,ritlecitinib tosilate|ritlecitinib tosylate,2,chembl|epar
+lixiana,edoxaban tosilate|edoxaban tosylate,2,chembl|epar
+lmwd,dextran|dextran 40,2,chembl
+locametz,gallium ga 68 gozetotide|gozetotide,2,chembl|epar
+lodipressin,amlodipine besilate|amlodipine besylate,2,chembl|epar
+lojuxta,lomitapide|lomitapide mesylate,2,chembl|epar
+lonsurf,tipiracil|trifluridine|trifluridine|tipiracil hydrochloride,2,epar|manual
+lopressor,metoprolol fumarate|metoprolol tartrate,2,chembl
+loteprednol,loteprednol|loteprednol etabonate,2,chembl
+lu-30-029,gallopamil|methoxyverapamil,2,chembl
+lumark,lutetium (177lu) chloride|lutetium chloride lu-177,2,chembl|epar
+lupron,leuprolide acetate|leuprorelin,2,chembl|manual
+lupuzor,forigerimod|forigerimod acetate,2,chembl
+lutathera,lutetium (177lu) oxodotreotide|lutetium oxodotreotide lu-177,2,chembl|epar
+lutetium (177lu) chloride billev (previously illuzyce),lutetium (177lu) chloride|lutetium chloride lu-177,2,chembl|epar
+lyfnua,gefapixant|gefapixant citrate,2,chembl|epar
+lymphoseek,technetium tc 99m tilmanocept|tilmanocept,2,chembl|epar
+lytenava,bevacizumab|bevacizumab gamma,2,chembl|epar
+m131ibg,iobenguane i 131|iobenguane sulfate i 131,2,chembl
+macrilen,macimorelin|macimorelin acetate,2,chembl
+macugen,pegaptanib|pegaptanib sodium,2,chembl|epar
+masican,masitinib|masitinib mesylate,2,chembl|epar
+masivet,masitinib mesilate|masitinib mesylate,2,chembl|epar
+masiviera,masitinib|masitinib mesylate,2,chembl|epar
+maxalt,rizatriptan|rizatriptan benzoate,2,chembl
+maxidex,dexamethasone|dexamethasone sodium phosphate,2,chembl
+mayzent,siponimod|siponimod fumaric acid,2,chembl|epar
+mdl-107826a,alvocidib|alvocidib hydrochloride,2,chembl
+mdx-066,actoxumab|mk-3415,2,chembl
+mecobalamin,mecobalamin|methylcobalamin,2,chembl
+medi-564,bta-9881|medi-564,2,chembl
+medium-chain triglycerides,"medium-chain triglycerides|triglycerides, medium-chain",2,chembl
+mekinist,trametinib|trametinib dimethyl sulfoxide,2,chembl|epar
+melflufen,melphalan flufenamide|melphalan flufenamide hydrochloride,2,chembl
+menquadfi,neisseria meningitidis group c polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group a polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group y polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group w-135 polysaccharide conjugated to tetanus toxoid|neisseria meningitidis polysaccharide conjugated to tetanus toxoid,2,chembl|epar
+menthyl anthranilate,mequinol|meradimate,2,chembl
+menveo,"meningococcal group a, c, w-135 and y conjugate vaccine|neisseria meningitidis oligosaccharide conjugated to corynebacterium diphtheriae crm197",2,chembl|epar
+metafolin,levomefolate calcium|levomefolic acid,2,chembl
+methylthioninium chloride proveblue,methylene blue anhydrous|methylthioninium chloride,2,chembl|epar
+mirapexin,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+mk-4827,niraparib|niraparib tosylate monohydrate,2,chembl
+monistat,miconazole|miconazole nitrate,2,chembl
+monotard,insulin human|insulin human zinc,2,chembl|epar
+moventig,naloxegol|naloxegol oxalate,2,chembl|epar
+moxivig,moxifloxacin hydrochloride|moxisylyte,2,chembl
+mresvia,respiratory syncytial virus pre-fusion glycoprotein f mrna|single-stranded 5' capped mrna encoding the respiratory syncytial virus glycoprotein f stabilised in the prefusion conformation,2,chembl|epar
+msc-1936369b,pimasertib|pimasertib hydrochloride,2,chembl
+mt-4129,lorundrostat|lorundrostat hydrobromide,2,chembl
+mtp 131,elamipretide|elamipretide hydrochloride,2,chembl
+multaq,dronedarone|dronedarone hydrochloride,2,chembl|epar
+mvabea,"recombinant modified vaccinia ankara bavarian nordic virus encoding the: ebola virus zaire (zebov) mayinga strain glycoprotein (gp)|ebola virus sudan gulu strain gp|ebola virus taï forest strain nucleoprotein and the marburg virus musoke strain gp|vaccinia virus, modified encoding ebola virus glycoprotein and nucleoprotein",2,chembl|epar
+mycamine,micafungin|micafungin sodium,2,chembl|epar
+mycograb,efungumab|recombinant human monoclonal antibody to hsp,2,chembl|epar
+myocet,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
+mysildecard,sildenafil|sildenafil citrate,2,chembl|epar
+mysimba,bupropion hydrochloride|bupropion hydrochloride|naltrexone hydrochloride,2,chembl|epar
+n-803,inbakicept|nogapendekin alfa,2,chembl
+nandrolone,nandrolone|nandrolone cyclotate,2,chembl
+navane,thiothixene|thiothixene hydrochloride,2,chembl
+navelbine,vinorelbine|vinorelbine tartrate,2,chembl|manual
+nbi-98854,valbenazine|valbenazine tosylate,2,chembl
+nebcin,tobramycin|tobramycin sulfate,2,chembl
+nembutal,pentobarbital|pentobarbital sodium,2,chembl
+nemdatine,memantine|memantine hydrochloride,2,chembl|epar
+neoatricon,dopamine hydrochloride|dopamine hydrochloride|dopamine,2,chembl|epar
+neofordex,dexamethasone|dexamethasone acetate,2,chembl|epar
+nerlynx,neratinib|neratinib maleate,2,chembl|epar
+nestorone,segesterone|segesterone acetate,2,chembl
+neuraceq,florbetaben (18f)|florbetaben f18,2,chembl|epar
+neurobloc,botulinum toxin type b|rimabotulinumtoxinb,2,chembl|epar
+nexavar,sorafenib|sorafenib tosylate,2,chembl|epar|manual
+nexium control,esomeprazole|esomeprazole magnesium,2,chembl|epar
+nexobrid,proteolytic enzymes enriched in bromelain|stem bromelain,2,chembl|epar
+nih-11008,dexmecamylamine|dexmecamylamine hydrochloride,2,chembl
+nimbex,cisatracurium|cisatracurium besylate,2,chembl
+nimenrix,neisseria meningitidis group a polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group c polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group w-135 polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group y polysaccharide conjugated to tetanus toxoid|neisseria meningitidis polysaccharide conjugated to tetanus toxoid,2,chembl|epar
+nimvastid,rivastigmine|rivastigmine tartrate,2,chembl|epar
+ninlaro,ixazomib|ixazomib citrate,2,chembl|epar|manual
+nintedanib accord,nintedanib|nintedanib esylate,2,chembl|epar
+nodetrip (previously xeristar),duloxetine|duloxetine hydrochloride,2,chembl|epar
+nonafact,coagulation factor ix human|human coagulation factor ix,2,chembl|epar
+norvasc,amlodipine|amlodipine besylate,2,chembl
+nsc-751452,dextromethorphan|dextromethorphan polistirex,2,chembl
+nsc-758421,paromomycin sulfate|penicillamine,2,chembl
+nuedexta,dextromethorphan hydrobromide|dextromethorphan|quinidine,2,chembl|epar
+nulibry,fosdenopterin hydrobromide|fosdenopterin hydrobromide dihydrate,2,chembl|epar
+nutrifolin,levomefolate calcium|levomefolic acid,2,chembl
+nuvaxovid,sars cov-2 (original) recombinant spike protein|sars-cov-2 (omicron xbb.1.5) recombinant spike protein|sars-cov-2 virus spike protein,2,chembl|epar
+nx-1207,fexapotide|fexapotide triflutate,2,chembl
+nxl-104,avibactam|avibactam sodium,2,chembl
+nyxthracis (previously obiltoxaximab sfl),nyxthracis|obiltoxaximab,2,chembl|epar
+oblimersen,oblimersen|oblimersen sodium,2,chembl
+odomzo,sonidegib|sonidegib diphosphate|sonidegib phosphate,3,chembl|epar|manual
+ofev,nintedanib|nintedanib esylate,2,chembl|epar
+olysio,simeprevir|simeprevir sodium,2,chembl|epar
+omontys,peginesatide|peginesatide acetate,2,chembl|epar
+oncovin,vincristine|vincristine sulfate,2,chembl|manual
+oneness,centella asiatica extract|plectranthus amboinicus extract,2,chembl
+onglyza,saxagliptin|saxagliptin hydrochloride,2,chembl|epar
+opatanol,olopatadine|olopatadine hydrochloride,2,chembl|epar
+oprymea,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+orlaam,levacetylmethadol|levomethadyl acetate|levomethadyl acetate hydrochloride,3,chembl|epar
+orladeyo,berotralstat dihydrochloride|berotralstat hydrochloride,2,chembl|epar
+orserdu,elacestrant|elacestrant hydrochloride,2,chembl|epar
+oxervate,cenegermin|recombinant human nerve growth factor,2,chembl|epar
+ozawade,pitolisant|pitolisant hydrochloride,2,chembl|epar
+palonosetron accord,palonosetron|palonosetron hydrochloride,2,chembl|epar
+pandemic influenza vaccine h5n1 astrazeneca (previously pandemic influenza vaccine h5n1 medimmune),"influenza a virus, live attenuated|reassortant influenza virus (live attenuated) of the following strain: a|vietnam|1203|2004 (h5n1) strain",2,chembl|epar
+pandemic influenza vaccine h5n1 baxter ag,"influenza a virus, inactivated whole virion|influenza vaccine (whole virion, inactivated) containing antigen of: a|vietnam|1203|2004 (h5n1)",2,chembl|epar
+pandemrix,"influenza a virus, split virion|split influenza virus inactivated, containing antigen equivalent to a|california|07|2009 (h1n1)-derived strain used nymc x-179a",2,chembl|epar
+panmycin,tetracycline|tetracycline hydrochloride,2,chembl
+pantecta control,pantoprazole|pantoprazole sodium,2,chembl|epar
+pantoloc control,pantoprazole|pantoprazole sodium,2,chembl|epar
+pantozol control,pantoprazole|pantoprazole sodium,2,chembl|epar
+parareg,cinacalcet|cinacalcet hydrochloride,2,chembl|epar
+parlodel,bromocriptine|bromocriptine mesylate,2,chembl
+patrex,sildenafil|sildenafil citrate,2,chembl|epar
+pazzul,eslicarbazepine|eslicarbazepine acetate,2,chembl
+pecfent,fentanyl|fentanyl citrate,2,chembl|epar
+pemetrexed baxter,pemetrexed disodium|pemetrexed disodium heptahydrate,2,chembl|epar
+pemetrexed fresenius kabi,pemetrexed|pemetrexed monohydrate,2,chembl|epar
+pemetrexed krka,pemetrexed disodium|pemetrexed disodium hemipentahydrate,2,chembl|epar
+pemetrexed lilly,pemetrexed|pemetrexed disodium,2,chembl|epar
+pemetrexed medac,pemetrexed|pemetrexed disodium hemipentahydrate,2,chembl|epar
+pemetrexed pfizer (previously pemetrexed hospira),pemetrexed disodium hemipentahydrate|pemetrexed disodium|pemetrexed disodium hemipentahydrate,2,chembl|epar
+pemetrexed sandoz,pemetrexed disodium|pemetrexed disodium hemipentahydrate,2,chembl|epar
+pentacarinat,pentamidine|pentamidine isethionate,2,chembl
+percorten,desoxycorticosterone acetate|desoxycorticosterone pivalate,2,chembl
+persicabtagen lemgedleucel,peluntamig|persicabtagene lemgedleucel,2,chembl
+pf-3512676,agatolimod|agatolimod sodium,2,chembl
+phospholipids egg,lecithin|phosphatidylcholine,2,chembl
+plavix,clopidogrel bisulfate|clopidogrel hydrogen sulfate,2,chembl|epar
+pluvicto,lutetium (177lu) vipivotide tetraxetan|lutetium lu-177 vipivotide tetraxetan,2,chembl|epar
+pmx30063,brilacidin|brilacidin tetrahydrochloride,2,chembl
+posiphen,buntanetap|buntanetap tartrate,2,chembl
+posluma,flotufolastat f 18|flotufolastat f-18 gallium,2,chembl
+potactasol,topotecan|topotecan hydrochloride,2,chembl|epar
+pradaxa,dabigatran etexilate|dabigatran etexilate mesilate|dabigatran etexilate mesylate,3,chembl|epar
+pramipexole accord,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+pramipexole teva,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+prasugrel viatris (previously prasugrel mylan),prasugrel besilate|prasugrel besylate,2,chembl|epar
+pregnenolone,pregnenolone|pregnenolone succinate,2,chembl
+prehevbri,hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+preotact,parathyroid hormone|parathyroid hormone (rdna),2,chembl|epar
+"prepandemic influenza vaccine (h5n1) (split virion, inactivated, adjuvanted) glaxosmithkline biologicals","influenza a virus, split virion|split influenza virus, inactivated, containing antigen: a|vietnam|1194|2004 (h5n1) like strain used (nibrg-14)",2,chembl|epar
+prepandrix,"a|indonesia|05|2005 (h5n1) like strain used (pr8-ibcdc-rg2)|influenza a virus, split virion",2,chembl|epar
+prevenar,pneumococcal oligosaccharide serotype 18c|pneumococcal polysaccharide serotype 19f|pneumococcal polysaccharide serotype 23f|pneumococcal polysaccharide serotype 4|pneumococcal polysaccharide serotype 6b|pneumococcal polysaccharide serotype 9v|pneumococcal polysaccharide serotype 14|streptococcus pneumoniae polysaccharide conjugated to corynebacterium diphtheriae crm197,2,chembl|epar
+prevenar 13,pneumococcal polysaccharide serotype 1|pneumococcal polysaccharide serotype 3|pneumococcal polysaccharide serotype 4|pneumococcal polysaccharide serotype 5|pneumococcal polysaccharide serotype 6a|pneumococcal polysaccharide serotype 6b|pneumococcal polysaccharide serotype 7f|pneumococcal polysaccharide serotype 9v|pneumococcal polysaccharide serotype 14|pneumococcal polysaccharide serotype 18c|pneumococcal polysaccharide serotype 19a|pneumococcal polysaccharide serotype 19f|pneumococcal polysaccharide serotype 23f|streptococcus pneumoniae polysaccharide conjugated to corynebacterium diphtheriae crm197,2,chembl|epar
+prevenar 20 (previously apexxnar),pneumococcal polysaccharide serotype 1|pneumococcal polysaccharide serotype 3|pneumococcal polysaccharide serotype 4|pneumococcal polysaccharide serotype 5|pneumococcal polysaccharide serotype 6a|pneumococcal polysaccharide serotype 6b|pneumococcal polysaccharide serotype 7f|pneumococcal polysaccharide serotype 8|pneumococcal polysaccharide serotype 9v|pneumococcal polysaccharide serotype 10a|pneumococcal polysaccharide serotype 11a|pneumococcal polysaccharide serotype 12f|pneumococcal polysaccharide serotype 14|pneumococcal polysaccharide serotype 15b|pneumococcal polysaccharide serotype 18c|pneumococcal polysaccharide serotype 19a|pneumococcal polysaccharide serotype 19f|pneumococcal polysaccharide serotype 22f|pneumococcal polysaccharide serotype 23f|pneumococcal polysaccharide serotype 33f|streptococcus pneumoniae polysaccharide conjugated to corynebacterium diphtheriae crm197,2,chembl|epar
+prezista,darunavir|darunavir ethanolate,2,chembl|epar
+prialt,ziconotide|ziconotide acetate,2,chembl|epar
+prilosec,omeprazole|omeprazole magnesium,2,chembl
+privigen,human immunoglobulin g|human normal immunoglobulin (ivig),2,chembl|epar
+procomvax,hepatitis b virus hbsag surface protein antigen|polyribosylribitol phosphate from haemophilus influenzae type b as prp-ompc|outer membrane protein complex of neisseria meningitidis (outer membrane protein complex of the b11 strain of neisseria meningitidis subgroup b)|adsorbed hepatitis b surface antigen produced in recombinant yeast cells (saccharomyces cerevisiae),2,chembl|epar
+procysbi,cysteamine bitartrate|mercaptamine bitartrate,2,chembl|epar
+prometax,rivastigmine|rivastigmine tartrate,2,chembl|epar
+protaphane,"insulin human|insulin human, isophane",2,chembl|epar
+proventil,albuterol|albuterol sulfate,2,chembl
+proxinium,h11 scfv|oportuzumab monatox,2,chembl
+prozinc,"insulin human|insulin, protamine zinc",2,chembl|epar
+pt-100,talabostat|talabostat mesylate,2,chembl
+pt-141,bremelanotide|bremelanotide acetate,2,chembl
+pti-6d2,pti-6d2|pti-6d2 188re,2,chembl
+ptk 0796,omadacycline|omadacycline tosylate,2,chembl
+pumarix,"influenza a virus, split virion|pandemic influenza vaccine (h5n1) (split virion, inactivated, adjuvanted)",2,chembl|epar
+pylclari,piflufolastat (18f)|piflufolastat f18,2,chembl|epar
+pylobactell,urea (13c)|urea c 13,2,chembl|epar
+pylori-chek,urea (13c)|urea c 13,2,chembl|epar
+qdenga,"dengue virus, live attenuated|dengue virus, serotype 2, expressing dengue virus, serotype 1, surface proteins, live, attenuated|dengue virus, serotype 2, expressing dengue virus, serotype 3, surface proteins, live, attenuated|dengue virus, serotype 2, expressing dengue virus, serotype 4, surface proteins, live, attenuated|dengue virus, serotype 2, live, attenuated",2,chembl|epar
+qsiva,phentermine|phentermine|topiramate,2,chembl|epar
+quadramet,samarium (153sm) lexidronam pentasodium|samarium sm 153 lexidronam pentasodium,2,chembl|epar
+raplixa,"fibrinogen, human|human fibrinogen|human thrombin",2,chembl|epar
+rasagiline ratiopharm,rasagiline|rasagiline mesylate,2,chembl|epar
+rasilez,aliskiren|aliskiren fumarate,2,chembl|epar
+reagila,cariprazine|cariprazine hydrochloride,2,chembl|epar
+rebif,interferon beta|interferon beta-1a,2,chembl|epar
+reboxetine,esreboxetine|reboxetine,2,chembl
+recentin,cediranib|cediranib maleate,2,chembl
+reconcile,fluoxetine|fluoxetine hydrochloride,2,chembl|epar
+relpax,eletriptan|eletriptan hydrobromide,2,chembl
+relvar ellipta,fluticasone furoate|fluticasone furoate|vilanterol,2,chembl|epar
+renagel,sevelamer|sevelamer hydrochloride,2,chembl|epar
+resolor,prucalopride|prucalopride succinate,2,chembl|epar
+respreeza,.alpha.1-proteinase inhibitor human|human alpha1-proteinase inhibitor,2,chembl|epar
+revatio,sildenafil|sildenafil citrate,2,chembl|epar
+revolade,eltrombopag|eltrombopag olamine,2,chembl|epar
+reyataz,atazanavir|atazanavir (as sulfate)|atazanavir sulfate,3,chembl|epar
+rezolsta,darunavir ethanolate|darunavir|cobicistat,2,chembl|epar
+rezurock,belumosudil mesilate|belumosudil mesylate,2,chembl|epar
+rezzayo,rezafungin|rezafungin acetate,2,chembl|epar
+rg-7594,mint-1526a|rg-7594,2,chembl
+rhokiinsa,netarsudil|netarsudil dimesylate,2,chembl|epar
+rhucin,conestat alfa|recombinant human c1-inhibitor,2,chembl|epar
+rifamycin,rifamycin|rifamycin sodium,2,chembl
+rinvoq,upadacitinib|upadacitinib hemihydrate,2,chembl|epar
+riprazo,aliskiren|aliskiren fumarate,2,chembl|epar
+ristaben,sitagliptin|sitagliptin phosphate,2,chembl|epar
+rivastigmine 1 a pharma,rivastigmine|rivastigmine tartrate,2,chembl|epar
+rivastigmine actavis,rivastigmine hydrogen tartrate|rivastigmine tartrate,2,chembl|epar
+rivastigmine hexal,rivastigmine|rivastigmine tartrate,2,chembl|epar
+rivastigmine sandoz,rivastigmine|rivastigmine tartrate,2,chembl|epar
+rivastigmine teva,rivastigmine|rivastigmine tartrate,2,chembl|epar
+rixubis,coagulation factor ix recombinant human|nonacog gamma,2,chembl|epar
+rizmoic,naldemedine tosilate|naldemedine tosylate,2,chembl|epar
+rotarix,"human rotavirus, live attenuated|rotavirus, live attenuated",2,chembl|epar
+rotashield,"rotavirus serotype 1 reassortant, rotavirus serotype 2 reassortant, rotavirus serotype 3 rhesus, rotavirus serotype 4 reassortant|rotavirus, live attenuated",2,chembl|epar
+rotateq,"rotavirus serotype g1|rotavirus serotype g2|rotavirus serotype g3|rotavirus serotype g4|rotavirus serotype p1|rotavirus, live",2,chembl|epar
+roteas,edoxaban tosilate|edoxaban tosylate,2,chembl|epar
+rti-150,abobotulinumtoxina|botulinum toxin type a|daxibotulinumtoxina|incobotulinumtoxina|onabotulinumtoxina,5,chembl
+rti150,abobotulinumtoxina|botulinum toxin type a|daxibotulinumtoxina|incobotulinumtoxina|onabotulinumtoxina,5,chembl
+rubraca,rucaparib|rucaparib camsylate,2,chembl|epar|manual
+ruconest,conestat alfa|recombinant human c1-inhibitor,2,chembl|epar
+rukobia,fostemsavir trometamol|fostemsavir tromethamine,2,chembl|epar
+rx 31,elamipretide|elamipretide hydrochloride,2,chembl
+rx-3341,delafloxacin|delafloxacin meglumine,2,chembl
+rytelo,imetelstat|imetelstat sodium,2,chembl|epar
+sanfetrinem,sanfetrinem|sanfetrinem cilexetil,2,chembl
+satumomab,indium in 111 satumomab pendetide|satumomab,2,chembl
+scemblix,asciminib|asciminib hydrochloride,2,chembl|epar|manual
+scenesse,afamelanotide|afamelanotide acetate,2,chembl|epar
+selincro,nalmefene|nalmefene hydrochloride dihydrate,2,chembl|epar
+seroquel,quetiapine|quetiapine fumarate,2,chembl
+shingrix,recombinant varicella zoster virus glycoprotein e|varicella zoster virus envelope glycoprotein e,2,chembl|epar
+sifrol,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar
+signifor,pasireotide|pasireotide diaspartate,2,chembl|epar
+siklos,hydroxycarbamide|hydroxyurea,2,chembl|epar
+sildenafil actavis,sildenafil|sildenafil citrate,2,chembl|epar
+sildenafil ratiopharm,sildenafil|sildenafil citrate,2,chembl|epar
+sildenafil teva,sildenafil|sildenafil citrate,2,chembl|epar
+silgard,"human papillomavirus type 6 l1 protein|human papillomavirus type 11 l1 protein|human papillomavirus type 16 l1 protein|human papillomavirus type 18 l1 protein|human papillomavirus, l1 protein virus like particles",2,chembl|epar
+sinequan,doxepin|doxepin hydrochloride,2,chembl
+singulair,montelukast|montelukast sodium,2,chembl
+sitagliptin accord,sitagliptin hydrochloride|sitagliptin hydrochloride monohydrate,2,chembl|epar
+sivextro,tedizolid|tedizolid phosphate,2,chembl|epar
+skelid,tiludronate disodium|tiludronic acid,2,chembl
+solriamfetol,solriamfetol|solriamfetol hydrochloride,2,chembl
+somac control,pantoprazole|pantoprazole sodium,2,chembl|epar
+somakit toc,edotreotide|edotreotide gallium ga-68,2,chembl|epar
+sonovue,sulfur hexafluoride|sulphur hexafluoride,2,chembl|epar
+sorafenib accord,sorafenib tosilate|sorafenib tosylate,2,chembl|epar
+sp-304,pirnabine|plecanatide,2,chembl
+spebrutinib,spebrutinib|spebrutinib besylate,2,chembl
+spikevax (previously covid-19 vaccine moderna),"elasomeran|single-stranded, 5'-capped messenger rna (mrna) produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",2,chembl|epar
+spl 7013,astodrimer|astodrimer sodium,2,chembl
+spl-7013,astodrimer|astodrimer sodium,2,chembl
+spl7013,astodrimer|astodrimer sodium,2,chembl
+spp100,aliskiren|aliskiren fumarate,2,chembl
+sprimeo,aliskiren|aliskiren fumarate,2,chembl|epar
+ss 31,elamipretide|elamipretide hydrochloride,2,chembl
+stayveer,bosentan|bosentan (as monohydrate),2,chembl|epar
+stedesa,eslicarbazepine|eslicarbazepine acetate,2,chembl
+steglatro,ertugliflozin l-pyroglutamic acid|ertugliflozin pidolate,2,chembl|epar
+stelazine,trifluoperazine|trifluoperazine hydrochloride,2,chembl
+sterane,prednisolone|prednisolone acetate,2,chembl
+striascan,ioflupane (123l)|ioflupane i 123,2,chembl|epar
+strimvelis,autologous cd34+ enriched cell fraction that contains cd34+ cells transduced with retroviral vector that encodes for the human ada cdna sequence|autologous cd34+ enriched cell fraction that contains cd34+ cells transduced with retroviral vector that encodes for the human adenosine deaminase (ada) cdna sequence from human haematopoietic stem|progenitor (cd34+) cells,2,chembl|epar
+striverdi respimat,olodaterol|olodaterol hydrochloride,2,chembl
+suboxone,buprenorphine|buprenorphine|naloxone,2,chembl|epar
+sulfamylon,mafenide|mafenide acetate,2,chembl
+surfaxin,lucinactant|sinapultide|dipalmitoylphosphatidylcholine|palmitoyl-oleoyl phosphatidylglycerol|palmitic acid,2,chembl|epar
+sutent,sunitinib|sunitinib malate,2,chembl|epar|manual
+sycrest,asenapine|asenapine maleate,2,chembl|epar
+syr-472,trelagliptin|trelagliptin succinate,2,chembl
+t2g1s,biciromab|biciromab brallobarbital,2,chembl
+tabrecta,capmatinib dihydrochloride monohydrate|capmatinib hydrochloride,2,chembl|epar
+tacaryl,methdilazine|methdilazine hydrochloride,2,chembl
+tacforius,tacrolimus|tacrolimus monohydrate,2,chembl|epar
+tafinlar,dabrafenib|dabrafenib mesilate|dabrafenib mesylate,3,chembl|epar
+tagamet,cimetidine|cimetidine hydrochloride,2,chembl
+tagrisso,osimertinib|osimertinib mesilate|osimertinib mesylate,3,chembl|epar|manual
+tak-438,vonoprazan|vonoprazan fumarate,2,chembl
+tak-491,azilsartan kamedoxomil|azilsartan medoxomil,2,chembl
+tak-652,cenicriviroc|cenicriviroc mesylate,2,chembl
+talzenna,talazoparib|talazoparib tosylate,2,chembl|epar|manual
+tamiflu,oseltamivir|oseltamivir phosphate,2,chembl|epar
+tarceva,erlotinib|erlotinib hydrochloride,2,chembl|epar
+tasigna,nilotinib|nilotinib hydrochloride monohydrate,2,chembl|epar|manual
+tauvid,flortaucipir (18f)|flortaucipir f 18,2,chembl|epar
+taxespira (previously docetaxel hospira uk limited ),docetaxel|docetaxel trihydrate,2,chembl|epar
+tbr-652,cenicriviroc|cenicriviroc mesylate,2,chembl
+tc-5214,dexmecamylamine|dexmecamylamine hydrochloride,2,chembl
+tecartus,autologous peripheral blood t cells cd4 and cd8 selected and cd3 and cd28 activated transduced with retroviral vector expressing anti-cd19 cd28|cd3-zeta chimeric antigen receptor and cultured (brexucabtagene autoleucel)|brexucabtagene autoleucel,2,chembl|epar
+technetium (99mtc) pertechnetate,sodium pertechnetate tc 99m|technetium tc-99m pertechnetate,2,chembl
+tecovirimat siga,tecovirimat|tecovirimat monohydrate,2,chembl|epar
+tekturna,aliskiren|aliskiren fumarate,2,chembl|epar
+tenkasi (previously orbactiv),oritavancin (diphosphate)|oritavancin diphosphate,2,chembl|epar
+tepmetko,tepotinib hydrochloride|tepotinib hydrochloride monohydrate,2,chembl|epar
+terramycin,oxytetracycline|oxytetracycline calcium|oxytetracycline hydrochloride,3,chembl
+tesavel,sitagliptin|sitagliptin phosphate,2,chembl|epar
+teveten,eprosartan|eprosartan mesylate,2,chembl
+th9507,tesamorelin|tesamorelin acetate,2,chembl
+theryttrex,yttrium (90y) chloride|yttrium chloride y-90,2,chembl|epar
+thorazine,chlorpromazine|chlorpromazine hydrochloride,2,chembl
+tivicay,dolutegravir|dolutegravir sodium,2,chembl|epar
+tookad,padeliporfin di-potassium|padeliporfin potassium,2,chembl|epar
+topotecan actavis,topotecan|topotecan hydrochloride,2,chembl|epar
+topotecan hospira,topotecan|topotecan hydrochloride,2,chembl|epar
+topotecan teva,topotecan|topotecan hydrochloride,2,chembl|epar
+torecan,thiethylperazine malate|thiethylperazine maleate,2,chembl
+tracleer,bosentan|bosentan (as monohydrate),2,chembl|epar
+tractocile,atosiban|atosiban (as acetate)|atosiban acetate,3,chembl|epar
+treanda,bendamustine|bendamustine hydrochloride,2,chembl|manual
+trelegy ellipta,fluticasone furoate|fluticasone furoate|umeclidinium bromide|vilanterol trifenatate,2,chembl|epar
+tribasic calcium phosphate,"calcium phosphate, tribasic|durapatite",2,chembl
+trobalt,ezogabine|retigabine,2,chembl|epar
+trovan iv,alatrofloxacin mesilate|alatrofloxacin mesylate,2,chembl|epar
+trumenba,neisseria meningitidis factor h binding protein|neisseria meningitidis serogroup b fhbp (recombinant lipidated fhbp (factor h binding protein)) subfamily a|neisseria meningitidis serogroup b fhbp (recombinant lipidated fhbp (factor h binding protein)) subfamily b,2,chembl|epar
+trusopt,dorzolamide|dorzolamide hydrochloride,2,chembl
+truvada,emtricitabine|tenofovir disoproxil|emtricitabine|tenofovir disoproxil fumarate,2,epar|manual
+turalio,pexidartinib|pexidartinib hydrochloride,2,chembl|epar
+turvel iv,alatrofloxacin mesilate|alatrofloxacin mesylate,2,chembl|epar
+twinrix adult,hepatitis a virus (inactivated)|hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+twinrix paediatric,hepatitis a virus (inactivated)|hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar
+typhoid vi polysaccharide vaccine,salmonella typhi ty2 vi polysaccharide antigen|typhoid vi polysaccharide vaccine,2,chembl
+tyvaso,treprostinil|treprostinil sodium,2,chembl|epar
+tyverb,lapatinib|lapatinib ditosylate,2,chembl|epar
+u3-1287,amg-888|patritumab,2,chembl
+ultratard,insulin human|insulin human zinc,2,chembl|epar
+unitensen,cryptenamine acetates|cryptenamine tannates,2,chembl
+upcard,torasemide anhydrous|torsemide,2,chembl|epar
+ux001,aceneuramic acid|sialic acid,2,chembl
+vaniqa,eflornithine|eflornithine hydrochloride,2,chembl|epar
+vargatef,nintedanib|nintedanib esylate,2,chembl|epar
+varuby,rolapitant|rolapitant hydrochloride,2,chembl|epar
+vaxchora,"vibrio cholerae, live attenuated|vibrio cholerae, strain cvd 103-hgr, live",2,chembl|epar
+vaxneuvance,pneumococcal polysaccharide conjugate vaccine (adsorbed)|streptococcus pneumoniae polysaccharide conjugated to corynebacterium diphtheriae crm197,2,chembl|epar
+vaxzevria (previously covid-19 vaccine astrazeneca),chadox1-sars-cov-2|chimpanzee adenovirus encoding sars-cov-2 spike glycoprotein,2,chembl|epar
+velcade,bortezomib|bortezomib d-mannitol,2,chembl|epar|manual
+veletri,epoprostenol sodium|tezosentan,2,chembl
+velphoro,ferric oxyhydroxide|sucroferric oxyhydroxide,2,chembl|epar
+vemlidy,tenofovir alafenamide|tenofovir alafenamide fumarate,2,chembl|epar
+ventavis,iloprost|iloprost tromethamine,2,chembl|epar
+ventolin,albuterol|albuterol sulfate,2,chembl
+vepacel,"influenza a virus, inactivated whole virion|influenza virus (whole virion, inactivated), containing antigen of: a|vietnam|1203|2004 (h5n1)",2,chembl|epar
+veraseal,"human fibrinogen, human thrombin|human fibrinogen|human thrombin",2,epar
+verkazia,ciclosporin|cyclosporine,2,chembl|epar
+vesicare,solifenacin|solifenacin succinate,2,chembl
+vesprin,triflupromazine|triflupromazine hydrochloride,2,chembl
+viagra,sildenafil|sildenafil citrate,2,chembl|epar
+vibativ,telavancin|telavancin hydrochloride,2,chembl|epar
+vibramycin,doxycycline|doxycycline calcium|doxycycline hyclate,3,chembl
+vidprevtyn beta,"sars-cov-2 prefusion spike delta tm protein, recombinant (b.1.351 strain)|sars-cov-2 virus spike protein",2,chembl|epar
+viekirax,ombitasvir|paritaprevir|ritonavir|ritonavir,2,chembl|epar
+vimizim,elosulfase alfa|recombinant human n-acetylgalactosamine-6-sulfatase,2,chembl|epar
+vipidia,alogliptin|alogliptin benzoate,2,chembl|epar
+viracept,nelfinavir|nelfinavir mesylate,2,chembl|epar
+viread,tenofovir disoproxil|tenofovir disoproxil fumarate,2,chembl|epar
+vistaril,hydroxyzine hydrochloride|hydroxyzine pamoate,2,chembl
+vivagel,astodrimer|astodrimer sodium,2,chembl
+vivanza,vardenafil|vardenafil hydrochloride,2,chembl|epar
+vizamyl,flutemetamol (18f)|flutemetamol f 18,2,chembl|epar
+vizarsin,sildenafil|sildenafil citrate,2,chembl|epar
+vizimpro,dacomitinib|dacomitinib monohydrate,2,chembl|epar
+vocabria,cabotegavir sodium|cabotegravir|cabotegravir sodium,2,chembl|epar
+vontrol,diphenidol|diphenidol hydrochloride,2,chembl
+votrient,pazopanib|pazopanib hydrochloride,2,chembl|epar|manual
+vs-6063,defactinib|defactinib hydrochloride,2,chembl
+vumerity,diroximel fumarate|diroximel fumarate (biib098),2,chembl|epar
+vydura,rimegepant|rimegepant sulfate,2,chembl|epar
+vyndaqel,tafamidis|tafamidis meglumine,2,chembl|epar
+wakix,pitolisant|pitolisant hydrochloride,2,chembl|epar
+wilzin,zinc|zinc acetate,2,chembl|epar
+win 40350,"calcium phosphate, tribasic|durapatite",2,chembl
+win-40350,"calcium phosphate, tribasic|durapatite",2,chembl
+wq-3034,delafloxacin|delafloxacin meglumine,2,chembl
+x0002,ibuprofen trelamine|ibuprofen trelamine hydrochloride,2,chembl
+xadago,safinamide|safinamide mesylate|safinamide methanesulfonate,3,chembl|epar
+xagrid,anagrelide|anagrelide hydrochloride,2,chembl|epar
+xaluprine (previously mercaptopurine nova laboratories),6-mercaptopurine monohydrate|mercaptopurine,2,chembl|epar
+xelevia,sitagliptin|sitagliptin phosphate,2,chembl|epar
+xeljanz,tofacitinib|tofacitinib citrate,2,chembl|epar
+xerava,eravacycline|eravacycline dihydrochloride,2,chembl|epar
+xermelo,telotristat ethyl|telotristat etiprate,2,chembl|epar
+xl-652,bms-779788|bms-852927,2,chembl
+xofigo,radium (223ra) dichloride|radium ra 223 dichloride,2,chembl|epar
+xospata,gilteritinib|gilteritinib fumarate,2,chembl|epar|manual
+xromi,hydroxycarbamide|hydroxyurea,2,chembl|epar
+xylocaine,lidocaine|lidocaine hydrochloride,2,chembl
+xyzal,levocetirizine|levocetirizine dihydrochloride,2,chembl
+yellox,bromfenac sodium|bromfenac sodium sesquihydrate,2,chembl|epar
+ytracis,yttrium (90y) chloride|yttrium chloride y-90,2,chembl|epar
+yttriga,yttrium (90y) chloride|yttrium chloride y-90,2,chembl|epar
+zabdeno,adenovirus type 26 encoding ebola virus glycoprotein|recombinant adenovirus type 26 (ad26) encoding the glycoprotein (gp) of the ebola virus zaire (zebov) mayinga strain,2,chembl|epar
+zalmoxis,allogeneic t cells genetically modified with a retroviral vector encoding for a truncated form of the human low affinity nerve growth factor receptor (deltalngfr) and the herpes simplex i virus thymidine kinase (hsv-tk mut2)|allogeneic t cells genetically modified with a retroviral vector encoding for a truncated form of the human low affinity nerve growth factor receptor (δlngfr) and the herpes simplex i virus thymidine kinase (hsv-tk mut2),2,chembl|epar
+zalviso,sufentanil|sufentanil citrate,2,chembl|epar
+zejula,niraparib|niraparib (tosilate monohydrate)|niraparib tosylate monohydrate,3,chembl|epar|manual
+zelnorm,tegaserod|tegaserod maleate,2,chembl|epar
+zemdri,plazomicin (sulfate)|plazomicin sulfate,2,chembl|epar
+zevalin,ibritumomab tiuxetan|yttrium y 90 ibritumomab tiuxetan,2,chembl|epar
+ziagen,abacavir|abacavir sulfate,2,chembl|epar
+zilbrysq,zilucoplan|zilucoplan sodium,2,chembl|epar
+zinforo,ceftaroline fosamil|ceftaroline fosamil acetate,2,chembl|epar
+zmapp,cosfroviximab|larcaviximab|porgaviximab,3,chembl
+zoely,nomegestrol acetate|nomegestrol acetate|estradiol,2,chembl|epar
+zoladex,goserelin|goserelin acetate,2,chembl|manual
+zoledronic acid accord,zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zoledronic acid actavis,zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zoledronic acid hospira,zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zoledronic acid medac,zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zoledronic acid teva generics,zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zolsketil pegylated liposomal,"doxorubicin hydrochloride|doxorubicin hydrochloride, liposomal",2,chembl|epar
+zometa,zoledronic acid|zoledronic acid|zoledronic acid monohydrate,2,chembl|epar
+zostavax,"varicella zoster virus, live attenuated|varicella-zoster virus (live, attenuated)",2,chembl|epar
+zovirax,acyclovir|acyclovir sodium,2,chembl
+zutectra,hepatitis b immune globulin|human hepatitis b immunoglobulin,2,chembl|epar
+zycortal,desoxycorticosterone pivalate|desoxycortone pivalate,2,chembl|epar
+zyllt,clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,2,chembl|epar
+zynteglo,autologous cd34+ cell enriched population that contains haematopoietic stem cells transduced with lentiviral vector encoding the βa-t87q-globin gene|betibeglogene autotemcel,2,chembl|epar
+zytiga,abiraterone|abiraterone acetate,2,chembl|epar|manual

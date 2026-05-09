@@ -73,7 +73,9 @@ sanitise_substance_output <- function(x) {
 
 # ── Config loader ─────────────────────────────────────────────────────────────
 
-load_substance_configs <- function(config_dir = "config") {
+load_substance_configs <- function(
+  config_dir = file.path("config", "substance_norm_pipeline")
+) {
   read_csv_safe <- function(path) {
     if (file.exists(path)) {
       readr::read_csv(path, show_col_types = FALSE)
@@ -414,7 +416,8 @@ if (!interactive() && sys.nframe() == 0L) {
 
   input_csv  <- get_arg("--input=")
   output_csv <- get_arg("--output=")
-  config_dir <- get_arg("--config-dir=") %||% "config"
+  config_dir <- get_arg("--config-dir=") %||%
+    file.path("config", "substance_norm_pipeline")
   write_queue <- "--write-queue" %in% args
   no_fuzzy    <- "--no-fuzzy"    %in% args
 

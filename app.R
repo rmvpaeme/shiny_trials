@@ -142,7 +142,10 @@ norm_pip_substance <- function(x) {
   unique(tokens[nchar(tokens) >= 4])
 }
 
-source("helper_scripts/normalise_substances.R", local = FALSE)
+source(
+  file.path("helper_scripts", "substance_norm_pipeline", "normalise_substances.R"),
+  local = FALSE
+)
 .substance_cfg <- load_substance_configs()
 
 resolve_substance_label <- function(x) {
@@ -3145,8 +3148,9 @@ server <- function(input, output, session) {
                          choices=extract_choices(rv$data$phase),server=TRUE)
     updateSelectizeInput(session,"sponsor_filter",
                          choices=sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),server=TRUE)
-    updateSelectizeInput(session,"product_search",
-                         choices=extract_product_substance_choices(rv$data),server=TRUE)
+    # substance choices disabled pending cache-time normalisation (see substance_normalisation_handover.md)
+    # updateSelectizeInput(session,"product_search",
+    #                      choices=extract_product_substance_choices(rv$data),server=TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
   })

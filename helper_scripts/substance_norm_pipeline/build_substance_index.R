@@ -23,8 +23,9 @@ suppressPackageStartupMessages({
 args      <- commandArgs(trailingOnly = TRUE)
 no_chembl <- "--no-chembl" %in% args
 
-OUT_INDEX     <- file.path("config", "substance_alias_index.csv")
-OUT_AMBIGUOUS <- file.path("config", "ambiguous_substance_aliases.csv")
+SNP           <- file.path("config", "substance_norm_pipeline")
+OUT_INDEX     <- file.path(SNP, "substance_alias_index.csv")
+OUT_AMBIGUOUS <- file.path(SNP, "ambiguous_substance_aliases.csv")
 
 # ── Shared cleaning helpers ───────────────────────────────────────────────────
 # Canonical definitions — also sourced by normalise_substances.R via source().
@@ -51,7 +52,7 @@ clean_substance <- function(x) {
 }
 
 # ── Manual brand overrides (highest priority) ─────────────────────────────────
-manual_path <- file.path("config", "manual_brand_to_substance.csv")
+manual_path <- file.path(SNP, "manual_brand_to_substance.csv")
 manual_brand <- if (file.exists(manual_path)) {
   readr::read_csv(manual_path, show_col_types = FALSE) |>
     dplyr::mutate(
