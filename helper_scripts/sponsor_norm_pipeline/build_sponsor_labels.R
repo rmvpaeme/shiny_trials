@@ -98,7 +98,8 @@ trial_norm <- raw %>%
   dplyr::left_join(
     norm %>% dplyr::select(
       raw_sponsor, sponsor_clean, sponsor_parent, sponsor_group,
-      sponsor_type, match_status, match_score, match_source, match_reason
+      sponsor_type, match_status, match_score, match_source, match_reason,
+      suggested_clean
     ),
     by = "raw_sponsor"
   )
@@ -148,8 +149,8 @@ if (write_queue) {
     dplyr::filter(match_status %in% c("review", "unknown")) %>%
     dplyr::left_join(occ, by = "raw_sponsor") %>%
     dplyr::mutate(
-      n_trials         = dplyr::coalesce(n_trials, 0L),
-      candidate_sponsor = sponsor_clean
+      n_trials          = dplyr::coalesce(n_trials, 0L),
+      candidate_sponsor = dplyr::coalesce(sponsor_clean, suggested_clean)
     ) %>%
     dplyr::select(
       raw_sponsor, candidate_sponsor, sponsor_type, match_status,

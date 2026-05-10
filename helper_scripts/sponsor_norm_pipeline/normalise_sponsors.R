@@ -57,6 +57,18 @@ clean_sponsor_alias <- function(x) {
   ")\\b"
 )
 
+suggest_sponsor_clean <- function(x) {
+  x0 <- clean_sponsor_alias(x)
+  s  <- x0 |>
+    stringr::str_remove_all(stringr::regex(.address_rx,    ignore_case = TRUE)) |>
+    stringr::str_squish() |>
+    stringr::str_remove_all(stringr::regex(.legal_suffixes_rx, ignore_case = TRUE)) |>
+    stringr::str_squish() |>
+    stringr::str_remove_all(stringr::regex(.rd_rx,         ignore_case = TRUE)) |>
+    stringr::str_squish()
+  stringr::str_to_title(if (nchar(s) >= 3) s else x0)
+}
+
 make_sponsor_candidates <- function(x) {
   x0 <- clean_sponsor_alias(x)
 
@@ -353,7 +365,14 @@ normalise_sponsors <- function(raw_vec,
 
   lookup <- purrr::map_dfr(
     unique_vals, ~ normalise_one(.x, cfg = cfg, allow_fuzzy = allow_fuzzy)
-  )
+  ) |>
+    dplyr::mutate(
+      suggested_clean = dplyr::if_else(
+        !is.na(sponsor_clean),
+        sponsor_clean,
+        purrr::map_chr(raw_sponsor, suggest_sponsor_clean)
+      )
+    )
   tibble::tibble(raw_sponsor = as.character(raw_vec)) |>
     dplyr::left_join(lookup, by = "raw_sponsor")
 }
