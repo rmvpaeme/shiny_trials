@@ -159,8 +159,20 @@ tibble(
 
 ## Reviewing the queue
 
-After a cache rebuild, `substance_review_queue.csv` contains all `review`/`unknown`
-rows sorted by frequency. Use the interactive curation tool:
+After a cache rebuild, `substance_review_queue.csv` contains rows needing manual
+curation, sorted by `n_occurrences` descending.
+
+**Queue inclusion rules:**
+
+- `review` rows — always included regardless of `n_occurrences`. The pipeline found a
+  plausible candidate; the raw string may be an alias or variant spelling of a
+  high-frequency substance, so it is always worth checking.
+- `unknown` rows — included only if `n_occurrences >= 2`. Singleton unknowns with no
+  candidate are not actionable.
+- Strings filtered before normalisation (never reach the queue): length < 3 chars, no
+  3-char alpha run, or starts with a dose amount (e.g. `0.56 mL solution for injection`).
+
+Use the interactive curation tool:
 
 ```bash
 # Review top 50 rows (default)
@@ -180,6 +192,7 @@ Decisions (accept / reject / override / skip) are saved immediately to the queue
 and can be resumed across sessions.
 
 `--export` writes:
+
 - `decision=accepted` rows → `manual_substance_overrides.csv`
 - `decision=rejected` rows → `negative_aliases.csv`
 
