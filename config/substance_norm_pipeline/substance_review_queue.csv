@@ -1,0 +1,881 @@
+raw_substance,active_substance_clean,match_status,match_score,match_source,match_reason,n_occurrences,decision,canonical_substance,comment
+mL concentrate for solution for infusion,NA,unknown,0,NA,no reliable match,70,NA,NA,NA
+mL concentrate for solution for infusion.,NA,unknown,0,NA,no reliable match,49,NA,NA,NA
+ml concentrate for solution for infusion,NA,unknown,0,NA,no reliable match,37,NA,NA,NA
+PEGINTERFERON ALFA 2A,Peginterferon alfa-2a,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),22,NA,NA,NA
+CALCIUM FOLINATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,20,NA,NA,NA
+ml concentrate for solution for infusion.,NA,unknown,0,NA,no reliable match,18,NA,NA,NA
+ml solution for injection,NA,unknown,0,NA,no reliable match,16,NA,NA,NA
+CISPLATINO,Cisplatin,review,64,chembl,alias match (chembl_synonym): 'cisplatino' → 'cisplatin',15,NA,NA,NA
+mL solution for injection,NA,unknown,0,NA,no reliable match,15,NA,NA,NA
+infusion,Nifursemizone,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),15,NA,NA,NA
+ml Konzentrat zur Herstellung einer Infusionslösung,NA,unknown,0,NA,no reliable match,14,NA,NA,NA
+"ml, solution à diluer pour perfusion",NA,unknown,0,NA,no reliable match,14,NA,NA,NA
+mL solution for infusion,NA,unknown,0,NA,no reliable match,13,NA,NA,NA
+CARBOPLATINO,Carboplatin,review,64,chembl,alias match (chembl_synonym): 'carboplatino' → 'carboplatin',12,NA,NA,NA
+DESAMETASONE,Dexamethasone,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),11,NA,NA,NA
+Datopotamab deruxtecan,NA,review,84,chembl,ambiguous alias maps to multiple substances,11,NA,NA,NA
+Hepatitis B surface antigen,Hepatitis b virus hbsag surface protein antigen,review,64,chembl,alias match (chembl_synonym): 'hepatitis b surface antigen' → 'hepatitis b virus hbsag surface protein antigen',10,NA,NA,NA
+FOLINIC ACID,Leucovorin,review,64,chembl,alias match (chembl_synonym): 'folinic acid' → 'leucovorin',10,NA,NA,NA
+Calcipotriol,Calcipotriene,review,84,chembl,alias match (ban): 'calcipotriol' → 'calcipotriene',9,NA,NA,NA
+OXALIPLATINO,Oxaliplatin,review,64,chembl,alias match (chembl_synonym): 'oxaliplatino' → 'oxaliplatin',9,NA,NA,NA
+ETHINYLESTRADIOL,Ethinyl estradiol,review,64,chembl,alias match (chembl_synonym): 'ethinylestradiol' → 'ethinyl estradiol',9,NA,NA,NA
+RIFAMPICIN,Rifampin,review,84,chembl,alias match (ban): 'rifampicin' → 'rifampin',9,NA,NA,NA
+ml Concentrate for Solution for Infusion,NA,unknown,0,NA,no reliable match,9,NA,NA,NA
+Calcium folinate,NA,review,64,chembl,ambiguous alias maps to multiple substances,8,NA,NA,NA
+CAPECITABINA,Capecitabine,review,64,chembl,alias match (chembl_synonym): 'capecitabina' → 'capecitabine',8,NA,NA,NA
+TRIAMCINOLONE ACETONIDE,NA,review,89,chembl,ambiguous alias maps to multiple substances,8,NA,NA,NA
+AMG 386,Trebananib,review,64,chembl,alias match (chembl_synonym): 'amg 386' → 'trebananib',8,NA,NA,NA
+HYDROXYCARBAMIDE,Hydroxyurea,review,64,chembl,alias match (chembl_synonym): 'hydroxycarbamide' → 'hydroxyurea',8,NA,NA,NA
+CALCIUM LEVOFOLINATE,Levoleucovorin calcium,review,84,chembl,alias match (ban): 'calcium levofolinate' → 'levoleucovorin calcium',8,NA,NA,NA
+ml Solution for Injection,NA,unknown,0,NA,no reliable match,8,NA,NA,NA
+BMS-986165,Deucravacitinib,review,64,chembl,alias match (chembl_synonym): 'bms-986165' → 'deucravacitinib',8,NA,NA,NA
+ml powder for dispersion for infusion.,NA,unknown,0,NA,no reliable match,8,NA,NA,NA
+Calcium levofolinate,Levoleucovorin calcium,review,84,chembl,alias match (ban): 'calcium levofolinate' → 'levoleucovorin calcium',7,NA,NA,NA
+Fluorouracile,Fluorouracil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),7,NA,NA,NA
+EMTRICITABINA,Emtricitabine,review,64,chembl,alias match (chembl_synonym): 'emtricitabina' → 'emtricitabine',7,NA,NA,NA
+Enoxaparin,Enoxaparin sodium,review,64,chembl,alias match (chembl_synonym): 'enoxaparin' → 'enoxaparin sodium',7,NA,NA,NA
+Human Thrombin,Thrombin,review,64,chembl,alias match (chembl_synonym): 'human thrombin' → 'thrombin',7,NA,NA,NA
+FLUOROURACILE,Fluorouracil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),7,NA,NA,NA
+ml solution for infusion,NA,unknown,0,NA,no reliable match,7,NA,NA,NA
+ml oplossing voor injectie,NA,unknown,0,NA,no reliable match,7,NA,NA,NA
+Follitropin alfa,NA,review,64,chembl,ambiguous alias maps to multiple substances,6,NA,NA,NA
+ethinylestradiol,Ethinyl estradiol,review,64,chembl,alias match (chembl_synonym): 'ethinylestradiol' → 'ethinyl estradiol',6,NA,NA,NA
+enoxaparin,Enoxaparin sodium,review,64,chembl,alias match (chembl_synonym): 'enoxaparin' → 'enoxaparin sodium',6,NA,NA,NA
+Pertactin,Penetratin,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),6,NA,NA,NA
+TIMOLOL MALEATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,6,NA,NA,NA
+Human Fibrinogen,"Fibrinogen, human",review,64,chembl,"alias match (chembl_synonym): 'human fibrinogen' → 'fibrinogen, human'",6,NA,NA,NA
+BIBF 1120,Nintedanib,review,64,chembl,alias match (chembl_synonym): 'bibf 1120' → 'nintedanib',6,NA,NA,NA
+NORETHISTERONE ACETATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,6,NA,NA,NA
+ABT-493,Glecaprevir,review,64,chembl,alias match (chembl_synonym): 'abt-493' → 'glecaprevir',6,NA,NA,NA
+ABT-530,Pibrentasvir,review,64,chembl,alias match (chembl_synonym): 'abt-530' → 'pibrentasvir',6,NA,NA,NA
+Infusion,Nifursemizone,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),6,NA,NA,NA
+ABT-494,Upadacitinib,review,64,chembl,alias match (chembl_synonym): 'abt-494' → 'upadacitinib',6,NA,NA,NA
+ABX464,Obefazimod,review,64,chembl,alias match (chembl_synonym): 'abx464' → 'obefazimod',6,NA,NA,NA
+pour perfusion,NA,unknown,0,NA,no reliable match,6,NA,NA,NA
+Infusionslösung,Nifursol,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),6,NA,NA,NA
+ml concentraat voor oplossing voor infusie,NA,unknown,0,NA,no reliable match,6,NA,NA,NA
+LAMIVUDINA,Lamivudine,review,64,chembl,alias match (chembl_synonym): 'lamivudina' → 'lamivudine',5,NA,NA,NA
+5-Aminolevulinic acid hydrochloride,Aminolevulinic acid hydrochloride,review,64,chembl,alias match (chembl_synonym): '5-aminolevulinic acid hydrochloride' → 'aminolevulinic acid hydrochloride',5,NA,NA,NA
+calcipotriol,Calcipotriene,review,84,chembl,alias match (ban): 'calcipotriol' → 'calcipotriene',5,NA,NA,NA
+RIBAVIRINA,Ribavirin,review,64,chembl,alias match (chembl_synonym): 'ribavirina' → 'ribavirin',5,NA,NA,NA
+Nicotinic acid,Niacin,review,64,chembl,alias match (chembl_synonym): 'nicotinic acid' → 'niacin',5,NA,NA,NA
+Nicotinic Acid,Niacin,review,64,chembl,alias match (chembl_synonym): 'nicotinic acid' → 'niacin',5,NA,NA,NA
+Folinic acid,Leucovorin,review,64,chembl,alias match (chembl_synonym): 'folinic acid' → 'leucovorin',5,NA,NA,NA
+Calcium chloride dihydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
+Wisconsin,Isonixin,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),5,NA,NA,NA
+Malaysia,NA,unknown,0,NA,no reliable match,5,NA,NA,NA
+GEMCITABINA,Gemcitabine,review,64,chembl,alias match (chembl_synonym): 'gemcitabina' → 'gemcitabine',5,NA,NA,NA
+Brisbane,Barusiban,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),5,NA,NA,NA
+AIN457,Secukinumab,review,64,chembl,alias match (chembl_synonym): 'ain457' → 'secukinumab',5,NA,NA,NA
+AFQ056,Mavoglurant,review,64,chembl,alias match (chembl_synonym): 'afq056' → 'mavoglurant',5,NA,NA,NA
+PARACETAMOLO,Plosaracetam,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),5,NA,NA,NA
+Vilanterol trifenatate,NA,review,84,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 1,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),5,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 3,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),5,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 4,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),5,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 5,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),5,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 6A CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),5,NA,NA,NA
+GSK1605786A,Vercirnon sodium,review,64,chembl,alias match (chembl_synonym): 'gsk1605786a' → 'vercirnon sodium',5,NA,NA,NA
+ABT-450,Paritaprevir,review,64,chembl,alias match (chembl_synonym): 'abt-450' → 'paritaprevir',5,NA,NA,NA
+ABT-267,Ombitasvir,review,64,chembl,alias match (chembl_synonym): 'abt-267' → 'ombitasvir',5,NA,NA,NA
+ABT-333,Dasabuvir,review,64,chembl,alias match (chembl_synonym): 'abt-333' → 'dasabuvir',5,NA,NA,NA
+AMG 416,Etelcalcetide hydrochloride,review,64,chembl,alias match (chembl_synonym): 'amg 416' → 'etelcalcetide hydrochloride',5,NA,NA,NA
+LIDOCAINE HYDROCHLORIDE,NA,review,89,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
+DOXORUBICINA CLORIDRATO,Doxorubicin,review,63,chembl,alias match (chembl_synonym): 'doxorubicina' → 'doxorubicin',5,NA,NA,NA
+CICLOFOSFAMIDE,Cyclophosphamide,review,64,chembl,alias match (chembl_synonym): 'ciclofosfamide' → 'cyclophosphamide',5,NA,NA,NA
+BMS-986205,Linrodostat,review,64,chembl,alias match (chembl_synonym): 'bms-986205' → 'linrodostat',5,NA,NA,NA
+Folinic Acid,Leucovorin,review,64,chembl,alias match (chembl_synonym): 'folinic acid' → 'leucovorin',5,NA,NA,NA
+belantamab mafodotin,NA,review,84,chembl,ambiguous alias maps to multiple substances,5,NA,NA,NA
+JNJ-61186372,Amivantamab,review,64,chembl,alias match (chembl_synonym): 'jnj-61186372' → 'amivantamab',5,NA,NA,NA
+VAY736,Ianalumab,review,64,chembl,alias match (chembl_synonym): 'vay736' → 'ianalumab',5,NA,NA,NA
+"mL, solution à diluer pour perfusion",NA,unknown,0,NA,no reliable match,5,NA,NA,NA
+eptacog alfa activated,Eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),4,NA,NA,NA
+California,Clofarabine,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),4,NA,NA,NA
+Prednisolon,Prednisolone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),4,NA,NA,NA
+Fluarix,Fluparoxan,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),4,NA,NA,NA
+Glycerol,Glycerin,review,64,chembl,alias match (chembl_synonym): 'glycerol' → 'glycerin',4,NA,NA,NA
+Actinomycin D,Dactinomycin,review,64,chembl,alias match (chembl_synonym): 'actinomycin d' → 'dactinomycin',4,NA,NA,NA
+Filamentous Haemagglutinin,Flamenol,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+Oxaliplatine,Oxaliplatin,review,64,chembl,alias match (chembl_synonym): 'oxaliplatine' → 'oxaliplatin',4,NA,NA,NA
+migalastat hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+N.meningitidis serogroup A polysaccharide PSA conjugated to tetanus toxoid TT,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PolyO-2-hydroxyethylstarch,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+colestilan,Colestilan chloride,review,64,chembl,alias match (chembl_synonym): 'colestilan' → 'colestilan chloride',4,NA,NA,NA
+Alendronate,Alendronic acid,review,64,chembl,alias match (chembl_synonym): 'alendronate' → 'alendronic acid',4,NA,NA,NA
+Endoxan,Cyclophosphamide,review,64,chembl,alias match (chembl_synonym): 'endoxan' → 'cyclophosphamide',4,NA,NA,NA
+"Influenza, purified antigen",Enflurane,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),4,NA,NA,NA
+Human fibrinogen,"Fibrinogen, human",review,64,chembl,"alias match (chembl_synonym): 'human fibrinogen' → 'fibrinogen, human'",4,NA,NA,NA
+Magnesium chloride hexahydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+Haemagglutinin from A,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+Solomon Islands,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+Haemagglutinin from B,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+CALCIPOTRIOL,Calcipotriene,review,84,chembl,alias match (ban): 'calcipotriol' → 'calcipotriene',4,NA,NA,NA
+AMG 479,Ganitumab,review,64,chembl,alias match (chembl_synonym): 'amg 479' → 'ganitumab',4,NA,NA,NA
+HYDROCORTISONE ACETATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+TRABECTEDINA,Trabectedin,review,64,chembl,alias match (chembl_synonym): 'trabectedina' → 'trabectedin',4,NA,NA,NA
+AMG 827,Brodalumab,review,64,chembl,alias match (chembl_synonym): 'amg 827' → 'brodalumab',4,NA,NA,NA
+MnB rLP2086 Subfamily A,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+MnB rLP2086 Subfamily B,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PERTUSSIS TOXOID,Pertussis vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+Gemcitabina,Gemcitabine,review,64,chembl,alias match (chembl_synonym): 'gemcitabina' → 'gemcitabine',4,NA,NA,NA
+Boostrix,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+BEZ235,Dactolisib,review,64,chembl,alias match (chembl_synonym): 'bez235' → 'dactolisib',4,NA,NA,NA
+RILPIVIRINE HYDROCHLORIDE,NA,review,84,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+TIOGUANINE,Thioguanine,review,84,chembl,alias match (ban): 'tioguanine' → 'thioguanine',4,NA,NA,NA
+Recombinant Neisseria meningitidis group B fHbp fusion protein,Mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+Recombinant Neisseria meningitidis group B NadA protein,Mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+Recombinant Neisseria meningitidis group B NHBA fusion protein,Mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+254 measured as amount of total protein containing the PorA P1.4,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+Radium-223 dichloride,NA,review,64,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+Sodium,Opium,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),4,NA,NA,NA
+RILPIVIRINA,Rilpivirine,review,64,chembl,alias match (chembl_synonym): 'rilpivirina' → 'rilpivirine',4,NA,NA,NA
+COLCHICINA,Colchicine,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),4,NA,NA,NA
+BAY 1841788,Darolutamide,review,64,chembl,alias match (chembl_synonym): 'bay 1841788' → 'darolutamide',4,NA,NA,NA
+NEISSERIA MENINGITIDIS GROUP Y POLYSACCHARIDE CONJUGATED TO TETANUS TOXOID CARRIER PROTEIN,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),4,NA,NA,NA
+Avibactam sodium,NA,review,84,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+MICOFENOLATO MOFETILE,Mycophenolate mofetil,unknown,84,fuzzy:manual,fuzzy match (jw similarity 84%),4,NA,NA,NA
+Efgartigimod,Efgartigimod alfa,review,64,chembl,alias match (chembl_synonym): 'efgartigimod' → 'efgartigimod alfa',4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 1 CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 3 CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 4 CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 5 CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 6B CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 7F CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 9V CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 14 CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 18C CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 19A CONJUGATED TO CRM197,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 19F CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 22F CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 23F CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 33F CONJUGATED TO CRM197,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 8,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 10A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 11A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 12F,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 15B,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 22F,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 33F,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 6A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 6B,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 7F,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 9V,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 14,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 18C,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 19A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 19F,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+PNEUMOCOCCAL POLYSACCHARIDE SEROTYPE 23F,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+BAY 2433334,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+CAMOSTAT MESILATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+ml oral solution,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+Vyxeos Liposomal 44 mg,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+infusie,Vinflunine,unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),4,NA,NA,NA
+Natriumklorid Fresenius Kabi 9 mg,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+Dexamethason 4 mg JENAPHARM®,Dexamethasone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),4,NA,NA,NA
+"mL, solution injectable",NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+KarXT,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+"CELLULOSE, MICROCRYSTALLINE",NA,review,64,chembl,ambiguous alias maps to multiple substances,4,NA,NA,NA
+Hyperpolarized [1-13C]pyruvate,Peralopride,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),4,NA,NA,NA
+mL oral solution,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
+AMG 531,Romiplostim,review,64,chembl,alias match (chembl_synonym): 'amg 531' → 'romiplostim',3,NA,NA,NA
+estradiol valerate,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Combinations,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Ethinylestradiol,Ethinyl estradiol,review,64,chembl,alias match (chembl_synonym): 'ethinylestradiol' → 'ethinyl estradiol',3,NA,NA,NA
+BMS-354825-03,Dasatinib,review,64,chembl,alias match (chembl_synonym): 'bms-354825-03' → 'dasatinib',3,NA,NA,NA
+Calcium Chloride,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+follitropin beta,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+neostigmine metilsulfate,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Azatioprina,Azathioprine,review,64,chembl,alias match (chembl_synonym): 'azatioprina' → 'azathioprine',3,NA,NA,NA
+TAK-475,Lapaquistat acetate,review,64,chembl,alias match (chembl_synonym): 'tak-475' → 'lapaquistat acetate',3,NA,NA,NA
+Intradermal Influenza Vaccine,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+pending,Pegdinetanib,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),3,NA,NA,NA
+Carboplatino,Carboplatin,review,64,chembl,alias match (chembl_synonym): 'carboplatino' → 'carboplatin',3,NA,NA,NA
+Pneumococcal polysaccharide serotype 1,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 3,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 4,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 5,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 6A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 6B,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 7F,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 9V,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 14,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 18C,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 19A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal polysaccharide serotype 19F,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Pneumococcal polysaccharide serotype 23F,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Pertussis toxoid,Pertussis vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),3,NA,NA,NA
+nicotinic acid,Niacin,review,64,chembl,alias match (chembl_synonym): 'nicotinic acid' → 'niacin',3,NA,NA,NA
+Dalteparin,Dalteparin sodium,review,64,chembl,alias match (chembl_synonym): 'dalteparin' → 'dalteparin sodium',3,NA,NA,NA
+Dimethylfumarat,Dimethyl fumarate,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),3,NA,NA,NA
+Filamentous haemagglutinin,Flamenol,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),3,NA,NA,NA
+Ribavirina,Ribavirin,review,64,chembl,alias match (chembl_synonym): 'ribavirina' → 'ribavirin',3,NA,NA,NA
+N.meningitidis serogroup W polysaccharide PSW conjugated to tetanus toxoid TT,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+N.meningitidis serogroup Y polysaccharide PSY conjugated to tetanus toxoid TT,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+DIBOTERMIN ALPHA,Dibotermin alfa,review,63,chembl,alias match (chembl_synonym): 'dibotermin' → 'dibotermin alfa',3,NA,NA,NA
+LENALIDOMIDA,Lenalidomide,review,64,chembl,alias match (chembl_synonym): 'lenalidomida' → 'lenalidomide',3,NA,NA,NA
+Gemcitabin,Gemcitabine,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),3,NA,NA,NA
+CLONIDINE HYDROCHLORIDE,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+AMG 102,Rilotumumab,review,64,chembl,alias match (chembl_synonym): 'amg 102' → 'rilotumumab',3,NA,NA,NA
+Mesenchymal stem cells,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+N.meningitidis serogroup C polysaccharide PSC conjugated to tetanus toxoid TT,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+DEQUALINIUM CHLORIDE,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Microplasmin,Ocriplasmin,review,64,chembl,alias match (chembl_synonym): 'microplasmin' → 'ocriplasmin',3,NA,NA,NA
+Eptacog alfa activated,Eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),3,NA,NA,NA
+Cisplatino,Cisplatin,review,64,chembl,alias match (chembl_synonym): 'cisplatino' → 'cisplatin',3,NA,NA,NA
+Calcium Folinate,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Thymoglobuline,Thyroglobulin,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),3,NA,NA,NA
+YM178 OCAS tablet 50 mg,Mirabegron,review,61,chembl,alias match (chembl_synonym): 'ym178' → 'mirabegron',3,NA,NA,NA
+timolol maleate,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 1,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 3,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 4,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 5,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 6A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 6B,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 7F,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 9V,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 14,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 18C,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 19A,Pneumococcal polysaccharide conjugate vaccine (adsorbed),unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 19F,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Pneumococcal Polysaccharide Serotype 23F,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+2006 IVR-145,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+rilpivirine hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+HYDROCORTISONE SODIUM SUCCINATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+atropine sulfate,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Dimebon dihydrochloride,Latrepirdine,review,63,chembl,alias match (chembl_synonym): 'dimebon' → 'latrepirdine',3,NA,NA,NA
+gE recombinant protein formulated in AS01B Adjuvant System,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Albumin,Albumin human,review,64,chembl,alias match (chembl_synonym): 'albumin' → 'albumin human',3,NA,NA,NA
+CISPLATINE,Cisplatin,review,64,chembl,alias match (chembl_synonym): 'cisplatine' → 'cisplatin',3,NA,NA,NA
+follitropin alfa,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+ACT-128800,Ponesimod,review,64,chembl,alias match (chembl_synonym): 'act-128800' → 'ponesimod',3,NA,NA,NA
+CICLOSPORINA,Cyclosporine,review,64,chembl,alias match (chembl_synonym): 'ciclosporina' → 'cyclosporine',3,NA,NA,NA
+Aluminium hydroxide,Aluminum hydroxide,review,64,chembl,alias match (chembl_synonym): 'aluminium hydroxide' → 'aluminum hydroxide',3,NA,NA,NA
+Fluorouracilo,Fluorouracil,review,64,chembl,alias match (chembl_synonym): 'fluorouracilo' → 'fluorouracil',3,NA,NA,NA
+METFORMINA,Metformin,review,64,chembl,alias match (chembl_synonym): 'metformina' → 'metformin',3,NA,NA,NA
+Nonavalent HPV VLP Vaccine,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+vial,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+AGUA PARA PREPARACIONES INYECTABLES,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+"Influenza vaccine surface antigen, inactivated",Enflurane,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),3,NA,NA,NA
+MORPHINE HYDROCHLORIDE,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+IMCgp100,Tebentafusp,review,64,chembl,alias match (chembl_synonym): 'imcgp100' → 'tebentafusp',3,NA,NA,NA
+VINCRISTINA,Vincristine,review,64,chembl,alias match (chembl_synonym): 'vincristina' → 'vincristine',3,NA,NA,NA
+HEPATITIS B SURFACE ANTIGEN,Hepatitis b virus hbsag surface protein antigen,review,64,chembl,alias match (chembl_synonym): 'hepatitis b surface antigen' → 'hepatitis b virus hbsag surface protein antigen',3,NA,NA,NA
+Tetrahydrocannabinol Botanical Drug Substance THC BDS,Dronabinol,review,63,chembl,alias match (chembl_synonym): 'tetrahydrocannabinol' → 'dronabinol',3,NA,NA,NA
+EPTACOG ALFA ACTIVATED,Eptacog alfa (activated),review,97,fuzzy:epar,fuzzy match (jw similarity 97%),3,NA,NA,NA
+FOLLITROPIN ALFA,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Prevenar 13,NA,review,94,epar,ambiguous alias maps to multiple substances,3,NA,NA,NA
+AMG 145,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+SYL1001,Tivanisiran,review,64,chembl,alias match (chembl_synonym): 'syl1001' → 'tivanisiran',3,NA,NA,NA
+To be confirmed,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+ulipristal acetate,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Delafloxacin meglumine,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+L-asparaginase encapsulated in erythrocytes,Asparaginase,review,63,chembl,alias match (chembl_synonym): 'l-asparaginase' → 'asparaginase',3,NA,NA,NA
+DCVAC,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+EVP-6124,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+TRIENTINE DIHYDROCHLORIDE,Trientine hydrochloride,review,84,chembl,alias match (ban): 'trientine dihydrochloride' → 'trientine hydrochloride',3,NA,NA,NA
+VILANTEROL TRIFENATATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+Nab-Paclitaxel,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+NICOTINAMIDE,Niacinamide,review,64,chembl,alias match (chembl_synonym): 'nicotinamide' → 'niacinamide',3,NA,NA,NA
+-LIKE VIRUS ANTIGEN,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Meningococcal group C oligosaccharide conjugated to Corynebacterium diphtheriae CRM197 protein,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Meningococcal group A oligosaccharide conjugated to Corynebacterium diphtheriae CRM197 protein,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+COLESTYRAMINE,Cholestyramine,review,64,chembl,alias match (chembl_synonym): 'colestyramine' → 'cholestyramine',3,NA,NA,NA
+Vilanterol Trifenatate,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+TOBRAMYCIN SULFATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+"Immune Globulin Human, 10 Caprylate",Resimmune,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),3,NA,NA,NA
+MEDI4736,Durvalumab,review,64,chembl,alias match (chembl_synonym): 'medi4736' → 'durvalumab',3,NA,NA,NA
+SODIUM CROMOGLICATE,Cromolyn sodium,review,64,chembl,alias match (chembl_synonym): 'sodium cromoglicate' → 'cromolyn sodium',3,NA,NA,NA
+CALCIUM CHLORIDE DIHYDRATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+INTERLEUKIN-2,Aldesleukin,review,64,chembl,alias match (chembl_synonym): 'interleukin-2' → 'aldesleukin',3,NA,NA,NA
+mongersen,Tominersen,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),3,NA,NA,NA
+ALXN1210,Ravulizumab,review,64,chembl,alias match (chembl_synonym): 'alxn1210' → 'ravulizumab',3,NA,NA,NA
+Not applied,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+KTE-X19,Brexucabtagene autoleucel,review,64,chembl,alias match (chembl_synonym): 'kte-x19' → 'brexucabtagene autoleucel',3,NA,NA,NA
+NEISSERIA MENINGITIDIS GROUP A POLYSACCHARIDE CONJUGATED TO TETANUS TOXOID CARRIER PROTEIN,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+NEISSERIA MENINGITIDIS SEROGROUP C POLYSACCHARIDE PSC CONJUGATED TO TETANUS TOXOID TT,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+NEISSERIA MENINGITIDIS GROUP W-135 POLYSACCHARIDE CONJUGATED TO TETANUS TOXOID CARRIER PROTEIN,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+BCX7353,Berotralstat,review,64,chembl,alias match (chembl_synonym): 'bcx7353' → 'berotralstat',3,NA,NA,NA
+177Lu-Edotreotide,Edotreotide,review,88,fuzzy:epar,fuzzy match (jw similarity 88%),3,NA,NA,NA
+INCB050465,Parsaclisib,review,64,chembl,alias match (chembl_synonym): 'incb050465' → 'parsaclisib',3,NA,NA,NA
+VALACICLOVIR,Valacyclovir,review,84,chembl,alias match (ban): 'valaciclovir' → 'valacyclovir',3,NA,NA,NA
+ROVALPITUZUMAB TESIRINE,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+APR-246,Eprenetapopt,review,64,chembl,alias match (chembl_synonym): 'apr-246' → 'eprenetapopt',3,NA,NA,NA
+Neisseria Meningitidis Serogroup A Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Serogroup C Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Serogroup Y Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Serogroup W Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Group A Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Group C Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Group Y Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+Neisseria Meningitidis Group W Polysaccharide Conjugated to Tetanus Toxoid Carrier Protein,Nedisertib,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),3,NA,NA,NA
+DCR-L1360,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+HAEMOPHILUS INFLUENZAE TYPE B POLYSACCHARIDE POLYRIBOSYLRIBITOL PHOSPHATE,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+AZACITIDINA,Azacitidine,review,64,chembl,alias match (chembl_synonym): 'azacitidina' → 'azacitidine',3,NA,NA,NA
+Recombinant coagulation FVIII Fc  von Willebrand factor  XTEN fusion protein,Mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),3,NA,NA,NA
+MIRVETUXIMAB SORAVTANSINE,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+METILPREDNISOLONE,Methylprednisolone,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),3,NA,NA,NA
+NBI-921352,Zandatrigine,review,64,chembl,alias match (chembl_synonym): 'nbi-921352' → 'zandatrigine',3,NA,NA,NA
+ABBV-154,Adalimumab fosimdesonide,review,64,chembl,alias match (chembl_synonym): 'abbv-154' → 'adalimumab fosimdesonide',3,NA,NA,NA
+ISIS 678354,Olezarsen,review,64,chembl,alias match (chembl_synonym): 'isis 678354' → 'olezarsen',3,NA,NA,NA
+NBI-1065845,Bi-1206,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),3,NA,NA,NA
+Spikevax,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+TAK-861,Tak-186,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),3,NA,NA,NA
+[68Ga]Ga-PentixaFor,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+FLUDEOXYGLUCOSE (18F),NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+ABBV-066,Risankizumab,review,64,chembl,alias match (chembl_synonym): 'abbv-066' → 'risankizumab',3,NA,NA,NA
+ml Injektionslösung,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+ml Injektions-,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+g ointment,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+JNJ-73841937,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Zelenectide Pevedotin,NA,review,84,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+JNJ-56021927,Apalutamide,review,64,chembl,alias match (chembl_synonym): 'jnj-56021927' → 'apalutamide',3,NA,NA,NA
+ml concentrato per soluzione per infusione.,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Raludotatug Deruxtecan,NA,review,64,chembl,ambiguous alias maps to multiple substances,3,NA,NA,NA
+"ml, solution injectable",NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+ml Infusionslösung,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+Folinic acid (as calcium folinate) 10 mg,Foslinanib,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),3,NA,NA,NA
+tablet,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+ml Solution for Injection or Infusion,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+ml concentrato per soluzione per infusione,NA,unknown,0,NA,no reliable match,3,NA,NA,NA
+FLUOROURACILE TEVA 1000 mg,Fluorouracil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),3,NA,NA,NA
+Lipitor,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Antithymocyte immunoglobulin rabbit,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+risedronate,Risedronic acid,review,64,chembl,alias match (chembl_synonym): 'risedronate' → 'risedronic acid',2,NA,NA,NA
+ACR16,Pridopidine,review,64,chembl,alias match (chembl_synonym): 'acr16' → 'pridopidine',2,NA,NA,NA
+Enoxaparin-Na,Enoxacin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+Other antineoplastic agents,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Prophylactic bivalent HPV,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+AS04 Vaccine Candidate,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Sodium Valproate,Valproate sodium,review,64,chembl,alias match (chembl_synonym): 'sodium valproate' → 'valproate sodium',2,NA,NA,NA
+Macrogol 3350,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+TMC125,Etravirine,review,64,chembl,alias match (chembl_synonym): 'tmc125' → 'etravirine',2,NA,NA,NA
+Tioguanine,Thioguanine,review,84,chembl,alias match (ban): 'tioguanine' → 'thioguanine',2,NA,NA,NA
+Influvac,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Clostridium botulinum type A toxin - haemagglutinin complex,Toliodium,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+R+ Verapamil,Verapamil,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
+Telavancinum,Telavancin,review,94,fuzzy:epar,fuzzy match (jw similarity 94%),2,NA,NA,NA
+Diamyd,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+House dust mite allergoid Dermatophagoides pteronyssinus,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Live attenuated rubella vaccine, RA 27",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Nicotinamide,Niacinamide,review,64,chembl,alias match (chembl_synonym): 'nicotinamide' → 'niacinamide',2,NA,NA,NA
+Esomeprazole magnesium trihydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Anecortave,Anecortave acetate,review,64,chembl,alias match (chembl_synonym): 'anecortave' → 'anecortave acetate',2,NA,NA,NA
+Dehydroepiandrosterone,Prasterone,review,64,chembl,alias match (chembl_synonym): 'dehydroepiandrosterone' → 'prasterone',2,NA,NA,NA
+Seretide,Sertindole,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
+HRV vaccine live,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+New Caledonia,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Prednisona,Prednisone,review,64,chembl,alias match (chembl_synonym): 'prednisona' → 'prednisone',2,NA,NA,NA
+Everolismus,Everolimus,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),2,NA,NA,NA
+"Immunoglobulins, normal human, for intravascular adm.",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ALBUMINA HUMANA,Albumin human,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),2,NA,NA,NA
+Insulin,Insulin human,review,64,chembl,alias match (chembl_synonym): 'insulin' → 'insulin human',2,NA,NA,NA
+Clonidinhydrochlorid,Clonidine hydrochloride,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),2,NA,NA,NA
+ciclosporina,Cyclosporine,review,64,chembl,alias match (chembl_synonym): 'ciclosporina' → 'cyclosporine',2,NA,NA,NA
+Vaxigrip,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Lactic acid producing organisms,Lactic acid,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+Methylphenidathydrochloride,Methylphenidate hydrochloride,review,90,fuzzy:epar,fuzzy match (jw similarity 90%),2,NA,NA,NA
+Triamcinolone acetonide,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Heliox21,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+INN,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Pioglitazon,Pioglitazone,review,97,fuzzy:epar,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Micofenolato mofetilo,Mycophenolate mofetil,unknown,84,fuzzy:manual,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Hepatitis B virus surface antigen recombinant S protein,Hepatitis b virus hbsag surface protein antigen,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+Inactivated poliovirus type 1,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Inactivated poliovirus type 2,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Inactivated poliovirus type 3,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Haemophilus influenzae type b polysaccharide,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Natural phospholipids,Nantradol,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Grazax,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SSR150106XB,Ssr-150106,review,64,chembl,alias match (chembl_synonym): 'ssr150106xb' → 'ssr-150106',2,NA,NA,NA
+"1,6-glucan",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SCH 420814,Preladenant,review,64,chembl,alias match (chembl_synonym): 'sch 420814' → 'preladenant',2,NA,NA,NA
+"Botulinum Toxin Type A, purified Neurotoxin Complex",Abobotulinumtoxina,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+Clostridium Botulinum Neurotoxin Type A,Toliodium,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+Acetylsalicylsure,Methyl salicylate,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+Ibandronate,Ibandronic acid,review,64,chembl,alias match (chembl_synonym): 'ibandronate' → 'ibandronic acid',2,NA,NA,NA
+carbamamazepine,Carbamazepine,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),2,NA,NA,NA
+Inactivated polio virus type 1,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Inactivated polio virus type 2,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Inactivated polio virus type 3,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+N-4-benzoylpiperidin-4-ylbutyl-3-pyridin-3-ylacrylamide,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+GlaxoSmithKline Biologicals low dose influenza vaccine adjuvanted with AS03,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TroVax,Trovafloxacin,unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),2,NA,NA,NA
+"+-S,S-Reboxetine Succinate",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+URSODEOXYCHOLIC ACID,Ursodiol,review,84,chembl,alias match (ban): 'ursodeoxycholic acid' → 'ursodiol',2,NA,NA,NA
+Fluoruracil,Fluorouracil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Cytarabin,Cytarabine,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Japanese Encephalitis Purified Inactivated Vaccine,"Japanese encephalitis virus, inactivated",unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+ml Infusionslsung,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"FLUVIRIN Influenza Vaccine Surface Antigen, Inactivated Ph.Eur.",Flupirtine,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
+Agrippal,Aripiprazole,unknown,82,fuzzy:epar,fuzzy match (jw similarity 82%),2,NA,NA,NA
+Interferon-beta 1a,Interferon beta,review,63,chembl,alias match (chembl_synonym): 'interferon-beta' → 'interferon beta',2,NA,NA,NA
+Org 25935,Org-25935,review,64,chembl,alias match (chembl_synonym): 'org 25935' → 'org-25935',2,NA,NA,NA
+REMIFENTANIL HYDROCHLORIDE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Liquid paraffin,Mineral oil,review,64,chembl,alias match (chembl_synonym): 'liquid paraffin' → 'mineral oil',2,NA,NA,NA
+ASCs,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+octocog alpha,Octocog alfa,review,92,fuzzy:epar,fuzzy match (jw similarity 92%),2,NA,NA,NA
+recMAGE-A3 recombinant protein formulated in AS15 adjuvant,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Morphine Sulphate,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+oxaliplatino,Oxaliplatin,review,64,chembl,alias match (chembl_synonym): 'oxaliplatino' → 'oxaliplatin',2,NA,NA,NA
+Lidocane,Lidocaine,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),2,NA,NA,NA
+CUV1647,Afamelanotide,review,64,chembl,alias match (chembl_synonym): 'cuv1647' → 'afamelanotide',2,NA,NA,NA
+Novartis Meningococcal B Recombinant + OMV NZ Vaccine,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+GSK221149A,Retosiban,review,64,chembl,alias match (chembl_synonym): 'gsk221149a' → 'retosiban',2,NA,NA,NA
+Sunphenon,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ALFENTANIL HYDROCHLORIDE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+doxorubicine,Doxorubicin,review,64,chembl,alias match (chembl_synonym): 'doxorubicine' → 'doxorubicin',2,NA,NA,NA
+G-CSF,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Immunoglobulins, normal human, for extravascular adm.",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+5-FLUOROURACILE,Fluorouracil,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),2,NA,NA,NA
+recMAGE-A3,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+EPARINA SODICA,Heparin,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),2,NA,NA,NA
+YM178 OCAS tablet 100 mg,Mirabegron,review,61,chembl,alias match (chembl_synonym): 'ym178' → 'mirabegron',2,NA,NA,NA
+Amoxycillin,Amoxicillin,review,64,chembl,alias match (chembl_synonym): 'amoxycillin' → 'amoxicillin',2,NA,NA,NA
+proposed: pegzerepoetin alfa,Propisergide,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+OXYBUPROCAINE,Benoxinate,review,64,chembl,alias match (chembl_synonym): 'oxybuprocaine' → 'benoxinate',2,NA,NA,NA
+2005 NYMCX-161B,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Fluorescein lisicol,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Lenalidomid,Lenalidomide,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+SODIO BICARBONATO,Sodium bicarbonate,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),2,NA,NA,NA
+peginterferon alfa 2A,Peginterferon alfa-2a,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+deforolimus,Ridaforolimus,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+AZD0530,Saracatinib,review,64,chembl,alias match (chembl_synonym): 'azd0530' → 'saracatinib',2,NA,NA,NA
+Magnesium Chloride hexahydrate,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+TAK-242,Resatorvid,review,64,chembl,alias match (chembl_synonym): 'tak-242' → 'resatorvid',2,NA,NA,NA
+ABT-869,Linifanib,review,64,chembl,alias match (chembl_synonym): 'abt-869' → 'linifanib',2,NA,NA,NA
+Radium-223 chloride,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+magnesium oxide,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Macrogol,Polyethylene glycol,review,64,chembl,alias match (chembl_synonym): 'macrogol' → 'polyethylene glycol',2,NA,NA,NA
+Novartis Meningooccal B Recombinant + OMV NZ Vaccine,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus type 16 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus type 18 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mecasermin rinfabate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+TRIPTORELIN PAMOATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Corticosteroid,Corticosterone,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),2,NA,NA,NA
+TOVOK,Afatinib,review,64,chembl,alias match (chembl_synonym): 'tovok' → 'afatinib',2,NA,NA,NA
+Florida,Cloridarol,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+VARENICLINA,Varenicline,review,64,chembl,alias match (chembl_synonym): 'vareniclina' → 'varenicline',2,NA,NA,NA
+Sitagliptinphosphat,Sitagliptin phosphate,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),2,NA,NA,NA
+GLYCEROL,Glycerin,review,64,chembl,alias match (chembl_synonym): 'glycerol' → 'glycerin',2,NA,NA,NA
+PREDNISONA,Prednisone,review,64,chembl,alias match (chembl_synonym): 'prednisona' → 'prednisone',2,NA,NA,NA
+Ursodeoxycholic acid,Ursodiol,review,84,chembl,alias match (ban): 'ursodeoxycholic acid' → 'ursodiol',2,NA,NA,NA
+GEMCITABINA HIDROCLORURO,Gemcitabine,review,63,chembl,alias match (chembl_synonym): 'gemcitabina' → 'gemcitabine',2,NA,NA,NA
+ursodeoxycholic acid,Ursodiol,review,84,chembl,alias match (ban): 'ursodeoxycholic acid' → 'ursodiol',2,NA,NA,NA
+SCH 527123,Navarixin,review,64,chembl,alias match (chembl_synonym): 'sch 527123' → 'navarixin',2,NA,NA,NA
+Tetraspan,Tetracaine,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+SmofKabiven,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+PPA904 sterile gel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CNTO328,Siltuximab,review,64,chembl,alias match (chembl_synonym): 'cnto328' → 'siltuximab',2,NA,NA,NA
+GSK2190915 Oral Solution,Fiboflapon,review,63,chembl,alias match (chembl_synonym): 'gsk2190915' → 'fiboflapon',2,NA,NA,NA
+"1 4R,5R-4,5-dihydroxy-N2-4-pentyloxy1,1:4,1 -terphenyl-4-ylcarbonyl-L-ornithine echinocandin B",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TOXINA BOTULINICA TIPO A,Treloxinate,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+Sodium chlorid,Sodium chloride,review,98,fuzzy:chembl,fuzzy match (jw similarity 98%),2,NA,NA,NA
+SGN-35,Brentuximab vedotin,review,64,chembl,alias match (chembl_synonym): 'sgn-35' → 'brentuximab vedotin',2,NA,NA,NA
+GSK962040,Camicinal,review,64,chembl,alias match (chembl_synonym): 'gsk962040' → 'camicinal',2,NA,NA,NA
+folinic acid,Leucovorin,review,64,chembl,alias match (chembl_synonym): 'folinic acid' → 'leucovorin',2,NA,NA,NA
+AMG 785,Romosozumab,review,64,chembl,alias match (chembl_synonym): 'amg 785' → 'romosozumab',2,NA,NA,NA
+Dermagraft,Artegraft,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+FOLINATO CALCIO,Tolindate,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+FLUOROURACILO,Fluorouracil,review,64,chembl,alias match (chembl_synonym): 'fluorouracilo' → 'fluorouracil',2,NA,NA,NA
+Preflucel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mesenchymal stem cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Sublingual tablet of HDM Allergen Extracts,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Pertussis Toxoid,Pertussis vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Haemophilus influenzae type b polysaccharide PRP conjugated to tetanus toxoid TT,Haemophilus influenzae type b strain 20752 capsular polysaccharide tetanus toxoid conjugate antigen,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+Pneumococcal polysaccharide serotypes 1-3-4-5-6A-7F-9V-14-18C-19A-19F-23F conjugated to CRM197 carrier protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Pneumococcal polysaccharide serotype 6B conjugated to CRM197 carrier protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CEFTAZIDIMA PENTAIDRATO,Ceftazidime,review,63,chembl,alias match (chembl_synonym): 'ceftazidima' → 'ceftazidime',2,NA,NA,NA
+Talactoferrinum alfa,Talactoferrin alfa,review,64,chembl,alias match (chembl_synonym): 'talactoferrinum alfa' → 'talactoferrin alfa',2,NA,NA,NA
+HUMAN THROMBIN,Thrombin,review,64,chembl,alias match (chembl_synonym): 'human thrombin' → 'thrombin',2,NA,NA,NA
+GW685698 Fluticasone furoate,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BI 1744 2.5 g Solution for Inhalation,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BI 1744 5 g Solution for Inhalation,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SODIUM LAURILSULFATE,Sodium lauryl sulfate,review,64,chembl,alias match (chembl_synonym): 'sodium laurilsulfate' → 'sodium lauryl sulfate',2,NA,NA,NA
+Sodium acetate trihydrate,Sodium acetate,review,64,chembl,alias match (chembl_synonym): 'sodium acetate trihydrate' → 'sodium acetate',2,NA,NA,NA
+Hydroxyethyl starch,Hetastarch,review,64,chembl,alias match (chembl_synonym): 'hydroxyethyl starch' → 'hetastarch',2,NA,NA,NA
+Ferric carboxymaltose FCM,Ferric carboxymaltose,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),2,NA,NA,NA
+Medicinsk Luft AGA,Medorubicin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+ANTIGENO POLISACARIDO MENINGOCOCO GRUPO C,Ingenol,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+TOXOIDE TETANICO,Troxolamide,review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),2,NA,NA,NA
+"E-3-2,6-Dichloro-4-4-3-S-1-hexyloxyethyl-2-methoxyphenyl-thiazol-2-ylcarbamoyl-phenyl-2-methylacrylic acid",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TRIPTORELINA,Triptorelin,review,64,chembl,alias match (chembl_synonym): 'triptorelina' → 'triptorelin',2,NA,NA,NA
+IMC-3G3,Olaratumab,review,64,chembl,alias match (chembl_synonym): 'imc-3g3' → 'olaratumab',2,NA,NA,NA
+interleukin-2,Aldesleukin,review,64,chembl,alias match (chembl_synonym): 'interleukin-2' → 'aldesleukin',2,NA,NA,NA
+Clonidine Hydrochloride,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Japanese Encephalitis Vaccine inactivated,"Japanese encephalitis virus, inactivated",review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),2,NA,NA,NA
+Proposed INN - Orteronel,Propisergide,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+VIRUS GRIPE B INACTIVADO HEMAGLUTININA DE,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TC-5214 S-mecamylamine,NA,review,63,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+AUY922,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+MEDI-563,Benralizumab,review,64,chembl,alias match (chembl_synonym): 'medi-563' → 'benralizumab',2,NA,NA,NA
+Victoria,Tecovirimat,unknown,80,fuzzy:epar,fuzzy match (jw similarity 80%),2,NA,NA,NA
+Fluval AB Influenza Vaccine,Fluoxetine,review,63,chembl,alias match (chembl_synonym): 'fluval' → 'fluoxetine',2,NA,NA,NA
+ISOTRETINOINA,Isotretinoin,review,64,chembl,alias match (chembl_synonym): 'isotretinoina' → 'isotretinoin',2,NA,NA,NA
+HUMAN HEPATITIS B IMMUNOGLOBULIN,Hepatitis b immune globulin,review,64,chembl,alias match (chembl_synonym): 'human hepatitis b immunoglobulin' → 'hepatitis b immune globulin',2,NA,NA,NA
+vilanterol trifenatate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+PNEUMOVAX 23,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human anti-IP10 monoclonal antibody,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+GRT6005 hard capsules  liquid filled with SEDDS_0708,Cebranopadol,review,62,chembl,alias match (chembl_synonym): 'grt6005' → 'cebranopadol',2,NA,NA,NA
+Inactivated Varicella Zoster Virus Vaccine,Inactivated ibr virus,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+GSK573719,Umeclidinium,review,64,chembl,alias match (chembl_synonym): 'gsk573719' → 'umeclidinium',2,NA,NA,NA
+18F flutemetamol,NA,review,63,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Anamorelin HCl,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+SIMVASTATINA,Simvastatin,review,64,chembl,alias match (chembl_synonym): 'simvastatina' → 'simvastatin',2,NA,NA,NA
+Clulas troncales mesenquimales autlogas derivadas de tejido adiposo expandidas ASC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CLOMIFENE CITRATE,Clomiphene,review,83,chembl,alias match (ban): 'clomifene' → 'clomiphene',2,NA,NA,NA
+dendritic cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+OPC-34712,Brexpiprazole,review,64,chembl,alias match (chembl_synonym): 'opc-34712' → 'brexpiprazole',2,NA,NA,NA
+ETRAVIRINA,Etravirine,review,64,chembl,alias match (chembl_synonym): 'etravirina' → 'etravirine',2,NA,NA,NA
+LAIS Grass tablets,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Macrogols,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CITRIC ACID ANHYDROUS,Citric acid,review,64,chembl,alias match (chembl_synonym): 'citric acid anhydrous' → 'citric acid',2,NA,NA,NA
+HUMAN FIBRINOGEN,"Fibrinogen, human",review,64,chembl,"alias match (chembl_synonym): 'human fibrinogen' → 'fibrinogen, human'",2,NA,NA,NA
+CHOLINE,Choline c-11,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
+BM32 4 API components,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human normal immunoglobulin SCIg,Human normal immunoglobulin (scig),review,98,fuzzy:epar,fuzzy match (jw similarity 98%),2,NA,NA,NA
+Dexamethason,Dexamethasone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Anti-Interleukin-6 Monoclonal Antibody,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Lamazym,Velmanase alfa,review,64,chembl,alias match (chembl_synonym): 'lamazym' → 'velmanase alfa',2,NA,NA,NA
+OXALIPLATINE,Oxaliplatin,review,64,chembl,alias match (chembl_synonym): 'oxaliplatine' → 'oxaliplatin',2,NA,NA,NA
+ACIDE FOLINIQUE,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+RUBELLA VIRUS WISTAR RA 27,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+fluorouracile,Fluorouracil,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+AMG 181,Abrilumab,review,64,chembl,alias match (chembl_synonym): 'amg 181' → 'abrilumab',2,NA,NA,NA
+LIPIDOSTEROLIC EXTRACT OF SERENOA REPENS,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+carboplatino,Carboplatin,review,64,chembl,alias match (chembl_synonym): 'carboplatino' → 'carboplatin',2,NA,NA,NA
+No disponible,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Purified Diphtheria Toxoid,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Purified Tetanus Toxoid,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+PERTUSSIS FILAMENTOUS HAEMAGGLUTININ,Pertussis vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+POLIOVIRUS INACTIVATED TYPE 1,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+POLIOVIRUS INACTIVATED TYPE 2,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+POLIOVIRUS INACTIVATED TYPE 3,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Hepatitis B rDNA,Hepatitis b surface antigen,unknown,81,fuzzy:epar,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Haemophilus Influenzae type b conjugate,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+PERTUSSIS PERTACTIN,Pertussis vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Timolol maleate,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+ISIS 420915,Inotersen,review,64,chembl,alias match (chembl_synonym): 'isis 420915' → 'inotersen',2,NA,NA,NA
+mesenchymal stromal cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+PRP 2012,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+POTASSIUM CLAVULANATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+RPC1063,Ozanimod,review,64,chembl,alias match (chembl_synonym): 'rpc1063' → 'ozanimod',2,NA,NA,NA
+ANTI-HUMAN T-LYMPHOCYTE IMMUNOGLOBULIN FROM RABBITS,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Micronized purified flavonoid fraction,Mociprazine,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Innate repair activator peptide,Vinconate,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),2,NA,NA,NA
+MACROGOL 3350,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+ACIDO ACETILSALICILICO,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Albutropin,Albusomatropin,review,64,chembl,alias match (chembl_synonym): 'albutropin' → 'albusomatropin',2,NA,NA,NA
+rilpivirina,Rilpivirine,review,64,chembl,alias match (chembl_synonym): 'rilpivirina' → 'rilpivirine',2,NA,NA,NA
+"Influenza virus split virion, inactivated A","Influenza a virus, inactivated whole virion",unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+"Influenza virus  split virion, inactivated A","Influenza a virus, inactivated whole virion",unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Phleum pratense,Helium,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+Human C3A hepatoblastoma cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Autologous Mesenchymal Stem Cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+LDK378,Ceritinib,review,64,chembl,alias match (chembl_synonym): 'ldk378' → 'ceritinib',2,NA,NA,NA
+PEGYLATED LIPOSOMAL DOXORUBICIN,Eglumetad,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+GABAPENTINA,Gabapentin,review,64,chembl,alias match (chembl_synonym): 'gabapentina' → 'gabapentin',2,NA,NA,NA
+OvCa,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+AMG 334,Erenumab,review,64,chembl,alias match (chembl_synonym): 'amg 334' → 'erenumab',2,NA,NA,NA
+YKP3089,Cenobamate,review,64,chembl,alias match (chembl_synonym): 'ykp3089' → 'cenobamate',2,NA,NA,NA
+Alpha1-Proteinase Inhibitor Human,.Alpha.1-proteinase inhibitor human,review,98,fuzzy:chembl,fuzzy match (jw similarity 98%),2,NA,NA,NA
+Hepatitis A inactivated,Hepatopoietin-a,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+CALIFORNIA,Clofarabine,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Texas,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Massachusetts,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Ceralifimod,Etrasimod,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+Lipopolysaccharide,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+macrogol,Polyethylene glycol,review,64,chembl,alias match (chembl_synonym): 'macrogol' → 'polyethylene glycol',2,NA,NA,NA
+5-Aminolaevulinic acid,Aminolevulinic acid,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),2,NA,NA,NA
+Human Papillomavirus Type 6 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 11 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 16 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 18 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 31 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 33 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 45 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 52 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Human Papillomavirus Type 58 L1 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+HUMAN CLOTTABLE PROTEIN,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ABT 494,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Langlenatide,Efpeglenatide,review,64,chembl,alias match (chembl_synonym): 'langlenatide' → 'efpeglenatide',2,NA,NA,NA
+PRGF-ENDORET,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Tedizolid Phosphate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+ISIS 396443,Nusinersen,review,64,chembl,alias match (chembl_synonym): 'isis 396443' → 'nusinersen',2,NA,NA,NA
+Norursodeoxycholic acid,Norucholic acid,review,64,chembl,alias match (chembl_synonym): 'norursodeoxycholic acid' → 'norucholic acid',2,NA,NA,NA
+Chromatography Purified IGIV-C,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Ciprofloxacin Hydrochloride,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Hydroxychloroquine sulphate,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+EGF816,Nazartinib,review,64,chembl,alias match (chembl_synonym): 'egf816' → 'nazartinib',2,NA,NA,NA
+"influenza vaccine surface antigen, inactivated",Enflurane,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+EPHEDRINE HYDROCHLORIDE,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+GLPG1205,Glpg-1205,review,64,chembl,alias match (chembl_synonym): 'glpg1205' → 'glpg-1205',2,NA,NA,NA
+ISIS 304801,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Ferinject,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+EICOSAPENTANOIC ACID,Docosapentaenoic acid,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+DOCOSAHEXAENOIC ACID,Doconexent,review,64,chembl,alias match (chembl_synonym): 'docosahexaenoic acid' → 'doconexent',2,NA,NA,NA
+NEOD001,Birtamimab,review,64,chembl,alias match (chembl_synonym): 'neod001' → 'birtamimab',2,NA,NA,NA
+68-Ga-NODAGA-K40-Exendin4,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+LANREOTIDE ACETATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+UCB5857,Seletalisib,review,64,chembl,alias match (chembl_synonym): 'ucb5857' → 'seletalisib',2,NA,NA,NA
+no INN available,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+DC-VACCINE_IRSTIRCCS,Bcg vaccine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+OSSICODONE CLORIDRATO,Oxycodone,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+5-AMINOLEVULINIC ACID,Aminolevulinic acid,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+MAGNESIUM CHLORIDE HEXAHYDRATE,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+PDR001,Spartalizumab,review,64,chembl,alias match (chembl_synonym): 'pdr001' → 'spartalizumab',2,NA,NA,NA
+GEMCITABINA CLORIDRATO,Gemcitabine,review,63,chembl,alias match (chembl_synonym): 'gemcitabina' → 'gemcitabine',2,NA,NA,NA
+ApoA-I,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Sph,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+DPPG,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SAR439774,Sar-439459,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+IVA337,Lanifibranor,review,64,chembl,alias match (chembl_synonym): 'iva337' → 'lanifibranor',2,NA,NA,NA
+ATROPINE SULFATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+ULIPRISTAL ACETATE,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+INSULINA GLARGINE,Insulin glargine,review,94,fuzzy:manual,fuzzy match (jw similarity 94%),2,NA,NA,NA
+JNJ-53718678-AAA,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TAZOBACTAM SODIUM,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Desametasone,Dexamethasone,review,92,fuzzy:manual,fuzzy match (jw similarity 92%),2,NA,NA,NA
+Metformine,Metformin,review,64,chembl,alias match (chembl_synonym): 'metformine' → 'metformin',2,NA,NA,NA
+Not established yet,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+AAV2,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BEMIPARIN SODIUM,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+SODIUM CHLORIDE SOLUTION 0.9,Sodium chloride,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+CD19CAR,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+GDC-0199,Venetoclax,review,64,chembl,alias match (chembl_synonym): 'gdc-0199' → 'venetoclax',2,NA,NA,NA
+CALCIFEDIOLO,Calcifediol,review,97,fuzzy:chembl,fuzzy match (jw similarity 97%),2,NA,NA,NA
+CALCIUM CHLORIDE,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+HMED-IdeS,Imlifidase,review,64,chembl,alias match (chembl_synonym): 'hmed-ides' → 'imlifidase',2,NA,NA,NA
+Triamcinolone Acetonide,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Pegunigalsidase alpha,Pegunigalsidase alfa,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),2,NA,NA,NA
+JNJ-64304500,Tesnatilimab,review,64,chembl,alias match (chembl_synonym): 'jnj-64304500' → 'tesnatilimab',2,NA,NA,NA
+CALCIO LEVOFOLINATO,Calcitriol,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),2,NA,NA,NA
+Autologous Chondrocytes,Autologous cultured chondrocytes,unknown,84,fuzzy:epar,fuzzy match (jw similarity 84%),2,NA,NA,NA
+DOLUTEGRAVIR SODIUM,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Fc- and CDR-modified humanised monoclonal antibody against C5,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Conoxia,Lornoxicam,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+JNJ-53718678,Rilematovir,review,64,chembl,alias match (chembl_synonym): 'jnj-53718678' → 'rilematovir',2,NA,NA,NA
+Peanut allergen extract,Pexantel,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+AZD6738,Ceralasertib,review,64,chembl,alias match (chembl_synonym): 'azd6738' → 'ceralasertib',2,NA,NA,NA
+MELFALAN CLORIDRATO,Melphalan,review,63,chembl,alias match (chembl_synonym): 'melfalan' → 'melphalan',2,NA,NA,NA
+neladenoson bialanate,Bay1067197,review,64,chembl,alias match (chembl_synonym): 'neladenoson bialanate' → 'bay1067197',2,NA,NA,NA
+DACARBAZINA,Dacarbazine,review,64,chembl,alias match (chembl_synonym): 'dacarbazina' → 'dacarbazine',2,NA,NA,NA
+MENINGOCOCCAL GROUP A OLIGOSACCHARIDES CONJUGATED TO CORYNEBACTERIUM DIPHTHERIAE C7 197 M8 CRM197 PROTEIN,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ACIDO ZOLEDRONICO,Zoledronic acid,review,64,chembl,alias match (chembl_synonym): 'acido zoledronico' → 'zoledronic acid',2,NA,NA,NA
+WVE-120102,Lexanersen,review,64,chembl,alias match (chembl_synonym): 'wve-120102' → 'lexanersen',2,NA,NA,NA
+Allergovit 6-grasses,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Protein-bound Paclitaxel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Recombinant human hyaluronidase PH20,Mecarbinate,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+ACIDO FOLINICO,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+MTAU9937A,Semorinemab,review,64,chembl,alias match (chembl_synonym): 'mtau9937a' → 'semorinemab',2,NA,NA,NA
+DCC-2618,Ripretinib,review,64,chembl,alias match (chembl_synonym): 'dcc-2618' → 'ripretinib',2,NA,NA,NA
+HUMAN ALBUMIN,Albumin human,review,64,chembl,alias match (chembl_synonym): 'human albumin' → 'albumin human',2,NA,NA,NA
+FLUDARABINA,Fludarabine,review,64,chembl,alias match (chembl_synonym): 'fludarabina' → 'fludarabine',2,NA,NA,NA
+ml PDS290,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+COLECALCIFEROLO,Cholecalciferol,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),2,NA,NA,NA
+Nab-paclitaxel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CITARABINA,Cytarabine,review,64,chembl,alias match (chembl_synonym): 'citarabina' → 'cytarabine',2,NA,NA,NA
+TBC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SODIUM BICARBONATE BP,Sodium bicarbonate,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),2,NA,NA,NA
+SGM-101,Gi-101,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+ORY-1001,Iadademstat,review,64,chembl,alias match (chembl_synonym): 'ory-1001' → 'iadademstat',2,NA,NA,NA
+Etoposid,Etoposide,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),2,NA,NA,NA
+L-asparaginase encapsulated in red blood cells,Asparaginase,review,63,chembl,alias match (chembl_synonym): 'l-asparaginase' → 'asparaginase',2,NA,NA,NA
+WVE-210201,Suvodirsen,review,64,chembl,alias match (chembl_synonym): 'wve-210201' → 'suvodirsen',2,NA,NA,NA
+FLT190,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CRN00808,Paltusotine,review,64,chembl,alias match (chembl_synonym): 'crn00808' → 'paltusotine',2,NA,NA,NA
+Varicella Zoster Virus glycoprotein E antigen,Varicella zoster virus envelope glycoprotein e,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),2,NA,NA,NA
+IMGN632,Pivekimab sunirine,review,64,chembl,alias match (chembl_synonym): 'imgn632' → 'pivekimab sunirine',2,NA,NA,NA
+ampreloxetine hydrochloride,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+HEPATITIS B SURFACE ANTIGEN RDNA ADSORBED ON ALUMINIUM PHOSPHATE PRODUCED IN S. CEREVISAE CELLS BY RDNA,Hepatopoietin-a,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+POLIOVIRUS TYPE 2 INACTIVATED,Poliovirus vaccine inactivated,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+FILAMENTOUS HAEMAGGLUTININ,Flamenol,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+ERIBULINA,Eribulin,review,64,chembl,alias match (chembl_synonym): 'eribulina' → 'eribulin',2,NA,NA,NA
+N-Acetyl-L-leucine,Acetylleucine,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),2,NA,NA,NA
+PSILOCYBINE,Psilocybin,review,84,chembl,alias match (ban): 'psilocybine' → 'psilocybin',2,NA,NA,NA
+Cereblon-modifying CM agent,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Tofacitinib citrate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+DECITABINA,Decitabine,review,64,chembl,alias match (chembl_synonym): 'decitabina' → 'decitabine',2,NA,NA,NA
+MODIFIED ALLERGEN TYROSINE-ADSORBED,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BAY 1747846,Gadoquatrane,review,64,chembl,alias match (chembl_synonym): 'bay 1747846' → 'gadoquatrane',2,NA,NA,NA
+LUTETIUM 177LU OXODOTREOTIDE,Lutetium (177lu) oxodotreotide,review,98,fuzzy:epar,fuzzy match (jw similarity 98%),2,NA,NA,NA
+ALKS 4230,Nemvaleukin alfa,review,64,chembl,alias match (chembl_synonym): 'alks 4230' → 'nemvaleukin alfa',2,NA,NA,NA
+DOXYCYCLINE HYCLATE,NA,review,89,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+IMR-687,Tovinontrine,review,64,chembl,alias match (chembl_synonym): 'imr-687' → 'tovinontrine',2,NA,NA,NA
+"HUMAN PAPILLOMAVIRUS VACCINE TYPES 6, 11, 16, 18, 31, 33, 45, 52, 58 RECOMBINANT, ADSORBED",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Prevotella histicola,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+SODIUM PYRUVATE,Sodium butyrate,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+LETROZOLO,Letrozole,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),2,NA,NA,NA
+BCX9930,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Influenza vaccine,Influenza virus vaccine,review,88,fuzzy:chembl,fuzzy match (jw similarity 88%),2,NA,NA,NA
+Recombinant human Pentraxin-2,Zinpentraxin alfa,review,64,chembl,alias match (chembl_synonym): 'recombinant human pentraxin-2' → 'zinpentraxin alfa',2,NA,NA,NA
+iridescimab vidros,Ordesekimab,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+APRAGLUTIDE,Apalutamide,review,88,fuzzy:manual,fuzzy match (jw similarity 88%),2,NA,NA,NA
+EDP-938,Zelicapavir,review,64,chembl,alias match (chembl_synonym): 'edp-938' → 'zelicapavir',2,NA,NA,NA
+ALBUMIN,Albumin human,review,64,chembl,alias match (chembl_synonym): 'albumin' → 'albumin human',2,NA,NA,NA
+REN001,Mavodelpar,review,64,chembl,alias match (chembl_synonym): 'ren001' → 'mavodelpar',2,NA,NA,NA
+Venglustat malate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Modified recombinant botulinum neurotoxin serotype AB mrBoNT,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ANX005,Anx-005,review,64,chembl,alias match (chembl_synonym): 'anx005' → 'anx-005',2,NA,NA,NA
+MIJ821,Onfasprodil,review,64,chembl,alias match (chembl_synonym): 'mij821' → 'onfasprodil',2,NA,NA,NA
+lutetium177Lu vipivotide tetraxetan,Lutetium lu-177 vipivotide tetraxetan,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),2,NA,NA,NA
+BIVV020,Riliprubart,review,64,chembl,alias match (chembl_synonym): 'bivv020' → 'riliprubart',2,NA,NA,NA
+ALBUMINE HUMAINE,Albumin human,review,94,fuzzy:chembl,fuzzy match (jw similarity 94%),2,NA,NA,NA
+Ciclofosfamide,Cyclophosphamide,review,64,chembl,alias match (chembl_synonym): 'ciclofosfamide' → 'cyclophosphamide',2,NA,NA,NA
+VACCINO PNEUMOCOCCICO,Vancomycin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+HAEMOPHILUS INFLUENZAE,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+VACCINO POLISACCARIDICO ANTI-MENINGOCOCCICO A.C.Y E W-135,Vancomycin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+VACCINO CONTRO IL MEMINGOCOCCO DI GRUPPO B,Vancomycin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+VACCINO HAEMOPHILUS INFLUENZAE B CONIUGATO CON TOSSOIDETETANICO,Vancomycin,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+254 measured as amount of total protein containing the PorA P1,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Meningococcal group W-135 oligosaccharide conjugated to Corynebacterium diphtheriae CRM197 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Meningococcal group Y oligosaccharide conjugated to Corynebacterium diphtheriae CRM197 protein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mRNA-3705,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+HZN-825,Fipaxalparant,review,64,chembl,alias match (chembl_synonym): 'hzn-825' → 'fipaxalparant',2,NA,NA,NA
+Bevacizumab-IRDye800CW,Bevacizumab,unknown,83,fuzzy:manual,fuzzy match (jw similarity 83%),2,NA,NA,NA
+COVID-19 mRNA vaccine nucleoside-modified,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+deuruxolitinib phosphate,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+PTC923,Sepiapterin,review,64,chembl,alias match (chembl_synonym): 'ptc923' → 'sepiapterin',2,NA,NA,NA
+AZD0171,Falbikitug,review,64,chembl,alias match (chembl_synonym): 'azd0171' → 'falbikitug',2,NA,NA,NA
+COVID-19 Vaccine ChAdOx1-S recombinant,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Peptide antigen SurA1.T,Peptide t,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+Peptide antigen SurA2.M,Peptide t,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+Peptide antigen SurA3.K,Peptide t,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+Peptide antigen SurA24,Peptide t,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+Peptide antigen SurB7,Peptide t,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+Polynucleotide adjuvant dldC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+T-Helper antigen A16L,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+nab-Paclitaxel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Patritumab deruxtecan,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Sonelokimab,M-1095,review,64,chembl,alias match (chembl_synonym): 'sonelokimab' → 'm-1095',2,NA,NA,NA
+JDQ443,Opnurasib,review,64,chembl,alias match (chembl_synonym): 'jdq443' → 'opnurasib',2,NA,NA,NA
+CDX-0159,Barzolvolimab,review,64,chembl,alias match (chembl_synonym): 'cdx-0159' → 'barzolvolimab',2,NA,NA,NA
+Ifinatamab deruxtecan,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+lutetium 177Lu zadavotide guraxetan,Lutetium lu 177 zadavotide guraxetan,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),2,NA,NA,NA
+Disitamab Vedotin,NA,review,84,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Lyophilized capsules of fecal microbiota,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Dibondrin - Ampullen,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml oldatos injekció,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Prednisolon 5 mg JENAPHARM,Prednisolone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+FDC Nivolumab + Relatlimab + rHuPH20 Injection,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Cisplatinum Accord, 1 mg",Cisplatin,review,62,chembl,alias match (chembl_synonym): 'cisplatinum' → 'cisplatin',2,NA,NA,NA
+"ml, koncentrat do sporządzania roztworu do infuzji.",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+g Gel,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CARBOPLATINE HOSPIRA 10 mg,Carboplatin,review,62,chembl,alias match (chembl_synonym): 'carboplatine' → 'carboplatin',2,NA,NA,NA
+"ml, solution injectable pour perfusion",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml solution à diluer pour perfusion,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml Solution à diluer pour perfusion,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml Concentrate for Solution for Injection or Infusion,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Apexxnar suspension for injection in pre-filled syringe Pneumococcal polysaccharide conjugate vaccine (20-valent, adsorbed)",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TQJ230,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+LOU064,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Sterile 0.9% (w,Serine,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+S95031 250mg film-coated tablet,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BAY 94-8862,Finerenone,review,64,chembl,alias match (chembl_synonym): 'bay 94-8862' → 'finerenone',2,NA,NA,NA
+5 micrograms,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"9 micrograms pressurised inhalation, solution",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+JNJ-64407564,Talquetamab,review,64,chembl,alias match (chembl_synonym): 'jnj-64407564' → 'talquetamab',2,NA,NA,NA
+"Isotone Kochsalz-Lösung 0,9 % Braun Infusionslösung",Piroctone,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+v Sodium Chloride Injection BP,Sodium chloride,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+"ml infusjonsvæske, oppløsning",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ACTEMRA,Tocilizumab,review,64,chembl,alias match (chembl_synonym): 'actemra' → 'tocilizumab',2,NA,NA,NA
+ml solution for injection in pre-filled syringe,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mL solution for injection in pre-filled syringe,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"COLCHICINA SEID 0,5 mg comprimidos",Colchicine,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+"KARDEGIC 75 mg, poudre pour solution buvable en sachet-dose",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BGB-11417,Sonrotoclax,review,64,chembl,alias match (chembl_synonym): 'bgb-11417' → 'sonrotoclax',2,NA,NA,NA
+KALINOX 50%,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Medical Air,Meciadanol,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+Botulinum Toxin Type A 300 units Powder for solution for injection,Botulinum toxin type a,review,95,fuzzy:epar,fuzzy match (jw similarity 95%),2,NA,NA,NA
+Calciumfolinat-GRY® 100 mg,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+18F-PSMA-1007,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Natriumklorid B. Braun 9 mg,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ANTITHYMOCYTE IMMUNOGLOBULIN (RABBIT),Antilymphocyte immunoglobulin (horse),unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
+7.2 micrograms,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"160 micrograms pressurised inhalation, suspension",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"ml, solution injectable en seringue préremplie",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mRNA-4157,Mln-0415,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+"ml, solution pour perfusion",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+DFV890,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+MAS825,Mas-825,review,64,chembl,alias match (chembl_synonym): 'mas825' → 'mas-825',2,NA,NA,NA
+Alogenic sclerocorneal limbus stem adult limbal cells expanded combined with alogenic corneal diferenciated adult keratocytes expanded in biological matrix,Aloe,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+PHE885,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+JNJ-63723283,Cetrelimab,review,64,chembl,alias match (chembl_synonym): 'jnj-63723283' → 'cetrelimab',2,NA,NA,NA
+Gemcitabina Accord 100 mg,Gemcitabine,review,62,chembl,alias match (chembl_synonym): 'gemcitabina' → 'gemcitabine',2,NA,NA,NA
+VRDN-001 (Insulin-like growth factor-1 receptor [IGF-1R] inhibitor),Veligrotug,review,63,chembl,alias match (chembl_synonym): 'vrdn-001' → 'veligrotug',2,NA,NA,NA
+"Prednison acis 5 mg, Tabletten",Prednisone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Zelvina 5 mg hard capsules,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Zelvina 10 mg hard capsules,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Zelvina 15 mg hard capsules,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Dexamethason 8 mg JENAPHARM®,Dexamethasone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+Celestone Cronodose suspensión inyectable,NA,review,88,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+Plasma rich in growth factors,Plasmalyte a,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
+NKTR-358,Rezpegaldesleukin,review,64,chembl,alias match (chembl_synonym): 'nktr-358' → 'rezpegaldesleukin',2,NA,NA,NA
+Leucovorin-Teva 10 mg,Leucovorin,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),2,NA,NA,NA
+Steripet 250 MBq,Serine,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+ml Oplossing voor injectie,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+JZP598,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+AZD0901,Azd7009,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+ml - Ampullen,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+P-Tabletten weiß 10 mm Lichtenstein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Dexamethason Teva 4 mg, tabletten",Dexamethasone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+JNJ-42756493,Erdafitinib,review,64,chembl,alias match (chembl_synonym): 'jnj-42756493' → 'erdafitinib',2,NA,NA,NA
+Prednison 20 mg GALEN®,Prednisone,review,97,fuzzy:manual,fuzzy match (jw similarity 97%),2,NA,NA,NA
+NBI-74788,Crinecerfont,review,64,chembl,alias match (chembl_synonym): 'nbi-74788' → 'crinecerfont',2,NA,NA,NA
+"ml, solution buvable en gouttes",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml koncentrátum oldatos infúzióhoz,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+mL powder for suspension for injection,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml solución inyectable,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Fentanest 0,05 mg",Fentanyl,review,63,chembl,alias match (chembl_synonym): 'fentanest' → 'fentanyl',2,NA,NA,NA
+"ASPIRINE PROTECT 100 mg, comprimé gastro-resistant",Aspirin,review,96,fuzzy:chembl,fuzzy match (jw similarity 96%),2,NA,NA,NA
+LEE011,Ribociclib,review,64,chembl,alias match (chembl_synonym): 'lee011' → 'ribociclib',2,NA,NA,NA
+KYV-101,Av-101,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+"ml, Injektionslösung",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Aacidexam 5 mg,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml solution injectable,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"ml, oplossing voor injectie",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml Lösung zur Injektion,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+VHB937,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"FASTJEKT
+300 Mikrogramm, Injektionslösung im Fertigpen",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Genoxal 200 mg polvo para solución inyectable y para perfusión,Tenosal,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+ml – Injektions-,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+VIR-3434,Tobevibart,review,64,chembl,alias match (chembl_synonym): 'vir-3434' → 'tobevibart',2,NA,NA,NA
+VIR-2218,Elebsiran,review,64,chembl,alias match (chembl_synonym): 'vir-2218' → 'elebsiran',2,NA,NA,NA
+VERDYE 5 mg,Verazide,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
+ENOXAPARIN,Enoxaparin sodium,review,64,chembl,alias match (chembl_synonym): 'enoxaparin' → 'enoxaparin sodium',2,NA,NA,NA
+mL dispersion for infusion,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TOPOTECANE ACCORD 1 mg,Topotecan,review,62,chembl,alias match (chembl_synonym): 'topotecane' → 'topotecan',2,NA,NA,NA
+"ZIMINO 2,5 mg",Viminol,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
+ARO-APOC3 PFS,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+OXALIPLATINE ARROW LAB 5 mg,Oxaliplatin,review,62,chembl,alias match (chembl_synonym): 'oxaliplatine' → 'oxaliplatin',2,NA,NA,NA
+ml powder for suspension for injection,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Softisan 378,Safotibant,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Armisarte 25 mg,Pemetrexed monohydrate,review,63,chembl,alias match (chembl_synonym): 'armisarte' → 'pemetrexed monohydrate',2,NA,NA,NA
+ANHYDROUS DOCETAXEL,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+Cisplatine Teva 1 mg,Cisplatin,review,62,chembl,alias match (chembl_synonym): 'cisplatine' → 'cisplatin',2,NA,NA,NA
+ml soluzione iniettabile,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ASTX727,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+TEDOPI,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+CARBOPLATINE MEDAC 10 mg,Carboplatin,review,62,chembl,alias match (chembl_synonym): 'carboplatine' → 'carboplatin',2,NA,NA,NA
+"ml, roztwór do wstrzykiwań",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"tablet
+Carmellose sodium 10mg",NA,review,62,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+"tablet
+Corn starch 70mg","Starch, corn",review,62,chembl,"alias match (chembl_synonym): 'corn starch' → 'starch, corn'",2,NA,NA,NA
+"tablet
+Cellulose microcrystalline 55mg",NA,review,62,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+"tablet
+Silicium dioxide anhydrous 20mg",Aclidinium,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),2,NA,NA,NA
+ml solución inyectable y para perfusión EFG,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+BJT-778,Bt-1718,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
+ISIS 721744,Donidalorsen sodium,review,64,chembl,alias match (chembl_synonym): 'isis 721744' → 'donidalorsen sodium',2,NA,NA,NA
+Ifinatamab Deruxtecan,NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+PIFLUFOLASTAT (18F),NA,review,64,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
+ELOXATINE 5 mg,Elatine,review,93,fuzzy:chembl,fuzzy match (jw similarity 93%),2,NA,NA,NA
+"CHLORURE DE SODIUM 0,9 % BAXTER, solution pour perfusion en poche",Chloroquine,unknown,84,fuzzy:chembl,fuzzy match (jw similarity 84%),2,NA,NA,NA
+Rapibloc 300 mg Pulver zur Herstellung einer Infusionslösung,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+dose KwikPen solution for injection in pre-filled pen,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+ml  Injektionslösung,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
+"Endoxan 500 mg, poeder voor oplossing voor injectie",Cyclophosphamide,review,62,chembl,alias match (chembl_synonym): 'endoxan' → 'cyclophosphamide',2,NA,NA,NA

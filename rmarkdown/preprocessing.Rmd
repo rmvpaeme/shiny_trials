@@ -1692,204 +1692,205 @@ df %>%
 
 # 13 · Substance Name Normalisation {.tabset}
 
-Raw INN and product-name fields often contain concentrations, formulation descriptors, salt suffixes, and multi-substance strings. `norm_pip_substance()` normalises them to clean tokens used by the **Active Substances** tab and the **EMA compound reference tables** (Compounds with Multiple EMA Decisions and Linked EMA Decisions for Selected Compound).
+The substance normalisation pipeline runs at **cache-build time** (not at session start).
+It maps raw `DIMP_inn_name` / `DIMP_product_name` strings to clean canonical INN labels
+via a multi-step entity-resolution pipeline: placebo rule → manual overrides →
+negative-alias reject → pattern reject → canonical lookup → brand/alias lookup →
+conservative fuzzy match → abstain.
 
-Normalisation steps:
+Output is stored in `data/trial_substance_labels.csv` and joined to `rv$data` by `_id`
+at startup. The tabs below audit every step.
 
-1. **Lowercase and squish** whitespace.
-2. **Strip concentrations** — patterns like `150 mg/mL`, `5%`, `10 mg` are removed.
-3. **Strip common salt and formulation suffixes** — hydrochloride, sulfate, sulphate,
-   phosphate, acetate, maleate, fumarate, tartrate, citrate, mesylate, tosylate, besylate,
-   monohydrate, dihydrate, trihydrate, sesquihydrate, sodium, potassium, calcium, magnesium,
-   zinc, aluminum/aluminium, monosodium, disodium.
-4. **Tokenise on `;` and `/`** — multi-substance entries (e.g. `risankizumab / placebo`) are
-   split; each component is matched independently.
-5. **Minimum token length 4 characters** — very short tokens are discarded.
-
-EUCTR rows use the INN/proposed INN from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` when available and also tokenise `DIMP_product_name`; CTIS rows use product names. Tokens are looked up against the normalised EMA `active_substance` values from `config/pip_decisions.csv` to identify substances with multiple EMA PIP decisions.
-
-```{r substance-norm-summary}
-log_sub <- {
+```{r sub-data-load}
+sub_log <- {
   p <- file.path(log_dir, "substance_normalisation_log.csv")
   if (file.exists(p)) read_csv(p, show_col_types = FALSE) else NULL
 }
-if (!is.null(log_sub)) {
-  raw_col <- if ("raw_substance" %in% names(log_sub)) "raw_substance" else "raw_product_name"
-  n_raw   <- n_distinct(log_sub[[raw_col]])
-  n_tok   <- n_distinct(log_sub$token)
-  n_match <- n_distinct(log_sub$token[log_sub$ema_match != "no match"])
-  n_unambig <- nrow(log_sub %>% filter(ema_match == "unambiguous") %>% distinct(.data[[raw_col]]))
+
+sub_labels <- {
+  p <- file.path(log_dir, "trial_substance_labels.csv")
+  if (file.exists(p)) read_csv(p, show_col_types = FALSE) else NULL
 }
+
+sub_queue <- {
+  p <- file.path(dirname(log_dir), "config", "substance_norm_pipeline",
+                 "substance_review_queue.csv")
+  if (file.exists(p)) read_csv(p, show_col_types = FALSE) else NULL
+}
+
+# Trial metadata for joins (register, year, age_group)
+cache_meta <- tryCatch(
+  readRDS(params$cache_path) %>%
+    select(`_id`, register, year, age_group) %>%
+    mutate(year = suppressWarnings(as.integer(year))),
+  error = function(e) NULL
+)
 ```
 
-```{r substance-norm-kpis, results='asis', eval=!is.null(log_sub)}
-cat(sprintf('
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
-<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>unique raw substance names tokenised</small>
-</div>
-<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>unique normalised tokens generated</small>
-</div>
-<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>tokens matched to EMA substance index</small>
-</div>
-<div style="background:#ECEFF4;border-left:4px solid #BF616A;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>raw names with at least one unambiguous match</small>
-</div>
-</div>',
-fmt_n(n_raw), fmt_n(n_tok), fmt_n(n_match), fmt_n(n_unambig)))
+### Match status
+
+```{r sub-status-kpis, results='asis', eval=!is.null(sub_log)}
+n_unique_in  <- n_distinct(sub_log$raw_substance)
+n_accepted   <- n_distinct(sub_log$raw_substance[sub_log$match_status == "accepted"])
+n_review     <- n_distinct(sub_log$raw_substance[sub_log$match_status == "review"])
+n_rejected   <- n_distinct(sub_log$raw_substance[sub_log$match_status == "rejected"])
+n_unknown    <- n_distinct(sub_log$raw_substance[sub_log$match_status == "unknown"])
+n_trials_lab <- if (!is.null(sub_labels)) n_distinct(sub_labels$`_id`) else NA_integer_
+
+kpi_box <- function(val, label, colour)
+  sprintf('<div style="background:#ECEFF4;border-left:4px solid %s;border-radius:4px;padding:10px 18px;min-width:140px;"><b>%s</b><br><small>%s</small></div>',
+          colour, val, label)
+
+cat(paste0(
+  '<div style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 16px;">',
+  kpi_box(fmt_n(n_unique_in),                      "unique raw strings normalised",    BLUE),
+  kpi_box(fmt_pct(n_accepted / n_unique_in * 100), "accepted rate",                   GREEN),
+  kpi_box(fmt_pct(n_review   / n_unique_in * 100), "review rate",                     YELLOW),
+  kpi_box(fmt_pct(n_rejected / n_unique_in * 100), "rejected rate",                   ORANGE),
+  kpi_box(fmt_pct(n_unknown  / n_unique_in * 100), "unknown rate",                    RED),
+  kpi_box(fmt_n(n_trials_lab),                     "trials with a substance label",   TEAL),
+  '</div>'
+))
 ```
 
-```{r substance-norm-table, eval=!is.null(log_sub)}
-log_sub %>%
-  arrange(desc(n_trials), ema_match) %>%
+```{r sub-status-chart, fig.height=3.2, eval=!is.null(sub_log)}
+sub_log %>%
+  distinct(raw_substance, match_status) %>%
+  count(match_status) %>%
   mutate(
-    source = if ("source" %in% names(.)) source else NA_character_,
-    raw_substance = if ("raw_substance" %in% names(.)) raw_substance else raw_product_name,
-    active_substance = if ("active_substance" %in% names(.)) active_substance else clean_active_substance_label(raw_substance),
-    exploratory_include = if ("exploratory_include" %in% names(.)) exploratory_include else is_exploratory_substance(active_substance)
+    match_status = factor(match_status,
+                          levels = c("accepted", "review", "rejected", "unknown")),
+    fill_col = c(accepted = GREEN, review = YELLOW,
+                 rejected = ORANGE, unknown = RED)[as.character(match_status)]
   ) %>%
-  select(
-    Register      = register,
-    Source        = source,
-    `Raw substance name` = raw_substance,
-    `Exploratory label` = active_substance,
-    `In active-substance charts` = exploratory_include,
-    `Normalised token` = token,
-    `EMA match`   = ema_match,
-    `N decisions` = n_decisions,
-    `N trials`    = n_trials
+  ggplot(aes(n, match_status, fill = fill_col)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = fmt_n(n)), hjust = -0.1, size = 3.2, colour = GRAY) +
+  scale_fill_identity() +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Unique raw strings by normalisation outcome",
+       x = "Unique raw substance strings", y = NULL) +
+  theme_pre()
+```
+
+```{r sub-source-chart, fig.height=3.5, eval=!is.null(sub_log)}
+sub_log %>%
+  filter(match_status == "accepted") %>%
+  distinct(raw_substance, match_source) %>%
+  mutate(
+    source_group = case_when(
+      grepl("canonical",    match_source) ~ "Canonical INN list",
+      grepl("manual",       match_source) ~ "Manual brand table",
+      grepl("epar|ema",     match_source, ignore.case = TRUE) ~ "EMA EPAR",
+      grepl("chembl",       match_source, ignore.case = TRUE) ~ "ChEMBL",
+      grepl("fuzzy",        match_source) ~ "Fuzzy match",
+      grepl("placebo",      match_source) ~ "Placebo rule",
+      grepl("override",     match_source) ~ "Manual override",
+      TRUE ~ match_source
+    )
   ) %>%
-  datatable(
-    rownames = FALSE, filter = "top",
-    options  = list(pageLength = 20, scrollX = TRUE),
-    caption  = "Substance name normalisation: trial INN/product names → normalised tokens and EMA match result"
-  )
+  count(source_group, sort = TRUE) %>%
+  mutate(source_group = factor(source_group, levels = rev(source_group))) %>%
+  ggplot(aes(n, source_group)) +
+  geom_col(fill = BLUE, width = 0.6) +
+  geom_text(aes(label = fmt_n(n)), hjust = -0.1, size = 3.2, colour = GRAY) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Accepted strings by match source",
+       x = "Unique raw substance strings", y = NULL) +
+  theme_pre()
 ```
 
-### Active-substance exploration log
+### Top substances
 
-The same `data/substance_normalisation_log.csv` file now also records the cleaned exploratory
-substance label used by the dashboard's **Active Substances** tab. This keeps the app and
-preprocessing audit aligned: the report below uses `active_substance`, `source`, `year`,
-`age_group`, and `exploratory_include` from the log when those columns are available.
-
-```{r active-substance-log-prep}
-active_sub_log <- NULL
-if (!is.null(log_sub)) {
-  active_sub_log <- log_sub %>%
-    mutate(
-      source = if ("source" %in% names(.)) source else NA_character_,
-      raw_substance = if ("raw_substance" %in% names(.)) raw_substance else raw_product_name,
-      active_substance = if ("active_substance" %in% names(.)) active_substance else clean_active_substance_label(raw_substance),
-      exploratory_include = if ("exploratory_include" %in% names(.)) exploratory_include else is_exploratory_substance(active_substance),
-      year = if ("year" %in% names(.)) suppressWarnings(as.integer(year)) else NA_integer_,
-      age_group = if ("age_group" %in% names(.)) age_group else NA_character_
-    ) %>%
-    filter(exploratory_include, !is.na(active_substance), nchar(active_substance) > 0)
-}
+```{r sub-top-prep, eval=!is.null(sub_log) && !is.null(cache_meta)}
+# Join log → cache for trial-level counts by register
+active_by_trial <- sub_log %>%
+  filter(match_status == "accepted",
+         !is.na(active_substance_clean), nchar(active_substance_clean) > 0) %>%
+  distinct(`_id`, active_substance_clean) %>%
+  left_join(cache_meta, by = "_id")
 ```
 
-```{r active-substance-kpis, results='asis', eval=!is.null(active_sub_log)}
-cat(sprintf('
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 16px;">
-<div style="background:#ECEFF4;border-left:4px solid #5E81AC;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>active-substance log rows included</small>
-</div>
-<div style="background:#ECEFF4;border-left:4px solid #A3BE8C;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>unique exploratory substance labels</small>
-</div>
-<div style="background:#ECEFF4;border-left:4px solid #D08770;border-radius:4px;padding:10px 18px;">
-  <b>%s</b><br><small>INN/generic-source rows</small>
-</div>
-</div>',
-fmt_n(nrow(active_sub_log)),
-fmt_n(n_distinct(active_sub_log$active_substance)),
-fmt_n(sum(active_sub_log$source == "INN", na.rm = TRUE))))
-```
+```{r sub-top-chart, fig.height=5.5, eval=!is.null(sub_log) && !is.null(cache_meta)}
+top_sub <- active_by_trial %>%
+  count(active_substance_clean, register, name = "n_trials")
 
-```{r active-substance-top, fig.height=5, eval=!is.null(active_sub_log)}
-top_sub <- active_sub_log %>%
-  group_by(active_substance, register) %>%
-  summarise(n_trials = sum(n_trials), .groups = "drop")
-
-top20_substances <- top_sub %>%
-  group_by(active_substance) %>%
+top20 <- top_sub %>%
+  group_by(active_substance_clean) %>%
   summarise(total = sum(n_trials), .groups = "drop") %>%
   arrange(desc(total)) %>%
   slice_head(n = 20) %>%
-  pull(active_substance)
+  pull(active_substance_clean)
 
 top_sub %>%
-  filter(active_substance %in% top20_substances) %>%
-  mutate(active_substance = factor(active_substance, levels = rev(top20_substances))) %>%
-  ggplot(aes(n_trials, active_substance, fill = register)) +
+  filter(active_substance_clean %in% top20) %>%
+  mutate(active_substance_clean = factor(active_substance_clean, levels = rev(top20))) %>%
+  ggplot(aes(n_trials, active_substance_clean, fill = register)) +
   geom_col() +
   scale_fill_manual(values = REG_COLS) +
   labs(title = "Top 20 active substances by trial count",
-       subtitle = "Uses INN/generic names where available, with product-name fallback",
+       subtitle = "Accepted matches only; one trial counted once per substance",
        x = "Trials", y = NULL) +
   theme_pre()
 ```
 
-```{r active-substance-timeline, fig.height=4.8, eval=!is.null(active_sub_log)}
-top8_substances <- active_sub_log %>%
-  group_by(active_substance) %>%
-  summarise(total = sum(n_trials), .groups = "drop") %>%
+### Timeline
+
+```{r sub-timeline, fig.height=4.8, eval=!is.null(sub_log) && !is.null(cache_meta)}
+top8 <- active_by_trial %>%
+  count(active_substance_clean, name = "total") %>%
   arrange(desc(total)) %>%
   slice_head(n = 8) %>%
-  pull(active_substance)
+  pull(active_substance_clean)
 
-active_sub_log %>%
-  filter(active_substance %in% top8_substances, !is.na(year)) %>%
-  group_by(year, active_substance) %>%
-  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
-  ggplot(aes(year, n_trials, colour = active_substance)) +
+active_by_trial %>%
+  filter(active_substance_clean %in% top8, !is.na(year)) %>%
+  count(year, active_substance_clean, name = "n_trials") %>%
+  ggplot(aes(year, n_trials, colour = active_substance_clean)) +
   geom_line(linewidth = 0.9) +
   geom_point(size = 1.8) +
-  scale_colour_manual(values = setNames(rep(NORD8, length.out = length(top8_substances)), top8_substances)) +
+  scale_colour_manual(
+    values = setNames(rep(NORD8, length.out = length(top8)), top8)) +
   scale_x_continuous(breaks = pretty_breaks()) +
-  labs(title = "Active substance evolution over time",
+  labs(title = "Trial volume for top 8 substances over time",
        x = "Submission year", y = "Trials") +
   theme_pre()
 ```
 
-```{r active-substance-register-age, fig.height=4.8, eval=!is.null(active_sub_log)}
-top10_substances <- active_sub_log %>%
-  group_by(active_substance) %>%
-  summarise(total = sum(n_trials), .groups = "drop") %>%
+### Register & age mix
+
+```{r sub-reg-age, fig.height=4.8, eval=!is.null(sub_log) && !is.null(cache_meta)}
+top10 <- active_by_trial %>%
+  count(active_substance_clean, name = "total") %>%
   arrange(desc(total)) %>%
   slice_head(n = 10) %>%
-  pull(active_substance)
+  pull(active_substance_clean)
 
-reg_mix <- active_sub_log %>%
-  filter(active_substance %in% top10_substances) %>%
-  group_by(active_substance, register) %>%
-  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
-  group_by(active_substance) %>%
+reg_mix <- active_by_trial %>%
+  filter(active_substance_clean %in% top10) %>%
+  count(active_substance_clean, register, name = "n_trials") %>%
+  group_by(active_substance_clean) %>%
   mutate(pct = n_trials / sum(n_trials)) %>%
   ungroup() %>%
-  mutate(active_substance = factor(active_substance, levels = rev(top10_substances)))
+  mutate(active_substance_clean = factor(active_substance_clean, levels = rev(top10)))
 
-age_mix <- active_sub_log %>%
-  filter(active_substance %in% top10_substances) %>%
+age_mix <- active_by_trial %>%
+  filter(active_substance_clean %in% top10) %>%
   mutate(age_group = coalesce(age_group, "Unknown")) %>%
-  group_by(active_substance, age_group) %>%
-  summarise(n_trials = sum(n_trials), .groups = "drop") %>%
-  group_by(active_substance) %>%
+  count(active_substance_clean, age_group, name = "n_trials") %>%
+  group_by(active_substance_clean) %>%
   mutate(pct = n_trials / sum(n_trials)) %>%
   ungroup() %>%
-  mutate(active_substance = factor(active_substance, levels = rev(top10_substances)))
+  mutate(active_substance_clean = factor(active_substance_clean, levels = rev(top10)))
 
-p1 <- ggplot(reg_mix, aes(pct, active_substance, fill = register)) +
+p1 <- ggplot(reg_mix, aes(pct, active_substance_clean, fill = register)) +
   geom_col() +
   scale_x_continuous(labels = percent) +
   scale_fill_manual(values = REG_COLS) +
   labs(title = "Register mix", x = "% of trials", y = NULL) +
   theme_pre()
 
-p2 <- ggplot(age_mix, aes(pct, active_substance, fill = age_group)) +
+p2 <- ggplot(age_mix, aes(pct, active_substance_clean, fill = age_group)) +
   geom_col() +
   scale_x_continuous(labels = percent) +
   scale_fill_manual(values = c(Paediatric = BLUE, Adult = ORANGE,
@@ -1899,6 +1900,83 @@ p2 <- ggplot(age_mix, aes(pct, active_substance, fill = age_group)) +
 
 subplot(ggplotly(p1), ggplotly(p2), nrows = 1, margin = 0.05, shareY = TRUE) %>%
   layout(showlegend = TRUE)
+```
+
+### Review queue
+
+```{r sub-queue-kpis, results='asis', eval=!is.null(sub_queue)}
+n_q       <- nrow(sub_queue)
+n_decided <- sum(!is.na(sub_queue$decision) & nzchar(sub_queue$decision), na.rm = TRUE)
+n_pending <- n_q - n_decided
+
+cat(paste0(
+  '<div style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 16px;">',
+  kpi_box(fmt_n(n_q),       "rows in review queue (n_occurrences ≥ 2)", BLUE),
+  kpi_box(fmt_n(n_decided), "decisions recorded",                             GREEN),
+  kpi_box(fmt_n(n_pending), "pending review",                                 ORANGE),
+  '</div>'
+))
+```
+
+```{r sub-queue-table, eval=!is.null(sub_queue)}
+sub_queue %>%
+  arrange(desc(n_occurrences)) %>%
+  mutate(
+    match_score = round(match_score, 1),
+    decision    = coalesce(decision, "")
+  ) %>%
+  select(
+    `Raw substance`    = raw_substance,
+    `Suggested clean`  = active_substance_clean,
+    Status             = match_status,
+    Score              = match_score,
+    Source             = match_source,
+    Reason             = match_reason,
+    `N trials`         = n_occurrences,
+    Decision           = decision
+  ) %>%
+  datatable(
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 25, scrollX = TRUE),
+    caption  = "Substance review queue — rows needing manual curation (singletons excluded)"
+  )
+```
+
+```{r sub-queue-status-chart, fig.height=3, eval=!is.null(sub_queue)}
+sub_queue %>%
+  count(match_status, sort = TRUE) %>%
+  mutate(
+    match_status = factor(match_status, levels = c("review", "unknown")),
+    fill_col = c(review = YELLOW, unknown = RED)[as.character(match_status)]
+  ) %>%
+  ggplot(aes(n, match_status, fill = fill_col)) +
+  geom_col(width = 0.5) +
+  geom_text(aes(label = fmt_n(n)), hjust = -0.1, size = 3.2, colour = GRAY) +
+  scale_fill_identity() +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Queue rows by status", x = "Rows", y = NULL) +
+  theme_pre()
+```
+
+### Full normalisation log
+
+```{r sub-log-table, eval=!is.null(sub_log)}
+sub_log %>%
+  arrange(match_status, desc(match_score)) %>%
+  mutate(match_score = round(match_score, 1)) %>%
+  select(
+    `Raw substance`   = raw_substance,
+    `Clean label`     = active_substance_clean,
+    Status            = match_status,
+    Score             = match_score,
+    Source            = match_source,
+    Reason            = match_reason
+  ) %>%
+  datatable(
+    rownames = FALSE, filter = "top",
+    options  = list(pageLength = 25, scrollX = TRUE),
+    caption  = "Full substance normalisation log — one row per accepted trial-substance pair"
+  )
 ```
 
 ---

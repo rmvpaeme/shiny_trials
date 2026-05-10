@@ -93,6 +93,21 @@ message(sprintf("Input: %d trial-substance pairs, %d unique substances, %d trial
                 dplyr::n_distinct(raw$raw_substance),
                 dplyr::n_distinct(raw$`_id`)))
 
+# ── pre-filter: drop strings that cannot be substance names ──────────────────
+# Removes split fragments (single letters, units, pure numbers) and
+# formulation-only strings that start with a dose amount.
+n_raw_before <- nrow(raw)
+raw <- raw %>%
+  dplyr::filter(
+    !is.na(raw_substance),
+    nchar(trimws(raw_substance)) >= 3,
+    grepl("[A-Za-z]{3,}", raw_substance),
+    !grepl("^[0-9][0-9.,]* *(mg|ml|g|mcg|mL|IU|ui|%|ppm|mBq|GBq|L\\b)",
+           raw_substance, ignore.case = TRUE)
+  )
+message(sprintf("Pre-filter: %d → %d pairs (%d removed as non-substance fragments)",
+                n_raw_before, nrow(raw), n_raw_before - nrow(raw)))
+
 # ── normalise unique substances ────────────────────────────────────────────────
 
 unique_subs <- unique(raw$raw_substance)
@@ -172,6 +187,7 @@ if (write_queue) {
     filter(match_status %in% c("review", "unknown")) %>%
     left_join(occ, by = "raw_substance") %>%
     mutate(n_occurrences = coalesce(n_occurrences, 0L)) %>%
+    filter(n_occurrences >= 2) %>%
     select(raw_substance, active_substance_clean, match_status,
            match_score, match_source, match_reason, n_occurrences)
 
@@ -185,7 +201,8 @@ if (write_queue) {
     arrange(desc(n_occurrences))
 
   readr::write_csv(queue_out, queue_path)
-  message(sprintf("Wrote review queue: %d rows to %s", nrow(queue_out), queue_path))
+  message(sprintf("Wrote review queue: %d rows to %s (singletons excluded)",
+                  nrow(queue_out), queue_path))
 }
 
 message("Done.")

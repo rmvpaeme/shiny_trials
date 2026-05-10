@@ -2166,11 +2166,26 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
 
 load_trial_data <- function(force_rebuild = FALSE) {
   if (!force_rebuild && cache_is_valid()) {
-	    message("Loading cache..."); t0 <- Sys.time()
-	    d <- readRDS(CACHE_PATH)
+    message("Loading cache..."); t0 <- Sys.time()
+    d <- readRDS(CACHE_PATH)
     message(sprintf("Cached: %s trials in %.1fs",
                     format(nrow(d), big.mark=","),
                     as.numeric(Sys.time()-t0, units="secs")))
+    if (!"substance_label" %in% names(d)) {
+      labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
+      if (file.exists(labels_path)) {
+        tryCatch({
+          labels <- readr::read_csv(labels_path, show_col_types = FALSE,
+                                    col_types = readr::cols(
+                                      `_id`            = readr::col_character(),
+                                      substance_label  = readr::col_character()))
+          d <- dplyr::left_join(d, labels, by = "_id")
+          message(sprintf("Attached substance labels: %d / %d trials",
+                          sum(!is.na(d$substance_label)), nrow(d)))
+        }, error = function(e) message("Could not attach substance labels: ", e$message))
+      }
+      if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
+    }
     return(d)
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }
@@ -2820,16 +2835,27 @@ ui <- tagList(
                         ),
                         tabItem(tabName="analytics_substances",
                                 fluidRow(
-                                  box(title="Top 20 Active Substances by Trial Count",status="primary",solidHeader=TRUE,width=12,height=460,
-                                      withSpinner(plotlyOutput("plot_top_substances",height="400px"),type=6))),
+                                  box(width=12, background="light-blue",
+                                      sliderInput("sub_top_n", "Number of top substances to show:",
+                                                  min=5, max=50, value=20, step=5, width="400px"))),
                                 fluidRow(
-                                  box(title="Active Substance Evolution Over Time",status="info",solidHeader=TRUE,width=12,height=460,
-                                      withSpinner(plotlyOutput("plot_substance_timeline",height="400px"),type=6))),
+                                  box(title="Top N Active Substances by Trial Count",status="primary",solidHeader=TRUE,width=12,height=480,
+                                      withSpinner(plotlyOutput("plot_top_substances",height="420px"),type=6))),
+                                fluidRow(
+                                  box(title="Active Substance Evolution Over Time",status="info",solidHeader=TRUE,width=12,height=480,
+                                      withSpinner(plotlyOutput("plot_substance_timeline",height="420px"),type=6))),
                                 fluidRow(
                                   box(title="Register Mix for Top Substances",status="warning",solidHeader=TRUE,width=6,height=420,
                                       withSpinner(plotlyOutput("plot_substance_register",height="360px"),type=6)),
                                   box(title="Age Group Profile for Top Substances",status="success",solidHeader=TRUE,width=6,height=420,
-                                      withSpinner(plotlyOutput("plot_substance_age",height="360px"),type=6)))
+                                      withSpinner(plotlyOutput("plot_substance_age",height="360px"),type=6))),
+                                fluidRow(
+                                  box(title="Substance Debut Year",status="primary",solidHeader=TRUE,width=6,height=460,
+                                      p(em("First year each substance appeared in the filtered trials."),style="font-size:11px;opacity:0.7;"),
+                                      withSpinner(plotlyOutput("plot_substance_debut",height="380px"),type=6)),
+                                  box(title="Top Conditions for Top Substances",status="info",solidHeader=TRUE,width=6,height=460,
+                                      p(em("Most common MedDRA conditions associated with each of the top substances."),style="font-size:11px;opacity:0.7;"),
+                                      withSpinner(plotlyOutput("plot_substance_condition",height="380px"),type=6)))
                         ),
 	                        tabItem(tabName="migration",
 	                                fluidRow(
@@ -4324,21 +4350,22 @@ server <- function(input, output, session) {
   })
 
   top_active_substances <- reactive({
+    n <- max(5L, min(50L, as.integer(input$sub_top_n %||% 20L)))
     active_substance_rows() %>%
       count(active_substance, name = "total", sort = TRUE) %>%
-      slice_head(n = 20) %>%
+      slice_head(n = n) %>%
       pull(active_substance)
   })
 
   output$plot_top_substances <- renderPlotly({
-    top20 <- top_active_substances()
+    topN <- top_active_substances()
     df <- active_substance_rows() %>%
-      filter(active_substance %in% top20) %>%
+      filter(active_substance %in% topN) %>%
       count(active_substance, register) %>%
       group_by(active_substance) %>%
       mutate(total = sum(n)) %>%
       ungroup() %>%
-      mutate(active_substance = factor(active_substance, levels = rev(top20)))
+      mutate(active_substance = factor(active_substance, levels = rev(topN)))
     validate(need(nrow(df) > 0, "No active substance data for current filters."))
     plot_ly(df, x = ~n, y = ~active_substance, color = ~register,
             colors = register_cols(), type = "bar", orientation = "h",
@@ -4351,18 +4378,16 @@ server <- function(input, output, session) {
   })
 
   output$plot_substance_timeline <- renderPlotly({
-    top8 <- active_substance_rows() %>%
-      count(active_substance, name = "total", sort = TRUE) %>%
-      slice_head(n = 8) %>%
-      pull(active_substance)
+    n <- min(8L, length(top_active_substances()))
+    top_n <- head(top_active_substances(), n)
     df <- active_substance_rows() %>%
-      filter(active_substance %in% top8, !is.na(year)) %>%
+      filter(active_substance %in% top_n, !is.na(year)) %>%
       count(year, active_substance) %>%
-      mutate(active_substance = factor(active_substance, levels = top8))
+      mutate(active_substance = factor(active_substance, levels = top_n))
     validate(need(nrow(df) > 0, "No active substance timeline data for current filters."))
-    pal <- colorRampPalette(c(tc()$frost1, tc()$green, tc()$purple, tc()$orange))(length(top8))
+    pal <- colorRampPalette(c(tc()$frost1, tc()$green, tc()$purple, tc()$orange))(length(top_n))
     plot_ly(df, x = ~year, y = ~n, color = ~active_substance,
-            colors = setNames(pal, top8), type = "scatter", mode = "lines+markers",
+            colors = setNames(pal, top_n), type = "scatter", mode = "lines+markers",
             hovertemplate = "<b>%{fullData.name}</b><br>Year: %{x}<br>Trials: %{y}<extra></extra>") %>%
       plt_layout(xaxis = list(title = "Submission year", dtick = 2, tickformat = "d"),
                  yaxis = list(title = "Trials"),
@@ -4370,10 +4395,7 @@ server <- function(input, output, session) {
   })
 
   output$plot_substance_register <- renderPlotly({
-    top10 <- active_substance_rows() %>%
-      count(active_substance, name = "total", sort = TRUE) %>%
-      slice_head(n = 10) %>%
-      pull(active_substance)
+    top10 <- head(top_active_substances(), 10L)
     df <- active_substance_rows() %>%
       filter(active_substance %in% top10) %>%
       count(active_substance, register) %>%
@@ -4394,10 +4416,7 @@ server <- function(input, output, session) {
   })
 
   output$plot_substance_age <- renderPlotly({
-    top10 <- active_substance_rows() %>%
-      count(active_substance, name = "total", sort = TRUE) %>%
-      slice_head(n = 10) %>%
-      pull(active_substance)
+    top10 <- head(top_active_substances(), 10L)
     age_pal <- c(
       "Paediatric" = tc()$frost1,
       "Adult" = tc()$orange,
@@ -4422,6 +4441,49 @@ server <- function(input, output, session) {
                  yaxis = list(title = ""),
                  legend = list(orientation = "h", y = -0.2, title = list(text = "Age group")),
                  margin = list(l = 180))
+  })
+
+  output$plot_substance_debut <- renderPlotly({
+    topN <- top_active_substances()
+    df <- active_substance_rows() %>%
+      filter(active_substance %in% topN, !is.na(year)) %>%
+      group_by(active_substance) %>%
+      summarise(debut = min(year, na.rm = TRUE),
+                total = n_distinct(`_id`),
+                .groups = "drop") %>%
+      arrange(debut, desc(total)) %>%
+      mutate(active_substance = factor(active_substance, levels = rev(active_substance)))
+    validate(need(nrow(df) > 0, "No debut year data for current filters."))
+    plot_ly(df, x = ~debut, y = ~active_substance, type = "scatter", mode = "markers",
+            marker = list(color = tc()$frost1, size = 10, opacity = 0.85),
+            customdata = ~total,
+            hovertemplate = "<b>%{y}</b><br>First trial year: %{x}<br>Total trials: %{customdata}<extra></extra>") %>%
+      plt_layout(xaxis = list(title = "First trial year", tickformat = "d"),
+                 yaxis = list(title = ""),
+                 margin = list(l = 180))
+  })
+
+  output$plot_substance_condition <- renderPlotly({
+    top5 <- head(top_active_substances(), 5L)
+    df <- active_substance_rows() %>%
+      filter(active_substance %in% top5) %>%
+      left_join(filt() %>% select(`_id`, MEDDRA_term), by = "_id") %>%
+      filter(!is.na(MEDDRA_term), nzchar(str_trim(MEDDRA_term))) %>%
+      count(active_substance, MEDDRA_term, name = "n") %>%
+      group_by(active_substance) %>%
+      slice_max(n, n = 5, with_ties = FALSE) %>%
+      ungroup() %>%
+      mutate(MEDDRA_term = str_trunc(MEDDRA_term, 40))
+    validate(need(nrow(df) > 0, "No condition data for current filters."))
+    pal <- colorRampPalette(c(tc()$frost1, tc()$green, tc()$purple, tc()$orange))(length(top5))
+    plot_ly(df, x = ~n, y = ~MEDDRA_term, color = ~active_substance,
+            colors = setNames(pal, top5), type = "bar", orientation = "h",
+            hovertemplate = "<b>%{y}</b><br>Substance: %{fullData.name}<br>Trials: %{x}<extra></extra>") %>%
+      plt_layout(barmode = "group",
+                 xaxis = list(title = "Trials"),
+                 yaxis = list(title = ""),
+                 legend = list(orientation = "h", y = -0.2, title = list(text = "Substance")),
+                 margin = list(l = 260))
   })
 
   output$plot_phase <- renderPlotly({
