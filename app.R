@@ -1913,55 +1913,87 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
         TRUE                 ~ "Unknown")
     })
 
-  # ── Emit substance normalisation log for preprocessing.Rmd ────────────────
-  tryCatch({
-    inn_log_rows <- result %>%
-      filter(!is.na(DIMP_inn_name), nchar(str_trim(DIMP_inn_name)) > 0) %>%
-      select(`_id`, register, year, age_group, raw_substance = DIMP_inn_name) %>%
-      mutate(source_label = "INN")
-    product_log_rows <- result %>%
-      filter(is.na(DIMP_inn_name) | nchar(str_trim(DIMP_inn_name)) == 0,
-             !is.na(DIMP_product_name), nchar(str_trim(DIMP_product_name)) > 0) %>%
-      select(`_id`, register, year, age_group, raw_substance = DIMP_product_name) %>%
-      mutate(source_label = "Product")
+  # ── Substance labels for product_search dropdown ─────────────────────────────
+  # Preferred: read pre-built trial_substance_labels.csv (written by
+  # build_substance_labels.R during cache rebuild — no runtime normalisation cost).
+  # Fallback: compute inline if the file is absent (first run / dev environment).
+  substance_label_path <- file.path(dirname(db_path), "trial_substance_labels.csv")
+  if (file.exists(substance_label_path)) {
+    tryCatch({
+      substance_labels <- readr::read_csv(substance_label_path, show_col_types = FALSE,
+                                          col_types = readr::cols(
+                                            `_id`            = readr::col_character(),
+                                            substance_label  = readr::col_character()
+                                          ))
+      result <- result %>% left_join(substance_labels, by = "_id")
+      message(sprintf("Loaded substance labels: %d / %d trials have a label",
+                      sum(!is.na(result$substance_label)), nrow(result)))
+    }, error = function(e) message("Could not load substance labels: ", e$message))
+  } else {
+    # Inline fallback: single resolve_substance_label() call for both
+    # the substance_label column and the preprocessing.Rmd CSV log.
+    message("trial_substance_labels.csv not found — computing substance labels inline.")
+    message("Run build_substance_labels.R after cache rebuild to avoid this at startup.")
+    tryCatch({
+      inn_log_rows <- result %>%
+        filter(!is.na(DIMP_inn_name), nchar(str_trim(DIMP_inn_name)) > 0) %>%
+        select(`_id`, register, year, age_group, raw_substance = DIMP_inn_name) %>%
+        mutate(source_label = "INN")
+      product_log_rows <- result %>%
+        filter(is.na(DIMP_inn_name) | nchar(str_trim(DIMP_inn_name)) == 0,
+               !is.na(DIMP_product_name), nchar(str_trim(DIMP_product_name)) > 0) %>%
+        select(`_id`, register, year, age_group, raw_substance = DIMP_product_name) %>%
+        mutate(source_label = "Product")
 
-    sub_log <- bind_rows(inn_log_rows, product_log_rows) %>%
-      separate_rows(raw_substance, sep = " / ") %>%
-      mutate(
-        active_substance = resolve_substance_label(raw_substance),
-        exploratory_include = is_exploratory_substance(active_substance)
-      ) %>%
-      filter(exploratory_include) %>%
-      rowwise() %>%
-      mutate(token = list(norm_pip_substance(active_substance))) %>%
-      ungroup() %>%
-      unnest(token) %>%
-      filter(!is.na(token), nchar(token) >= 4) %>%
-      left_join(pip_by_substance %>% select(sub_tok, sub_n),
-                by = c("token" = "sub_tok")) %>%
-      mutate(
-        ema_match = case_when(
-          is.na(sub_n) ~ "no match",
-          sub_n == 1   ~ "unambiguous",
-          TRUE         ~ paste0("ambiguous (", sub_n, " decisions)")
-        ),
-        n_decisions = coalesce(sub_n, 0L)
-      ) %>%
-      select(register, year, age_group, source = source_label, raw_substance,
-             active_substance, exploratory_include,
-             token, ema_match, n_decisions) %>%
-      group_by(register, year, age_group, source, raw_substance,
+      all_rows <- bind_rows(inn_log_rows, product_log_rows) %>%
+        separate_rows(raw_substance, sep = " / ") %>%
+        mutate(
+          active_substance    = resolve_substance_label(raw_substance),
+          exploratory_include = is_exploratory_substance(active_substance)
+        )
+
+      sub_labels <- all_rows %>%
+        filter(exploratory_include,
+               !is.na(active_substance), nchar(trimws(active_substance)) > 0) %>%
+        group_by(`_id`) %>%
+        summarise(substance_label = paste(sort(unique(active_substance)), collapse = " / "),
+                  .groups = "drop")
+      result <- result %>% left_join(sub_labels, by = "_id")
+
+      sub_log <- all_rows %>%
+        filter(exploratory_include) %>%
+        rowwise() %>%
+        mutate(token = list(norm_pip_substance(active_substance))) %>%
+        ungroup() %>%
+        unnest(token) %>%
+        filter(!is.na(token), nchar(token) >= 4) %>%
+        left_join(pip_by_substance %>% select(sub_tok, sub_n),
+                  by = c("token" = "sub_tok")) %>%
+        mutate(
+          ema_match = case_when(
+            is.na(sub_n) ~ "no match",
+            sub_n == 1   ~ "unambiguous",
+            TRUE         ~ paste0("ambiguous (", sub_n, " decisions)")
+          ),
+          n_decisions = coalesce(sub_n, 0L)
+        ) %>%
+        select(register, year, age_group, source = source_label, raw_substance,
                active_substance, exploratory_include,
                token, ema_match, n_decisions) %>%
-      summarise(n_trials = n(), .groups = "drop") %>%
-      arrange(register, desc(n_trials))
-    write.csv(sub_log,
-              file.path(dirname(db_path), "substance_normalisation_log.csv"),
-              row.names = FALSE)
-    message(sprintf("Substance normalisation log: %d rows -> %s",
-                    nrow(sub_log), file.path(dirname(db_path), "substance_normalisation_log.csv")))
-  }, error = function(e)
-    message("Could not write substance normalisation log: ", e$message))
+        group_by(register, year, age_group, source, raw_substance,
+                 active_substance, exploratory_include,
+                 token, ema_match, n_decisions) %>%
+        summarise(n_trials = n(), .groups = "drop") %>%
+        arrange(register, desc(n_trials))
+      write.csv(sub_log,
+                file.path(dirname(db_path), "substance_normalisation_log.csv"),
+                row.names = FALSE)
+      message(sprintf("Substance normalisation log: %d rows -> %s",
+                      nrow(sub_log), file.path(dirname(db_path), "substance_normalisation_log.csv")))
+    }, error = function(e)
+      message("Could not compute substance labels: ", e$message))
+  }
+  if (!"substance_label" %in% names(result)) result$substance_label <- NA_character_
   
   write_norm_log(result$status_raw_orig, result$status,     result$register, "status_category", dirname(db_path))
   write_norm_log(result$status_raw_orig, result$status_raw, result$register, "status_display",  dirname(db_path))
@@ -2156,23 +2188,12 @@ extract_choices <- function(x, sep = " / ") {
   v <- str_trim(v); sort(unique(v[v != "" & !is.na(v)]))
 }
 
-extract_product_substance_choices <- function(df) {
-  raw <- c(
-    extract_choices(df$DIMP_product_name),
-    extract_choices(df$DIMP_inn_name)
-  )
-  normalised <- resolve_substance_label(raw)
-  sort(unique(normalised[!is.na(normalised) & normalised != ""]))
-}
-
-matches_product_substance <- function(product, inn, selected, sep = " / ") {
+matches_substance_label <- function(substance_label, selected, sep = " / ") {
   selected <- str_trim(selected[!is.na(selected) & selected != ""])
-  if (length(selected) == 0) return(rep(TRUE, length(product)))
-  mapply(function(p, i) {
-    vals <- unlist(str_split(c(coalesce(p, ""), coalesce(i, "")), fixed(sep)))
-    vals <- vapply(str_trim(vals), resolve_substance_label, character(1))
-    any(vals[vals != ""] %in% selected)
-  }, product, inn)
+  if (length(selected) == 0) return(rep(TRUE, length(substance_label)))
+  vapply(coalesce(substance_label, ""), function(sl) {
+    any(str_trim(unlist(str_split(sl, fixed(sep)))) %in% selected)
+  }, logical(1))
 }
 
 
@@ -3148,9 +3169,9 @@ server <- function(input, output, session) {
                          choices=extract_choices(rv$data$phase),server=TRUE)
     updateSelectizeInput(session,"sponsor_filter",
                          choices=sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),server=TRUE)
-    # substance choices disabled pending cache-time normalisation (see substance_normalisation_handover.md)
-    # updateSelectizeInput(session,"product_search",
-    #                      choices=extract_product_substance_choices(rv$data),server=TRUE)
+    updateSelectizeInput(session, "product_search",
+                         choices = sort(unique(rv$data$substance_label[!is.na(rv$data$substance_label)])),
+                         server = TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
   })
@@ -3187,7 +3208,7 @@ server <- function(input, output, session) {
 	                        str_detect(MEDDRA_term,pat)|
 	                        str_detect(coalesce(sponsor_name,""),pat))}
     if(length(input$product_search)>0)
-      df<-df%>%filter(matches_product_substance(DIMP_product_name,DIMP_inn_name,input$product_search))
+      df<-df%>%filter(matches_substance_label(substance_label,input$product_search))
     df
   })
 

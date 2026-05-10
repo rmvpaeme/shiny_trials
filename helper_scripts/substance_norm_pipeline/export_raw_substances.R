@@ -2,6 +2,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(stringr)
   library(readr)
+  library(tidyr)
 })
 
 cache <- readRDS("trials_cache.rds")
@@ -13,6 +14,8 @@ out <- cache |>
     DIMP_product_name
   )) |>
   filter(!is.na(raw_substance), nchar(stringr::str_trim(raw_substance)) > 0) |>
+  tidyr::separate_rows(raw_substance, sep = " / ") |>
+  filter(nchar(stringr::str_trim(raw_substance)) > 0) |>
   count(raw_substance, name = "n_trials", sort = TRUE)
 
 readr::write_csv(out, "tmp_raw_substances.csv")

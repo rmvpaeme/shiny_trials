@@ -1,0 +1,80 @@
+raw_substance,expected_substance,expected_status
+Humira,Adalimumab,accepted
+Keytruda,Pembrolizumab,accepted
+Opdivo,Nivolumab,accepted
+Avastin,Bevacizumab,accepted
+Herceptin,Trastuzumab,accepted
+MabThera,Rituximab,accepted
+Rituxan,Rituximab,accepted
+Tecentriq,Atezolizumab,accepted
+Imbruvica,Ibrutinib,accepted
+Tagrisso,Osimertinib,accepted
+Lynparza,Olaparib,accepted
+Xeljanz,Tofacitinib,accepted
+Jardiance,Empagliflozin,accepted
+Revlimid,Lenalidomide,accepted
+Velcade,Bortezomib,accepted
+Tasigna,Nilotinib,accepted
+Gleevec,Imatinib,accepted
+Glivec,Imatinib,accepted
+Sutent,Sunitinib,accepted
+Humira 40 mg solution for injection,Adalimumab,accepted
+Keytruda 25 mg,Pembrolizumab,accepted
+Opdivo 10 mg/ml concentrate for solution for infusion,Nivolumab,accepted
+Avastin 25 mg/ml concentrate for solution for infusion,Bevacizumab,accepted
+Pembrolizumab 25 mg/ml,Pembrolizumab,accepted
+Pembrolizumab,Pembrolizumab,accepted
+Nivolumab,Nivolumab,accepted
+Rituximab,Rituximab,accepted
+Adalimumab,Adalimumab,accepted
+Bevacizumab,Bevacizumab,accepted
+Trastuzumab,Trastuzumab,accepted
+Atezolizumab,Atezolizumab,accepted
+Ibrutinib,Ibrutinib,accepted
+Osimertinib,Osimertinib,accepted
+Olaparib,Olaparib,accepted
+Secukinumab,Secukinumab,accepted
+Apremilast,Apremilast,accepted
+Baricitinib,Baricitinib,accepted
+Tocilizumab,Tocilizumab,accepted
+Abatacept,Abatacept,accepted
+Etanercept,Etanercept,accepted
+Infliximab,Infliximab,accepted
+Certolizumab,Certolizumab,accepted
+Golimumab,Golimumab,accepted
+Ustekinumab,Ustekinumab,accepted
+adalimumab,Adalimumab,accepted
+PEMBROLIZUMAB,Pembrolizumab,accepted
+Ciclosporin,Ciclosporin,accepted
+Cyclosporine,Ciclosporin,accepted
+Paracetamol,Paracetamol,accepted
+Acetaminophen,Paracetamol,accepted
+Aciclovir,Aciclovir,accepted
+Acyclovir,Aciclovir,accepted
+Salbutamol,Salbutamol,accepted
+Albuterol,Salbutamol,accepted
+Cabozantinib malate,Cabozantinib,accepted
+Fludarabine phosphate,Fludarabine,accepted
+Dapagliflozin propanediol,Dapagliflozin,accepted
+Biktarvy,Bictegravir|emtricitabine|tenofovir alafenamide,accepted
+Truvada,Emtricitabine|tenofovir disoproxil,accepted
+Lonsurf,Tipiracil|trifluridine,accepted
+Entresto,Sacubitril|valsartan,accepted
+Gemcitabine100 mg,Gemcitabine,accepted
+Placebo,Placebo,accepted
+Placebo for Humira,Placebo,accepted
+Placebo excipient composition,Placebo,accepted
+Placebo to Opdivo,Placebo,accepted
+Matching placebo,Placebo,accepted
+LPA1 antagonist,,rejected
+Toothpaste (cosmetic product),,rejected
+Blinded to the test product,,rejected
+Medical device,,rejected
+Dose dispersion for,,rejected
+Not available,,rejected
+Hydrocolloid dressing,,rejected
+Excipient,,rejected
+2019 (H1N1)pdm09-like strain,,rejected
+AMG 386,Trebananib,review
+AIN457,Secukinumab,review
+PF-04965842,Abrocitinib,review

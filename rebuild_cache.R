@@ -10,6 +10,30 @@ message("=== Rebuilding RDS cache ===")
 try(setwd("/shiny_trials/shiny_trials"), silent = TRUE)
 source("app.R")
 
+# ── Substance normalisation pipeline ─────────────────────────────────────────
+# Runs after the cache is on disk so export_trial_substances.R can read it.
+# Produces data/trial_substance_labels.csv which app.R reads at startup.
+message("=== Building substance labels ===")
+rscript_bin <- function() {
+  bin <- file.path(R.home("bin"), "Rscript")
+  if (file.exists(bin)) bin else "Rscript"
+}
+export_script  <- file.path("helper_scripts", "substance_norm_pipeline", "export_trial_substances.R")
+build_script   <- file.path("helper_scripts", "substance_norm_pipeline", "build_substance_labels.R")
+
+if (file.exists(export_script) && file.exists(build_script)) {
+  status <- system2(rscript_bin(), export_script)
+  if (!identical(status, 0L)) {
+    warning("export_trial_substances.R exited with status ", status)
+  } else {
+    status <- system2(rscript_bin(), c(build_script, "--write-queue"))
+    if (!identical(status, 0L)) warning("build_substance_labels.R exited with status ", status)
+  }
+  message("=== Substance labels build complete ===")
+} else {
+  warning("Substance normalisation scripts not found — skipping label build")
+}
+
 message("=== Cache rebuild complete ===")
 
 # ── Regenerate preprocessing report ──────────────────────────────────────────
