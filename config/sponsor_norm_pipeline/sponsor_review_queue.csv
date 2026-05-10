@@ -1,46 +1,14 @@
 raw_sponsor,candidate_sponsor,sponsor_type,match_status,match_score,match_source,match_reason,n_trials,decision,canonical_sponsor,comment
 Lilly S.A.,Eli Lilly,industry,review,88,manual,alias match: 'lilly' → 'Eli Lilly',23,accepted,Eli Lilly,NA
-POLICLINICO UNIVERSITARIO AGOSTINO GEMELLI,Policlinico Universitario Agostino Gemelli,hospital,unknown,0,NA,no reliable sponsor match,22,NA,NA,NA
-AZIENDA OSPEDALIERA DI BOLOGNA POLICLINICO S. ORSOLA M. MALPIGHI,Azienda Ospedaliera Di Bologna Policlinico S Orsola M Malpighi,hospital,unknown,0,NA,no reliable sponsor match,19,NA,NA,NA
-Baxter Innovations GmbH,Baxter,industry,review,87,manual,alias match: 'baxter' → 'Baxter',19,NA,NA,NA
-Genmab A/S,Genmab,industry,review,88,manual,alias match: 'genmab' → 'Genmab',19,NA,NA,NA
-Academic Medical Center,Academic Medical Center,unknown,unknown,0,NA,no reliable sponsor match,17,NA,NA,NA
-Odense University Hospital,Odense University Hospital,hospital,unknown,0,NA,no reliable sponsor match,16,NA,NA,NA
-Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),Erasmus Universitair Medisch Centrum Rotterdam Erasmus Mc,unknown,unknown,0,NA,no reliable sponsor match,16,NA,NA,NA
-NV Organon,Nv Organon,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-BioMarin Pharmaceutical Inc.,Biomarin Pharmaceutical,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-University of Leeds,University Of Leeds,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-University of Nottingham,University Of Nottingham,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-University of Cologne,University Of Cologne,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-AB Science,Ab Science,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-Unicancer,Unicancer,unknown,unknown,0,NA,no reliable sponsor match,15,NA,NA,NA
-ISTITUTO EUROPEO DI ONCOLOGIA,Istituto Europeo Di Oncologia,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-BOEHRINGER ING.,Boehringer Ing,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-UNICANCER,Unicancer,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-University of Birmingham,University Of Birmingham,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-LYSARC,Lysarc,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-Fundaci Clnic per a la Recerca Biomdica,Fundaci Clnic Per A La Recerca Biomdica,unknown,unknown,0,NA,no reliable sponsor match,14,NA,NA,NA
-ViiV Healthcare UK Limited,Viiv Healthcare,unknown,unknown,0,NA,no reliable sponsor match,13,NA,NA,NA
-Cardiff University,Cardiff University,unknown,unknown,0,NA,no reliable sponsor match,13,NA,NA,NA
-Merck Healthcare KGaA,Merck Healthcare,unknown,unknown,0,NA,no reliable sponsor match,13,NA,NA,NA
-OSPEDALE S. RAFFAELE,Ospedale S Raffaele,hospital,unknown,0,NA,no reliable sponsor match,12,NA,NA,NA
-"MedImmune, LLC",Medimmune,unknown,unknown,0,NA,no reliable sponsor match,12,NA,NA,NA
-"Ionis Pharmaceuticals, Inc.",Ionis,unknown,unknown,0,NA,no reliable sponsor match,12,NA,NA,NA
-"Daiichi Sankyo, Inc.",Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,12,NA,NA,NA
-Seagen Inc.,Seagen,unknown,unknown,0,NA,no reliable sponsor match,12,NA,NA,NA
-Centocor BV,Centocor,unknown,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-United Therapeutics Corporation,United,unknown,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-Helsinn Healthcare SA,Helsinn Healthcare,unknown,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-European Organisation for Research and Treatment of Cancer EORTC,European Organisation For Research And Treatment Of Cancer Eortc,cooperative_group,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-Sun Pharmaceutical Industries Limited,Sun Pharmaceutical Industries,unknown,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-Region Midtjylland,Region Midtjylland,unknown,unknown,0,NA,no reliable sponsor match,11,NA,NA,NA
-University of Dundee,University Of Dundee,unknown,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
+POLICLINICO UNIVERSITARIO AGOSTINO GEMELLI,Policlinico Universitario Agostino Gemelli,hospital,unknown,0,NA,no reliable sponsor match,22,accepted,Policlinico Universitario Agostino Gemelli,NA
+AZIENDA OSPEDALIERA DI BOLOGNA POLICLINICO S. ORSOLA M. MALPIGHI,Azienda Ospedaliera Di Bologna Policlinico S Orsola M Malpighi,hospital,unknown,0,NA,no reliable sponsor match,19,accepted,Azienda Ospedaliera Di Bologna Policlinico S Orsola M Malpighi,NA
+Baxter Innovations GmbH,Baxter,industry,review,87,manual,alias match: 'baxter' → 'Baxter',19,accepted,Baxter,NA
+Genmab A/S,Genmab,industry,review,88,manual,alias match: 'genmab' → 'Genmab',19,accepted,Genmab,NA
+AB Science,Ab Science,unknown,unknown,0,NA,no reliable sponsor match,15,accepted,Ab Science,NA
+Fundaci Clnic per a la Recerca Biomdica,Fundaci Clnic Per A La Recerca Biomdica,unknown,unknown,0,NA,no reliable sponsor match,14,accepted,Fundaci Clnic Per A La Recerca Biomdica,NA
 Charit - Universittsmedizin Berlin,Charit - Universittsmedizin Berlin,unknown,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
-Merz Pharmaceuticals GmbH,Merz,unknown,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
 University of Edinburgh / NHS Lothian,University Of Edinburgh / Nhs Lothian,hospital,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
 AZIENDA UNIVERSITARIA POLICLINICO UMBERTO I DI ROMA,Azienda Universitaria Policlinico Umberto I Di Roma,hospital,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
-UMC Utrecht,Umc Utrecht,hospital,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
 University College Dublin,University College Dublin,academic,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
 Baxalta Innovations GmbH,Baxalta Innovations,unknown,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
 "BeiGene, Ltd.",Beigene,unknown,unknown,0,NA,no reliable sponsor match,10,NA,NA,NA
@@ -63,8 +31,6 @@ Bispebjerg Hospital,Bispebjerg Hospital,hospital,unknown,0,NA,no reliable sponso
 "Lexicon Pharmaceuticals, Inc.",Lexicon,unknown,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
 "Alnylam Pharmaceuticals, Inc.",Alnylam,unknown,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
 Ultragenyx Pharmaceutical Inc.,Ultragenyx Pharmaceutical,unknown,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
-OSPEDALE SAN RAFFAELE,Ospedale San Raffaele,hospital,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
-Daiichi Sankyo Inc.,Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
 Fondation Franc.Cancerologie Digestive,Fondation Franc Cancerologie Digestive,foundation,unknown,0,NA,no reliable sponsor match,9,NA,NA,NA
 Hexal AG,Hexal,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 "Amicus Therapeutics, Inc.",Amicus,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
@@ -75,13 +41,12 @@ Antwerp University Hospital,Antwerp University Hospital,hospital,unknown,0,NA,no
 Array BioPharma Inc.,Array Biopharma,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 "Exelixis, Inc.",Exelixis,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 FONDAZIONE POLICLINICO UNIVERSITARIO AGOSTINO GEMELLI IRCCS UNIVERSITA CATTOLICA DEL SACRO CUORE,Fondazione Policlinico Universitario Agostino Gemelli Irccs Universita Cattolica Del Sacro Cuore,hospital,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
-Ionis Pharmaceuticals Inc.,Ionis,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 Centre Hospitalier Universitaire De Nantes,Centre Hospitalier Universitaire De Nantes,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 Vaestra Goetalandsregionen,Vaestra Goetalandsregionen,unknown,unknown,0,NA,no reliable sponsor match,8,NA,NA,NA
 Tibotec Pharmaceuticals Limited,Tibotec,unknown,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
 Sanofi-Synthelabo Recherche,Sanofi-Synthelabo Recherche,unknown,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
 GW Pharma Ltd,Gw Pharma,unknown,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
-Centocor B.V.,Centocor B V,unknown,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
+Centocor B.V.,Centocor,industry,review,88,manual,alias match: 'centocor' → 'Centocor',7,NA,NA,NA
 AZIENDA OSPEDALIERA POLICLINICO DI MODENA,Azienda Ospedaliera Policlinico Di Modena,hospital,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
 Barts and the London NHS Trust,Barts And The London Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
 FONDAZIONE ITALIANA LINFOMI ONLUS,Fondazione Italiana Linfomi Onlus,foundation,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
@@ -176,7 +141,6 @@ ISTITUTO NAZIONALE PER LA CURA TUMORI,Istituto Nazionale Per La Cura Tumori,unkn
 Universittsklinikum Mnster,Universittsklinikum Mnster,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 SOLTI,Solti,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 Medizinische Universitt Innsbruck,Medizinische Universitt Innsbruck,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
-Daiichi Sankyo Development Ltd,Daiichi Sankyo Development,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 AZIENDA OSPEDALIERA L. SACCO A.O. DI RILIEVO NAZIONALE,Azienda Ospedaliera L Sacco A O Di Rilievo Nazionale,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 MorphoSys AG,Morphosys,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 "Medivation, Inc.",Medivation,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
@@ -231,7 +195,6 @@ Fondazione Italiana Linfomi Ets,Fondazione Italiana Linfomi Ets,foundation,unkno
 Universitaetsklinikum Heidelberg AöR,Universitaetsklinikum Heidelberg Aor,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 Universitaetsklinikum Erlangen AöR,Universitaetsklinikum Erlangen Aor,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 Centre Hospitalier Universitaire De Toulouse,Centre Hospitalier Universitaire De Toulouse,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
-Leids Universitair Medisch Centrum (LUMC),Leids Universitair Medisch Centrum Lumc,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,Frankfurter Institut Fuer Klinische Krebsforschung Ikf,unknown,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
 Serono International S.A.,Serono S A,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Fresenius Biotech GmbH,Fresenius Biotech,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
@@ -263,7 +226,6 @@ Nerviano Medical Sciences S.r.l.,Nerviano Medical S R L,unknown,unknown,0,NA,no 
 Mitsubishi Tanabe Pharma Corporation,Mitsubishi Tanabe Pharma,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Steno Diabetes Center,Steno Diabetes Center,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Swedish Orphan Biovitrum AB publ,Swedish Orphan Biovitrum Ab Publ,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
-DAIICHI SANKYO EUROPE GmbH,Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Institut Bergoni,Institut Bergoni,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Fresenius Kabi Deutschland GmbH,Fresenius Kabi Deutschland,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 University of Leuven,University Of Leuven,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
@@ -292,7 +254,6 @@ LFB BIOTECHNOLOGIES,Lfb Biotechnologies,unknown,unknown,0,NA,no reliable sponsor
 Nordic Lymphoma Group,Nordic Lymphoma Group,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Sahlgrenska University Hospital,Sahlgrenska University Hospital,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Pharming Technologies B.V.,Pharming Technologies B V,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
-MedImmune Ltd,Medimmune,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Abbott Biologicals B.V.,Abbott,industry,review,86,manual,alias match: 'abbott' → 'Abbott',4,NA,NA,NA
 "Taiho Oncology, Inc.",Taiho,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Gentofte Hospital,Gentofte Hospital,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
@@ -366,7 +327,6 @@ Laboratorios Normon S.A.,Laboratorios Normon S A,unknown,unknown,0,NA,no reliabl
 Fondazione Policlinico Universitario Agostino Gemelli IRCCS,Fondazione Policlinico Universitario Agostino Gemelli Irccs,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Fundacio Institut De Recerca De L Hospital De La Santa Creu I Sant Pau,Fundacio Institut De Recerca De L Hospital De La Santa Creu I Sant Pau,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Bicycletx Limited,Bicycletx,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
-University Of Cologne,University Of Cologne,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Centre Hospitalier Regional Universitaire De Tours,Centre Hospitalier Regional Universitaire De Tours,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Hopital Fondation Adolphe De Rothschild,Hopital Fondation Adolphe De Rothschild,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Medica Scientia Innovation Research S.L.,Medica Scientia Innovation Research S L,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
@@ -374,7 +334,6 @@ Academisch Ziekenhuis Leiden,Academisch Ziekenhuis Leiden,hospital,unknown,0,NA,
 Les Hopitaux Universitaires De Strasbourg,Les Hopitaux Universitaires De Strasbourg,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Exelixis Inc.,Exelixis,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Stichting Radboud universitair medisch centrum,Stichting Radboud Universitair Medisch Centrum,foundation,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
-Ospedale San Raffaele S.r.l.,Ospedale San Raffaele S R L,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Centre Hospitalier Universitaire De Nice,Centre Hospitalier Universitaire De Nice,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Centre Hospitalier Regional De Marseille,Centre Hospitalier Regional De Marseille,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
 Academisch Ziekenhuis Maastricht,Academisch Ziekenhuis Maastricht,hospital,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
@@ -403,7 +362,6 @@ medac GmbH,Medac,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Oxford Radcliffe Hospitals NHS Trust,Oxford Radcliffe Hospitals Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 North Bristol NHS Trust,North Bristol Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 ISTITUTO GIANNINA GASLINI,Istituto Giannina Gaslini,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-BioMarin Pharmaceutical Inc,Biomarin Pharmaceutical,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Henogen,Henogen,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 IST. DI RICERCHE FARMACOLOG. M. NEGRI,Ist Di Ricerche Farmacolog M Negri,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 St. Anna Kinderkrebsforschung,St Anna Kinderkrebsforschung,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -426,7 +384,6 @@ Moorfields Eye Hospital NHS Foundation Trust,Moorfields Eye Hospital Nhs Foundat
 Laboratoires Merck Sharp  Dohme - Chibret,Laboratoires Merck Sharp Dohme - Chibret,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 immatics biotechnologies GmbH,Immatics Biotechnologies,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 ISTITUTO AUXOLOGICO ITALIANO,Istituto Auxologico Italiano,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-Daiichi Sankyo Pharma Development,Daiichi Sankyo Pharma Development,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 AZIENDA OSPEDALIERA OSPEDALE POLICLINICO CONSORZIALE,Azienda Ospedaliera Ospedale Policlinico Consorziale,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 GW Pharma Ltd.,Gw Pharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Innate Pharma,Innate Pharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -477,14 +434,12 @@ Neovacs SA,Neovacs,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 University of Tartu,University Of Tartu,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Quark Pharmaceuticals, Inc.",Quark,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Klinikum der Universitt Mnchen,Klinikum Der Universitt Mnchen,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-BIOMARIN PHARMACEUTICAL INC.,Biomarin Pharmaceutical,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Institut de Recerca HSCSP,Institut De Recerca Hscsp,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Convergence Pharmaceuticals Ltd,Convergence,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Synageva Biopharma Corp.,Synageva Biopharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Can-Fite BioPharma, Ltd.",Can-Fite Biopharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Friedrich-Schiller-Universitt Jena,Friedrich-Schiller-Universitt Jena,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Fundacin para la Investigacin Biomdica del Hospital Universitario La Paz,Fundacin Para La Investigacin Biomdica Del Hospital Universitario La Paz,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 South London and Maudsley NHS Foundation Trust / Kings College London,South London And Maudsley Nhs Foundation Trust / Kings College London,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Menarini International Operations Luxembourg SA,Menarini Operations Luxembourg,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 VU medical center,Vu Medical Center,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -492,7 +447,6 @@ Universitetssjukhuset rebro,Universitetssjukhuset Rebro,unknown,unknown,0,NA,no 
 Biomay AG,Biomay,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 CERENIS THERAPEUTICS SA,Cerenis,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Intercept Pharmaceuticals, Inc.",Intercept,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-University of Dundee  NHS Tayside,University Of Dundee Nhs Tayside,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Maastricht University Medical Centre,Maastricht University Medical Centre,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "bluebird bio, Inc.",Bluebird Bio,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Centre Hospitalier Rgional et Universitaire de Lille,Centre Hospitalier Rgional Et Universitaire De Lille,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -520,7 +474,6 @@ Professor Jrgen B. Dahl,Professor Jrgen B Dahl,unknown,unknown,0,NA,no reliable 
 TrialNet Coordinating Center,Trialnet Coordinating Center,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Medizinische Universitt Wien, Universittsklinik fr Ansthesie, Allgemeine Intensivmedizin und Schmerztherapie",Medizinische Universitt Wien Universittsklinik Fr Ansthesie Allgemeine Intensivmedizin Und Schmerztherapie,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 University Hospital Grenoble,University Hospital Grenoble,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-MedImmune LLC,Medimmune,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Cambridge University Hospitals NHS Foundation Trust and the University of Cambridge,Cambridge University Hospitals Nhs Foundation Trust And The University Of Cambridge,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "CELLTRION, Inc.",Celltrion,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 uniQure biopharma B.V.,Uniqure Biopharma B V,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -551,7 +504,6 @@ Herlev and Gentofte Hospital,Herlev And Gentofte Hospital,hospital,unknown,0,NA,
 Octapharma Pharmazeutika Produktionsges.m.b.H.,Octapharma Pharmazeutika Produktionsges M B H,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Telios Pharma, Inc.",Telios Pharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Zogenix International Limited,Zogenix,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-"MedImmune, LLC, a wholly owned subsidiary of AstraZeneca PLC",Medimmune Llc A Wholly Owned Subsidiary Of Astrazeneca,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "Clovis Oncology, Inc.",Clovis,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Radboud University Medical Centre,Radboud University Medical Centre,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Uni-Pharma Kleon Tsetis Pharmaceutical Laboratories S.A.,Uni-Pharma Kleon Tsetis Pharmaceutical Laboratories S A,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -599,7 +551,6 @@ Mirum Pharmaceuticals Inc.,Mirum,unknown,unknown,0,NA,no reliable sponsor match,
 Steno Diabetes Center Copenhagen,Steno Diabetes Center Copenhagen,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Pirkanmaan hyvinvointialue,Pirkanmaan Hyvinvointialue,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 "NS Pharma, Inc.",Ns Pharma,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-Assistance Publique  Hpitaux de Paris AP-HP,Assistance Publique Hpitaux De Paris Ap-Hp,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Mitsubishi Tanabe Development America Inc.,Mitsubishi Tanabe Development America,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 STICHTING EUROPEAN MYELOMA NETWORK,Stichting European Myeloma Network,foundation,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 NEWRON PHARMACEUTICALS SPA,Newron,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
@@ -646,7 +597,6 @@ Red Andaluza De Diseno Y Traslacion De Terapias Avanzadas Fundacion Publica Anda
 IRCCS Istituto Nazionale Tumori Fondazione Pascale,Irccs Istituto Nazionale Tumori Fondazione Pascale,foundation,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Fondazione Ricerca Traslazionale,Fondazione Ricerca Traslazionale,foundation,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
 Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,Fundacio De Recerca Clinic Barcelona-Institut D'investigacions Biomediques August Pi I Sunyer,hospital,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-"MedImmune, Inc.",Medimmune,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 FRESENIUS BIOTECH GMBH,Fresenius Biotech,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Fujisawa GmbH,Fujisawa,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Wilex AG,Wilex,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -683,14 +633,12 @@ Sanofi-Synthelabo-Recherche,Sanofi-Synthelabo-Recherche,unknown,unknown,0,NA,no 
 IDEA AG,Idea,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 ASSOCIAZIONE MALATTIE SANGUE,Associazione Malattie Sangue,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 AZIENDA OSPEDALIERA DI PADOVA,Azienda Ospedaliera Di Padova,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-HELSINN HEALTHCARE SA,Helsinn Healthcare,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 MediGene AG,Medigene,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 NERVIANO MEDICAL SCIENCES,Nerviano Medical,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Leeds Teaching Hospitals NHS Trust,Leeds Teaching Hospitals Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 BioInvent International AB,Bioinvent,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 FONDAZIONE MONZINO CENTRO CARDIOLOGICO,Fondazione Monzino Centro Cardiologico,foundation,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 FNCLCC,Fnclcc,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Odense Universitetshospital,Odense Universitetshospital,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Laboratorios LETI, S.L. Unipersonal",Laboratorios Leti S L Unipersonal,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 MannKind Corporation,Mannkind,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "CombinatoRx, Inc.",Combinatorx,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -835,7 +783,6 @@ Asahi Kasei Pharma Corporation,Asahi Kasei Pharma,unknown,unknown,0,NA,no reliab
 GRUPO ESPAOL DE NEUROONCOLOGIA MEDICA,Grupo Espaol De Neurooncologia Medica,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Johns Hopkins University,Johns Hopkins University,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 I.T.M.O. - ITALIAN TRIALS IN MEDICAL ONCOLOGY,I T M O - Italian Trials In Medical,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-European Organization for Research and Treatment of Cancer EORTC,European Organization For Research And Treatment Of Cancer Eortc,cooperative_group,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Alcon Research, Ltd",Alcon Research,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Kiadis Pharma Netherlands B.V.,Kiadis Pharma B V,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Universittsklinikum Ulm,Universittsklinikum Ulm,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -861,7 +808,6 @@ Meander Medical Centre,Meander Medical Centre,unknown,unknown,0,NA,no reliable s
 Agennix Incorporated,Agennix,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Bone Therapeutics S.A.,Bone S A,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 University Hospital Bristol NHS Foundation Trust,University Hospital Bristol Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Daiichi Sankyo Development Limited,Daiichi Sankyo Development,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 AZIENDA OSPEDALIERA UNIVERSITARIA SAN MARTINO GENOVA,Azienda Ospedaliera Universitaria San Martino Genova,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Centre Hospitalier de Toulouse,Centre Hospitalier De Toulouse,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 The Newcastle upon Tyne Hospitals NHS Foundation Trust,The Newcastle Upon Tyne Hospitals Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -932,14 +878,12 @@ Debiopharm International SA,Debiopharm,unknown,unknown,0,NA,no reliable sponsor 
 Hull and East Yorkshire Hospitals NHS Trust,Hull And East Yorkshire Hospitals Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Clinical Research Centre, Hvidovre University Hospital",Clinical Research Centre Hvidovre University Hospital,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 COSMO TECHNOLOGIES LTD,Cosmo Technologies,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Swiss Group for Clinical Cancer Research SAKK,Swiss Group For Clinical Cancer Research Sakk,cooperative_group,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Array BioPharma Inc. a wholly owned subsidiary of Pfizer Inc,Array Biopharma Inc A Wholly Owned Subsidiary Of Pfizer,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 CHU-ULg,Chu-Ulg,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Hamilton Health Sciences Corporation,Hamilton Health,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Fundaci Hospital Universitari Vall dHebron - Institut de Recerca VHIR,Fundaci Hospital Universitari Vall Dhebron - Institut De Recerca Vhir,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Banc de Sang i Teixits,Banc De Sang I Teixits,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 The University of Birmingham,The University Of Birmingham,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-OSPEDALE S. RAFFAELE DI MILANO,Ospedale S Raffaele Di Milano,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Medizinische Universitt Wien, Universittsklinik fr Klinische Pharmakologie",Medizinische Universitt Wien Universittsklinik Fr Klinische Pharmakologie,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 St Stephens AIDS Trust,St Stephens Aids Trust,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 University Hospital Leuven,University Hospital Leuven,hospital,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -997,7 +941,6 @@ Paratek Pharma LLC,Paratek Pharma,unknown,unknown,0,NA,no reliable sponsor match
 Fondazione Melanoma ONLUS,Fondazione Melanoma Onlus,foundation,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Celltrion, Inc.",Celltrion,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Instituto Grifols, S.A.",Instituto Grifols S A,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Daiichi Sankyo Inc,Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Azienda Ospedaliera di Padova,Azienda Ospedaliera Di Padova,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Grifols Therapeutics Inc.,Grifols,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Aradigm Corporation,Aradigm,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -1246,7 +1189,6 @@ Jazz Pharmaceuticals Ireland Limited,Jazz Ireland,unknown,unknown,0,NA,no reliab
 Domp farmaceutici s.p.a.,Domp Farmaceutici S P A,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 CuraTeQ Biologics Private Ltd.,Curateq Biologics Private,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Meiji Seika Pharma Co., Ltd.",Meiji Seika Pharma Co,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-"IONIS PHARMACEUTICALS, INC.",Ionis,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 AnaptysBio Inc.,Anaptysbio,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 Thoraxklinik Heidelberg gGmbH,Thoraxklinik Heidelberg Ggmbh,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 IRCCS MATERNO INFANTILE BURLO GAROFOLO,Irccs Materno Infantile Burlo Garofolo,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
@@ -1380,11 +1322,9 @@ NPS Allelix Corporation,Nps Allelix,unknown,unknown,0,NA,no reliable sponsor mat
 Otsuka Maryland Research Institute,Otsuka Pharmaceutical,industry,review,87,manual,alias match: 'otsuka' → 'Otsuka Pharmaceutical',1,NA,NA,NA
 CELL THERAPEUTICS EUROPE S.r.l.,Cell S R L,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Integrated Therapeutics Group, Incorporated-a subsidiary of Schering Plough",Integrated Group Incorporated-A Subsidiary Of Schering Plough,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Daiichi Sankyo Pharma GmbH,Daiichi Sankyo Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Laboratoires Expanscience,Laboratoires Expanscience,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SERONO INTERNATIONAL SA,Serono,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Aventis Pharmaceuticals, Inc. a subsidiary of sanofi-aventis group",Aventis Inc A Subsidiary Of Sanofi-Aventis Group,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MedImmune Vaccines, Inc.",Medimmune Vaccines,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA OSPEDALIERA UMBERTO I,Azienda Ospedaliera Umberto I,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SEATTLE GENETICS INC.,Seattle Genetics,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Aventis Pharmaceuticals, Inc.",Aventis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -1475,7 +1415,6 @@ Finnish Uro-Oncological Group,Finnish Uro-Oncological Group,unknown,unknown,0,NA
 Eyetech Pharamceuticals Inc,Eyetech Pharamceuticals,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Suomen MSD Oy,Suomen Msd,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Antisoma Research Limited,Antisoma Research,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Christel B. Lajer, Dep. of Otolaryngology head and neck surgery, Rigshospitalet",Christel B Lajer Dep Of Otolaryngology Head And Neck Surgery Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 vectura group plc,Vectura Group,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Universittsklinikum Aachen, Klinik f. Psychiatrie und Psychotherapie",Universittsklinikum Aachen Klinik F Psychiatrie Und Psychotherapie,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Ferring BV,Ferring Pharmaceuticals,industry,review,88,manual,alias match: 'ferring' → 'Ferring Pharmaceuticals',1,NA,NA,NA
@@ -1546,7 +1485,6 @@ TRANSGENE,Transgene,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 PETHEMA Foundation,Pethema Foundation,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Division of Angiology Graz,Division Of Angiology Graz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 THRESHOLD PHARMACEUTICALS INC.,Threshold,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Odense University Hospital, afd.M",Odense University Hospital Afd M,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 MELORA PORTUGUESA. LDA.,Melora Portuguesa Lda,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Our Ladys Childrens Hospital,Our Ladys Childrens Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Julian Pans,Julian Pans,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -1838,7 +1776,6 @@ Sanna Vilo,Sanna Vilo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Gentofte University Hospital,Gentofte University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Acusphere, Inc.",Acusphere,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 LABORATORIOS NORMON S.A.,Laboratorios Normon S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MERZ PHARMACEUTICALS GMBH,Merz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University Hospital Sint Radboud,University Hospital Sint Radboud,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 St Radboud UMC,St Radboud Umc,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Copenhagen CF-centre,Copenhagen Cf-Centre,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -1882,7 +1819,6 @@ Galderma Research and Development,Galderma Research And Development,unknown,unkn
 Optimer Pharmaceuticals Inc.,Optimer,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 IMAS,Imas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Cerimon Pharmaceuticals, Inc.",Cerimon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Neurology UMCG,Department Of Neurology Umcg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Belfast City Hospital Trust,Belfast City Hospital Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Southampton University Hospitals Trust RD,Southampton University Hospitals Trust Rd,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Osiris Therapeutics, Inc.",Osiris,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -1910,7 +1846,6 @@ Solvay Pharmaceuticals. Inc.,Solvay,unknown,unknown,0,NA,no reliable sponsor mat
 UNIVERSITA  DEGLI STUDI DI UDINE,Universita Degli Studi Di Udine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Universittsmedizin der Johannes Gutenberg-Universitt Mainz,Universittsmedizin Der Johannes Gutenberg-Universitt Mainz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Calcium and Bone Metabolic Unit Copenhange University Hospital Hvidovre,Calcium And Bone Metabolic Unit Copenhange University Hospital Hvidovre,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-DAIICHI SANKYO PHARMA DEVELOPMENT,Daiichi Sankyo Pharma Development,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CHU Amiens,Chu Amiens,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Adelaide  Meath Hospital / Adelaide  Meath Hospital, incorporating the National Childrens hospital",Adelaide Meath Hospital / Adelaide Meath Hospital Incorporating The National Childrens Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Debiopharm,Debiopharm,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -1933,7 +1868,6 @@ OSPEDALI CIVILI DI LIONE,Ospedali Civili Di Lione,unknown,unknown,0,NA,no reliab
 Institut de Recherches Internationales Servier I.R.I.S.,Institut De Recherches Internationales Servier I R I S,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 HYKS Marian sairaala,Hyks Marian Sairaala,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Laboratoires Merck Sharp  Dhome-Chibret,Laboratoires Merck Sharp Dhome-Chibret,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University of Birmingham / Birmingham Heartlands Hospital,University Of Birmingham / Birmingham Heartlands Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 GRUPO DE TERAPIA CELULAR Y CARDIOVASCULAR DEL HOSPITAL UNIVERSITARIO CENTRAL DE ASTURIAS,Grupo De Terapia Celular Y Cardiovascular Del Hospital Universitario Central De Asturias,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Antonio Cubillo Gracin Servicio de Oncologa Mdica - Hospital MD Anderson,Antonio Cubillo Gracin Servicio De Oncologa Mdica - Hospital Md Anderson,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Assistance Publique Hopitaux de marseille,Assistance Publique Hopitaux De Marseille,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2048,10 +1982,8 @@ Tibotec Pharmaceuticals Ltd.,Tibotec,unknown,unknown,0,NA,no reliable sponsor ma
 HELP Pharmaceuticals S.A.,Help S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AIR LIQUIDE,Air Liquide,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Johnson Pharmaceutical Research  Development, L.L.C.",Johnson Pharmaceutical Research Development L L C,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Swiss Group for Clinical Cancer Reaserch SAKK,Swiss Group For Clinical Cancer Reaserch Sakk,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Medizinische Universitt Wien, Univ. Klinik fr Innere Medizin III, Abteilung fr Gastroenterologie",Medizinische Universitt Wien Univ Klinik Fr Innere Medizin Iii Abteilung Fr Gastroenterologie,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Greater Glasgow Health Board/University of Glasgow,Greater Glasgow Health Board/University Of Glasgow,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MedImmune Limited,Medimmune,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 INTENDIS GmbH,Intendis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CSC Pharmaceuticals Handels GmbH.,Csc Handels,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Royal Wolverhampton Hospitals Trust,Royal Wolverhampton Hospitals Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2147,7 +2079,7 @@ CESAR Central European Society for Anticancer Drug Research  EWIV,Cesar Central 
 Kwizda Pharma GmbH,Kwizda Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Valderm ApS,Valderm Aps,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hutchison MediPharma Enterprises Limited,Hutchison Medipharma Enterprises,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ORGANON ITALIA,Organon Italia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+ORGANON ITALIA,Organon,industry,review,88,manual,alias match: 'organon' → 'Organon',1,NA,NA,NA
 Lexicon Pharmaceuticals Incorporated,Lexicon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University Hospital of Grenoble,University Hospital Of Grenoble,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Gambro Lundia AB,Gambro Lundia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2286,7 +2218,6 @@ RDR Pharma GmbH,Rdr Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,N
 "Tolerx, Inc.",Tolerx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University of Rochester,University Of Rochester,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 A.I.E.O.P. - ASSOCIAZIONE ITALIANA EMATOLOGIA ONCOLOGIA PEDIATRICA,A I E O P - Associazione Italiana Ematologia Oncologia Pediatrica,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"NV Organon, part of Schering-Plough Corporation",Nv Organon Part Of Schering-Plough,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Movetis NV,Movetis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 GALDERMA RD SNC,Galderma Rd Snc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Isala Klinieken, location Sophia",Isala Klinieken Location Sophia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2375,7 +2306,6 @@ Institutionen fr kirurgiska vetenskaper,Institutionen Fr Kirurgiska Vetenskaper,
 Reckitt Benckiser Healthcare UK Limited,Reckitt Benckiser Healthcare,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 East and North Hertfordhsire NHS Trust,East And North Hertfordhsire Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Wilhelminen Krebsforschung GmbH,Wilhelminen Krebsforschung,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Odense Universitetshospital, Nyremedicinsk Afd. Y",Odense Universitetshospital Nyremedicinsk Afd Y,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SYGNIS Bioscience GmbH  Co. KG,Sygnis Bioscience Gmbh Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Hvidovre Hospital, Anstesiologisk afdeling 532",Hvidovre Hospital Anstesiologisk Afdeling,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 cliniques universitaire de mont godinne,Cliniques Universitaire De Mont Godinne,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2431,7 +2361,7 @@ Heikki Koskela,Heikki Koskela,unknown,unknown,0,NA,no reliable sponsor match,1,N
 CENTRE LEON BERARD,Centre Leon Berard,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of medical gastroenterology, Herlev Hospital",Department Of Medical Gastroenterology Herlev Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 VVOG,Vvog,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Intensive Care, Rigshopitalet",Dept Of Intensive Care Rigshopitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Dept. of Intensive Care, Rigshopitalet",Rigshospitalet,hospital,review,93,fuzzy:manual,fuzzy match (jw similarity 93%),1,NA,NA,NA
 Elena Santagostino,Elena Santagostino,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fundacin para la Investigacin Biomdica Hospital Universitario Nio Jess,Fundacin Para La Investigacin Biomdica Hospital Universitario Nio Jess,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Amarin Pharma Inc.,Amarin Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2618,7 +2548,6 @@ Dr. Antonio Mari Roig,Dr Antonio Mari Roig,unknown,unknown,0,NA,no reliable spon
 Prothya Biosolutions Netherlands B.V.,Prothya Biosolutions B V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Joergen B Dahl,Joergen B Dahl,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University of Cincinnati - Academic Medical Center -Department of Neurology,University Of Cincinnati - Academic Medical Center -Department Of Neurology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Laboratoires Grnenthal,Laboratoires Grnenthal,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Psychiatry and Psychotherapy, Charity University Medicine",Department Of Psychiatry And Psychotherapy Charity University Medicine,charity,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CENTRO PER LA PREVENZIONE E CURA DEL TABAGISMO,Centro Per La Prevenzione E Cura Del Tabagismo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Asociacin para la investigacin de Nefrologa Infantil,Asociacin Para La Investigacin De Nefrologa Infantil,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2636,7 +2565,6 @@ PurGenesis Techonologies Inc.,Purgenesis Techonologies,unknown,unknown,0,NA,no r
 Promedior Inc,Promedior,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AXCAN PHARMA SAS,Axcan Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 LYOCENTRE,Lyocentre,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Viiv Healthcare,Viiv Healthcare,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Medizinische Universitt Wien, Univ.Klinik f.Innere Medizin I,Abt. f. Infektionen u.Tropenmedizin",Medizinische Universitt Wien Univ Klinik F Innere Medizin I Abt F Infektionen U Tropenmedizin,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA OSPEDALIERA G. BROTZU,Azienda Ospedaliera G Brotzu,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 St. Anna Kinderkrebsforschung/CCRI,St Anna Kinderkrebsforschung/Ccri,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2720,7 +2648,6 @@ ASSOCIAZIONE ITALIANA PNEUMOLOGI OSPEDALIERI,Associazione Italiana Pneumologi Os
 Allergie-Centrum-Charit,Allergie-Centrum-Charit,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Olympus France SAS,Olympus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Olympus Biotech Europe SAS,Olympus Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-DAIICHI SANKYO DEVELOPMENT LTD.,Daiichi Sankyo Development,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Academical medical Center, Department of dermatology",Academical Medical Center Department Of Dermatology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 The Institute of Cancer Research / The Royal Marsden NHS Foundation Trust,The Institute Of Cancer Research / The Royal Marsden Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Helperby Thearapeutics Ltd,Helperby Thearapeutics,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2738,7 +2665,6 @@ ASCENDIS PHARMA A/S,Ascendis Pharma,unknown,unknown,0,NA,no reliable sponsor mat
 Luis Carlos Imaz Navarro,Luis Carlos Imaz Navarro,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Decan of Medical Faculty of Goethe University Frankfurt,Decan Of Medical Faculty Of Goethe University Frankfurt,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 GEMCAD,Gemcad,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-VIIV HEALTHCARE UK LIMITED,Viiv Healthcare,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Isala Clinics Zwolle,Isala Clinics Zwolle,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 STEBA BIOTECH SA,Steba Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Nephrology, Rigshospitalet, University of Copenhagen",Department Of Nephrology Rigshospitalet University Of Copenhagen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2789,7 +2715,6 @@ Martin-Luther-Universitt Halle-Wittenberg,Martin-Luther-Universitt Halle-Wittenb
 Danish Gynaecological Cancer Group,Danish Gynaecological Cancer Group,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 MAASTRO clinic,Maastro Clinic,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Academisch Ziekenhuis Leiden acting under the name of Leids Universitair Medisch Centrum,Academisch Ziekenhuis Leiden Acting Under The Name Of Leids Universitair Medisch Centrum,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Academic Medical Center, Division of Clinical Immunology and Rheumatology",Academic Medical Center Division Of Clinical Immunology And Rheumatology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 TRANZYME.INC.,Tranzyme,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Intercept Pharmaceuticals Inc,Intercept,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 McNeil AB,Mcneil,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2868,12 +2793,10 @@ University Hospital of Muenster,University Hospital Of Muenster,hospital,unknown
 Celyad SA,Celyad,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 to-BBB technologies B.V.,To-Bbb Technologies B V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University of Zurich,University Of Zurich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Hjertemedicinsk klinik B, 2142, Rigshospitalet",Hjertemedicinsk Klinik B Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Buckinghamshire Healthcare NHS Trust,Buckinghamshire Healthcare Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Rafael Lpez Lpez,Rafael Lpez Lpez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Nordic Pharma France,Nordic Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fundacin para el Progreso de la Oncologa en Cantabria,Fundacin Para El Progreso De La Oncologa En Cantabria,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Lab Servier,Lab Servier,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Schering Corporation, a Subsidiary of Merck  Co., Inc.",Schering Corporation A Subsidiary Of Merck Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hull and East Yorkshire Acute Hospitals NHS Trust,Hull And East Yorkshire Acute Hospitals Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Servicio de Enfermedades Infecciosas. Unidad VIH. Hospital Universitari de Bellvitge,Servicio De Enfermedades Infecciosas Unidad Vih Hospital Universitari De Bellvitge,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2888,7 +2811,7 @@ CNIO - Centro Nacional de Investigaciones Oncolgicas,Cnio - Centro Nacional De I
 Professor Reich,Professor Reich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Laves-Arzneimittel GmbH,Laves-Arzneimittel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Monash University / NHS Lothian,Monash University / Nhs Lothian,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Cliniques Universitaires Saint Luc - UCL,Cliniques Universitaires Saint Luc - Ucl,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Cliniques Universitaires Saint Luc - UCL,University College London,academic,review,80,manual,alias match: 'ucl' → 'University College London',1,NA,NA,NA
 Medizinische Fakultt der Otto-von-Guericke Universitt Magdeburg Universittsklinikum Magdeburg A..R.,Medizinische Fakultt Der Otto-Von-Guericke Universitt Magdeburg Universittsklinikum Magdeburg A R,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Boehringer,Boehringer,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Elevation Pharmaceuticals, Inc",Elevation,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2908,7 +2831,6 @@ RB Pharmaceuticals Inc.,Rb Pharmaceuticals Inc,unknown,unknown,0,NA,no reliable 
 MICROMET AG,Micromet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Niels Jrgen Secher,Niels Jrgen Secher,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Schur Pharmazeutika GmbH  Co. KG,Schur Pharmazeutika Gmbh Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Multidisciplinary Pain Center 7612, Rigshospitalet",Multidisciplinary Pain Center Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Sint Antonius Ziekenhuis,Sint Antonius Ziekenhuis,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 J.W. Goethe-University,J W Goethe-University,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Virgilio Hernando Requejo,Virgilio Hernando Requejo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2920,7 +2842,6 @@ Matti Ristikankare,Matti Ristikankare,unknown,unknown,0,NA,no reliable sponsor m
 Hospital of the University of Munich,Hospital Of The University Of Munich,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 DBV Technologies SA,Dbv Technologies,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 FRANCISCO JAVIER BELDA,Francisco Javier Belda,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MEDIMMUNE ONCOLOGY INC,Medimmune,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Psykiatrien i Region Syddanmark,Psykiatrien I Region Syddanmark,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 OMNIVISION GmbH,Omnivision,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 NURON BIOTECH INC.,Nuron Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2985,7 +2906,6 @@ Laboratoires Bouchara-Recordati,Laboratoires Bouchara-Recordati,unknown,unknown,
 AZIENDA OSPEDALIERA S. PAOLO A.O. DI RILIEVO NAZIONALE,Azienda Ospedaliera S Paolo A O Di Rilievo Nazionale,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 VU University Medical,Vu University Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Merrimack Pharmaceuticals Inc.,Merrimack,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-UNIVERSITY OF COLOGNE,University Of Cologne,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "The Karolinska Instutute, ClinTRID",The Karolinska Instutute Clintrid,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 VU Univeristy Medical Centre,Vu Univeristy Medical Centre,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CHU Nantes,Chu Nantes,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -2993,7 +2913,7 @@ ViroDefense Inc,Virodefense,unknown,unknown,0,NA,no reliable sponsor match,1,NA,
 "Irish Clinical Oncology Research Group CLG, trading as Cancer Trials Ireland",Irish Clinical Research Group Clg Trading As Cancer Trials Ireland,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hospital General Universitario de Alicante,Hospital General Universitario De Alicante,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Funxional Therapeutics Ltd,Funxional,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-BioMarin Nederland B.V.,Biomarin Nederland B V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+BioMarin Nederland B.V.,BioMarin Pharmaceutical,industry,review,87,manual,alias match: 'biomarin' → 'BioMarin Pharmaceutical',1,NA,NA,NA
 APOTEX Inc.,Apotex,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Santarus, Inc.",Santarus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Matti Eskelinen,Matti Eskelinen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3089,7 +3009,6 @@ Central European Society for Anticancer Drug Research - EWIV,Central European So
 Green Cross Corporation,Green Cross,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 OncoGenex Technologies Inc.,Oncogenex Technologies,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Sydvestjysk Sygehus, Esbjerg / Odense Universitetshospital",Sydvestjysk Sygehus Esbjerg / Odense Universitetshospital,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-VU University Medical Center VUmc,Vu University Medical Center Vumc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Vejle Hospital, Dept. of Oncology",Vejle Hospital Dept Of,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Pijt-Hme Central Hospital,Pijt-Hme Central Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Sinoxa Pharma GmbH,Sinoxa Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3244,18 +3163,15 @@ Tillotts Pharma AG,Tillotts Pharma,unknown,unknown,0,NA,no reliable sponsor matc
 CHU AMIENS / CHU AMIENS,Chu Amiens / Chu Amiens,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Charit-Universittsmedizin Berlin, Department of Dermatology, Clinical Research Center for Hair and Skin Science",Charit-Universittsmedizin Berlin Department Of Dermatology Clinical Research Center For Hair And Skin Science,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 FUNDACION DE INVESTIGACION EN RED EN ENFERMEDADES CARDIOVASCULARES FIRCAVA,Fundacion De Investigacion En Red En Enfermedades Cardiovasculares Fircava,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-DUTCH BELGIAN COOPERATIVE GROUP FOR HEMATOLOGY ONCOLOGY - HOVON,Dutch Belgian Cooperative Group For Hematology - Hovon,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Cosmo Technologies Ltd.,Cosmo Technologies,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 LANDSTINGET I STERGTLAND,Landstinget I Stergtland,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Gerencia de Atencin Primaria de Mallorca,Gerencia De Atencin Primaria De Mallorca,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 TAYS Sydnkeskus Oy,Tays Sydnkeskus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CLINICA DERMATOLOGICA POLICLINICO UMBERTO I SAPIENZA,Clinica Dermatologica Policlinico Umberto I Sapienza,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"ViiV Healthcare, S.L.",Viiv Healthcare S L,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Novalon S.A,Novalon S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 PROLOR Biotech Ltd.,Prolor Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ITALFARMACO S.p.A,Italfarmaco S P A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Federico Diaz Gonzlez,Federico Diaz Gonzlez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Academic Medical Center, University of Amsterdam",Academic Medical Center University Of Amsterdam,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Smith  Nephew Inc.,Smith Nephew,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Landspitali - The National University Hospital of Iceland,Landspitali - The National University Hospital Of Iceland,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Metacure Ltd.,Metacure,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3275,7 +3191,6 @@ AesRx,Aesrx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Gerolsteiner Brunnen GmbH  Co. KG,Gerolsteiner Brunnen Gmbh Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Maruho Europe Limited,Maruho,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA OSPEDALIERA S. PAOLO,Azienda Ospedaliera S Paolo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University of Dundee / NHS Tayside,University Of Dundee / Nhs Tayside,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Clinical Research Center for Hair and Skin Science,Clinical Research Center For Hair And Skin Science,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 PHARMATHEN S.A.,Pharmathen S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA PROVINCIALE PER I SERVIZI SANITARI DELLA PROVINCIA AUTONOMA DI TRENTO,Azienda Provinciale Per I Servizi Sanitari Della Provincia Autonoma Di Trento,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3319,10 +3234,8 @@ Fundacin para la Investigacin en Enfermedades del Aparato Digestivo,Fundacin Par
 NeRRe Therapeutics Ltd,Nerre,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "University Hospital, Limoges",University Hospital Limoges,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Centre de lutte contre le cancer Lon Brard,Centre De Lutte Contre Le Cancer Lon Brard,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"University of Leeds, Division of Musculoskeletal Disease, Leeds Institute of Molecular Medicine",University Of Leeds Division Of Musculoskeletal Disease Leeds Institute Of Molecular Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SERMAS Hospital la Paz,Sermas Hospital La Paz,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Trevena Inc.,Trevena,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ACADEMIC MEDICAL CENTER,Academic Medical Center,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Christoffer Hedetoft,Christoffer Hedetoft,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Sylentis S.A.U.,Sylentis S A U,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Shionogi Inc.,Shionogi,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3336,7 +3249,6 @@ Sahlgrenska University Hospital / The Queen Silvia Childrens Hospital,Sahlgrensk
 AUSL Piacenza,Ausl Piacenza,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Grete Andersen,Grete Andersen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Genticel,Genticel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University of cologne,University Of Cologne,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Medicine, Kge University Hospital / Department of Medicine, Kge University Hospital",Department Of Medicine Kge University Hospital / Department Of Medicine Kge University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Ethicon Inc.,Ethicon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "EXELIXIS, INC.",Exelixis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3383,7 +3295,6 @@ Allergy Centre,Allergy Centre,unknown,unknown,0,NA,no reliable sponsor match,1,N
 Kompetenznetz TDM-KJP e.V.,Kompetenznetz Tdm-Kjp E V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Kliniken Krnan Urology Centre,Kliniken Krnan Urology Centre,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Tigercat Pharma, Inc.",Tigercat Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Ospedale San Raffaele s.r.l.,Ospedale San Raffaele S R L,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Medical University of Graz - Division of Endocrinology and Metabolism,Medical University Of Graz - Division Of Endocrinology And Metabolism,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Avillion Development 1 Limited,Avillion Development 1,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Alios BioPharma,Alios Biopharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3404,7 +3315,6 @@ Laboratoire HRA Pharma,Laboratoire Hra Pharma,unknown,unknown,0,NA,no reliable s
 "Ferrer Internacional, SA",Ferrer Internacional,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "rijnstate hospital, the netherlands",Rijnstate Hospital The,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Orthopedic Research in Aarhus,Orthopedic Research In Aarhus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Odense University Hospital, Department of Neurology",Odense University Hospital Department Of Neurology,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "CLOVIS ONCOLOGY, INC",Clovis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Mast Therapeutics, Inc.",Mast,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Ultragenyx Pharmaceuticals Inc.,Ultragenyx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3434,7 +3344,6 @@ TAYS Sydnsairaala,Tays Sydnsairaala,unknown,unknown,0,NA,no reliable sponsor mat
 Jazz Pharmaceuticals,Jazz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hellenic Oncology Research Group,Hellenic Research Group,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AS Kevelt,As Kevelt,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-European Orgainzation for the Research and Treatment of Cancer EORTC,European Orgainzation For The Research And Treatment Of Cancer Eortc,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Onyx Therapeutics, Inc., an Amgen Inc. subsidiary",Onyx Inc An Amgen Inc Subsidiary,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 NephroGenex,Nephrogenex,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Salix Pharmaceuticals, Inc. subsidiary of Valeant Pharmaceuticals International In",Salix Inc Subsidiary Of Valeant In,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3451,7 +3360,6 @@ Probiodrug AG,Probiodrug,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,
 Klinikum der Universitt Mnchen - AR  vertreten durch den Vorstand des Bereiches umanmedizinH,Klinikum Der Universitt Mnchen - Ar Vertreten Durch Den Vorstand Des Bereiches Umanmedizinh,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Brighton and Sussex University Hospitals NHS Trust,Brighton And Sussex University Hospitals Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SillaJen Inc.,Sillajen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Clinical Trials Unit, Rigshospitalet",Clinical Trials Unit Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Lars Bo Svendsen,Lars Bo Svendsen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 GEMCAD Grupo Espaol Multidisciplinar en Cncer Digestivo,Gemcad Grupo Espaol Multidisciplinar En Cncer Digestivo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Speising Orthopaedic Hospital Vienna,Speising Orthopaedic Hospital Vienna,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3461,7 +3369,6 @@ Ospedale L. Sacco - Azienda Ospedaliera-Polo Universitario,Ospedale L Sacco - Az
 ZonMW GGG,Zonmw Ggg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hpital Universitaire Des Enfants Reine Fabiola,Hpital Universitaire Des Enfants Reine Fabiola,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 County Council of stergtland,County Council Of Stergtland,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Bonkolab, Rigshospitalet",Bonkolab Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hvidovre University Hospital,Hvidovre University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Scioderm, An Amicus Therapeutics Company",Scioderm An Amicus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Medizinische Universitt Graz Universittsklinik fr InnereMedizin Abteilung fr Endokrinologie und Stoffwechsel,Medizinische Universitt Graz Universittsklinik Fr Inneremedizin Abteilung Fr Endokrinologie Und Stoffwechsel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3475,7 +3382,6 @@ Krankenhaus Nordwest gGmbH,Krankenhaus Nordwest Ggmbh,unknown,unknown,0,NA,no re
 "Medizinische Universitt Innsbruck, Innere Medizin VI",Medizinische Universitt Innsbruck Innere Medizin Vi,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 IKF-Klinische Krebsforschung GmbH am Krankenhaus Nordwest,Ikf-Klinische Krebsforschung Gmbh Am Krankenhaus Nordwest,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fondazione G.I.M.EM.A. Onlus Gruppo Italiano Malattie Ematologiche dellAdulto,Fondazione G I M Em A Onlus Gruppo Italiano Malattie Ematologiche Delladulto,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University Medical Center Groningen UMCG,University Medical Center Groningen Umcg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Antoni van Leeuwenhoek Hospital-Nuclear Medicine department,Antoni Van Leeuwenhoek Hospital-Nuclear Medicine Department,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Holostem Terapie Avanzate  S.r.l.,Holostem Terapie Avanzate S R L,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Cook MyoSite Incorporated,Cook Myosite,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3491,7 +3397,6 @@ Leiden University Medical Centre,Leiden University Medical Centre,unknown,unknow
 Dr. Jordi Montero Homs- Unidad de Neuromuscular- Servicio de Neurologa- Hospital Universitario de Bellvitge,Dr Jordi Montero Homs- Unidad De Neuromuscular- Servicio De Neurologa- Hospital Universitario De Bellvitge,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Institut dInvestigaci Sanitria Pere Virgili IISPV,Institut Dinvestigaci Sanitria Pere Virgili Iispv,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "James Martin Shannon, MB Bch NUI",James Martin Shannon Mb Bch Nui,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"GGZ inGeest, parner VUmc",Ggz Ingeest Parner Vumc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "AZIENDA OSPEDALIERA SAN GERARDO, MONZA, ITALIA",Azienda Ospedaliera San Gerardo Monza Italia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Mylan GmbH Mylan,Mylan Gmbh Mylan,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Dept of Medical Sciences, Clinical Diabetes and Metabolism, Uppsala University",Dept Of Medical Clinical Diabetes And Metabolism Uppsala University,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3508,7 +3413,6 @@ CHU de BORDEAUX,Chu De Bordeaux,hospital,unknown,0,NA,no reliable sponsor match,
 "Department of surgery, Herlev Hospital",Department Of Surgery Herlev Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Oncology, Linkping University Hospital, Linkping, Sweden",Department Of Linkping University Hospital Linkping Sweden,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Revalesio Corporation,Revalesio,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-VU University medical center VUmc,Vu University Medical Center Vumc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 NeRReTherapeuticsLtd,Nerretherapeuticsltd,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Ethicon, Inc.",Ethicon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA SANITARIA DI FIRENZE,Azienda Sanitaria Di Firenze,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3557,7 +3461,6 @@ CHU de DIJON,Chu De Dijon,hospital,unknown,0,NA,no reliable sponsor match,1,NA,N
 Flexion Therapeutics,Flexion,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Anesthesiology and Operative Intensive Care Medicine, Charit CBF",Department Of Anesthesiology And Operative Intensive Care Medicine Charit Cbf,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ARCHIGEN BIOTECH LIMITED,Archigen Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Academic Medical Center, Gastroenterology",Academic Medical Center Gastroenterology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 PIQUR Therapeutics AG,Piqur,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 HPITAUX UNIVERSITAIRES DE GENVE,Hpitaux Universitaires De Genve,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 IKEM,Ikem,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3580,7 +3483,6 @@ Medisch Centrum Haaglanden,Medisch Centrum Haaglanden,unknown,unknown,0,NA,no re
 Fondazione PENTA Onlus,Fondazione Penta Onlus,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "PharmaMar S.A., Sociedad Unipersonal",Pharmamar S A Sociedad Unipersonal,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University Hospitals of North Midlands NHS Trust,University Hospitals Of North Midlands Nhs Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Intensive Care 4131, Copenhagen University Hospital Rigshospitalet",Dept Of Intensive Care Copenhagen University Hospital Rigshospitalet,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Amarantus BioScience Holdings, Inc.",Amarantus Bioscience Holdings,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Delcath Systems, Ltd",Delcath Systems,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Universidad Autnoma de Madrid U.A.M.,Universidad Autnoma De Madrid U A M,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3603,7 +3505,6 @@ The London Clinic,The London Clinic,hospital,unknown,0,NA,no reliable sponsor ma
 St Georges University of London,St Georges University Of London,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Clinical Science, Intervention and Technology, Karolinska Institute",Department Of Clinical Science Intervention And Technology Karolinska Institute,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 MENARINI INTERNATIONAL OPERATIONS LUXEMBOURG SA,Menarini Operations Luxembourg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Swiss Group  For Clinical Cancer Research SAKK,Swiss Group For Clinical Cancer Research Sakk,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Aerie Pharmaceuticals Ireland Ltd.,Aerie Ireland,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Laguna Pharmaceuticals, Inc.",Laguna,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Secura Bio, Inc.",Secura Bio,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3611,7 +3512,6 @@ Medizinische Universit Wien,Medizinische Universit Wien,academic,unknown,0,NA,no
 Centre Hospitalier Universitaire de Nice,Centre Hospitalier Universitaire De Nice,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Inventiva SA,Inventiva,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Mxima Medisch Centrum,Mxima Medisch Centrum,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MEDIMMUNE, LLC",Medimmune,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Cliniques Universitaires Saint-Luc CUSL,Cliniques Universitaires Saint-Luc Cusl,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 HPITAUX UNIVERSITAIRES DE STRASBOURG,Hpitaux Universitaires De Strasbourg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Medizinische Universitt Wien, Universittsklinik fr",Medizinische Universitt Wien Universittsklinik Fr,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3655,7 +3555,6 @@ Arthritis Alaptvny,Arthritis Alaptvny,unknown,unknown,0,NA,no reliable sponsor m
 "Alnylam Pharmaceuticals, Inc",Alnylam,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Helse Bergen HF, Haukeland universitetssjukehus",Helse Bergen Hf Haukeland Universitetssjukehus,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CASSIOPEA SpA,Cassiopea,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Institut de Recherche International Servier,Institut De Recherche Servier,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Celtaxsys Inc.,Celtaxsys,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 SMARTPRACTICE,Smartpractice,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Taiho Oncology, Inc",Taiho,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3678,7 +3577,7 @@ Centre Hospitalier Henri Laborit,Centre Hospitalier Henri Laborit,unknown,unknow
 Vienna Institute for Research in Ocular Surgery,Vienna Institute For Research In Ocular Surgery,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Medicine, Zealand University Hospital",Department Of Medicine Zealand University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 INSTITUTE OF CLINICAL CANCER RESEARCH IKF KRANKENHAUS NORDWEST GGMBH,Institute Of Clinical Cancer Research Ikf Krankenhaus Nordwest Ggmbh,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Universit catholique de Louvain UCL,Universit Catholique De Louvain Ucl,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Universit catholique de Louvain UCL,University College London,academic,review,80,manual,alias match: 'ucl' → 'University College London',1,NA,NA,NA
 PALUPA Medical Ltd,Palupa Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 OSE Pharma,Ose Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AZIENDA OSPEDALIERO-UNIVERSITARIA CAREGGI,Azienda Ospedaliero-Universitaria Careggi,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3770,7 +3669,6 @@ University Hospital Basel,University Hospital Basel,hospital,unknown,0,NA,no rel
 Uzsoki Utcai Krhz,Uzsoki Utcai Krhz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 DexTech Medical AB,Dextech Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "CoLucid Pharmaceuticals, Inc.",Colucid,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Daiichi Sankyo , Inc.",Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Gemphire Therapeutics Inc.,Gemphire,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Cyclo Therapeutics, Inc.",Cyclo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Surgery, Herlev Hospital",Department Of Surgery Herlev Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3854,7 +3752,6 @@ Shield TX UK Limited,Shield Tx,unknown,unknown,0,NA,no reliable sponsor match,1,
 Region Hovedstadens psykiatriske hospital,Region Hovedstadens Psykiatriske Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Ottawa Heart institute Research Corporation,Ottawa Heart Institute Research,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "DOTT.SSA CARMELINDA RUGGIERO,ISTITUTO DI GERIATRIA E GERONTOLOGIA, UNIVERSIT DEGLI STUDI DI PERUGIA",Dott Ssa Carmelinda Ruggiero Istituto Di Geriatria E Gerontologia Universit Degli Studi Di Perugia,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Hjertemedicinsk klinik, Rigshospitalet",Hjertemedicinsk Klinik Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Friedrich-Schiller-University Jena,Friedrich-Schiller-University Jena,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Engelhard Arzneimittel GmbH  Co.KG,Engelhard Arzneimittel Gmbh Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "CytomX Therapeutics, Inc",Cytomx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3862,7 +3759,6 @@ National Institutes of Health - Eunice Kennedy Shriver National Institute of Chi
 Alder Hey Childrens NHS Foundation Trust,Alder Hey Childrens Nhs Foundation Trust,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Nemocnice Na Homolce,Nemocnice Na Homolce,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Relypsa, Inc",Relypsa,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Daiichi Sankyo Europe GmbH,Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Medica Scientia Innovation Research MedSIR ARO,Medica Scientia Innovation Research Medsir Aro,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 A.C.R.A.F. SpA  Angelini SpA,A C R A F Spa Angelini,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Versartis, Inc.",Versartis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -3874,7 +3770,6 @@ Fundaci Clnic per la recerca Biomdica / CNIC,Fundaci Clnic Per La Recerca Biomdi
 "BeiGene USA, Inc.",Beigene,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Centre Hospitalier Universitaire Saint Pierre , ULB",Centre Hospitalier Universitaire Saint Pierre Ulb,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Rigontec GmbH,Rigontec,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Academic Medical Center of Amsterdam,Academic Medical Center Of Amsterdam,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 UHangers,Uhangers,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fondazione FADOI,Fondazione Fadoi,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "TARGID, KU Leuven",Targid Ku Leuven,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4006,7 +3901,6 @@ ASLAN Pharmaceuticals,Aslan,unknown,unknown,0,NA,no reliable sponsor match,1,NA,
 ECRI-9,Ecri-9,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Dr. Abelardo Aguilera Peralta,Dr Abelardo Aguilera Peralta,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "MD, PhD Salome Kristensen",Md Phd Salome Kristensen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MedImmune Limited, a wholly owned subsidiary of AstraZeneca",Medimmune Limited A Wholly Owned Subsidiary Of Astrazeneca,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Carrick Therapeutics,Carrick,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Hospital for Sick Children,Hospital For Sick Children,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Institut fr Klinische Krebsforschung IKF GmbH at Krankenhaus Nordwest,Institut Fr Klinische Krebsforschung Ikf Gmbh At Krankenhaus Nordwest,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4070,7 +3964,6 @@ Iterum Therapeutics International Limited,Iterum,unknown,unknown,0,NA,no reliabl
 centre hospitalier et universitaire de Lille,Centre Hospitalier Et Universitaire De Lille,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "DOBECURE, S.L",Dobecure S L,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Consorzio Futuro in Ricerca,Consorzio Futuro In Ricerca,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-European Organisation for research and Treatment of cancer EORTC,European Organisation For Research And Treatment Of Cancer Eortc,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Chimerix, Inc",Chimerix,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Advanced Accelerator Applications International SA,Advanced Accelerator Applications,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 European AIDS Treatment Network Infectious Disease Foundation NEAT ID,European Aids Treatment Network Infectious Disease Foundation Neat Id,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4184,7 +4077,6 @@ Mereo BioPharma 4 Ltd,Mereo Biopharma 4,unknown,unknown,0,NA,no reliable sponsor
 "VenatoRx Pharmaceuticals, Inc.",Venatorx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fondation Lenval - Hpitaux Pdiatriques de Nice CHULENVAL,Fondation Lenval - Hpitaux Pdiatriques De Nice Chulenval,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Katairo GmbH,Katairo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-SEAGEN INC.,Seagen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Leiden University,Leiden University,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Rafael Pharmaceuticals, Inc",Rafael,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CHU AMIENS-PICARDIE,Chu Amiens-Picardie,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4211,7 +4103,6 @@ HOSPITAL UNIVERSITARIO FUNDACION ALCORCON,Hospital Universitario Fundacion Alcor
 "GB001, Inc.",Gb001,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Principia Biopharma,Principia Biopharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 DRCI APHP,Drci Aphp,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Stichting VUmc,Stichting Vumc,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Department of Clinical Pharmacology/Medical University of Vienna,Department Of Clinical Pharmacology/Medical University Of Vienna,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Medical University Graz, Department of Ophtalmology",Medical University Graz Department Of Ophtalmology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Litaphar Laboratorios,Litaphar Laboratorios,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4221,7 +4112,6 @@ County Council of Vsterbotten,County Council Of Vsterbotten,unknown,unknown,0,NA
 Auris Medical Ltd,Auris Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Ovid Therapeutics, Inc.",Ovid,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Rakuten Aspyrian, Inc.",Rakuten Aspyrian,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Center for Aktiv Sundhed, Rigshospitalet",Center For Aktiv Sundhed Rigshospitalet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Atox Bio,Atox Bio,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Ruprecht-Karls-University Heidelberg, Medical Faculty represented by Universittsklinikum Heidelberg and its Commercial",Ruprecht-Karls-University Heidelberg Medical Faculty Represented By Universittsklinikum Heidelberg And Its Commercial,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ADC THERAPEUTICS SA,Adc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4476,7 +4366,6 @@ Centre Hospitalier Rgional Universitaire de Nancy,Centre Hospitalier Rgional Uni
 "CeleCor Therapeutics, Inc.",Celecor,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 BarcelonaBeta  Brain Research Center,Barcelonabeta Brain Research Center,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Institut National de la Sant et de la Recherche Mdicale INSERM,Institut National De La Sant Et De La Recherche Mdicale Inserm,public_body,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ASSISTANCE PUBLIQUE - HPITAUX DE PARIS AP-HP,Assistance Publique - Hpitaux De Paris Ap-Hp,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 BioNTech Cell  Gene Therapies GmbH,Biontech Cell Gene Therapies,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fundaci Clnic per a la Recerca Biomdica_FCRB,Fundaci Clnic Per A La Recerca Biomdica_fcrb,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Centro de Investigacin Biomdica en Red de Enfermedades Neurodegenerativas Ciberned,Centro De Investigacin Biomdica En Red De Enfermedades Neurodegenerativas Ciberned,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4510,7 +4399,6 @@ Verein zur Frderung von Wissenschaft und Forschung an der 1. Med. Abteilung der 
 "PellePharm, Inc.",Pellepharm,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AP-HP/DRCD,Ap-Hp/Drcd,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Christoffer Laustsen,Christoffer Laustsen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Merck Healthcare KGaA, an affiliate of Merck KGaA, Darmstadt, Germany",Merck Healthcare Kgaa An Affiliate Of Merck Kgaa Darmstadt,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Ruprecht-Karls University Heidelberg, Medical Faculty, repr. by HD University Hospital and its Commercial Managing Dir.",Ruprecht-Karls University Heidelberg Medical Faculty Repr By Hd University Hospital And Its Commercial Managing Dir,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 DIP. MEDICINA DEI SISTEMI UNIVERSIT DEGLI STUDI DI ROMA TOR VERGATA,Dip Medicina Dei Sistemi Universit Degli Studi Di Roma Tor Vergata,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "DIPARTIMENTO DI SCIENZE BIOMEDICHE SPERIMENTALI E CLINICHE, UNIVERSIT DI FIRENZE",Dipartimento Di Scienze Biomediche Sperimentali E Cliniche Universit Di Firenze,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4667,7 +4555,6 @@ University of Alabama at Birmingham,University Of Alabama At Birmingham,unknown,
 Department of Oncology,Department Of,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 AiCuris Anti-infective Cures AG,Aicuris Anti-Infective Cures,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Constellation Pharmaceuticals, Inc.",Constellation,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"DAIICHI SANKYO, INC.",Daiichi Sankyo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Affibody AB,Affibody,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Altavant Sciences GmbH,Altavant,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "ModernaTX, Inc.",Modernatx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4766,7 +4653,6 @@ Spanish Cardiology Society,Spanish Cardiology Society,unknown,unknown,0,NA,no re
 chu de NANTES,Chu De Nantes,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Intas Pharmaceuticals Ltd.,Intas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 GeNeuro Innovation SAS,Geneuro Innovation,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Cardiology, Copenhagen University Hospital Rigshospitalet",Department Of Cardiology Copenhagen University Hospital Rigshospitalet,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ACTICOR BIOTECH,Acticor Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Nanobiotix SA,Nanobiotix,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Eden Biologics, Inc., Taiwan",Eden Biologics Inc Taiwan,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4778,7 +4664,7 @@ ALFASIGMA CZECH s.r.o.,Alfasigma Czech S R O,unknown,unknown,0,NA,no reliable sp
 "IGM Biosciences, Inc.",Igm,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fundaci Clinic per a la Recerca Biomdica FCRB,Fundaci Clinic Per A La Recerca Biomdica Fcrb,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 National Institute for Public Health and the Environment,National Institute For Public Health And The Environment,public_body,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Sun Pharmaceutical Industries, Inc.",Sun Pharmaceutical Industries,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Sun Pharmaceutical Industries, Inc.",Sun Pharmaceutical,industry,review,86,manual,alias match: 'sun pharmaceutical' → 'Sun Pharmaceutical',1,NA,NA,NA
 "Escient Pharmaceuticals, Inc.",Escient,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 InDex Pharmaceuticals,Index,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 CHU de Besanon,Chu De Besanon,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4865,7 +4751,6 @@ SOTIO Biotech AG,Sotio Biotech,unknown,unknown,0,NA,no reliable sponsor match,1,
 Incyte Biosciences International Sarl,Incyte Corporation,industry,review,86,manual,alias match: 'incyte' → 'Incyte Corporation',1,NA,NA,NA
 "Panbela Therapeutics, Inc",Panbela,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 LMU Klinikum der Universitt Mnchen,Lmu Klinikum Der Universitt Mnchen,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-UNITED THERAPEUTICS CORPORATION,United,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Grupo Espaol Multidisciplinar de Cncer Digestivo GEMCAD,Grupo Espaol Multidisciplinar De Cncer Digestivo Gemcad,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fundaci Institut dInvestigaci i Innovaci Parc Taul I3PT,Fundaci Institut Dinvestigaci I Innovaci Parc Taul I3pt,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Prehospital Emergency Medical Services, Central Denmark Region",Prehospital Emergency Medical Services Central Denmark Region,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4943,7 +4828,6 @@ Blue Earth Therapeutics Limited,Blue Earth,unknown,unknown,0,NA,no reliable spon
 Heinrich-Heine-Universitt Dsseldorf represented by the Coordinating Investigator,Heinrich-Heine-Universitt Dsseldorf Represented By The Coordinating Investigator,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Jadran - galenski laboratorij d.d. JGL,Jadran - Galenski Laboratorij D D Jgl,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Institut Mutualiste Montsouris,Institut Mutualiste Montsouris,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ASSISTANCE PUBLIQUE-HOPITAUX DE PARIS AP-HP,Assistance Publique-Hopitaux De Paris Ap-Hp,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Germans Trias i Pujol Health Research Institute,Germans Trias I Pujol Health Research Institute,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Klinikum Nrnberg,Klinikum Nrnberg,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Department of Otorhinolaryngology Head  Neck and Audiology, Rigshospitalet, Copenhagen, Denmark",Department Of Otorhinolaryngology Head Neck And Audiology Rigshospitalet Copenhagen Denmark,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -4981,7 +4865,6 @@ Calcilytix Therapeutics Inc.,Calcilytix,unknown,unknown,0,NA,no reliable sponsor
 CCAB Centro Clinico Academico Braga Associacao,Ccab Centro Clinico Academico Braga Associacao,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Leap Therapeutics Inc.,Leap,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Institut Curie / Institut Curie,Institut Curie / Institut Curie,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Lysarc,Lysarc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin Der Johannes Gutenberg-Universitat Mainz Kor,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Maat Pharma,Maat Pharma,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Bispebjerg Hospital / Gentofte Hospital,Bispebjerg Hospital / Gentofte Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -5066,7 +4949,6 @@ Ferrer Internacional S.A.,Ferrer Internacional S A,unknown,unknown,0,NA,no relia
 Medac Gesellschaft fuer klinische Spezialprapaerate mbH,Medac Gesellschaft Fuer Klinische Spezialprapaerate Mbh,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Haemato Oncology Foundation For Adults Netherlands,Haemato Foundation For Adults,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Dendrogenix,Dendrogenix,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Viiv Healthcare UK Limited,Viiv Healthcare,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,Bellvitge University Hospital / Fundacio Institut D'investigacio Biomedica De Bellvitge Idibell,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Transcend Therapeutics Inc.,Transcend,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University Medical Center Utrecht / University Medical Center Utrecht,University Medical Center Utrecht / University Medical Center Utrecht,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -5119,7 +5001,6 @@ Oncoinvent Solutions AS,Oncoinvent Solutions As,unknown,unknown,0,NA,no reliable
 D3 Bio (Wuxi) Co. Ltd.,D3 Bio Wuxi Co,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Biontech US Inc.,Biontech Us,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ACO Hud Nordic AB,Aco Hud Nordic,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Stichting Hemato-Oncologie voor Volwassenen Nederland (Hovon),Stichting Hemato-Oncologie Voor Volwassenen Nederland Hovon,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 University Of Gothenburg / NU Hospital Group-Vaestra Goetalandsregionen,University Of Gothenburg / Nu Hospital Group-Vaestra Goetalandsregionen,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Universitaetsspital Basel,Universitaetsspital Basel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Blueprint Medicines Corp.,Blueprint Medicines,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -5131,7 +5012,6 @@ CDR-Life AG,Cdr-Life,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Twi Biotechnology Inc.,Twi Biotechnology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Myokardia Inc.,Myokardia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Grupo Gallego De Investigacion En Tumores Digestivos / Grupo Gallego De Investigacion En Tumores Digestivos,Grupo Gallego De Investigacion En Tumores Digestivos / Grupo Gallego De Investigacion En Tumores Digestivos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Biomarin Pharmaceutical Inc.,Biomarin Pharmaceutical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Fondazione IRCCS Istituto Nazionale Dei Tumori / Fondazione IRCCS Istituto Nazionale Dei Tumori,Fondazione Irccs Istituto Nazionale Dei Tumori / Fondazione Irccs Istituto Nazionale Dei Tumori,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Celltrion Inc.,Celltrion,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Tectonic Therapeutic Inc.,Tectonic Therapeutic,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
@@ -5302,7 +5182,6 @@ Groupe Francophone Des Myelodysplasies,Groupe Francophone Des Myelodysplasies,un
 Novocure GmbH,Novocure,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Biodol Therapeutics,Biodol,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Centre Hospitalier De Versailles / Centre Hospitalier De Versailles,Centre Hospitalier De Versailles / Centre Hospitalier De Versailles,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Ospedale San Raffaele S.r.l. / Ospedale San Raffaele S.r.l.,Ospedale San Raffaele S R L / Ospedale San Raffaele S R L,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Universita Degli Studi Di Milano Bicocca,Universita Degli Studi Di Milano Bicocca,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Oncopole Claudius Regaud,Oncopole Claudius Regaud,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Inhibrx Biosciences Inc.,Inhibrx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA

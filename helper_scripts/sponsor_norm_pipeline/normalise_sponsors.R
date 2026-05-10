@@ -84,6 +84,18 @@ make_sponsor_candidates <- function(x) {
     stringr::str_remove_all(stringr::regex(.rd_rx, ignore_case = TRUE)) |>
     stringr::str_squish()
 
+  # Strip parenthetical content from the RAW string before cleaning —
+  # clean_sponsor_alias() converts ( ) to spaces so the paren regex needs
+  # to run first. Catches "Erasmus MC Rotterdam (Erasmus MC)" →
+  # candidate without the parenthetical suffix.
+  x_no_paren <- stringr::str_remove_all(x, "\\(.*?\\)") |>
+    stringr::str_squish() |>
+    clean_sponsor_alias()
+
+  # Last token catches trailing acronyms: "...Cancer EORTC" -> "eortc"
+  all_toks   <- stringr::str_split(x_no_addr, "\\s+")[[1]]
+  last_token <- utils::tail(all_toks, 1)
+
   toks         <- stringr::str_split(x0, "\\s+")[[1]]
   first_tokens <- paste(utils::head(toks, 3), collapse = " ")
 
@@ -95,8 +107,8 @@ make_sponsor_candidates <- function(x) {
   first_two  <- paste(utils::head(clean_toks, 2), collapse = " ")
 
   candidates <- unique(stats::na.omit(c(
-    x0, x_no_addr, x_no_legal, x_no_rd,
-    first_tokens, first_word, first_two
+    x0, x_no_addr, x_no_paren, x_no_legal, x_no_rd,
+    first_tokens, first_word, first_two, last_token
   )))
   candidates[nchar(candidates) >= 2]
 }

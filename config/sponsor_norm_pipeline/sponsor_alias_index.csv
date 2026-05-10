@@ -272,6 +272,57 @@ hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices
 abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,manual,1
 abbott gmbh,Abbott,Abbott,Abbott,industry,manual,manual,1
 abbott,Abbott,Abbott,Abbott,industry,manual,manual,0.9
+university of birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,manual,manual,1
+university hospitals birmingham nhs foundation trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,hospital,manual,manual,1
+sheffield teaching hospitals nhs foundation trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,hospital,manual,manual,1
+academic medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+umc utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,manual,1
+erasmus universitair medisch centrum rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,manual,1
+merck healthcare kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,manual,1
+merck healthcare,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,manual,0.9
+boehringer ing,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,manual,1
+nv organon,Organon,Organon,Organon,industry,manual,manual,1
+organon,Organon,Organon,Organon,industry,manual,manual,0.9
+biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,manual,1
+biomarin pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,manual,1
+biomarin,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,manual,0.9
+university of leeds,University Of Leeds,University Of Leeds,University Of Leeds,academic,manual,manual,1
+university of nottingham,University Of Nottingham,University Of Nottingham,University Of Nottingham,academic,manual,manual,1
+university of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,manual,manual,1
+university of cardiff,University Of Cardiff,University Of Cardiff,University Of Cardiff,academic,manual,manual,1
+cardiff university,Cardiff University,Cardiff University,Cardiff University,academic,manual,manual,1
+university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,manual,1
+unicancer,Unicancer,Unicancer,Unicancer,cooperative_group,manual,manual,1
+viiv healthcare uk limited,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,manual,1
+viiv healthcare,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,manual,1
+medimmune llc,MedImmune,AstraZeneca,AstraZeneca,industry,manual,manual,1
+medimmune,MedImmune,AstraZeneca,AstraZeneca,industry,manual,manual,1
+ionis pharmaceuticals inc,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,manual,1
+ionis pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,manual,1
+ionis,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,manual,0.9
+daiichi sankyo inc,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,manual,1
+daiichi sankyo,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,manual,1
+seagen inc,Seagen,Pfizer,Pfizer,industry,manual,manual,1
+seagen,Seagen,Pfizer,Pfizer,industry,manual,manual,0.9
+centocor bv,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,manual,1
+centocor,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,manual,0.9
+united therapeutics corporation,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,manual,1
+united therapeutics,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,manual,0.9
+helsinn healthcare sa,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,manual,1
+helsinn healthcare,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,manual,1
+lysarc,LYSARC,LYSARC,LYSARC,cooperative_group,manual,manual,1
+region midtjylland,Region Midtjylland,Region Midtjylland,Region Midtjylland,hospital,manual,manual,1
+odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,manual,1
+odense universitetshospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,manual,1
+ospedale san raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,manual,1
+ospedale s raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,manual,1
+istituto europeo di oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,manual,manual,1
+charite - universitatsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charite - universitsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+merz pharmaceuticals gmbh,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,manual,1
+merz pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,manual,1
+sun pharmaceutical industries limited,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,manual,1
+sun pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,manual,0.9
 glaxosmithkline trading services limited,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
 bristol-myers squibb pharma eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
 sanofi-aventis deutschland gmbh,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
@@ -298,11 +349,13 @@ glaxosmithkline biologicals s a,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
 merck sharp dohme limited,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
 astellas pharma europe b v,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
 chiesi farmaceutici s p a,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,epar_mah,epar_mah,0.85
+daiichi sankyo europe gmbh,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,epar_mah,epar_mah,0.85
 sandoz pharmaceuticals d d,Sandoz,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
 leo pharma a/s,LEO Pharma,LEO Pharma,LEO Pharma,industry,epar_mah,epar_mah,0.85
 amgen technology ireland uc,Amgen,Amgen,Amgen,industry,epar_mah,epar_mah,0.85
 teva pharma b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
 incyte biosciences distribution b v,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,epar_mah,epar_mah,0.85
+organon n v,Organon,Organon,Organon,industry,epar_mah,epar_mah,0.85
 alk-abello a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 bristol-myers squibb / pfizer eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
@@ -316,13 +369,17 @@ takeda pharma a/s,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 otsuka novel products gmbh,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,epar_mah,epar_mah,0.85
 biogen netherlands b v,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
 genmab a/s,Genmab,Genmab,Genmab,industry,epar_mah,epar_mah,0.85
+viiv healthcare b v,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag ireland branch,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 teva gmbh,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
 novartis europharm ltd,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
 sanofi b v,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 regeneron ireland designated activity company dac,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,epar_mah,epar_mah,0.85
+sun pharmaceutical industries europe b v,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,epar_mah,epar_mah,0.85
+viiv healthcare bv,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag ireland,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 sanofi-aventis groupe,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+biomarin international limited,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,epar_mah,epar_mah,0.85
 bristol myers squibb pharma eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
 gilead sciences international ltd,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
 pfizer ireland pharmaceuticals unlimited company,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
@@ -345,6 +402,7 @@ sanofi pasteur europe,Sanofi Pasteur,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.
 biogen idec ltd,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
 sanofi pasteur s a,Sanofi Pasteur,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 genzyme europe bv,Genzyme,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+united therapeutics europe ltd,United Therapeutics,United Therapeutics,United Therapeutics,industry,epar_mah,epar_mah,0.85
 teva generics b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
 smithkline beecham plc,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
 novartis vaccines and diagnostics s r l,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
@@ -364,7 +422,9 @@ merck serono europe limited,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,indu
 abbott laboratories ltd,Abbott,Abbott,Abbott,industry,epar_mah,epar_mah,0.85
 schering-plough europe,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
 wyeth europa ltd,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+sun pharmaceutical industries b v,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,epar_mah,epar_mah,0.85
 wyeth consumer healthcare,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+centocor b v,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
 wyeth lederle vaccines s a,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
 shire pharmaceutical contracts limited,Shire,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 astellas pharma gmbh,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
@@ -377,3 +437,4 @@ abbott s r l,Abbott,Abbott,Abbott,industry,epar_mah,epar_mah,0.85
 takeda europe r centre ltd,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 eli lilly co ltd,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 novartis ophthalmics europe ltd,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+pasteur ma¨rieux msd,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
