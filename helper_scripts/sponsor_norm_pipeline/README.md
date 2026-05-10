@@ -16,17 +16,27 @@ Reads `trials_cache.rds`, extracts the primary sponsor name for each trial (EUCT
 
 ---
 
-### Step 2 (optional, Phase 2) — Build alias index from external databases
+### Step 2 — Build alias index from external databases
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R          # manual + EPAR + ROR
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror  # manual + EPAR only
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-epar # manual + ROR only
 ```
 
-> **Not yet implemented.** Planned sources:
-> - EMA EPAR Marketing Authorisation Holders (MAH names)
-> - ROR (Research Organization Registry) for academic/hospital names
->
-> Until this script exists, matching relies entirely on `config/sponsor_norm_pipeline/manual_sponsor_aliases.csv`.
+Downloads external name sources and merges them with `manual_sponsor_aliases.csv` to produce `sponsor_alias_index.csv`. Run after adding new manual aliases or when the EPAR dataset is updated.
+
+**Sources:**
+- `manual_sponsor_aliases.csv` — always included (confidence 1.00, highest priority)
+- EMA EPAR Marketing Authorisation Holders — MAH name variants for sponsors already in the manual table (confidence 0.85)
+- ROR (Research Organization Registry) — academic/hospital name variants for EU institutions already in the manual table (confidence 0.75)
+
+**Outputs:**
+- `config/sponsor_norm_pipeline/sponsor_alias_index.csv` — merged alias table used by `normalise_sponsors.R`
+- `config/sponsor_norm_pipeline/sponsor_ambiguous_aliases.csv` — aliases that map to more than one canonical sponsor
+- `config/sponsor_norm_pipeline/new_sponsor_candidates.csv` — unmatched external names for manual review
+
+When `sponsor_alias_index.csv` does not yet exist, `normalise_sponsors.R` falls back to `manual_sponsor_aliases.csv` automatically.
 
 ---
 
