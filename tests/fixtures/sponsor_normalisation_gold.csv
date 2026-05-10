@@ -1,0 +1,90 @@
+raw_sponsor,expected_sponsor_clean,expected_sponsor_group,expected_status
+Merck Sharp & Dohme LLC,MSD,MSD / Merck & Co.,accepted
+Merck Sharp & Dohme Corp.,MSD,MSD / Merck & Co.,accepted
+Merck Sharp & Dohme Limited,MSD,MSD / Merck & Co.,accepted
+MSD,MSD,MSD / Merck & Co.,accepted
+Merck & Co. Inc.,MSD,MSD / Merck & Co.,accepted
+Merck & Co.,MSD,MSD / Merck & Co.,accepted
+Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,accepted
+Merck Serono SA,Merck Serono,Merck KGaA / EMD Serono,accepted
+Merck Serono,Merck Serono,Merck KGaA / EMD Serono,accepted
+EMD Serono,EMD Serono,Merck KGaA / EMD Serono,accepted
+F. Hoffmann-La Roche AG,Roche,Roche,accepted
+Hoffmann-La Roche,Roche,Roche,accepted
+Roche,Roche,Roche,accepted
+Genentech,Genentech,Roche,accepted
+Genentech Inc.,Genentech,Roche,accepted
+Novartis Pharma AG,Novartis,Novartis,accepted
+Novartis AG,Novartis,Novartis,accepted
+Novartis,Novartis,Novartis,accepted
+AstraZeneca AB,AstraZeneca,AstraZeneca,accepted
+AstraZeneca,AstraZeneca,AstraZeneca,accepted
+Bristol-Myers Squibb,BMS,BMS,accepted
+Bristol-Myers Squibb International Corporation,BMS,BMS,accepted
+BMS,BMS,BMS,accepted
+GlaxoSmithKline,GSK,GSK,accepted
+GlaxoSmithKline Research and Development Limited,GSK,GSK,accepted
+GSK,GSK,GSK,accepted
+Boehringer Ingelheim GmbH,Boehringer Ingelheim,Boehringer Ingelheim,accepted
+Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,accepted
+SCS Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,accepted
+Pfizer Inc.,Pfizer,Pfizer,accepted
+Pfizer,Pfizer,Pfizer,accepted
+Eli Lilly and Company,Eli Lilly,Eli Lilly,accepted
+Eli Lilly,Eli Lilly,Eli Lilly,accepted
+Sanofi-Aventis,Sanofi,Sanofi,accepted
+Sanofi,Sanofi,Sanofi,accepted
+Janssen-Cilag,Janssen,Janssen / Johnson & Johnson,accepted
+Janssen,Janssen,Janssen / Johnson & Johnson,accepted
+Johnson & Johnson,Johnson & Johnson,Janssen / Johnson & Johnson,accepted
+AbbVie Inc.,AbbVie,AbbVie,accepted
+AbbVie,AbbVie,AbbVie,accepted
+Amgen Inc.,Amgen,Amgen,accepted
+Amgen,Amgen,Amgen,accepted
+Gilead Sciences,Gilead Sciences,Gilead Sciences,accepted
+Gilead,Gilead Sciences,Gilead Sciences,accepted
+Takeda Pharmaceutical Company Limited,Takeda,Takeda,accepted
+Takeda,Takeda,Takeda,accepted
+Bayer AG,Bayer,Bayer,accepted
+Bayer,Bayer,Bayer,accepted
+UCB Pharma SA,UCB,UCB,accepted
+UCB,UCB,UCB,accepted
+Novo Nordisk A/S,Novo Nordisk,Novo Nordisk,accepted
+Novo Nordisk,Novo Nordisk,Novo Nordisk,accepted
+Ipsen,Ipsen,Ipsen,accepted
+Servier,Servier,Servier,accepted
+Les Laboratoires Servier,Servier,Servier,accepted
+Institut de Recherches Internationales Servier IRIS,Servier,Servier,accepted
+Pierre Fabre Médicament,Pierre Fabre,Pierre Fabre,accepted
+EORTC,EORTC,EORTC,accepted
+European Organisation for Research and Treatment of Cancer,EORTC,EORTC,accepted
+HOVON,HOVON,HOVON,accepted
+HOVON Foundation,HOVON,HOVON,accepted
+Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,accepted
+Academic Medical Center Amsterdam,Amsterdam UMC,Amsterdam UMC,accepted
+VU University Medical Center Amsterdam,Amsterdam UMC,Amsterdam UMC,accepted
+Erasmus MC,Erasmus MC,Erasmus MC,accepted
+Erasmus University Medical Center,Erasmus MC,Erasmus MC,accepted
+Radboudumc,Radboudumc,Radboudumc,accepted
+Radboud University Medical Center,Radboudumc,Radboudumc,accepted
+Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,accepted
+UZ Leuven,UZ Leuven,UZ Leuven,accepted
+University Hospitals Leuven,UZ Leuven,UZ Leuven,accepted
+KU Leuven,KU Leuven,KU Leuven,accepted
+University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,accepted
+UZ Gent,University Hospital Ghent,University Hospital Ghent,accepted
+Rigshospitalet,Rigshospitalet,Rigshospitalet,accepted
+Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,accepted
+Aarhus University,Aarhus University,Aarhus University,accepted
+Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,accepted
+Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,accepted
+Medical University of Vienna,Medical University Of Vienna,Medical University Of Vienna,accepted
+Gustave Roussy,Gustave Roussy,Gustave Roussy,accepted
+University of Oxford,University Of Oxford,University Of Oxford,accepted
+Imperial College London,Imperial College London,Imperial College London,accepted
+University College London,University College London,University College London,accepted
+Unknown,,NA,rejected
+not applicable,,NA,rejected
+N/A,,NA,rejected
+multiple sponsors,,NA,rejected
+see protocol,,NA,rejected
