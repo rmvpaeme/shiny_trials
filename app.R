@@ -4330,23 +4330,12 @@ server <- function(input, output, session) {
   # ── Active Substances tab ─────────────────────────────────────────────────
   active_substance_rows <- reactive({
     req(rv$data)
-    base <- filt()
-    inn_rows <- base %>%
-      filter(!is.na(DIMP_inn_name), nchar(str_trim(DIMP_inn_name)) > 0) %>%
-      select(`_id`, register, year, age_group, substance_raw = DIMP_inn_name) %>%
-      separate_rows(substance_raw, sep = " / ") %>%
-      mutate(substance_source = "INN / generic")
-    product_rows <- base %>%
-      filter(is.na(DIMP_inn_name) | nchar(str_trim(DIMP_inn_name)) == 0,
-             !is.na(DIMP_product_name), nchar(str_trim(DIMP_product_name)) > 0) %>%
-      select(`_id`, register, year, age_group, substance_raw = DIMP_product_name) %>%
-      separate_rows(substance_raw, sep = " / ") %>%
-      mutate(substance_source = "Product name")
-    bind_rows(inn_rows, product_rows) %>%
-      mutate(
-        active_substance = resolve_substance_label(substance_raw)
-      ) %>%
-      filter(is_exploratory_substance(active_substance))
+    filt() %>%
+      filter(!is.na(substance_label), nchar(trimws(substance_label)) > 0) %>%
+      select(`_id`, register, year, age_group, substance_label) %>%
+      separate_rows(substance_label, sep = " / ") %>%
+      filter(nchar(trimws(substance_label)) > 0) %>%
+      rename(active_substance = substance_label)
   })
 
   top_active_substances <- reactive({
