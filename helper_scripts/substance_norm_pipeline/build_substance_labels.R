@@ -187,7 +187,10 @@ if (write_queue) {
     filter(match_status %in% c("review", "unknown")) %>%
     left_join(occ, by = "raw_substance") %>%
     mutate(n_occurrences = coalesce(n_occurrences, 0L)) %>%
-    filter(n_occurrences >= 2) %>%
+    filter(
+      match_status == "review" |          # always include review — may be an alias of a common substance
+        n_occurrences >= 2               # unknown singletons not worth curating
+    ) %>%
     select(raw_substance, active_substance_clean, match_status,
            match_score, match_source, match_reason, n_occurrences)
 
@@ -201,7 +204,7 @@ if (write_queue) {
     arrange(desc(n_occurrences))
 
   readr::write_csv(queue_out, queue_path)
-  message(sprintf("Wrote review queue: %d rows to %s (singletons excluded)",
+  message(sprintf("Wrote review queue: %d rows to %s (review: all; unknown: n>=2 only)",
                   nrow(queue_out), queue_path))
 }
 
