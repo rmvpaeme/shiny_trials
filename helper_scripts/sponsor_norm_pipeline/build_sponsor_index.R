@@ -131,15 +131,36 @@ if (!no_epar) {
       writeBin(dest)
     message("Download complete.")
 
-    # EMA Excel: rows 1-8 metadata, row 9 header, data from row 10
-    raw_excel <- readxl::read_excel(dest, col_names = FALSE, skip = 0)
-    headers   <- as.character(raw_excel[9, ])
-    data_rows <- raw_excel[10:nrow(raw_excel), ]
+    # Find the header row dynamically — EMA occasionally adds/removes metadata rows.
+    # The header row is the first row containing "name of medicine" or "active substance".
+    raw_excel <- readxl::read_excel(dest, col_names = FALSE, skip = 0,
+                                    .name_repair = "minimal")
+    row_strings <- apply(raw_excel, 1, function(r) {
+      paste(tolower(trimws(as.character(unlist(r, use.names = FALSE)))),
+            collapse = " ")
+    })
+    header_idx <- which(
+      grepl("name of medicine", row_strings) |
+      grepl("active substance", row_strings)
+    )[1]
+
+    if (is.na(header_idx)) {
+      stop("Could not find header row in EPAR Excel")
+    }
+
+    headers   <- stringr::str_squish(
+      as.character(unlist(raw_excel[header_idx, ], use.names = FALSE))
+    )
+    data_rows <- raw_excel[(header_idx + 1):nrow(raw_excel), ]
     colnames(data_rows) <- headers
 
+    # The EMA MAH column is "Marketing authorisation developer / applicant / holder"
+    # (exact wording varies across releases); match on the shared prefix.
+    # Use ignore.case so the returned value preserves the original column name.
     mah_col <- grep(
-      "marketing authori[sz]ation holder",
-      tolower(names(data_rows)),
+      "marketing authori[sz]ation",
+      names(data_rows),
+      ignore.case = TRUE,
       value = TRUE
     )[1]
 
