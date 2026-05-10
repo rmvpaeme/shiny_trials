@@ -59,15 +59,10 @@ OUT_AMBIG    <- file.path(SNP, "sponsor_ambiguous_aliases.csv")
 OUT_NEW      <- file.path(SNP, "new_sponsor_candidates.csv")
 
 # ── Load normaliser helpers ───────────────────────────────────────────────────
-# We need clean_sponsor_alias() and make_sponsor_candidates() from normalise_sponsors.R.
-# Source it in a local environment so it doesn't pollute the global namespace.
-norm_env <- new.env(parent = emptyenv())
 source(
   project_path("helper_scripts", "sponsor_norm_pipeline", "normalise_sponsors.R"),
-  local = norm_env
+  local = FALSE
 )
-clean_sponsor_alias   <- norm_env$clean_sponsor_alias
-make_sponsor_candidates <- norm_env$make_sponsor_candidates
 
 # ── Manual aliases (seed) ─────────────────────────────────────────────────────
 
