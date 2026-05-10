@@ -6,9 +6,6 @@ raw_name,source,alias_clean
 A.C.O.M. - Advanced Center Oncology,epar_mah,a c o m - advanced center oncology
 A. Menarini Industrie Farmaceutiche Riunite s.r.l.,epar_mah,a menarini industrie farmaceutiche riunite s r l
 AB Science,epar_mah,ab science
-Abbott Laboratories Ltd.,epar_mah,abbott laboratories ltd
-Abbott S.r.l.,epar_mah,abbott s r l
-AbbVie Deutschland GmbH & Co. KG,epar_mah,abbvie deutschland gmbh and co kg
 Ablynx NV,epar_mah,ablynx nv
 AbZ-Pharma GmbH,epar_mah,abz-pharma gmbh
 Acadia Pharmaceuticals B.V.,epar_mah,acadia pharmaceuticals b v
@@ -33,15 +30,12 @@ Alcon Laboratories (U.K.) Limited.,epar_mah,alcon laboratories u k limited
 Alfasigma S.p.A.,epar_mah,alfasigma s p a
 Alimenterics B.V.,epar_mah,alimenterics b v
 Alkermes Pharma Ireland Ltd.,epar_mah,alkermes pharma ireland ltd
-Allergan Pharmaceuticals International Limited,epar_mah,allergan pharmaceuticals international limited
 Allos Therapeutics Ltd,epar_mah,allos therapeutics ltd
 "Almirall, S.A.",epar_mah,almirall s a
 Alnylam Netherlands B.V.,epar_mah,alnylam netherlands b v
 Amarin Neuroscience Ltd,epar_mah,amarin neuroscience ltd
 Amdipharm Limited,epar_mah,amdipharm limited
 Amersham Sorin.S.r.l.,epar_mah,amersham sorin s r l
-Amgen Europe B.V.,epar_mah,amgen europe b v
-Amgen Technology (Ireland) UC,epar_mah,amgen technology ireland uc
 Amicus Therapeutics Europe Limited,epar_mah,amicus therapeutics europe limited
 Amivas Ireland Ltd,epar_mah,amivas ireland ltd
 Ammtek,epar_mah,ammtek
@@ -69,13 +63,9 @@ Ars Pharmaceuticals Irl Limited,epar_mah,ars pharmaceuticals irl limited
 Ascend GmbH,epar_mah,ascend gmbh
 Ascendis Pharma Bone Diseases A/S,epar_mah,ascendis pharma bone diseases a/s
 Ascendis Pharma Endocrinology Division A/S,epar_mah,ascendis pharma endocrinology division a/s
-Astellas Pharma Europe B.V.,epar_mah,astellas pharma europe b v
-Astellas Pharma Europe BV,epar_mah,astellas pharma europe bv
-Astellas Pharma GmbH,epar_mah,astellas pharma gmbh
 Astra Zeneca AB,epar_mah,astra zeneca ab
 Atnahs Pharma Netherlands B.V.,epar_mah,atnahs pharma netherlands b v
 Autolus GmbH,epar_mah,autolus gmbh
-Aventis Pharma S.A.,epar_mah,aventis pharma s a
 Averoa,epar_mah,averoa
 AVI Biopharma International Ltd,epar_mah,avi biopharma international ltd
 Avimedical B.V.,epar_mah,avimedical b v
@@ -90,8 +80,6 @@ Bausch Health Ireland Limited,epar_mah,bausch health ireland limited
 Bausch  Lomb Ireland,epar_mah,bausch lomb ireland
 Bavarian Nordic A/S,epar_mah,bavarian nordic a/s
 Baxalta Innovations GmbH,epar_mah,baxalta innovations gmbh
-Baxter Holding B.V.,epar_mah,baxter holding b v
-Bayer Pharma AG,epar_mah,bayer pharma ag
 Beecham Group plc,epar_mah,beecham group plc
 BeiGene Ireland Ltd,epar_mah,beigene ireland ltd
 Belpharma s.a.,epar_mah,belpharma s a
@@ -109,7 +97,6 @@ Biocryst,epar_mah,biocryst
 BioCryst Ireland Limited,epar_mah,biocryst ireland limited
 Biofrontera Bioscience GmbH,epar_mah,biofrontera bioscience gmbh
 Biogaran,epar_mah,biogaran
-Biogen Netherlands B.V.,epar_mah,biogen netherlands b v
 Biohaven Bioscience Ireland Limited,epar_mah,biohaven bioscience ireland limited
 Biolitec pharma Limited Zweigniederlassung Jena,epar_mah,biolitec pharma limited zweigniederlassung jena
 Biolitec Pharma Ltd,epar_mah,biolitec pharma ltd
@@ -125,12 +112,9 @@ Biovest Europe Ltd,epar_mah,biovest europe ltd
 Blue Earth Diagnostics Ireland Ltd,epar_mah,blue earth diagnostics ireland ltd
 bluebird bio (Netherlands) B.V.,epar_mah,bluebird bio netherlands b v
 Blueprint Medicines (Netherlands) B.V.,epar_mah,blueprint medicines netherlands b v
-Boehringer Ingelheim Vetmedica GmbH,epar_mah,boehringer ingelheim vetmedica gmbh
 Bracco Imaging S.p.A.,epar_mah,bracco imaging s p a
 Bracco International B.V.,epar_mah,bracco international b v
 BrePco Biopharma Limited,epar_mah,brepco biopharma limited
-Bristol-Myers Squibb / Pfizer EEIG,epar_mah,bristol-myers squibb / pfizer eeig
-Bristol-Myers Squibb Pharma EEIG,epar_mah,bristol-myers squibb pharma eeig
 Camurus AB,epar_mah,camurus ab
 Cancer Prevention Pharma (Ireland) Limited,epar_mah,cancer prevention pharma ireland limited
 Cangene Europe Limited,epar_mah,cangene europe limited
@@ -149,8 +133,6 @@ Chemical Works of Gedeon Richter Plc. (Gedeon Richter Plc.),epar_mah,chemical wo
 ChemoCentryx Ltd,epar_mah,chemocentryx ltd
 CHEPLAPHARM Arzneimittel GmbH,epar_mah,cheplapharm arzneimittel gmbh
 CHEPLAPHARM Registration GmbH,epar_mah,cheplapharm registration gmbh
-Chiesi Farmaceutici S.p.A.,epar_mah,chiesi farmaceutici s p a
-Chiesi Farmaceutici SpA,epar_mah,chiesi farmaceutici spa
 Chiron S.p.A.,epar_mah,chiron s p a
 CinnaGen Co Unipessoal LDA,epar_mah,cinnagen co unipessoal lda
 Cipla (EU) Limited,epar_mah,cipla eu limited
@@ -167,7 +149,6 @@ Covis Pharma Europe B.V.,epar_mah,covis pharma europe b v
 CP-Pharma Handelsgesellschaft mbH,epar_mah,cp-pharma handelsgesellschaft mbh
 Crealta Pharmaceuticals Ireland Limited,epar_mah,crealta pharmaceuticals ireland limited
 Crinetics Pharmaceuticals Europe GmbH,epar_mah,crinetics pharmaceuticals europe gmbh
-CSL Behring GmbH,epar_mah,csl behring gmbh
 Cstone Pharmaceuticals Ireland Limited,epar_mah,cstone pharmaceuticals ireland limited
 CTI Life Sciences Limited,epar_mah,cti life sciences limited
 CTI Life Sciences Ltd,epar_mah,cti life sciences ltd
@@ -188,7 +169,6 @@ DLRC Pharma Services Ltd,epar_mah,dlrc pharma services ltd
 Dompé Biotec S.p.A.,epar_mah,dompe biotec s p a
 Dompe' Farmaceutici S.p.A.,epar_mah,dompe' farmaceutici s p a
 DOR BIOPHARMA UK Ltd,epar_mah,dor biopharma uk ltd
-Dr. Falk Pharma GmbH,epar_mah,dr falk pharma gmbh
 Dr. Friedrich Eberth Arzneimittel GmbH,epar_mah,dr friedrich eberth arzneimittel gmbh
 "Dr. Gerhard Mann, Chem.-Pharm. Fabrik GmbH..",epar_mah,dr gerhard mann chem -pharm fabrik gmbh
 Dr. Karl Thomae GmbH,epar_mah,dr karl thomae gmbh
@@ -199,14 +179,10 @@ Eagle Laboratories Ltd.   ,epar_mah,eagle laboratories ltd
 Eckert & Ziegler Radiopharma GmbH,epar_mah,eckert and ziegler radiopharma gmbh
 Eckert  Ziegler Radiopharma GmbH,epar_mah,eckert ziegler radiopharma gmbh
 Ecuphar,epar_mah,ecuphar
-Eisai GmbH,epar_mah,eisai gmbh
 Elan Pharma International Ltd.,epar_mah,elan pharma international ltd
 Elanco animal health,epar_mah,elanco animal health
 Elanco Europe Ltd,epar_mah,elanco europe ltd
 Elanco GmbH,epar_mah,elanco gmbh
-Eli Lilly and Company (Ireland) Limited,epar_mah,eli lilly and company ireland limited
-Eli Lilly  Co. Ltd.,epar_mah,eli lilly co ltd
-Eli Lilly Nederland B.V.,epar_mah,eli lilly nederland b v
 Emdoka BVBA,epar_mah,emdoka bvba
 Emmaus Medical Europe Ltd,epar_mah,emmaus medical europe ltd
 Endoceutics S.A.,epar_mah,endoceutics s a
@@ -228,7 +204,6 @@ Evive Biotechnology Ireland Limited,epar_mah,evive biotechnology ireland limited
 Evolus Pharma B.V.,epar_mah,evolus pharma b v
 Extrovis EU Ltd,epar_mah,extrovis eu ltd
 Ferrer Internacional S.A.,epar_mah,ferrer internacional s a
-Ferring Pharmaceuticals A/S,epar_mah,ferring pharmaceuticals a/s
 FGK Representative Service GmbH,epar_mah,fgk representative service gmbh
 Fondazione Telethon ETS,epar_mah,fondazione telethon ets
 Formycon AG,epar_mah,formycon ag
@@ -245,29 +220,19 @@ Gedeon Richter Plc.,epar_mah,gedeon richter plc
 Gen.Orph,epar_mah,gen orph
 Gendux Molecular Limited,epar_mah,gendux molecular limited
 Generics (UK) Limited,epar_mah,generics uk limited
-Genmab A/S,epar_mah,genmab a/s
 Gennisium Pharma,epar_mah,gennisium pharma
 GenSight Biologics S.A.,epar_mah,gensight biologics s a
 Genta Development Ltd. c/o Ross  Craig,epar_mah,genta development ltd c/o ross craig
 Gentium S.r.l.,epar_mah,gentium s r l
-Genzyme Europe B.V.,epar_mah,genzyme europe b v
-Genzyme Europe BV,epar_mah,genzyme europe bv
 Geron Netherlands B.V.,epar_mah,geron netherlands b v
-Gilead Sciences Ireland UC,epar_mah,gilead sciences ireland uc
-Gilead Sciences Ireland Unlimited Company,epar_mah,gilead sciences ireland unlimited company
 Glaxo Group Limited ,epar_mah,glaxo group limited
 Glaxo Group Ltd,epar_mah,glaxo group ltd
-GlaxoSmithKline Biologicals S.A.,epar_mah,glaxosmithkline biologicals s a
-GlaxoSmithKline Trading Services Limited,epar_mah,glaxosmithkline trading services limited
 Glenmark Arzneimittel GmbH,epar_mah,glenmark arzneimittel gmbh
 Glenmark Pharmaceuticals s.r.o. ,epar_mah,glenmark pharmaceuticals s r o
 Gruenenthal GmbH,epar_mah,gruenenthal gmbh
-Grunenthal GmbH,epar_mah,grunenthal gmbh
-GSK Vaccines S.r.l.,epar_mah,gsk vaccines s r l
 Guerbet,epar_mah,guerbet
 Guidehouse Germany GmbH,epar_mah,guidehouse germany gmbh
 H.A.C. Pharma,epar_mah,h a c pharma
-H. Lundbeck A/S,epar_mah,h lundbeck a/s
 Haleon Ireland Dungarvan Limited,epar_mah,haleon ireland dungarvan limited
 Hansa Biopharma AB,epar_mah,hansa biopharma ab
 HCS bvba ,epar_mah,hcs bvba
@@ -290,7 +255,6 @@ Immunocore Ireland Limited,epar_mah,immunocore ireland limited
 Immunomedics GmbH,epar_mah,immunomedics gmbh
 Inceptua AB,epar_mah,inceptua ab
 Incline Therapeutics Europe Ltd,epar_mah,incline therapeutics europe ltd
-Incyte Biosciences Distribution B.V.,epar_mah,incyte biosciences distribution b v
 Indivior Europe Limited,epar_mah,indivior europe limited
 "INFAI, Institut für biomedizinische Analytik  NMR-Imaging GmbH",epar_mah,infai institut fur biomedizinische analytik nmr-imaging gmbh
 InflaRx GmbH,epar_mah,inflarx gmbh
@@ -302,13 +266,10 @@ Intas Third Party Sales 2005 S.L.,epar_mah,intas third party sales 2005 s l
 Intervet International BV,epar_mah,intervet international bv
 Intrabio Ireland Limited,epar_mah,intrabio ireland limited
 Iovance Biotherapeutics B.V.,epar_mah,iovance biotherapeutics b v
-Ipsen Pharma,epar_mah,ipsen pharma
 ISTA Pharma Limited,epar_mah,ista pharma limited
 Istituto Gentili S.r.l.,epar_mah,istituto gentili s r l
 Italfarmaco S.p.A.,epar_mah,italfarmaco s p a
 ITM Medical Isotopes GmbH,epar_mah,itm medical isotopes gmbh
-Janssen Pharmaceutica N.V.,epar_mah,janssen pharmaceutica n v
-Janssen-Cilag International N.V.   ,epar_mah,janssen-cilag international n v
 Jazz Pharmaceuticals Ireland Limited,epar_mah,jazz pharmaceuticals ireland limited
 Jenson Pharmaceutical Services Limited,epar_mah,jenson pharmaceutical services limited
 JensonR+ Limited,epar_mah,jensonr+ limited
@@ -346,7 +307,6 @@ Le Vet Beheer B.V.,epar_mah,le vet beheer b v
 Leadiant GmbH,epar_mah,leadiant gmbh
 Legacy Healthcare (France) S.A.S.,epar_mah,legacy healthcare france s a s
 LEO Laboratories Ltd.,epar_mah,leo laboratories ltd
-LEO Pharma A/S,epar_mah,leo pharma a/s
 Linde Healthcare AB,epar_mah,linde healthcare ab
 Lipomed GmbH,epar_mah,lipomed gmbh
 Lucane Pharma,epar_mah,lucane pharma
@@ -379,8 +339,6 @@ Menarini International Operations Luxembourg S.A. (MIOL),epar_mah,menarini inter
 MendeliKABS Europe Ltd,epar_mah,mendelikabs europe ltd
 Merck Europe B.V.,epar_mah,merck europe b v
 Merck Sharp & Dohme B.V.,epar_mah,merck sharp and dohme b v
-Merck Sharp  Dohme Limited,epar_mah,merck sharp dohme limited
-Merck Sharp  Dohme Ltd ,epar_mah,merck sharp dohme ltd
 Merial,epar_mah,merial
 Merial S.A.S. ,epar_mah,merial s a s
 Merz Pharmaceuticals GmbH  ,epar_mah,merz pharmaceuticals gmbh
@@ -416,10 +374,6 @@ Norgine B.V.,epar_mah,norgine b v
 Norpharm Regulatory Services Ltd,epar_mah,norpharm regulatory services ltd
 Norton Healthcare Ltd.,epar_mah,norton healthcare ltd
 Novagali Pharma S.A.,epar_mah,novagali pharma s a
-Novartis Europharm Limited,epar_mah,novartis europharm limited
-Novartis Europharm Ltd,epar_mah,novartis europharm ltd
-Novartis Ophthalmics Europe Ltd.,epar_mah,novartis ophthalmics europe ltd
-Novartis Vaccines and Diagnostics S.r.l.,epar_mah,novartis vaccines and diagnostics s r l
 NPS Pharma Holdings Limited,epar_mah,nps pharma holdings limited
 Oasmia Pharmaceutical AB,epar_mah,oasmia pharmaceutical ab
 Octapharma AB,epar_mah,octapharma ab
@@ -438,8 +392,6 @@ Orphalan,epar_mah,orphalan
 Orphazyme A/S,epar_mah,orphazyme a/s
 ORPHELIA Pharma,epar_mah,orphelia pharma
 OTR3,epar_mah,otr3
-Otsuka Novel Products GmbH,epar_mah,otsuka novel products gmbh
-Otsuka Pharmaceutical Netherlands B.V.,epar_mah,otsuka pharmaceutical netherlands b v
 Outlook Therapeutics NL B. V.,epar_mah,outlook therapeutics nl b v
 Pacira Ireland Limited,epar_mah,pacira ireland limited
 Pacira Limited,epar_mah,pacira limited
@@ -450,9 +402,6 @@ Parnell Technologies (UK) Limited,epar_mah,parnell technologies uk limited
 Partner Therapeutics Limited,epar_mah,partner therapeutics limited
 Passauer Pharma GmbH,epar_mah,passauer pharma gmbh
 Pasteur Mà¨rieux MSD,epar_mah,pasteur ma¨rieux msd
-Pfizer Europe MA EEIG,epar_mah,pfizer europe ma eeig
-Pfizer Ireland Pharmaceuticals,epar_mah,pfizer ireland pharmaceuticals
-Pfizer Ireland Pharmaceuticals Unlimited Company,epar_mah,pfizer ireland pharmaceuticals unlimited company
 Pharm Research Associates (UK) Limited,epar_mah,pharm research associates uk limited
 Pharma Mar S.A.,epar_mah,pharma mar s a
 pharmaand GmbH,epar_mah,pharmaand gmbh
@@ -495,8 +444,6 @@ Recordati Ireland Ltd,epar_mah,recordati ireland ltd
 Recordati Netherlands B.V.,epar_mah,recordati netherlands b v
 Recordati Rare Diseases,epar_mah,recordati rare diseases
 Reddy Holding GmbH,epar_mah,reddy holding gmbh
-Regeneron Ireland Designated Activity Company (DAC),epar_mah,regeneron ireland designated activity company dac
-Regeneron UK Limited,epar_mah,regeneron uk limited
 Regulatory Pharma Net S.r.l.,epar_mah,regulatory pharma net s r l
 Reliance GeneMedix Plc,epar_mah,reliance genemedix plc
 Renable Pharma Limited,epar_mah,renable pharma limited
@@ -506,20 +453,9 @@ Retrophin Europe Ltd,epar_mah,retrophin europe ltd
 Rhythm Pharmaceuticals Netherlands B.V.,epar_mah,rhythm pharmaceuticals netherlands b v
 Richen Europe S.R.L,epar_mah,richen europe s r l
 Rilonacept FGK Representative Service GmbH,epar_mah,rilonacept fgk representative service gmbh
-Roche Registration GmbH ,epar_mah,roche registration gmbh
-Roche Registration Limited,epar_mah,roche registration limited
-Roche Registration Ltd.,epar_mah,roche registration ltd
 Rocket Pharmaceuticals B.V.,epar_mah,rocket pharmaceuticals b v
 Rotterdam Biologics B.V.,epar_mah,rotterdam biologics b v
 Samsung Bioepis NL B.V.,epar_mah,samsung bioepis nl b v
-Sandoz Pharmaceuticals d.d.,epar_mah,sandoz pharmaceuticals d d
-Sanofi B.V.,epar_mah,sanofi b v
-"Sanofi Pasteur MSD, SNC",epar_mah,sanofi pasteur msd snc
-Sanofi Pasteur S.A.,epar_mah,sanofi pasteur s a
-Sanofi Pharma Bristol-Myers Squibb,epar_mah,sanofi pharma bristol-myers squibb
-Sanofi Winthrop Industrie,epar_mah,sanofi winthrop industrie
-Sanofi-aventis Deutschland GmbH,epar_mah,sanofi-aventis deutschland gmbh
-sanofi-aventis groupe ,epar_mah,sanofi-aventis groupe
 Sanquin Plasma Products B.V.,epar_mah,sanquin plasma products b v
 Santen Oy,epar_mah,santen oy
 Santhera Pharmaceuticals (Deutschland) GmbH,epar_mah,santhera pharmaceuticals deutschland gmbh
@@ -534,11 +470,9 @@ SERB SA,epar_mah,serb sa
 SERB SAS,epar_mah,serb sas
 Serono Europe Limited,epar_mah,serono europe limited
 Serum Life Science Europe GmbH,epar_mah,serum life science europe gmbh
-Servier (Ireland) Industries Ltd,epar_mah,servier ireland industries ltd
 SFL Pharmaceuticals Deutschland GmbH,epar_mah,sfl pharmaceuticals deutschland gmbh
 Shine Europe B.V.,epar_mah,shine europe b v
 Shionogi B.V.,epar_mah,shionogi b v
-Shire Pharmaceutical Contracts Limited,epar_mah,shire pharmaceutical contracts limited
 SIFI SPA,epar_mah,sifi spa
 SIGA Technologies Netherlands B.V.,epar_mah,siga technologies netherlands b v
 Sipaco Internacional Lda.,epar_mah,sipaco internacional lda
@@ -562,13 +496,6 @@ Swedish Orphan Biovitrum AB (publ),epar_mah,swedish orphan biovitrum ab publ
 Swedish Orphan Biovitrum International AB,epar_mah,swedish orphan biovitrum international ab
 Tad Pharma GmbH,epar_mah,tad pharma gmbh
 Taiho Pharma Netherlands B.V.,epar_mah,taiho pharma netherlands b v
-Takeda Europe R Centre Ltd.,epar_mah,takeda europe r centre ltd
-Takeda Global Research and Development Centre (Europe),epar_mah,takeda global research and development centre europe
-Takeda Global Research  Development Centre (Europe) Ltd.,epar_mah,takeda global research development centre europe ltd
-Takeda Manufacturing Austria AG,epar_mah,takeda manufacturing austria ag
-Takeda Pharma A/S,epar_mah,takeda pharma a/s
-Takeda Pharmaceuticals International AG Ireland,epar_mah,takeda pharmaceuticals international ag ireland
-Takeda Pharmaceuticals International AG Ireland Branch,epar_mah,takeda pharmaceuticals international ag ireland branch
 Tanabe Pharma GmbH,epar_mah,tanabe pharma gmbh
 Targanta Netherlands B.V.,epar_mah,targanta netherlands b v
 Taw Pharma (Ireland) Limited,epar_mah,taw pharma ireland limited
@@ -577,11 +504,6 @@ Techdow Pharma Netherlands B.V. ,epar_mah,techdow pharma netherlands b v
 Telix Innovations,epar_mah,telix innovations
 TESARO Bio Netherlands B.V.,epar_mah,tesaro bio netherlands b v
 TETEC Tissue Engineering Technologies AG,epar_mah,tetec tissue engineering technologies ag
-Teva B.V.,epar_mah,teva b v
-Teva Generics B.V,epar_mah,teva generics b v
-Teva GmbH,epar_mah,teva gmbh
-Teva Pharma B.V.,epar_mah,teva pharma b v
-Teva Pharma GmbH,epar_mah,teva pharma gmbh
 The Medicines Company UK Ltd,epar_mah,the medicines company uk ltd
 Theramex Ireland Limited,epar_mah,theramex ireland limited
 Theratechnologies Europe Limited,epar_mah,theratechnologies europe limited
@@ -597,7 +519,6 @@ Toray International U.K. Limited,epar_mah,toray international u k limited
 Tour Hekla,epar_mah,tour hekla
 Triskel EU Services Ltd,epar_mah,triskel eu services ltd
 TriviumVet DAC,epar_mah,triviumvet dac
-UCB Pharma S.A.  ,epar_mah,ucb pharma s a
 UGA Biopharma,epar_mah,uga biopharma
 Ultragenyx Germany GmbH,epar_mah,ultragenyx germany gmbh
 Ultragenyx UK Limited,epar_mah,ultragenyx uk limited
@@ -615,7 +536,6 @@ VBI Vaccines B.V.,epar_mah,vbi vaccines b v
 Vericel Denmark ApS,epar_mah,vericel denmark aps
 Verona Pharma Ireland Limited,epar_mah,verona pharma ireland limited
 VEROVACCiNES GmbH,epar_mah,verovaccines gmbh
-Vertex Pharmaceuticals (Ireland) Limited,epar_mah,vertex pharmaceuticals ireland limited
 Viatris Healthcare Limited,epar_mah,viatris healthcare limited
 Viatris Limited,epar_mah,viatris limited
 Vifor France,epar_mah,vifor france
@@ -629,9 +549,6 @@ Vivus BV,epar_mah,vivus bv
 Warner Chilcott  Deutschland GmbH,epar_mah,warner chilcott deutschland gmbh
 Warner Chilcott UK Ltd.,epar_mah,warner chilcott uk ltd
 Whiteoak Pharmaceutical B.V.,epar_mah,whiteoak pharmaceutical b v
-Wyeth Consumer Healthcare,epar_mah,wyeth consumer healthcare
-Wyeth Europa Ltd,epar_mah,wyeth europa ltd
-Wyeth Lederle Vaccines S.A.,epar_mah,wyeth lederle vaccines s a
 X4 Pharmaceuticals GmbH,epar_mah,x4 pharmaceuticals gmbh
 XBiotech Germany GmbH,epar_mah,xbiotech germany gmbh
 Y-Mabs Therapeutics A/S,epar_mah,y-mabs therapeutics a/s

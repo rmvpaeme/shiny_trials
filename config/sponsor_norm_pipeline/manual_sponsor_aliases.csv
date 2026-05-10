@@ -200,3 +200,76 @@ kings college hospital nhs foundation trust,Kings College Hospital NHS Foundatio
 university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,manual,1.00
 cambridge university hospitals nhs foundation trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,manual,1.00
 the christie nhs foundation trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,manual,1.00
+merck sharp dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
+merck sharp dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
+merck sharp dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
+merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
+merck co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,0.90
+h lundbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
+h lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
+lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
+lundbeck as,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
+ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
+assistance publique hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
+assistance publique - hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
+vertex pharmaceuticals incorporated,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1.00
+vertex pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1.00
+vertex,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,0.90
+regeneron pharmaceuticals inc,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1.00
+regeneron pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1.00
+regeneron,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,0.90
+incyte corporation,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,1.00
+incyte,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,0.90
+ferring pharmaceuticals as,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1.00
+ferring pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1.00
+ferring,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,0.90
+chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1.00
+chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1.00
+chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,0.90
+astellas pharma europe bv,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1.00
+astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1.00
+astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,0.90
+otsuka pharmaceutical development and commercialization inc,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1.00
+otsuka pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1.00
+otsuka,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,0.90
+eisai limited,Eisai,Eisai,Eisai,industry,manual,1.00
+eisai,Eisai,Eisai,Eisai,industry,manual,1.00
+genzyme corporation,Genzyme,Sanofi,Sanofi,industry,manual,1.00
+genzyme,Genzyme,Sanofi,Sanofi,industry,manual,1.00
+grunenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
+grunenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
+dr falk pharma gmbh,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1.00
+dr falk pharma,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1.00
+ucb biopharma srl,UCB,UCB,UCB,industry,manual,1.00
+ucb biopharma,UCB,UCB,UCB,industry,manual,1.00
+biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,1.00
+biogen idec,Biogen,Biogen,Biogen,industry,manual,1.00
+assistance publique - hopitaux de paris ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
+grnenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
+grnenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
+f hoffman-la roche ltd,Roche,Roche,Roche,industry,manual,1.00
+f hoffman-la roche,Roche,Roche,Roche,industry,manual,1.00
+hoffman-la roche,Roche,Roche,Roche,industry,manual,1.00
+teva branded pharmaceutical products rd inc,Teva,Teva,Teva,industry,manual,1.00
+teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,1.00
+teva pharmaceutical,Teva,Teva,Teva,industry,manual,1.00
+teva,Teva,Teva,Teva,industry,manual,0.90
+actelion pharmaceuticals ltd,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1.00
+actelion pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1.00
+actelion,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,0.90
+leo pharma as,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1.00
+leo pharma,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1.00
+csl behring gmbh,CSL Behring,CSL Behring,CSL Behring,industry,manual,1.00
+csl behring,CSL Behring,CSL Behring,CSL Behring,industry,manual,1.00
+allergan limited,Allergan,AbbVie,AbbVie,industry,manual,1.00
+allergan,Allergan,AbbVie,AbbVie,industry,manual,1.00
+baxter international inc,Baxter,Baxter,Baxter,industry,manual,1.00
+baxter,Baxter,Baxter,Baxter,industry,manual,0.90
+genmab as,Genmab,Genmab,Genmab,industry,manual,1.00
+genmab,Genmab,Genmab,Genmab,industry,manual,0.90
+galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,1.00
+galapagos,Galapagos,Galapagos,Galapagos,industry,manual,0.90
+hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,manual,1.00
+abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,1.00
+abbott gmbh,Abbott,Abbott,Abbott,industry,manual,1.00
+abbott,Abbott,Abbott,Abbott,industry,manual,0.90

@@ -200,32 +200,180 @@ kings college hospital nhs foundation trust,Kings College Hospital NHS Foundatio
 university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,manual,manual,1
 cambridge university hospitals nhs foundation trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,manual,manual,1
 the christie nhs foundation trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,manual,manual,1
+merck sharp dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+merck sharp dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+merck sharp dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+merck co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,0.9
+h lundbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,manual,manual,1
+h lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,manual,1
+lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,manual,1
+lundbeck as,Lundbeck,Lundbeck,Lundbeck,industry,manual,manual,1
+ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+assistance publique hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+assistance publique - hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+vertex pharmaceuticals incorporated,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,manual,1
+vertex pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,manual,1
+vertex,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,manual,0.9
+regeneron pharmaceuticals inc,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,manual,1
+regeneron pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,manual,1
+regeneron,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,manual,0.9
+incyte corporation,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,manual,1
+incyte,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,manual,0.9
+ferring pharmaceuticals as,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,manual,1
+ferring pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,manual,1
+ferring,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,manual,0.9
+chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,manual,1
+chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,manual,1
+chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,manual,0.9
+astellas pharma europe bv,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,manual,1
+astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,manual,1
+astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,manual,0.9
+otsuka pharmaceutical development and commercialization inc,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,manual,1
+otsuka pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,manual,1
+otsuka,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,manual,0.9
+eisai limited,Eisai,Eisai,Eisai,industry,manual,manual,1
+eisai,Eisai,Eisai,Eisai,industry,manual,manual,1
+genzyme corporation,Genzyme,Sanofi,Sanofi,industry,manual,manual,1
+genzyme,Genzyme,Sanofi,Sanofi,industry,manual,manual,1
+grunenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,manual,1
+grunenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,manual,1
+dr falk pharma gmbh,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,manual,1
+dr falk pharma,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,manual,1
+ucb biopharma srl,UCB,UCB,UCB,industry,manual,manual,1
+ucb biopharma,UCB,UCB,UCB,industry,manual,manual,1
+biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,manual,1
+assistance publique - hopitaux de paris ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+grnenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,manual,1
+grnenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,manual,1
+f hoffman-la roche ltd,Roche,Roche,Roche,industry,manual,manual,1
+f hoffman-la roche,Roche,Roche,Roche,industry,manual,manual,1
+hoffman-la roche,Roche,Roche,Roche,industry,manual,manual,1
+teva branded pharmaceutical products rd inc,Teva,Teva,Teva,industry,manual,manual,1
+teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,manual,1
+teva pharmaceutical,Teva,Teva,Teva,industry,manual,manual,1
+teva,Teva,Teva,Teva,industry,manual,manual,0.9
+actelion pharmaceuticals ltd,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,manual,1
+actelion pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,manual,1
+actelion,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,manual,0.9
+leo pharma as,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,manual,1
+leo pharma,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,manual,1
+csl behring gmbh,CSL Behring,CSL Behring,CSL Behring,industry,manual,manual,1
+csl behring,CSL Behring,CSL Behring,CSL Behring,industry,manual,manual,1
+allergan limited,Allergan,AbbVie,AbbVie,industry,manual,manual,1
+allergan,Allergan,AbbVie,AbbVie,industry,manual,manual,1
+baxter international inc,Baxter,Baxter,Baxter,industry,manual,manual,1
+baxter,Baxter,Baxter,Baxter,industry,manual,manual,0.9
+genmab as,Genmab,Genmab,Genmab,industry,manual,manual,1
+genmab,Genmab,Genmab,Genmab,industry,manual,manual,0.9
+galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,manual,1
+galapagos,Galapagos,Galapagos,Galapagos,industry,manual,manual,0.9
+hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,manual,manual,1
+abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,manual,1
+abbott gmbh,Abbott,Abbott,Abbott,industry,manual,manual,1
+abbott,Abbott,Abbott,Abbott,industry,manual,manual,0.9
+glaxosmithkline trading services limited,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+bristol-myers squibb pharma eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
+sanofi-aventis deutschland gmbh,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+gilead sciences ireland uc,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
+ucb pharma s a,UCB,UCB,UCB,industry,epar_mah,epar_mah,0.85
+ipsen pharma,Ipsen,Ipsen,Ipsen,industry,epar_mah,epar_mah,0.85
+roche registration gmbh,Roche,Roche,Roche,industry,epar_mah,epar_mah,0.85
+novartis europharm limited,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+amgen europe b v,Amgen,Amgen,Amgen,industry,epar_mah,epar_mah,0.85
+sanofi winthrop industrie,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+abbvie deutschland gmbh and co kg,AbbVie,AbbVie,AbbVie,industry,epar_mah,epar_mah,0.85
+eli lilly nederland b v,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
+teva b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
+janssen-cilag international n v,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
+eisai gmbh,Eisai,Eisai,Eisai,industry,epar_mah,epar_mah,0.85
+pfizer europe ma eeig,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+gilead sciences ireland unlimited company,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
+takeda manufacturing austria ag,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+baxter holding b v,Baxter,Baxter,Baxter,industry,epar_mah,epar_mah,0.85
 janssen-cilag international nv,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
+eli lilly and company ireland limited,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 novo nordisk a/s,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,epar_mah,epar_mah,0.85
+glaxosmithkline biologicals s a,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+merck sharp dohme limited,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
+astellas pharma europe b v,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
+chiesi farmaceutici s p a,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,epar_mah,epar_mah,0.85
+sandoz pharmaceuticals d d,Sandoz,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+leo pharma a/s,LEO Pharma,LEO Pharma,LEO Pharma,industry,epar_mah,epar_mah,0.85
+amgen technology ireland uc,Amgen,Amgen,Amgen,industry,epar_mah,epar_mah,0.85
+teva pharma b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
+incyte biosciences distribution b v,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,epar_mah,epar_mah,0.85
 alk-abello a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+bristol-myers squibb / pfizer eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
+vertex pharmaceuticals ireland limited,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,epar_mah,epar_mah,0.85
+ferring pharmaceuticals a/s,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,epar_mah,epar_mah,0.85
 janssen cilag international nv,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
+bayer pharma ag,Bayer,Bayer,Bayer,industry,epar_mah,epar_mah,0.85
 alexion europe sas,Alexion,AstraZeneca,AstraZeneca,industry,epar_mah,epar_mah,0.85
+otsuka pharmaceutical netherlands b v,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,epar_mah,epar_mah,0.85
+takeda pharma a/s,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+otsuka novel products gmbh,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,epar_mah,epar_mah,0.85
+biogen netherlands b v,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
+genmab a/s,Genmab,Genmab,Genmab,industry,epar_mah,epar_mah,0.85
+takeda pharmaceuticals international ag ireland branch,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+teva gmbh,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
+novartis europharm ltd,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+sanofi b v,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+regeneron ireland designated activity company dac,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,epar_mah,epar_mah,0.85
+takeda pharmaceuticals international ag ireland,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+sanofi-aventis groupe,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 bristol myers squibb pharma eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
 gilead sciences international ltd,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
+pfizer ireland pharmaceuticals unlimited company,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
 sanofi belgium,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+gsk vaccines s r l,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+roche registration limited,Roche,Roche,Roche,industry,epar_mah,epar_mah,0.85
+pfizer ireland pharmaceuticals,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
 ucb pharma ltd,UCB,UCB,UCB,industry,epar_mah,epar_mah,0.85
 abbvie ltd,AbbVie,AbbVie,AbbVie,industry,epar_mah,epar_mah,0.85
+boehringer ingelheim vetmedica gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,epar_mah,epar_mah,0.85
 takeda gmbh,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+servier ireland industries ltd,Servier,Servier,Servier,industry,epar_mah,epar_mah,0.85
 eli lilly netherlands,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 celgene europe bv,Celgene,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
+allergan pharmaceuticals international limited,Allergan,AbbVie,AbbVie,industry,epar_mah,epar_mah,0.85
+merck sharp dohme ltd,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
+aventis pharma s a,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 eli lilly and company limited,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 sanofi pasteur europe,Sanofi Pasteur,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 biogen idec ltd,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
+sanofi pasteur s a,Sanofi Pasteur,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+genzyme europe bv,Genzyme,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+teva generics b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
 smithkline beecham plc,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+novartis vaccines and diagnostics s r l,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
 gilead sciences international limited,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
+teva pharma gmbh,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
+roche registration ltd,Roche,Roche,Roche,industry,epar_mah,epar_mah,0.85
+takeda global research and development centre europe,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 celgene europe ltd,Celgene,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
 merck sharp and dohme ltd,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
 pfizer ltd,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+regeneron uk limited,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,epar_mah,epar_mah,0.85
+sanofi pasteur msd snc,Sanofi Pasteur,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+genzyme europe b v,Genzyme,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+janssen pharmaceutica n v,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
 smithkline beecham ltd,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
 merck serono europe limited,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,epar_mah,epar_mah,0.85
+abbott laboratories ltd,Abbott,Abbott,Abbott,industry,epar_mah,epar_mah,0.85
 schering-plough europe,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
+wyeth europa ltd,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+wyeth consumer healthcare,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+wyeth lederle vaccines s a,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+shire pharmaceutical contracts limited,Shire,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+astellas pharma gmbh,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
+takeda global research development centre europe ltd,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 celgene europe limited,Celgene,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
+sanofi pharma bristol-myers squibb,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 wyeth europe ltd,Wyeth,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
 bayer healthcare ag,Bayer,Bayer,Bayer,industry,epar_mah,epar_mah,0.85
-erasmus medical center transplant institute,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+abbott s r l,Abbott,Abbott,Abbott,industry,epar_mah,epar_mah,0.85
+takeda europe r centre ltd,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
+eli lilly co ltd,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
+novartis ophthalmics europe ltd,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85

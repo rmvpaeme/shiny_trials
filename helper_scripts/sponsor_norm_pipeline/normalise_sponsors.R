@@ -75,8 +75,16 @@ make_sponsor_candidates <- function(x) {
   toks         <- stringr::str_split(x0, "\\s+")[[1]]
   first_tokens <- paste(utils::head(toks, 3), collapse = " ")
 
+  # Shorter prefix candidates from the most-stripped form:
+  # catches "Novartis Pharma Services AG" → "novartis",
+  # "Boehringer Ingelheim Pharma GmbH & Co. KG" → "boehringer ingelheim", etc.
+  clean_toks <- stringr::str_split(x_no_legal, "\\s+")[[1]]
+  first_word <- clean_toks[1]
+  first_two  <- paste(utils::head(clean_toks, 2), collapse = " ")
+
   candidates <- unique(stats::na.omit(c(
-    x0, x_no_addr, x_no_legal, x_no_rd, first_tokens
+    x0, x_no_addr, x_no_legal, x_no_rd,
+    first_tokens, first_word, first_two
   )))
   candidates[nchar(candidates) >= 2]
 }
@@ -222,7 +230,11 @@ check_alias <- function(candidates, cfg) {
   if (nrow(hits) == 0) return(NULL)
 
   top_score <- hits$match_score[1]
-  top_hits  <- hits |> dplyr::filter(match_score >= top_score - 2)
+  # Use exact tie-check only: shorter candidates (first_word, first_two) can
+  # score just 2 points below a longer exact match, so a wider window produces
+  # false ambiguity (e.g. "Aarhus University Hospital" spuriously flagging
+  # because first_two = "aarhus university" also hits the university alias).
+  top_hits  <- hits |> dplyr::filter(match_score == top_score)
 
   if (dplyr::n_distinct(top_hits$sponsor_clean) > 1) {
     return(.result(
