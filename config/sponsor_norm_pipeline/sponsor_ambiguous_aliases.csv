@@ -1,1 +1,10 @@
 alias_clean,sponsors_all,n_sponsors,sources
+academisch ziekenhuis maastricht,Maastricht University|University Hospital Maastricht,2,ctis_businesskey|euctr_email_domain:maastrichtuniversity.nl
+imperial college,Imperial College Healthcare NHS Trust|Imperial College London,2,location_postcode
+karolinska universitetssjukhuset,Karolinska Institutet|Karolinska University Hospital,2,location_postcode
+kuleuven,KU Leuven|UZ Leuven,2,location_postcode
+maastricht universitary medical centre,Maastricht University|Maastricht University Medical Center,2,location_postcode
+sanofi pasteur,Sanofi|Sanofi Pasteur,2,epar_mah|manual
+universiteit maastricht,Maastricht University|University Hospital Maastricht,2,ctis_businesskey|location_postcode
+university ghent,Ghent University|University Hospital Ghent,2,location_postcode
+uzleuven,KU Leuven|UZ Leuven,2,location_postcode

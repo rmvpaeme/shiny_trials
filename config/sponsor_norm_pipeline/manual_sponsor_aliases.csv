@@ -1,488 +1,619 @@
-alias_clean,sponsor_clean,sponsor_parent,sponsor_group,sponsor_type,source,confidence_prior
-merck sharp and dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp and dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp and dohme limited,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp and dohme bv,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp and dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck and co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck and co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-msd,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-msd sharp and dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-laboratoires merck sharp dohme chibret,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-schering-plough,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-schering plough,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-merck kgaa darmstadt germany,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-merck serono sa,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-merck serono,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-emd serono inc,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-emd serono,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-merck europe bv,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-f hoffmann-la roche ag,Roche,Roche,Roche,industry,manual,1.00
-f hoffmann-la roche,Roche,Roche,Roche,industry,manual,1.00
-hoffmann-la roche,Roche,Roche,Roche,industry,manual,1.00
-f hoffmann,Roche,Roche,Roche,industry,manual,1.00
-roche,Roche,Roche,Roche,industry,manual,1.00
-roche products ltd,Roche,Roche,Roche,industry,manual,1.00
-roche pharma ag,Roche,Roche,Roche,industry,manual,1.00
-genentech inc,Genentech,Roche,Roche,industry,manual,1.00
-genentech,Genentech,Roche,Roche,industry,manual,1.00
-novartis pharma ag,Novartis,Novartis,Novartis,industry,manual,1.00
-novartis pharma,Novartis,Novartis,Novartis,industry,manual,1.00
-novartis ag,Novartis,Novartis,Novartis,industry,manual,1.00
-novartis oncology,Novartis,Novartis,Novartis,industry,manual,1.00
-novartis,Novartis,Novartis,Novartis,industry,manual,1.00
-sandoz,Sandoz,Novartis,Novartis,industry,manual,1.00
-sandoz gmbh,Sandoz,Novartis,Novartis,industry,manual,1.00
-astrazeneca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1.00
-astrazeneca plc,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1.00
-astrazeneca,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1.00
-bms,BMS,Bristol-Myers Squibb,BMS,industry,manual,1.00
-bristol-myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1.00
-bristol myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1.00
-bristol-myers squibb international corporation,BMS,Bristol-Myers Squibb,BMS,industry,manual,1.00
-bristol-myers squibb company,BMS,Bristol-Myers Squibb,BMS,industry,manual,1.00
-gsk,GSK,GSK,GSK,industry,manual,1.00
-glaxosmithkline,GSK,GSK,GSK,industry,manual,1.00
-glaxosmithkline plc,GSK,GSK,GSK,industry,manual,1.00
-glaxosmithkline research and development limited,GSK,GSK,GSK,industry,manual,1.00
-smithkline beecham,GSK,GSK,GSK,industry,manual,1.00
-boehringer ingelheim gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-boehringer ingelheim pharma gmbh and co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-boehringer ingelheim international gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-scs boehringer ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-boehringer ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-pfizer inc,Pfizer,Pfizer,Pfizer,industry,manual,1.00
-pfizer limited,Pfizer,Pfizer,Pfizer,industry,manual,1.00
-pfizer,Pfizer,Pfizer,Pfizer,industry,manual,1.00
-wyeth,Wyeth,Pfizer,Pfizer,industry,manual,1.00
-wyeth pharmaceuticals,Wyeth,Pfizer,Pfizer,industry,manual,1.00
-eli lilly and company,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1.00
-eli lilly,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1.00
-lilly,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,0.90
-lilly deutschland,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1.00
-sanofi-aventis,Sanofi,Sanofi,Sanofi,industry,manual,1.00
-sanofi aventis,Sanofi,Sanofi,Sanofi,industry,manual,1.00
-sanofi sa,Sanofi,Sanofi,Sanofi,industry,manual,1.00
-sanofi pasteur,Sanofi Pasteur,Sanofi,Sanofi,industry,manual,1.00
-sanofi genzyme,Sanofi Genzyme,Sanofi,Sanofi,industry,manual,1.00
-sanofi,Sanofi,Sanofi,Sanofi,industry,manual,1.00
-aventis pharma,Sanofi,Sanofi,Sanofi,industry,manual,1.00
-janssen-cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-janssen and cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-janssen cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-janssen research and development llc,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-janssen biologics bv,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-janssen,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-johnson and johnson,Johnson & Johnson,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-ortho biotech,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-abbvie inc,AbbVie,AbbVie,AbbVie,industry,manual,1.00
-abbvie,AbbVie,AbbVie,AbbVie,industry,manual,1.00
-amgen inc,Amgen,Amgen,Amgen,industry,manual,1.00
-amgen,Amgen,Amgen,Amgen,industry,manual,1.00
-gilead sciences inc,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1.00
-gilead sciences,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1.00
-gilead,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1.00
-takeda pharmaceutical company limited,Takeda,Takeda,Takeda,industry,manual,1.00
-takeda oncology,Takeda,Takeda,Takeda,industry,manual,1.00
-takeda,Takeda,Takeda,Takeda,industry,manual,1.00
-shire,Shire,Takeda,Takeda,industry,manual,1.00
-shire-movetis,Shire,Takeda,Takeda,industry,manual,1.00
-millennium pharmaceuticals inc,Millennium Pharmaceuticals,Takeda,Takeda,industry,manual,1.00
-bayer ag,Bayer,Bayer,Bayer,industry,manual,1.00
-bayer healthcare,Bayer,Bayer,Bayer,industry,manual,1.00
-bayer schering pharma ag,Bayer,Bayer,Bayer,industry,manual,1.00
-bayer schering pharma,Bayer,Bayer,Bayer,industry,manual,1.00
-bayer vital,Bayer,Bayer,Bayer,industry,manual,1.00
-bayer,Bayer,Bayer,Bayer,industry,manual,1.00
-ucb pharma sa,UCB,UCB,UCB,industry,manual,1.00
-ucb pharma,UCB,UCB,UCB,industry,manual,1.00
-ucb,UCB,UCB,UCB,industry,manual,1.00
-novo nordisk as,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1.00
-novo nordisk,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1.00
-ipsen innovation,Ipsen,Ipsen,Ipsen,industry,manual,1.00
-ipsen,Ipsen,Ipsen,Ipsen,industry,manual,1.00
-beaufour ipsen,Ipsen,Ipsen,Ipsen,industry,manual,1.00
-servier,Servier,Servier,Servier,industry,manual,1.00
-les laboratoires servier,Servier,Servier,Servier,industry,manual,1.00
-laboratoires servier,Servier,Servier,Servier,industry,manual,1.00
-institut de recherches internationales servier iris,Servier,Servier,Servier,industry,manual,1.00
-institut de recherches internationales servier,Servier,Servier,Servier,industry,manual,1.00
-pierre fabre medicament,Pierre Fabre,Pierre Fabre,Pierre Fabre,industry,manual,1.00
-pierre fabre,Pierre Fabre,Pierre Fabre,Pierre Fabre,industry,manual,1.00
-alk-abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1.00
-alk abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1.00
-biogen,Biogen,Biogen,Biogen,industry,manual,1.00
-biogen idec,Biogen,Biogen,Biogen,industry,manual,1.00
-celgene,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1.00
-celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1.00
-alexion pharmaceuticals,Alexion,AstraZeneca,AstraZeneca,industry,manual,1.00
-alexion,Alexion,AstraZeneca,AstraZeneca,industry,manual,1.00
-msd oncology,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-eortc,EORTC,EORTC,EORTC,cooperative_group,manual,1.00
-european organisation for research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1.00
-organisation for research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1.00
-hovon,HOVON,HOVON,HOVON,cooperative_group,manual,1.00
-hovon foundation,HOVON,HOVON,HOVON,cooperative_group,manual,1.00
-stichting hemato-oncologie voor volwassenen nederland,HOVON,HOVON,HOVON,cooperative_group,manual,1.00
-sakk,SAKK,SAKK,SAKK,cooperative_group,manual,1.00
-swiss group for clinical cancer research,SAKK,SAKK,SAKK,cooperative_group,manual,1.00
-gercor,GERCOR,GERCOR,GERCOR,cooperative_group,manual,1.00
-amsterdam umc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-stichting amsterdam umc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-amsterdam university medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-academic medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-academisch medisch centrum,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-vu university medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-vu university medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-vu medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-vumc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-amc amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-erasmus mc,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-erasmusMC,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-erasmus university medical center,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-erasmus medical center,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-erasmus universitair medisch centrum,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-radboudumc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1.00
-radboud umc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1.00
-radboud university medical center,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1.00
-radboud universitair medisch centrum,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1.00
-leiden university medical center,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1.00
-leids universitair medisch centrum,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1.00
-lumc,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1.00
-university medical center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1.00
-universitair medisch centrum groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1.00
-umcg,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1.00
-university medical center utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1.00
-universitair medisch centrum utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1.00
-umcu,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1.00
-maastricht university medical center,Maastricht University Medical Center,Maastricht University Medical Center,Maastricht University Medical Center,hospital,manual,1.00
-maastricht universitair medisch centrum,Maastricht University Medical Center,Maastricht University Medical Center,Maastricht University Medical Center,hospital,manual,1.00
-uz leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1.00
-universitaire ziekenhuis leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1.00
-university hospitals leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1.00
-ku leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,1.00
-katholieke universiteit leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,1.00
-uz brussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1.00
-uzbrussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1.00
-universitair ziekenhuis brussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1.00
-university hospital ghent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1.00
-universitair ziekenhuis gent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1.00
-uz gent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1.00
-ghent university,Ghent University,Ghent University,Ghent University,academic,manual,1.00
-universiteit gent,Ghent University,Ghent University,Ghent University,academic,manual,1.00
-rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1.00
-copenhagen university hospital rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1.00
-aarhus university hospital,Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,hospital,manual,1.00
-aarhus universitetshospital,Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,hospital,manual,1.00
-aarhus university,Aarhus University,Aarhus University,Aarhus University,academic,manual,1.00
-aarhus universitet,Aarhus University,Aarhus University,Aarhus University,academic,manual,1.00
-oslo university hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,manual,1.00
-karolinska institutet,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,manual,1.00
-karolinska university hospital,Karolinska University Hospital,Karolinska University Hospital,Karolinska University Hospital,hospital,manual,1.00
-university medical center hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,1.00
-universitaetsklinikum hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,1.00
-charite universitaetsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1.00
-universitaetsklinikum tuebingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,hospital,manual,1.00
-medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1.00
-medizinische universitaet wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1.00
-medical university of graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,1.00
-medical university of innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,1.00
-gustave roussy,Gustave Roussy,Gustave Roussy,Gustave Roussy,hospital,manual,1.00
-institut gustave roussy,Gustave Roussy,Gustave Roussy,Gustave Roussy,hospital,manual,1.00
-the royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,1.00
-imperial college london,Imperial College London,Imperial College London,Imperial College London,academic,manual,1.00
-imperial college healthcare nhs trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,hospital,manual,1.00
-university college london,University College London,University College London,University College London,academic,manual,1.00
-ucl,University College London,University College London,University College London,academic,manual,0.85
-kings college london,Kings College London,Kings College London,Kings College London,academic,manual,1.00
-kings college hospital nhs foundation trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,hospital,manual,1.00
-university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,manual,1.00
-cambridge university hospitals nhs foundation trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,manual,1.00
-the christie nhs foundation trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,manual,1.00
-merck sharp dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck sharp dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1.00
-merck co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,0.90
-h lundbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
-h lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
-lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
-lundbeck as,Lundbeck,Lundbeck,Lundbeck,industry,manual,1.00
-ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
-assistance publique hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
-assistance publique - hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
-vertex pharmaceuticals incorporated,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1.00
-vertex pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1.00
-vertex,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,0.90
-regeneron pharmaceuticals inc,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1.00
-regeneron pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1.00
-regeneron,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,0.90
-incyte corporation,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,1.00
-incyte,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,0.90
-ferring pharmaceuticals as,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1.00
-ferring pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1.00
-ferring,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,0.90
-chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1.00
-chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1.00
-chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,0.90
-astellas pharma europe bv,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1.00
-astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1.00
-astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,0.90
-otsuka pharmaceutical development and commercialization inc,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1.00
-otsuka pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1.00
-otsuka,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,0.90
-eisai limited,Eisai,Eisai,Eisai,industry,manual,1.00
-eisai,Eisai,Eisai,Eisai,industry,manual,1.00
-genzyme corporation,Genzyme,Sanofi,Sanofi,industry,manual,1.00
-genzyme,Genzyme,Sanofi,Sanofi,industry,manual,1.00
-grunenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
-grunenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
-dr falk pharma gmbh,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1.00
-dr falk pharma,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1.00
-ucb biopharma srl,UCB,UCB,UCB,industry,manual,1.00
-ucb biopharma,UCB,UCB,UCB,industry,manual,1.00
-biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,1.00
-biogen idec,Biogen,Biogen,Biogen,industry,manual,1.00
-assistance publique - hopitaux de paris ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1.00
-grnenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
-grnenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1.00
-f hoffman-la roche ltd,Roche,Roche,Roche,industry,manual,1.00
-f hoffman-la roche,Roche,Roche,Roche,industry,manual,1.00
-hoffman-la roche,Roche,Roche,Roche,industry,manual,1.00
-teva branded pharmaceutical products rd inc,Teva,Teva,Teva,industry,manual,1.00
-teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,1.00
-teva pharmaceutical,Teva,Teva,Teva,industry,manual,1.00
-teva,Teva,Teva,Teva,industry,manual,0.90
-actelion pharmaceuticals ltd,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1.00
-actelion pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1.00
-actelion,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,0.90
-leo pharma as,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1.00
-leo pharma,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1.00
-csl behring gmbh,CSL Behring,CSL Behring,CSL Behring,industry,manual,1.00
-csl behring,CSL Behring,CSL Behring,CSL Behring,industry,manual,1.00
-allergan limited,Allergan,AbbVie,AbbVie,industry,manual,1.00
-allergan,Allergan,AbbVie,AbbVie,industry,manual,1.00
-baxter international inc,Baxter,Baxter,Baxter,industry,manual,1.00
-baxter,Baxter,Baxter,Baxter,industry,manual,0.90
-genmab as,Genmab,Genmab,Genmab,industry,manual,1.00
-genmab,Genmab,Genmab,Genmab,industry,manual,0.90
-galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,1.00
-galapagos,Galapagos,Galapagos,Galapagos,industry,manual,0.90
-hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,manual,1.00
-abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,1.00
-abbott gmbh,Abbott,Abbott,Abbott,industry,manual,1.00
-abbott,Abbott,Abbott,Abbott,industry,manual,0.90
-university of birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,manual,1.00
-university hospitals birmingham nhs foundation trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,hospital,manual,1.00
-sheffield teaching hospitals nhs foundation trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,hospital,manual,1.00
-academic medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1.00
-umc utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1.00
-erasmus universitair medisch centrum rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1.00
-merck healthcare kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1.00
-merck healthcare,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,0.90
-boehringer ing,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1.00
-nv organon,Organon,Organon,Organon,industry,manual,1.00
-organon,Organon,Organon,Organon,industry,manual,0.90
-biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1.00
-biomarin pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1.00
-biomarin,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,0.90
-university of leeds,University Of Leeds,University Of Leeds,University Of Leeds,academic,manual,1.00
-university of nottingham,University Of Nottingham,University Of Nottingham,University Of Nottingham,academic,manual,1.00
-university of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,manual,1.00
-university of cardiff,University Of Cardiff,University Of Cardiff,University Of Cardiff,academic,manual,1.00
-cardiff university,Cardiff University,Cardiff University,Cardiff University,academic,manual,1.00
-university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,1.00
-unicancer,Unicancer,Unicancer,Unicancer,cooperative_group,manual,1.00
-viiv healthcare uk limited,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1.00
-viiv healthcare,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1.00
-medimmune llc,MedImmune,AstraZeneca,AstraZeneca,industry,manual,1.00
-medimmune,MedImmune,AstraZeneca,AstraZeneca,industry,manual,1.00
-ionis pharmaceuticals inc,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,1.00
-ionis pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,1.00
-ionis,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,0.90
-daiichi sankyo inc,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1.00
-daiichi sankyo,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1.00
-seagen inc,Seagen,Pfizer,Pfizer,industry,manual,1.00
-seagen,Seagen,Pfizer,Pfizer,industry,manual,0.90
-centocor bv,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1.00
-centocor,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,0.90
-united therapeutics corporation,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,1.00
-united therapeutics,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,0.90
-helsinn healthcare sa,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,1.00
-helsinn healthcare,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,1.00
-lysarc,LYSARC,LYSARC,LYSARC,cooperative_group,manual,1.00
-region midtjylland,Region Midtjylland,Region Midtjylland,Region Midtjylland,hospital,manual,1.00
-odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1.00
-odense universitetshospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1.00
-ospedale san raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,1.00
-ospedale s raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,1.00
-istituto europeo di oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,manual,1.00
-charite - universitatsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1.00
-charite - universitsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1.00
-charité - universitätsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1.00
-merz pharmaceuticals gmbh,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1.00
-merz pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1.00
-sun pharmaceutical industries limited,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,1.00
-sun pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,0.90
-chu amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-chu de amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-chu d'amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-centre hospitalier universitaire amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-centre hospitalier universitaire de amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-centre hospitalier universitaire d'amiens-picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-chu angers,CHU d'Angers,,,hospital,manual,1.00
-chu de angers,CHU d'Angers,,,hospital,manual,1.00
-chu d'angers,CHU d'Angers,,,hospital,manual,1.00
-centre hospitalier universitaire angers,CHU d'Angers,,,hospital,manual,1.00
-centre hospitalier universitaire de angers,CHU d'Angers,,,hospital,manual,1.00
-centre hospitalier universitaire d'angers,CHU d'Angers,,,hospital,manual,1.00
-chu besançon,CHU de Besançon,,,hospital,manual,1.00
-chu de besançon,CHU de Besançon,,,hospital,manual,1.00
-chu d'besançon,CHU de Besançon,,,hospital,manual,1.00
-centre hospitalier universitaire besançon,CHU de Besançon,,,hospital,manual,1.00
-centre hospitalier universitaire de besançon,CHU de Besançon,,,hospital,manual,1.00
-centre hospitalier universitaire d'besançon,CHU de Besançon,,,hospital,manual,1.00
-chu bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-chu de bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-chu d'bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-centre hospitalier universitaire bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-centre hospitalier universitaire de bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-centre hospitalier universitaire d'bordeaux,CHU de Bordeaux,,,hospital,manual,1.00
-chu brugmann,CHU Brugmann,,,hospital,manual,1.00
-chu de brugmann,CHU Brugmann,,,hospital,manual,1.00
-chu d'brugmann,CHU Brugmann,,,hospital,manual,1.00
-centre hospitalier universitaire brugmann,CHU Brugmann,,,hospital,manual,1.00
-centre hospitalier universitaire de brugmann,CHU Brugmann,,,hospital,manual,1.00
-centre hospitalier universitaire d'brugmann,CHU Brugmann,,,hospital,manual,1.00
-chu caen,CHU de Caen,,,hospital,manual,1.00
-chu de caen,CHU de Caen,,,hospital,manual,1.00
-chu d'caen,CHU de Caen,,,hospital,manual,1.00
-centre hospitalier universitaire caen,CHU de Caen,,,hospital,manual,1.00
-centre hospitalier universitaire de caen,CHU de Caen,,,hospital,manual,1.00
-centre hospitalier universitaire d'caen,CHU de Caen,,,hospital,manual,1.00
-chu clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-chu de clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-chu d'clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-centre hospitalier universitaire clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-centre hospitalier universitaire de clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-centre hospitalier universitaire d'clermont-ferrand,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-chu dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-chu de dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-chu d'dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-centre hospitalier universitaire dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-centre hospitalier universitaire de dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-centre hospitalier universitaire d'dijon,CHU Dijon Bourgogne,,,hospital,manual,1.00
-chu grenoble,CHU de Grenoble,,,hospital,manual,1.00
-chu de grenoble,CHU de Grenoble,,,hospital,manual,1.00
-chu d'grenoble,CHU de Grenoble,,,hospital,manual,1.00
-centre hospitalier universitaire grenoble,CHU de Grenoble,,,hospital,manual,1.00
-centre hospitalier universitaire de grenoble,CHU de Grenoble,,,hospital,manual,1.00
-centre hospitalier universitaire d'grenoble,CHU de Grenoble,,,hospital,manual,1.00
-chu la réunion,CHU de La Réunion,,,hospital,manual,1.00
-chu de la réunion,CHU de La Réunion,,,hospital,manual,1.00
-chu d'la réunion,CHU de La Réunion,,,hospital,manual,1.00
-centre hospitalier universitaire la réunion,CHU de La Réunion,,,hospital,manual,1.00
-centre hospitalier universitaire de la réunion,CHU de La Réunion,,,hospital,manual,1.00
-centre hospitalier universitaire d'la réunion,CHU de La Réunion,,,hospital,manual,1.00
-chu liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-chu de liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-chu d'liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-centre hospitalier universitaire liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-centre hospitalier universitaire de liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-centre hospitalier universitaire d'liège,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-chu lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-chu de lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-chu d'lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-centre hospitalier universitaire lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-centre hospitalier universitaire de lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-centre hospitalier universitaire d'lille,Centre Hospitalier Universitaire de Lille,,,hospital,manual,1.00
-chu limoges,CHU de Limoges,,,hospital,manual,1.00
-chu de limoges,CHU de Limoges,,,hospital,manual,1.00
-chu d'limoges,CHU de Limoges,,,hospital,manual,1.00
-centre hospitalier universitaire limoges,CHU de Limoges,,,hospital,manual,1.00
-centre hospitalier universitaire de limoges,CHU de Limoges,,,hospital,manual,1.00
-centre hospitalier universitaire d'limoges,CHU de Limoges,,,hospital,manual,1.00
-chu montpellier,CHU de Montpellier,,,hospital,manual,1.00
-chu de montpellier,CHU de Montpellier,,,hospital,manual,1.00
-chu d'montpellier,CHU de Montpellier,,,hospital,manual,1.00
-centre hospitalier universitaire montpellier,CHU de Montpellier,,,hospital,manual,1.00
-centre hospitalier universitaire de montpellier,CHU de Montpellier,,,hospital,manual,1.00
-centre hospitalier universitaire d'montpellier,CHU de Montpellier,,,hospital,manual,1.00
-chu nancy,CHU de Nancy,,,hospital,manual,1.00
-chu de nancy,CHU de Nancy,,,hospital,manual,1.00
-chu d'nancy,CHU de Nancy,,,hospital,manual,1.00
-centre hospitalier universitaire nancy,CHU de Nancy,,,hospital,manual,1.00
-centre hospitalier universitaire de nancy,CHU de Nancy,,,hospital,manual,1.00
-centre hospitalier universitaire d'nancy,CHU de Nancy,,,hospital,manual,1.00
-chu nantes,CHU de Nantes,,,hospital,manual,1.00
-chu de nantes,CHU de Nantes,,,hospital,manual,1.00
-chu d'nantes,CHU de Nantes,,,hospital,manual,1.00
-centre hospitalier universitaire nantes,CHU de Nantes,,,hospital,manual,1.00
-centre hospitalier universitaire de nantes,CHU de Nantes,,,hospital,manual,1.00
-centre hospitalier universitaire d'nantes,CHU de Nantes,,,hospital,manual,1.00
-chu nice,CHU de Nice,,,hospital,manual,1.00
-chu de nice,CHU de Nice,,,hospital,manual,1.00
-chu d'nice,CHU de Nice,,,hospital,manual,1.00
-centre hospitalier universitaire nice,CHU de Nice,,,hospital,manual,1.00
-centre hospitalier universitaire de nice,CHU de Nice,,,hospital,manual,1.00
-centre hospitalier universitaire d'nice,CHU de Nice,,,hospital,manual,1.00
-chu nîmes,CHU de Nîmes,,,hospital,manual,1.00
-chu de nîmes,CHU de Nîmes,,,hospital,manual,1.00
-chu d'nîmes,CHU de Nîmes,,,hospital,manual,1.00
-centre hospitalier universitaire nîmes,CHU de Nîmes,,,hospital,manual,1.00
-centre hospitalier universitaire de nîmes,CHU de Nîmes,,,hospital,manual,1.00
-centre hospitalier universitaire d'nîmes,CHU de Nîmes,,,hospital,manual,1.00
-chu poitiers,CHU de Poitiers,,,hospital,manual,1.00
-chu de poitiers,CHU de Poitiers,,,hospital,manual,1.00
-chu d'poitiers,CHU de Poitiers,,,hospital,manual,1.00
-centre hospitalier universitaire poitiers,CHU de Poitiers,,,hospital,manual,1.00
-centre hospitalier universitaire de poitiers,CHU de Poitiers,,,hospital,manual,1.00
-centre hospitalier universitaire d'poitiers,CHU de Poitiers,,,hospital,manual,1.00
-chu reims,CHU de Reims,,,hospital,manual,1.00
-chu de reims,CHU de Reims,,,hospital,manual,1.00
-chu d'reims,CHU de Reims,,,hospital,manual,1.00
-centre hospitalier universitaire reims,CHU de Reims,,,hospital,manual,1.00
-centre hospitalier universitaire de reims,CHU de Reims,,,hospital,manual,1.00
-centre hospitalier universitaire d'reims,CHU de Reims,,,hospital,manual,1.00
-chu rennes,CHU de Rennes,,,hospital,manual,1.00
-chu de rennes,CHU de Rennes,,,hospital,manual,1.00
-chu d'rennes,CHU de Rennes,,,hospital,manual,1.00
-centre hospitalier universitaire rennes,CHU de Rennes,,,hospital,manual,1.00
-centre hospitalier universitaire de rennes,CHU de Rennes,,,hospital,manual,1.00
-centre hospitalier universitaire d'rennes,CHU de Rennes,,,hospital,manual,1.00
-chu rouen,CHU de Rouen,,,hospital,manual,1.00
-chu de rouen,CHU de Rouen,,,hospital,manual,1.00
-chu d'rouen,CHU de Rouen,,,hospital,manual,1.00
-centre hospitalier universitaire rouen,CHU de Rouen,,,hospital,manual,1.00
-centre hospitalier universitaire de rouen,CHU de Rouen,,,hospital,manual,1.00
-centre hospitalier universitaire d'rouen,CHU de Rouen,,,hospital,manual,1.00
-chu saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu de saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu d'saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-centre hospitalier universitaire saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-centre hospitalier universitaire de saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-centre hospitalier universitaire d'saint-étienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu toulouse,CHU de Toulouse,,,hospital,manual,1.00
-chu de toulouse,CHU de Toulouse,,,hospital,manual,1.00
-chu d'toulouse,CHU de Toulouse,,,hospital,manual,1.00
-centre hospitalier universitaire toulouse,CHU de Toulouse,,,hospital,manual,1.00
-centre hospitalier universitaire de toulouse,CHU de Toulouse,,,hospital,manual,1.00
-centre hospitalier universitaire d'toulouse,CHU de Toulouse,,,hospital,manual,1.00
-chu amiens picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-centre hospitalier universitaire amiens picardie,CHU Amiens-Picardie,,,hospital,manual,1.00
-chu gabriel-montpied,CHU de Clermont-Ferrand,,,hospital,manual,1.00
-chu sart-tilman,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-chu-ulg,Centre Hospitalier Universitaire de Liège,,,hospital,manual,1.00
-chu grenoble alpes,CHU de Grenoble,,,hospital,manual,1.00
-centre hospitalier universitaire grenoble alpes,CHU de Grenoble,,,hospital,manual,1.00
-chu de la reunion,CHU de La Réunion,,,hospital,manual,1.00
-chu besancon,CHU de Besançon,,,hospital,manual,1.00
-chu de besancon,CHU de Besançon,,,hospital,manual,1.00
-chu saint-etienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu de saint-etienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu saint etienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu de saint etienne,CHU de Saint-Étienne,,,hospital,manual,1.00
-chu nimes,CHU de Nîmes,,,hospital,manual,1.00
-chu de nimes,CHU de Nîmes,,,hospital,manual,1.00
-centre hospitalier universitaire de caen normandie,CHU de Caen,,,hospital,manual,1.00
+alias_clean,sponsor_clean,sponsor_parent,sponsor_group,sponsor_type,source,confidence_prior,alias_type
+ac immune sa,AC Immune SA,NA,NA,NA,ctis_businesskey,0.95,NA
+adc therapeutics sa,ADC Therapeutics SA,NA,NA,NA,ctis_businesskey,0.95,NA
+aio-studien-ggmbh,AIO-Studien-gGmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+alk abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
+alk-abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
+ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1,NA
+assistance publique - hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1,NA
+assistance publique - hopitaux de paris ap-hp,AP-HP,AP-HP,AP-HP,hospital,manual,1,NA
+assistance publique hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,1,NA
+aarhus universitet,Aarhus University,Aarhus University,Aarhus University,academic,manual,1,NA
+aarhus university,Aarhus University,Aarhus University,Aarhus University,academic,manual,1,NA
+aarhus universitetshospital,Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,hospital,manual,1,NA
+aarhus university hospital,Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,hospital,manual,1,NA
+abbvie,AbbVie,AbbVie,AbbVie,industry,manual,1,NA
+abbvie inc,AbbVie,AbbVie,AbbVie,industry,manual,1,NA
+abbott,Abbott,Abbott,Abbott,industry,manual,0.9,NA
+abbott gmbh,Abbott,Abbott,Abbott,industry,manual,1,NA
+abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,1,NA
+aco hud nordic ab,Aco Hud Nordic AB,NA,NA,NA,ctis_businesskey,0.95,NA
+actelion,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,0.9,NA
+actelion pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1,NA
+actelion pharmaceuticals ltd,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1,NA
+agomab spain s l,Agomab Spain S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+alexion,Alexion,AstraZeneca,AstraZeneca,industry,manual,1,NA
+alexion pharmaceuticals,Alexion,AstraZeneca,AstraZeneca,industry,manual,1,NA
+allergan,Allergan,AbbVie,AbbVie,industry,manual,1,NA
+allergan limited,Allergan,AbbVie,AbbVie,industry,manual,1,NA
+alx oncology inc,Alx Oncology Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+amgen,Amgen,Amgen,Amgen,industry,manual,1,NA
+amgen inc,Amgen,Amgen,Amgen,industry,manual,1,NA
+academic medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+academic medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+academisch medisch centrum,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+amc amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+amsterdam umc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+amsterdam university medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+stichting amsterdam umc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+vu medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+vu university medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+vu university medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+vumc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
+angelini pharma italia aziende chimiche riunite angelini francesc o a c r a f s p a,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+antibiotice s a / iasis pharmaceuticals hellas s a,Antibiotice S.A. / Iasis Pharmaceuticals Hellas S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+antwerp university hospital,Antwerp University Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
+arcagy gineco,Arcagy Gineco,NA,NA,NA,ctis_businesskey,0.95,NA
+arctic therapeutics hf,Arctic Therapeutics hf.,NA,NA,NA,ctis_businesskey,0.95,NA
+armgo pharma inc,Armgo Pharma Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+association international extranodal lymphoma study group,Association International Extranodal Lymphoma Study Group,NA,NA,NA,ctis_businesskey,0.95,NA
+astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,0.9,NA
+astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
+astellas pharma europe bv,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
+astrazeneca,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
+astrazeneca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
+astrazeneca plc,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
+azienda ospedaliera di padova,Azienda Ospedaliera di Padova,NA,NA,NA,ctis_businesskey,0.95,NA
+azienda ospedaliero universitaria meyer irccs,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,ctis_businesskey,0.95,NA
+biotest ag,BIOTEST AG,NA,NA,NA,ctis_businesskey,0.95,NA
+bms,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+bristol myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+bristol-myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+bristol-myers squibb company,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+bristol-myers squibb international corporation,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+baxter,Baxter,Baxter,Baxter,industry,manual,0.9,NA
+baxter international inc,Baxter,Baxter,Baxter,industry,manual,1,NA
+bayer,Bayer,Bayer,Bayer,industry,manual,1,NA
+bayer ag,Bayer,Bayer,Bayer,industry,manual,1,NA
+bayer healthcare,Bayer,Bayer,Bayer,industry,manual,1,NA
+bayer schering pharma,Bayer,Bayer,Bayer,industry,manual,1,NA
+bayer schering pharma ag,Bayer,Bayer,Bayer,industry,manual,1,NA
+bayer vital,Bayer,Bayer,Bayer,industry,manual,1,NA
+biomarin,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,0.9,NA
+biomarin pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
+biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
+biogen,Biogen,Biogen,Biogen,industry,manual,1,NA
+biogen idec,Biogen,Biogen,Biogen,industry,manual,1,NA
+biogen idec,Biogen,Biogen,Biogen,industry,manual,1,NA
+biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,1,NA
+bioinvent international ab,Bioinvent International AB,NA,NA,NA,ctis_businesskey,0.95,NA
+biotechnology institue i mas d s l,Biotechnology Institue I Mas D S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+boehringer ing,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+boehringer ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+boehringer ingelheim gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+boehringer ingelheim international gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+boehringer ingelheim pharma gmbh and co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+scs boehringer ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
+chru de nancy,CHRU De Nancy,NA,NA,NA,ctis_businesskey,0.95,NA
+centre hospitalier universitaire amiens picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+chu amiens picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+chu amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+chu d'amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+chu de amiens-picardie,CHU Amiens-Picardie,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+chu brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+chu d'brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+chu de brugmann,CHU Brugmann,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+chu d'dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+chu de dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+chu dijon,CHU Dijon Bourgogne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+chu angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+chu d'angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+chu de angers,CHU d'Angers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chu besancon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chu besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chu d'besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chu de besancon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chu de besançon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+chu bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+chu d'bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+chu de bordeaux,CHU de Bordeaux,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de caen normandie,CHU de Caen,NA,NA,hospital,manual,1,NA
+chu caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+chu d'caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+chu de caen,CHU de Caen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+chu clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+chu d'clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+chu de clermont-ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+chu gabriel-montpied,CHU de Clermont-Ferrand,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire grenoble alpes,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+chu d'grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+chu de grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+chu grenoble,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+chu grenoble alpes,CHU de Grenoble,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+chu d'la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+chu de la reunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+chu de la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+chu la réunion,CHU de La Réunion,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+chu d'limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+chu de limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+chu limoges,CHU de Limoges,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+chu d'montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+chu de montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+chu montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+chu d'nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+chu de nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+chu nancy,CHU de Nancy,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+chu d'nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+chu de nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+chu nantes,CHU de Nantes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+chu d'nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+chu de nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+chu nice,CHU de Nice,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+chu d'nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+chu de nimes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+chu de nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+chu nimes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+chu nîmes,CHU de Nîmes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+chu d'poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+chu de poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+chu poitiers,CHU de Poitiers,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+chu d'reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+chu de reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+chu reims,CHU de Reims,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+chu d'rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+chu de rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+chu rennes,CHU de Rennes,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+chu d'rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+chu de rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+chu rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu d'saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu de saint etienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu de saint-etienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu de saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu saint etienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu saint-etienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+chu saint-étienne,CHU de Saint-Étienne,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+chu d'toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+chu de toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+chu toulouse,CHU de Toulouse,NA,NA,hospital,manual,1,NA
+csl behring,CSL Behring,CSL Behring,CSL Behring,industry,manual,1,NA
+csl behring gmbh,CSL Behring,CSL Behring,CSL Behring,industry,manual,1,NA
+cambridge university hospitals nhs foundation trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,manual,1,NA
+canisius wilhelmina hospital,Canisius Wilhelmina Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
+cardiff university,Cardiff University,Cardiff University,Cardiff University,academic,manual,1,NA
+celgene,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1,NA
+cell2cure aps,Cell2cure ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+centocor,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,0.9,NA
+centocor bv,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+centre for human drug research,Centre For Human Drug Research,NA,NA,NA,ctis_businesskey,0.95,NA
+centre hospitalier regional de marseille,Centre Hospitalier Regional De Marseille,NA,NA,NA,ctis_businesskey,0.95,NA
+centre hospitalier sainte anne paris,Centre Hospitalier Sainte Anne Paris,NA,NA,NA,ctis_businesskey,0.95,NA
+centre hospitalier universitaire d'lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+chu d'lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+chu de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+chu lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire d'liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire de liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+centre hospitalier universitaire liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+chu d'liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+chu de liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+chu liège,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+chu sart-tilman,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+chu-ulg,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+centrum medyczne ksztalcenia podyplomowego,Centrum Medyczne Ksztalcenia Podyplomowego,NA,NA,NA,ctis_businesskey,0.95,NA
+charite - universitatsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+charite - universitsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+charite universitaetsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+charité - universitätsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,0.9,NA
+chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
+chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
+curevac ag,Curevac AG,NA,NA,NA,ctis_businesskey,0.95,NA
+dice therapeutics inc,DICE Therapeutics Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+daiichi sankyo,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1,NA
+daiichi sankyo inc,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1,NA
+debiopharm international sa,Debiopharm International SA,NA,NA,NA,ctis_businesskey,0.95,NA
+deuteroncology,Deuteroncology,NA,NA,NA,ctis_businesskey,0.95,NA
+deutsches krebsforschungszentrum dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,NA,ctis_businesskey,0.95,NA
+dr falk pharma,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1,NA
+dr falk pharma gmbh,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1,NA
+dr reddy's laboratories limited,Dr. Reddy's Laboratories Limited,NA,NA,NA,ctis_businesskey,0.95,NA
+emd serono,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+emd serono inc,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+eortc,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
+european organisation for research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
+organisation for research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
+eisai,Eisai,Eisai,Eisai,industry,manual,1,NA
+eisai limited,Eisai,Eisai,Eisai,industry,manual,1,NA
+eli lilly,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1,NA
+eli lilly and company,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1,NA
+lilly,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,0.9,NA
+lilly deutschland,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1,NA
+elliniko institouto meletis tis sipsis,Elliniko Institouto Meletis Tis Sipsis,NA,NA,NA,ctis_businesskey,0.95,NA
+erasmus mc,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+erasmus medical center,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+erasmus universitair medisch centrum,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+erasmus universitair medisch centrum rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+erasmus university medical center,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+erasmusMC,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
+esbjerg sygehus,Esbjerg Sygehus,NA,NA,NA,ctis_businesskey,0.95,NA
+eyepoint inc,Eyepoint Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+ferring,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,0.9,NA
+ferring pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1,NA
+ferring pharmaceuticals as,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1,NA
+fondation a de rothschild,Fondation A De Rothschild,NA,NA,NA,ctis_businesskey,0.95,NA
+fondazione italiana linfomi ets,Fondazione Italiana Linfomi Ets,NA,NA,NA,ctis_businesskey,0.95,NA
+fondazione santa lucia,Fondazione Santa Lucia,NA,NA,NA,ctis_businesskey,0.95,NA
+foundation clinic for biomedical research,Foundation Clinic For Biomedical Research,NA,NA,NA,ctis_businesskey,0.95,NA
+friedrich-schiller-universitaet jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacio institut d investigacio biomedica de bellvitge idibell,Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacio institut de recerca de l hospital de la santa creu i sant pau,Fundacio Institut De Recerca De L Hospital De La Santa Creu I Sant Pau,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion fls de lucha contra el sida las enfermedades infecciosas y la promocion de la salud y la c,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion instituto de investigacion sanitaria de santiago de compostela,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion para la gestion de la investigacion en salud de sevilla,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion oncosur,Fundación Oncosur,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion para la investigacion biomedica del hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,ctis_businesskey,0.95,NA
+gcs ramsay sante enseignement et recherche,GCS Ramsay Sante Enseignement Et Recherche,NA,NA,NA,ctis_businesskey,0.95,NA
+gercor,GERCOR,GERCOR,GERCOR,cooperative_group,manual,1,NA
+goirc gruppo oncologico italiano di ricerca clinica,GOIRC Gruppo Oncologico Italiano Di Ricerca Clinica,NA,NA,NA,ctis_businesskey,0.95,NA
+glaxosmithkline,GSK,GSK,GSK,industry,manual,1,NA
+glaxosmithkline plc,GSK,GSK,GSK,industry,manual,1,NA
+glaxosmithkline research and development limited,GSK,GSK,GSK,industry,manual,1,NA
+gsk,GSK,GSK,GSK,industry,manual,1,NA
+smithkline beecham,GSK,GSK,GSK,industry,manual,1,NA
+galapagos,Galapagos,Galapagos,Galapagos,industry,manual,0.9,NA
+galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,1,NA
+gcp-service international west gmbh,Gcp-Service International West GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+genentech,Genentech,Roche,Roche,industry,manual,1,NA
+genentech inc,Genentech,Roche,Roche,industry,manual,1,NA
+genmab,Genmab,Genmab,Genmab,industry,manual,0.9,NA
+genmab as,Genmab,Genmab,Genmab,industry,manual,1,NA
+genzyme,Genzyme,Sanofi,Sanofi,industry,manual,1,NA
+genzyme corporation,Genzyme,Sanofi,Sanofi,industry,manual,1,NA
+ghent university,Ghent University,Ghent University,Ghent University,academic,manual,1,NA
+universiteit gent,Ghent University,Ghent University,Ghent University,academic,manual,1,NA
+gilead,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1,NA
+gilead sciences,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1,NA
+gilead sciences inc,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,manual,1,NA
+grupo espanol de investigacion en cancer de mama,Grupo Espanol De Investigacion En Cancer De Mama,NA,NA,NA,ctis_businesskey,0.95,NA
+grnenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
+grnenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
+grunenthal,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
+grunenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
+gustave roussy,Gustave Roussy,Gustave Roussy,Gustave Roussy,hospital,manual,1,NA
+institut gustave roussy,Gustave Roussy,Gustave Roussy,Gustave Roussy,hospital,manual,1,NA
+hovon,HOVON,HOVON,HOVON,cooperative_group,manual,1,NA
+hovon foundation,HOVON,HOVON,HOVON,cooperative_group,manual,1,NA
+stichting hemato-oncologie voor volwassenen nederland,HOVON,HOVON,HOVON,cooperative_group,manual,1,NA
+hus-yhtymae,HUS-yhtymae,NA,NA,NA,ctis_businesskey,0.95,NA
+haleon ch sarl,Haleon CH SARL,NA,NA,NA,ctis_businesskey,0.95,NA
+heidelberg university,Heidelberg University,NA,NA,NA,ctis_businesskey,0.95,NA
+heidelberg university hospital aor,Heidelberg University Hospital AöR,NA,NA,NA,ctis_businesskey,0.95,NA
+helse stavanger hf,Helse Stavanger HF,NA,NA,NA,ctis_businesskey,0.95,NA
+helsinn healthcare,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,1,NA
+helsinn healthcare sa,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,1,NA
+herlev hospital,Herlev Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
+hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,manual,1,NA
+io biotech aps,IO Biotech ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+irccs istituto giannina gaslini,IRCCS Istituto Giannina Gaslini,NA,NA,NA,ctis_businesskey,0.95,NA
+ifom istituto fondazione di oncologia molecolare ets in breve ifom ets,Ifom Istituto Fondazione Di Oncologia Molecolare Ets In Breve Ifom Ets,NA,NA,NA,ctis_businesskey,0.95,NA
+imperial college healthcare nhs trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,hospital,manual,1,NA
+imperial college london,Imperial College London,Imperial College London,Imperial College London,academic,manual,1,NA
+incyte,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,0.9,NA
+incyte corporation,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,1,NA
+inserm,Inserm,NA,NA,NA,ctis_businesskey,0.95,NA
+institut fur frauengesundheit gmbh,Institut Für Frauengesundheit GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+institut paoli-calmettes,Institut Paoli-Calmettes,NA,NA,NA,ctis_businesskey,0.95,NA
+institut fuer klinische krebsforschung ikf gmbh,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+instituto de investigacion sanitaria fundacion para la investigacion del hospital clinico de valencia-incliva,Instituto de Investigacion Sanitaria Fundacion para la Investigacion del Hospital Clinico de Valencia-INCLIVA,NA,NA,NA,ctis_businesskey,0.95,NA
+insusense aps / insusense aps,Insusense ApS / Insusense ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+intergroupe francophone de cancerologie thoracique,Intergroupe Francophone de Cancerologie Thoracique,NA,NA,NA,ctis_businesskey,0.95,NA
+ionis,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,0.9,NA
+ionis pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,1,NA
+ionis pharmaceuticals inc,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,1,NA
+beaufour ipsen,Ipsen,Ipsen,Ipsen,industry,manual,1,NA
+ipsen,Ipsen,Ipsen,Ipsen,industry,manual,1,NA
+ipsen innovation,Ipsen,Ipsen,Ipsen,industry,manual,1,NA
+istituto di ricerche farmacologiche mario negri,Istituto Di Ricerche Farmacologiche Mario Negri,NA,NA,NA,ctis_businesskey,0.95,NA
+istituto europeo di oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,manual,1,NA
+janssen,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+janssen and cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+janssen biologics bv,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+janssen cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+janssen research and development llc,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+janssen-cilag,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+ortho biotech,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+johnson and johnson,Johnson & Johnson,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
+katholieke universiteit leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,1,NA
+ku leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,1,NA
+karolinska institutet,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,manual,1,NA
+karolinska university hospital,Karolinska University Hospital,Karolinska University Hospital,Karolinska University Hospital,hospital,manual,1,NA
+kings college hospital nhs foundation trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,hospital,manual,1,NA
+kings college london,Kings College London,Kings College London,Kings College London,academic,manual,1,NA
+klinikum der universitat munchen aor,Klinikum Der Universitat Munchen AöR,NA,NA,NA,ctis_businesskey,0.95,NA
+klinikum rechts der isar der tu muenchen aor,Klinikum rechts der Isar der TU Muenchen AöR,NA,NA,NA,ctis_businesskey,0.95,NA
+kobenhavns universitet,Kobenhavns Universitet,NA,NA,NA,ctis_businesskey,0.95,NA
+leo pharma,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1,NA
+leo pharma as,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1,NA
+lysarc,LYSARC,LYSARC,LYSARC,cooperative_group,manual,1,NA
+laboratorios lesvi s l,Laboratorios Lesvi S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+leiden university medical center,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
+leids universitair medisch centrum,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
+lumc,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
+litevax b v,Litevax B.V.,NA,NA,NA,ctis_businesskey,0.95,NA
+lumos pharma inc,Lumos Pharma Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+h lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
+h lundbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
+lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
+lundbeck as,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
+lupin atlantis holdings sa,Lupin Atlantis Holdings SA,NA,NA,NA,ctis_businesskey,0.95,NA
+laboratoires merck sharp dohme chibret,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck and co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck and co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,0.9,NA
+merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp and dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp and dohme bv,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp and dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp and dohme limited,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp and dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp dohme corp,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+merck sharp dohme llc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+msd,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+msd oncology,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+msd sharp and dohme,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+maastricht university,Maastricht University,NA,NA,NA,ctis_businesskey,0.95,NA
+maastricht universitair medisch centrum,Maastricht University Medical Center,Maastricht University Medical Center,Maastricht University Medical Center,hospital,manual,1,NA
+maastricht university medical center,Maastricht University Medical Center,Maastricht University Medical Center,Maastricht University Medical Center,hospital,manual,1,NA
+maat pharma,Maat Pharma,NA,NA,NA,ctis_businesskey,0.95,NA
+malmo universitet,Malmö Universitet,NA,NA,NA,ctis_businesskey,0.95,NA
+medimmune,MedImmune,AstraZeneca,AstraZeneca,industry,manual,1,NA
+medimmune llc,MedImmune,AstraZeneca,AstraZeneca,industry,manual,1,NA
+medac gesellschaft fuer klinische spezialprapaerate mbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,ctis_businesskey,0.95,NA
+medical university of graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,1,NA
+medical university of innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,1,NA
+medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitaet wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medice arzneimittel puetter gmbh and co kg,Medice Arzneimittel Puetter GmbH & Co. KG,NA,NA,NA,ctis_businesskey,0.95,NA
+merck europe bv,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck healthcare,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,0.9,NA
+merck healthcare kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck kgaa darmstadt germany,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck serono,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck serono sa,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merus b v,Merus B.V.,NA,NA,NA,ctis_businesskey,0.95,NA
+merz pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1,NA
+merz pharmaceuticals gmbh,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1,NA
+millennium pharmaceuticals inc,Millennium Pharmaceuticals,Takeda,Takeda,industry,manual,1,NA
+moderna inc,Moderna Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+narodowy instytut onkologii im marii sklodowskiej-curie-panstwowy instytut badawczy,Narodowy Instytut Onkologii Im. Marii Sklodowskiej-Curie-Panstwowy Instytut Badawczy,NA,NA,NA,ctis_businesskey,0.95,NA
+national institute of cardiology,National Institute Of Cardiology,NA,NA,NA,ctis_businesskey,0.95,NA
+nord ostdeutsche gesellschaft fuer gynaekologische onkologie e v,Nord Ostdeutsche Gesellschaft Fuer Gynaekologische Onkologie e.V.,NA,NA,NA,ctis_businesskey,0.95,NA
+novimmune sa,NovImmune SA,NA,NA,NA,ctis_businesskey,0.95,NA
+novartis,Novartis,Novartis,Novartis,industry,manual,1,NA
+novartis ag,Novartis,Novartis,Novartis,industry,manual,1,NA
+novartis oncology,Novartis,Novartis,Novartis,industry,manual,1,NA
+novartis pharma,Novartis,Novartis,Novartis,industry,manual,1,NA
+novartis pharma ag,Novartis,Novartis,Novartis,industry,manual,1,NA
+novo nordisk,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1,NA
+novo nordisk as,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1,NA
+om pharma sa,OM Pharma SA,NA,NA,NA,ctis_businesskey,0.95,NA
+odense universitetshospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1,NA
+odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1,NA
+oncoinvent asa,Oncoinvent ASA,NA,NA,NA,ctis_businesskey,0.95,NA
+oncomatryx biopharma s l,Oncomatryx Biopharma S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+oncoverity inc,Oncoverity Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+nv organon,Organon,Organon,Organon,industry,manual,1,NA
+organon,Organon,Organon,Organon,industry,manual,0.9,NA
+oslo university hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,manual,1,NA
+ospedale s raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,1,NA
+ospedale san raffaele,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,manual,1,NA
+otsuka,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,0.9,NA
+otsuka pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1,NA
+otsuka pharmaceutical development and commercialization inc,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,manual,1,NA
+parc de salut mar,Parc De Salut Mar,NA,NA,NA,ctis_businesskey,0.95,NA
+pethema fundacion,Pethema Fundacion,NA,NA,NA,ctis_businesskey,0.95,NA
+pfizer,Pfizer,Pfizer,Pfizer,industry,manual,1,NA
+pfizer inc,Pfizer,Pfizer,Pfizer,industry,manual,1,NA
+pfizer limited,Pfizer,Pfizer,Pfizer,industry,manual,1,NA
+phaxiam therapeutics,Phaxiam Therapeutics,NA,NA,NA,ctis_businesskey,0.95,NA
+pierre fabre,Pierre Fabre,Pierre Fabre,Pierre Fabre,industry,manual,1,NA
+pierre fabre medicament,Pierre Fabre,Pierre Fabre,Pierre Fabre,industry,manual,1,NA
+princess maxima center for pediatric oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,ctis_businesskey,0.95,NA
+radboud umc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
+radboud universitair medisch centrum,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
+radboud university medical center,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
+radboudumc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
+regeneron,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,0.9,NA
+regeneron pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1,NA
+regeneron pharmaceuticals inc,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,Regeneron Pharmaceuticals,industry,manual,1,NA
+region midtjylland,Region Midtjylland,Region Midtjylland,Region Midtjylland,hospital,manual,1,NA
+region sjaelland,Region Sjaelland,NA,NA,NA,ctis_businesskey,0.95,NA
+region skane,Region Skane,NA,NA,NA,ctis_businesskey,0.95,NA
+region vasterbotten / umea university,Region Västerbotten / Umea University,NA,NA,NA,ctis_businesskey,0.95,NA
+replimune inc,Replimune Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+rheinische friedrich wilhelms universitat bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,ctis_businesskey,0.95,NA
+copenhagen university hospital rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1,NA
+rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1,NA
+f hoffman-la roche,Roche,Roche,Roche,industry,manual,1,NA
+f hoffman-la roche ltd,Roche,Roche,Roche,industry,manual,1,NA
+f hoffmann,Roche,Roche,Roche,industry,manual,1,NA
+f hoffmann-la roche,Roche,Roche,Roche,industry,manual,1,NA
+f hoffmann-la roche ag,Roche,Roche,Roche,industry,manual,1,NA
+hoffman-la roche,Roche,Roche,Roche,industry,manual,1,NA
+hoffmann-la roche,Roche,Roche,Roche,industry,manual,1,NA
+roche,Roche,Roche,Roche,industry,manual,1,NA
+roche pharma ag,Roche,Roche,Roche,industry,manual,1,NA
+roche products ltd,Roche,Roche,Roche,industry,manual,1,NA
+sakk,SAKK,SAKK,SAKK,cooperative_group,manual,1,NA
+swiss group for clinical cancer research,SAKK,SAKK,SAKK,cooperative_group,manual,1,NA
+sandoz,Sandoz,Novartis,Novartis,industry,manual,1,NA
+sandoz gmbh,Sandoz,Novartis,Novartis,industry,manual,1,NA
+aventis pharma,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+sanofi,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+sanofi aventis,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+sanofi sa,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+sanofi-aventis,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+sanofi genzyme,Sanofi Genzyme,Sanofi,Sanofi,industry,manual,1,NA
+sanofi pasteur,Sanofi Pasteur,Sanofi,Sanofi,industry,manual,1,NA
+schering plough,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+schering-plough,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
+seagen,Seagen,Pfizer,Pfizer,industry,manual,0.9,NA
+seagen inc,Seagen,Pfizer,Pfizer,industry,manual,1,NA
+institut de recherches internationales servier,Servier,Servier,Servier,industry,manual,1,NA
+institut de recherches internationales servier iris,Servier,Servier,Servier,industry,manual,1,NA
+laboratoires servier,Servier,Servier,Servier,industry,manual,1,NA
+les laboratoires servier,Servier,Servier,Servier,industry,manual,1,NA
+servier,Servier,Servier,Servier,industry,manual,1,NA
+sheffield teaching hospitals nhs foundation trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,hospital,manual,1,NA
+shire,Shire,Takeda,Takeda,industry,manual,1,NA
+shire-movetis,Shire,Takeda,Takeda,industry,manual,1,NA
+sint maartenskliniek,Sint Maartenskliniek,NA,NA,NA,ctis_businesskey,0.95,NA
+st antonius hospital,St Antonius Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
+stichting het nederlands kanker instituut-antoni van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,ctis_businesskey,0.95,NA
+stichting radboud university medical center,Stichting Radboud University Medical Center,NA,NA,NA,ctis_businesskey,0.95,NA
+stichting rijnstate ziekenhuis,Stichting Rijnstate Ziekenhuis,NA,NA,NA,ctis_businesskey,0.95,NA
+stichting zuyderland medisch centrum,Stichting Zuyderland Medisch Centrum,NA,NA,NA,ctis_businesskey,0.95,NA
+summit therapeutics inc,Summit Therapeutics Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+sun pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,0.9,NA
+sun pharmaceutical industries limited,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,1,NA
+takeda,Takeda,Takeda,Takeda,industry,manual,1,NA
+takeda oncology,Takeda,Takeda,Takeda,industry,manual,1,NA
+takeda pharmaceutical company limited,Takeda,Takeda,Takeda,industry,manual,1,NA
+technische universitat dresden,Technische Universitat Dresden,NA,NA,NA,ctis_businesskey,0.95,NA
+teva,Teva,Teva,Teva,industry,manual,0.9,NA
+teva branded pharmaceutical products rd inc,Teva,Teva,Teva,industry,manual,1,NA
+teva pharmaceutical,Teva,Teva,Teva,industry,manual,1,NA
+teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,1,NA
+the christie nhs foundation trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,manual,1,NA
+the royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,1,NA
+tolremo therapeutics ag,Tolremo Therapeutics AG,NA,NA,NA,ctis_businesskey,0.95,NA
+turku university hospital,Turku University Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
+ucb,UCB,UCB,UCB,industry,manual,1,NA
+ucb biopharma,UCB,UCB,UCB,industry,manual,1,NA
+ucb biopharma srl,UCB,UCB,UCB,industry,manual,1,NA
+ucb pharma,UCB,UCB,UCB,industry,manual,1,NA
+ucb pharma sa,UCB,UCB,UCB,industry,manual,1,NA
+universitair ziekenhuis brussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1,NA
+uz brussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1,NA
+uzbrussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,manual,1,NA
+universitaire ziekenhuis leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1,NA
+university hospitals leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1,NA
+uz leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1,NA
+unicancer,Unicancer,Unicancer,Unicancer,cooperative_group,manual,1,NA
+united therapeutics,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,0.9,NA
+united therapeutics corporation,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,1,NA
+universita degli studi di genova,Universita Degli Studi Di Genova,NA,NA,NA,ctis_businesskey,0.95,NA
+universita degli studi di roma la sapienza,Universita Degli Studi Di Roma La Sapienza,NA,NA,NA,ctis_businesskey,0.95,NA
+universita degli studi di verona,Universita Degli Studi Di Verona,NA,NA,NA,ctis_businesskey,0.95,NA
+universita' degli studi di napoli federico ii,Universita' Degli Studi Di Napoli Federico II,NA,NA,NA,ctis_businesskey,0.95,NA
+universitaet leipzig,Universitaet Leipzig,NA,NA,NA,ctis_businesskey,0.95,NA
+universitaetsklinikum regensburg,Universitaetsklinikum Regensburg,NA,NA,NA,ctis_businesskey,0.95,NA
+universitaetsklinikum schleswig-holstein,Universitaetsklinikum Schleswig-Holstein,NA,NA,NA,ctis_businesskey,0.95,NA
+universitaetsklinikum ulm aor,Universitaetsklinikum Ulm AöR,NA,NA,NA,ctis_businesskey,0.95,NA
+universitatsmedizin der johannes gutenberg-universitat mainz kor,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,ctis_businesskey,0.95,NA
+universite de liege / chu de liege,Universite De Liege / CHU De Liege,NA,NA,NA,ctis_businesskey,0.95,NA
+universitetssykehuset nord-norge hf,Universitetssykehuset Nord-Norge HF,NA,NA,NA,ctis_businesskey,0.95,NA
+university clinic of navarra,University Clinic Of Navarra,NA,NA,NA,ctis_businesskey,0.95,NA
+ucl,University College London,University College London,University College London,academic,manual,0.85,NA
+university college london,University College London,University College London,University College London,academic,manual,1,NA
+universitair ziekenhuis gent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1,NA
+university hospital ghent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1,NA
+uz gent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,manual,1,NA
+university hospital maastricht,University Hospital Maastricht,NA,NA,NA,ctis_businesskey,0.95,NA
+university hospitals birmingham nhs foundation trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,hospital,manual,1,NA
+umcg,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1,NA
+universitair medisch centrum groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1,NA
+university medical center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,manual,1,NA
+universitaetsklinikum hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,1,NA
+university medical center hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,1,NA
+umc utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
+umcu,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
+universitair medisch centrum utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
+university medical center utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
+university of birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,manual,1,NA
+university of cardiff,University Of Cardiff,University Of Cardiff,University Of Cardiff,academic,manual,1,NA
+university of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,manual,1,NA
+university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
+university of leeds,University Of Leeds,University Of Leeds,University Of Leeds,academic,manual,1,NA
+university of milano bicocca,University Of Milano Bicocca,NA,NA,NA,ctis_businesskey,0.95,NA
+university of nottingham,University Of Nottingham,University Of Nottingham,University Of Nottingham,academic,manual,1,NA
+university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,manual,1,NA
+university of saarland,University Of Saarland,NA,NA,NA,ctis_businesskey,0.95,NA
+universitaetsklinikum tuebingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,hospital,manual,1,NA
+vall d'hebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,NA,ctis_businesskey,0.95,NA
+vandria sa,Vandria SA,NA,NA,NA,ctis_businesskey,0.95,NA
+vastra gotalandsregionen,Vastra Gotalandsregionen,NA,NA,NA,ctis_businesskey,0.95,NA
+vertex,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,0.9,NA
+vertex pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1,NA
+vertex pharmaceuticals incorporated,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1,NA
+vigeneron gmbh,ViGeneron GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+viiv healthcare,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1,NA
+viiv healthcare uk limited,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1,NA
+win medica pharmaceutical s a,Win Medica Pharmaceutical S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+wyeth,Wyeth,Pfizer,Pfizer,industry,manual,1,NA
+wyeth pharmaceuticals,Wyeth,Pfizer,Pfizer,industry,manual,1,NA
+zaklady farmaceutyczne polpharma s a,Zaklady Farmaceutyczne Polpharma S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+zymeworks inc,Zymeworks Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+i-getaid,i-GETAID,NA,NA,NA,ctis_businesskey,0.95,NA

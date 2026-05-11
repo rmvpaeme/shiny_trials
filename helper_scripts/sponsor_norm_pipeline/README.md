@@ -19,22 +19,48 @@ Reads `trials_cache.rds`, extracts the primary sponsor name for each trial (EUCT
 ### Step 2 — Build alias index from external databases
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R          # manual + EPAR + ROR
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror  # manual + EPAR only
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-epar # manual + ROR only
+# Recommended: EPAR + all DB tiers, skip slow ROR API
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
+
+# Full run (adds ~43 ROR aliases, takes several extra minutes):
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R
+
+# DB tiers only (fastest, no network):
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-epar --no-ror
+
+# Skip DB tiers (e.g. no local database available):
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-db
 ```
 
-Downloads external name sources and merges them with `manual_sponsor_aliases.csv` to produce `sponsor_alias_index.csv`. Run after adding new manual aliases or when the EPAR dataset is updated.
+Downloads external name sources and merges them with `manual_sponsor_aliases.csv` to produce `sponsor_alias_index.csv`. Run after adding new manual aliases or when the EPAR dataset is updated. The DB tiers require `data/trials.sqlite`; override the path with the `DB_PATH` environment variable.
 
-**Sources:**
-- `manual_sponsor_aliases.csv` — always included (confidence 1.00, highest priority)
-- EMA EPAR Marketing Authorisation Holders — MAH name variants for sponsors already in the manual table (confidence 0.85)
-- ROR (Research Organization Registry) — academic/hospital name variants for EU institutions already in the manual table (confidence 0.75)
+**Sources (priority order):**
+
+| Source | Flag to skip | Confidence | Coverage |
+| ------ | ------------ | ---------- | -------- |
+| `manual_sponsor_aliases.csv` | always included | 1.00 | seed |
+| EMA EPAR MAH names | `--no-epar` | 0.85 | industry |
+| ROR (academic/hospital variants) | `--no-ror` | 0.75 | EU institutions |
+| CTIS `businessKey` EMA org IDs | `--no-businesskey` | 0.95 | CTIS only |
+| EUCTR email domain | `--no-email` | 0.85 | EUCTR, 74% coverage |
+| Postcode + country + JW ≥ 0.88 | `--no-location` | 0.70 | both registers |
+
+**CTIS businessKey** is ground truth: EMA's own organisation registry links name variants
+that are definitively the same entity (e.g. "AstraZeneca AB" / "Astrazeneca AB",
+"Princess Maxima Center" / "Prinses Maxima Centrum").
+
+**EUCTR email domain** groups sponsors sharing a corporate email domain (e.g. `novartis.com`).
+CRO domains and generic providers are blocked. Requires a discriminative token overlap
+between the unresolved name and the canonical to prevent investigator-email false positives.
+
+**Postcode + country** groups sponsors at the same registered address; only proposes an alias
+when at least one name in the group already resolves to a known canonical.
 
 **Outputs:**
 - `config/sponsor_norm_pipeline/sponsor_alias_index.csv` — merged alias table used by `normalise_sponsors.R`
 - `config/sponsor_norm_pipeline/sponsor_ambiguous_aliases.csv` — aliases that map to more than one canonical sponsor
-- `config/sponsor_norm_pipeline/new_sponsor_candidates.csv` — unmatched external names for manual review
+- `config/sponsor_norm_pipeline/new_sponsor_candidates.csv` — unmatched EPAR MAH names for manual review
+- `config/sponsor_norm_pipeline/ctis_org_candidates.csv` — CTIS businessKey groups with no known canonical; one row per EMA organisation, with `suggested_canonical`, `other_names`, and `n_variants` for review
 
 When `sponsor_alias_index.csv` does not yet exist, `normalise_sponsors.R` falls back to `manual_sponsor_aliases.csv` automatically.
 

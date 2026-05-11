@@ -66,8 +66,9 @@ if (!file.exists(raw_path)) {
 
 raw <- readr::read_csv(raw_path, show_col_types = FALSE,
                        col_types = readr::cols(
-                         `_id`       = readr::col_character(),
-                         raw_sponsor = readr::col_character()
+                         `_id`         = readr::col_character(),
+                         raw_sponsor   = readr::col_character(),
+                         is_commercial = readr::col_logical()
                        ))
 
 message(sprintf(
@@ -102,6 +103,18 @@ trial_norm <- raw %>%
       suggested_clean
     ),
     by = "raw_sponsor"
+  ) %>%
+  # Derive sponsor_type from the trial's own commercial flag (authoritative)
+  # rather than the alias table's heuristic.
+  #   is_commercial == TRUE  → "industry"
+  #   is_commercial == FALSE → classify_sponsor_type() on the raw name
+  #   is_commercial == NA    → keep alias-table value (fallback)
+  dplyr::mutate(
+    sponsor_type = dplyr::case_when(
+      !is.na(is_commercial) & is_commercial  ~ "industry",
+      !is.na(is_commercial) & !is_commercial ~ classify_sponsor_type(raw_sponsor),
+      TRUE                                   ~ sponsor_type
+    )
   )
 
 # One sponsor per trial: keep accepted and review, drop rejected/unknown from labels

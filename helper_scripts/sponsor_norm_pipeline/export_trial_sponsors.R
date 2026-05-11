@@ -59,9 +59,25 @@ extract_sponsor <- function(df) {
         if ("authorizedApplication.authorizedPartI.sponsors.organisation.name" %in% names(df)) {
           .data[["authorizedApplication.authorizedPartI.sponsors.organisation.name"]]
         } else NA_character_
+      ),
+      is_commercial = dplyr::coalesce(
+        # CTIS: direct boolean flag
+        if ("authorizedApplication.authorizedPartI.sponsors.isCommercial" %in% names(df)) {
+          as.logical(.data[["authorizedApplication.authorizedPartI.sponsors.isCommercial"]])
+        } else NA,
+        # EUCTR: "Commercial organisation" → TRUE, "Non-Commercial organisation" → FALSE
+        if ("b1_sponsor.b31_and_b32_status_of_the_sponsor" %in% names(df)) {
+          dplyr::case_when(
+            grepl("^Non-Commercial", .data[["b1_sponsor.b31_and_b32_status_of_the_sponsor"]],
+                  ignore.case = TRUE) ~ FALSE,
+            grepl("Commercial", .data[["b1_sponsor.b31_and_b32_status_of_the_sponsor"]],
+                  ignore.case = TRUE) ~ TRUE,
+            TRUE ~ NA
+          )
+        } else NA
       )
     ) %>%
-    dplyr::select(`_id`, raw_sponsor) %>%
+    dplyr::select(`_id`, raw_sponsor, is_commercial) %>%
     dplyr::filter(
       !is.na(raw_sponsor),
       nchar(stringr::str_trim(raw_sponsor)) > 0
@@ -73,8 +89,9 @@ out <- extract_sponsor(cache) %>%
 
 readr::write_csv(out, out_path)
 message(sprintf(
-  "Wrote %d trial sponsor rows (%d unique sponsors) to %s",
+  "Wrote %d trial sponsor rows (%d unique sponsors, %d with commercial flag) to %s",
   nrow(out),
   dplyr::n_distinct(out$raw_sponsor),
+  sum(!is.na(out$is_commercial)),
   out_path
 ))
