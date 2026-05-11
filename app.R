@@ -1784,38 +1784,39 @@ load_trial_data <- function(force_rebuild = FALSE) {
     message(sprintf("Cached: %s trials in %.1fs",
                     format(nrow(d), big.mark=","),
                     as.numeric(Sys.time()-t0, units="secs")))
-    if (!"substance_label" %in% names(d)) {
-      labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
-      if (file.exists(labels_path)) {
-        tryCatch({
-          labels <- readr::read_csv(labels_path, show_col_types = FALSE,
-                                    col_types = readr::cols(
-                                      `_id`            = readr::col_character(),
-                                      substance_label  = readr::col_character()))
-          d <- dplyr::left_join(d, labels, by = "_id")
-          message(sprintf("Attached substance labels: %d / %d trials",
-                          sum(!is.na(d$substance_label)), nrow(d)))
-        }, error = function(e) message("Could not attach substance labels: ", e$message))
-      }
-      if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
+    # Always re-attach fresh labels from CSV so pipeline updates are reflected
+    # without a full cache rebuild.
+    substance_labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
+    if (file.exists(substance_labels_path)) {
+      tryCatch({
+        d <- dplyr::select(d, -dplyr::any_of("substance_label"))
+        sub_labels <- readr::read_csv(substance_labels_path, show_col_types = FALSE,
+                                  col_types = readr::cols(
+                                    `_id`            = readr::col_character(),
+                                    substance_label  = readr::col_character()))
+        d <- dplyr::left_join(d, sub_labels, by = "_id")
+        message(sprintf("Attached substance labels: %d / %d trials",
+                        sum(!is.na(d$substance_label)), nrow(d)))
+      }, error = function(e) message("Could not attach substance labels: ", e$message))
     }
-    if (!"sponsor_label" %in% names(d)) {
-      slabels_path <- file.path(dirname(DB_PATH), "trial_sponsor_labels.csv")
-      if (file.exists(slabels_path)) {
-        tryCatch({
-          slabels <- readr::read_csv(slabels_path, show_col_types = FALSE,
-                                     col_types = readr::cols(
-                                       `_id`         = readr::col_character(),
-                                       sponsor_clean = readr::col_character()))
-          slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
-          d <- dplyr::left_join(d, slabels, by = "_id")
-          d$sponsor_label <- dplyr::coalesce(d$sponsor_clean, d$sponsor_name)
-          message(sprintf("Attached sponsor labels: %d / %d trials matched",
-                          sum(!is.na(d$sponsor_clean)), nrow(d)))
-        }, error = function(e) message("Could not attach sponsor labels: ", e$message))
-      }
-      if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
+    if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
+
+    slabels_path <- file.path(dirname(DB_PATH), "trial_sponsor_labels.csv")
+    if (file.exists(slabels_path)) {
+      tryCatch({
+        d <- dplyr::select(d, -dplyr::any_of(c("sponsor_clean", "sponsor_label")))
+        slabels <- readr::read_csv(slabels_path, show_col_types = FALSE,
+                                   col_types = readr::cols(
+                                     `_id`         = readr::col_character(),
+                                     sponsor_clean = readr::col_character()))
+        slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
+        d <- dplyr::left_join(d, slabels, by = "_id")
+        d$sponsor_label <- dplyr::coalesce(d$sponsor_clean, d$sponsor_name)
+        message(sprintf("Attached sponsor labels: %d / %d trials matched",
+                        sum(!is.na(d$sponsor_clean)), nrow(d)))
+      }, error = function(e) message("Could not attach sponsor labels: ", e$message))
     }
+    if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
     return(d)
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }
@@ -2075,16 +2076,16 @@ ui <- tagList(
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analysis",icon=icon("chart-bar"),startExpanded=FALSE,
-	                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope")),
-	                                                   menuSubItem("Geography",tabName="analytics_geography",icon=icon("globe")),
-	                                                   menuSubItem("PIP Analysis",tabName="analytics_pip",icon=icon("file-medical")),
                                                    menuSubItem("Active Substances",tabName="analytics_substances",icon=icon("pills")),
-	                                                   menuSubItem("Register Migration",tabName="migration",icon=icon("route")),
-	                                                   menuSubItem("Sponsors",tabName="analytics_sponsors",icon=icon("building")),
+	                                                   menuSubItem("Geography",tabName="analytics_geography",icon=icon("globe")),
                                                    menuSubItem("Phase Analytics",tabName="phase",icon=icon("flask")),
-                                                   menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt")),
+	                                                   menuSubItem("PIP Analysis",tabName="analytics_pip",icon=icon("file-medical")),
+	                                                   menuSubItem("Register Migration",tabName="migration",icon=icon("route")),
+                                                   menuSubItem("Result Reporting",tabName="compliance",icon=icon("file-medical-alt")),
+	                                                   menuSubItem("Sponsors",tabName="analytics_sponsors",icon=icon("building")),
+	                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope")),
                                                    menuSubItem("Country Comparison",tabName="country_compare",icon=icon("globe")),
-                                                   menuSubItem("Result Reporting",tabName="compliance",icon=icon("file-medical-alt"))
+                                                   menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt"))
                                                  ),
                                                  menuItem("About",tabName="about",icon=icon("info-circle"))),
                                      tags$div(style="padding:10px 14px 6px;",
@@ -2443,7 +2444,12 @@ ui <- tagList(
                                   box(title="Trials by Country",status="primary",solidHeader=TRUE,width=12,height=460,
                                       p(em("Counts split multinational trials across all listed EU member states and update with the sidebar filters."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_country",height="390px"),type=6)))
+                                      withSpinner(plotlyOutput("plot_country",height="390px"),type=6))),
+                                fluidRow(
+                                  box(title="Country Co-occurrence in Multinational Trials",status="primary",solidHeader=TRUE,width=12,
+                                      p(em("Heatmap shows how often pairs of countries appear together in the same multinational trial. Darker cells indicate more frequent collaboration. Only trials with ≥2 countries are included."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_country_cooccur",height="550px"),type=6)))
                         ),
 	                        tabItem(tabName="analytics_pip",
 	                                fluidRow(
@@ -3795,6 +3801,70 @@ server <- function(input, output, session) {
     if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df,x=~reorder(Member_state,-n),y=~n,type="bar",marker=list(color=tc()$frost1))%>%
       plt_layout(margin=list(b=120),xaxis=list(tickangle=-45,tickfont=list(color=tc()$chart_fg)))
+  })
+
+  output$plot_country_cooccur <- renderPlotly({
+    t <- tc()
+    multi <- filt() %>%
+      filter(!is.na(Member_state)) %>%
+      mutate(countries = strsplit(Member_state, " / |, ")) %>%
+      filter(lengths(countries) >= 2) %>%
+      select(`_id`, countries)
+
+    if (nrow(multi) == 0) {
+      return(plotly_empty() %>% layout(
+        title = list(text = "No multinational trials for current filters", font = list(size = 14, color = "#888")),
+        annotations = list(text = "Adjust the sidebar filters to see country co-occurrence data.", showarrow = FALSE, font = list(size = 12, color = "#aaa"))
+      ))
+    }
+
+    pairs <- multi %>%
+      rowwise() %>%
+      mutate(countries = list(unique(str_trim(countries[nchar(str_trim(countries)) > 0])))) %>%
+      filter(length(countries) >= 2) %>%
+      mutate(pairs = list(as.data.frame(t(combn(sort(countries), 2)), stringsAsFactors = FALSE))) %>%
+      ungroup() %>%
+      select(pairs) %>%
+      unnest(pairs) %>%
+      rename(a = V1, b = V2) %>%
+      count(a, b, name = "n")
+
+    top_countries <- filt() %>%
+      filter(!is.na(Member_state)) %>%
+      separate_rows(Member_state, sep = " / |, ") %>%
+      mutate(Member_state = str_trim(Member_state)) %>%
+      filter(Member_state != "") %>%
+      count(Member_state, sort = TRUE) %>%
+      head(25) %>%
+      pull(Member_state)
+
+    pairs <- pairs %>% filter(a %in% top_countries, b %in% top_countries)
+
+    # Build symmetric matrix
+    all_countries <- sort(unique(c(pairs$a, pairs$b)))
+    mat <- matrix(0L, nrow = length(all_countries), ncol = length(all_countries),
+                  dimnames = list(all_countries, all_countries))
+    for (i in seq_len(nrow(pairs))) {
+      mat[pairs$a[i], pairs$b[i]] <- pairs$n[i]
+      mat[pairs$b[i], pairs$a[i]] <- pairs$n[i]
+    }
+
+    # Sort by total co-occurrence (most connected first)
+    row_order <- order(rowSums(mat), decreasing = TRUE)
+    mat <- mat[row_order, row_order]
+
+    plot_ly(
+      z = mat,
+      x = colnames(mat),
+      y = rownames(mat),
+      type = "heatmap",
+      colorscale = list(c(0, t$chart_bg), c(0.15, t$frost0), c(1, t$frost3)),
+      hovertemplate = "%{y} + %{x}: %{z} trials<extra></extra>"
+    ) %>% plt_layout(
+      margin = list(l = 120, b = 120),
+      xaxis = list(tickangle = -45, tickfont = list(size = 10, color = t$chart_fg)),
+      yaxis = list(tickfont = list(size = 10, color = t$chart_fg))
+    )
   })
 
 
@@ -5746,7 +5816,7 @@ server <- function(input, output, session) {
       # Data Explorer
       "trials_table",
 	      # Basic Analytics
-	      "plot_organ", "plot_term", "plot_country",
+	      "plot_organ", "plot_term", "plot_country", "plot_country_cooccur",
 	      "table_pip_compound_complexity", "pip_compound_decision_picker",
 	      "table_pip_compound_decisions", "plot_pip", "plot_pip_year",
 	      "plot_top_substances", "plot_substance_timeline",
