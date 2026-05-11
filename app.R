@@ -723,430 +723,25 @@ clean_member_state <- function(x) {
 # ══════════════════════════════════════════════════════════════════════════════
 
 normalize_sponsor_name <- function(x) {
+  # Minimal stub — full regex normalisation was replaced by the sponsor
+  # normalisation pipeline (trial_sponsor_labels.csv). sponsor_label =
+  # coalesce(pipeline output, this stub) provides the enriched display name.
   x <- str_trim(as.character(x))
   x[x %in% c("NA", "", "NULL")] <- NA_character_
-  # Collapse multiple spaces (raw EUCTR data has "GmbH  Co. KG" with double space)
   x <- str_replace_all(x, "\\s{2,}", " ")
-  # Protect hyphenated brand names before the generic "- long expansion" cleanup.
-  x <- ifelse(!is.na(x) & str_detect(x, regex("\\bBristol\\s*[-.]?\\s*M(ey|y)ers\\s+Squibb\\b|\\bBristol\\s*[-.]\\s*M\\.?\\s*Squibb\\b", ignore_case = TRUE)),
-              "BMS", x)
-  x <- ifelse(!is.na(x) & str_detect(x, regex("\\bALK\\s*[- ]?\\s*Abell[óo]?\\b|\\bALK\\s*[- ]?\\s*Abell\\b", ignore_case = TRUE)),
-              "ALK-Abello", x)
-
-  # ── Pre-step: structural cleanup before any token removal ─────────────────
-  # Strip "a wholly[-owned] subsidiary of..." and similar sub-company noise
-  x <- str_replace_all(x, regex(",?\\s*(an?\\s+)?wholly.owned\\s+subsidiary.*$|,?\\s*an?\\s+indirect.*subsidiary.*$|,?\\s*a\\s+wholly\\s+owned.*$|,?\\s*como\\s+filial.*$", ignore_case = TRUE), "")
-  # Strip "- [long expansion]" (acronym + full name), with or without spaces
-  x <- str_replace_all(x, "\\s*-\\s*[A-Z][A-Za-z\\s]{15,}$", "")
-  # Strip trailing ", Department/Unit/Ward/Section..." qualifiers
-  x <- str_replace_all(x,
-    regex(",\\s*(Department|Dept|Unit|Ward|Section|Centre|Center|Division|Faculty|School|Institute|Laboratory|Clinic|Service|Team).*$",
-          ignore_case = TRUE), "")
-  x <- str_trim(x)
-
-  # ── Strip legal-entity tokens early so they don't trigger is_abbrev ────────
-  # (e.g. "ADAMED Pharma S.A." has "S.A." which would block title-casing)
-  legal_tok_early <- paste0(
-    "\\b(GmbH\\s+&\\s+Co\\.?\\s*KGaA|GmbH\\s+&\\s+Co\\.?\\s*KG|",
-    "GmbH\\s+Co\\.?\\s*KGaA|GmbH\\s+Co\\.?\\s*KG|",
-    "GmbH|AG|SE|KGaA|KG|LLC|L\\.L\\.C\\.?|SNC|SRL|SAS|SARL|DAC|",
-    "Inc\\.?|Incorporated|Ltd\\.?|Limited|",
-    "B\\.V\\.?|N\\.V\\.?|S\\.A\\.?|SA|S\\.L\\.?|SL\\.?|S\\.p\\.A\\.?|S\\.r\\.l\\.?|",
-    "Corp\\.?|Corporation|PLC|LP\\.?|L\\.P\\.?|AB|Oy|NV|BV|A\\/S|",
-    "&\\s*Co\\.?|and\\s+Co\\.?|Sp\\.\\s*z\\s*o\\.\\s*o\\.)\\b")
-  x <- str_replace_all(x, regex(legal_tok_early, ignore_case = TRUE), " ")
-  x <- str_replace_all(x, "(^[,\\.\\-/\\s]+|[,\\.\\-/\\s]+$)", "")
-  x <- str_replace_all(x, "\\s{2,}", " ")
-  x <- str_trim(x)
-
-  # Title-case everything EXCEPT dotted abbreviations (A.I.E.O.P., A.O., etc.)
-  is_abbrev <- !is.na(x) & str_detect(x, "[A-Za-z]\\.[A-Za-z]")
-  x <- ifelse(!is.na(x) & !is_abbrev, str_to_title(x), x)
-
-  # Curated aliases for high-frequency register spelling variants.
-  sponsor_aliases <- list(
-    c("\\bH\\.?\\s*Lundbeck\\b", "Lundbeck"),
-    c("\\bMerck\\s*(Amp\\s*)?&?\\s*Co\\b|\\bMerck\\s+And\\s+Co\\b", "MSD"),
-    c("\\b(UZ|Universitair\\s+Ziekenhuis|University\\s+Hospital)\\s+Brussel(s)?\\b|\\bUZBrussel\\b|\\bUZ\\s+Brussel\\s+VUB\\b|\\bCrg\\s+UZ\\s+Brussel\\b", "UZ Brussel"),
-    c("\\bRigshospitalet\\b|\\bCopenhagen\\s+University\\s+Hospital\\s*,?\\s*Rigshospitalet\\b|\\bRigshospitalet\\s*,?\\s*Copenhagen\\s+University\\s+Hospitals?\\b", "Rigshospitalet"),
-    c("\\b(Policlinico\\s+(Universitario\\s+)?(Agostino\\s+)?A\\.?\\s*Gemelli|Fondazione\\s+Policlinico\\s+Universitario\\s+Agostino\\s+Gemelli|Universit\\s+Cattolica\\s+Del\\s+Sacro\\s+Cuore\\s*[- ]\\s*Policlinico\\s+A\\.?\\s*Gemelli)\\b", "Policlinico Universitario Agostino Gemelli"),
-    c("\\b(Institut\\s+)?Gustave\\s+Roussy\\b|\\bInstitut\\s+De\\s+Cancrologie\\s+Gustave\\s+Roussy\\b", "Gustave Roussy"),
-    c("\\b(S?Tichting\\s+)?Het\\s+Nederlands\\s+Kanker\\s+Instituut(?=\\b|_)|\\bNederlands\\s+Kanker\\s+Instutuut\\b", "Het Nederlands Kanker Instituut"),
-    c("\\bFundaci[oó]?\\s+(Privada\\s+)?(Cl[ií]n?ic|Cln[ií]c)\\s+((Per\\s+A\\s+(La\\s+)?)|Per\\s+La\\s+)?Recerca\\s+Biom[èe]?dica(\\s+FCRB)?\\b|\\bFundaci[oó]?\\s+(Privada\\s+)?(Cl[ií]n?ic|Cln[ií]c)\\b|\\bFundaci[oó]?\\s+De\\s+Recerca\\s+(Cl[ií]n?ic|Cln[ií]c)\\s+Barcelona\\b|\\bFundaci[oó]?\\s+(Privada\\s+)?Clinic\\s+Per\\s+A\\s+La\\s+Recerca\\s+Biomedica\\b", "Fundacio Clinic Per A La Recerca Biomedica"),
-    c("\\bCentre\\s+(Leon|Lon)\\s+B[ée]?rard\\b", "Centre Leon Berard"),
-    c("\\b(Irccs\\s+)?Istituto\\s+Giannina\\s+Gaslini\\b|\\bGiannina\\s+Gaslini\\s+Institute\\b", "Istituto Giannina Gaslini"),
-    c("\\b(Irccs\\s+)?Istituto\\s+Clinico\\s+Humanitas\\b|\\bInstituto\\s+Clinico\\s+Humanitas\\b|\\bHumanitas\\s+Mirasole\\b", "Istituto Clinico Humanitas"),
-    c("\\bKing'?s?\\s+College\\s+Hospital(\\s+Foundtion)?\\s+(Nhs\\s+)?(Foundation\\s+)?Trust\\b|\\bKing'?s?\\s+College\\s+Hospital\\s+Trust\\b", "Kings College Hospital NHS Foundation Trust"),
-    c("\\bBMS\\b|\\bBristol\\s*[-.]?\\s*M(ey|y)ers\\s+Squibb\\b|\\bBRISTOL\\s*[-.]\\s*M\\.?\\s*Squibb\\b", "BMS"),
-    c("\\b(SCS\\s+)?Boehringer\\s*[- ]?\\s*Ing(elheim)?\\b", "Boehringer Ingelheim"),
-    c("\\bF\\.?\\s*Hoff?mann?\\s*[- ]?\\s*La\\s*[- ]?\\s*Roche\\b|\\bHoff?mann?\\s*[- ]?\\s*La\\s*[- ]?\\s*Roche\\b", "Roche"),
-    c("\\bF\\.?\\s*Hoff?mann?\\b", "Roche"),
-    c("\\bImperial\\s+College\\s+(Healthcare\\s+)?Nhs\\s+Trust\\b", "Imperial College Healthcare NHS Trust"),
-    c("\\bImperial\\s+College\\s*,?\\s*London\\b|^Imperial\\s+College$", "Imperial College London"),
-    c("\\bQueen\\s+Mary\\s*,?\\s+University\\s+Of\\s+London\\b|\\bQueen\\s+Mary\\s+University\\s+London\\b|\\bQueen\\s+Marys?\\s*,?\\s+University\\s+Of\\s+London\\b", "Queen Mary University Of London"),
-    c("\\bUniversity\\s+College\\s+London\\s+UCL\\b|\\bUCL\\s+University\\s+College\\s+London\\b|^UCL$", "University College London"),
-    c("\\bErasmus\\s*MC\\b|\\bErasmusM?C\\b|\\bErasmus\\s+Medical\\s+Cent(re|er)\\b|\\bErasmus\\s+University\\s+Medical\\s+Cent(re|er)\\b|\\bErasmus\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bErasmusMedical\\s+Cent(re|er)\\b", "Erasmus MC"),
-    c("\\bRadboud\\s*UMC\\b|\\bRadboudUMC\\b|\\bRadboud\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bRadboud\\s+University\\s+(Nijmegen\\s+)?Medical\\s+Cent(re|er)\\b|\\bUMCN?\\s+St\\s+Radboud\\b|\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+(Nijmegen\\s+)?(St|Sint)\\.?\\s+Radboud\\b|\\bUniversity\\s+Hospital\\s+Sint\\s+Radboud\\b", "Radboudumc"),
-    c("\\bLUMC\\b|\\bLeid[se]n?\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bLeiden\\s+Univer(si|is|sti)ty\\s+Medical\\s+Cent(re|er)\\b|\\bLeiden\\s+University\\s+Medical\\s+Cent(re|er)\\b|\\bAcademisch\\s+Ziekenhuis\\s+Leiden\\b", "Leiden University Medical Center"),
-    c("\\bUZ\\s*Leuven\\b|\\bUniversitaire\\s+Ziekenhuis\\s+Leuven\\b|\\bUniver(sity|ity)\\s+Hospitals?\\s+(Of\\s+)?Leuven\\b", "UZ Leuven"),
-    c("\\bKU\\s*Leuven\\b|\\bK\\.U\\.\\s*Leuven\\b|\\bKatholieke\\s+Universiteit\\s+Leuven\\b", "KU Leuven"),
-    c("\\b(Academic|Academical|Academisch|Acedemic)\\s+(Medical|Medisch)\\s+Cent(re|er|rum)(\\s+Amsterdam|\\s+AMC)?\\b|\\bAMC\\s*,?\\s*Amsterdam\\b|\\bAMC\\s+Amsterdam\\b|\\bAMC\\b|\\bAMC\\s*[- ]\\s*UVA\\b|\\bAmsterdam\\s+AMC\\b", "Amsterdam UMC"),
-    c("\\bKarolinska\\s+Institutet\\b|\\bKarolinska\\s+Institute\\b", "Karolinska Institutet"),
-    c("\\bPierre\\s+Fabre\\s+M[ée]?dicament\\b|\\bPierre\\s+Fabre\\s+Medicament\\b", "Pierre Fabre Medicament"),
-    c("\\bALK\\s*[- ]?\\s*Abell[óo]?\\b|\\bALK\\s*[- ]?\\s*Abell\\b", "ALK-Abello"),
-    c("\\bLaboratoires\\s+Th[éea]a?\\b", "Laboratoires Thea"),
-    c("\\bInstitut\\s+De\\s+Recherches?\\s+Internationales?\\s+Servier(\\s+I\\.?R\\.?I\\.?S\\.?)?\\b|\\bInstitut\\s+De\\s+Recherche\\s+International\\s+Servier\\b", "Institut De Recherches Internationales Servier IRIS"),
-    c("\\bEutherapie\\s+Pour\\s+Le\\s+Compte\\s+Du\\s+Promoteur\\s+Les\\s+Laboratoires\\s+Servier\\b|\\bLaboratorios\\s+Servier\\b", "Servier"),
-    c("\\bHOVON\\b|\\bHovon\\s+Foundation\\b|\\b(Stichting\\s+)?Hemato\\s*[- ]\\s*Oncologie\\s+Voor\\s+Volwassenen(\\s+Nederland)?\\s*\\(?Hovon\\)?(\\s+Stichting)?\\b|\\bDutch\\s+Belgian\\s+Cooperative\\s+(Group\\s+)?For\\s+Hematology\\s+Oncology\\s*[- ]\\s*Hovon\\b", "HOVON"),
-    c("\\bRegion\\s+Sk[aå]?ne\\b", "Region Skane"),
-    c("\\bRegion\\s+Oe?stergoe?tland\\b", "Region Ostergotland"),
-    c("\\bSankt\\s+Antonius\\s+Hospital\\b|\\bSt\\.?\\s+Antonius\\s+Hospital\\b|\\bSint\\s+Antonius\\s+Ziekenhuis(\\s+Stichting)?\\b|\\bSt\\.?\\s+Antonius\\s+Ziekenhuis\\b", "St Antonius Hospital"),
-    c("\\bCliniques\\s+Universitaires\\s+Saint\\s*[- ]\\s*Luc\\b", "Cliniques Universitaires Saint-Luc"),
-    c("\\bGuys\\s+(And\\s+)?St\\.?\\s+Thomas'?\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bGuys\\s+And\\s+St\\.?\\s+Thomas\\s+Nhs\\s+Foundation\\s+Trust\\b", "Guys And St Thomas NHS Foundation Trust"),
-    c("\\bInstitut\\s+Paoli\\s*[- ]\\s*Calmettes\\b", "Institut Paoli-Calmettes"),
-    c("\\bIBSA\\s*,?\\s+Institut\\s+Biochimique\\b", "IBSA Institut Biochimique"),
-    c("\\bSchering\\s*[- ]\\s*Plough\\s+(Institute|Institution|Reserach\\s+Institute)\\b|\\bSchering\\s*[- ]\\s*Plough\\b", "Schering-Plough"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Saint\\s*[- ]\\s*Etienne\\b", "CHU Saint-Etienne"),
-    c("\\bFundaci[oó]?\\s+(Privada\\s+)?(De\\s+L)?Institut\\s+De\\s+Recerca.*Santa\\s+Creu.*Sant\\s+Pau\\b|\\bInstitut\\s+De\\s+Recerca.*Santa\\s+Creu.*Sant\\s+Pau\\b|\\bInstitut\\s+De\\s+Recerca\\s+H\\.?\\s*(De\\s+La\\s+Santa\\s+Creu\\s+I\\s+Sant\\s+Pau)?\\b|\\bInstitut\\s+De\\s+Recerca\\s+HSCSP\\b", "Institut De Recerca Sant Pau"),
-    c("\\bGE\\s*\\.?\\s+And\\s+Its\\s+Affiliates\\b", "GE And Its Affiliates"),
-    c("\\bLaboratorios\\s+Leti(\\s*,?\\s*\\.?\\s*Unipersonal|\\s*,?\\s*U)?\\b", "Laboratorios Leti"),
-    c("\\bZiekenhuis\\s+Oost\\s*[- ]\\s*Limburg\\b", "Ziekenhuis Oost-Limburg"),
-    c("\\bSt\\.?\\s+Georges\\s*,?\\s+University\\s+Of\\s+London\\b", "St Georges University Of London"),
-    c("\\bKing'?s?\\s+College\\s+London(\\s+IoP|\\s+Institute\\s+Of\\s+Pyschiatry)?\\b|\\bKingss\\s+College\\s+London\\b", "Kings College London"),
-    c("\\b(AOU|Azienda\\s+Ospedaliera\\s+Di\\s+Bologna)\\s*,?\\s*Policlinico\\s+S\\.?\\s*Orsola\\s*[- ]\\s*Malpighi\\b|\\bAOU\\s+DI\\s+BOLOGNA\\s+POLICLINICO\\s+S\\.?ORSOLA\\s*[- ]\\s*MALPIGHI\\b", "Azienda Ospedaliera Di Bologna Policlinico S. Orsola M. Malpighi"),
-    c("\\b(AOU|Azienda\\s+Ospedalier[ao](\\s+Universitaria)?)\\s+Policlinico\\s+Di\\s+Modena\\b", "Azienda Ospedaliera Policlinico Di Modena"),
-    c("\\b(Policlinico\\s+(Universitario\\s+)?(Agostino\\s+)?A?\\.?\\s*Gemelli|Fondazione\\s+Policlinico\\s+Universitario\\s+Agostino\\s+Gemelli|Universit\\s+Cattolica\\s+Del\\s+Sacro\\s+Cuore\\s*[- ]\\s*Policlinico\\s+A\\.?\\s*Gemelli)\\b", "Policlinico Universitario Agostino Gemelli"),
-    c("\\bUniversity\\s+Of\\s+Dundee\\s*/?\\s*(And\\s+)?Nhs\\s+Tayside\\b|\\bTayside\\s+Medical\\s+Centre\\s+On\\s+Behalf\\s+Of\\s+University\\s+Of\\s+Dundee\\s+Nhs\\s+Tayside\\b", "University Of Dundee NHS Tayside"),
-    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+Hamburg\\s*[- ]\\s*Eppendorf\\b|\\bUniversit[aä]tsklinikum\\s+Hamburg\\s*[- ]\\s*Eppendorf\\b", "University Medical Center Hamburg-Eppendorf"),
-    c("\\bAarhus\\s+University\\b(?!\\s+Hospital)|\\bAarhus\\s+Universitet\\b(?!s?hospital)|\\bUniversity\\s+Of\\s+Aarhus\\b|\\bInstitut\\s+For\\s+Klinisk\\s+Medicin\\s*,?\\s*Aarhus\\s+Universitet\\b|\\bInstitute\\s+Of\\s+Pharmacology\\s*,?\\s*Aarhus\\s+University\\b", "Aarhus University"),
-    c("\\bAarhus\\s+Universit(y|et)s?\\s*Hospital\\b|\\bAarhus\\s+University\\s+Hospiotal\\b|\\bAarhus\\s+Unversity\\s+Hospital\\b|\\bAarhus\\s+Universityhospital\\b|\\bAarhus\\s+Universitetshospital\\b|\\bUniversity\\s+Hospital\\s+Of\\s+Aarhus\\b|\\bAarhus\\s+Sygehus\\b|\\bDepartment.*Aarhus\\s+University\\s+Hospital\\b|\\bDept\\.? .*Aarhus\\s+University\\s*Hospital\\b|\\bKlinisk.*Aarhus\\s+Universitetshospital\\b", "Aarhus University Hospital"),
-    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+(Of\\s+)?Groningen\\b|\\bUniversity\\s+Medial\\s+Cent(re|er)\\s+Groningen\\b|\\bUniveristy\\s+Medical\\s+Cent(re|er)\\s+Groningen\\b|\\bUniversitair\\s+Medisch\\s+Centrum\\s+Groningen\\b|\\bUMCG\\b", "University Medical Center Groningen"),
-    c("\\bUniversity\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniveristy\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniverstiy\\s+Medical\\s+Cent(re|er)\\s+Utrecht\\b|\\bUniversitair\\s+Medisch\\s+Cen?trum\\s+Utrecht\\b|\\bUMC\\s*[- ]?\\s*Utrecht\\b|\\bUMCU\\b", "University Medical Center Utrecht"),
-    c("\\bAmsterdam\\s+UMC(\\s+Stichting)?\\b|\\bStichting\\s+Amsterdam\\s+UMC\\b|\\bAmsterdam\\s+University\\s+Medical\\s+Cent(re|er)s?\\b|\\bAmsterdam\\s+Univeristy\\s+Medical\\s+Cent(re|er)\\b|\\bAUMC\\b|\\bAmsterdam\\s+UMC\\s*,?\\s*(Location\\s+)?(AMC|VUMC)\\b|\\bAmsterdam\\s+UMC\\s*[-,]?\\s*(AMC|VUMC)\\b|\\bVU\\s+University\\s+Medical\\s+Cent(re|er)(\\s+Amsterdam|\\s+VUMC)?\\b|\\bVU\\s+Medical\\s+Cent(re|er)\\s*,?\\s*Amsterdam\\b|\\bVUMC\\b", "Amsterdam UMC"),
-    c("\\bMaastricht\\s+University\\s+Medical\\s+Cent(re|er)\\+?\\b|\\bMaastricht\\s+Universitair\\s+Medisch\\s+Centrum\\b|\\bMaastricht\\s+Universitary\\s+Medical\\s+Cent(re|er)\\b|\\bMaastricht\\s+UMC\\+?\\b|\\bMUMC\\+?\\b|\\bAcademic\\s+Hospital\\s+Maastricht(\\s+AZM)?\\b|\\bAcademisch\\s+Ziekenhuis\\s+Maastricht\\b|\\bUniversity\\s+Hospital\\s+Maastricht\\b", "Maastricht University Medical Center"),
-    c("\\bCambridge\\s+University\\s+Hospitals?\\s+Nhs\\s+(Foundation\\s+)?Trust.*\\b|\\bAddenbrookes\\s+(Hospital\\s+)?(Cambridge\\s+University\\s+Hospitals?\\s+)?Nhs\\s+(Foundation\\s+)?Trust\\b", "Cambridge University Hospitals NHS Foundation Trust"),
-    c("\\b(The\\s+)?Royal\\s+Marsden\\s+Nhsf?\\s+(Foundation\\s+)?Trust\\b", "The Royal Marsden NHS Foundation Trust"),
-    c("\\b(The\\s+)?Newcastle\\s+[- ]?\\s*Upon\\s+[- ]?\\s*Tyne\\s+(Hospitals\\s+)?Nhs\\s+(Foundation\\s+)?Trust\\b|\\bNewcastle\\s*[- ]\\s*Upon\\b", "Newcastle Upon Tyne Hospitals NHS Foundation Trust"),
-    c("\\bNorth\\s+Bristol\\s+Nhs(\\s+Trust)?(\\s+NBT)?\\b|\\bNorth\\s+Bristol\\s+Trust\\b|\\bNorth\\s+Bristol\\s+Nhs\\s+Trust\\s+(Innovation|Office)\\b", "North Bristol NHS Trust"),
-    c("\\bUniversity\\s+Hospitals?\\s+Bristol\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bUniversity\\s+Hospital\\s+Bristol\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bUniversity\\s+Hosptial\\s+Bristol\\s+Nhs\\s+Foundation\\s+Trust\\b|\\bUniversity\\s+Hospitals\\s+Bristol\\b", "University Hospitals Bristol NHS Foundation Trust"),
-    c("\\bUnited\\s+Bristol\\s+(Healthcare\\s+)?(Nhs\\s+)?Trust\\b", "University Hospitals Bristol NHS Foundation Trust"),
-    c("\\bUniversity\\s+Hospitals?\\s+Bristol\\s+And\\s+Weston\\s+Nhs\\s+Foundation\\s+Trust\\b", "University Hospitals Bristol And Weston NHS Foundation Trust"),
-    c("\\bBarts\\s+(And\\s+)?The\\s+London\\s+Nhs\\s+Trust\\b|\\bBarts\\s+Health\\s+Nhs\\s+Trust\\b", "Barts Health NHS Trust"),
-    c("\\bLeeds\\s+Teaching\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bThe\\s+Leeds\\s+Teaching\\s+Hospitals\\s+Nhs\\s+Trust\\b", "Leeds Teaching Hospitals NHS Trust"),
-    c("\\bChristie\\s+Hospital\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bThe\\s+Christie\\s+Nhs\\s+Foundation\\s+Trust\\b", "The Christie NHS Foundation Trust"),
-    c("\\bNhs\\s+Greater\\s+Glasgow(\\s+And)?\\s+Clyde(\\s+Health\\s+Board)?\\b|\\bGreater\\s+Glasgow\\s+Nhs\\s+Health\\s+Board\\b|\\bNhs\\s+Greater\\s+Glasgow\\s+Health\\s+Board\\b", "NHS Greater Glasgow And Clyde"),
-    c("\\bUniversity\\s+Hospital\\s+Southampton\\s+Nhs\\s+(Foundation\\s+)?Trust\\b|\\bSouthampton\\s+University\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bUniversity\\s+Southampton\\s+Hospital\\s+Nhs\\s+Foundation\\s+Trust\\b", "University Hospital Southampton NHS Foundation Trust"),
-    c("\\bHull\\s+(And\\s+)?East\\s+Yorkshire\\s+Hospitals?\\s+(Nhs\\s+)?Trust\\b|\\bHull\\s+University\\s+Teaching\\s+Hospitals\\s+Nhs\\s+Trust\\b", "Hull And East Yorkshire Hospitals NHS Trust"),
-    c("\\bBelfast\\s+Health\\s+(And\\s+)?Social\\s+Care\\s+Trust\\b|\\bBelfast\\s+City\\s+Hospital\\s+Trust\\b", "Belfast Health And Social Care Trust"),
-    c("\\bRoyal\\s+Brompton\\s+(And\\s+)?Harefield\\s+Nhs\\s+(Foundation\\s+)?Trust\\b", "Royal Brompton And Harefield NHS Foundation Trust"),
-    c("\\bGreat\\s+Ormond\\s+Street\\s+Hospital\\s+For\\s+Children\\s+Nhs\\s+(Foundation\\s+)?Trust\\b", "Great Ormond Street Hospital For Children NHS Foundation Trust"),
-    c("\\bSheffield\\s+Teaching\\s+Hospitals?(\\s+Nhs\\s+Foundation\\s+Trust)?\\b", "Sheffield Teaching Hospitals NHS Foundation Trust"),
-    c("\\bUniversity\\s+Hospitals?\\s+(Of\\s+)?Leicester(\\s+Nhs\\s+Trust)?(\\s+Department)?\\b|\\bUniversity\\s+Hospital\\s+Leicester\\b", "University Hospitals Of Leicester NHS Trust"),
-    c("\\bUniversity\\s+Hospitals?\\s+Birmingham(\\s+Nhs\\s+Foundation\\s+Trust)?\\b|\\bUniversity\\s+Hospital\\s+Birmingham(\\s+Nhs\\s+Foundation\\s+Trust)?\\b|\\bUniversity\\s+Hospital\\s+Of\\s+Birmingham\\s+Foundation\\s+Trust\\b", "University Hospitals Birmingham NHS Foundation Trust"),
-    c("\\b(The\\s+)?University\\s+Of\\s+Birmingham\\b|\\bUniversity\\s+Of\\s+Birmingham\\s*,?\\s*Enterprise\\s+Services\\b", "University Of Birmingham"),
-    c("\\b(The\\s+)?University\\s+Of\\s+Oxford\\b|\\bUniversity\\s+Of\\s+Oxford\\s*,?\\s*(CTRG|NDM|Nuffield\\s+Department\\s+Of\\s+Medicine)\\b|\\bClinical\\s+Trials\\s+And\\s+(Research\\s+)?Governance(\\s+CTRG)?\\s*,?\\s*University\\s+Of\\s+Oxford\\b", "University Of Oxford"),
-    c("\\bUniversity\\s+Hospital\\s+(Ghent|Gent)\\b|\\bUZ\\s+Gent\\b", "University Hospital Ghent"),
-    c("\\bGhent\\s+University\\s+Hospital\\b|\\bUniversitair\\s+Ziekenhuis\\s+Gent\\b", "University Hospital Ghent"),
-    c("\\bGhent\\s+University\\b|\\bUniversity\\s+Ghent\\b|\\bUniversiteit\\s+Gent\\b", "Ghent University"),
-    c("\\bMedical\\s+University\\s+(Of\\s+)?Vienna\\b", "Medical University Of Vienna"),
-    c("\\bMedizinische\\s+Universit[aäe]?t?t?\\s+Wien\\b|\\bVienna\\s+Medical\\s+University\\b", "Medical University Of Vienna"),
-    c("\\bMedical\\s+University\\s+(Of\\s+)?Graz\\b|\\bMed\\s+Uni\\s+Graz\\b|\\bGraz\\s+Medical\\s+University\\b|\\bMedizinische\\s+Universit[aäe]?t?t?\\s+Graz\\b", "Medical University Of Graz"),
-    c("\\bMedical\\s+University\\s+(Of\\s+)?Innsbruck\\b|\\bInnsbruck\\s+Medical\\s+University\\b|\\bMedizinische\\s+Universit(aet|[aäe]?t?t?)\\s+Innsbruck\\b", "Medical University Of Innsbruck"),
-    c("\\bOspedale\\s+S\\.?\\s+Raffaele\\b|\\bOspedale\\s+San\\s+Raffaele\\b|\\bIrccs\\s+Ospedale\\s+San\\s+Raffaele\\b", "Ospedale San Raffaele"),
-    c("\\bOslo\\s+University\\s+Hospital(\\s+HF|\\s+OUS)?\\b", "Oslo University Hospital"),
-    c("\\bInstitut\\s+De\\s+Recherches\\s+Internationales\\s+Servier\\s+Iris\\b|\\bInstitut\\s+de\\s+Recherches\\s+Internationales\\s+Servier\\s+I[.]R[.]I[.]S\\b|\\bI[.]R[.]I[.]S[.]?\\s+Institut\\s+de\\s+Recherches\\s+Internationales\\s+Servier\\b", "Institut De Recherches Internationales Servier IRIS"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Nice\\b|\\bNice\\s+CHU\\b", "CHU De Nice"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Lille\\b|\\bLille\\s+CHU\\b", "CHU De Lille"),
-    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Toulouse\\b|\\bToulouse\\s+University\\s+Hospital\\b|\\bToulouse\\s+Hospital\\b|\\bUHToulouse\\b", "CHU De Toulouse"),
-    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*)\\s+(De\\s+|Of\\s+)?Lille\\b|\\bCHRU?\\s+(Of\\s+)?Lille\\b", "CHU De Lille"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Clermont\\s*[- ]\\s*Ferrand\\b|\\bCHU\\s+Clermont\\s+Ferrand\\b", "CHU De Clermont-Ferrand"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Limoges\\b|\\bUniversity\\s+Hospital\\s*,\\s*Limoges\\b|\\bLimoges\\s+Hospital\\b", "CHU De Limoges"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|Rennes\\s+University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Rennes\\b|\\bCHU\\s+Of\\s+Rennes\\b", "CHU De Rennes"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*)\\s+(De\\s+)?Dijon(\\s+Bourgogne)?\\b|\\bCHU\\s+Dijon\\s+Bourgogne\\b", "CHU De Dijon"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|Rouen\\s+University\\s+Hospital)\\s+(De\\s+)?Rouen\\b", "CHU De Rouen"),
-    c("\\b(C\\.?H\\.?U\\.?|C\\.?H\\.?R\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital|UH)\\s+(De\\s+|Of\\s+)?Montpellier\\b", "CHU De Montpellier"),
-    c("\\b(C\\.?H\\.?U\\.?|Centre\\s+Hospitalier.*|University\\s+Hospital)\\s+(De\\s+|Of\\s+)?Grenoble(\\s+Alpes)?\\b|\\bGrenoble\\s+(Alps\\s+)?University\\s+Hospital\\b|\\bUniversityHospitalGrenoble\\b", "CHU De Grenoble"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+|Of\\s+)?Nantes\\b|\\bNantes\\s+CHU\\b", "CHU De Nantes"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire|Nimes\\s+University\\s+Hospital)\\s*(De\\s+)?N[iî]?mes\\b|\\bCHU\\s+De\\s+Nmes\\b", "CHU De Nimes"),
-    c("\\b(CHU|Centre\\s+Hospitalier\\s+Universitaire)\\s+(De\\s+)?Bordeaux\\b|\\bBordeaux\\s+CHU\\b", "CHU De Bordeaux"),
-    c("\\bCharit[eé]?\\s*[-,]?\\s*(Universit[aä]tsmedizin|Universitaetsmedizin|University\\s+Medicine)?\\s*(Berlin)?\\b", "Charite Universitaetsmedizin Berlin"),
-    c("\\b(Universit[aä]tsklinikum|Universitaetsklinikum|Uniklinikum|University\\s+(Hospital|Clinic|Clinical\\s+Center|Clinics))\\s+(Of\\s+)?T[uü]?bingen\\b|\\bUniversity\\s+Of\\s+T[uü]?bingen\\b|\\bUniversit[aä]t\\s+T[uü]?bingen\\b", "Universitaetsklinikum Tuebingen"),
-    c("\\bOrganisation\\s+For\\s+(The\\s+)?(And\\s+)?Treatment\\s+Of\\s+Cancer(\\s+EORTC)?\\b|\\bEORTC\\s+Organisation\\s+For\\s+And\\s+Treatment\\s+Of\\s+Cancer\\b", "EORTC"),
-    c("\\b(SAKK\\s+)?Swiss\\s+For\\s+Clinical\\s+Cancer(\\s+SAKK|\\s+Reaserch\\s+SAKK)?\\b", "SAKK"),
-    c("\\bGroupe\\s+Francophone\\s+Des\\s+Mye?lodysplasies(\\s+GFM)?\\b|\\bGroupe\\s+Fran[cç]ais\\s+Des\\s+Mye?lodysplasies\\b", "Groupe Francophone Des Myelodysplasies"),
-    c("\\bMedica\\s+Scientia\\s+Innovation(\\s*[,.]?\\s*Medsir(\\s+Aro)?)?\\b", "Medica Scientia Innovation"),
-    c("\\bOspedale\\s+Pediatrico\\s+Bambino\\s+Gesu'?((\\s+Di\\s+Roma)?)\\b|\\bBambino\\s+Gesu\\s+Childrens\\s+Hospital\\b", "Ospedale Pediatrico Bambino Gesu"),
-    c("\\b(Universit[aä]tsklinikum|Universitaetsklinikum|University\\s+Hospital)\\s+Erlangen\\b", "Universitaetsklinikum Erlangen"),
-    c("^KU Leuven$", "UZ Leuven"),
-    c("^Leiden University$", "Leiden University Medical Center"),
-    c("^Aarhus University$", "Aarhus University Hospital"),
-    c("^Ghent University$", "University Hospital Ghent"),
-    c("^Servier$", "Institut De Recherches Internationales Servier IRIS"),
-    c("^Merck Serono$", "Merck"),
-    c("^Laboratoires Merck Sharp Dohme - Chibret$", "Merck"),
-    c("^Schering$", "Schering-Plough"),
-    c("^Karolinska University Hospital, Huddinge$", "Karolinska University Hospital"),
-    c("^Karolinska University Hospital Huddinge$", "Karolinska University Hospital"),
-    c("^Department Of Neurology, Odense University Hospital$", "Odense University Hospital"),
-    c("^Beaufour Ipsen$", "Ipsen"),
-    c("^Eortc$", "EORTC"),
-    c("^Maastricht University$", "Maastricht University Medical Center"),
-    c("^Shire-Movetis$", "Shire"),
-    c("^University Of Dundee NHS Tayside$", "University Of Dundee"),
-    c("^Istituto Nazionale Tumori$", "Fondazione Irccs Istituto Nazionale Dei Tumori"),
-    c("^The University Of Leeds$", "University Of Leeds"),
-    c("^University Of Leicester$", "University Hospitals Of Leicester NHS Trust"),
-    c("^Universiteit Maastricht$", "Maastricht University Medical Center"),
-    c("^Serono$", "Merck Serono"),
-    c("^Istituto Nazionale Tumori$", "Istituto Nazionale Per La Cura Tumori"),
-    c("^Helsinki University Hospital$", "Helsinki University Central Hospital"),
-    c("^Almirall Hermal$", "Almirall"),
-    c("^Irccs Istituto Nazionale Tumori Fondazione Pascale$", "Istituto Nazionale Per Lo Studio E La Cura Dei Tumori - Fondazione G. Pascale"),
-    c("^Universittsklinikum Erlangen$", "Universitaetsklinikum Erlangen"),
-    c("^Argenx Bvba$", "Argenx"),
-    c("^Fundacion Pethema$", "Fundacin Pethema"),
-    c("^Universitaetsklinikum Tuebingen$", "Universitaetsklinikum Erlangen"),
-    c("^Turku University Central Hospital$", "Turku University Hospital"),
-    c("^Royal Marsden Hospital$", "The Royal Marsden NHS Foundation Trust"),
-    c("^Laboratorios Almirall$", "Almirall"),
-    c("^Almirall Prodesfarma$", "Almirall"),
-    c("^FONDAZIONE I\\.R\\.C\\.C\\.S\\. POLICLINICO SAN MATTEO$", "Ospedale Policlinico S. Matteo"),
-    c("^Bispebjerg University Hospital$", "Bispebjerg Hospital"),
-    c("^Inserm-Anrs$", "Inserm"),
-    c("^University Of Antwerp$", "Antwerp University Hospital"),
-    c("^Tibotec Bvba$", "Tibotec"),
-    c("^Les Hopitaux Universitaires De Strasbourg$", "Hpitaux Universitaires De Strasbourg"),
-    c("^Department Of Dermatology D92, Bispebjerg Hospital$", "Bispebjerg Hospital"),
-    c("^Zealand University Hospital$", "Zealand University Hospital"),
-    c("^Umberto I$", "Azienda Universitaria Policlinico Umberto I Di Roma"),
-    c("^Fundaci De Lluita Contra La Sida$", "Fundaci Lluita Contra La Sida"),
-    c("^Steno Diabetes Center$", "Steno Diabetes Center Copenhagen"),
-    c("^Verona$", "Azienda Ospedaliera Universitaria Integrata Verona"),
-    c("^Consorci Mar Parc De Salut De Barcelona$", "Consorci Mar Parc De Salut De Barcelona Parc De Salut Mar"),
-    c("^The University Of Liverpool$", "University Of Liverpool"),
-    c("^A\\.O\\. UNIVERSITARIA INTEGRATA DI VERONA$", "Azienda Ospedaliera Universitaria Integrata Verona"),
-    c("^Universitt Leipzig$", "University Of Leipzig"),
-    c("^I\\.F\\.O\\. Istituti Fisioterapici Ospitalieri$", "Istituti Fisioterapici Ospitalieri"),
-    c("^Bracco Altana$", "Altana"),
-    c("^Orion Orion$", "Orion"),
-    c("^Grifols$", "Instituto Grifols"),
-    c("^Fondazione Irccs Ca Granda Ospedale Maggiore Policlinico Di Milano$", "Fondazione Irccs Ca Granda Ospedale Maggiore Policlinico"),
-    c("^Universittsklinikum Heidelberg$", "Universitaetsklinikum Heidelberg Aör"),
-    c("^The Institute of Cancer$", "The Institute of Caner"),
-    c("^Fondazione Irccs Istituto Neurologico Carlo Besta$", "Istituto Neurologico Carlo Besta"),
-    c("^Istituto Scientifico Romagnolo Per Lo Studio E La Cura Dei Tumori Irst \\. Irccs$", "Istituto Scientifico Romagnolo Per Lo Studio E La Cura Dei Tumori"),
-    c("^Chru Nancy$", "Chru De Nancy"),
-    c("^Technical University Dresden$", "Technische Universitt Dresden"),
-    c("^Klinikum Der Universitaet Muenchen Aör$", "Klinikum Der Universitt Mnchen"),
-    c("^Fresenius$", "Fresenius Kabi"),
-    c("^Technische Universitat Dresden$", "Technische Universitt Dresden"),
-    c("^Mech-Sense, Aalborg University Hospital$", "Aalborg University Hospital"),
-    c("^Azienda Ospedaliera Universitaria Senese$", "Azienda Ospedaliera Senese"),
-    c("^Bracco$", "Bracco Imaging"),
-    c("^Moorfields Eye Hospital Nhs Foundation Trust$", "Moorfields Eye Hospital"),
-    c("^Heidelberg$", "Universitaetsklinikum Heidelberg Aör"),
-    c("^Centre Hospitalier Regional Universitaire$", "Centre Hospitalier Regional De Marseille"),
-    c("^Gruppo Oncologico Italiano Di Ricerca$", "Gruppo Oncologico Italiano Di Ricerca Clinica Goirc"),
-    c("^Herlev Gentofte Hospital$", "Herlev Hospital"),
-    c("^Zambon Spa$", "Zambon"),
-    c("^Department Of Surgery, Herlev Hospital$", "Herlev Hospital"),
-    c("^Department Of , Herlev Gentofte Hospital$", "Herlev Hospital"),
-    c("^Chu De Caen$", "Chu Caen"),
-    c("^Fundaci Sant Joan De Du$", "Hospital Sant Joan De Du"),
-    c("^Fundacin Pblica Andaluza Progreso Y Salud$", "Fundacin Progreso Y Salud"),
-    c("^Manchester University Nhs Foundation Trust$", "Central Manchester University Hospitals Nhs Foundation Trust"),
-    c("^Association Gercor$", "Gercor"),
-    c("^Dompe' Farmaceutici$", "Domp Farmaceutici"),
-    c("^Bial - Portela C$", "Bial - Portela Ca"),
-    c("^Chu De Brest$", "Chru De Brest"),
-    c("^Universitaetsklinikum Essen Aör$", "Universittsklinikum Essen"),
-    c("^Herlev Gentofte Hospital$", "Gentofte Hospital"),
-    c("^Erasme Hospital$", "Hopital Erasme"),
-    c("^Herlev And Gentofte Hospital$", "Gentofte Hospital"),
-    c("^Odense Universitetshospital$", "Odense University Hospital"),
-    c("^Parc De Salut Mar$", "Consorci Mar Parc De Salut De Barcelona Parc De Salut Mar"),
-    c("^Hpital Erasme$", "Hopital Erasme"),
-    c("^Allergopharma$", "Allergopharma Joachim Ganzer"),
-    c("^Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Paz$", "Hospital Universitario La Paz"),
-    c("^Chu Amiens-Picardie$", "Chu Amiens"),
-    c("^Institut De Cancerologie De Louest$", "Institut De Cancerologie De L Ouest"),
-    c("^Instituto De Investigacion Sanitaria La Fe$", "Instituto De Investigacin Sanitaria La Fe"),
-    c("^Fdration Francophone De Cancrologie Digestive Ffcd$", "Fdration Francophone De Cancrologie Digestive"),
-    c("^Hellenic Cooperative Hecog$", "Hellenic Cooperative"),
-    c("^Nycomed Aps$", "Nycomed"),
-    c("^University Hospital Of Heidelberg$", "University Hospital Heidelberg"),
-    c("^The University Of Manchester$", "University Of Manchester"),
-    c("^Mitsubishi Tanabe$", "Mitsubishi Tanabe Mtpc"),
-    c("^Azienda Ospedaliera Arcispedale Santa Maria Nuova/Irccs Di Reggio Emilia$", "Azienda Ospedaliera Arcispedale S. Maria Nuova"),
-    c("^Chiron Behring$", "Chiron"),
-    c("^Martin-Luther-Universitaet Halle-Wittenberg$", "Martin-Luther-Universitt Halle-Wittenberg"),
-    c("^Hospital Foch$", "Hopital Foch"),
-    c("^Centre Francois Baclesse$", "Centre Franois Baclesse"),
-    c("^Istituto Nazionale Delle Malattie Infettive Lazzaro Spallanzani$", "Istituto Nazionale Per Le Malattie Infettive Lazzaro Spallanzani"),
-    c("^Universittsklinikum Schleswig-Holstein$", "Universitaetsklinikum Schleswig-Holstein Aör"),
-    c("^Friedrich-Schiller-Universitt Jena$", "Friedrich-Schiller"),
-    c("^Heidelberg University$", "University Of Heidelberg"),
-    c("^Azienda Ospedaliera S\\. Gerardo Di Monza$", "Azienda Ospedaliera San Gerardo Di Monza"),
-    c("^Fondazione Ricerca Traslazionale$", "Fondazione Ricerca Traslazionale Fort"),
-    c("^Fundacion Para La Formacion E Investigacion Sanitaria De La Region De Murcia$", "Fundacin Para La Formacin E Investigacin Sanitarias De La Regin De Murcia"),
-    c("^Rheinische Friedrich-Wilhelms-Universitt Bonn$", "Rheinische Friedrich-Wilhelms"),
-    c("^Ume University Hospital$", "Ume University"),
-    c("^Newron Spa$", "Newron"),
-    c("^Oryzon Genomics S\\. A$", "Oryzon Genomics"),
-    c("^Azienda Ospedaliera Ospedali Galliera$", "Ente Ospedaliero Ospedali Galliera"),
-    c("^Arcagy-Gineco$", "Arcagy"),
-    c("^Royal College Of Surgeons$", "Royal College Of Surgeons"),
-    c("^Pierre Fabre Dermatologie Represented By Institut De Recherche Pierre Fabre$", "Pierre Fabre Dermatologie"),
-    c("^Institut Fr Klinische Krebsforschung Ikf At Krankenhaus Nordwest$", "Krankenhaus Nordwest"),
-    c("^Air Liquide Sante$", "Air Liquide Sant"),
-    c("^Fundacin Pblica Andaluza Para La Gestin En Salud De Sevilla Fisevi$", "Fundacin Pblica Andaluza Para La Gestin De La Investigacin En Salud De Sevilla Fisevi"),
-    c("^Technische Universitt Mnchen, Fakultt Fr Medizin$", "Technische Universitt Mnchen"),
-    c("^Fondation A De Rothschild$", "Hopital Fondation Adolphe De Rothschild"),
-    c("^Protalix Biotherapeutics$", "Protalix"),
-    c("^Istituto Ortopedico Rizzoli$", "Istituti Ortopedici Rizzoli"),
-    c("^Grupo Espaol De Investigacin En Sarcomas Geis$", "Grupo Espaol De Investigacin En Sarcomas"),
-    c("^Professor Jrgen Berg Dahl$", "Professor Jrgen B. Dahl"),
-    c("^Ascendis$", "Ascendis Growth Disorders"),
-    c("^Centre Hospitalier Intercommunal De Crteil$", "Centre Hospitalier Intercommunal Creteil"),
-    c("^Institut Catal Doncologia Ico$", "Institut Catal Doncologia"),
-    c("^Horizon Usa$", "Horizon"),
-    c("^Ascendis Endocrinology$", "Ascendis")
-  )
-  apply_sponsor_aliases <- function(vals) {
-    for (alias in sponsor_aliases) {
-      vals <- ifelse(!is.na(vals) & str_detect(vals, regex(alias[[1]], ignore_case = TRUE)), alias[[2]], vals)
-    }
-    vals
-  }
-  x <- apply_sponsor_aliases(x)
-
-  # ── Step 1: prefix-brand extraction ───────────────────────────────────────
-  # For known pharma brands: if the string STARTS WITH the brand name
-  # (optionally followed by junk), return the canonical brand.
-  # Order matters — more specific entries before general ones.
-  brand_prefixes <- list(
-    c("4D\\s+Molecular",                "4D Molecular Therapeutics"),
-    c("4D\\s+Pharma",                  "4D Pharma"),
-    c("A\\.?I\\.?E\\.?O\\.?P\\.?",    "AIEOP"),
-    c("AIEOP",                         "AIEOP"),
-    c("Ap-Hp",                         "AP-HP"),
-    c("Aphp",                          "AP-HP"),
-    c("Ap-Hp/Drcd",                    "AP-HP"),
-    c("Assistance\\s+Publique",        "AP-HP"),
-    c("Assistanc-Publique",            "AP-HP"),
-    c("AbbVie",                        "AbbVie"),
-    c("Abbott\\s+Laboratories",        "Abbott"),
-    c("Abbott",                        "Abbott"),
-    c("Actelion",                      "Actelion"),
-    c("Aimmune",                       "Aimmune"),
-    c("Alexion",                       "Alexion"),
-    c("Allergan",                      "Allergan"),
-    c("Amgen",                         "Amgen"),
-    c("Astellas",                      "Astellas"),
-    c("AstraZeneca",                   "AstraZeneca"),
-    c("Baxalta",                       "Baxalta"),
-    c("Baxter",                        "Baxter"),
-    c("Bayer",                         "Bayer"),
-    c("Biogen",                        "Biogen"),
-    c("BioMarin",                      "BioMarin"),
-    c("Biomarin",                      "BioMarin"),
-    c("bluebird\\s+bio",               "bluebird bio"),
-    c("Blueprint\\s+Medicines",        "Blueprint Medicines"),
-    c("Boehringer\\s+Ingelheim",       "Boehringer Ingelheim"),
-    c("Bristol.Myers\\s+Squibb",       "BMS"),
-    c("CSL\\s+Behring",                "CSL Behring"),
-    c("Celgene",                       "Celgene"),
-    c("Chiesi",                        "Chiesi"),
-    c("Eisai",                         "Eisai"),
-    c("Eli\\s+Lilly",                  "Lilly"),
-    c("F\\.?\\s*Hoffmann.La\\s+Roche", "Roche"),
-    c("Genentech",                     "Genentech"),
-    c("Gilead",                        "Gilead"),
-    c("GlaxoSmithKline\\s+Biologicals","GSK Biologicals"),
-    c("GlaxoSmithKline",               "GSK"),
-    c("GSK\\s+Biologicals",            "GSK Biologicals"),
-    c("GSK",                           "GSK"),
-    c("GW\\s+(Pharma|Research)",       "GW Pharma"),
-    c("Hoffmann.La\\s+Roche",          "Roche"),
-    c("Ipsen",                         "Ipsen"),
-    c("Janssen.Cilag",                 "Janssen"),
-    c("Janssen",                       "Janssen"),
-    c("Jazz\\s+Pharmaceuticals",       "Jazz Pharmaceuticals"),
-    c("Kyowa\\s+Kirin",                "Kyowa Kirin"),
-    c("Lilly",                         "Lilly"),
-    c("Lundbeck",                      "Lundbeck"),
-    c("Medimmune",                     "MedImmune"),
-    c("Merck\\s+Sharp.{0,8}Dohme",     "MSD"),
-    c("MSD\\s+Sharp.{0,8}Dohme",       "MSD"),
-    c("Merck\\s+KGaA",                 "Merck KGaA"),
-    c("Merck\\s+Serono",               "Merck Serono"),
-    c("Merck\\s+&\\s+Co",              "MSD"),
-    c("Merck\\s+and\\s+Co",            "MSD"),
-    c("MSD",                           "MSD"),
-    c("Novartis\\s+Vaccines",          "Novartis Vaccines"),
-    c("Novartis",                      "Novartis"),
-    c("Novo\\s+Nordisk",               "Novo Nordisk"),
-    c("Octapharma",                    "Octapharma"),
-    c("Otsuka",                        "Otsuka"),
-    c("Pfizer",                        "Pfizer"),
-    c("PTC\\s+Therapeutics",           "PTC Therapeutics"),
-    c("Regeneron",                     "Regeneron"),
-    c("Roche",                         "Roche"),
-    c("Sanofi\\s+Pasteur",             "Sanofi Pasteur"),
-    c("Sanofi.Aventis",                "Sanofi"),
-    c("Sanofi.Synthelabo",             "Sanofi"),
-    c("Sanofi",                        "Sanofi"),
-    c("Servier",                       "Servier"),
-    c("Shire",                         "Shire"),
-    c("Sobi",                          "Sobi"),
-    c("Swedish\\s+Orphan\\s+Biovitrum","Sobi"),
-    c("Takeda",                        "Takeda"),
-    c("Teva",                          "Teva"),
-    c("UCB\\s+Biosciences",            "UCB"),
-    c("UCB\\s+Biopharma",              "UCB"),
-    c("UCB\\s+Pharma",                 "UCB"),
-    c("UCB",                           "UCB"),
-    c("Vertex",                        "Vertex"),
-    c("Wyeth",                         "Wyeth"),
-    c("Zogenix",                       "Zogenix")
-  )
-  for (bp in brand_prefixes) {
-    pat <- regex(paste0("^", bp[[1]], "(\\s|,|\\.|$)"), ignore_case = TRUE)
-    x <- ifelse(!is.na(x) & str_detect(x, pat), bp[[2]], x)
-  }
-
-  # ── Step 2: for non-brand entries, strip pharma/country noise ────────────
-  # Pharma-descriptor words that are noise when standalone
-  pharma_tok <- paste0(
-    "\\b(R\\s*&\\s*D|\\bR[dD]\\b|R\\s+D\\b|",   # R&D / RD / R D artifact
-    "Pharmaceuticals?|Pharma|Biopharmaceuticals?|Biopharma|",
-    "Biosciences?|Biotechnology|Biotech|Therapeutics?|",
-    "Laboratories?|Sciences?|Research\\s+&\\s+Development|",
-    "Research\\s+and\\s+Development|Research|Development|",
-    "Healthcare|Health\\s+Care|Oncology|Biologics?|",
-    "Products?|Ventures?|Partners?|Group|Holdings?|Division)\\b")
-  x <- str_replace_all(x, regex(pharma_tok, ignore_case = TRUE), " ")
-
-  # Country/region subsidiary words
-  country_tok <- paste0(
-    "\\b(Deutschland|Germany|France|Espa[nñ]a|Spain|Italy|Italia|",
-    "Netherlands|Nederland|Belgium|Belgique|Austria|[Öö]sterreich|",
-    "Switzerland|Schweiz|Suisse|Sweden|Sverige|Denmark|Danmark|",
-    "Finland|Norway|Norge|Poland|Polska|Portugal|Greece|Ireland|",
-    "Czech|Hungary|Romania|Slovakia|Slovenia|Croatia|",
-    "UK|Europe|European|International|Worldwide|Global|",
-    "North\\s+America|Latin\\s+America|Asia\\s+Pacific)\\b")
-  x <- str_replace_all(x, regex(country_tok, ignore_case = TRUE), " ")
-
-  # Remove stray punctuation and collapse spaces
-  x <- str_replace_all(x, "(^[,\\.\\-/\\s]+|[,\\.\\-/\\s]+$)", "")
-  x <- str_replace_all(x, "\\s{2,}", " ")
-  x <- str_trim(x)
-  x <- apply_sponsor_aliases(x)
-
-  x[x %in% c("Na", "NA", "")] <- NA_character_
   x
 }
+
+# ── LEGACY normalize_sponsor_name (commented out — superseded by pipeline) ─────
+# normalize_sponsor_name_legacy <- function(x) {
+#   x <- str_trim(as.character(x))
+#   x[x %in% c("NA", "", "NULL")] <- NA_character_
+#   x <- str_replace_all(x, "\\s{2,}", " ")
+#   x <- ifelse(!is.na(x) & str_detect(x, regex("\\bBristol\\s*[-.]?\\s*M(ey|y)ers\\s+Squibb\\b|\\bBristol\\s*[-.]\\s*M\\.?\\s*Squibb\\b", ignore_case = TRUE)),
+#               "BMS", x)
+#   x <- ifelse(!is.na(x) & str_detect(x, regex("\\bALK\\s*[- ]?\\s*Abell[óo]?\\b|\\bALK\\s*[- ]?\\s*Abell\\b", ignore_case = TRUE)),
+#               "ALK-Abello", x)
+# }
 
 deep_flatten_col <- function(x) {
   if (!is.list(x)) return(as.character(x))
@@ -2146,6 +1741,24 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "f13_elderly_65_years", "ageGroup")))
 
   result <- result %>% mutate(data_processing_version = "2026-05-ctis-status-results")
+
+  # ── Sponsor labels (from pipeline) ───────────────────────────────────────────
+  sponsor_labels_path <- file.path(dirname(db_path), "trial_sponsor_labels.csv")
+  if (file.exists(sponsor_labels_path)) {
+    tryCatch({
+      slabels <- readr::read_csv(sponsor_labels_path, show_col_types = FALSE,
+                                 col_types = readr::cols(
+                                   `_id`         = readr::col_character(),
+                                   sponsor_clean = readr::col_character()))
+      slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
+      result  <- dplyr::left_join(result, slabels, by = "_id")
+      result$sponsor_label <- dplyr::coalesce(result$sponsor_clean, result$sponsor_name)
+      message(sprintf("Attached sponsor labels: %d / %d trials matched",
+                      sum(!is.na(result$sponsor_clean)), nrow(result)))
+    }, error = function(e) message("Could not attach sponsor labels: ", e$message))
+  }
+  if (!"sponsor_label" %in% names(result)) result$sponsor_label <- result$sponsor_name
+
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
 }
@@ -2185,6 +1798,23 @@ load_trial_data <- function(force_rebuild = FALSE) {
         }, error = function(e) message("Could not attach substance labels: ", e$message))
       }
       if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
+    }
+    if (!"sponsor_label" %in% names(d)) {
+      slabels_path <- file.path(dirname(DB_PATH), "trial_sponsor_labels.csv")
+      if (file.exists(slabels_path)) {
+        tryCatch({
+          slabels <- readr::read_csv(slabels_path, show_col_types = FALSE,
+                                     col_types = readr::cols(
+                                       `_id`         = readr::col_character(),
+                                       sponsor_clean = readr::col_character()))
+          slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
+          d <- dplyr::left_join(d, slabels, by = "_id")
+          d$sponsor_label <- dplyr::coalesce(d$sponsor_clean, d$sponsor_name)
+          message(sprintf("Attached sponsor labels: %d / %d trials matched",
+                          sum(!is.na(d$sponsor_clean)), nrow(d)))
+        }, error = function(e) message("Could not attach sponsor labels: ", e$message))
+      }
+      if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
     }
     return(d)
   }
@@ -3194,7 +2824,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session,"phase_filter",
                          choices=extract_choices(rv$data$phase),server=TRUE)
     updateSelectizeInput(session,"sponsor_filter",
-                         choices=sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),server=TRUE)
+                         choices=sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),server=TRUE)
     updateSelectizeInput(session, "product_search",
                          choices = sort(unique(rv$data$substance_label[!is.na(rv$data$substance_label)])),
                          server = TRUE)
@@ -3225,14 +2855,14 @@ server <- function(input, output, session) {
       if(input$age_group_filter=="< 18 years")df<-df%>%filter(age_group%in%c("Paediatric","Paediatric & Adult"))
       else if(input$age_group_filter=="≥ 18 years")df<-df%>%filter(age_group%in%c("Adult","Paediatric & Adult"))}
     if(isTRUE(mono_active())&&"n_countries"%in%names(df))df<-df%>%filter(n_countries==1)
-    if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_name%in%input$sponsor_filter)
+    if(length(input$sponsor_filter)>0)df<-df%>%filter(sponsor_label%in%input$sponsor_filter)
     if(nzchar(input$text_search)){
       pat<-regex(input$text_search,ignore_case=TRUE)
 	      df<-df%>%filter(str_detect(Full_title,pat)|str_detect(DIMP_product_name,pat)|
 	                        str_detect(coalesce(DIMP_inn_name, ""), pat)|
 	                        str_detect(coalesce(trial_identifiers, CT_number),pat)|
 	                        str_detect(MEDDRA_term,pat)|
-	                        str_detect(coalesce(sponsor_name,""),pat))}
+	                        str_detect(coalesce(sponsor_label,""),pat))}
     if(length(input$product_search)>0)
       df<-df%>%filter(matches_substance_label(substance_label,input$product_search))
     df
@@ -3592,7 +3222,7 @@ server <- function(input, output, session) {
     } else if (p == "novartis_compare") {
       req(rv$data)
       updateSelectizeInput(session, "sponsor_filter",
-                           choices  = sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)])),
+                           choices  = sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),
                            selected = "Novartis",
                            server   = TRUE)
     } else if (p == "belgium_croatia_compare") {
@@ -3600,7 +3230,7 @@ server <- function(input, output, session) {
       updateTabItems(session, "tabs", "country_compare")
     } else if (p == "gsk_novartis_compare") {
       req(rv$data)
-      all_sponsors <- sort(unique(rv$data$sponsor_name[!is.na(rv$data$sponsor_name)]))
+      all_sponsors <- sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)]))
       updateSelectizeInput(session, "sponsor_filter",
                            choices  = all_sponsors,
                            selected = c("GSK", "Novartis", "Roche"),
@@ -3666,7 +3296,7 @@ server <- function(input, output, session) {
             tags$dt("Register"),      tags$dd(coalesce(reg, "—")),
             tags$dt("Status"),        tags$dd(coalesce(row$status_raw, "—")),
             tags$dt("Phase"),         tags$dd(coalesce(row$phase, "—")),
-            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_name, "—")),
+            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_label, "—")),
             tags$dt("Sponsor Type"),  tags$dd(coalesce(row$sponsor_type, "—"))
           ),
           column(6,
@@ -3822,14 +3452,14 @@ server <- function(input, output, session) {
 	      select(CT_number,trial_identifiers,transition_eudract_number,register,
 	             Full_title,DIMP_product_name,DIMP_inn_name,MEDDRA_term,
 	             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-	             phase,sponsor_name,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
+	             phase,sponsor_label,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
 	      select(-CT_number)%>%
 	      rename(Identifiers=trial_identifiers, `Transition EudraCT`=transition_eudract_number,
 	             Register=register,Title=Full_title,
 	             Product=DIMP_product_name,INN=DIMP_inn_name,Condition=MEDDRA_term,
 	             `Organ Class`=MEDDRA_organ_class,Country=Member_state,
 	             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Phase=phase,`Sponsor Name`=sponsor_name,`Sponsor Type`=sponsor_type,
+             Phase=phase,`Sponsor Name`=sponsor_label,`Sponsor Type`=sponsor_type,
              Submitted=submission_date_parsed,Started=start_date,
              `Decision Date`=decision_date)%>%
       relocate(`CT Number`)
@@ -3880,7 +3510,7 @@ server <- function(input, output, session) {
             tags$dt("Register"),   tags$dd(coalesce(reg, "—")),
             tags$dt("Status"),     tags$dd(coalesce(row$status_raw, "—")),
             tags$dt("Phase"),      tags$dd(coalesce(row$phase, "—")),
-            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_name, "—")),
+            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_label, "—")),
             tags$dt("Sponsor Type"),  tags$dd(coalesce(row$sponsor_type, "—"))
           ),
           column(6,
@@ -4031,7 +3661,7 @@ server <- function(input, output, session) {
       if(isTRUE(mono_active())&&"n_countries"%in%names(df_comp))
         df_comp <- df_comp %>% filter(n_countries==1)
       if(length(input$sponsor_filter)>0)
-        df_comp <- df_comp %>% filter(sponsor_name%in%input$sponsor_filter)
+        df_comp <- df_comp %>% filter(sponsor_label%in%input$sponsor_filter)
       if(nzchar(input$text_search)){
         pat <- regex(input$text_search,ignore_case=TRUE)
 	        df_comp <- df_comp %>%
@@ -4039,7 +3669,7 @@ server <- function(input, output, session) {
 	                   str_detect(coalesce(DIMP_inn_name, ""), pat)|
 	                   str_detect(coalesce(trial_identifiers, CT_number),pat)|
 	                   str_detect(MEDDRA_term,pat)|
-	                   str_detect(coalesce(sponsor_name,""),pat))}
+	                   str_detect(coalesce(sponsor_label,""),pat))}
 
       tmp_data <- tempfile(fileext = ".rds")
       saveRDS(df_comp, tmp_data)
@@ -4747,11 +4377,11 @@ server <- function(input, output, session) {
   })
 
   output$plot_top_sponsors <- renderPlotly({
-    df <- filt() %>% filter(!is.na(sponsor_name))
+    df <- filt() %>% filter(!is.na(sponsor_label))
     if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     t <- tc()
     sp <- df %>%
-      group_by(sponsor_name) %>%
+      group_by(sponsor_label) %>%
       summarise(
         n = n(),
         sponsor_type = {
@@ -4762,11 +4392,11 @@ server <- function(input, output, session) {
       ) %>%
       arrange(desc(n)) %>%
       slice_head(n = input$top_n_sponsor) %>%
-      mutate(sponsor_name = factor(sponsor_name, levels = rev(sponsor_name)))
+      mutate(sponsor_label = factor(sponsor_label, levels = rev(sponsor_label)))
     pal <- c(Academic = t$frost1, Industry = t$orange, Unknown = t$fg)
-    plot_ly(sp, x = ~n, y = ~sponsor_name, color = ~sponsor_type, colors = pal,
+    plot_ly(sp, x = ~n, y = ~sponsor_label, color = ~sponsor_type, colors = pal,
             type = "bar", orientation = "h",
-            text = ~paste0(sponsor_name, "<br>", n, " trial(s) — ", sponsor_type),
+            text = ~paste0(sponsor_label, "<br>", n, " trial(s) — ", sponsor_type),
             hoverinfo = "text") %>%
       plt_layout(
         xaxis = list(title = "Number of Trials"),
@@ -4786,7 +4416,7 @@ server <- function(input, output, session) {
   output$plot_sponsor_timeline <- renderPlotly({
     req(length(input$sponsor_filter) == 1)
     df <- filt() %>%
-      filter(!is.na(sponsor_name), !is.na(submission_date_parsed)) %>%
+      filter(!is.na(sponsor_label), !is.na(submission_date_parsed)) %>%
       mutate(year = year(submission_date_parsed)) %>%
       count(year, name = "n") %>%
       arrange(year) %>%
@@ -4907,12 +4537,12 @@ server <- function(input, output, session) {
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(phase), nzchar(str_trim(phase)),
-             sponsor_name %in% input$sponsor_filter) %>%
+             sponsor_label %in% input$sponsor_filter) %>%
       separate_rows(phase, sep = " / ") %>%
       mutate(phase = str_trim(phase)) %>%
       filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
-      count(sponsor_name, phase) %>%
-      group_by(sponsor_name) %>%
+      count(sponsor_label, phase) %>%
+      group_by(sponsor_label) %>%
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup() %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
@@ -4920,7 +4550,7 @@ server <- function(input, output, session) {
     y_col <- if (use_pct) ~pct else ~n
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~phase, y = y_col, color = ~sponsor_name, colors = compare_pal(),
+    plot_ly(df, x = ~phase, y = y_col, color = ~sponsor_label, colors = compare_pal(),
             type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
@@ -4932,16 +4562,16 @@ server <- function(input, output, session) {
     req(length(input$sponsor_filter) >= 2)
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
-      filter(!is.na(status), sponsor_name %in% input$sponsor_filter) %>%
-      count(sponsor_name, status) %>%
-      group_by(sponsor_name) %>%
+      filter(!is.na(status), sponsor_label %in% input$sponsor_filter) %>%
+      count(sponsor_label, status) %>%
+      group_by(sponsor_label) %>%
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     validate(need(nrow(df) > 0, "No status data for selected sponsors."))
     y_col <- if (use_pct) ~pct else ~n
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~status, y = y_col, color = ~sponsor_name, colors = compare_pal(),
+    plot_ly(df, x = ~status, y = y_col, color = ~sponsor_label, colors = compare_pal(),
             type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
@@ -4954,12 +4584,12 @@ server <- function(input, output, session) {
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(!is.na(MEDDRA_organ_class),
-             sponsor_name %in% input$sponsor_filter) %>%
+             sponsor_label %in% input$sponsor_filter) %>%
       separate_rows(MEDDRA_organ_class, sep = " / ") %>%
       mutate(MEDDRA_organ_class = str_trim(MEDDRA_organ_class)) %>%
       filter(nzchar(MEDDRA_organ_class)) %>%
-      count(sponsor_name, MEDDRA_organ_class) %>%
-      group_by(sponsor_name) %>%
+      count(sponsor_label, MEDDRA_organ_class) %>%
+      group_by(sponsor_label) %>%
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     top_oc <- df %>%
@@ -4975,7 +4605,7 @@ server <- function(input, output, session) {
     x_lbl <- if (use_pct) "% of Trials" else "Trials"
     plot_ly(df,
             y = ~reorder(MEDDRA_organ_class, sort_val), x = x_col,
-            color = ~sponsor_name, colors = compare_pal(),
+            color = ~sponsor_label, colors = compare_pal(),
             type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = x_lbl),
@@ -4988,12 +4618,12 @@ server <- function(input, output, session) {
     req(length(input$sponsor_filter) >= 2)
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
-      filter(!is.na(Member_state), sponsor_name %in% input$sponsor_filter) %>%
+      filter(!is.na(Member_state), sponsor_label %in% input$sponsor_filter) %>%
       separate_rows(Member_state, sep = " / ") %>%
       mutate(Member_state = str_trim(Member_state)) %>%
       filter(nzchar(Member_state)) %>%
-      count(sponsor_name, Member_state) %>%
-      group_by(sponsor_name) %>%
+      count(sponsor_label, Member_state) %>%
+      group_by(sponsor_label) %>%
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     top_countries <- df %>%
@@ -5009,7 +4639,7 @@ server <- function(input, output, session) {
     x_lbl <- if (use_pct) "% of Trials" else "Trials"
     plot_ly(df,
             y = ~reorder(Member_state, sort_val), x = x_col,
-            color = ~sponsor_name, colors = compare_pal(),
+            color = ~sponsor_label, colors = compare_pal(),
             type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = x_lbl),
@@ -5022,9 +4652,9 @@ server <- function(input, output, session) {
     req(length(input$sponsor_filter) >= 2)
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
-      filter(!is.na(has_PIP), sponsor_name %in% input$sponsor_filter) %>%
-      count(sponsor_name, has_PIP) %>%
-      group_by(sponsor_name) %>%
+      filter(!is.na(has_PIP), sponsor_label %in% input$sponsor_filter) %>%
+      count(sponsor_label, has_PIP) %>%
+      group_by(sponsor_label) %>%
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     validate(need(nrow(df) > 0, "No PIP data for selected sponsors."))
@@ -5033,7 +4663,7 @@ server <- function(input, output, session) {
     y_col <- if (use_pct) ~pct else ~n
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~sponsor_name, y = y_col,
+    plot_ly(df, x = ~sponsor_label, y = y_col,
             color = ~has_PIP, colors = pip_pal,
             type = "bar", text = txt, textposition = "outside",
             hoverinfo = "x+y+name") %>%
@@ -5048,15 +4678,15 @@ server <- function(input, output, session) {
     req(length(input$sponsor_filter) >= 2)
     df <- filt() %>%
       filter(!is.na(submission_date_parsed),
-             sponsor_name %in% input$sponsor_filter) %>%
+             sponsor_label %in% input$sponsor_filter) %>%
       mutate(year = year(submission_date_parsed)) %>%
-      count(sponsor_name, year)
+      count(sponsor_label, year)
     validate(need(nrow(df) > 0, "No submission date data for selected sponsors."))
     plot_ly(df, x = ~year, y = ~n,
-            color = ~sponsor_name, colors = compare_pal(),
+            color = ~sponsor_label, colors = compare_pal(),
             type = "scatter", mode = "lines+markers",
             line = list(width = 2), marker = list(size = 6),
-            text = ~paste0(sponsor_name, " ", year, "<br>", n, " trial(s)"),
+            text = ~paste0(sponsor_label, " ", year, "<br>", n, " trial(s)"),
             hoverinfo = "text") %>%
       plt_layout(
         xaxis = list(title = "Submission Year", dtick = 1, tickformat = "d"),
@@ -5069,13 +4699,13 @@ server <- function(input, output, session) {
     use_pct <- isTRUE(input$compare_pct == "pct")
     df <- filt() %>%
       filter(status == "Completed", !is.na(decision_date),
-             sponsor_name %in% input$sponsor_filter) %>%
+             sponsor_label %in% input$sponsor_filter) %>%
       { if ("has_results" %in% names(.))
           mutate(., results_status = ifelse(has_results, "Results reported", "No results reported"))
         else
           mutate(., results_status = "Unknown (rebuild cache)") } %>%
-      count(sponsor_name, results_status) %>%
-      group_by(sponsor_name) %>%
+      count(sponsor_label, results_status) %>%
+      group_by(sponsor_label) %>%
       mutate(total = sum(n), pct = round(n / total * 100, 1)) %>%
       ungroup()
     validate(need(nrow(df) > 0, "No completed trial data for selected sponsors."))
@@ -5086,7 +4716,7 @@ server <- function(input, output, session) {
     y_col <- if (use_pct) ~pct else ~n
     y_lbl <- if (use_pct) "% of Completed Trials" else "Completed Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~sponsor_name, y = y_col, color = ~results_status, colors = pal,
+    plot_ly(df, x = ~sponsor_label, y = y_col, color = ~results_status, colors = pal,
             type = "bar", text = txt, textposition = "outside",
             hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
@@ -5432,14 +5062,14 @@ server <- function(input, output, session) {
     if(input$pip_filter != "All")
       df <- df %>% filter(has_PIP == input$pip_filter)
     if(length(input$sponsor_filter) > 0)
-      df <- df %>% filter(sponsor_name %in% input$sponsor_filter)
+      df <- df %>% filter(sponsor_label %in% input$sponsor_filter)
     if(nzchar(input$text_search)) {
       pat <- regex(input$text_search, ignore_case=TRUE)
 	      df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
 	                            str_detect(coalesce(DIMP_inn_name, ""), pat) |
 	                            str_detect(coalesce(trial_identifiers, CT_number), pat) |
 	                            str_detect(MEDDRA_term, pat) |
-	                            str_detect(coalesce(sponsor_name,""), pat))
+	                            str_detect(coalesce(sponsor_label,""), pat))
     }
     df %>%
       filter(!is.na(Member_state)) %>%
@@ -5985,10 +5615,10 @@ server <- function(input, output, session) {
             paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1,
                    '" target="_blank">', ct1, '</a>') },
           TRUE ~ CT_number)) %>%
-      select(`CT Number`, register, Full_title, sponsor_name, sponsor_type,
+      select(`CT Number`, register, Full_title, sponsor_label, sponsor_type,
              MEDDRA_organ_class, decision_date) %>%
       rename(Register = register, Title = Full_title,
-             Sponsor = sponsor_name, `Sponsor Type` = sponsor_type,
+             Sponsor = sponsor_label, `Sponsor Type` = sponsor_type,
              `Organ Class` = MEDDRA_organ_class,
              `Authorization Date` = decision_date) %>%
       arrange(`Authorization Date`)
@@ -6003,7 +5633,7 @@ server <- function(input, output, session) {
     content  = function(f) {
       df <- compliance_base() %>%
         { if ("has_results" %in% names(.)) filter(., has_results) else filter(., FALSE) } %>%
-        select(CT_number, register, Full_title, sponsor_name, sponsor_type,
+        select(CT_number, register, Full_title, sponsor_label, sponsor_type,
                MEDDRA_organ_class, Member_state, decision_date) %>%
         arrange(decision_date)
       readr::write_csv(df, f)
@@ -6023,10 +5653,10 @@ server <- function(input, output, session) {
             paste0('<a href="https://euclinicaltrials.eu/ctis-public/view/', ct1,
                    '" target="_blank">', ct1, '</a>') },
           TRUE ~ CT_number)) %>%
-      select(`CT Number`, register, Full_title, sponsor_name, sponsor_type,
+      select(`CT Number`, register, Full_title, sponsor_label, sponsor_type,
              MEDDRA_organ_class, decision_date) %>%
       rename(Register = register, Title = Full_title,
-             Sponsor = sponsor_name, `Sponsor Type` = sponsor_type,
+             Sponsor = sponsor_label, `Sponsor Type` = sponsor_type,
              `Organ Class` = MEDDRA_organ_class,
              `Authorization Date` = decision_date) %>%
       arrange(`Authorization Date`)
@@ -6041,7 +5671,7 @@ server <- function(input, output, session) {
     content  = function(f) {
       df <- compliance_base() %>%
         { if ("has_results" %in% names(.)) filter(., !has_results) else . } %>%
-        select(CT_number, register, Full_title, sponsor_name, sponsor_type,
+        select(CT_number, register, Full_title, sponsor_label, sponsor_type,
                MEDDRA_organ_class, Member_state, decision_date) %>%
         arrange(decision_date)
       readr::write_csv(df, f)
