@@ -74,7 +74,6 @@ biomarin pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin
 biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
 biogen,Biogen,Biogen,Biogen,industry,manual,1,NA
 biogen idec,Biogen,Biogen,Biogen,industry,manual,1,NA
-biogen idec,Biogen,Biogen,Biogen,industry,manual,1,NA
 biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,1,NA
 bioinvent international ab,Bioinvent International AB,NA,NA,NA,ctis_businesskey,0.95,NA
 biotechnology institue i mas d s l,Biotechnology Institue I Mas D S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
@@ -741,3 +740,157 @@ argenx bvba,argenx BV,argenx BV,argenx BV,industry,manual,1,NA
 gruenenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
 european organisation for the research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
 centre hospitalier departemental vendee,Centre Hospitalier Départemental Vendée,NA,NA,hospital,manual,1,NA
+fundaci clnic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,1,NA
+universit degli studi  milano bicocca,University Of Milano Bicocca,NA,NA,academic,manual,1,NA
+azienda ospedaliera papa giovanni xxiii,Azienda Ospedaliera Papa Giovanni XXIII,NA,NA,hospital,manual,1,NA
+fundaci hospital vall hebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,1,NA
+aou citta della salute e della scienza di torino,AOU Città della Salute e della Scienza di Torino,NA,NA,hospital,manual,1,NA
+azienda unit sanitaria locale della romagna,Azienda Unità Sanitaria Locale della Romagna,NA,NA,hospital,manual,1,NA
+universit degli studi di perugia,Università degli Studi di Perugia,NA,NA,academic,manual,1,NA
+institut fr klinische krebsforschung ikf gmbh at krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,1,NA
+frankfurter institut fr klinische krebsforschung ikf gmbh am krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,1,NA
+gensight biologics,Gensight Biologics,NA,NA,industry,manual,1,NA
+azienda ospedaliera santandrea,Azienda Ospedaliera Sant'Andrea,NA,NA,hospital,manual,1,NA
+azienda ospedaliero universitaria maggiore della carit di novara,Azienda Ospedaliero Universitaria Maggiore della Carità di Novara,NA,NA,hospital,manual,1,NA
+universita' vita-salute s. raffaele,Università Vita-Salute San Raffaele,NA,NA,academic,manual,1,NA
+universita' degli studi di perugia,Università degli Studi di Perugia,NA,NA,academic,manual,1,NA
+serono international sa,Serono International SA,NA,NA,industry,manual,1,NA
+azienda ospedaliera umberto i,Azienda Ospedaliera Umberto I,NA,NA,hospital,manual,1,NA
+eau european association of urology,European Association of Urology,NA,NA,public_body,manual,1,NA
+sanofi-synthelabo rt,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
+aesca pharma gesmbh,AESCA Pharma GmbH,NA,NA,industry,manual,1,NA
+laboratorios leti,Laboratorios Leti,NA,NA,industry,manual,1,NA
+institut de recherches internationales,Servier,Servier,Servier,industry,manual,0.9,NA
+universittskinderklinik innsbruck,Universitätskinderklinik Innsbruck,NA,NA,hospital,manual,1,NA
+therakos,Therakos,NA,NA,industry,manual,1,NA
+grupo espaol de investigacin en cncer de mama geicam,GEICAM,NA,NA,cooperative_group,manual,1,NA
+geicam grupo espaol de investigacion en cancer de mama,GEICAM,NA,NA,cooperative_group,manual,1,NA
+charit campus mitte klinik fr psychiatrie und psychotherapie,Charité Campus Mitte; Klinik für Psychiatrie und Psychotherapie,NA,NA,hospital,manual,1,NA
+allergie-centrum-charit,Allergie-Centrum-Charité,NA,NA,hospital,manual,1,NA
+johann wolfgang goethe-universitt frankfurt am main,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
+fondazione sendo,Fondazione Sendo,NA,NA,foundation,manual,1,NA
+associazione malattie sangue,Associazione Malattie Sangue,NA,NA,foundation,manual,1,NA
+ullevl university hospital,Ullevål University Hospital,NA,NA,hospital,manual,1,NA
+landsptali hsklasjkrahs,Landspítali Háskólasjúkrahús,NA,NA,hospital,manual,1,NA
+hospital ramn y cajal,Hospital Ramón y Cajal,NA,NA,hospital,manual,1,NA
+medizinische fakultt der technischen universitt mnchen,Medizinische Fakultät der Technischen Universität München,NA,NA,academic,manual,1,NA
+stiftung institut fr herzinfarktforschung,Stiftung Institut für Herzinfarktforschung,NA,NA,foundation,manual,1,NA
+universittsklinikum bonn klinik und poliklinik fr psychiatrie und psychotherapie,Universitaetsklinikum Bonn,NA,NA,hospital,manual,1,NA
+klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen,Klinik für Herz- und Kreislauferkrankungen; Deutsches Herzzentrum München,NA,NA,hospital,manual,1,NA
+stallergenes sa,Stallergenes S.A.,NA,NA,industry,manual,1,NA
+grupo espaol de tratamiento de los tumores de cabeza y cuello ttcc,Grupo Español de Tratamiento de los Tumores de Cabeza y Cuello TTCC,NA,NA,cooperative_group,manual,1,NA
+charit universitaetsmedizin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+an-institut fr qualittssicherung in der operativen medizin ggmbh,An-Institut für Qualitätssicherung in der operativen Medizin gGmbH,NA,NA,unknown,manual,1,NA
+georg-august-universitt gttingen,Georg-August-Universität Göttingen,NA,NA,academic,manual,1,NA
+medizinische universitt wien univ klinik fr dermatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+klinik lwenstein ggmbh,Klinik Löwenstein gGmbH,NA,NA,hospital,manual,1,NA
+universittsklinikum essen - zentrum fr innere medizin - klinik fr endokrinologie,Universitätsklinikum Essen,NA,NA,hospital,manual,1,NA
+medizinische fakultt der martin-luther-universitt halle-wittenberg,Medizinische Fakultät der Martin-Luther-Universität Halle-Wittenberg,NA,NA,academic,manual,1,NA
+university hospital of tbingen,University Hospital of Tübingen,NA,NA,hospital,manual,1,NA
+stockholms lns landsting,Stockholms Läns Landsting,NA,NA,public_body,manual,1,NA
+centre hospitalier rgional et universitaire,Centre Hospitalier Régional et Universitaire,NA,NA,hospital,manual,1,NA
+zentralinstitut fr seelische gesundheit mannheim,Zentralinstitut für Seelische Gesundheit Mannheim,NA,NA,hospital,manual,1,NA
+ludwig boltzmann institut fr retinologie und biomikroskopische laserchirurgie,Ludwig Boltzmann Institut für Retinologie und biomikroskopische Laserchirurgie,NA,NA,academic,manual,1,NA
+universita  campus biomedico,Università Campus Bio-Medico di Roma,NA,NA,academic,manual,1,NA
+johann wolfgang goethe universitt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
+fundaci puigvert,Fundació Puigvert,NA,NA,hospital,manual,1,NA
+glaxosmithkiline research and development,GSK,GSK,GSK,industry,manual,1,NA
+instituto de investigacin del hospital de la santa creu i sant pau,Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,manual,1,NA
+azienda ospedaliera s. croce e carle,Azienda Ospedaliera S. Croce e Carle,NA,NA,hospital,manual,1,NA
+azienda ospedaliero-universitaria pisana,Azienda Ospedaliero-Universitaria Pisana,NA,NA,hospital,manual,1,NA
+azienda ospedaliera fondazione macchi a o di rilievo nazionale,Azienda Ospedaliera Fondazione Macchi A.O. di Rilievo Nazionale,NA,NA,hospital,manual,1,NA
+galderma research development,Galderma Research & Development,NA,NA,industry,manual,1,NA
+grupo espaol de neurooncologia medica,Grupo Español de Neurooncología Médica,NA,NA,cooperative_group,manual,1,NA
+university medical center gttingen,University Medical Center Göttingen,NA,NA,hospital,manual,1,NA
+uppsalns landsting,Uppsala Läns Landsting,NA,NA,public_body,manual,1,NA
+charit  university medicine berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+oslo universitetssykehus,Oslo University Hospital,NA,NA,hospital,manual,1,NA
+centre rgional de lutte contre le cancer val daurelle- paul lamarque,Centre Val d'Aurelle - Paul Lamarque,NA,NA,hospital,manual,1,NA
+gmiho gesellschaft fr medizinische innovation  hmatologie und onkologie mbh,GMIHO,NA,NA,cooperative_group,manual,1,NA
+rebro lns landsting,Örebro Läns Landsting,NA,NA,public_body,manual,1,NA
+fundaci privada clnic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,1,NA
+chu-hopitaux de rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
+instituto cataln de oncologa,Instituto Catalán de Oncología,NA,NA,hospital,manual,1,NA
+centre georges franois leclerc,Centre Georges François Leclerc,NA,NA,hospital,manual,1,NA
+curevac gmbh,CureVac AG,NA,NA,industry,manual,1,NA
+geltamo grupo espaol de linfoma y transplante autlogo de mdula sea,GELTAMO,NA,NA,cooperative_group,manual,1,NA
+alk-abell arzneimittel gmbh,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
+istituto mediterraneo per i trapianti e terapie ad alta  specializzazione,ISMETT,NA,NA,hospital,manual,1,NA
+azienda ospedaliera s. maria di terni,Azienda Ospedaliera S. Maria di Terni,NA,NA,hospital,manual,1,NA
+medizinische universitt wien univ klinik f frauenheilkunde abt f gynkologie und gyn onkologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien univ klinik fr ansthesie allg intensivmedizin u schmerztherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+fundacion para la investigacion biomedica hospital universitario 12 de octubre,Fundación para la Investigación Biomédica Hospital Universitario 12 de Octubre,NA,NA,hospital,manual,1,NA
+fundacion cv investigacion hospital dr peset,Fundación CV Investigación Hospital Dr. Peset,NA,NA,hospital,manual,1,NA
+institut de cancrologie de la loire,Institut de Cancérologie de la Loire,NA,NA,hospital,manual,1,NA
+universittsklinik fr klinische pharmakologie,Universitätsklinik für Klinische Pharmakologie,NA,NA,hospital,manual,1,NA
+fundacion para la investigacin la fe,Fundación para la Investigación La Fe,NA,NA,foundation,manual,1,NA
+azienda ospedaliera g. brotzu,Azienda Ospedaliera G. Brotzu,NA,NA,hospital,manual,1,NA
+medizinische fakultt der technischen universitt muenchen,Medizinische Fakultät der Technischen Universität München,NA,NA,academic,manual,1,NA
+hpital foch,Hôpital Foch,NA,NA,hospital,manual,1,NA
+klinikum der universitt mnchen-grohadern,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,1,NA
+azienda ospedaliera s. paolo a o di rilievo nazionale,Azienda Ospedaliera S. Paolo A.O. di Rilievo Nazionale,NA,NA,hospital,manual,1,NA
+chu ambroise pare,CHU Ambroise Paré,NA,NA,hospital,manual,1,NA
+justus liebig universitt gieen,Justus-Liebig-Universität Gießen,NA,NA,academic,manual,1,NA
+vsterbottens lns landsting,Västerbottens Läns Landsting,NA,NA,public_body,manual,1,NA
+fondazione del piemonte per loncologia ircc di candiolo,Fondazione del Piemonte per l'Oncologia IRCC di Candiolo,NA,NA,hospital,manual,1,NA
+goethe universitt frankfurt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
+landstinget i stergtland,Landstinget i Östergötland,NA,NA,public_body,manual,1,NA
+uh montpellier,CHU de Montpellier,NA,NA,hospital,manual,1,NA
+universittsklinik fr neurologie medizinische universitt wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien universittsklinik fr psychiatrie und psychotherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien universittsklinik fr klinische pharmakologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien abteilung fr herzchirurgie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+med univ wien klinik fr klinische pharmakologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+med univ wien universittsklinik fr ansthesie allgemeine intensivmedizin und schmerztherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+fundacin hospital nacional de paraplji cos,Fundación Hospital Nacional de Parapléjicos,NA,NA,hospital,manual,1,NA
+universittsklinikum schleswig-holstein -sh,Universitätsklinikum Schleswig-Holstein,NA,NA,hospital,manual,1,NA
+grupo espaol de investigacin en cncer de ovario,Grupo Español de Investigación en Cáncer de Ovario,NA,NA,cooperative_group,manual,1,NA
+grupo espaol de tumores neuroendocrinos,Grupo Español de Tumores Neuroendocrinos,NA,NA,cooperative_group,manual,1,NA
+antonio van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,hospital,manual,1,NA
+university medical center goettingen,University Medical Center Göttingen,NA,NA,hospital,manual,1,NA
+apotex inc.,Apotex Inc.,NA,NA,industry,manual,1,NA
+german cancer research center dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,academic,manual,1,NA
+medizinische universitt innsbruck / univ -klinik fr allgemeine und chirurgische intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,1,NA
+medizinische universitt wien universittsklinik fr innere medizin 3 abteilung fr gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien universittsklinik fr augenheilkunde,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien univ klinik fr innere medizin iii abt f endokrinologie und stoffwechsel,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien universittsklinik fr innere medizin iii,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt wien univ klinik f dermatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medizinische universitt graz universittsklinik fr innere medizin abteilung fr endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,1,NA
+medizinische universitt graz / endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,1,NA
+loreal recherche,L'Oréal Recherche,NA,NA,industry,manual,1,NA
+county council of stergtland,County Council of Östergötland,NA,NA,public_body,manual,1,NA
+vall dhebron institut de recerca vhir,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,1,NA
+universittsklinikum ulm ar,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,hospital,manual,1,NA
+universitt innsbruck institut fr biomedizinische alternsforschung,Universität Innsbruck; Institut für Biomedizinische Alternsforschung,NA,NA,academic,manual,1,NA
+universittsklinik fr augenheilkunde und optometrie,Universitätsklinik für Augenheilkunde und Optometrie,NA,NA,hospital,manual,1,NA
+georg-august-universitt gttingen stiftung ffentlichen rechts universittsmedizin gttingen,Universitätsmedizin Göttingen,NA,NA,hospital,manual,1,NA
+gteborgs universitet,University of Gothenburg,NA,NA,academic,manual,1,NA
+fondazione irccs ca granda ospedale maggiore policlinico milano,Fondazione IRCCS Ca' Granda Ospedale Maggiore Policlinico,NA,NA,hospital,manual,1,NA
+orthopädisches spital speising,Orthopädisches Spital Speising,NA,NA,hospital,manual,1,NA
+pascoe pharmazeutische prparate gmbh,Pascoe pharmazeutische Präparate GmbH,NA,NA,industry,manual,1,NA
+gesellschaft fr pdiatrische onkologie und hmatologie gpoh ggmbh,GPOH,NA,NA,cooperative_group,manual,1,NA
+agmt  arbeitsgemeinschaft medikamentse tumortherapie gemeinntzige,AGMT,NA,NA,cooperative_group,manual,1,NA
+tays sydnsairaala,TAYS Sydänsairaala,NA,NA,hospital,manual,1,NA
+medizinische universitt graz universittsklinik fr inneremedizin abteilung fr endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,1,NA
+istituto scientifico romagnolo per lo studio e la cura dei tumori irst - irccs,IRCCS Istituto Scientifico Romagnolo per lo Studio e la Cura dei Tumori IRST,NA,NA,hospital,manual,1,NA
+fundacio privada clinic per a la recerca biomedica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,1,NA
+centre hospitalier rgional universitaire de nancy,CHRU De Nancy,CHRU De Nancy,CHRU De Nancy,hospital,manual,1,NA
+rouen university hospital,CHU de Rouen,NA,NA,hospital,manual,1,NA
+service of neurology chu liege,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,1,NA
+astrazenenca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
+charite - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
+fondazione irccs istituto nazionale dei tumori,IRCCS Istituto Nazionale dei Tumori,NA,NA,hospital,manual,1,NA
+centre eugne marquis,Centre Eugène Marquis,NA,NA,hospital,manual,1,NA
+nordsjllands hospital department of cardiology nephrology and endocrinology,Nordsjællands Hospital,NA,NA,hospital,manual,1,NA
+nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,manual,1,NA
+landstinget vstmanland,Landstinget Västmanland,NA,NA,public_body,manual,1,NA
+grupo espaol de investigacin en sarcomas,GEIS,NA,NA,cooperative_group,manual,1,NA
+centre hospitalier rgional universitaire de besanon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+chru de besanon,CHU de Besançon,NA,NA,hospital,manual,1,NA
+groupement des hpitaux de linstitut catholique de lille ghicl,Groupement des Hôpitaux de l'Institut Catholique de Lille (GHICL),NA,NA,hospital,manual,1,NA
+medical university of vienna muw,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+medical university of vienna department of internal medicine i,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
+fundacin cris de investigacin para vencer el cncer,Fundación CRIS de Investigación para Vencer el Cáncer,NA,NA,foundation,manual,1,NA
+klinikum der universitaet muenchen aoer,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,1,NA
+uk fr ansthesiologie und allgemeine intensivmedizin,Universitätsklinik für Anästhesiologie und allgemeine Intensivmedizin,NA,NA,hospital,manual,1,NA
