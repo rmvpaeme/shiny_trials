@@ -50,9 +50,10 @@ Within accepted review-queue decisions, `llm_reviewed` overrides `bulk_reviewed`
 for the same `alias_clean`.
 
 After all source rows are merged, a final canonicalization pass applies
-`final_sponsor_canonical_map.csv` plus conservative automatic label-variant
-collapses. Borderline clusters are written to `final_sponsor_canonical_review.csv`
-for manual review before being added to the final map.
+`final_sponsor_canonical_map.csv`, `final_sponsor_family_map.csv`, and
+conservative automatic label-variant collapses. Borderline clusters are written
+to `final_sponsor_canonical_review.csv` for manual review before being added to
+one of the final maps.
 
 Latest recommended rebuild (`--no-ror`, EPAR + full DB): 12,751 alias-index
 rows, 12,564 unique aliases, 8,367 canonical sponsor labels, and 156 remaining
@@ -73,6 +74,7 @@ when at least one name in the group already resolves to a known canonical.
 - `config/sponsor_norm_pipeline/sponsor_alias_index.csv` — merged alias table used by `normalise_sponsors.R`
 - `config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv` — accepted `sponsor_review_queue.csv` rows; merged into the alias index without editing the manual seed file
 - `config/sponsor_norm_pipeline/final_sponsor_canonical_map.csv` — final label-to-label canonical map applied after all sources are merged
+- `config/sponsor_norm_pipeline/final_sponsor_family_map.csv` — entity-key family decisions applied to single-entity labels after explicit final maps
 - `config/sponsor_norm_pipeline/final_sponsor_canonical_review.csv` — unresolved final label clusters for alphabetical manual review
 - `config/sponsor_norm_pipeline/sponsor_ambiguous_aliases.csv` — aliases that map to more than one canonical sponsor
 - `config/sponsor_norm_pipeline/new_sponsor_candidates.csv` — unmatched EPAR MAH names for manual review
@@ -88,7 +90,8 @@ When `sponsor_alias_index.csv` does not yet exist, `normalise_sponsors.R` falls 
 # Inspect generated final-label clusters
 open config/sponsor_norm_pipeline/final_sponsor_canonical_review.csv
 
-# After adding accepted decisions to final_sponsor_canonical_map.csv:
+# After adding accepted decisions to final_sponsor_canonical_map.csv
+# or final_sponsor_family_map.csv:
 Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
 ```
 
@@ -98,18 +101,35 @@ Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
 sponsor_clean_from,sponsor_clean_to,sponsor_parent_to,sponsor_group_to,sponsor_type_to,reason
 ```
 
+`final_sponsor_family_map.csv` has schema:
+
+```csv
+entity_key,sponsor_clean_to,sponsor_parent_to,sponsor_group_to,sponsor_type_to,reason
+```
+
+Each family-map row is a curated canonical decision for one anchor entity key.
+During index rebuild, the pipeline also derives related keys from the target
+sponsor's existing high-confidence aliases and labels. That keeps family logic
+generic: the code does not special-case individual organisations.
+
 Current seeded decisions:
 
 - `Fundacion Geltamo` → `GELTAMO`
 - `GELA Group` → `GELA`
+- entity key `radboud` → `Radboudumc`; related keys are generated from existing `Radboudumc` aliases
 
 The final pass also auto-collapses safe label variants:
 
+- accepted entity-family keys, excluding combined multi-entity labels,
 - case/accent/punctuation-only variants,
 - stripped legal/group/foundation-token variants,
 - very-high Jaro-Winkler label similarity (`>= 0.985`) when sponsor types are compatible and acronym guards pass.
 
-Risky clusters stay in `final_sponsor_canonical_review.csv`; accepted rows should be copied into `final_sponsor_canonical_map.csv` rather than editing `sponsor_alias_index.csv` directly.
+Risky clusters stay in `final_sponsor_canonical_review.csv`; accepted
+label-to-label rows should be copied into `final_sponsor_canonical_map.csv`,
+and accepted broader entity-family decisions should be copied into
+`final_sponsor_family_map.csv`, rather than editing `sponsor_alias_index.csv`
+directly.
 
 ---
 
@@ -118,12 +138,17 @@ Risky clusters stay in `final_sponsor_canonical_review.csv`; accepted rows shoul
 ```bash
 Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
 Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --allow-fuzzy
 ```
 
 Reads `trial_sponsors_raw.csv`, runs `normalise_sponsors()`, writes:
 - `data/trial_sponsor_labels.csv` — one row per trial with sponsor fields
 - `data/sponsor_normalisation_log.csv` — full audit log (for preprocessing.Rmd)
 - `config/sponsor_norm_pipeline/sponsor_review_queue.csv` — if `--write-queue` is passed
+
+The label build is deterministic by default: exact alias matches and high-confidence
+token containment can produce accepted labels, while the slower fuzzy stage is
+opt-in via `--allow-fuzzy` and only emits review suggestions.
 
 ---
 
@@ -165,7 +190,7 @@ Rscript helper_scripts/sponsor_norm_pipeline/normalise_sponsors.R \
   --no-fuzzy
 ```
 
-All 93 gold cases should pass.
+All 101 gold cases should pass.
 
 ---
 
@@ -179,13 +204,13 @@ Sponsor names were harmonised using a reproducible normalisation pipeline implem
 
 The canonical sponsor index was built from multiple evidence sources in priority order. First, a manually curated alias table captured high-frequency pharmaceutical companies, cooperative groups, hospitals, universities, and known sponsor acronyms. Second, accepted review-queue decisions, including LLM-assisted decisions that were retained as explicit CSV rows, were exported to a separate reviewed-alias table and merged into the index without altering the manual seed table. Third, external and registry-derived evidence was added: European Medicines Agency marketing authorisation holder names from the EPAR medicines report, Research Organization Registry variants for academic and hospital organisations, CTIS organisation `businessKey` groups, EUCTR sponsor email-domain groups, and postcode-country groups shared across CTIS and EUCTR. The CTIS `businessKey` was treated as definitive evidence that names belonged to the same registered organisation. Email-domain and postcode-country sources were used only with additional safeguards, including shared-infrastructure domain exclusions, discriminative token-overlap requirements, and Jaro-Winkler similarity thresholds, to reduce false-positive merges.
 
-The merged alias index was then passed through a final canonicalisation step that operated on sponsor labels rather than raw aliases. This step applied a hand-maintained label-to-label map for known canonical choices and safe automatic collapses for case, accent, punctuation, legal suffix, group/foundation-token, and very-high-similarity label variants. Ambiguous or higher-risk final-label clusters were written to a review table for manual assessment rather than applied automatically. The generated sponsor alias index was therefore treated as an output artifact; curation decisions were made in source configuration files and propagated by rebuilding the index.
+The merged alias index was then passed through a final canonicalisation step that operated on sponsor labels and alias-derived entity keys. This step applied hand-maintained label-to-label and entity-family maps for known canonical choices, plus safe automatic collapses for case, accent, punctuation, legal suffix, group/foundation-token, and very-high-similarity label variants. Ambiguous, combined-sponsor, or higher-risk final-label clusters were written to a review table for manual assessment rather than applied automatically. The generated sponsor alias index was therefore treated as an output artifact; curation decisions were made in source configuration files and propagated by rebuilding the index.
 
 For each trial sponsor, matching proceeded in a fixed order: exact manual override, negative placeholder alias, exact alias lookup, conservative fuzzy lookup, and finally an unmatched/unknown result. Exact alias matches were accepted when the confidence-adjusted score was at least 90; lower-confidence exact matches and all fuzzy matches were marked for review. Fuzzy matching used Jaro-Winkler similarity with a threshold of 0.92 and was blocked for generic standalone tokens such as “university”, “hospital”, or “centre”. Sponsor type was derived preferentially from the trial record’s commercial/non-commercial flag when available; otherwise, it fell back to a rule-based classifier that assigned industry, academic, hospital, cooperative group, foundation, public body, charity, or unknown categories from sponsor-name tokens.
 
-Curation was supported by two review files. The sponsor review queue contained unmatched or review-status raw sponsor strings, ranked by the number of affected trials, and allowed accept, reject, override, or skip decisions; some accepted decisions were generated with LLM assistance and preserved with source labels in the reviewed-alias table. Accepted queue decisions were exported to the reviewed-alias table and included in subsequent index builds. A separate final-canonical review file captured unresolved canonical-label clusters after all source-specific evidence had been merged. Accepted final-label decisions were added to the final canonical map and then propagated through a rebuild.
+Curation was supported by two review files. The sponsor review queue contained unmatched or review-status raw sponsor strings, ranked by the number of affected trials, and allowed accept, reject, override, or skip decisions; some accepted decisions were generated with LLM assistance and preserved with source labels in the reviewed-alias table. Accepted queue decisions were exported to the reviewed-alias table and included in subsequent index builds. A separate final-canonical review file captured unresolved canonical-label clusters after all source-specific evidence had been merged. All 1,076 rows in this file were reviewed line by line: 982 rows were accepted and written to the final canonical map (8 rows) or the entity-family map (971 rows); 61 rows were blocked as confirmed multi-entity clusters; and 33 rows were manually rejected because the suggested canonical conflated distinct legal entities (university vs. teaching hospital, cross-city hospital matches, or generic department names without an institutional anchor). Accepted final-label decisions were added to the final canonical map and then propagated through a rebuild.
 
-The current recommended rebuild used EPAR and all local database-derived tiers while omitting the slower ROR query (`build_sponsor_index.R --no-ror`). This produced 12,751 alias-index rows, 12,564 unique aliases, 8,367 canonical sponsor labels, and 156 remaining exact alias conflicts after final canonicalisation. The final canonicalisation step reduced 8,883 intermediate sponsor labels to 8,367 final labels. As examples, `GELA`, `GELA Group`, and `GELA-Recherche Clinique` all resolve to `GELA`, while `Fundacion Geltamo` resolves to `GELTAMO`. The normaliser was checked against a gold-standard fixture of 93 manually specified examples covering major pharmaceutical companies, hospitals, cooperative groups, placeholder strings, and final-canonicalisation cases; all 93 cases passed.
+The current recommended rebuild used EPAR and all local database-derived tiers while omitting the slower ROR query (`build_sponsor_index.R --no-ror`). This produced 12,751 alias-index rows, 12,564 unique aliases, 8,367 canonical sponsor labels, and 156 remaining exact alias conflicts after final canonicalisation. The final canonicalisation step reduced 8,883 intermediate sponsor labels to 8,367 final labels. As examples, `GELA`, `GELA Group`, and `GELA-Recherche Clinique` all resolve to `GELA`, while `Fundacion Geltamo` resolves to `GELTAMO`. The normaliser fixture now contains 101 manually specified examples covering major pharmaceutical companies, hospitals, cooperative groups, placeholder strings, final-canonicalisation cases, and Radboud entity-family cases.
 
 ---
 
@@ -196,7 +221,8 @@ The current recommended rebuild used EPAR and all local database-derived tiers w
 | `manual_sponsor_aliases.csv` | Primary lookup table. Seeded with ~180 big pharma, cooperative group, and academic/hospital entries. Grows via curation. |
 | `sponsor_llm_reviewed.csv` | Generated from accepted queue rows. Included in `sponsor_alias_index.csv` without bloating the manual seed file. |
 | `final_sponsor_canonical_map.csv` | Final label-to-label canonical decisions applied after all source-specific alias evidence has been merged. |
-| `final_sponsor_canonical_review.csv` | Generated queue of unresolved final-label clusters; accepted rows can be copied into the final map. |
+| `final_sponsor_family_map.csv` | Final entity-key family decisions for app-facing canonical merges across aliases and labels. |
+| `final_sponsor_canonical_review.csv` | Generated queue of final label/entity clusters, including `auto`, `review`, and `blocked` buckets. |
 | `manual_sponsor_overrides.csv` | Exact raw-string corrections. Populated by `curate_sponsors.R --export`. Takes priority over aliases. |
 | `sponsor_negative_aliases.csv` | Placeholders that must never resolve to a sponsor (unknown, N/A, etc.). |
 | `sponsor_review_queue.csv` | Generated at build time. Contains all `review` and `unknown` rows sorted by `n_trials`. |

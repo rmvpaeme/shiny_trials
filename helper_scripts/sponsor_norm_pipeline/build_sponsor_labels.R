@@ -11,6 +11,7 @@
 # Usage:
 #   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
 #   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --allow-fuzzy
 #
 # Environment:
 #   DATA_DIR    override for data directory (default: data/)
@@ -41,6 +42,7 @@ project_path <- function(...) file.path(project_root, ...)
 
 args        <- commandArgs(trailingOnly = TRUE)
 write_queue <- "--write-queue" %in% args
+allow_fuzzy <- "--allow-fuzzy" %in% args
 
 data_dir   <- Sys.getenv("DATA_DIR",   unset = project_path("data"))
 config_dir <- Sys.getenv("CONFIG_DIR", unset = project_path("config", "sponsor_norm_pipeline"))
@@ -83,7 +85,7 @@ unique_sponsors <- unique(raw$raw_sponsor)
 unique_sponsors <- unique_sponsors[!is.na(unique_sponsors) & nzchar(trimws(unique_sponsors))]
 message(sprintf("Normalising %d unique sponsor strings...", length(unique_sponsors)))
 
-norm <- normalise_sponsors(unique_sponsors, configs = cfg)
+norm <- normalise_sponsors(unique_sponsors, configs = cfg, allow_fuzzy = allow_fuzzy)
 
 message(sprintf(
   "Results: accepted=%d  review=%d  rejected=%d  unknown=%d",

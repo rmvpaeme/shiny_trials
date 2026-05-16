@@ -1,3 +1,11 @@
 sponsor_clean_from,sponsor_clean_to,sponsor_parent_to,sponsor_group_to,sponsor_type_to,reason
 Fundacion Geltamo,GELTAMO,NA,NA,cooperative_group,collapse final label variant to established GELTAMO canonical
 GELA Group,GELA,NA,NA,unknown,collapse final label variant to established GELA canonical
+centro cardiologico monzino,Fondazione Centro Cardiologico Monzino,NA,NA,foundation,cluster canonical normalization
+cliniques universitaires saint luc,Cliniques Universitaires Saint-Luc,NA,NA,academic,cluster canonical normalization
+cliniquesuniversitairessaintluc,Cliniques Universitaires Saint-Luc,NA,NA,academic,cluster canonical normalization
+kingscollegelondon,Kings College London,NA,NA,academic,cluster canonical normalization
+nibit,NIBIT,NA,NA,cooperative_group,cluster canonical normalization
+oxford university hospitals nhs trust,Oxford University Hospitals NHS Foundation Trust,NA,NA,academic,cluster canonical normalization
+university nottingham,University Of Nottingham,NA,NA,academic,cluster canonical normalization
+universityofnottingham,University Of Nottingham,NA,NA,academic,cluster canonical normalization

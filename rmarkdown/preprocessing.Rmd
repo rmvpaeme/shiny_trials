@@ -181,6 +181,9 @@ sub_labels   <- read_optional_csv(log_dir, "trial_substance_labels.csv")
 spon_raw     <- read_optional_csv(log_dir, "trial_sponsors_raw.csv")
 sub_raw      <- read_optional_csv(log_dir, "trial_substances_raw.csv")
 spon_queue   <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "sponsor_review_queue.csv")
+spon_final_review <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_canonical_review.csv")
+spon_final_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_canonical_map.csv")
+spon_family_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_family_map.csv")
 sub_queue    <- read_optional_csv(project_root, "config", "substance_norm_pipeline", "substance_review_queue.csv")
 
 normalise_sponsor_log <- function(x) {
@@ -918,7 +921,21 @@ if ("MEDDRA_organ_class" %in% names(df)) {
 
 ## Sponsor Names
 
-The sponsor audit follows the cache-build pipeline: exported trial-sponsor pairs, unique raw sponsor strings, normalised unique strings, accepted/review labels joined back to trials, and optional review queue rows.
+The sponsor audit follows the cache-build pipeline: exported trial-sponsor pairs, unique raw sponsor strings, normalised unique strings, accepted/review labels joined back to trials, and optional raw-alias review queue rows. Final app-facing sponsor labels are then canonicalised through explicit label decisions and broader entity-family decisions before the trial label cache is rebuilt.
+
+Current curation loop:
+
+1. Review `config/sponsor_norm_pipeline/final_sponsor_canonical_review.csv`, prioritising unapplied `review` rows with high scores and no blocking reason.
+2. Copy accepted label-to-label decisions to `config/sponsor_norm_pipeline/final_sponsor_canonical_map.csv`.
+3. Copy accepted broader grouping decisions to `config/sponsor_norm_pipeline/final_sponsor_family_map.csv`.
+4. Rebuild with:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+```
+
+`build_sponsor_labels.R` is deterministic by default: exact aliases and high-confidence token containment can produce accepted labels. Fuzzy matching is opt-in with `--allow-fuzzy` and is intended for review suggestions.
 
 ```{r sponsor-audit-compute}
 spon_has_rich_log <- !is.null(spon_log_raw) && has_cols(
@@ -952,6 +969,27 @@ spon_accepted_strings <- if (nrow(spon_unique) > 0) sum(spon_unique$match_status
 spon_label_rows <- if (!is.null(spon_labels) && "_id" %in% names(spon_labels)) nrow(spon_labels) else NA_integer_
 spon_label_trials <- if (!is.null(spon_labels) && "_id" %in% names(spon_labels)) n_distinct(spon_labels$`_id`) else NA_integer_
 spon_queue_rows <- if (!is.null(spon_queue)) nrow(spon_queue) else NA_integer_
+spon_final_review_rows <- if (!is.null(spon_final_review)) nrow(spon_final_review) else NA_integer_
+spon_final_review_open <- if (!is.null(spon_final_review) && "applied" %in% names(spon_final_review)) {
+  applied_flag <- tolower(as.character(spon_final_review$applied)) %in% c("true", "1", "yes")
+  sum(!applied_flag, na.rm = TRUE)
+} else {
+  NA_integer_
+}
+spon_final_review_buckets <- if (!is.null(spon_final_review) && "confidence_bucket" %in% names(spon_final_review)) {
+  spon_final_review |>
+    mutate(confidence_bucket = coalesce(as.character(confidence_bucket), "not recorded")) |>
+    count(confidence_bucket, name = "n", sort = TRUE)
+} else {
+  tibble()
+}
+spon_final_maps <- tibble(
+  Map = c("Label canonical map", "Entity-family map"),
+  Rows = c(
+    if (!is.null(spon_final_map)) nrow(spon_final_map) else NA_integer_,
+    if (!is.null(spon_family_map)) nrow(spon_family_map) else NA_integer_
+  )
+)
 
 spon_wf <- tibble(
   step = c("Raw trial-sponsor pairs", "Unique raw strings", "Accepted/review strings", "Trial label rows", "Labelled trials"),
@@ -972,6 +1010,17 @@ if (nrow(spon_unique) > 0) {
   ))
 } else {
   cat(notice("Sponsor log unavailable", "No sponsor normalisation log was found for this render.", "warn"))
+}
+```
+
+```{r sponsor-final-review-kpis, results='asis'}
+if (!is.null(spon_final_review)) {
+  cat(kpi_row(
+    kpi_box(fmt_n(spon_final_review_rows), "final review clusters", BLUE),
+    kpi_box(fmt_n(spon_final_review_open), "unapplied final clusters", ORANGE),
+    kpi_box(fmt_n(spon_final_maps$Rows[[1]]), "canonical-map rows", GREEN),
+    kpi_box(fmt_n(spon_final_maps$Rows[[2]]), "family-map rows", PURPLE)
+  ))
 }
 ```
 
@@ -1041,6 +1090,28 @@ if (nrow(spon_unique) > 0 && any(!is.na(spon_unique$match_score))) {
 }
 ```
 
+```{r sponsor-final-review-buckets, fig.height=3.4}
+if (nrow(spon_final_review_buckets) > 0) {
+  spon_final_review_buckets |>
+    mutate(confidence_bucket = reorder(confidence_bucket, n)) |>
+    ggplot(aes(n, confidence_bucket, fill = confidence_bucket)) +
+    geom_col(width = 0.62, show.legend = FALSE) +
+    geom_text(aes(label = fmt_n(n)), hjust = -0.1, size = 3.1, color = GRAY) +
+    scale_fill_manual(values = c(auto = GREEN, review = YELLOW, blocked = RED, `not recorded` = GRAY), na.value = GRAY) +
+    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
+    labs(title = "Final sponsor canonical-review buckets", x = "Clusters", y = NULL) +
+    theme_pre()
+}
+```
+
+```{r sponsor-final-map-table}
+if (!is.null(spon_final_map) || !is.null(spon_family_map)) {
+  spon_final_maps |>
+    mutate(Rows = fmt_n(Rows)) |>
+    nk(cap = "Curated sponsor canonical decision files")
+}
+```
+
 ```{r sponsor-changes-table}
 if (nrow(spon_unique) > 0) {
   spon_unique |>
@@ -1094,6 +1165,36 @@ if (!is.null(spon_queue)) {
     dt_tbl(caption = "Sponsor review queue", page = 25, filter = "top")
 } else {
   cat("Sponsor review queue not available.")
+}
+```
+
+```{r sponsor-final-review-table}
+if (!is.null(spon_final_review)) {
+  review_tbl <- spon_final_review |>
+    mutate(
+      applied_flag = if ("applied" %in% names(spon_final_review)) {
+        tolower(as.character(applied)) %in% c("true", "1", "yes")
+      } else {
+        FALSE
+      },
+      confidence_bucket = if ("confidence_bucket" %in% names(spon_final_review)) coalesce(as.character(confidence_bucket), "not recorded") else "not recorded",
+      blocked_reason = if ("blocked_reason" %in% names(spon_final_review)) coalesce(as.character(blocked_reason), "") else ""
+    ) |>
+    arrange(
+      applied_flag,
+      factor(confidence_bucket, levels = c("review", "blocked", "auto", "not recorded")),
+      desc(suppressWarnings(as.numeric(score)))
+    ) |>
+    select(any_of(c(
+      "cluster_key", "entity_key", "suggested_canonical", "sponsor_labels",
+      "aliases_sample", "sources", "sponsor_types", "score", "evidence",
+      "confidence_bucket", "blocked_reason", "review_bucket", "applied"
+    )))
+
+  review_tbl |>
+    dt_tbl(caption = "Final sponsor canonical/entity-family review", page = 25, filter = "top")
+} else {
+  cat("Final sponsor canonical review file not available.")
 }
 ```
 

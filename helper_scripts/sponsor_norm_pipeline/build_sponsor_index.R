@@ -84,6 +84,7 @@ OUT_AMBIG    <- file.path(SNP, "sponsor_ambiguous_aliases.csv")
 OUT_NEW      <- file.path(SNP, "new_sponsor_candidates.csv")
 OUT_ORGS     <- file.path(SNP, "ctis_org_candidates.csv")
 OUT_FINAL_MAP    <- file.path(SNP, "final_sponsor_canonical_map.csv")
+OUT_FINAL_FAMILY_MAP <- file.path(SNP, "final_sponsor_family_map.csv")
 OUT_FINAL_REVIEW <- file.path(SNP, "final_sponsor_canonical_review.csv")
 
 # ── Load normaliser helpers ───────────────────────────────────────────────────
@@ -304,7 +305,311 @@ apply_explicit_final_map <- function(combined, map_path) {
     dplyr::select(
       alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
       sponsor_type, alias_type, source, confidence_prior
+	    )
+}
+
+final_review_empty <- function() {
+  tibble::tibble(
+    cluster_key = character(),
+    entity_key = character(),
+    suggested_canonical = character(),
+    sponsor_labels = character(),
+    aliases_sample = character(),
+    sources = character(),
+    sponsor_types = character(),
+    score = numeric(),
+    evidence = character(),
+    confidence_bucket = character(),
+    blocked_reason = character(),
+    review_bucket = character(),
+    applied = logical()
+  )
+}
+
+ensure_final_review_schema <- function(review) {
+  empty <- final_review_empty()
+  if (is.null(review) || nrow(review) == 0L) return(empty)
+  missing_cols <- setdiff(names(empty), names(review))
+  for (nm in missing_cols) {
+    review[[nm]] <- if (is.logical(empty[[nm]])) {
+      rep(NA, nrow(review))
+    } else if (is.numeric(empty[[nm]])) {
+      rep(NA_real_, nrow(review))
+    } else {
+      rep(NA_character_, nrow(review))
+    }
+  }
+  review[, names(empty), drop = FALSE]
+}
+
+read_final_family_map <- function(map_path) {
+  empty_map <- tibble::tibble(
+    entity_key = character(),
+    sponsor_clean_to = character(),
+    sponsor_parent_to = character(),
+    sponsor_group_to = character(),
+    sponsor_type_to = character(),
+    reason = character()
+  )
+
+  family_map <- if (file.exists(map_path)) {
+    readr::read_csv(map_path, show_col_types = FALSE)
+  } else {
+    empty_map
+  }
+
+  required <- names(empty_map)
+  missing_cols <- setdiff(required, names(family_map))
+  if (length(missing_cols)) {
+    stop(
+      "Final sponsor family map is missing columns: ",
+      paste(missing_cols, collapse = ", ")
     )
+  }
+
+  family_map |>
+    dplyr::select(dplyr::all_of(required)) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::everything(), ~ stringr::str_squish(as.character(.x))),
+      dplyr::across(dplyr::everything(), ~ dplyr::na_if(.x, "")),
+      dplyr::across(dplyr::everything(), ~ dplyr::na_if(.x, "NA")),
+      entity_key = purrr::map_chr(entity_key, sponsor_entity_key_one)
+    ) |>
+    dplyr::filter(
+      !is.na(entity_key), entity_key != "",
+      !is.na(sponsor_clean_to), sponsor_clean_to != ""
+    ) |>
+    dplyr::distinct(entity_key, .keep_all = TRUE)
+}
+
+expand_final_family_map <- function(combined, family_map) {
+  if (nrow(family_map) == 0L) return(family_map)
+
+  configured_keys <- family_map$entity_key
+
+  generated_from_target <- combined |>
+    dplyr::semi_join(family_map, by = c("sponsor_clean" = "sponsor_clean_to")) |>
+    dplyr::filter(
+      !sponsor_is_cross_entity_combined(alias_clean),
+      !sponsor_is_cross_entity_combined(sponsor_clean)
+    ) |>
+    dplyr::mutate(
+      alias_entity_key = sponsor_entity_key(alias_clean),
+      label_entity_key = sponsor_entity_key(sponsor_clean)
+    ) |>
+    dplyr::select(
+      sponsor_clean_to = sponsor_clean,
+      sponsor_parent_to = sponsor_parent,
+      sponsor_group_to = sponsor_group,
+      sponsor_type_to = sponsor_type,
+      alias_entity_key,
+      label_entity_key
+    ) |>
+    tidyr::pivot_longer(
+      c(alias_entity_key, label_entity_key),
+      names_to = "key_source",
+      values_to = "entity_key"
+    ) |>
+    dplyr::filter(!is.na(entity_key), entity_key != "", nchar(entity_key) >= 3L) |>
+    dplyr::left_join(
+      family_map |>
+        dplyr::select(
+          sponsor_clean_to,
+          sponsor_parent_map = sponsor_parent_to,
+          sponsor_group_map = sponsor_group_to,
+          sponsor_type_map = sponsor_type_to,
+          reason
+        ),
+      by = "sponsor_clean_to"
+    ) |>
+    dplyr::transmute(
+      entity_key,
+      sponsor_clean_to,
+      sponsor_parent_to = dplyr::coalesce(sponsor_parent_map, sponsor_parent_to),
+      sponsor_group_to = dplyr::coalesce(sponsor_group_map, sponsor_group_to),
+      sponsor_type_to = dplyr::coalesce(sponsor_type_map, sponsor_type_to),
+      reason = paste0(
+        dplyr::coalesce(reason, "family-map target"),
+        "; generated from target sponsor aliases"
+      )
+    ) |>
+    dplyr::distinct(entity_key, sponsor_clean_to, .keep_all = TRUE)
+
+  generated_conflicts <- generated_from_target |>
+    dplyr::filter(!entity_key %in% configured_keys) |>
+    dplyr::count(entity_key, name = "n_targets") |>
+    dplyr::filter(n_targets > 1L)
+
+  dplyr::bind_rows(
+    family_map,
+    generated_from_target |>
+      dplyr::filter(!entity_key %in% generated_conflicts$entity_key)
+  ) |>
+    dplyr::arrange(!entity_key %in% configured_keys, entity_key, sponsor_clean_to) |>
+    dplyr::distinct(entity_key, .keep_all = TRUE)
+}
+
+build_final_family_review <- function(combined, family_map) {
+  label_stats <- combined |>
+    dplyr::filter(!is.na(sponsor_clean), sponsor_clean != "") |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      sponsor_types = paste(sort(unique(stats::na.omit(sponsor_type))), collapse = "|"),
+      sources = paste(sort(unique(stats::na.omit(source))), collapse = "|"),
+      aliases_sample = paste(utils::head(sort(unique(alias_clean)), 8L), collapse = "|"),
+      label_entity_key = sponsor_entity_key_one(sponsor_clean[[1L]]),
+      label_blocked = sponsor_is_cross_entity_combined_one(sponsor_clean[[1L]]),
+      .groups = "drop"
+    )
+
+  label_members <- label_stats |>
+    dplyr::transmute(
+      entity_key = label_entity_key,
+      sponsor_clean,
+      member_blocked = label_blocked,
+      evidence = "shared final-label entity key"
+    )
+
+  alias_members <- combined |>
+    dplyr::filter(!is.na(alias_clean), !is.na(sponsor_clean)) |>
+    dplyr::mutate(
+      entity_key = sponsor_entity_key(alias_clean),
+      member_blocked = sponsor_is_cross_entity_combined(alias_clean) |
+        sponsor_is_cross_entity_combined(sponsor_clean),
+      evidence = "shared alias entity key"
+    ) |>
+    dplyr::select(entity_key, sponsor_clean, member_blocked, evidence)
+
+  members <- dplyr::bind_rows(label_members, alias_members) |>
+    dplyr::filter(!is.na(entity_key), entity_key != "", nchar(entity_key) >= 3L) |>
+    dplyr::distinct(entity_key, sponsor_clean, member_blocked, evidence)
+
+  if (nrow(members) == 0L) return(final_review_empty())
+
+  keep_keys <- members |>
+    dplyr::group_by(entity_key) |>
+    dplyr::summarise(n_labels = dplyr::n_distinct(sponsor_clean), .groups = "drop") |>
+    dplyr::filter(n_labels > 1L | entity_key %in% family_map$entity_key)
+
+  members <- members |>
+    dplyr::semi_join(keep_keys, by = "entity_key") |>
+    dplyr::left_join(label_stats, by = "sponsor_clean") |>
+    dplyr::left_join(family_map, by = "entity_key") |>
+    dplyr::mutate(
+      mapped = !is.na(sponsor_clean_to),
+      label_key_matches = label_entity_key == entity_key,
+      member_blocked = member_blocked | (mapped & !label_key_matches),
+      confidence_bucket = dplyr::case_when(
+        member_blocked ~ "blocked",
+        mapped ~ "auto",
+        TRUE ~ "review"
+      )
+    )
+
+  if (nrow(members) == 0L) return(final_review_empty())
+
+  members |>
+    dplyr::group_by(entity_key, confidence_bucket) |>
+    dplyr::summarise(
+      sponsor_labels = paste(sort(unique(sponsor_clean)), collapse = "|"),
+      labels_list = list(sort(unique(sponsor_clean))),
+      aliases_sample = paste(utils::head(sort(unique(unlist(strsplit(aliases_sample, "\\|", fixed = FALSE)))), 8L), collapse = "|"),
+      sources = paste(sort(unique(unlist(strsplit(sources, "\\|", fixed = FALSE)))), collapse = "|"),
+      sponsor_types = paste(sort(unique(unlist(strsplit(sponsor_types, "\\|", fixed = FALSE)))), collapse = "|"),
+      suggested_canonical = first_non_missing(sponsor_clean_to),
+      evidence = paste(sort(unique(evidence)), collapse = "; "),
+      map_reason = first_non_missing(reason),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(
+      suggested_canonical = dplyr::if_else(
+        is.na(suggested_canonical) | suggested_canonical == "",
+        purrr::map_chr(labels_list, pick_final_canonical, combined = combined),
+        suggested_canonical
+      ),
+      cluster_key = paste0("entity:", entity_key, ":", confidence_bucket),
+      score = dplyr::case_when(
+        confidence_bucket == "auto" ~ 100,
+        confidence_bucket == "review" ~ 92,
+        TRUE ~ 0
+      ),
+      evidence = dplyr::if_else(
+        !is.na(map_reason) & map_reason != "",
+        paste(evidence, map_reason, sep = "; "),
+        evidence
+      ),
+      blocked_reason = dplyr::case_when(
+        confidence_bucket == "blocked" ~
+          "combined multi-entity label or alias-only family evidence excluded from auto-map",
+        TRUE ~ NA_character_
+      ),
+      review_bucket = purrr::map_chr(entity_key, review_bucket_for_key),
+      applied = confidence_bucket == "auto"
+    ) |>
+    dplyr::select(
+      cluster_key, entity_key, suggested_canonical, sponsor_labels,
+      aliases_sample, sources, sponsor_types, score, evidence,
+      confidence_bucket, blocked_reason, review_bucket, applied
+    ) |>
+    dplyr::arrange(review_bucket, entity_key, confidence_bucket)
+}
+
+apply_final_family_canonicalization <- function(combined, family_map_path) {
+  family_map <- read_final_family_map(family_map_path)
+  family_map <- expand_final_family_map(combined, family_map)
+  review <- build_final_family_review(combined, family_map)
+
+  if (nrow(family_map) == 0L) {
+    return(list(combined = combined, review = review))
+  }
+
+  target_defaults <- combined |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      sponsor_parent_default = first_non_missing(sponsor_parent),
+      sponsor_group_default = first_non_missing(sponsor_group),
+      sponsor_type_default = first_non_missing(sponsor_type),
+      .groups = "drop"
+    ) |>
+    dplyr::rename(sponsor_clean_to = sponsor_clean)
+
+  mapped <- combined |>
+    dplyr::mutate(
+      entity_key = sponsor_entity_key(sponsor_clean),
+      cross_entity = sponsor_is_cross_entity_combined(sponsor_clean)
+    ) |>
+    dplyr::left_join(family_map, by = "entity_key") |>
+    dplyr::left_join(target_defaults, by = "sponsor_clean_to") |>
+    dplyr::mutate(
+      apply_family = !is.na(sponsor_clean_to) & !cross_entity,
+      sponsor_clean = dplyr::if_else(apply_family, sponsor_clean_to, sponsor_clean),
+      sponsor_parent = dplyr::if_else(
+        apply_family,
+        dplyr::coalesce(sponsor_parent_to, sponsor_parent_default, sponsor_parent),
+        sponsor_parent
+      ),
+      sponsor_group = dplyr::if_else(
+        apply_family,
+        dplyr::coalesce(sponsor_group_to, sponsor_group_default, sponsor_group),
+        sponsor_group
+      ),
+      sponsor_type = dplyr::if_else(
+        apply_family,
+        dplyr::coalesce(sponsor_type_to, sponsor_type_default, sponsor_type),
+        sponsor_type
+      )
+    ) |>
+    dplyr::select(
+      alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+      sponsor_type, alias_type, source, confidence_prior
+    )
+
+  message(sprintf(
+    "Final sponsor family canonicalization: %d family-map keys applied",
+    nrow(family_map)
+  ))
+
+  list(combined = mapped, review = review)
 }
 
 build_final_groups <- function(combined) {
@@ -391,21 +696,12 @@ build_final_fuzzy_groups <- function(label_stats) {
     dplyr::select(-cluster)
 }
 
-apply_auto_final_canonicalization <- function(combined, review_path) {
+apply_auto_final_canonicalization <- function(combined, review_path, seed_review = NULL) {
+  seed_review <- ensure_final_review_schema(seed_review)
   groups <- build_final_groups(combined)
 
   if (nrow(groups) == 0L) {
-    readr::write_csv(tibble::tibble(
-      cluster_key = character(),
-      suggested_canonical = character(),
-      sponsor_labels = character(),
-      aliases_sample = character(),
-      sources = character(),
-      sponsor_types = character(),
-      score = numeric(),
-      evidence = character(),
-      review_bucket = character()
-    ), review_path)
+    readr::write_csv(seed_review, review_path)
     return(combined)
   }
 
@@ -442,15 +738,34 @@ apply_auto_final_canonicalization <- function(combined, review_path) {
   review <- group_summary |>
     dplyr::filter(!auto_apply) |>
     dplyr::transmute(
-      cluster_key, suggested_canonical, sponsor_labels, aliases_sample,
-      sources, sponsor_types, score, evidence, review_bucket
+      cluster_key,
+      entity_key = NA_character_,
+      suggested_canonical,
+      sponsor_labels,
+      aliases_sample,
+      sources,
+      sponsor_types,
+      score,
+      evidence,
+      confidence_bucket = "review",
+      blocked_reason = dplyr::case_when(
+        !compatible_types ~ "sponsor types differ",
+        !acronym_safe ~ "short acronym guard failed",
+        TRUE ~ NA_character_
+      ),
+      review_bucket,
+      applied = FALSE
     ) |>
     dplyr::arrange(review_bucket, cluster_key)
 
-  readr::write_csv(review, review_path)
+  review_out <- dplyr::bind_rows(seed_review, review) |>
+    ensure_final_review_schema() |>
+    dplyr::arrange(review_bucket, cluster_key)
+
+  readr::write_csv(review_out, review_path)
   message(sprintf(
     "Wrote %d final sponsor canonical review clusters to %s",
-    nrow(review), review_path
+    nrow(review_out), review_path
   ))
 
   if (nrow(auto_map) == 0L) return(combined)
@@ -484,11 +799,16 @@ apply_auto_final_canonicalization <- function(combined, review_path) {
     )
 }
 
-apply_final_canonicalization <- function(combined, map_path, review_path) {
+apply_final_canonicalization <- function(combined, map_path, family_map_path, review_path) {
   before_labels <- dplyr::n_distinct(combined$sponsor_clean)
 
   combined <- apply_explicit_final_map(combined, map_path)
-  combined <- apply_auto_final_canonicalization(combined, review_path)
+  family_result <- apply_final_family_canonicalization(combined, family_map_path)
+  combined <- apply_auto_final_canonicalization(
+    family_result$combined,
+    review_path,
+    seed_review = family_result$review
+  )
   combined <- combined |>
     dplyr::arrange(alias_clean, sponsor_clean) |>
     dplyr::distinct(alias_clean, sponsor_clean, .keep_all = TRUE)
@@ -1219,6 +1539,7 @@ message(sprintf("Combined index: %d total alias entries", nrow(combined)))
 combined <- apply_final_canonicalization(
   combined,
   map_path = OUT_FINAL_MAP,
+  family_map_path = OUT_FINAL_FAMILY_MAP,
   review_path = OUT_FINAL_REVIEW
 )
 

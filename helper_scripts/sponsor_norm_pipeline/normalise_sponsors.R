@@ -47,6 +47,17 @@ clean_sponsor_alias <- function(x) {
   ")\\b"
 )
 
+.country_tail_rx <- paste0(
+  "\\b(",
+  paste(c(
+    "the netherlands", "netherlands", "nederland", "belgium", "france",
+    "germany", "united kingdom", "uk", "united states", "usa",
+    "switzerland", "austria", "spain", "italy", "denmark", "sweden",
+    "norway", "finland"
+  ), collapse = "|"),
+  ")$"
+)
+
 .rd_rx <- paste0(
   "\\b(",
   paste(c(
@@ -57,9 +68,220 @@ clean_sponsor_alias <- function(x) {
   ")\\b"
 )
 
+.department_rx <- paste0(
+  "\\b(",
+  paste(c(
+    "department", "dept", "departement", "department of", "dept of",
+    "service", "division", "unit", "section", "clinic", "klinik",
+    "laboratory", "laboratories", "lab", "abteilung", "afdeling",
+    "heilkunde", "dermatology", "neurology", "endocrinology",
+    "pharmacy", "pharmacology", "toxicology"
+  ), collapse = "|"),
+  ")\\b"
+)
+
+.institution_anchor_rx <- paste0(
+  "\\b(",
+  paste(c(
+    "university", "universiteit", "universitair", "universitair[e]?",
+    "medical", "medisch", "medische", "hospital", "hospitals",
+    "centre", "center", "centrum", "klinikum", "clinic", "umc",
+    "chu", "chru", "institute", "institut", "istituto", "ospedale",
+    "policlinico", "stichting"
+  ), collapse = "|"),
+  ")\\b"
+)
+
+is_department_label <- function(x) {
+  stringr::str_detect(
+    clean_sponsor_alias(dplyr::coalesce(as.character(x), "")),
+    stringr::regex(.department_rx, ignore_case = TRUE)
+  )
+}
+
+strip_department_suffix <- function(x) {
+  s <- clean_sponsor_alias(x)
+  out <- stringr::str_remove(s, stringr::regex(
+    paste0("\\s+", .department_rx, "\\b.*$"),
+    ignore_case = TRUE
+  ))
+  out <- stringr::str_squish(out)
+  dplyr::if_else(nchar(out) >= 3L & out != s, out, NA_character_)
+}
+
+expand_institution_parent_candidates <- function(x) {
+  base <- clean_sponsor_alias(x)
+  base <- base |>
+    stringr::str_remove_all(stringr::regex(.address_rx, ignore_case = TRUE)) |>
+    stringr::str_remove(stringr::regex(paste0("\\s+", .country_tail_rx), ignore_case = TRUE)) |>
+    stringr::str_remove(stringr::regex("^\\s*(the\\s+)?")) |>
+    stringr::str_squish()
+
+  if (is.na(base) || !nzchar(base)) return(character())
+
+  centre_variants <- unique(c(
+    base,
+    stringr::str_replace_all(base, "\\bcenter\\b", "centre"),
+    stringr::str_replace_all(base, "\\bcentre\\b", "center")
+  ))
+
+  st_variants <- unique(c(
+    centre_variants,
+    stringr::str_replace_all(centre_variants, "\\bsint\\b", "st"),
+    stringr::str_replace_all(centre_variants, "\\bsaint\\b", "st")
+  ))
+
+  umc_variants <- character()
+  for (candidate in st_variants) {
+    umc_variants <- c(
+      umc_variants,
+      stringr::str_replace(
+        candidate,
+        "^university medical cent(?:er|re)\\s+(.+)$",
+        "umc \\1"
+      ),
+      stringr::str_replace(
+        candidate,
+        "^universitair medisch centrum\\s+(.+)$",
+        "umc \\1"
+      ),
+      stringr::str_replace(
+        candidate,
+        "^(.+)\\s+universitair medisch centrum$",
+        "\\1 umc"
+      )
+    )
+  }
+
+  # Many medical-centre aliases are maintained at the compact UMC level
+  # rather than with department/city suffixes.
+  compact_umc <- purrr::map_chr(
+    stringr::str_match(st_variants, "^([a-z0-9-]+)\\s+umc\\b")[, 2],
+    ~ if (!is.na(.x)) paste(.x, "umc") else NA_character_
+  )
+
+  unique(stats::na.omit(c(st_variants, umc_variants, compact_umc)))
+}
+
+department_parent_candidates <- function(raw) {
+  raw_chr <- dplyr::coalesce(as.character(raw), "")
+  parts <- unlist(stringr::str_split(raw_chr, "\\s*[,;/]\\s*"))
+  parts <- clean_sponsor_alias(parts)
+  parts <- parts[
+    nchar(parts) >= 3L &
+      stringr::str_detect(parts, stringr::regex(.institution_anchor_rx, ignore_case = TRUE))
+  ]
+
+  clean <- clean_sponsor_alias(raw_chr)
+  suffix_stripped <- strip_department_suffix(raw_chr)
+
+  # Handles "Dept of X, Example UMC" after comma splitting, and also cases
+  # without punctuation such as "Afdeling heelkunde Universitair Medisch...".
+  anchor_tail <- stringr::str_match(clean, stringr::regex(
+    paste0(".*?(", .institution_anchor_rx, ".*)$"),
+    ignore_case = TRUE
+  ))[, 2]
+
+  parents <- unique(stats::na.omit(c(parts, suffix_stripped, anchor_tail)))
+  unique(stats::na.omit(c(
+    parents,
+    unlist(purrr::map(parents, expand_institution_parent_candidates), use.names = FALSE)
+  )))
+}
+
+# ── Entity-family helpers ─────────────────────────────────────────────────────
+
+.entity_generic_tokens <- c(
+  "the", "of", "for", "and", "in", "at",
+  "university", "universiteit", "universitair", "universitaire",
+  "universite", "universidad", "universidade", "universitat",
+  "medical", "medisch", "medische", "medicine", "hospital", "hospitals",
+  "centre", "center", "centrum", "clinic", "kliniek", "klinikum",
+  "umc", "amc",
+  "institute", "institut", "istituto", "research", "science", "sciences",
+  "department", "dept", "departement", "division", "unit", "section",
+  "laboratory", "laboratories", "lab", "service", "services", "stichting",
+  "foundation", "fundacion", "fundacao", "fondation", "fondazione",
+  "group", "groupe", "trust", "nhs", "st", "aor", "ag", "gmbh", "bv", "nv",
+  "ltd", "limited", "inc", "corp", "corporation", "company", "co"
+)
+
+normalise_entity_text <- function(x) {
+  clean_sponsor_alias(x) |>
+    stringr::str_replace_all("\\bsint\\b|\\bsaint\\b", "st") |>
+    stringr::str_replace_all("\\bcenters?\\b", "centre") |>
+    stringr::str_replace_all("\\bcentres?\\b", "centre") |>
+    stringr::str_replace_all("\\bcentrum\\b", "centre") |>
+    stringr::str_squish()
+}
+
+sponsor_entity_key_one <- function(x) {
+  s <- normalise_entity_text(x)
+  if (is.na(s) || !nzchar(s)) return(NA_character_)
+
+  s <- s |>
+    stringr::str_remove_all(stringr::regex(.address_rx, ignore_case = TRUE)) |>
+    stringr::str_remove(stringr::regex(paste0("\\s+", .country_tail_rx), ignore_case = TRUE)) |>
+    stringr::str_remove_all(stringr::regex(.legal_suffixes_rx, ignore_case = TRUE)) |>
+    stringr::str_remove_all(stringr::regex(.department_rx, ignore_case = TRUE)) |>
+    stringr::str_replace_all("[^a-z0-9]+", " ") |>
+    stringr::str_squish()
+
+  if (!nzchar(s)) return(NA_character_)
+  toks <- stringr::str_split(s, "\\s+")[[1L]]
+  toks <- toks[nchar(toks) >= 3L & !toks %in% .entity_generic_tokens]
+  if (length(toks) == 0L) return(NA_character_)
+
+  paste(unique(toks), collapse = " ")
+}
+
+sponsor_entity_key <- function(x) {
+  x <- as.character(x)
+  if (length(x) == 0L) return(character())
+  purrr::map_chr(x, sponsor_entity_key_one)
+}
+
+sponsor_combined_parts <- function(x) {
+  parts <- unlist(stringr::str_split(dplyr::coalesce(as.character(x), ""), "\\s*/\\s*|\\s*;\\s*"))
+  parts <- parts[!is.na(parts) & nzchar(stringr::str_squish(parts))]
+  parts
+}
+
+sponsor_is_cross_entity_combined_one <- function(x) {
+  parts <- sponsor_combined_parts(x)
+  if (length(parts) < 2L) return(FALSE)
+  keys <- sponsor_entity_key(parts)
+  keys <- keys[!is.na(keys) & nzchar(keys)]
+  length(keys) != length(parts) || dplyr::n_distinct(keys) > 1L
+}
+
+sponsor_is_cross_entity_combined <- function(x) {
+  x <- as.character(x)
+  if (length(x) == 0L) return(logical())
+  purrr::map_lgl(x, sponsor_is_cross_entity_combined_one)
+}
+
+containment_tokens <- function(x) {
+  s <- normalise_entity_text(x) |>
+    stringr::str_replace_all("[^a-z0-9]+", " ") |>
+    stringr::str_squish()
+  if (is.na(s) || !nzchar(s)) return(character())
+  stringr::str_split(s, "\\s+")[[1L]]
+}
+
+token_sequence_contains <- function(haystack, needle) {
+  if (length(needle) == 0L || length(haystack) < length(needle)) return(FALSE)
+  starts <- seq_len(length(haystack) - length(needle) + 1L)
+  any(purrr::map_lgl(starts, function(i) {
+    identical(haystack[i:(i + length(needle) - 1L)], needle)
+  }))
+}
+
 suggest_sponsor_clean <- function(x) {
   x0 <- clean_sponsor_alias(x)
-  s  <- x0 |>
+  dept_parent <- department_parent_candidates(x)
+  x_base <- if (length(dept_parent) > 0L) dept_parent[[1L]] else x0
+  s  <- x_base |>
     stringr::str_remove_all(stringr::regex(.address_rx,    ignore_case = TRUE)) |>
     stringr::str_squish() |>
     stringr::str_remove_all(stringr::regex(.legal_suffixes_rx, ignore_case = TRUE)) |>
@@ -84,6 +306,8 @@ make_sponsor_candidates <- function(x) {
     stringr::str_remove_all(stringr::regex(.rd_rx, ignore_case = TRUE)) |>
     stringr::str_squish()
 
+  dept_candidates <- department_parent_candidates(x)
+
   # Strip parenthetical content from the RAW string before cleaning —
   # clean_sponsor_alias() converts ( ) to spaces so the paren regex needs
   # to run first. Catches "Erasmus MC Rotterdam (Erasmus MC)" →
@@ -107,7 +331,7 @@ make_sponsor_candidates <- function(x) {
   first_two  <- paste(utils::head(clean_toks, 2), collapse = " ")
 
   candidates <- unique(stats::na.omit(c(
-    x0, x_no_addr, x_no_paren, x_no_legal, x_no_rd,
+    x0, x_no_addr, x_no_paren, x_no_legal, x_no_rd, dept_candidates,
     first_tokens, first_word, first_two, last_token
   )))
   candidates[nchar(candidates) >= 2]
@@ -167,6 +391,78 @@ classify_sponsor_type <- function(x) {
   }))
 }
 
+# ── Alias target precomputation ───────────────────────────────────────────────
+
+prepare_sponsor_alias_targets <- function(aliases) {
+  if (nrow(aliases) == 0L) {
+    empty <- tibble::tibble()
+    return(list(containment = empty, containment_token_index = empty, fuzzy = empty))
+  }
+
+  containment <- aliases |>
+    dplyr::filter(
+      !is.na(alias_clean), !is.na(sponsor_clean),
+      confidence_prior >= 0.95,
+      nchar(alias_clean) >= 5L,
+      !alias_clean %in% .fuzzy_block_tokens
+    ) |>
+    dplyr::mutate(
+      alias_tokens = purrr::map(alias_clean, containment_tokens),
+      n_alias_tokens = purrr::map_int(alias_tokens, length),
+      signal_tokens = purrr::map(alias_tokens, function(toks) {
+        toks[nchar(toks) >= 4L & !toks %in% c(.fuzzy_block_tokens, .entity_generic_tokens)]
+      }),
+      cross_entity = sponsor_is_cross_entity_combined(alias_clean) |
+        sponsor_is_cross_entity_combined(sponsor_clean),
+      has_signal_token = purrr::map_lgl(signal_tokens, ~ length(.x) > 0L)
+    ) |>
+    dplyr::filter(
+      !cross_entity,
+      has_signal_token,
+      n_alias_tokens >= 2L | nchar(alias_clean) >= 7L
+    ) |>
+    dplyr::mutate(containment_id = dplyr::row_number())
+
+  containment_token_index <- containment |>
+    dplyr::select(containment_id, signal_tokens) |>
+    tidyr::unnest_longer(signal_tokens, values_to = "signal_token") |>
+    dplyr::filter(!is.na(signal_token), signal_token != "") |>
+    dplyr::distinct(signal_token, containment_id)
+
+  label_targets <- aliases |>
+    dplyr::filter(!is.na(sponsor_clean)) |>
+    dplyr::transmute(
+      target_label = sponsor_clean,
+      target_kind = "sponsor_clean",
+      sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, source
+    ) |>
+    dplyr::distinct(target_label, sponsor_clean, .keep_all = TRUE)
+
+  alias_targets <- aliases |>
+    dplyr::filter(
+      !is.na(alias_clean), !is.na(sponsor_clean),
+      confidence_prior >= 0.95,
+      nchar(alias_clean) >= 6L,
+      !alias_clean %in% .fuzzy_block_tokens
+    ) |>
+    dplyr::transmute(
+      target_label = alias_clean,
+      target_kind = "alias_clean",
+      sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, source
+    ) |>
+    dplyr::distinct(target_label, sponsor_clean, .keep_all = TRUE)
+
+  fuzzy <- dplyr::bind_rows(label_targets, alias_targets) |>
+    dplyr::filter(!is.na(target_label), nchar(target_label) >= 6L) |>
+    dplyr::mutate(fuzzy_key = substr(target_label, 1L, 1L))
+
+  list(
+    containment = containment,
+    containment_token_index = containment_token_index,
+    fuzzy = fuzzy
+  )
+}
+
 # ── Config loader ─────────────────────────────────────────────────────────────
 
 load_sponsor_configs <- function(
@@ -190,8 +486,12 @@ load_sponsor_configs <- function(
   } else {
     dplyr::bind_rows(read_csv_safe(alias_seed), read_csv_safe(alias_llm))
   }
+  targets <- prepare_sponsor_alias_targets(aliases)
   list(
     aliases   = aliases,
+    containment_targets = targets$containment,
+    containment_token_index = targets$containment_token_index,
+    fuzzy_targets = targets$fuzzy,
     overrides = read_csv_safe(file.path(config_dir, "manual_sponsor_overrides.csv")),
     negatives = read_csv_safe(file.path(config_dir, "sponsor_negative_aliases.csv"))
   )
@@ -265,6 +565,16 @@ check_alias <- function(candidates, cfg) {
   # because first_two = "aarhus university" also hits the university alias).
   top_hits  <- hits |> dplyr::filter(match_score == top_score)
 
+  # Department-/unit-level labels should not become final sponsor labels when
+  # a parent organisation is also matched by a stripped candidate.
+  non_department_hits <- hits |>
+    dplyr::filter(!is_department_label(sponsor_clean))
+  if (nrow(non_department_hits) > 0L && any(is_department_label(top_hits$sponsor_clean))) {
+    hits <- non_department_hits
+    top_score <- hits$match_score[1]
+    top_hits <- hits |> dplyr::filter(match_score == top_score)
+  }
+
   if (dplyr::n_distinct(top_hits$sponsor_clean) > 1) {
     return(.result(
       NA_character_, NA_character_, NA_character_, NA_character_,
@@ -287,12 +597,81 @@ check_alias <- function(candidates, cfg) {
   )
 }
 
+check_containment <- function(raw_clean, candidates, cfg) {
+  if (nrow(cfg$aliases) == 0) return(NULL)
+
+  candidate_texts <- unique(stats::na.omit(c(raw_clean, candidates)))
+  candidate_texts <- candidate_texts[
+    nchar(candidate_texts) >= 8L &
+      !sponsor_is_cross_entity_combined(candidate_texts)
+  ]
+  if (length(candidate_texts) == 0L) return(NULL)
+
+  candidate_token_sets <- purrr::map(candidate_texts, containment_tokens)
+  candidate_signal_tokens <- unique(unlist(purrr::map(candidate_token_sets, function(toks) {
+    toks[nchar(toks) >= 4L & !toks %in% c(.fuzzy_block_tokens, .entity_generic_tokens)]
+  }), use.names = FALSE))
+  if (length(candidate_signal_tokens) == 0L) return(NULL)
+
+  target_ids <- cfg$containment_token_index |>
+    dplyr::filter(signal_token %in% candidate_signal_tokens) |>
+    dplyr::pull(containment_id) |>
+    unique()
+  if (length(target_ids) == 0L) return(NULL)
+
+  targets <- cfg$containment_targets |>
+    dplyr::filter(containment_id %in% target_ids)
+
+  if (nrow(targets) == 0L) return(NULL)
+
+  matches <- targets |>
+    dplyr::mutate(
+      contains = purrr::map_lgl(alias_tokens, function(needle) {
+        any(purrr::map_lgl(
+          candidate_token_sets,
+          token_sequence_contains,
+          needle = needle
+        ))
+      })
+    ) |>
+    dplyr::filter(contains) |>
+    dplyr::mutate(
+      match_score = confidence_prior * 100,
+      alias_len = nchar(alias_clean)
+    ) |>
+    dplyr::arrange(dplyr::desc(match_score), dplyr::desc(alias_len))
+
+  if (nrow(matches) == 0L) return(NULL)
+
+  top_score <- matches$match_score[[1L]]
+  top_hits <- matches |>
+    dplyr::filter(match_score == top_score) |>
+    dplyr::filter(alias_len == max(alias_len))
+
+  if (dplyr::n_distinct(top_hits$sponsor_clean) > 1L) {
+    return(.result(
+      NA_character_, NA_character_, NA_character_, NA_character_,
+      status = "review", score = top_score,
+      source = paste(unique(top_hits$source), collapse = "|"),
+      reason = "ambiguous high-confidence alias containment"
+    ))
+  }
+
+  hit <- top_hits |> dplyr::slice(1)
+  .result(
+    hit$sponsor_clean, hit$sponsor_parent,
+    hit$sponsor_group, hit$sponsor_type,
+    status = if (top_score >= 90) "accepted" else "review",
+    score = top_score,
+    source = paste0("containment:", hit$source),
+    reason = paste0("alias containment: '", hit$alias_clean, "' → '", hit$sponsor_clean, "'")
+  )
+}
+
 check_fuzzy <- function(candidates, cfg) {
   if (nrow(cfg$aliases) == 0) return(NULL)
 
-  targets <- cfg$aliases |>
-    dplyr::filter(!is.na(sponsor_clean)) |>
-    dplyr::distinct(sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, source)
+  targets <- cfg$fuzzy_targets
 
   if (nrow(targets) == 0) return(NULL)
 
@@ -305,11 +684,15 @@ check_fuzzy <- function(candidates, cfg) {
   best_row   <- NULL
 
   for (cand in eligible) {
-    sims <- 1 - stringdist::stringdist(cand, targets$sponsor_clean, method = "jw")
+    target_subset <- targets |>
+      dplyr::filter(fuzzy_key == substr(cand, 1L, 1L))
+    if (nrow(target_subset) == 0L) next
+
+    sims <- 1 - stringdist::stringdist(cand, target_subset$target_label, method = "jw")
     idx  <- which.max(sims)
     if (sims[idx] > best_score) {
       best_score <- sims[idx]
-      best_row   <- targets[idx, , drop = FALSE]
+      best_row   <- target_subset[idx, , drop = FALSE]
     }
   }
 
@@ -321,7 +704,10 @@ check_fuzzy <- function(candidates, cfg) {
     best_row$sponsor_group, best_row$sponsor_type,
     status = "review", score = score,
     source = paste0("fuzzy:", best_row$source),
-    reason = paste0("fuzzy match (jw similarity ", score, "%)")
+    reason = paste0(
+      "fuzzy ", best_row$target_kind, " match to '", best_row$target_label,
+      "' (jw similarity ", score, "%)"
+    )
   )
 }
 
@@ -344,6 +730,9 @@ normalise_one <- function(raw, cfg, allow_fuzzy = TRUE) {
   r <- check_alias(candidates, cfg)
   if (!is.null(r)) return(.return_sponsor(raw, r))
 
+  r <- check_containment(raw_clean, candidates, cfg)
+  if (!is.null(r)) return(.return_sponsor(raw, r))
+
   if (allow_fuzzy && .fuzzy_eligible(candidates)) {
     r <- check_fuzzy(candidates, cfg)
     if (!is.null(r)) return(.return_sponsor(raw, r))
@@ -363,6 +752,16 @@ normalise_sponsors <- function(raw_vec,
                                allow_fuzzy = TRUE) {
   `%||%` <- function(a, b) if (!is.null(a)) a else b
   cfg         <- configs %||% load_sponsor_configs(config_dir)
+  if (
+    is.null(cfg$containment_targets) ||
+      is.null(cfg$containment_token_index) ||
+      is.null(cfg$fuzzy_targets)
+  ) {
+    targets <- prepare_sponsor_alias_targets(cfg$aliases)
+    cfg$containment_targets <- targets$containment
+    cfg$containment_token_index <- targets$containment_token_index
+    cfg$fuzzy_targets <- targets$fuzzy
+  }
   unique_vals <- unique(as.character(raw_vec))
   unique_vals <- unique_vals[!is.na(unique_vals) & nzchar(trimws(unique_vals))]
 
