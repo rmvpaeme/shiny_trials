@@ -3,15 +3,16 @@
 #
 # Sources (priority order):
 #   1. manual_sponsor_aliases.csv  (seed, confidence 1.00) — always included
-#   2. EMA EPAR Marketing Authorisation Holders (confidence 0.85) — MAH name variants
+#   2. sponsor_llm_reviewed.csv (accepted queue decisions, confidence 1.00)
+#   3. EMA EPAR Marketing Authorisation Holders (confidence 0.85) — MAH name variants
 #      for sponsors already in the manual alias table
-#   3. ROR academic/hospital name variants (confidence 0.75, --no-ror to skip)
-#   4. CTIS businessKey EMA org IDs (confidence 0.95, --no-businesskey to skip)
+#   4. ROR academic/hospital name variants (confidence 0.75, --no-ror to skip)
+#   5. CTIS businessKey EMA org IDs (confidence 0.95, --no-businesskey to skip)
 #      Ground-truth aliases: EMA's own organisation registry links name variants.
-#   5. EUCTR email domain (confidence 0.85, --no-email to skip)
+#   6. EUCTR email domain (confidence 0.85, --no-email to skip)
 #      Sponsors sharing a corporate email domain → same canonical.
 #      CRO / generic / NHS-shared domains are blocked.
-#   6. Postcode + country + JW name similarity (confidence 0.70, --no-location to skip)
+#   7. Postcode + country + JW name similarity (confidence 0.70, --no-location to skip)
 #      Same registered postcode + similar name → institution alias candidate.
 #      Only proposed when one name already resolves to a known canonical.
 #
@@ -36,6 +37,7 @@
 #
 # Outputs:
 #   config/sponsor_norm_pipeline/sponsor_alias_index.csv       full merged alias table
+#   config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv      accepted queue decisions
 #   config/sponsor_norm_pipeline/sponsor_ambiguous_aliases.csv aliases → multiple sponsors
 #   config/sponsor_norm_pipeline/new_sponsor_candidates.csv    unmatched for manual review
 
@@ -48,6 +50,7 @@ suppressPackageStartupMessages({
   library(readr)
   library(purrr)
   library(tibble)
+  library(tidyr)
 })
 
 script_path <- local({
@@ -76,15 +79,427 @@ no_location     <- "--no-location"     %in% args
 
 SNP          <- project_path("config", "sponsor_norm_pipeline")
 OUT_INDEX    <- file.path(SNP, "sponsor_alias_index.csv")
+OUT_LLM      <- file.path(SNP, "sponsor_llm_reviewed.csv")
 OUT_AMBIG    <- file.path(SNP, "sponsor_ambiguous_aliases.csv")
 OUT_NEW      <- file.path(SNP, "new_sponsor_candidates.csv")
 OUT_ORGS     <- file.path(SNP, "ctis_org_candidates.csv")
+OUT_FINAL_MAP    <- file.path(SNP, "final_sponsor_canonical_map.csv")
+OUT_FINAL_REVIEW <- file.path(SNP, "final_sponsor_canonical_review.csv")
 
 # ── Load normaliser helpers ───────────────────────────────────────────────────
 source(
   project_path("helper_scripts", "sponsor_norm_pipeline", "normalise_sponsors.R"),
   local = FALSE
 )
+
+null_coalesce <- function(a, b) {
+  if (!is.null(a)) a else b
+}
+
+prefer_llm_reviewed <- function(rows) {
+  rows |>
+    dplyr::group_by(alias_clean) |>
+    dplyr::mutate(has_llm_reviewed = any(source == "llm_reviewed")) |>
+    dplyr::filter(!(has_llm_reviewed & source == "bulk_reviewed")) |>
+    dplyr::ungroup() |>
+    dplyr::select(-has_llm_reviewed)
+}
+
+collapse_text <- function(x) {
+  x |>
+    stringi::stri_trans_general("Latin-ASCII") |>
+    stringr::str_to_lower() |>
+    stringr::str_replace_all("&", " and ") |>
+    stringr::str_replace_all("[^a-z0-9]+", " ") |>
+    stringr::str_squish()
+}
+
+final_exact_key <- function(x) {
+  collapse_text(x) |>
+    stringr::str_replace_all("\\s+", "")
+}
+
+final_stripped_key <- function(x) {
+  s <- collapse_text(x)
+  s <- stringr::str_remove_all(s, stringr::regex(paste0(
+    "\\b(",
+    paste(c(
+      "the", "of", "for", "and",
+      "inc", "incorporated", "corp", "corporation", "company", "co",
+      "ltd", "limited", "llc", "plc", "ag", "gmbh", "kg", "kgaa",
+      "bv", "nv", "sa", "sas", "srl", "spa", "ab", "oy", "pte", "kk",
+      "group", "groupe", "foundation", "fundacion", "fundacao",
+      "fondation", "fondazione", "stichting"
+    ), collapse = "|"),
+    ")\\b"
+  ), ignore_case = TRUE))
+  stringr::str_squish(s)
+}
+
+normalise_final_type <- function(x) {
+  x <- as.character(x)
+  x[is.na(x) | x == "" | x == "NA" | x == "unknown"] <- NA_character_
+  x
+}
+
+first_non_missing <- function(x) {
+  x <- as.character(x)
+  x <- x[!is.na(x) & x != "" & x != "NA"]
+  if (length(x) == 0L) NA_character_ else x[[1L]]
+}
+
+final_types_compatible <- function(types) {
+  length(unique(stats::na.omit(normalise_final_type(types)))) <= 1L
+}
+
+is_short_acronym_label <- function(label) {
+  clean <- stringr::str_replace_all(label, "[^A-Za-z0-9]", "")
+  nchar(clean) >= 2L && nchar(clean) <= 5L && clean == toupper(clean)
+}
+
+short_acronym_safe <- function(labels) {
+  acronyms <- labels[purrr::map_lgl(labels, is_short_acronym_label)]
+  if (length(acronyms) == 0L) return(TRUE)
+  text <- collapse_text(paste(labels, collapse = " "))
+  all(purrr::map_lgl(acronyms, function(acr) {
+    stringr::str_detect(text, paste0("\\b", collapse_text(acr), "\\b"))
+  }))
+}
+
+review_bucket_for_key <- function(key) {
+  first <- stringr::str_to_upper(substr(key, 1L, 1L))
+  dplyr::case_when(
+    first >= "A" & first <= "F" ~ "A-F",
+    first >= "G" & first <= "L" ~ "G-L",
+    first >= "M" & first <= "R" ~ "M-R",
+    first >= "S" & first <= "Z" ~ "S-Z",
+    TRUE ~ "other"
+  )
+}
+
+pick_final_canonical <- function(labels, combined) {
+  source_priority <- c(
+    manual = 1, llm_reviewed = 2, review_queue = 3, bulk_reviewed = 4,
+    ctis_businesskey = 5, epar_mah = 6, ror = 7
+  )
+  candidates <- combined |>
+    dplyr::filter(sponsor_clean %in% labels) |>
+    dplyr::mutate(
+      source_priority = dplyr::coalesce(source_priority[source], 99),
+      label_len = nchar(sponsor_clean)
+    ) |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      source_priority = min(source_priority, na.rm = TRUE),
+      label_len = min(label_len, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(source_priority, label_len, sponsor_clean)
+  candidates$sponsor_clean[[1L]]
+}
+
+apply_explicit_final_map <- function(combined, map_path) {
+  empty_map <- tibble::tibble(
+    sponsor_clean_from = character(),
+    sponsor_clean_to = character(),
+    sponsor_parent_to = character(),
+    sponsor_group_to = character(),
+    sponsor_type_to = character(),
+    reason = character()
+  )
+
+  final_map <- if (file.exists(map_path)) {
+    readr::read_csv(map_path, show_col_types = FALSE)
+  } else {
+    empty_map
+  }
+
+  required <- names(empty_map)
+  missing_cols <- setdiff(required, names(final_map))
+  if (length(missing_cols)) {
+    stop(
+      "Final sponsor canonical map is missing columns: ",
+      paste(missing_cols, collapse = ", ")
+    )
+  }
+
+  final_map <- final_map |>
+    dplyr::select(dplyr::all_of(required)) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::everything(), ~ stringr::str_squish(as.character(.x))),
+      dplyr::across(
+        c(sponsor_parent_to, sponsor_group_to, sponsor_type_to, reason),
+        ~ dplyr::na_if(.x, "")
+      )
+    ) |>
+    dplyr::filter(
+      !is.na(sponsor_clean_from), sponsor_clean_from != "",
+      !is.na(sponsor_clean_to), sponsor_clean_to != "",
+      sponsor_clean_from != sponsor_clean_to
+    )
+
+  if (nrow(final_map) == 0L) return(combined)
+
+  dup_from <- final_map |>
+    dplyr::count(sponsor_clean_from, name = "n") |>
+    dplyr::filter(n > 1L)
+  if (nrow(dup_from) > 0L) {
+    stop(
+      "Final sponsor canonical map has duplicate sponsor_clean_from values: ",
+      paste(dup_from$sponsor_clean_from, collapse = ", ")
+    )
+  }
+
+  to_lookup <- stats::setNames(final_map$sponsor_clean_to, final_map$sponsor_clean_from)
+  resolve_target <- function(label) {
+    seen <- character()
+    current <- label
+    while (current %in% names(to_lookup)) {
+      if (current %in% seen) {
+        stop(
+          "Final sponsor canonical map contains a cycle: ",
+          paste(c(seen, current), collapse = " -> ")
+        )
+      }
+      seen <- c(seen, current)
+      current <- to_lookup[[current]]
+    }
+    current
+  }
+
+  resolved <- tibble::tibble(
+    sponsor_clean = unique(combined$sponsor_clean),
+    sponsor_clean_final = purrr::map_chr(unique(combined$sponsor_clean), resolve_target)
+  )
+
+  map_meta <- final_map |>
+    dplyr::transmute(
+      sponsor_clean = sponsor_clean_from,
+      sponsor_clean_final = sponsor_clean_to,
+      sponsor_parent_map = sponsor_parent_to,
+      sponsor_group_map = sponsor_group_to,
+      sponsor_type_map = sponsor_type_to
+    )
+
+  final_defaults <- combined |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      sponsor_parent_default = first_non_missing(sponsor_parent),
+      sponsor_group_default = first_non_missing(sponsor_group),
+      sponsor_type_default = first_non_missing(sponsor_type),
+      .groups = "drop"
+    ) |>
+    dplyr::rename(sponsor_clean_final = sponsor_clean)
+
+  combined |>
+    dplyr::left_join(resolved, by = "sponsor_clean") |>
+    dplyr::left_join(map_meta, by = c("sponsor_clean", "sponsor_clean_final")) |>
+    dplyr::left_join(final_defaults, by = "sponsor_clean_final") |>
+    dplyr::mutate(
+      sponsor_clean = sponsor_clean_final,
+      sponsor_parent = dplyr::coalesce(sponsor_parent_map, sponsor_parent_default, sponsor_parent),
+      sponsor_group = dplyr::coalesce(sponsor_group_map, sponsor_group_default, sponsor_group),
+      sponsor_type = dplyr::coalesce(sponsor_type_map, sponsor_type_default, sponsor_type)
+    ) |>
+    dplyr::select(
+      alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+      sponsor_type, alias_type, source, confidence_prior
+    )
+}
+
+build_final_groups <- function(combined) {
+  label_stats <- combined |>
+    dplyr::filter(!is.na(sponsor_clean), sponsor_clean != "") |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      sponsor_types = paste(sort(unique(stats::na.omit(sponsor_type))), collapse = "|"),
+      sources = paste(sort(unique(stats::na.omit(source))), collapse = "|"),
+      aliases_sample = paste(utils::head(sort(unique(alias_clean)), 8L), collapse = "|"),
+      .groups = "drop"
+    )
+
+  exact_groups <- label_stats |>
+    dplyr::mutate(cluster_key = purrr::map_chr(sponsor_clean, final_exact_key)) |>
+    dplyr::filter(nchar(cluster_key) >= 3L) |>
+    dplyr::group_by(cluster_key) |>
+    dplyr::filter(dplyr::n_distinct(sponsor_clean) > 1L) |>
+    dplyr::mutate(evidence = "case/accent/punctuation variant", score = 100) |>
+    dplyr::ungroup()
+
+  stripped_groups <- label_stats |>
+    dplyr::mutate(cluster_key = purrr::map_chr(sponsor_clean, final_stripped_key)) |>
+    dplyr::filter(nchar(cluster_key) >= 3L) |>
+    dplyr::group_by(cluster_key) |>
+    dplyr::filter(dplyr::n_distinct(sponsor_clean) > 1L) |>
+    dplyr::mutate(evidence = "stripped legal/group/foundation tokens", score = 98) |>
+    dplyr::ungroup()
+
+  fuzzy_groups <- build_final_fuzzy_groups(label_stats)
+
+  dplyr::bind_rows(exact_groups, stripped_groups, fuzzy_groups) |>
+    dplyr::distinct(cluster_key, sponsor_clean, .keep_all = TRUE)
+}
+
+build_final_fuzzy_groups <- function(label_stats) {
+  labels <- label_stats$sponsor_clean
+  keys <- purrr::map_chr(labels, collapse_text)
+  n <- length(labels)
+  if (n < 2L) {
+    return(dplyr::slice(label_stats, 0) |>
+      dplyr::mutate(cluster_key = character(), evidence = character(), score = numeric()))
+  }
+
+  parent <- seq_len(n)
+  find <- function(x) {
+    r <- x
+    while (parent[[r]] != r) r <- parent[[r]]
+    r
+  }
+
+  blocks <- split(seq_len(n), substr(keys, 1L, 1L))
+  for (idx in blocks) {
+    if (length(idx) < 2L) next
+    for (a in seq_len(length(idx) - 1L)) {
+      i <- idx[[a]]
+      for (b in (a + 1L):length(idx)) {
+        j <- idx[[b]]
+        if (abs(nchar(keys[[i]]) - nchar(keys[[j]])) > 3L) next
+        if (!short_acronym_safe(c(labels[[i]], labels[[j]]))) next
+        sim <- stringdist::stringsim(keys[[i]], keys[[j]], method = "jw", p = 0.1)
+        if (is.na(sim) || sim < 0.985) next
+        ri <- find(i); rj <- find(j)
+        if (ri != rj) parent[[rj]] <- ri
+      }
+    }
+  }
+
+  cluster <- vapply(seq_len(n), find, integer(1L))
+  multi <- names(which(table(cluster) > 1L))
+  if (length(multi) == 0L) {
+    return(dplyr::slice(label_stats, 0) |>
+      dplyr::mutate(cluster_key = character(), evidence = character(), score = numeric()))
+  }
+
+  label_stats |>
+    dplyr::mutate(
+      cluster = as.character(cluster),
+      cluster_key = paste0("fuzzy:", cluster),
+      evidence = "very high JW label similarity",
+      score = 99
+    ) |>
+    dplyr::filter(cluster %in% multi) |>
+    dplyr::select(-cluster)
+}
+
+apply_auto_final_canonicalization <- function(combined, review_path) {
+  groups <- build_final_groups(combined)
+
+  if (nrow(groups) == 0L) {
+    readr::write_csv(tibble::tibble(
+      cluster_key = character(),
+      suggested_canonical = character(),
+      sponsor_labels = character(),
+      aliases_sample = character(),
+      sources = character(),
+      sponsor_types = character(),
+      score = numeric(),
+      evidence = character(),
+      review_bucket = character()
+    ), review_path)
+    return(combined)
+  }
+
+  group_summary <- groups |>
+    dplyr::group_by(cluster_key) |>
+    dplyr::summarise(
+      sponsor_labels = paste(sort(unique(sponsor_clean)), collapse = "|"),
+      labels_list = list(sort(unique(sponsor_clean))),
+      aliases_sample = paste(utils::head(sort(unique(unlist(strsplit(aliases_sample, "\\|", fixed = FALSE)))), 8L), collapse = "|"),
+      sources = paste(sort(unique(unlist(strsplit(sources, "\\|", fixed = FALSE)))), collapse = "|"),
+      sponsor_types = paste(sort(unique(unlist(strsplit(sponsor_types, "\\|", fixed = FALSE)))), collapse = "|"),
+      score = max(score),
+      evidence = paste(sort(unique(evidence)), collapse = "; "),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(
+      suggested_canonical = purrr::map_chr(labels_list, pick_final_canonical, combined = combined),
+      compatible_types = purrr::map_lgl(strsplit(sponsor_types, "\\|", fixed = FALSE), final_types_compatible),
+      acronym_safe = purrr::map_lgl(labels_list, short_acronym_safe),
+      auto_apply = compatible_types & acronym_safe & score >= 98,
+      review_bucket = purrr::map_chr(cluster_key, review_bucket_for_key)
+    )
+
+  auto_map <- group_summary |>
+    dplyr::filter(auto_apply) |>
+    dplyr::select(labels_list, suggested_canonical) |>
+    tidyr::unnest_longer(labels_list, values_to = "sponsor_clean") |>
+    dplyr::filter(sponsor_clean != suggested_canonical) |>
+    dplyr::distinct(sponsor_clean, suggested_canonical) |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::filter(dplyr::n_distinct(suggested_canonical) == 1L) |>
+    dplyr::ungroup()
+
+  review <- group_summary |>
+    dplyr::filter(!auto_apply) |>
+    dplyr::transmute(
+      cluster_key, suggested_canonical, sponsor_labels, aliases_sample,
+      sources, sponsor_types, score, evidence, review_bucket
+    ) |>
+    dplyr::arrange(review_bucket, cluster_key)
+
+  readr::write_csv(review, review_path)
+  message(sprintf(
+    "Wrote %d final sponsor canonical review clusters to %s",
+    nrow(review), review_path
+  ))
+
+  if (nrow(auto_map) == 0L) return(combined)
+
+  canonical_defaults <- combined |>
+    dplyr::semi_join(auto_map, by = c("sponsor_clean" = "suggested_canonical")) |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(
+      sponsor_parent_default = first_non_missing(sponsor_parent),
+      sponsor_group_default = first_non_missing(sponsor_group),
+      sponsor_type_default = first_non_missing(sponsor_type),
+      .groups = "drop"
+    ) |>
+    dplyr::rename(sponsor_clean_final = sponsor_clean)
+
+  combined |>
+    dplyr::left_join(auto_map, by = "sponsor_clean") |>
+    dplyr::mutate(
+      sponsor_clean_final = dplyr::coalesce(suggested_canonical, sponsor_clean)
+    ) |>
+    dplyr::left_join(canonical_defaults, by = "sponsor_clean_final") |>
+    dplyr::mutate(
+      sponsor_clean = sponsor_clean_final,
+      sponsor_parent = dplyr::coalesce(sponsor_parent_default, sponsor_parent),
+      sponsor_group = dplyr::coalesce(sponsor_group_default, sponsor_group),
+      sponsor_type = dplyr::coalesce(sponsor_type_default, sponsor_type)
+    ) |>
+    dplyr::select(
+      alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+      sponsor_type, alias_type, source, confidence_prior
+    )
+}
+
+apply_final_canonicalization <- function(combined, map_path, review_path) {
+  before_labels <- dplyr::n_distinct(combined$sponsor_clean)
+
+  combined <- apply_explicit_final_map(combined, map_path)
+  combined <- apply_auto_final_canonicalization(combined, review_path)
+  combined <- combined |>
+    dplyr::arrange(alias_clean, sponsor_clean) |>
+    dplyr::distinct(alias_clean, sponsor_clean, .keep_all = TRUE)
+
+  after_labels <- dplyr::n_distinct(combined$sponsor_clean)
+  message(sprintf(
+    "Final sponsor canonicalization: %d labels -> %d labels",
+    before_labels, after_labels
+  ))
+  combined
+}
 
 # ── Manual aliases (seed) ─────────────────────────────────────────────────────
 
@@ -94,9 +509,114 @@ manual <- readr::read_csv(manual_path, show_col_types = FALSE) |>
 
 message(sprintf("Manual aliases: %d entries", nrow(manual)))
 
+export_llm_reviewed <- function(queue_path, out_path) {
+  empty_llm <- tibble::tibble(
+    alias_clean      = character(),
+    sponsor_clean    = character(),
+    sponsor_parent   = character(),
+    sponsor_group    = character(),
+    sponsor_type     = character(),
+    source           = character(),
+    confidence_prior = numeric(),
+    alias_type       = character()
+  )
+
+  existing_llm <- if (file.exists(out_path)) {
+    readr::read_csv(out_path, show_col_types = FALSE) |>
+      dplyr::mutate(alias_clean = clean_sponsor_alias(alias_clean)) |>
+      dplyr::select(
+        alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+        sponsor_type, source, confidence_prior, alias_type
+      ) |>
+      prefer_llm_reviewed()
+  } else {
+    empty_llm
+  }
+
+  if (!file.exists(queue_path)) {
+    return(existing_llm)
+  }
+
+  queue <- readr::read_csv(queue_path, show_col_types = FALSE)
+  required_cols <- c(
+    "raw_sponsor", "sponsor_type", "decision", "canonical_sponsor", "comment"
+  )
+  missing_cols <- setdiff(required_cols, names(queue))
+  if (length(missing_cols)) {
+    warning(
+      "Cannot export LLM-reviewed sponsors; queue is missing columns: ",
+      paste(missing_cols, collapse = ", ")
+    )
+    return(existing_llm)
+  }
+
+  queue_llm <- queue |>
+    dplyr::mutate(
+      decision          = stringr::str_to_lower(stringr::str_squish(decision)),
+      canonical_sponsor = stringr::str_squish(canonical_sponsor),
+      comment           = dplyr::coalesce(comment, ""),
+      alias_clean       = clean_sponsor_alias(raw_sponsor)
+    ) |>
+    dplyr::filter(
+      decision == "accepted",
+      !is.na(canonical_sponsor), nchar(canonical_sponsor) >= 2,
+      !stringr::str_detect(comment, stringr::regex("^legacy-export", ignore_case = TRUE))
+    ) |>
+    dplyr::mutate(
+      sponsor_clean    = canonical_sponsor,
+      sponsor_parent   = NA_character_,
+      sponsor_group    = NA_character_,
+      sponsor_type     = dplyr::if_else(
+        is.na(sponsor_type) | sponsor_type == "" | sponsor_type == "NA",
+        classify_sponsor_type(canonical_sponsor),
+        sponsor_type
+      ),
+      source           = dplyr::case_when(
+        stringr::str_detect(comment, stringr::regex("^llm-reviewed", ignore_case = TRUE)) ~ "llm_reviewed",
+        stringr::str_detect(comment, stringr::regex("^bulk-", ignore_case = TRUE)) ~ "bulk_reviewed",
+        TRUE ~ "review_queue"
+      ),
+      confidence_prior = 1,
+      alias_type       = source
+    ) |>
+    dplyr::select(
+      alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+      sponsor_type, source, confidence_prior, alias_type
+    ) |>
+    dplyr::filter(
+      !is.na(alias_clean), !is.na(sponsor_clean),
+      nchar(alias_clean) >= 2, nchar(sponsor_clean) >= 2
+    ) |>
+    prefer_llm_reviewed() |>
+    dplyr::arrange(alias_clean, sponsor_clean) |>
+    dplyr::distinct(alias_clean, sponsor_clean, .keep_all = TRUE)
+
+  llm_reviewed <- dplyr::bind_rows(existing_llm, queue_llm) |>
+    dplyr::filter(
+      !is.na(alias_clean), !is.na(sponsor_clean),
+      nchar(alias_clean) >= 2, nchar(sponsor_clean) >= 2
+    ) |>
+    prefer_llm_reviewed() |>
+    dplyr::arrange(alias_clean, sponsor_clean) |>
+    dplyr::distinct(alias_clean, sponsor_clean, .keep_all = TRUE)
+
+  readr::write_csv(llm_reviewed, out_path)
+  llm_reviewed
+}
+
+llm_reviewed <- export_llm_reviewed(
+  queue_path = file.path(SNP, "sponsor_review_queue.csv"),
+  out_path   = OUT_LLM
+)
+
+message(sprintf(
+  "Reviewed queue aliases: %d entries (wrote %s)",
+  nrow(llm_reviewed), OUT_LLM
+))
+
 # Build a lookup table: alias_clean → canonical sponsor fields
 # Used to resolve external source names against known canonicals.
-alias_lookup <- manual |>
+alias_lookup <- dplyr::bind_rows(manual, llm_reviewed) |>
   dplyr::select(
     alias_clean, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type
   ) |>
@@ -272,7 +792,7 @@ if (!no_ror) {
       names_vec <- c(names_vec, unlist(org$aliases))
     }
     if (!is.null(org$labels) && length(org$labels) > 0) {
-      labels <- purrr::map_chr(org$labels, ~ .x$label %||% NA_character_)
+      labels <- purrr::map_chr(org$labels, ~ null_coalesce(.x$label, NA_character_))
       names_vec <- c(names_vec, labels[!is.na(labels)])
     }
     if (!is.null(org$acronyms) && length(org$acronyms) > 0) {
@@ -280,8 +800,6 @@ if (!no_ror) {
     }
     unique(names_vec[nzchar(names_vec)])
   }
-
-  `%||%` <- function(a, b) if (!is.null(a)) a else b
 
   message("Querying ROR for EU academic/hospital organizations...")
 
@@ -292,18 +810,18 @@ if (!no_ror) {
       page1 <- fetch_ror_page(1, country, type)
       if (is.null(page1)) next
 
-      total     <- page1$number_of_results %||% 0L
+      total     <- null_coalesce(page1$number_of_results, 0L)
       n_pages   <- ceiling(total / 20)
       if (n_pages == 0) next
 
       message(sprintf("  %s/%s: %d orgs, %d pages", country, type, total, n_pages))
 
-      orgs <- page1$items %||% list()
+      orgs <- null_coalesce(page1$items, list())
       for (p in seq_len(min(n_pages, 50))) {  # cap at 50 pages (1000 orgs) per combo
         if (p > 1) {
           Sys.sleep(0.05)
           pg <- fetch_ror_page(p, country, type)
-          if (!is.null(pg)) orgs <- c(orgs, pg$items %||% list())
+          if (!is.null(pg)) orgs <- c(orgs, null_coalesce(pg$items, list()))
         }
       }
 
@@ -678,8 +1196,18 @@ manual_index <- manual |>
     sponsor_type, alias_type, source, confidence_prior
   )
 
-# Row order = priority: manual > epar > ror > db (businesskey > email > location)
-combined <- dplyr::bind_rows(manual_index, epar_rows, ror_rows, db_rows) |>
+# Prepare reviewed queue aliases in the same schema. These are generated from
+# accepted queue decisions and intentionally kept outside the hand-maintained
+# manual seed file.
+llm_index <- llm_reviewed |>
+  dplyr::select(
+    alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
+    sponsor_type, alias_type, source, confidence_prior
+  )
+
+# Row order = priority: manual > reviewed queue > epar > ror > db
+# (businesskey > email > location)
+combined <- dplyr::bind_rows(manual_index, llm_index, epar_rows, ror_rows, db_rows) |>
   dplyr::filter(
     !is.na(alias_clean), !is.na(sponsor_clean),
     nchar(alias_clean) >= 2, nchar(sponsor_clean) >= 2
@@ -687,6 +1215,12 @@ combined <- dplyr::bind_rows(manual_index, epar_rows, ror_rows, db_rows) |>
   dplyr::distinct(alias_clean, sponsor_clean, .keep_all = TRUE)
 
 message(sprintf("Combined index: %d total alias entries", nrow(combined)))
+
+combined <- apply_final_canonicalization(
+  combined,
+  map_path = OUT_FINAL_MAP,
+  review_path = OUT_FINAL_REVIEW
+)
 
 # ── Ambiguous aliases ─────────────────────────────────────────────────────────
 
@@ -808,48 +1342,57 @@ nc <- new_candidates |>
   dplyr::filter(!is.na(raw_name), nchar(alias_clean) >= 4L) |>
   dplyr::mutate(grp = purrr::map_chr(raw_name, suggest_key))
 
-# Pass 1: exact key collapse — collect all raw names per (grp, source)
-nc_grp <- nc |>
-  dplyr::group_by(grp, source) |>
-  dplyr::arrange(nchar(alias_clean), .by_group = TRUE) |>
-  dplyr::summarise(raw_names = list(unique(raw_name)), .groups = "drop") |>
-  dplyr::arrange(nchar(grp))  # shortest key first so clusters pick it as head
-
-# Pass 2: JW fuzzy cluster within each source
-n_nc   <- nrow(nc_grp)
-parent <- seq_len(n_nc)
-find   <- function(x) { r <- x; while (parent[r] != r) r <- parent[[r]]; r }
-
-if (n_nc > 1L) {
-  dist_mat <- stringdist::stringdistmatrix(
-    nc_grp$grp, nc_grp$grp, method = "jw", p = 0.1
+if (nrow(nc) == 0L) {
+  new_candidates <- tibble::tibble(
+    raw_name = character(),
+    source = character(),
+    suggested_canonical = character(),
+    other_names = character()
   )
-  for (i in seq_len(n_nc - 1L)) {
-    for (j in (i + 1L):n_nc) {
-      if (nc_grp$source[i] != nc_grp$source[j]) next
-      if (1 - dist_mat[i, j] < 0.90)            next
-      ri <- find(i); rj <- find(j)
-      if (ri != rj) parent[rj] <- ri
+} else {
+  # Pass 1: exact key collapse — collect all raw names per (grp, source)
+  nc_grp <- nc |>
+    dplyr::group_by(grp, source) |>
+    dplyr::arrange(nchar(alias_clean), .by_group = TRUE) |>
+    dplyr::summarise(raw_names = list(unique(raw_name)), .groups = "drop") |>
+    dplyr::arrange(nchar(grp))  # shortest key first so clusters pick it as head
+
+  # Pass 2: JW fuzzy cluster within each source
+  n_nc   <- nrow(nc_grp)
+  parent <- seq_len(n_nc)
+  find   <- function(x) { r <- x; while (parent[r] != r) r <- parent[[r]]; r }
+
+  if (n_nc > 1L) {
+    dist_mat <- stringdist::stringdistmatrix(
+      nc_grp$grp, nc_grp$grp, method = "jw", p = 0.1
+    )
+    for (i in seq_len(n_nc - 1L)) {
+      for (j in (i + 1L):n_nc) {
+        if (nc_grp$source[i] != nc_grp$source[j]) next
+        if (1 - dist_mat[i, j] < 0.90)            next
+        ri <- find(i); rj <- find(j)
+        if (ri != rj) parent[rj] <- ri
+      }
     }
   }
+
+  nc_grp$cluster <- vapply(seq_len(n_nc), find, integer(1L))
+
+  new_candidates <- nc_grp |>
+    dplyr::group_by(cluster, source) |>
+    dplyr::summarise(
+      raw_name            = raw_names[[1L]][[1L]],
+      suggested_canonical = stringr::str_to_title(grp[[1L]]),
+      other_names = {
+        all_r <- unique(unlist(raw_names))
+        rest  <- all_r[all_r != raw_names[[1L]][[1L]]]
+        if (length(rest) > 0L) paste(rest, collapse = " | ") else NA_character_
+      },
+      .groups = "drop"
+    ) |>
+    dplyr::select(raw_name, source, suggested_canonical, other_names) |>
+    dplyr::arrange(source, suggested_canonical)
 }
-
-nc_grp$cluster <- vapply(seq_len(n_nc), find, integer(1L))
-
-new_candidates <- nc_grp |>
-  dplyr::group_by(cluster, source) |>
-  dplyr::summarise(
-    raw_name            = raw_names[[1L]][[1L]],
-    suggested_canonical = stringr::str_to_title(grp[[1L]]),
-    other_names = {
-      all_r <- unique(unlist(raw_names))
-      rest  <- all_r[all_r != raw_names[[1L]][[1L]]]
-      if (length(rest) > 0L) paste(rest, collapse = " | ") else NA_character_
-    },
-    .groups = "drop"
-  ) |>
-  dplyr::select(raw_name, source, suggested_canonical, other_names) |>
-  dplyr::arrange(source, suggested_canonical)
 
 readr::write_csv(new_candidates, OUT_NEW)
 message(sprintf(

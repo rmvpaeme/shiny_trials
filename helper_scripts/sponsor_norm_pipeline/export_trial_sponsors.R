@@ -3,7 +3,7 @@
 # Reads trials_cache.rds and writes data/trial_sponsors_raw.csv with columns:
 #   _id         — trial identifier
 #   raw_sponsor — raw sponsor name string
-#   register    — source register (EUCTR or CTIS)
+#   is_commercial — trial-level commercial sponsor flag, when available
 #
 # One row per trial (trials have one primary sponsor).
 # This is the input to build_sponsor_labels.R.
@@ -58,12 +58,20 @@ extract_sponsor <- function(df) {
         # CTIS primary sponsor name
         if ("authorizedApplication.authorizedPartI.sponsors.organisation.name" %in% names(df)) {
           .data[["authorizedApplication.authorizedPartI.sponsors.organisation.name"]]
+        } else NA_character_,
+        # Prepared app cache fallback. Some flattened/cache rows already have a
+        # sponsor_name even when the original source-specific field is absent.
+        if ("sponsor_name" %in% names(df)) {
+          .data[["sponsor_name"]]
         } else NA_character_
       ),
       is_commercial = dplyr::coalesce(
         # CTIS: direct boolean flag
         if ("authorizedApplication.authorizedPartI.sponsors.isCommercial" %in% names(df)) {
           as.logical(.data[["authorizedApplication.authorizedPartI.sponsors.isCommercial"]])
+        } else NA,
+        if ("authorizedApplication.authorizedPartI.sponsors.commercial" %in% names(df)) {
+          as.logical(.data[["authorizedApplication.authorizedPartI.sponsors.commercial"]])
         } else NA,
         # EUCTR: "Commercial organisation" → TRUE, "Non-Commercial organisation" → FALSE
         if ("b1_sponsor.b31_and_b32_status_of_the_sponsor" %in% names(df)) {

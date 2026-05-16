@@ -180,13 +180,18 @@ load_sponsor_configs <- function(
     }
   }
   # Prefer the generated index (manual + EPAR + ROR) when available;
-  # fall back to the hand-maintained seed table if the index hasn't been built.
+  # fall back to the hand-maintained seed table plus LLM-reviewed aliases if the
+  # index hasn't been built.
   alias_index <- file.path(config_dir, "sponsor_alias_index.csv")
   alias_seed  <- file.path(config_dir, "manual_sponsor_aliases.csv")
+  alias_llm   <- file.path(config_dir, "sponsor_llm_reviewed.csv")
+  aliases <- if (file.exists(alias_index)) {
+    read_csv_safe(alias_index)
+  } else {
+    dplyr::bind_rows(read_csv_safe(alias_seed), read_csv_safe(alias_llm))
+  }
   list(
-    aliases   = read_csv_safe(
-      if (file.exists(alias_index)) alias_index else alias_seed
-    ),
+    aliases   = aliases,
     overrides = read_csv_safe(file.path(config_dir, "manual_sponsor_overrides.csv")),
     negatives = read_csv_safe(file.path(config_dir, "sponsor_negative_aliases.csv"))
   )
