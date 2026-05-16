@@ -608,22 +608,443 @@ wyeth pharmaceuticals,Wyeth,Pfizer,Pfizer,industry,manual,manual,1
 zaklady farmaceutyczne polpharma s a,Zaklady Farmaceutyczne Polpharma S.A.,NA,NA,NA,manual,ctis_businesskey,0.95
 zymeworks inc,Zymeworks Inc.,NA,NA,NA,manual,ctis_businesskey,0.95
 i-getaid,i-GETAID,NA,NA,NA,manual,ctis_businesskey,0.95
-glaxosmithkline trading services limited,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+uzleuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,manual,1
+universittsklinikum essen,Universitätsklinikum Essen,Universitätsklinikum Essen,Universitätsklinikum Essen,hospital,manual,manual,1
+universitatsklinikum essen,Universitätsklinikum Essen,Universitätsklinikum Essen,Universitätsklinikum Essen,hospital,manual,manual,1
+hellenic cooperative oncology group,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,cooperative_group,manual,manual,1
+european myeloma network,European Myeloma Network,European Myeloma Network,European Myeloma Network,cooperative_group,manual,manual,1
+european myeloma network b v / emn trial office s r l impresa sociale,European Myeloma Network,European Myeloma Network,European Myeloma Network,cooperative_group,manual,manual,1
+reckitt benckiser healthcare,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,industry,manual,manual,1
+reckitt benckiser healthcare uk ltd,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,industry,manual,manual,1
+azienda ospedaliera universitaria integrata verona,Azienda Ospedaliera Universitaria Integrata Verona,Azienda Ospedaliera Universitaria Integrata Verona,Azienda Ospedaliera Universitaria Integrata Verona,hospital,manual,manual,1
+umc st radboud,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+queen mary university london,Queen Mary University of London,Queen Mary University of London,Queen Mary University of London,academic,manual,manual,1
+manchester university nhs foundation trust,Manchester University NHS Foundation Trust,Manchester University NHS Foundation Trust,Manchester University NHS Foundation Trust,hospital,manual,manual,1
+horizon therapeutics ireland designated activity company,Horizon Therapeutics,Horizon Therapeutics,Horizon Therapeutics,industry,manual,manual,1
+hopital foch,Hôpital Foch,Hôpital Foch,Hôpital Foch,hospital,manual,manual,1
+dompe farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,industry,manual,manual,1
+dompe' farmaceutici s p a,Dompé Farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,industry,manual,manual,1
+crinetics pharmaceuticals,Crinetics Pharmaceuticals,Crinetics Pharmaceuticals,Crinetics Pharmaceuticals,industry,manual,manual,1
+azienda ospedaliera san gerardo di monza,Azienda Ospedaliera San Gerardo di Monza,Azienda Ospedaliera San Gerardo di Monza,Azienda Ospedaliera San Gerardo di Monza,hospital,manual,manual,1
+arcagy,Arcagy Gineco,NA,NA,NA,manual,manual,1
+university hospital erlangen,University Hospital Erlangen,University Hospital Erlangen,University Hospital Erlangen,hospital,manual,manual,1
+radboud university nijmegen medical center,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+ospedale pediatrico bambino gesu,Ospedale Pediatrico Bambino Gesù,Ospedale Pediatrico Bambino Gesù,Ospedale Pediatrico Bambino Gesù,hospital,manual,manual,1
+medisch spectrum twente,Medisch Spectrum Twente,Medisch Spectrum Twente,Medisch Spectrum Twente,hospital,manual,manual,1
+fundacin para la investigacin biomdica del hospital gregorio maran,Fundación para la Investigación Biomédica del Hospital Gregorio Marañón,Fundación para la Investigación Biomédica del Hospital Gregorio Marañón,Fundación para la Investigación Biomédica del Hospital Gregorio Marañón,foundation,manual,manual,1
+fundacion gecp,Fundacion GECP,NA,NA,foundation,manual,manual,1
+fundacin gecp,Fundacion GECP,NA,NA,foundation,manual,manual,1
+centro di riferimento oncologico di aviano,Centro di Riferimento Oncologico di Aviano,Centro di Riferimento Oncologico di Aviano,Centro di Riferimento Oncologico di Aviano,hospital,manual,manual,1
+anrs,ANRS,ANRS,ANRS,public_body,manual,manual,1
+charit - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charit universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+medizinische universitt wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+ist di ricerche farmacolog m negri,Istituto Di Ricerche Farmacologiche Mario Negri,NA,NA,NA,manual,manual,1
+medizinische universitt graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,manual,1
+alk-abell a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,manual,1
+glaxo smithkline,GSK,GSK,GSK,industry,manual,manual,1
+institut curie,Institut Curie,Institut Curie,Institut Curie,hospital,manual,manual,1
+academic medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+medical university innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,manual,1
+centre hospitalier rgional et universitaire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,manual,1
+royal marsden hospital,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,manual,1
+region skne,Region Skane,NA,NA,NA,manual,manual,1
+klinikum der universitt mnchen,Klinikum Der Universitat Munchen AöR,NA,NA,NA,manual,manual,1
+university hospital leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,manual,1
+medical university vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+kuleuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,manual,1
+domp farmaceutici s p a,Dompé Farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,industry,manual,manual,1
+chru de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,manual,manual,1
+karolinska institute,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,manual,manual,1
+university medical centre utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,manual,1
+leiden university medical centre,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,manual,1
+vu university medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+arcagy-gineco,Arcagy Gineco,NA,NA,NA,manual,manual,1
+charite universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charit-universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+isis pharmaceuticals inc,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,manual,1
+bristol-m squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,manual,1
+friedrich-schiller-universitt jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,manual,manual,1
+medac gesellschaft fr klinische spezialprparate mbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,manual,manual,1
+groupe francophone des mylodysplasies,Groupe Francophone Des Myelodysplasies,NA,NA,cooperative_group,manual,manual,1
+fondazione toscana gabriele monasterio,Fondazione Toscana Gabriele Monasterio,NA,NA,foundation,manual,manual,1
+chiron,Chiron,NA,NA,industry,manual,manual,1
+azienda usl 6 livorno zona livornese,Azienda USL 6 Livorno Zona Livornese,NA,NA,hospital,manual,manual,1
+rijnstate hospital,Rijnstate Hospital,NA,NA,hospital,manual,manual,1
+vicore pharma ab,Vicore Pharma,NA,NA,industry,manual,manual,1
+university hospital of toulouse,CHU de Toulouse,NA,NA,hospital,manual,manual,1
+university medical centre hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,manual,1
+sint antonius ziekenhuis stichting,St Antonius Hospital,NA,NA,NA,manual,manual,1
+royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,manual,1
+universittsmedizin der johannes gutenberg-universitt mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,manual,manual,1
+rheinische friedrich-wilhelms-universitat bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,manual,manual,1
+runmc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+the leeds teaching hospitals nhs trust,The Leeds Teaching Hospitals NHS Trust,The Leeds Teaching Hospitals NHS Trust,The Leeds Teaching Hospitals NHS Trust,hospital,manual,manual,1
+university hospital birmingham nhs foundation trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,hospital,manual,manual,1
+united therapeutics corp,United Therapeutics,United Therapeutics,United Therapeutics,industry,manual,manual,1
+guys st thomas nhs foundation trust,Guys and St Thomas NHS Foundation Trust,Guys and St Thomas NHS Foundation Trust,Guys and St Thomas NHS Foundation Trust,hospital,manual,manual,1
+university of leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,manual,1
+charit - university hospital of berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+vu medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+erasmus medical centre,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,manual,1
+university of dundee/nhs tayside,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,manual,1
+hellenic cooperative oncology group hecog,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,cooperative_group,manual,manual,1
+technische universitt mnchen,Technische Universität München,Technische Universität München,Technische Universität München,academic,manual,manual,1
+med univ wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+chu de brest,CHU de Brest,NA,NA,hospital,manual,manual,1
+university medical centre nijmegen,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+university medical centre nijmegen st radboud,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+i r c c s fondazione s lucia,Fondazione Santa Lucia,NA,NA,NA,manual,manual,1
+c h u de rennes,CHU de Rennes,NA,NA,hospital,manual,manual,1
+rijksinstituut voor volksgezondheid en milieu rivm,RIVM,RIVM,RIVM,public_body,manual,manual,1
+universittsklinikum hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,manual,1
+copenhagen university hospital,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,manual,1
+radboud university medical centre nijmegen,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+sint antonius hospital,St Antonius Hospital,NA,NA,NA,manual,manual,1
+university hospital of montpellier,CHU de Montpellier,NA,NA,hospital,manual,manual,1
+university hospital montpellier,CHU de Montpellier,NA,NA,hospital,manual,manual,1
+azienda ospedaliero-universitaria meyer,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,manual,manual,1
+university hospital toulouse,CHU de Toulouse,NA,NA,hospital,manual,manual,1
+assistance publique - hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+region vaesterbotten / umea university,Region Västerbotten / Umea University,NA,NA,NA,manual,manual,1
+sanofi-synthelabo,Sanofi,Sanofi,Sanofi,industry,manual,manual,1
+merck sharp and dohme de espaa,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+turku pet centre,Turku University Hospital,NA,NA,hospital,manual,manual,1
+axcan pharma inc,Axcan Pharma,NA,NA,industry,manual,manual,1
+royal brompton harefield nhs trust,Royal Brompton and Harefield NHS Foundation Trust,Royal Brompton and Harefield NHS Foundation Trust,Royal Brompton and Harefield NHS Foundation Trust,hospital,manual,manual,1
+newcastle upon tyne hospitals nhs trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,hospital,manual,manual,1
+almirall prodesfarma,Almirall S.A.,Almirall S.A.,Almirall S.A.,industry,manual,manual,1
+lilly icos llc,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,manual,1
+erasmus medical centre rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,manual,1
+laboratoires merck sharp dohme - chibret,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,manual,1
+ch-versailles,Centre Hospitalier De Versailles,NA,NA,hospital,manual,manual,1
+sahlgrenska universitetssjukhuset,Sahlgrenska University Hospital,NA,NA,hospital,manual,manual,1
+the university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,manual,1
+aio studien ggmbh,AIO-Studien-gGmbH,NA,NA,NA,manual,manual,1
+charit university medicine berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+fundacin para la investigacin biomdica del hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,foundation,manual,manual,1
+dompe s p a,Dompé Farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,industry,manual,manual,1
+london school of hygiene tropical medicine,London School of Hygiene and Tropical Medicine,NA,NA,academic,manual,manual,1
+universitatsklinikum bonn,Universitätsklinikum Bonn,NA,NA,hospital,manual,manual,1
+f hoffmann- la roche ltd,Roche,Roche,Roche,industry,manual,manual,1
+skne university hospital,Skåne University Hospital,NA,NA,hospital,manual,manual,1
+argenx bvba,argenx BV,argenx BV,argenx BV,industry,manual,manual,1
+gruenenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,manual,1
+european organisation for the research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,manual,1
+centre hospitalier departemental vendee,Centre Hospitalier Départemental Vendée,NA,NA,hospital,manual,manual,1
+fundaci clnic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,manual,1
+universit degli studi milano bicocca,University Of Milano Bicocca,NA,NA,academic,manual,manual,1
+azienda ospedaliera papa giovanni xxiii,Azienda Ospedaliera Papa Giovanni XXIII,NA,NA,hospital,manual,manual,1
+fundaci hospital vall hebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,manual,1
+aou citta della salute e della scienza di torino,AOU Città della Salute e della Scienza di Torino,NA,NA,hospital,manual,manual,1
+azienda unit sanitaria locale della romagna,Azienda Unità Sanitaria Locale della Romagna,NA,NA,hospital,manual,manual,1
+universit degli studi di perugia,Università degli Studi di Perugia,NA,NA,academic,manual,manual,1
+institut fr klinische krebsforschung ikf gmbh at krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,manual,1
+frankfurter institut fr klinische krebsforschung ikf gmbh am krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,manual,1
+gensight biologics,Gensight Biologics,NA,NA,industry,manual,manual,1
+azienda ospedaliera santandrea,Azienda Ospedaliera Sant'Andrea,NA,NA,hospital,manual,manual,1
+azienda ospedaliero universitaria maggiore della carit di novara,Azienda Ospedaliero Universitaria Maggiore della Carità di Novara,NA,NA,hospital,manual,manual,1
+universita' vita-salute s raffaele,Università Vita-Salute San Raffaele,NA,NA,academic,manual,manual,1
+universita' degli studi di perugia,Università degli Studi di Perugia,NA,NA,academic,manual,manual,1
+serono international sa,Serono International SA,NA,NA,industry,manual,manual,1
+azienda ospedaliera umberto i,Azienda Ospedaliera Umberto I,NA,NA,hospital,manual,manual,1
+eau european association of urology,European Association of Urology,NA,NA,public_body,manual,manual,1
+sanofi-synthelabo rt,Sanofi,Sanofi,Sanofi,industry,manual,manual,1
+aesca pharma gesmbh,AESCA Pharma GmbH,NA,NA,industry,manual,manual,1
+laboratorios leti,Laboratorios Leti,NA,NA,industry,manual,manual,1
+institut de recherches internationales,Servier,Servier,Servier,industry,manual,manual,0.9
+universittskinderklinik innsbruck,Universitätskinderklinik Innsbruck,NA,NA,hospital,manual,manual,1
+therakos,Therakos,NA,NA,industry,manual,manual,1
+grupo espaol de investigacin en cncer de mama geicam,GEICAM,NA,NA,cooperative_group,manual,manual,1
+geicam grupo espaol de investigacion en cancer de mama,GEICAM,NA,NA,cooperative_group,manual,manual,1
+charit campus mitte klinik fr psychiatrie und psychotherapie,Charité Campus Mitte; Klinik für Psychiatrie und Psychotherapie,NA,NA,hospital,manual,manual,1
+allergie-centrum-charit,Allergie-Centrum-Charité,NA,NA,hospital,manual,manual,1
+johann wolfgang goethe-universitt frankfurt am main,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+fondazione sendo,Fondazione Sendo,NA,NA,foundation,manual,manual,1
+associazione malattie sangue,Associazione Malattie Sangue,NA,NA,foundation,manual,manual,1
+ullevl university hospital,Ullevål University Hospital,NA,NA,hospital,manual,manual,1
+landsptali hsklasjkrahs,Landspítali Háskólasjúkrahús,NA,NA,hospital,manual,manual,1
+hospital ramn y cajal,Hospital Ramón y Cajal,NA,NA,hospital,manual,manual,1
+medizinische fakultt der technischen universitt mnchen,Medizinische Fakultät der Technischen Universität München,NA,NA,academic,manual,manual,1
+stiftung institut fr herzinfarktforschung,Stiftung Institut für Herzinfarktforschung,NA,NA,foundation,manual,manual,1
+universittsklinikum bonn klinik und poliklinik fr psychiatrie und psychotherapie,Universitaetsklinikum Bonn,NA,NA,hospital,manual,manual,1
+klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen,Klinik für Herz- und Kreislauferkrankungen; Deutsches Herzzentrum München,NA,NA,hospital,manual,manual,1
+stallergenes sa,Stallergenes S.A.,NA,NA,industry,manual,manual,1
+grupo espaol de tratamiento de los tumores de cabeza y cuello ttcc,Grupo Español de Tratamiento de los Tumores de Cabeza y Cuello TTCC,NA,NA,cooperative_group,manual,manual,1
+charit universitaetsmedizin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+an-institut fr qualittssicherung in der operativen medizin ggmbh,An-Institut für Qualitätssicherung in der operativen Medizin gGmbH,NA,NA,unknown,manual,manual,1
+georg-august-universitt gttingen,Georg-August-Universität Göttingen,NA,NA,academic,manual,manual,1
+medizinische universitt wien univ klinik fr dermatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+klinik lwenstein ggmbh,Klinik Löwenstein gGmbH,NA,NA,hospital,manual,manual,1
+universittsklinikum essen - zentrum fr innere medizin - klinik fr endokrinologie,Universitätsklinikum Essen,NA,NA,hospital,manual,manual,1
+medizinische fakultt der martin-luther-universitt halle-wittenberg,Medizinische Fakultät der Martin-Luther-Universität Halle-Wittenberg,NA,NA,academic,manual,manual,1
+university hospital of tbingen,University Hospital of Tübingen,NA,NA,hospital,manual,manual,1
+stockholms lns landsting,Stockholms Läns Landsting,NA,NA,public_body,manual,manual,1
+centre hospitalier rgional et universitaire,Centre Hospitalier Régional et Universitaire,NA,NA,hospital,manual,manual,1
+zentralinstitut fr seelische gesundheit mannheim,Zentralinstitut für Seelische Gesundheit Mannheim,NA,NA,hospital,manual,manual,1
+ludwig boltzmann institut fr retinologie und biomikroskopische laserchirurgie,Ludwig Boltzmann Institut für Retinologie und biomikroskopische Laserchirurgie,NA,NA,academic,manual,manual,1
+universita campus biomedico,Università Campus Bio-Medico di Roma,NA,NA,academic,manual,manual,1
+johann wolfgang goethe universitt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+fundaci puigvert,Fundació Puigvert,NA,NA,hospital,manual,manual,1
+glaxosmithkiline research and development,GSK,GSK,GSK,industry,manual,manual,1
+instituto de investigacin del hospital de la santa creu i sant pau,Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,manual,manual,1
+azienda ospedaliera s croce e carle,Azienda Ospedaliera S. Croce e Carle,NA,NA,hospital,manual,manual,1
+azienda ospedaliero-universitaria pisana,Azienda Ospedaliero-Universitaria Pisana,NA,NA,hospital,manual,manual,1
+azienda ospedaliera fondazione macchi a o di rilievo nazionale,Azienda Ospedaliera Fondazione Macchi A.O. di Rilievo Nazionale,NA,NA,hospital,manual,manual,1
+galderma research development,Galderma Research & Development,NA,NA,industry,manual,manual,1
+grupo espaol de neurooncologia medica,Grupo Español de Neurooncología Médica,NA,NA,cooperative_group,manual,manual,1
+university medical center gttingen,University Medical Center Göttingen,NA,NA,hospital,manual,manual,1
+uppsalns landsting,Uppsala Läns Landsting,NA,NA,public_body,manual,manual,1
+oslo universitetssykehus,Oslo University Hospital,NA,NA,hospital,manual,manual,1
+centre rgional de lutte contre le cancer val daurelle- paul lamarque,Centre Val d'Aurelle - Paul Lamarque,NA,NA,hospital,manual,manual,1
+gmiho gesellschaft fr medizinische innovation hmatologie und onkologie mbh,GMIHO,NA,NA,cooperative_group,manual,manual,1
+rebro lns landsting,Örebro Läns Landsting,NA,NA,public_body,manual,manual,1
+fundaci privada clnic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,manual,1
+chu-hopitaux de rouen,CHU de Rouen,NA,NA,hospital,manual,manual,1
+instituto cataln de oncologa,Instituto Catalán de Oncología,NA,NA,hospital,manual,manual,1
+centre georges franois leclerc,Centre Georges François Leclerc,NA,NA,hospital,manual,manual,1
+curevac gmbh,CureVac AG,NA,NA,industry,manual,manual,1
+geltamo grupo espaol de linfoma y transplante autlogo de mdula sea,GELTAMO,NA,NA,cooperative_group,manual,manual,1
+alk-abell arzneimittel gmbh,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,manual,1
+istituto mediterraneo per i trapianti e terapie ad alta specializzazione,ISMETT,NA,NA,hospital,manual,manual,1
+azienda ospedaliera s maria di terni,Azienda Ospedaliera S. Maria di Terni,NA,NA,hospital,manual,manual,1
+medizinische universitt wien univ klinik f frauenheilkunde abt f gynkologie und gyn onkologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien univ klinik fr ansthesie allg intensivmedizin u schmerztherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+fundacion para la investigacion biomedica hospital universitario 12 de octubre,Fundación para la Investigación Biomédica Hospital Universitario 12 de Octubre,NA,NA,hospital,manual,manual,1
+fundacion cv investigacion hospital dr peset,Fundación CV Investigación Hospital Dr. Peset,NA,NA,hospital,manual,manual,1
+institut de cancrologie de la loire,Institut de Cancérologie de la Loire,NA,NA,hospital,manual,manual,1
+universittsklinik fr klinische pharmakologie,Universitätsklinik für Klinische Pharmakologie,NA,NA,hospital,manual,manual,1
+fundacion para la investigacin la fe,Fundación para la Investigación La Fe,NA,NA,foundation,manual,manual,1
+azienda ospedaliera g brotzu,Azienda Ospedaliera G. Brotzu,NA,NA,hospital,manual,manual,1
+medizinische fakultt der technischen universitt muenchen,Medizinische Fakultät der Technischen Universität München,NA,NA,academic,manual,manual,1
+hpital foch,Hôpital Foch,NA,NA,hospital,manual,manual,1
+klinikum der universitt mnchen-grohadern,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+azienda ospedaliera s paolo a o di rilievo nazionale,Azienda Ospedaliera S. Paolo A.O. di Rilievo Nazionale,NA,NA,hospital,manual,manual,1
+chu ambroise pare,CHU Ambroise Paré,NA,NA,hospital,manual,manual,1
+justus liebig universitt gieen,Justus-Liebig-Universität Gießen,NA,NA,academic,manual,manual,1
+vsterbottens lns landsting,Västerbottens Läns Landsting,NA,NA,public_body,manual,manual,1
+fondazione del piemonte per loncologia ircc di candiolo,Fondazione del Piemonte per l'Oncologia IRCC di Candiolo,NA,NA,hospital,manual,manual,1
+goethe universitt frankfurt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+landstinget i stergtland,Landstinget i Östergötland,NA,NA,public_body,manual,manual,1
+uh montpellier,CHU de Montpellier,NA,NA,hospital,manual,manual,1
+universittsklinik fr neurologie medizinische universitt wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien universittsklinik fr psychiatrie und psychotherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien universittsklinik fr klinische pharmakologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien abteilung fr herzchirurgie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+med univ wien klinik fr klinische pharmakologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+med univ wien universittsklinik fr ansthesie allgemeine intensivmedizin und schmerztherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+fundacin hospital nacional de paraplji cos,Fundación Hospital Nacional de Parapléjicos,NA,NA,hospital,manual,manual,1
+universittsklinikum schleswig-holstein -sh,Universitätsklinikum Schleswig-Holstein,NA,NA,hospital,manual,manual,1
+grupo espaol de investigacin en cncer de ovario,Grupo Español de Investigación en Cáncer de Ovario,NA,NA,cooperative_group,manual,manual,1
+grupo espaol de tumores neuroendocrinos,Grupo Español de Tumores Neuroendocrinos,NA,NA,cooperative_group,manual,manual,1
+antonio van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,hospital,manual,manual,1
+university medical center goettingen,University Medical Center Göttingen,NA,NA,hospital,manual,manual,1
+apotex inc,Apotex Inc.,NA,NA,industry,manual,manual,1
+german cancer research center dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,academic,manual,manual,1
+medizinische universitt innsbruck / univ -klinik fr allgemeine und chirurgische intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,manual,1
+medizinische universitt wien universittsklinik fr innere medizin 3 abteilung fr gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien universittsklinik fr augenheilkunde,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien univ klinik fr innere medizin iii abt f endokrinologie und stoffwechsel,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien universittsklinik fr innere medizin iii,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt wien univ klinik f dermatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medizinische universitt graz universittsklinik fr innere medizin abteilung fr endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,manual,1
+medizinische universitt graz / endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,manual,1
+loreal recherche,L'Oréal Recherche,NA,NA,industry,manual,manual,1
+county council of stergtland,County Council of Östergötland,NA,NA,public_body,manual,manual,1
+vall dhebron institut de recerca vhir,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,manual,1
+universittsklinikum ulm ar,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,hospital,manual,manual,1
+universitt innsbruck institut fr biomedizinische alternsforschung,Universität Innsbruck; Institut für Biomedizinische Alternsforschung,NA,NA,academic,manual,manual,1
+universittsklinik fr augenheilkunde und optometrie,Universitätsklinik für Augenheilkunde und Optometrie,NA,NA,hospital,manual,manual,1
+georg-august-universitt gttingen stiftung ffentlichen rechts universittsmedizin gttingen,Universitätsmedizin Göttingen,NA,NA,hospital,manual,manual,1
+gteborgs universitet,University of Gothenburg,NA,NA,academic,manual,manual,1
+fondazione irccs ca granda ospedale maggiore policlinico milano,Fondazione IRCCS Ca' Granda Ospedale Maggiore Policlinico,NA,NA,hospital,manual,manual,1
+orthopadisches spital speising,Orthopädisches Spital Speising,NA,NA,hospital,manual,manual,1
+pascoe pharmazeutische prparate gmbh,Pascoe pharmazeutische Präparate GmbH,NA,NA,industry,manual,manual,1
+gesellschaft fr pdiatrische onkologie und hmatologie gpoh ggmbh,GPOH,NA,NA,cooperative_group,manual,manual,1
+agmt arbeitsgemeinschaft medikamentse tumortherapie gemeinntzige,AGMT,NA,NA,cooperative_group,manual,manual,1
+fondazione telethon,Fondazione Telethon,NA,NA,foundation,manual,manual,1
+princess mxima center for pediatric oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,hospital,manual,manual,1
+princess mxima center,Princess Maxima Center For Pediatric Oncology,NA,NA,hospital,manual,manual,1
+istituto mediterraneo per i trapianti e terapie ad alta specializzazione - ismett,ISMETT,NA,NA,hospital,manual,manual,1
+assistance publique-hopitaux de paris aphp,AP-HP,AP-HP,AP-HP,hospital,manual,manual,1
+amsterdam university medical centers,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+dipartimento di medicina-dimed universit di padova,Azienda Ospedaliera di Padova,NA,NA,hospital,manual,manual,1
+chru nancy,CHRU De Nancy,CHRU De Nancy,CHRU De Nancy,hospital,manual,manual,1
+rennes university hospital,CHU de Rennes,NA,NA,hospital,manual,manual,1
+nimes university hospital,CHU de Nîmes,NA,NA,hospital,manual,manual,1
+toulouse university hospital,CHU de Toulouse,NA,NA,hospital,manual,manual,1
+nordsjllands hospital hillerd,Nordsjællands Hospital Hillerød,NA,NA,hospital,manual,manual,1
+les hpitaux universitaires de strasbourg,Les Hôpitaux Universitaires de Strasbourg,NA,NA,hospital,manual,manual,1
+ospedale santa maria della misericordia,Ospedale Santa Maria della Misericordia,NA,NA,hospital,manual,manual,1
+azienda usl della valle daosta,Azienda USL della Valle d'Aosta,NA,NA,hospital,manual,manual,1
+a o ospedale di circolo e fondazione macchi,Azienda Ospedaliera Fondazione Macchi A.O. di Rilievo Nazionale,NA,NA,hospital,manual,manual,1
+azienda ospedaliera ao ospedale niguarda ca granda,Ospedale Niguarda Ca' Granda,NA,NA,hospital,manual,manual,1
+universit degli studi g dannunzio chieti-pescara,Università degli Studi G. d'Annunzio Chieti-Pescara,NA,NA,academic,manual,manual,1
+vall dhebron research institute,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,manual,1
+vall dhebron institute of research,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,manual,1
+charit - universittsmedizin berlin klinik fr dermatologie und allergologie,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+vall hebron university hospital,Hospital Universitari Vall d'Hebron,NA,NA,hospital,manual,manual,1
+amsterdam university medical center - location vu medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+service de neurologie chu lige,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,manual,1
+sorlandet sykehus hf,Sørlandet Sykehus HF,NA,NA,hospital,manual,manual,1
+centre leon berard / centre leon berard,Centre Léon Bérard,NA,NA,hospital,manual,manual,1
+institut de cancrologie lucien neuwirth,Institut de Cancérologie Lucien Neuwirth,NA,NA,hospital,manual,manual,1
+chu besanon,CHU de Besançon,NA,NA,hospital,manual,manual,1
+medizinische universitt innsbruck institut fr virologie,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,manual,1
+medical university of vienna department for internal medicine iii division of rheumatology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+department of hepatology and gastroenterology aarhus university hospital,Aarhus University,NA,NA,academic,manual,manual,1
+vhio vall dhebron institute of oncology,Vall d'Hebron Institute of Oncology (VHIO),NA,NA,hospital,manual,manual,1
+dipartimento di medicina di precisione - universit degli studi della campania l vanvitelli,Università degli Studi della Campania Luigi Vanvitelli,NA,NA,academic,manual,manual,1
+cmc ambroise par,CMC Ambroise Paré,NA,NA,hospital,manual,manual,1
+cosmo technologies limited,Cosmo Technologies Ltd,NA,NA,industry,manual,manual,1
+azienda ospedaliera universitaria citta della salute e della scienza di torino,AOU Città della Salute e della Scienza di Torino,NA,NA,hospital,manual,manual,1
+hospital general universitario gregorio maranon,Hospital General Universitario Gregorio Marañón,NA,NA,hospital,manual,manual,1
+ngm biopharmaceuticals inc,NGM Biopharmaceuticals; Inc.,NA,NA,industry,manual,manual,1
+verein zur praevention und therapie boesartiger erkrankungen austrian breast and colorectal cancer study group,ABCSG,NA,NA,cooperative_group,manual,manual,1
+istituti clinici scientifici maugeri in forma abbreviata istituti clinici scientifici maugeri o anche ics maugeri o maugeri s p a sb,ICS Maugeri S.p.A. SB,NA,NA,hospital,manual,manual,1
+gemeinnutzige salzburger landes kliniken betriebsgesellschaft mbh,Salzburger Landeskliniken,NA,NA,hospital,manual,manual,1
+centro cardiologico monzino s p a,Fondazione Centro Cardiologico Monzino,NA,NA,hospital,manual,manual,1
+diater laboratorio de diagnostico y aplicaciones terapeuticas s a,Diater Laboratorio de Diagnóstico y Aplicaciones Terapéuticas S.A.,NA,NA,industry,manual,manual,1
+industrial farmaceutica cantabria s a,Industrial Farmacéutica Cantabria S.A.,NA,NA,industry,manual,manual,1
+itf research pharma s l,ITF Research Pharma S.L.,NA,NA,industry,manual,manual,1
+universittshautklinik kiel,Universitätshautklinik Kiel,NA,NA,hospital,manual,manual,1
+universittsklinik fr innere medizin iv klinische abteilung gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+groupement des hopitaux de l'institut catholique de lille,Groupement des Hôpitaux de l'Institut Catholique de Lille (GHICL),NA,NA,hospital,manual,manual,1
+hopital novo,Hôpital NOVO,NA,NA,hospital,manual,manual,1
+hospital vall d hebron,Hospital Universitari Vall d'Hebron,NA,NA,hospital,manual,manual,1
+servicio de psiquiatria hospital universitari vall dhebron,Hospital Universitari Vall d'Hebron,NA,NA,hospital,manual,manual,1
+servicio de psiquiatra hospital universitari vall dhebron,Hospital Universitari Vall d'Hebron,NA,NA,hospital,manual,manual,1
+hospital 12 octubre,Hospital Universitario 12 de Octubre,NA,NA,hospital,manual,manual,1
+hospital universitario gregorio maran,Hospital General Universitario Gregorio Marañón,NA,NA,hospital,manual,manual,1
+amc medical research,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+university of frankfurt institute of clinical pharmacology,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+university hospital of frankfurt department of cardiology,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+kliniken fr ansthesiologie und op intensivmedizin charit universittsmedizin berlin cvk/ccm,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+pdiatrische endokrinologie universittsmedizin berlin charit,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+prof b wiedenmann klinik fr gastroenterologie charit campus virchow,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+universittsklinik fr kinder-und jugendheilkunde,Universitätsklinik für Kinder- und Jugendheilkunde,NA,NA,hospital,manual,manual,1
+klinikum leverkusen ggmbh,Klinikum Leverkusen gGmbH,NA,NA,hospital,manual,manual,1
+fundacin gregorio maran,Fundación Gregorio Marañón,NA,NA,foundation,manual,manual,1
+charite cbf endokrinologie,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charit/campus virchow-klinikum medizinische klinik m s kardiologie,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+klinikum grohadern,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+klinikum grohadern university of munich / medical director prof dr med burkhard gtze,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+klinikum grosshadern,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+1 frauenklinik der lmu- innenstadt,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+universittskinderklinik heidelberg,Universitätskinderklinik Heidelberg,NA,NA,hospital,manual,manual,1
+universitaetsklinikum hamburg,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,manual,1
+university hospital hamburg-eppendorf psychiatry,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,manual,manual,1
+georg-august-universitt gttingen bereich humanmedizin,Universitätsmedizin Göttingen,NA,NA,hospital,manual,manual,1
+nephrology department hospital universitary of bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,manual,manual,1
+klinik fr ansthesiologie und operative intensivmedizin charit universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+brainsgate ltd,BrainsGate Ltd,NA,NA,industry,manual,manual,1
+azienda ospedaliera maggiore della carita,Azienda Ospedaliera Maggiore della Carità,NA,NA,hospital,manual,manual,1
+universita degli studi di pavia,Università degli Studi di Pavia,NA,NA,academic,manual,manual,1
+gel/tamo grupo cooperativo espaol de linfoma/transplante antlogo de mdula sea,GELTAMO,NA,NA,cooperative_group,manual,manual,1
+agmt arbeitsgemeinschaft medikamentse tumortherapie,AGMT,NA,NA,cooperative_group,manual,manual,1
+geicam grupo espaol de investigacin en cncer de mama,GEICAM,NA,NA,cooperative_group,manual,manual,1
+malm university hospital,Malmö University Hospital,NA,NA,hospital,manual,manual,1
+universittsklinik fr kinder- und jugendheilkunde,Universitätsklinik für Kinder- und Jugendheilkunde,NA,NA,hospital,manual,manual,1
+charit university medicine,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charit berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+universittsklinikum des saarlandes,Universitätsklinikum des Saarlandes,NA,NA,hospital,manual,manual,1
+universittsklinik mainz pneumologie,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,hospital,manual,manual,1
+universittsklinikum der medizinischen fakultt freiburg,Universitätsklinikum Freiburg,NA,NA,hospital,manual,manual,1
+azienda ospedaliera s filippo neri,Azienda Ospedaliera S. Filippo Neri,NA,NA,hospital,manual,manual,1
+emma childrens hospital-amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+weleda ag deutschland,Weleda AG,NA,NA,industry,manual,manual,1
+azienda ospedaliera l sacco a o di rilievo nazionale,Azienda Ospedaliera L. Sacco,NA,NA,hospital,manual,manual,1
+universittsmedizin der johannes-gutenberg universitt mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,hospital,manual,manual,1
+university hospital vienna,AKH Wien,AKH Wien,AKH Wien,hospital,manual,manual,1
+charit- universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charite-universittsmedizin berlin germany,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+irccs casa sollievo della sofferenza,IRCCS Casa Sollievo della Sofferenza,NA,NA,hospital,manual,manual,1
+umcn,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+umcn farm-tox,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+umc st radboud university hospital center,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+kuopion yliopistollinen sairaala,Kuopio University Hospital,NA,NA,hospital,manual,manual,1
+vu medisch centrum,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+academic medical centre amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,manual,1
+hospital universitario de bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,manual,manual,1
+klinikum der lmu,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+hospital clnico de barcelona,Hospital Clínic de Barcelona,NA,NA,hospital,manual,manual,1
+servicio de infecciones hospital clinic de barcelona,Hospital Clínic de Barcelona,NA,NA,hospital,manual,manual,1
+giovanni-wolfgang goethe-universitt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+dekan des fb medizin der johann-wolfgang goethe-universitt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+umcn department pharm-tox,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+universita degli studi di ferrara,Università degli Studi di Ferrara,NA,NA,academic,manual,manual,1
+genmab a/s,Genmab A/S,NA,NA,industry,manual,manual,1
+radboud university medical centre,Radboudumc,Radboudumc,Radboudumc,hospital,manual,manual,1
+u z gasthuisberg,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,manual,1
+zari - univeristtsmedizin gttingen,Universitätsmedizin Göttingen,NA,NA,hospital,manual,manual,1
+universittsklinikum schleswig-holstein uksh,Universitätsklinikum Schleswig-Holstein,NA,NA,hospital,manual,manual,1
+charit-universittsmedizin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+universittsklinkum erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,manual,manual,1
+grupo espaol multidisciplinar en cncer digestivo-gemcad,GEMCAD,NA,NA,cooperative_group,manual,manual,1
+grupo espaol multidisciplinar en cncer digestivo gemcad,GEMCAD,NA,NA,cooperative_group,manual,manual,1
+grupo de tratamiento de los tumores digestivos ttd,Grupo TTD,NA,NA,cooperative_group,manual,manual,1
+universita degli studi g dannunzio chieti,Università degli Studi G. d'Annunzio Chieti-Pescara,NA,NA,academic,manual,manual,1
+nibit network italiano per la bio-immunoterapia dei tumori,NIBIT,NA,NA,cooperative_group,manual,manual,1
+geth grupo espaol de trasplantes hemotopoyeticos y terapia celular,GETH,NA,NA,cooperative_group,manual,manual,1
+azienda unita sanitaria locale lecce,Azienda Unità Sanitaria Locale Lecce,NA,NA,hospital,manual,manual,1
+protalix biotherapeutics,Protalix BioTherapeutics,NA,NA,industry,manual,manual,1
+grupo espaol de investigacin en cancer de ovario geico,GEICO,NA,NA,cooperative_group,manual,manual,1
+gotel grupo oncolgico para el tratamiento de las enfermedades linfoides,GOTEL,NA,NA,cooperative_group,manual,manual,1
+charit campus mitte,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+charite universittsmedizin berlin- campus virchow-klinikum,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+universittsklinikum greifswald der ernst-moritz-arndt universitt greifswald ar,Universitätsklinikum Greifswald,NA,NA,hospital,manual,manual,1
+hotel universitario ramon y cajal,Hospital Ramón y Cajal,NA,NA,hospital,manual,manual,1
+hospital general universitario gregorio maraon de madrid,Hospital General Universitario Gregorio Marañón,NA,NA,hospital,manual,manual,1
+ciruga general ii hospital general universitario gregorio maran,Hospital General Universitario Gregorio Marañón,NA,NA,hospital,manual,manual,1
+gruppo italiano mesotelioma g i me,Gruppo Italiano Mesotelioma G.I.Me.,NA,NA,cooperative_group,manual,manual,1
+fachbereich medizin der johann wolfgang goethe-universitt frankfurt/m,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,manual,1
+universita degli studi di milano-bicocca,University Of Milano Bicocca,NA,NA,academic,manual,manual,1
+julius maximilians universitt wrzburg,Universitätsklinikum Würzburg,NA,NA,hospital,manual,manual,1
+fundaci clinic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,manual,1
+tays sydnsairaala,TAYS Sydänsairaala,NA,NA,hospital,manual,manual,1
+medizinische universitt graz universittsklinik fr inneremedizin abteilung fr endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,manual,manual,1
+istituto scientifico romagnolo per lo studio e la cura dei tumori irst - irccs,IRCCS Istituto Scientifico Romagnolo per lo Studio e la Cura dei Tumori IRST,NA,NA,hospital,manual,manual,1
+fundacio privada clinic per a la recerca biomedica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,manual,manual,1
+centre hospitalier rgional universitaire de nancy,CHRU De Nancy,CHRU De Nancy,CHRU De Nancy,hospital,manual,manual,1
+rouen university hospital,CHU de Rouen,NA,NA,hospital,manual,manual,1
+service of neurology chu liege,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,manual,manual,1
+astrazenenca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,manual,1
+charite - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,manual,1
+fondazione irccs istituto nazionale dei tumori,IRCCS Istituto Nazionale dei Tumori,NA,NA,hospital,manual,manual,1
+centre eugne marquis,Centre Eugène Marquis,NA,NA,hospital,manual,manual,1
+nordsjllands hospital department of cardiology nephrology and endocrinology,Nordsjællands Hospital,NA,NA,hospital,manual,manual,1
+nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,manual,manual,1
+landstinget vstmanland,Landstinget Västmanland,NA,NA,public_body,manual,manual,1
+grupo espaol de investigacin en sarcomas,GEIS,NA,NA,cooperative_group,manual,manual,1
+centre hospitalier rgional universitaire de besanon,CHU de Besançon,NA,NA,hospital,manual,manual,1
+chru de besanon,CHU de Besançon,NA,NA,hospital,manual,manual,1
+groupement des hpitaux de linstitut catholique de lille ghicl,Groupement des Hôpitaux de l'Institut Catholique de Lille (GHICL),NA,NA,hospital,manual,manual,1
+medical university of vienna muw,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+medical university of vienna department of internal medicine i,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,manual,1
+fundacin cris de investigacin para vencer el cncer,Fundación CRIS de Investigación para Vencer el Cáncer,NA,NA,foundation,manual,manual,1
+klinikum der universitaet muenchen aoer,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,Klinikum Der Universitat Munchen AöR,hospital,manual,manual,1
+uk fr ansthesiologie und allgemeine intensivmedizin,Universitätsklinik für Anästhesiologie und allgemeine Intensivmedizin,NA,NA,hospital,manual,manual,1
+novartis europharm limited,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+incyte biosciences distribution b v,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,epar_mah,epar_mah,0.85
 bristol-myers squibb pharma eeig,BMS,Bristol-Myers Squibb,BMS,industry,epar_mah,epar_mah,0.85
+astellas pharma europe b v,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
+pfizer europe ma eeig,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
+glaxosmithkline trading services limited,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
+biogen netherlands b v,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
+ipsen pharma,Ipsen,Ipsen,Ipsen,industry,epar_mah,epar_mah,0.85
 sanofi-aventis deutschland gmbh,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 gilead sciences ireland uc,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
 ucb pharma s a,UCB,UCB,UCB,industry,epar_mah,epar_mah,0.85
-ipsen pharma,Ipsen,Ipsen,Ipsen,industry,epar_mah,epar_mah,0.85
+fondazione telethon ets,Fondazione Telethon,NA,NA,foundation,epar_mah,epar_mah,0.85
 roche registration gmbh,Roche,Roche,Roche,industry,epar_mah,epar_mah,0.85
-novartis europharm limited,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
 amgen europe b v,Amgen,Amgen,Amgen,industry,epar_mah,epar_mah,0.85
 sanofi winthrop industrie,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
 abbvie deutschland gmbh and co kg,AbbVie,AbbVie,AbbVie,industry,epar_mah,epar_mah,0.85
 eli lilly nederland b v,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 teva b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
+crinetics pharmaceuticals europe gmbh,Crinetics Pharmaceuticals,Crinetics Pharmaceuticals,Crinetics Pharmaceuticals,industry,epar_mah,epar_mah,0.85
 janssen-cilag international n v,Janssen,Johnson & Johnson,Janssen / Johnson & Johnson,industry,epar_mah,epar_mah,0.85
 eisai gmbh,Eisai,Eisai,Eisai,industry,epar_mah,epar_mah,0.85
-pfizer europe ma eeig,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0.85
 gilead sciences ireland unlimited company,Gilead Sciences,Gilead Sciences,Gilead Sciences,industry,epar_mah,epar_mah,0.85
 takeda manufacturing austria ag,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 baxter holding b v,Baxter,Baxter,Baxter,industry,epar_mah,epar_mah,0.85
@@ -632,14 +1053,12 @@ eli lilly and company ireland limited,Eli Lilly,Eli Lilly,Eli Lilly,industry,epa
 novo nordisk a/s,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,epar_mah,epar_mah,0.85
 glaxosmithkline biologicals s a,GSK,GSK,GSK,industry,epar_mah,epar_mah,0.85
 merck sharp dohme limited,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
-astellas pharma europe b v,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,epar_mah,epar_mah,0.85
 chiesi farmaceutici s p a,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,epar_mah,epar_mah,0.85
 daiichi sankyo europe gmbh,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,epar_mah,epar_mah,0.85
 sandoz pharmaceuticals d d,Sandoz,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
 leo pharma a/s,LEO Pharma,LEO Pharma,LEO Pharma,industry,epar_mah,epar_mah,0.85
 amgen technology ireland uc,Amgen,Amgen,Amgen,industry,epar_mah,epar_mah,0.85
 teva pharma b v,Teva,Teva,Teva,industry,epar_mah,epar_mah,0.85
-incyte biosciences distribution b v,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,epar_mah,epar_mah,0.85
 organon n v,Organon,Organon,Organon,industry,epar_mah,epar_mah,0.85
 alk-abello a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
@@ -652,7 +1071,6 @@ alexion europe sas,Alexion,AstraZeneca,AstraZeneca,industry,epar_mah,epar_mah,0.
 otsuka pharmaceutical netherlands b v,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,epar_mah,epar_mah,0.85
 takeda pharma a/s,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 otsuka novel products gmbh,Otsuka Pharmaceutical,Otsuka Pharmaceutical,Otsuka Pharmaceutical,industry,epar_mah,epar_mah,0.85
-biogen netherlands b v,Biogen,Biogen,Biogen,industry,epar_mah,epar_mah,0.85
 genmab a/s,Genmab,Genmab,Genmab,industry,epar_mah,epar_mah,0.85
 viiv healthcare b v,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,epar_mah,epar_mah,0.85
 takeda pharmaceuticals international ag ireland branch,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
@@ -675,6 +1093,7 @@ pfizer ireland pharmaceuticals,Pfizer,Pfizer,Pfizer,industry,epar_mah,epar_mah,0
 ucb pharma ltd,UCB,UCB,UCB,industry,epar_mah,epar_mah,0.85
 abbvie ltd,AbbVie,AbbVie,AbbVie,industry,epar_mah,epar_mah,0.85
 sanofi pasteur,Sanofi,Sanofi,Sanofi,industry,epar_mah,epar_mah,0.85
+gensight biologics s a,Gensight Biologics,NA,NA,industry,epar_mah,epar_mah,0.85
 boehringer ingelheim vetmedica gmbh,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,epar_mah,epar_mah,0.85
 takeda gmbh,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 servier ireland industries ltd,Servier,Servier,Servier,industry,epar_mah,epar_mah,0.85
@@ -723,699 +1142,251 @@ abbott s r l,Abbott,Abbott,Abbott,industry,epar_mah,epar_mah,0.85
 takeda europe r centre ltd,Takeda,Takeda,Takeda,industry,epar_mah,epar_mah,0.85
 eli lilly co ltd,Eli Lilly,Eli Lilly,Eli Lilly,industry,epar_mah,epar_mah,0.85
 novartis ophthalmics europe ltd,Novartis,Novartis,Novartis,industry,epar_mah,epar_mah,0.85
+chiron s p a,Chiron,NA,NA,industry,epar_mah,epar_mah,0.85
 pasteur ma¨rieux msd,MSD,Merck & Co.,MSD / Merck & Co.,industry,epar_mah,epar_mah,0.85
+maastricht university medical centre,Maastricht University,NA,NA,NA,ror,ror,0.75
+amsterdam umc location vumc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,ror,ror,0.75
+amsterdam umc location vrije universiteit amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,ror,ror,0.75
+amsterdam umc location university of amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,ror,ror,0.75
+erasmus mc cancer institute,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc kanker instituut,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc transplant institute,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc transplantatie instituut,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus medical center transplant institute,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc - sophia children's hospital,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc cardiovascular institute,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+erasmus mc hart en vaat instituut,Erasmus MC,Erasmus MC,Erasmus MC,hospital,ror,ror,0.75
+ghent university hospital,Ghent University,Ghent University,Ghent University,academic,ror,ror,0.75
+heidelberg university of education,Heidelberg University,NA,NA,NA,ror,ror,0.75
+heidelberg university medical faculty mannheim,Heidelberg University,NA,NA,NA,ror,ror,0.75
+chu dijon bourgogne,CHU Dijon Bourgogne,NA,NA,hospital,ror,ror,0.75
+chu caen normandie,CHU de Caen,NA,NA,hospital,ror,ror,0.75
+unicancer group,Unicancer,Unicancer,Unicancer,cooperative_group,ror,ror,0.75
+ucl queen square institute of neurology,University College London,University College London,University College London,academic,ror,ror,0.75
+ospedale san raffaele arcangelo,Ospedale San Raffaele,Ospedale San Raffaele,Ospedale San Raffaele,hospital,ror,ror,0.75
+novo nordisk foundation center for stem cell medicine,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,ror,ror,0.75
+novo nordisk foundation center for stem cell medicine renew,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,ror,ror,0.75
+aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,ror,ror,0.75
+copenhagen university hospital gentofte,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,ror,ror,0.75
+oslo universitetssykehus hf,Oslo University Hospital,NA,NA,hospital,ror,ror,0.75
 university of leipzig,Universitaet Leipzig,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-medac gesellschaft fuer klinische spezialpraeparate mbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-neuraxpharm pharmaceuticals s l,Laboratorios Lesvi S.L.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universite de liege / centre hospitalier universitaire de liege,Universite De Liege / CHU De Liege,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-angelini pharma italia aziende chimiche riunite angelini francesc o a c r a f s p a enunciabile anche angelini pharma italia s p a angelini pharma s p a a c r a f s p a acraf s p a angelini s p a aziende chimiche riunite angelini francesco a c r a f s p a,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 bispebjerg hospital,Herlev Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 region hovedstaden,Herlev Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-haleon ch s a r l,Haleon CH SARL,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 antibiotice s a / iasis pharmaceuticals hellas a b e e,Antibiotice S.A. / Iasis Pharmaceuticals Hellas S.A.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-mario negri institute for pharmacological research,Istituto Di Ricerche Farmacologiche Mario Negri,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-mario negri institute for pharmacological research irccs,Istituto Di Ricerche Farmacologiche Mario Negri,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-curevac se,Curevac AG,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-debiopharm international s a,Debiopharm International SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-university hospital of ulm aor,Universitaetsklinikum Ulm AöR,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-ac immune s a,AC Immune SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-merus n v,Merus B.V.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 novimmune s a,NovImmune SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-lumos pharma llc,Lumos Pharma Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 adc therapeutics s a,ADC Therapeutics SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-university hospital grenoble,CHU de Grenoble,NA,NA,hospital,ctis_businesskey,ctis_businesskey,0.95
-centre hospitalier universitaire dijon bourgogne,CHU Dijon Bourgogne,NA,NA,hospital,ctis_businesskey,ctis_businesskey,0.95
 institut national de la sante et de la recherche medicale,Inserm,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-g o i r c gruppo oncologico italiano di ricerca clinica,GOIRC Gruppo Oncologico Italiano Di Ricerca Clinica,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-clinica universidad de navarra,University Clinic Of Navarra,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-moderna therapeutics inc,Moderna Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-eyepoint pharmaceuticals inc,Eyepoint Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-om pharma s a,OM Pharma SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-klinikum der technischen universitaet muenchen tum klinikum,Klinikum rechts der Isar der TU Muenchen AöR,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fir huvh fundacio institut de recerca hospital universitari vall de hebron,Vall D'hebron Institut De Recerca,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fundacio hospital universitari vall d'hebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universitaetsmedizin der johannes gutenberg-universitaet mainz koerperschaft des offentlichen rechts,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 universitaetsmedizin der johannes gutenberg-universitaet mainz kor,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-klinikum der universitaet muenchen aor,Klinikum Der Universitat Munchen AöR,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-azienda ospedale-universita padova,Azienda Ospedaliera di Padova,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 assistance publique hopitaux de marseille,Centre Hospitalier Regional De Marseille,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-aio-studien ggmbh,AIO-Studien-gGmbH,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-win medica pharmaceutical a e,Win Medica Pharmaceutical S.A.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-narodowy instytut onkologii im marii sklodowskiej-curie panstwowy instytut badawczy,Narodowy Instytut Onkologii Im. Marii Sklodowskiej-Curie-Panstwowy Instytut Badawczy,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-centre hospitalier universitaire d angers,CHU d'Angers,NA,NA,hospital,ctis_businesskey,ctis_businesskey,0.95
-fundacion publica galega instituto de investigacion sanitaria de santiago de compostela,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-centre hospitalier et universitaire de limoges,CHU de Limoges,NA,NA,hospital,ctis_businesskey,ctis_businesskey,0.95
-deutsches krebsforschungszentrum stiftung des oeffentlichen rechts,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 fondazione italiana linfomi onlus,Fondazione Italiana Linfomi Ets,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-groupe hospitalier universitaire paris psychiatrie and neuroscience,Centre Hospitalier Sainte Anne Paris,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-groupe hospitalier universitaire paris psychiatrie et neuroscience,Centre Hospitalier Sainte Anne Paris,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-institut paoli calmettes,Institut Paoli-Calmettes,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-centre hospitalier regional universitaire de nancy,CHRU De Nancy,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universitair ziekenhuis antwerpen,Antwerp University Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 hemato-oncologie voor volwassenen nederland hovon stichting,HOVON,HOVON,HOVON,cooperative_group,ctis_businesskey,ctis_businesskey,0.95
 haemato oncology foundation for adults netherlands,HOVON,HOVON,HOVON,cooperative_group,ctis_businesskey,ctis_businesskey,0.95
 fundacio de recerca clinic barcelona-institut d'investigacions biomediques august pi i sunyer,Foundation Clinic For Biomedical Research,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-dipartimento di neuroscienze e scienze riproduttive ed odontostomatologiche universita degli studi di napoli federico ii,Universita' Degli Studi Di Napoli Federico II,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 universita degli studi di milano bicocca,University Of Milano Bicocca,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 lymphoma academic research organisation,LYSARC,LYSARC,LYSARC,cooperative_group,ctis_businesskey,ctis_businesskey,0.95
 hopital fondation adolphe de rothschild,Fondation A De Rothschild,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fundacion grupo espanol de investigacion en cancer de mama,Grupo Espanol De Investigacion En Cancer De Mama,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-replimune group inc,Replimune Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-giannina gaslini institute for scientific hospitalization and care,IRCCS Istituto Giannina Gaslini,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 europese organisatie voor onderzoek en behandeling van kanker organisation europeenne pour la recherche et le traitement du cancer european organi,EORTC,EORTC,EORTC,cooperative_group,ctis_businesskey,ctis_businesskey,0.95
-fundacion pethema,Pethema Fundacion,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-prinses maxima centrum voor kinderoncologie b v,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-asso de recherche cancers gynecologiques,Arcagy Gineco,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universita' degli studi di roma la sapienza,Universita Degli Studi Di Roma La Sapienza,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 technische universitaet dresden,Technische Universitat Dresden,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-swiss cancer institute,SAKK,SAKK,SAKK,cooperative_group,ctis_businesskey,ctis_businesskey,0.95
-azienda ospedaliera universitaria meyer irccs,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-hellenic institute for the study of sepsis,Elliniko Institouto Meletis Tis Sipsis,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-frankfurter institut fuer klinische krebsforschung ikf gmbh,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-oncoinvent solutions as,Oncoinvent ASA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universitaetsklinikum heidelberg aor,Heidelberg University,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 academisch ziekenhuis leiden,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,ctis_businesskey,ctis_businesskey,0.95
 universiteit maastricht,Maastricht University,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-zymeworks bc inc,Zymeworks Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-oslo universitetssykehus hf,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,ctis_businesskey,ctis_businesskey,0.95
-rijnstate ziekenhuis stichting,Stichting Rijnstate Ziekenhuis,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fundacion fls de lucha contra el sida las enfermedades infecciosas y la promocion de la salud y la ciencia,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-helsinki university central hospital,HUS-yhtymae,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-zealand university hospital,Region Sjaelland,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-zuyderland medisch centrum stichting,Stichting Zuyderland Medisch Centrum,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-radboud universitair medisch centrum stichting,Stichting Radboud University Medical Center,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 stichting radboud universitair medisch centrum,Stichting Radboud University Medical Center,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-st antonius ziekenhuis,St Antonius Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-university medical centre schleswig-holstein,Universitaetsklinikum Schleswig-Holstein,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-friedrich schiller universitaet jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-institut fuer frauengesundheit gmbh,Institut Für Frauengesundheit GmbH,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fundacion publica andaluza para la gestion de la investigacion en salud de sevilla fisevi,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
+radboud universitair medisch centrum stichting,Stichting Radboud University Medical Center,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 fundacion publica andaluza para la gestion de la investigacion en salud de sevilla,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-alx oncology holdings inc,Alx Oncology Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-lupin atlantis holdings s a,Lupin Atlantis Holdings SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-canisius wilhelmina ziekenhuis,Canisius Wilhelmina Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-stavanger university hospital,Helse Stavanger HF,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 sydvestjysk sygehus,Esbjerg Sygehus,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-esbjerg og grindsted sygehus,Esbjerg Sygehus,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-narodowy instytut kardiologii stefana kardynala wyszynskiego panstwowy instytut badawczy,National Institute Of Cardiology,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-koebenhavns universitet,Kobenhavns Universitet,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-turku university central hospital,Turku University Hospital,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 academisch ziekenhuis maastricht,University Hospital Maastricht,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universitat heidelberg,Heidelberg University,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universita' degli studi di genova,Universita Degli Studi Di Genova,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universita' degli studi di verona,Universita Degli Studi Di Verona,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-nord-ostdeutsche gesellschaft fuer gynaekologische onkologie e v,Nord Ostdeutsche Gesellschaft Fuer Gynaekologische Onkologie e.V.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-universitaet des saarlandes,University Of Saarland,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-university hospital of north norway hf,Universitetssykehuset Nord-Norge HF,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-oncomatryx biopharma s a,Oncomatryx Biopharma S.L.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 het nederlands kanker instituut-antoni van leeuwenhoek ziekenhuis stichting,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-rheinische friedrich wilhelms universitaet bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-rheinische friedrich-wilhelms-universitaet bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-arctic therapeutics ehf,Arctic Therapeutics hf.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-vaestra goetalandsregionen,Vastra Gotalandsregionen,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-cell to cure aps,Cell2cure ApS,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-agomab spain s l u,Agomab Spain S.L.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-malmoe universitet,Malmö Universitet,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 fundacio institut de recerca de l'hospital de la santa creu i sant pau,Fundacio Institut De Recerca De L Hospital De La Santa Creu I Sant Pau,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-consorci mar parc de salut de barcelona,Parc De Salut Mar,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-groupe d'etude therapeutique des affections inflammatoires du tube digestif,i-GETAID,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-fundacio institut d'investigacio biomedica de bellvitge idibell,Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-rycarma therapeutics inc,Armgo Pharma Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-veongen therapeutics gmbh,ViGeneron GmbH,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
 biotechnology institute i mas d s l,Biotechnology Institue I Mas D S.L.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-summit therapeutics sub inc,Summit Therapeutics Inc.,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-groupement de cooperation sanitaire ramsay generale de sante pour l'enseignement et la recherche,GCS Ramsay Sante Enseignement Et Recherche,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-vesper bio aps / vesper bio aps,Insusense ApS / Insusense ApS,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-centrum medycznego ksztalcenia podyplomowego,Centrum Medyczne Ksztalcenia Podyplomowego,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-vandria s a,Vandria SA,NA,NA,NA,ctis_businesskey,ctis_businesskey,0.95
-department of hematology aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:aarhus.rm.dk,0.85
-arcagy research,Arcagy Gineco,NA,NA,NA,euctr_email_domain,euctr_email_domain:ago-ovar.de,0.85
+cambridge university hospitals nhs foundation trust and university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:addenbrookes.nhs.uk,0.85
+cambridge university hospitals nhs foundation trust and the university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:addenbrookes.nhs.uk,0.85
+cambridge university hospital nhs foundation trust and university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:addenbrookes.nhs.uk,0.85
 achillion pharmaceuticals inc a wholly owned subsidiary of alexion pharmaceuticals inc,Alexion,AstraZeneca,AstraZeneca,industry,euctr_email_domain,euctr_email_domain:alexion.com,0.85
-durata therapeutic international b v an allergan affiliate,Allergan,AbbVie,AbbVie,industry,euctr_email_domain,euctr_email_domain:allergan.com,0.85
 tobira therapeutics inc a subsidiary of allergan plc,Allergan,AbbVie,AbbVie,industry,euctr_email_domain,euctr_email_domain:allergan.com,0.85
-tobira therapeutics a subsidiary of allergan plc,Allergan,AbbVie,AbbVie,industry,euctr_email_domain,euctr_email_domain:allergan.com,0.85
-amsterdam university medical centers - location amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam umc-amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam umc-location amc-dept internal medicin,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam university medical centers location amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam university medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam university medical center amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam university medical center aumc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
-amsterdam university medical centers,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amsterdamumc.nl,0.85
+umc amsterdam location amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,euctr_email_domain,euctr_email_domain:amc.uva.nl,0.85
+kai pharmaceuticals inc a subsidiary of amgen inc,Amgen,Amgen,Amgen,industry,euctr_email_domain,euctr_email_domain:amgen.com,0.85
+onyx therapeutics inc an amgen inc subsidiary,Amgen,Amgen,Amgen,industry,euctr_email_domain,euctr_email_domain:amgen.com,0.85
 sint antonius ziekenhuis,St Antonius Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:antoniusziekenhuis.nl,0.85
-sint antonius hospital,St Antonius Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:antoniusziekenhuis.nl,0.85
-university hospital of aarhus,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:auh.rm.dk,0.85
-the university of birmingham / heart of england nhs foundation trust,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,euctr_email_domain,euctr_email_domain:bham.ac.uk,0.85
-the university of birmingham / manchester university nhs foundation trust,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,euctr_email_domain,euctr_email_domain:bham.ac.uk,0.85
+st antonius ziekenhuis,St Antonius Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:antoniusziekenhuis.nl,0.85
+argenx bv,argenx BV,argenx BV,argenx BV,industry,euctr_email_domain,euctr_email_domain:argenx.com,0.85
 birmingham womens hospital,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,euctr_email_domain,euctr_email_domain:bham.ac.uk,0.85
-the university of birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,euctr_email_domain,euctr_email_domain:bham.ac.uk,0.85
-university hospitals birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,euctr_email_domain,euctr_email_domain:bham.ac.uk,0.85
 boehringer,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,euctr_email_domain,euctr_email_domain:boehringer-ingelheim.com,0.85
-boehringer ingelehim ab,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,euctr_email_domain,euctr_email_domain:boehringer-ingelheim.com,0.85
-boehringer ingelheimrcv gmbh co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,euctr_email_domain,euctr_email_domain:boehringer-ingelheim.com,0.85
-boehringer ingeheim rcv gmbh co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,euctr_email_domain,euctr_email_domain:boehringer-ingelheim.com,0.85
-cardiff univeristy,Cardiff University,Cardiff University,Cardiff University,academic,euctr_email_domain,euctr_email_domain:cardiff.ac.uk,0.85
-racd cardiff university,Cardiff University,Cardiff University,Cardiff University,academic,euctr_email_domain,euctr_email_domain:cf.ac.uk,0.85
-centre for human drug research chdr,Centre For Human Drug Research,NA,NA,NA,euctr_email_domain,euctr_email_domain:chdr.nl,0.85
-vu university medical center / center human drug research,Centre For Human Drug Research,NA,NA,NA,euctr_email_domain,euctr_email_domain:chdr.nl,0.85
+abraxis bioscience llc a wholly owned subsidiary of celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,euctr_email_domain,euctr_email_domain:celgene.com,0.85
+abraxis bioscience llc an indirect subsidiary of celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,euctr_email_domain,euctr_email_domain:celgene.com,0.85
+abraxis bioscience llc a wholly-owned subsidiary of celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,euctr_email_domain,euctr_email_domain:celgene.com,0.85
+abraxis bioscience llc a wholly-owned subsidiary celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,euctr_email_domain,euctr_email_domain:celgene.com,0.85
+impact biomedicines inc a wholly owned subsidiary of celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,euctr_email_domain,euctr_email_domain:celgene.com,0.85
+charit university hospital berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,euctr_email_domain,euctr_email_domain:charite.de,0.85
+medizinischen klinik mit schwerpunkt nephrologie und internistische intensivmedizin/charit - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,euctr_email_domain,euctr_email_domain:charite.de,0.85
 chesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,euctr_email_domain,euctr_email_domain:chiesifrance.com,0.85
-the christie nhs foundation trust rd,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:christie.nhs.uk,0.85
-centre hospitalier rgional et universitaire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-centre hospitalier rgional universitaire lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-chru de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-chru of lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-chru lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-centre hospitalier rgional universitaire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
 centre hospitalier et universitaire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chru-lille.fr,0.85
-chru nancy,CHRU De Nancy,NA,NA,NA,euctr_email_domain,euctr_email_domain:chru-nancy.fr,0.85
-centre hospitalier rgional universitaire de nancy,CHRU De Nancy,NA,NA,NA,euctr_email_domain,euctr_email_domain:chru-nancy.fr,0.85
-centre hospitalier rgional universitaire de besancon,CHU de Besançon,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-besancon.fr,0.85
-centre hospitalier universitaire de bordeaux etablissement public,CHU de Bordeaux,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-bordeaux.fr,0.85
 association hospitalire chu brugmann,CHU Brugmann,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-brugmann.be,0.85
-university hospital of grenoble,CHU de Grenoble,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-grenoble.fr,0.85
-grenoble university hospital,CHU de Grenoble,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-grenoble.fr,0.85
-grenoble alps university hospital,CHU de Grenoble,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-grenoble.fr,0.85
-university hospital limoges,CHU de Limoges,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-limoges.fr,0.85
-limoges hospital,CHU de Limoges,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-limoges.fr,0.85
-limoges university hospital,CHU de Limoges,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-limoges.fr,0.85
-hospics civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,euctr_email_domain,euctr_email_domain:chu-lyon.fr,0.85
-hospices civils delyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,euctr_email_domain,euctr_email_domain:chu-lyon.fr,0.85
-hospices civils de lyon - direction de la recherche clinique et de linnovation,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,euctr_email_domain,euctr_email_domain:chu-lyon.fr,0.85
-hospices civils de lyon - direction de la recherche clinique,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,euctr_email_domain,euctr_email_domain:chu-lyon.fr,0.85
-centre hospitalier universiaire de nantes,CHU de Nantes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nantes.fr,0.85
+university hospital grenoble,CHU de Grenoble,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-grenoble.fr,0.85
 chu of nantes,CHU de Nantes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nantes.fr,0.85
-nantes chu,CHU de Nantes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nantes.fr,0.85
-nantes university hospital,CHU de Nantes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nantes.fr,0.85
-fondation lenval - hpitaux pdiatriques de nice chu-lenval,CHU de Nice,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nice.fr,0.85
 fondation lenval - hpitaux pdiatriques de nice chulenval,CHU de Nice,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nice.fr,0.85
-university nice hospital,CHU de Nice,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nice.fr,0.85
-nimes university hospital,CHU de Nîmes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-nimes.fr,0.85
-chu of rennes,CHU de Rennes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rennes.fr,0.85
-rennes university hospital,CHU de Rennes,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rennes.fr,0.85
-chu-hopitaux de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
 chu - hpitaux de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
 chu-hpitaux de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-chu- hpitaux de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-rouen university hospital,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-direction de la recherche clinique et de linnovation chu de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-university hospital centre of rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-direction de la recherche clinique et de linnovation - chu de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
-drci - chu de rouen,CHU de Rouen,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-rouen.fr,0.85
 centre hospitalier de toulouse,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
-erasmus medical centre / centre hospitalier de toulouse,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
-university hospital of toulouse,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
-university hospital toulouse,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
 toulouse hospital,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
-toulouse university hospital,CHU de Toulouse,NA,NA,hospital,euctr_email_domain,euctr_email_domain:chu-toulouse.fr,0.85
-curevac gmbh,Curevac AG,NA,NA,NA,euctr_email_domain,euctr_email_domain:curevac.com,0.85
-debiopharm sa,Debiopharm International SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:debiopharm.com,0.85
-debiopharm s a,Debiopharm International SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:debiopharm.com,0.85
-section of orofacial pain and jaw function aarhus university,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:dent.au.dk,0.85
-german cancer research center dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,NA,euctr_email_domain,euctr_email_domain:dkfz.de,0.85
+research center for emergency medicine department of clinical medicine aarhus university,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:clin.au.dk,0.85
+fundacio clinic per a la recerca biomedica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,euctr_email_domain,euctr_email_domain:clinic.ub.es,0.85
+debiopharm international s a,Debiopharm International SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:debiopharm.com,0.85
 daiichi sankio development limited,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,euctr_email_domain,euctr_email_domain:dsd-eu.com,0.85
 clinical director daiichi sankyo inc,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,euctr_email_domain,euctr_email_domain:dsi.com,0.85
 tayside medical sciences centre on behalf of university of dundee nhs tayside,University Of Dundee,University Of Dundee,University Of Dundee,academic,euctr_email_domain,euctr_email_domain:dundee.ac.uk,0.85
-tayside medical sciences centre on behalf of university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,euctr_email_domain,euctr_email_domain:dundee.ac.uk,0.85
-laboratorios servier s l,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:es.netgrs.com,0.85
-laboratorio servier s l,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:es.netgrs.com,0.85
-guys and st thomas nhs foundation trust / kings college london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:gstt.nhs.uk,0.85
-i r c c s fondazione s lucia,Fondazione Santa Lucia,NA,NA,NA,euctr_email_domain,euctr_email_domain:hsantalucia.it,0.85
-universittsklinik fr augenheilkunde und optometrie medizinische universitt innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck / univ -klinik fr allgem u chirurg intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck / department for general and surgical intensive care medicine,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-universittsklinik fr innere medizin iv medizinische universitt innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck / univ -klinik fr allgemeine und chirurgische intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
+grupo espaol de enfermedades mieloproliferativas gemfin,Grupo TTD,NA,NA,cooperative_group,euctr_email_domain,euctr_email_domain:dynasolutions.com,0.85
+stichting european myeloma network,European Myeloma Network,European Myeloma Network,European Myeloma Network,cooperative_group,euctr_email_domain,euctr_email_domain:emn.life,0.85
+stichting european myeloma network by emn,European Myeloma Network,European Myeloma Network,European Myeloma Network,cooperative_group,euctr_email_domain,euctr_email_domain:emn.life,0.85
+stichting european myeloma network emn,European Myeloma Network,European Myeloma Network,European Myeloma Network,cooperative_group,euctr_email_domain,euctr_email_domain:emn.life,0.85
+german pediatric oncology group gpoh ggmbh,GPOH,NA,NA,cooperative_group,euctr_email_domain,euctr_email_domain:forschung-paediatrie.de,0.85
 medizinische universitt innsbruck abteilung fr hygiene und medizinische mikrobiologie,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
 medizinische universitt innsbruck / univ -klinik fr allg und chirurg intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-innsbruck medical university department of radiology section of microinvasive therapy,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck ago studienzentrale,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university of innsbruck austrian ago trial centre,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck - department fr kinder- und jugendheilkunde pdiatrie iii,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck / allg u chirug intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck universittsklinik fr innere medizin i,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
 medizinische universitt innsbruck innere medizin vi,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-innsbruck medical university,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-department of nuclear medicine medical university innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
 abteilung fr neurologie der medizinischen universitt innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck department of visceral transplant und thoracic surgery,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck university hospital for internal medicine v haematology and oncology,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medizinische universitt innsbruck institut fr virologie,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university of innsbruck university clinic for pediatrics iii,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-medical university innsbruck internal medicine v,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
-istituto europeo di oncolgia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,euctr_email_domain,euctr_email_domain:ieo.it,0.85
-istituto europeo oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,euctr_email_domain,euctr_email_domain:ieo.it,0.85
-the cardinal stefan wyszyski institute of cardiology,National Institute Of Cardiology,NA,NA,NA,euctr_email_domain,euctr_email_domain:ikard.pl,0.85
-imperial college healthcare nhs trust and imperial college london,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,hospital,euctr_email_domain,euctr_email_domain:imperial.nhs.uk,0.85
-umc groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,euctr_email_domain,euctr_email_domain:int.umcg.nl,0.85
-isis pharmaceuticals inc,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,euctr_email_domain,euctr_email_domain:ionisph.com,0.85
-institut produits synthse ipsen ab,Ipsen,Ipsen,Ipsen,industry,euctr_email_domain,euctr_email_domain:ipsen.com,0.85
-epizyme inc an ipsen company,Ipsen,Ipsen,Ipsen,industry,euctr_email_domain,euctr_email_domain:ipsen.com,0.85
+medizinische universitt innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:i-med.ac.at,0.85
+imperial college academic healthsciences centre,Imperial College London,Imperial College London,Imperial College London,academic,euctr_email_domain,euctr_email_domain:imperial.ac.uk,0.85
+joint research compliance office imperial college london and imperial college healthcare nhs trust,Imperial College London,Imperial College London,Imperial College London,academic,euctr_email_domain,euctr_email_domain:imperial.ac.uk,0.85
+imperial college,Imperial College London,Imperial College London,Imperial College London,academic,euctr_email_domain,euctr_email_domain:imperial.ac.uk,0.85
+imperial college of science technology and medicine,Imperial College London,Imperial College London,Imperial College London,academic,euctr_email_domain,euctr_email_domain:imperial.ac.uk,0.85
 clementia pharmaceuticals inc an ipsen company,Ipsen,Ipsen,Ipsen,industry,euctr_email_domain,euctr_email_domain:ipsen.com,0.85
-ortopdkirurgisk forskningsenhed aarhus universitetshospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:ki.au.dk,0.85
-department of respiratory diseases aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:ki.au.dk,0.85
-orthopedic research in aarhus,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:ki.au.dk,0.85
-department of cardiology aarhus university hospital denmark,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:ki.au.dk,0.85
-medizinische universitt graz universittsklinik fr innere medizin abteilung fr gastroenterologie und hepatologie,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:klinikum-graz.at,0.85
-medizinische universitt graz universittsklinik fr innere medizin klinische abteilung fr lungenkrankheiten,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:klinikum-graz.at,0.85
-medizinische universitt graz universittsklinik fr innere medizin abteilung fr endokrinologie und stoffwechsel,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:klinikum-graz.at,0.85
-medizinische universitt graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:klinikum-graz.at,0.85
-the leeds teaching hospitals nhs trust,University Of Leeds,University Of Leeds,University Of Leeds,academic,euctr_email_domain,euctr_email_domain:leedsth.nhs.uk,0.85
+istituto nazionale per la cura tumori,IRCCS Istituto Nazionale dei Tumori,NA,NA,hospital,euctr_email_domain,euctr_email_domain:istitutotumori.mi.it,0.85
+fondazione irccs istituto nazionale tumori,IRCCS Istituto Nazionale dei Tumori,NA,NA,hospital,euctr_email_domain,euctr_email_domain:istitutotumori.mi.it,0.85
+south london and maudsley nhs foundation trust / kings college london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:kcl.ac.uk,0.85
 dermira a wholly owned subsidiary of eli lilly and company,Eli Lilly,Eli Lilly,Eli Lilly,industry,euctr_email_domain,euctr_email_domain:lilly.com,0.85
-dermira inc a wholly owned subsidiary of eli lilly and company,Eli Lilly,Eli Lilly,Eli Lilly,industry,euctr_email_domain,euctr_email_domain:lilly.com,0.85
 dermira inc a wholly-owned subsidiary of eli lilly and company,Eli Lilly,Eli Lilly,Eli Lilly,industry,euctr_email_domain,euctr_email_domain:lilly.com,0.85
-london school of hygiene and tropical medicine,University College London,University College London,University College London,academic,euctr_email_domain,euctr_email_domain:lshtm.ac.uk,0.85
-london school of hygiene tropical medicine,University College London,University College London,University College London,academic,euctr_email_domain,euctr_email_domain:lshtm.ac.uk,0.85
+kvinnokliniken universitetessjukhuset i linkping landstinget i stergtland,Landstinget i Östergötland,NA,NA,public_body,euctr_email_domain,euctr_email_domain:lio.se,0.85
 school of nutrition and translational research in metabolism nutrim maastricht university,Maastricht University,NA,NA,NA,euctr_email_domain,euctr_email_domain:maastrichtuniversity.nl,0.85
-academisch ziekenhuis maastricht,Maastricht University,NA,NA,NA,euctr_email_domain,euctr_email_domain:maastrichtuniversity.nl,0.85
-oslo universitetssykehus,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
+lund university clinical coagulation research unit skane university hospital,Region Skane,NA,NA,NA,euctr_email_domain,euctr_email_domain:med.lu.se,0.85
+friedrich-schiller-university jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,euctr_email_domain,euctr_email_domain:med.uni-jena.de,0.85
+friedrich schiller university jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,euctr_email_domain,euctr_email_domain:med.uni-jena.de,0.85
 university of oslo faculty of medicine institute of health and society,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
 division pf paediatric and adolescent medicine oslo university hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
 fou nevroklinikken oslo university hospital -ullevl,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
 university of oslo,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
-department of neurology division of clinical neuroscience oslo university hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,euctr_email_domain,euctr_email_domain:medisin.uio.no,0.85
-medivation inc a wholly-owned subsidiary of pfizer inc,Pfizer,Pfizer,Pfizer,industry,euctr_email_domain,euctr_email_domain:medivation.com,0.85
-medivation inc a wholly owned subsidiary of pfizer inc,Pfizer,Pfizer,Pfizer,industry,euctr_email_domain,euctr_email_domain:medivation.com,0.85
-university of heidelberg,Heidelberg University,NA,NA,NA,euctr_email_domain,euctr_email_domain:medma.uni-heidelberg.de,0.85
-universitt heidelberg,Heidelberg University,NA,NA,NA,euctr_email_domain,euctr_email_domain:medma.uni-heidelberg.de,0.85
-dept of neurological surgery medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
+med uni graz univ klinik dermatologie abteilung fr allgemeine dermatologie,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:medunigraz.at,0.85
+medical university of graz - division of endocrinology and metabolism,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:medunigraz.at,0.85
+medical university graz department of ophtalmology,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:medunigraz.at,0.85
+medical university graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:medunigraz.at,0.85
+division of thoracic and hyperbaric surgery medical university graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,euctr_email_domain,euctr_email_domain:medunigraz.at,0.85
 muw-medical university of vienna medizinische universitt wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of medicine iii division of nephrology und dialysis,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna department of clinical pharmacology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna / medizinische universitt wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of anaesthesia general intensive care and pain management,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of pediatrics,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna muw,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university vienna department of anesthesia intensive care medicine and pain management,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of internal medicine i,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university vienna gender medicine unit div of endocrinology dep of medicine iii,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical univerity vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna dpt of pediatrics,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna internal medicine iii clinical div of nephrology and dialysis,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna - department of neurology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna department of surgery division of transplantation,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of anaesthesia general critical care and pain management,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-meduni vienna dept of anesthesia critical care div of cardiothoracic and vascular anesthesia,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna department of biomedical imaging and image-guided therapy,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 department of clinical pharmacology/medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-department of clinical pharmacology medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of ophthalmology and optometry,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna university department of psychiatry and psychotherapy,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-department of clinical pharmacology medical university of vienna vienna austria,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 department of cardiothoracic anesthesia and intensive care medicine medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of cardiac thoracic vascular anesthesia and intensive care medicine,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-department of neurosurgery medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-university clinic of dentistry medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical univerity of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department for internal medicine iii division of rheumatology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna department of anaesthesia critical care and pain medicine,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna division of endocrinology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-medical university of vienna div of gastroenterology hepatology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna department of anesthesia intensive care medicine and pain medicine,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
 medical university of vienna / medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,euctr_email_domain,euctr_email_domain:meduniwien.ac.at,0.85
-department of pediatric oncology aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:midt.rm.dk,0.85
-nederlands kanker instituut/antoni van leeuwenhoek ziekenhuis nki-avl,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-stichting nvalt studies,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-antoni van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute- antoni van leeuwenhoek hospital,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-antoni van leeuwenhoek hospital-nuclear medicine department,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-antoni van leeuwenhoek - netherlands cancer institute,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute - antoni van leeuwenhoek hospital nki-alv,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute- antoni van leeuwenhoek hospital nki-avl,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-antoni van leeuwenhoek,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute - antoni van leeuwenhoek hospital,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute- antoni van leeuwenhoek,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-netherlands cancer institute nki antioni van leeuwenhoek avl,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-tichting het nederlands kanker instituut_antoni van leeuwenhoek,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-stichting het nederlands kanker instituut antoni van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
-department of medical oncology and clinical pharmacology the netherlands cancer institute - antoni van leeuwenhoek hosp,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,NA,euctr_email_domain,euctr_email_domain:nki.nl,0.85
+grupo espaol multidisciplinar de cncer digestivo gemcad,GEMCAD,NA,NA,cooperative_group,euctr_email_domain,euctr_email_domain:mfar.net,0.85
+university eye clinic maastricht umc,Maastricht University,NA,NA,NA,euctr_email_domain,euctr_email_domain:mumc.nl,0.85
+academic hospital maastricht azm,Maastricht University,NA,NA,NA,euctr_email_domain,euctr_email_domain:mumc.nl,0.85
 dicerna pharmaceuticals inc a novo nordisk company,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,euctr_email_domain,euctr_email_domain:novonordisk.com,0.85
-medical university medical center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,euctr_email_domain,euctr_email_domain:onco.umcg.nl,0.85
-the university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,euctr_email_domain,euctr_email_domain:oncology.ox.ac.uk,0.85
-oxford university hospitals nhs trust,University Of Oxford,University Of Oxford,University Of Oxford,academic,euctr_email_domain,euctr_email_domain:oncology.ox.ac.uk,0.85
-fundacin oncosur,Fundación Oncosur,NA,NA,NA,euctr_email_domain,euctr_email_domain:oncosur.org,0.85
-oxford university hospitals nhs foundation trust,University Of Oxford,University Of Oxford,University Of Oxford,academic,euctr_email_domain,euctr_email_domain:ouh.nhs.uk,0.85
-department of nephrology ouh odense dk,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:ouh.regionsyddanmark.dk,0.85
 clinical trials and research governance ctrg university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,euctr_email_domain,euctr_email_domain:paediatrics.ox.ac.uk,0.85
 institut de recherche pierre fabre - centre de rd pierre fabre,Pierre Fabre,Pierre Fabre,Pierre Fabre,industry,euctr_email_domain,euctr_email_domain:pierre-fabre.com,0.85
-rd barts and the london nhs trust,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:qmul.ac.uk,0.85
-queen mary university london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:qmul.ac.uk,0.85
-queen mary university of london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:qmul.ac.uk,0.85
-queen mary innovation centre queen mary university of london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:qmul.ac.uk,0.85
-merckle gmbh a member of the ratiopharm group a subsidiary of teva pharmaceutical industries ltd germany,Teva,Teva,Teva,industry,euctr_email_domain,euctr_email_domain:ratiopharm.de,0.85
-department of nephrology rigshospitalet university of copenhagen,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,euctr_email_domain,euctr_email_domain:rh.regionh.dk,0.85
-royal marsden hospital,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:rmh.nhs.uk,0.85
-royal marsden hospital nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:rmh.nhs.uk,0.85
-royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:rmh.nhs.uk,0.85
+queen mary university of london,Queen Mary University of London,Queen Mary University of London,Queen Mary University of London,academic,euctr_email_domain,euctr_email_domain:qmul.ac.uk,0.85
+reckitt benckiser pharmaceuticals,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,Reckitt Benckiser Healthcare,industry,euctr_email_domain,euctr_email_domain:rb.com,0.85
+department off infectious diseases aarhus university hospital skejby denmark,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:rm.dk,0.85
+department of oncology aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:rm.dk,0.85
+orthopedic research in aarhus,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:rm.dk,0.85
+department of pediatrics aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:rm.dk,0.85
 royal marsden,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:rmh.nhs.uk,0.85
+dept of anaesthesiology odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:rsyd.dk,0.85
+department of infectious diseases odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:rsyd.dk,0.85
+odense universitets hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:rsyd.dk,0.85
+steno diabetes center odense,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:rsyd.dk,0.85
+the department of cardiac thoracic and vascular surgery - odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,euctr_email_domain,euctr_email_domain:rsyd.dk,0.85
 hexal ag a sandoz company,Sandoz,Novartis,Novartis,industry,euctr_email_domain,euctr_email_domain:sandoz.com,0.85
 institut de recherches internationales servier i r i s,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-i r i s / servier portugal - especialidades farmacuticas lda,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
 laboratorios servier s l / institut de recherches internationales servier iris,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-laboratorios servier sl / institut de recherches internationales servier iris,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-institut de recherches internationales servier i r i s / laboratorios servier s l,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-institut de recherches internationales servier / servier research and development ltd uk,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-institut de recherches internationales servier / servier portugal - especialidades farmacuticas lda,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
 institute de recherches internacionales servier promotor internacional,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-institute de recherches internationales servier promotor internacional,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
 institut de recherches internationales servier / servier portugal especialidades farmacuticas lda,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-institut de recherches internationales servier / servier portugal - especialidades farmaceuticas lda,Servier,Servier,Servier,industry,euctr_email_domain,euctr_email_domain:servier.com,0.85
-sheffield teaching hospitals,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,Sheffield Teaching Hospitals NHS Foundation Trust,hospital,euctr_email_domain,euctr_email_domain:sheffield.ac.uk,0.85
-dept of infectious diseases aarhus university hospital,Aarhus University,Aarhus University,Aarhus University,academic,euctr_email_domain,euctr_email_domain:skejby.rm.dk,0.85
-south london and maudsley nhs foundation trust / kings college london,Kings College London,Kings College London,Kings College London,academic,euctr_email_domain,euctr_email_domain:slam.nhs.uk,0.85
-ratiopharm gmbh teva eu medical affairs,Teva,Teva,Teva,industry,euctr_email_domain,euctr_email_domain:teva.de,0.85
-oncolytics biotech inc,IO Biotech ApS,NA,NA,NA,euctr_email_domain,euctr_email_domain:theradex.co.uk,0.85
-pci biotech as,IO Biotech ApS,NA,NA,NA,euctr_email_domain,euctr_email_domain:theradex.co.uk,0.85
-moleculin biotech inc,IO Biotech ApS,NA,NA,NA,euctr_email_domain,euctr_email_domain:theradex.co.uk,0.85
-medizinische universitt innsbruck universittsklinik fr neurologie,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,euctr_email_domain,euctr_email_domain:tirol-kliniken.at,0.85
-centre hospitalier universitaire chu de dijon,CHU Dijon Bourgogne,NA,NA,hospital,euctr_email_domain,euctr_email_domain:u-bourgogne.fr,0.85
+tays sydnkeskus oy,TAYS Sydänsairaala,NA,NA,hospital,euctr_email_domain,euctr_email_domain:sydansairaala.fi,0.85
+medac gmbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,euctr_email_domain,euctr_email_domain:syneoshealth.com,0.85
+grupo de tratamiento de los tumores digestivos ttd group,Grupo TTD,NA,NA,cooperative_group,euctr_email_domain,euctr_email_domain:ttdgroup.org,0.85
+grupo de tratamiento de los tumores digestivos,Grupo TTD,NA,NA,cooperative_group,euctr_email_domain,euctr_email_domain:ttdgroup.org,0.85
+university of turku,Turku University Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:tyks.fi,0.85
 university of antwerp,Antwerp University Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:uantwerpen.be,0.85
-univeristy of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,euctr_email_domain,euctr_email_domain:uk-koeln.de,0.85
-german cll study group university of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,euctr_email_domain,euctr_email_domain:uk-koeln.de,0.85
-university medical centre hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,euctr_email_domain,euctr_email_domain:uke.de,0.85
-universittklinikum hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,euctr_email_domain,euctr_email_domain:uke.de,0.85
-department of stem cell transplantation - university medical center hamburg-eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,euctr_email_domain,euctr_email_domain:uke.de,0.85
-service of neurology chu liege,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,euctr_email_domain,euctr_email_domain:ulg.ac.be,0.85
 liege university hospital,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,euctr_email_domain,euctr_email_domain:ulg.ac.be,0.85
-azienda ulss n 9 - treviso uoc pediatria,Azienda Ospedaliera di Padova,NA,NA,NA,euctr_email_domain,euctr_email_domain:unipd.it,0.85
-dipartimento di scienze cardiologiche toraciche e vascolari-universit di padova,Azienda Ospedaliera di Padova,NA,NA,NA,euctr_email_domain,euctr_email_domain:unipd.it,0.85
-university of padova,Azienda Ospedaliera di Padova,NA,NA,NA,euctr_email_domain,euctr_email_domain:unipd.it,0.85
-dipartimento di medicina-dimed universit di padova,Azienda Ospedaliera di Padova,NA,NA,NA,euctr_email_domain,euctr_email_domain:unipd.it,0.85
-university of turku,Turku University Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:utu.fi,0.85
-turku pet centre,Turku University Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:utu.fi,0.85
-university hospital leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,euctr_email_domain,euctr_email_domain:uz.kuleuven.ac.be,0.85
+university medical centre groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,euctr_email_domain,euctr_email_domain:umcg.nl,0.85
+university medial center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,euctr_email_domain,euctr_email_domain:umcg.nl,0.85
+universit campus bio-medico di roma,Università Campus Bio-Medico di Roma,NA,NA,academic,euctr_email_domain,euctr_email_domain:unicampus.it,0.85
+universit campus bio-medico,Università Campus Bio-Medico di Roma,NA,NA,academic,euctr_email_domain,euctr_email_domain:unicampus.it,0.85
 antwerp university hopsital,Antwerp University Hospital,NA,NA,NA,euctr_email_domain,euctr_email_domain:uza.be,0.85
+university hospital brussel,UZ Brussel,UZ Brussel,UZ Brussel,hospital,euctr_email_domain,euctr_email_domain:uzbrussel.be,0.85
 vifor pharma inc,OM Pharma SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:viforpharma.com,0.85
 vifor pharma,OM Pharma SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:viforpharma.com,0.85
-vifor fresenius medical care renal pharma france,OM Pharma SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:viforpharma.com,0.85
-vifor fresenius medical care renal pharma ltd,OM Pharma SA,NA,NA,NA,euctr_email_domain,euctr_email_domain:viforpharma.com,0.85
 millenium pharmaceuticals a wholly owned subsidiary of takeda pharmaceutical company limited,Millennium Pharmaceuticals,Takeda,Takeda,industry,location_postcode,location_postcode,0.7
 millenium pharmaceuticals inc a wholly owned subsidiary of takeda pharmaceutical company limited,Millennium Pharmaceuticals,Takeda,Takeda,industry,location_postcode,location_postcode,0.7
-oslo univeristy hospital - rikshospitalet,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,location_postcode,location_postcode,0.7
-oslo universtity hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,location_postcode,location_postcode,0.7
-schering corporation a subsidiary of merck co inc,Schering-Plough,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-merck sharp dhome corp a subsidiary of merck co inc hereafter referred to as sopnsor or merck,MSD,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-friedrich-schiller-university of jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,location_postcode,location_postcode,0.7
-friedrich schiller university,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,location_postcode,location_postcode,0.7
-friedrich-schiller-universitt jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,location_postcode,location_postcode,0.7
-friedrich schiller university jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,location_postcode,location_postcode,0.7
-friedrich-schiller-university jena,Friedrich-Schiller-Universitaet Jena,NA,NA,NA,location_postcode,location_postcode,0.7
-vall dhebron institut de recerca vhir,Vall D'hebron Institut De Recerca,NA,NA,NA,location_postcode,location_postcode,0.7
-vall dhebron research institute,Vall D'hebron Institut De Recerca,NA,NA,NA,location_postcode,location_postcode,0.7
-vall dhebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,NA,location_postcode,location_postcode,0.7
-vall dhebron institute of research,Vall D'hebron Institut De Recerca,NA,NA,NA,location_postcode,location_postcode,0.7
-vall dhebron research institute vhir,Vall D'hebron Institut De Recerca,NA,NA,NA,location_postcode,location_postcode,0.7
-merck sharp and dohme corp a subsidiary of merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-merck sharpe dohme corp a subsidiary of merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-merck corporation inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-fundacin fls de lucha contra el sida las enfermedades infecciosas y la promocin de la salud y la ciencia,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacio fls de lluita contra la sida les malalties infeccioses i la promocio de la salut i la ciencia,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA,NA,NA,location_postcode,location_postcode,0.7
-laboratorios lesvi s l neuraxpharm group,Laboratorios Lesvi S.L.,NA,NA,NA,location_postcode,location_postcode,0.7
-vu univeristy medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-charite universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-charit universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-charit - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-charite - universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-charit-universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
+fundaci clnic per a la recerca biomdica_fcrb,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,location_postcode,location_postcode,0.7
+fundaci clinic per a la recerca biomdica fcrb,Fundació Clínic per a la Recerca Biomèdica,NA,NA,academic,location_postcode,location_postcode,0.7
+ac immune s a,AC Immune SA,NA,NA,NA,location_postcode,location_postcode,0.7
 vu university medical,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu university medical center department of medical oncology,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu university medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu university medical center department of reproductive medicine,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-amsterdam university medical center - location vu medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu university medical center department of medical,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-vu medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
 amsterdam univeristy medical center - vu univeristy medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
 medical university of vienna department of obstetrics and gynecology,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medical university of vienna department of surgery,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medical university of vienna - abteilung fr thoraxchirurgie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien klinik fr innere medizin ii abteilung fr kardiologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien klinik fr innere medizin iii abteilung fr gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien klinische abteilung fr nephrologie und dialyse universittsklinik fr innere medizin 3,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien univ klinik fr innere medizin iii abt f endokrinologie und stoffwechsel,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien universittsklinik fr innere medizin 3 abteilung fr gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien klinik fr innere medizin iii klin abteilung fr nephrologie und dialyse,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien/univ klinik fr innere medizin iii/abteilung fr nephrologie und dialyse/prof josef smolen,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien univ klinik f frauenheilkunde abt f geburtshilfe und feto-maternale medizin,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
-medizinische universitt wien universittsklinik fr innere medizin iii klinische abteilung fr rheumatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
+medizinische universit wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
+medizinsche universitt wien universittsklinik fr ansthesie allgemeine intensivmedizin und schmerztherapie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,location_postcode,location_postcode,0.7
 uz brussels,UZ Brussel,UZ Brussel,UZ Brussel,hospital,location_postcode,location_postcode,0.7
-amsterdam amc locatie amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academic medical centre,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academic medical center/ gastroenterology,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academic medical centre amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-acedemic medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-umc amsterdam location amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-amsterdam university medical center location amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academical medical centre department of internal,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academical medical centre dep of internal medicine,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-academic medical centre department of internal medicine,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,location_postcode,location_postcode,0.7
-karolinska institute,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,location_postcode,location_postcode,0.7
-european organisation for research and treatment on cancer,EORTC,EORTC,EORTC,cooperative_group,location_postcode,location_postcode,0.7
 european organization for the research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,location_postcode,location_postcode,0.7
-european organisation for research and treatment of,EORTC,EORTC,EORTC,cooperative_group,location_postcode,location_postcode,0.7
 cliniques universitaires saint-luc,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
 cliniques universitaires saint luc,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
 cliniques universitaires saint luc universit catholique de louvain,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-cliniques universitaires saint luc universit catholique de louvain bruxelles,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-cliniques universitaires saint-luc neurologie,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-cliniques universitaires saint-luc universit catholique de louvain,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
 cliniques universitaires saint-luc cusl,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-cliniques universitaires saint-lus universit catholique de louvain,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
 baxalta innovations gmbh,Baxter,Baxter,Baxter,industry,location_postcode,location_postcode,0.7
-glaxo smithkline,GSK,GSK,GSK,industry,location_postcode,location_postcode,0.7
-charit - universitaetsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-charit univeritaetsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,location_postcode,location_postcode,0.7
-aio studien ggmbh,AIO-Studien-gGmbH,NA,NA,NA,location_postcode,location_postcode,0.7
 karolinska universitetssjukhuset,Karolinska University Hospital,Karolinska University Hospital,Karolinska University Hospital,hospital,location_postcode,location_postcode,0.7
-karolinska universitetssjukhuset,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,location_postcode,location_postcode,0.7
-karolinska university hospital/huddinge,Karolinska University Hospital,Karolinska University Hospital,Karolinska University Hospital,hospital,location_postcode,location_postcode,0.7
 bristol-meyers squibb international corporation,BMS,Bristol-Myers Squibb,BMS,industry,location_postcode,location_postcode,0.7
-bristol-m squibb,BMS,Bristol-Myers Squibb,BMS,industry,location_postcode,location_postcode,0.7
-fondazione italiana linfomi,Fondazione Italiana Linfomi Ets,NA,NA,NA,location_postcode,location_postcode,0.7
-fondazione italiana linfomi onlus fil-onlus,Fondazione Italiana Linfomi Ets,NA,NA,NA,location_postcode,location_postcode,0.7
-fondazione italiana sindromi mielodisplastiche fism onlus,Fondazione Italiana Linfomi Ets,NA,NA,NA,location_postcode,location_postcode,0.7
-win medica pharmaceuticals s a,Win Medica Pharmaceutical S.A.,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin instituto de investigacin sanitaria de santiago de compostela,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA,NA,NA,location_postcode,location_postcode,0.7
-merck sharp and dohme a subsidiary of merck co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,location_postcode,location_postcode,0.7
-universita di genova,Universita Degli Studi Di Genova,NA,NA,NA,location_postcode,location_postcode,0.7
-karolinska intitutet,Karolinska Institutet,Karolinska Institutet,Karolinska Institutet,academic,location_postcode,location_postcode,0.7
-boehringer-ingelheim b v,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-astrazenenca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,location_postcode,location_postcode,0.7
+fondazione irccs istituto neurologico carlo besta,IRCCS Istituto Nazionale dei Tumori,NA,NA,hospital,location_postcode,location_postcode,0.7
 istituto europeo di oncologia s r l,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,Istituto Europeo di Oncologia,hospital,location_postcode,location_postcode,0.7
-istituto di ricerche farmacologiche mario negri irccs,Istituto Di Ricerche Farmacologiche Mario Negri,NA,NA,NA,location_postcode,location_postcode,0.7
+azienda ospedaliera s paolo,Azienda Ospedaliera S. Paolo A.O. di Rilievo Nazionale,NA,NA,hospital,location_postcode,location_postcode,0.7
 sanofi- aventis recherche et dveloppement,Sanofi,Sanofi,Sanofi,industry,location_postcode,location_postcode,0.7
-university medical center hamburg eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,location_postcode,location_postcode,0.7
 university medical center hamburg - eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,location_postcode,location_postcode,0.7
 university medical center eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,University Medical Center Hamburg-Eppendorf,hospital,location_postcode,location_postcode,0.7
-f hoffmann- la roche ltd,Roche,Roche,Roche,industry,location_postcode,location_postcode,0.7
-righospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-boehringer-ingelheim pharma gmbh co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-department of radiology rigshospitalet denmark,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-copenhagen university hospital,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-copenhagen university hospital rigshospitalet the heart center - department of thoracic surgery,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-copenhagen university hospital rigshospitalet department of cardiology b 2143,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-copenhagen university hospital rigshospitalet juliane marie centre department of anaesthesiology,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-copenhagen university,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-rigshopitalet/copenhagen university hospital,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-department of clinical physiology nuclear medicin and pet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-region skne,Region Skane,NA,NA,NA,location_postcode,location_postcode,0.7
-alk abell a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,location_postcode,location_postcode,0.7
-medac gesellschaft fr klinische spezialprparate mbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,location_postcode,location_postcode,0.7
-medac gesellschaft fuer klinische spezialprparate mbh,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA,NA,NA,location_postcode,location_postcode,0.7
-leiden universtity medical center,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,location_postcode,location_postcode,0.7
-leiden university medical centre,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,location_postcode,location_postcode,0.7
-leiden universitair medisch centrum,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,location_postcode,location_postcode,0.7
-universittsklinikum schleswig-holstein uksh,Universitaetsklinikum Schleswig-Holstein,NA,NA,NA,location_postcode,location_postcode,0.7
-h lunbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,location_postcode,location_postcode,0.7
-chru besanon,CHU de Besançon,NA,NA,hospital,location_postcode,location_postcode,0.7
-chru de besanon,CHU de Besançon,NA,NA,hospital,location_postcode,location_postcode,0.7
-chu besanon,CHU de Besançon,NA,NA,hospital,location_postcode,location_postcode,0.7
-chu de besanon,CHU de Besançon,NA,NA,hospital,location_postcode,location_postcode,0.7
-rigshospitalet-glostrup,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
-department of ophtalmology rigshospitalet-glostrup,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
+department of nephrology rigshospitalet university of copenhagen,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,location_postcode,location_postcode,0.7
 herlev gentofte hospital,Herlev Hospital,NA,NA,NA,location_postcode,location_postcode,0.7
 alk-abell s a,ALK-Abello,ALK-Abello,ALK-Abello,industry,location_postcode,location_postcode,0.7
-fundacion para la investigacion biomedica hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
 fundacin para la investigacin biomdica del hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin para la investigacin biomdica del hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacion para la investigacin biomdica hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin para la investigacin biomdica del hospital universitario de la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
 fundacin para la investigacin biomdica hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacion de investigacion biomedica hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin para la investigacin biomdica del hospital universitario de la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin para la investigacin biomedica hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-fundacin para la investigacin biomdica del hospital la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,location_postcode,location_postcode,0.7
-university college dublin,University Of Cologne,University Of Cologne,University Of Cologne,academic,location_postcode,location_postcode,0.7
-alk-abell a/s,ALK-Abello,ALK-Abello,ALK-Abello,industry,location_postcode,location_postcode,0.7
-uzleuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-kuleuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-university of leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
+laboratorios normon s a,Laboratorios Leti,NA,NA,industry,location_postcode,location_postcode,0.7
+university hospitals of leuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
+univerity hospitals leuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
 university hospitals of leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-university hospitals of the ku leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-univerity hospital leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-university hospital mnster,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-university hospital ku leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
 univerity hospitals leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-kuleuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
-ku leuven/uz leuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
-uzleuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
-k u leuven,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
 universitaire ziekenhuizen leuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,location_postcode,location_postcode,0.7
-kuleuven - targid,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
-erasmus university medical centre rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-erasmus medical centre,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
 chu de nmes,CHU de Nîmes,NA,NA,hospital,location_postcode,location_postcode,0.7
-erasmus medical centre rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-erasmus medical centre department of anesthesiology,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-erasmus university medical center rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-erasmus university medical center - sophia childrens hospital,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-erasmus mc-danil den hoed,Erasmus MC,Erasmus MC,Erasmus MC,hospital,location_postcode,location_postcode,0.7
-uhtoulouse,CHU de Toulouse,NA,NA,hospital,location_postcode,location_postcode,0.7
 centre hospiitaliier uniiversiitaiire de montpelliier,CHU de Montpellier,NA,NA,hospital,location_postcode,location_postcode,0.7
-uh montpellier,CHU de Montpellier,NA,NA,hospital,location_postcode,location_postcode,0.7
-universtiy medical center utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-university medical center utrecht the netherlands,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-university medical centre utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-princess mxima center for pediatric oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,location_postcode,location_postcode,0.7
-princess mxima center of pediatric oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,location_postcode,location_postcode,0.7
-princess maxima center for pediatric oncology in the netherlands,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,location_postcode,location_postcode,0.7
-princess mxima center for oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,location_postcode,location_postcode,0.7
-princess mxima center for paediatric oncology,Princess Maxima Center For Pediatric Oncology,NA,NA,NA,location_postcode,location_postcode,0.7
+prinses maxima centrum voor kinderoncologie b v,Princess Maxima Center For Pediatric Oncology,NA,NA,hospital,location_postcode,location_postcode,0.7
+princess maxima center for pediatric oncology in the netherlands,Princess Maxima Center For Pediatric Oncology,NA,NA,hospital,location_postcode,location_postcode,0.7
 university medical center,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-univeristy medical center utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-university medical centre utrecht department of vascular surgery,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-chu grenoble-alpes,CHU de Grenoble,NA,NA,hospital,location_postcode,location_postcode,0.7
-chu de lige,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,location_postcode,location_postcode,0.7
-sun pharma industries limited,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,location_postcode,location_postcode,0.7
 hoffman la roche ltd,Roche,Roche,Roche,industry,location_postcode,location_postcode,0.7
 f hoffmannla roche ltd,Roche,Roche,Roche,industry,location_postcode,location_postcode,0.7
-fundacin pblica andaluza para la gestin de la investigacin en salud de sevilla,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA,NA,NA,location_postcode,location_postcode,0.7
-narodowy instytut onkologii im m skodowskiej-curie pastwowy instytut badawczy oddzia w gliwicach,Narodowy Instytut Onkologii Im. Marii Sklodowskiej-Curie-Panstwowy Instytut Badawczy,NA,NA,NA,location_postcode,location_postcode,0.7
-university of essen,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,location_postcode,location_postcode,0.7
-vaestra goetalandsregionen / university of gothenburg,Vastra Gotalandsregionen,NA,NA,NA,location_postcode,location_postcode,0.7
-chu angers-damr,CHU d'Angers,NA,NA,hospital,location_postcode,location_postcode,0.7
 uhangers,CHU d'Angers,NA,NA,hospital,location_postcode,location_postcode,0.7
-odense universitets hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,location_postcode,location_postcode,0.7
-odense university hosipital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,location_postcode,location_postcode,0.7
-azienda ospedaliera universitaria careggi,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,location_postcode,location_postcode,0.7
-azienda ospedaliero-universitaria meyer,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,location_postcode,location_postcode,0.7
-universitt kln,University Of Cologne,University Of Cologne,University Of Cologne,academic,location_postcode,location_postcode,0.7
-gruenenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,location_postcode,location_postcode,0.7
-rheinische friedrich-wilhelms-universitt bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,location_postcode,location_postcode,0.7
-boehringer-ingelheim italia s p a,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-universittsmedizin der johannes gutenberg-university mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,location_postcode,location_postcode,0.7
-universittsmedizin der johannes gutenberg-universitt mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,location_postcode,location_postcode,0.7
-boehringer-ingelheim espaa s a,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-boehringer-ingelheim rcv gmbh co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
 boehringer-ingelheim rcv gmbhco kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-boehringer-ingelheim bv,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
+boehringer-ingelheim rcv gmbh co kg,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
 boehringer-ingelheim france,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-boehringer-ingelheim danmark a/s,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
-medice arzneimittel ptter gmbh co kg,Medice Arzneimittel Puetter GmbH & Co. KG,NA,NA,NA,location_postcode,location_postcode,0.7
-merz therapeutics gmbh,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,location_postcode,location_postcode,0.7
-institut fr klinische krebsforschung ikf gmbh,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,NA,location_postcode,location_postcode,0.7
+boehringer-ingelheim italia s p a,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,location_postcode,location_postcode,0.7
+azienda ospedaliero universitaria pisana,Azienda Ospedaliero-Universitaria Pisana,NA,NA,hospital,location_postcode,location_postcode,0.7
+frankfurter institut fuer klinische krebsforschung ikf gmbh,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,location_postcode,location_postcode,0.7
 universiteit maastricht,University Hospital Maastricht,NA,NA,NA,location_postcode,location_postcode,0.7
-university eye clinic maastricht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,location_postcode,location_postcode,0.7
-maastricht umc,Maastricht University,NA,NA,NA,location_postcode,location_postcode,0.7
-maastricht universitary medical centre,Maastricht University,NA,NA,NA,location_postcode,location_postcode,0.7
-maastricht universitary medical centre,Maastricht University Medical Center,Maastricht University Medical Center,Maastricht University Medical Center,hospital,location_postcode,location_postcode,0.7
-maastriccht university,Maastricht University,NA,NA,NA,location_postcode,location_postcode,0.7
-chu de clermont ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,location_postcode,location_postcode,0.7
-chu clermont ferrand - drci,CHU de Clermont-Ferrand,NA,NA,hospital,location_postcode,location_postcode,0.7
 radboud university nijmegen medical centre,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud university medical centre nijmegen,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud university medical centre department of psychiatry,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud university medical centre,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud university nijmegen medical center,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
 radboud university medical center nijmegen,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-university medical centre nijmegen,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud university,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-radboud univeristy medical centre,Radboudumc,Radboudumc,Radboudumc,hospital,location_postcode,location_postcode,0.7
-universitt des saarlandes,University Of Saarland,NA,NA,NA,location_postcode,location_postcode,0.7
+les hopitaux universitaires de strasbourg,Les Hôpitaux Universitaires de Strasbourg,NA,NA,hospital,location_postcode,location_postcode,0.7
 universittsklinikum tbingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,hospital,location_postcode,location_postcode,0.7
-arcagy-gineco,Arcagy Gineco,NA,NA,NA,location_postcode,location_postcode,0.7
-arcagy-ginco,Arcagy Gineco,NA,NA,NA,location_postcode,location_postcode,0.7
-getaid,i-GETAID,NA,NA,NA,location_postcode,location_postcode,0.7
+university hospital tbingen,University Hospital of Tübingen,NA,NA,hospital,location_postcode,location_postcode,0.7
+university hospital tuebingen,University Hospital of Tübingen,NA,NA,hospital,location_postcode,location_postcode,0.7
+university tuebingen,University Hospital of Tübingen,NA,NA,hospital,location_postcode,location_postcode,0.7
 assistance publique- hpiaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assitance publique des hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique-hopitaux de paris aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique - hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique- hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assistance publique - hopitaux de paris aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assitance publique - hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique des hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance-publique - hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assitance publique-hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique - hpitaux de paris aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique -hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assistance publique - hpitaux paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique - hpitaux de paris / drci,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique -hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique-hopitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assistance publique hpitaux de paris aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique des hpitaux de parisap-hp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assistance publique-hpitaux de paris,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique hpitaux de paris / drci,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique hopitaux de paris/ drci,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 assistance publique hopitaux paris - aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-assistance publique hpitaux de paris/drci,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-ap-hp/ drci,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-aphp,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
-ap-hp/drcd,AP-HP,AP-HP,AP-HP,hospital,location_postcode,location_postcode,0.7
 inserm-anrs,Inserm,NA,NA,NA,location_postcode,location_postcode,0.7
 institut national de la sant et de la research mdicale,Inserm,NA,NA,NA,location_postcode,location_postcode,0.7
-fondation a de rothschild hospital,Fondation A De Rothschild,NA,NA,NA,location_postcode,location_postcode,0.7
-aarhus unversity hospital,Aarhus University,Aarhus University,Aarhus University,academic,location_postcode,location_postcode,0.7
-chu amiens,CHU Amiens-Picardie,NA,NA,hospital,location_postcode,location_postcode,0.7
-medical university of graz division of cardiology,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,location_postcode,location_postcode,0.7
 universita degli studi di napoli federico ii,Universita' Degli Studi Di Napoli Federico II,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum der universitt mnchen,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum der universitaet muenchen,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-medical university graz,Medical University Of Graz,Medical University Of Graz,Medical University Of Graz,hospital,location_postcode,location_postcode,0.7
-klinikum der universitt mnchen-grohadern,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum der universitt,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum der universitaet muenchen aoer,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum rechts der isar technische universitt mnchen,Klinikum rechts der Isar der TU Muenchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-klinikum rechts der isar der technischen universitt mnchen,Klinikum rechts der Isar der TU Muenchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
+klinikum der universitaet muenchen aor,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
+klinikum der universitt mnchen anstalt des ffentlichen rechts,Klinikum Der Universitat Munchen AöR,NA,NA,NA,location_postcode,location_postcode,0.7
 universittsklinikum ulm,Universitaetsklinikum Ulm AöR,NA,NA,NA,location_postcode,location_postcode,0.7
-university ghent,Ghent University,Ghent University,Ghent University,academic,location_postcode,location_postcode,0.7
 university ghent,University Hospital Ghent,University Hospital Ghent,University Hospital Ghent,hospital,location_postcode,location_postcode,0.7
-region vaesterbotten / umea university,Region Västerbotten / Umea University,NA,NA,NA,location_postcode,location_postcode,0.7
-institut fr frauengesundheit gmbh,Institut Für Frauengesundheit GmbH,NA,NA,NA,location_postcode,location_postcode,0.7
-goustave roussy,Gustave Roussy,Gustave Roussy,Gustave Roussy,hospital,location_postcode,location_postcode,0.7
-university medical centre groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,location_postcode,location_postcode,0.7
-university medial center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,location_postcode,location_postcode,0.7
-university medical center groningen department of rheumatology and clinical immunology,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,location_postcode,location_postcode,0.7
-univeristy medical center groningen,University Medical Center Groningen,University Medical Center Groningen,University Medical Center Groningen,hospital,location_postcode,location_postcode,0.7
-ku leuven-drug delivery and disposition,KU Leuven,KU Leuven,KU Leuven,academic,location_postcode,location_postcode,0.7
-cambridge university hospitals nhs foundation trust addenbrookes hospital,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-cambridge university hospitals nhs trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-cambridge university hospitals nhs foundation trust and the university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-cambridge university hospitals nhs foundation trust and university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
+stallergenes s a,Stallergenes S.A.,NA,NA,industry,location_postcode,location_postcode,0.7
 cambridge university hospital nhs foundation trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-cambridge university hospitals nhs foundation trust university of cambridge,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-biohaven pharmaceuticals inc,Alexion,AstraZeneca,AstraZeneca,industry,location_postcode,location_postcode,0.7
-university of dundee/nhs tayside,University Of Dundee,University Of Dundee,University Of Dundee,academic,location_postcode,location_postcode,0.7
-university of dundee/ nhs tayside,University Of Dundee,University Of Dundee,University Of Dundee,academic,location_postcode,location_postcode,0.7
-university of exeter,University Of Dundee,University Of Dundee,University Of Dundee,academic,location_postcode,location_postcode,0.7
-astrazenecaab,AstraZeneca,AstraZeneca,AstraZeneca,industry,location_postcode,location_postcode,0.7
-astra zeneca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,location_postcode,location_postcode,0.7
-medivation inc a wholly owned subsidairy of pfizer inc,Pfizer,Pfizer,Pfizer,industry,location_postcode,location_postcode,0.7
-university of liverpool,University Of Oxford,University Of Oxford,University Of Oxford,academic,location_postcode,location_postcode,0.7
-kings college hospital foundtion nhs trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,Kings College Hospital NHS Foundation Trust,hospital,location_postcode,location_postcode,0.7
-kings college hospital nhs foundation trust / kings college london,Kings College London,Kings College London,Kings College London,academic,location_postcode,location_postcode,0.7
-glaxo smith kline research development ltd,GSK,GSK,GSK,industry,location_postcode,location_postcode,0.7
-glaxosmithklineresearch developemnt ltd,GSK,GSK,GSK,industry,location_postcode,location_postcode,0.7
-glaxo smithkine research and development limited,GSK,GSK,GSK,industry,location_postcode,location_postcode,0.7
+horizon therapeutics ireland dac,Horizon Therapeutics,Horizon Therapeutics,Horizon Therapeutics,industry,location_postcode,location_postcode,0.7
 university college hospital,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-imperial college,Imperial College London,Imperial College London,Imperial College London,academic,location_postcode,location_postcode,0.7
-imperial college,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,hospital,location_postcode,location_postcode,0.7
-imperial college joint research office,Imperial College London,Imperial College London,Imperial College London,academic,location_postcode,location_postcode,0.7
-imperial college nhs trust,Imperial College London,Imperial College London,Imperial College London,academic,location_postcode,location_postcode,0.7
-university college of london,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-medical research council clinical trials unit,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-medical research council clinical trial unit,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7
-medical research council,University College London,University College London,University College London,academic,location_postcode,location_postcode,0.7

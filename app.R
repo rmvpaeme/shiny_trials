@@ -188,6 +188,60 @@ load_pip_decisions <- function(path = PIP_DECISIONS_PATH) {
     distinct()
 }
 
+build_pip_decision_substance_index <- function(path = PIP_DECISIONS_PATH) {
+  load_pip_decisions(path) %>%
+    filter(!is.na(active_substance), nchar(str_trim(active_substance)) > 0) %>%
+    mutate(
+      pip_decision_label = coalesce(pip_decision_number, pip_procedure_number, ema_url),
+      substance_token = lapply(active_substance, norm_pip_substance)
+    ) %>%
+    unnest(substance_token) %>%
+    filter(!is.na(substance_token), nchar(str_trim(substance_token)) > 0) %>%
+    distinct(substance_token, pip_decision_label, .keep_all = TRUE)
+}
+
+build_trial_pip_substance_index <- function(d) {
+  empty <- tibble(
+    `_id` = character(), register = character(), year = integer(),
+    active_substance = character(), substance_token = character()
+  )
+  if (is.null(d) || nrow(d) == 0 || !"substance_label" %in% names(d)) return(empty)
+
+  d %>%
+    select(`_id`, register, year, substance_label) %>%
+    filter(!is.na(substance_label), nchar(str_trim(substance_label)) > 0) %>%
+    separate_rows(substance_label, sep = " / ") %>%
+    mutate(active_substance = str_squish(substance_label)) %>%
+    filter(is_exploratory_substance(active_substance),
+           !is.na(active_substance), nchar(active_substance) > 0) %>%
+    mutate(substance_token = lapply(active_substance, norm_pip_substance)) %>%
+    unnest(substance_token) %>%
+    filter(!is.na(substance_token), nchar(str_trim(substance_token)) > 0) %>%
+    distinct(`_id`, register, year, active_substance, substance_token)
+}
+
+add_pip_analysis_cache <- function(d) {
+  if (is.null(d) || nrow(d) == 0) return(d)
+  trial_index <- build_trial_pip_substance_index(d)
+  summary <- trial_index %>%
+    group_by(`_id`) %>%
+    summarise(
+      pip_active_substances = paste(sort(unique(active_substance)), collapse = " / "),
+      pip_substance_tokens  = paste(sort(unique(substance_token)), collapse = " / "),
+      .groups = "drop"
+    )
+
+  d <- d %>%
+    select(-any_of(c("pip_active_substances", "pip_substance_tokens"))) %>%
+    left_join(summary, by = "_id")
+  if (!"pip_active_substances" %in% names(d)) d$pip_active_substances <- NA_character_
+  if (!"pip_substance_tokens" %in% names(d)) d$pip_substance_tokens <- NA_character_
+
+  attr(d, "pip_trial_substance_index") <- trial_index
+  attr(d, "pip_decision_substance_index") <- build_pip_decision_substance_index()
+  d
+}
+
 # ══════════════════════════════════════════════════════════════════════════════
 # 1. CONFIGURATION
 # ══════════════════════════════════════════════════════════════════════════════
@@ -197,6 +251,7 @@ DB_PATH       <- Sys.getenv("DB_PATH", unset = "./data/trials.sqlite")
 DB_COLLECTION <- Sys.getenv("DB_COLLECTION", unset = "trials")
 CACHE_PATH    <- Sys.getenv("CACHE_PATH", unset = "trials_cache.rds")
 PIP_DECISIONS_PATH <- Sys.getenv("PIP_DECISIONS_PATH", unset = "config/pip_decisions.csv")
+STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Other")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -211,7 +266,7 @@ THEMES <- list(
     frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
     red="#BF616A",orange="#D08770",yellow="#EBCB8B",
     green="#A3BE8C",purple="#B48EAD",
-    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
+    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_withdrawn="#D08770",s_other="#BF616A",
     r_euctr="#5E81AC",r_ctis="#88C0D0",
     chart_bg="#434C5E",chart_fg="#D8DEE9",chart_grid="#4C566A",
     spinner="#88C0D0"),
@@ -221,7 +276,7 @@ THEMES <- list(
     frost0="#8FBCBB",frost1="#88C0D0",frost2="#81A1C1",frost3="#5E81AC",
     red="#BF616A",orange="#D08770",yellow="#EBCB8B",
     green="#A3BE8C",purple="#B48EAD",
-    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_other="#BF616A",
+    s_ongoing="#A3BE8C",s_completed="#EBCB8B",s_withdrawn="#D08770",s_other="#BF616A",
     r_euctr="#5E81AC",r_ctis="#88C0D0",
     chart_bg="#FFFFFF",chart_fg="#2E3440",chart_grid="#E5E9F0",
     spinner="#81A1C1"),
@@ -231,7 +286,7 @@ THEMES <- list(
     frost0="#3c8dbc",frost1="#00c0ef",frost2="#0073b7",frost3="#3c8dbc",
     red="#dd4b39",orange="#ff851b",yellow="#f39c12",
     green="#00a65a",purple="#605ca8",
-    s_ongoing="#00a65a",s_completed="#f39c12",s_other="#dd4b39",
+    s_ongoing="#00a65a",s_completed="#f39c12",s_withdrawn="#ff851b",s_other="#dd4b39",
     r_euctr="#3c8dbc",r_ctis="#00c0ef",
     chart_bg="#ffffff",chart_fg="#333333",chart_grid="#e5e5e5",
     spinner="#3c8dbc")
@@ -1041,6 +1096,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           x6_date_on_which_this_record_was_first_entered_in_the_eudract_database,
           `authorizedApplication.applicationInfo.submissionDate`,
           na.rm=TRUE, remove=TRUE)
+  result <- result %>% mutate(application_status_raw = trial_status_raw)
   
   # For CTIS, submissionDate is a " / "-separated list of per-amendment dates;
   # keep only the earliest (= first submission to CTIS).
@@ -1336,7 +1392,14 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     left_join(clu, by="trial_base_id") %>%
     mutate(Member_state = if_else(!is.na(all_countries), all_countries, Member_state)) %>%
     left_join(slu, by="trial_base_id") %>%
-    mutate(trial_status_raw = if_else(!is.na(all_statuses_raw), all_statuses_raw, trial_status_raw)) %>%
+    mutate(
+      member_state_status_raw = all_statuses_raw,
+      trial_status_raw = case_when(
+        register == "CTIS" ~ coalesce(application_status_raw, trial_status_raw),
+        !is.na(all_statuses_raw) ~ all_statuses_raw,
+        TRUE ~ trial_status_raw
+      )
+    ) %>%
     left_join(mlu, by="trial_base_id") %>%
     mutate(MEDDRA_term = if_else(!is.na(all_meddra), all_meddra, MEDDRA_term)) %>%
     left_join(olu, by="trial_base_id") %>%
@@ -1411,6 +1474,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "Authorised","In Progress","Temporarily halted"
   ), collapse = "|"), ignore_case = TRUE)
   completed_pat <- regex("Completed|COMPLETED|Ended", ignore_case = TRUE)
+  withdrawn_pat <- regex("\\bWithdrawn\\b", ignore_case = TRUE)
 
   # CTIS numeric status code mapping (CTIS API stores status as integer enums).
   # Prefer the textual application status when available; ctStatus can be a
@@ -1421,9 +1485,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "8" = "Ended")
 
   result <- result %>% mutate(
-    # status_raw_orig: used for Ongoing/Completed/Other classification only.
+    # status_raw_orig: used for dashboard status classification only.
     status_raw_orig = case_when(
-      register == "CTIS" ~ coalesce(trial_status_raw, ctStatus, p_end_of_trial_status),
+      register == "CTIS" ~ coalesce(application_status_raw, trial_status_raw, ctStatus, p_end_of_trial_status),
       TRUE ~ coalesce(p_end_of_trial_status, ctStatus, trial_status_raw)
     ),
     # For CTIS, map numeric codes to human-readable labels before any processing.
@@ -1446,6 +1510,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
         "withdrawn"                   = "Withdrawn",
         "terminated"                  = "Terminated",
         "completed"                   = "Completed",
+        "ended"                       = "Completed",
         "authorised"                  = "Authorised",
         "in progress"                 = "Ongoing",
         "ongoing"                     = "Ongoing",
@@ -1457,6 +1522,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     status = case_when(
       str_detect(coalesce(status_raw_orig, ""), ongoing_pat) ~ "Ongoing",
       str_detect(coalesce(status_raw_orig, ""), completed_pat) ~ "Completed",
+      str_detect(coalesce(status_raw_orig, ""), withdrawn_pat) ~ "Withdrawn",
       TRUE ~ "Other")) %>%
     # Ensure the display column is never blank: fall back to the status category.
     mutate(status_raw = if_else(is.na(status_raw) & !is.na(status), status, status_raw))
@@ -1608,6 +1674,17 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     days_to_decision = {d <- as.numeric(decision_date - submission_date_parsed); if_else(!is.na(d) & d >= 0, d, NA_real_)}
   )
 
+  result <- result %>% mutate(
+    trial_duration_end_date = case_when(
+      status == "Completed" & !is.na(decision_date) ~ decision_date,
+      TRUE ~ as.Date(NA)
+    ),
+    trial_duration_days = {
+      d <- as.numeric(trial_duration_end_date - start_date)
+      if_else(!is.na(d) & d >= 0 & d < 3650, d, NA_real_)
+    }
+  )
+
   # ── Sponsor type ──────────────────────────────────────────────────────────
   result <- result %>% mutate(
     sponsor_type = case_when(
@@ -1740,7 +1817,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "f11_trial_has_subjects_under_18", "f12_adults_1864_years",
     "f13_elderly_65_years", "ageGroup")))
 
-  result <- result %>% mutate(data_processing_version = "2026-05-ctis-status-results")
+  result <- result %>% mutate(data_processing_version = "2026-05-status-pip-duration")
 
   # ── Sponsor labels (from pipeline) ───────────────────────────────────────────
   sponsor_labels_path <- file.path(dirname(db_path), "trial_sponsor_labels.csv")
@@ -1759,6 +1836,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   }
   if (!"sponsor_label" %in% names(result)) result$sponsor_label <- result$sponsor_name
 
+  result <- add_pip_analysis_cache(result)
+
   message(sprintf("Ready: %d trials, %d cols", nrow(result), ncol(result)))
   return(result)
 }
@@ -1772,7 +1851,9 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
   d <- tryCatch(readRDS(cp), error = function(e) NULL)
   required_cols <- c("transition_eudract_number", "trial_identifiers",
                      "canonical_trial_id", "analysis_register", "analysis_year",
-                     "DIMP_inn_name",
+                     "DIMP_inn_name", "application_status_raw",
+                     "member_state_status_raw", "pip_active_substances",
+                     "pip_substance_tokens", "trial_duration_days",
                      "data_processing_version")
   !is.null(d) && all(required_cols %in% names(d))
 }
@@ -1817,6 +1898,7 @@ load_trial_data <- function(force_rebuild = FALSE) {
       }, error = function(e) message("Could not attach sponsor labels: ", e$message))
     }
     if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
+    d <- add_pip_analysis_cache(d)
     return(d)
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }
@@ -2131,7 +2213,7 @@ ui <- tagList(
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
                                                  tags$span("Trial", tags$span(" (click to expand)", style="font-size:10px;opacity:0.6;font-weight:normal;")), uiOutput("badge_trial", inline=TRUE)),
                                                selectizeInput("status_filter","Trial Status:",
-                                                              choices=c("Ongoing","Completed","Other"),selected=c("Ongoing","Completed","Other"),
+                                                              choices=STATUS_CHOICES,selected=STATUS_CHOICES,
                                                               multiple=TRUE,options=list(placeholder="All statuses")),
                                                selectizeInput("register_filter","Source Register:",
                                                               choices=c("EUCTR","CTIS"),selected=c("EUCTR","CTIS"),
@@ -2550,11 +2632,16 @@ ui <- tagList(
                                       p(em("% of trials in each phase that have completed, based on current filters."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       withSpinner(plotlyOutput("plot_completion_phase",height="370px"),type=6))),
+                                fluidRow(
+                                  box(title="Trial Duration by Register",status="info",solidHeader=TRUE,width=12,height=430,
+                                      p(em("Completed trials with reliable start and authorization/end-date information. Durations above 10 years are excluded as likely source-data anomalies."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_trial_duration",height="340px"),type=6))),
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
-                                  box(title="Open Trials by Country", status="primary", solidHeader=TRUE, width=12,
-                                      p(em("Completed trials are excluded. Circle size and colour reflect trial count. Zoom in to level 5+ to see a trial list below the map."),
+                                  box(title="Trials by Country", status="primary", solidHeader=TRUE, width=12,
+                                      p(em("Circle size and colour reflect trial count under the current sidebar filters. Zoom in to level 5+ to see a trial list below the map."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       div(style="margin-bottom:8px;",
                                         uiOutput("map_metric_ui")),
@@ -2618,7 +2705,7 @@ ui <- tagList(
                                       ),
                                       h4(icon("filter")," Filters & Features"),
                                       tags$ul(
-                                        tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, or other trial status."),
+                                        tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, withdrawn, or other trial status."),
                                         tags$li(tags$b("Source Register:"), " View data from EUCTR, CTIS, or both."),
                                         tags$li(tags$b("Date Range:"), " Restrict results to a specific submission period."),
                                         tags$li(tags$b("MedDRA Organ Class / Condition:"), " Filter by therapeutic area using standardised MedDRA terminology. Numeric codes (EUCTR prefix format and CTIS EMA vocabulary codes) are automatically resolved to human-readable SOC names."),
@@ -2659,7 +2746,7 @@ ui <- tagList(
                                 ),
                                 fluidRow(
                                   box(title="Trial Status Definitions", width=12, status="warning", solidHeader=TRUE,
-                                      p("The dashboard groups all trials into three categories based on their registry status.
+                                      p("The dashboard groups all trials into four categories based on their registry status.
                                         The table below shows how each registry-specific status maps to a dashboard category,
                                         followed by a definition of each status."),
                                       fluidRow(
@@ -2682,10 +2769,15 @@ ui <- tagList(
                                                 tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed, Prematurely Ended"),
                                                 tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed")
                                               ),
+                                              tags$tr(style="background:#FFF8E1;",
+                                                tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;border-bottom:1px solid #FFE0B2;","Withdrawn"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #FFE0B2;","Withdrawn"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #FFE0B2;","Withdrawn")
+                                              ),
                                               tags$tr(style="background:#FFF3E0;",
                                                 tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;","Other"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Withdrawn, Not Authorised"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Terminated, Withdrawn, Not Authorised")
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Not Authorised"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Terminated, Not Authorised")
                                               )
                                             )
                                           )
@@ -2709,7 +2801,7 @@ ui <- tagList(
                                             tags$dt(tags$b("Terminated (CTIS)")),
                                             tags$dd(style="margin-bottom:6px;","Permanently stopped before completion; not expected to resume. Counted as Other."),
                                             tags$dt(tags$b("Withdrawn")),
-                                            tags$dd(style="margin-bottom:6px;","Sponsor withdrew before trial start; no participants enrolled. Counted as Other."),
+                                            tags$dd(style="margin-bottom:6px;","Sponsor withdrew before trial start; no participants enrolled. Counted separately as Withdrawn."),
                                             tags$dt(tags$b("Not Authorised")),
                                             tags$dd(style="margin-bottom:6px;","Application refused by competent authority or Ethics Committee. Counted as Other.")
                                           )
@@ -2816,7 +2908,12 @@ server <- function(input, output, session) {
       legend.text=element_text(colour=t$chart_fg),legend.position="bottom")
   }
   
-  status_cols <- reactive(c("Ongoing"=tc()$s_ongoing,"Completed"=tc()$s_completed,"Other"=tc()$s_other))
+  status_cols <- reactive(c(
+    "Ongoing" = tc()$s_ongoing,
+    "Completed" = tc()$s_completed,
+    "Withdrawn" = tc()$s_withdrawn,
+    "Other" = tc()$s_other
+  ))
   register_cols <- reactive(c("EUCTR"=tc()$r_euctr,"CTIS"=tc()$r_ctis))
   
   observe({
@@ -2832,7 +2929,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session,"sponsor_filter",
                          choices=sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),server=TRUE)
     updateSelectizeInput(session, "product_search",
-                         choices = sort(unique(rv$data$substance_label[!is.na(rv$data$substance_label)])),
+                         choices = extract_choices(rv$data$substance_label),
                          server = TRUE)
     d<-rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
     if(length(d)>0)updateDateRangeInput(session,"date_range",start=min(d),end=Sys.Date())
@@ -2982,7 +3079,7 @@ server <- function(input, output, session) {
 
   output$badge_trial <- renderUI({
     n <- 0L
-    if (!setequal(input$status_filter,   c("Ongoing","Completed","Other"))) n <- n + 1L
+    if (!setequal(input$status_filter,   STATUS_CHOICES)) n <- n + 1L
     if (!setequal(input$register_filter, c("EUCTR","CTIS")))                n <- n + 1L
     if (length(input$phase_filter) > 0)                                     n <- n + 1L
     if (!isTRUE(input$pip_filter == "All"))                                  n <- n + 1L
@@ -3007,8 +3104,7 @@ server <- function(input, output, session) {
            span(class = "filter-chip-key", key),
            span(class = "filter-chip-val", val))
 
-    status_default <- c("Ongoing", "Completed", "Other")
-    if (!setequal(input$status_filter, status_default))
+    if (!setequal(input$status_filter, STATUS_CHOICES))
       chips <- c(chips, list(mk_chip("Status", paste(input$status_filter, collapse = ", "))))
 
     register_default <- c("EUCTR", "CTIS")
@@ -3065,10 +3161,10 @@ server <- function(input, output, session) {
                      style = "margin-left:8px;font-size:11px;padding:2px 8px;"))
   })
 
-  observeEvent(input$reset_filters, {
+  reset_filters_to_defaults <- function() {
     req(rv$data)
     updateSelectizeInput(session, "status_filter",
-                             selected = c("Ongoing", "Completed", "Other"))
+                             selected = STATUS_CHOICES)
     updateSelectizeInput(session, "register_filter",
                              selected = c("EUCTR", "CTIS"))
     d <- rv$data$submission_date_parsed[!is.na(rv$data$submission_date_parsed)]
@@ -3086,6 +3182,10 @@ server <- function(input, output, session) {
     updateTextInput(session, "text_search", value = "")
     updateSelectizeInput(session, "product_search", selected = character(0))
     mono_active(FALSE)
+  }
+
+  observeEvent(input$reset_filters, {
+    reset_filters_to_defaults()
   })
 
   output$data_info <- renderText({
@@ -3129,7 +3229,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$vb_click, {
     if (input$vb_click == "__reset__") {
-      updateSelectizeInput(session, "status_filter", selected = c("Ongoing","Completed","Other"))
+      updateSelectizeInput(session, "status_filter", selected = STATUS_CHOICES)
     } else if (input$vb_click == "__pip__") {
       updateSelectInput(session, "pip_filter", selected = "Yes")
     } else {
@@ -3163,7 +3263,7 @@ server <- function(input, output, session) {
         tags$div(
           make_question("Which trials have been authorized in the last 12 months?",
                         "last_12m"),
-          make_question("What are the open trials for neuroblastoma in Belgium?",
+          make_question("What are the ongoing trials for neuroblastoma in Belgium?",
                         "neuroblastoma_belgium"),
           make_question("How is the evolution of the PIPs in the past 10 years?",
                         "pip_10y"),
@@ -3181,15 +3281,16 @@ server <- function(input, output, session) {
 
   observeEvent(input$preset_click, {
     p <- input$preset_click
+    reset_filters_to_defaults()
     if (p == "ctis_only") {
       updateSelectizeInput(session, "register_filter", selected = "CTIS")
-      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectizeInput(session, "status_filter",   selected = STATUS_CHOICES)
       updateSelectInput(session,    "pip_filter",      selected = "All")
 
       updateSelectInput(session,    "orphan_filter",   selected = "All")
     } else if (p == "euctr_only") {
       updateSelectizeInput(session, "register_filter", selected = "EUCTR")
-      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectizeInput(session, "status_filter",   selected = STATUS_CHOICES)
       updateSelectInput(session,    "pip_filter",      selected = "All")
 
       updateSelectInput(session,    "orphan_filter",   selected = "All")
@@ -3199,7 +3300,7 @@ server <- function(input, output, session) {
 
     } else if (p == "orphan") {
       updateSelectInput(session,    "orphan_filter",   selected = "Yes")
-      updateSelectizeInput(session, "status_filter",   selected = c("Ongoing","Completed","Other"))
+      updateSelectizeInput(session, "status_filter",   selected = STATUS_CHOICES)
     } else if (p == "completed") {
       updateSelectizeInput(session, "status_filter",   selected = "Completed")
       updateSelectInput(session,    "pip_filter",      selected = "All")
@@ -3544,7 +3645,10 @@ server <- function(input, output, session) {
         country_filter     = input$country_filter,
         phase_filter       = input$phase_filter,
         pip_filter         = input$pip_filter,
+        orphan_filter      = input$orphan_filter,
+        age_group_filter   = input$age_group_filter,
         sponsor_filter     = input$sponsor_filter,
+        product_search     = input$product_search,
         text_search        = input$text_search
       )
       jsonlite::write_json(settings,f,auto_unbox=TRUE)
@@ -3676,6 +3780,8 @@ server <- function(input, output, session) {
 	                   str_detect(coalesce(trial_identifiers, CT_number),pat)|
 	                   str_detect(MEDDRA_term,pat)|
 	                   str_detect(coalesce(sponsor_label,""),pat))}
+      if(length(input$product_search)>0)
+        df_comp <- df_comp %>% filter(matches_substance_label(substance_label,input$product_search))
 
       tmp_data <- tempfile(fileext = ".rds")
       saveRDS(df_comp, tmp_data)
@@ -3692,6 +3798,7 @@ server <- function(input, output, session) {
         pip         = input$pip_filter,
         orphan      = if(!is.null(input$orphan_filter)) input$orphan_filter else "All",
         sponsor     = if(length(input$sponsor_filter)>0) input$sponsor_filter else "All",
+        product     = if(length(input$product_search)>0) input$product_search else "All",
         text_search = if(nzchar(input$text_search)) input$text_search else "(none)"
       )
 
@@ -3743,9 +3850,9 @@ server <- function(input, output, session) {
     tryCatch({
       s<-jsonlite::read_json(input$ul_filters$datapath,simplifyVector=TRUE)
       if(!is.null(s$status_filter))
-        updateCheckboxGroupInput(session,"status_filter",selected=s$status_filter)
+        updateSelectizeInput(session,"status_filter",selected=s$status_filter)
       if(!is.null(s$register_filter))
-        updateCheckboxGroupInput(session,"register_filter",selected=s$register_filter)
+        updateSelectizeInput(session,"register_filter",selected=s$register_filter)
       if(!is.null(s$date_range)&&length(s$date_range)==2)
         updateDateRangeInput(session,"date_range",start=s$date_range[1],end=s$date_range[2])
       if(!is.null(s$organ_class_filter))
@@ -3758,8 +3865,14 @@ server <- function(input, output, session) {
         updateSelectizeInput(session,"phase_filter",selected=s$phase_filter)
       if(!is.null(s$pip_filter))
         updateSelectInput(session,"pip_filter",selected=s$pip_filter)
+      if(!is.null(s$orphan_filter))
+        updateSelectInput(session,"orphan_filter",selected=s$orphan_filter)
+      if(!is.null(s$age_group_filter))
+        updateSelectInput(session,"age_group_filter",selected=s$age_group_filter)
       if(!is.null(s$sponsor_filter))
         updateSelectizeInput(session,"sponsor_filter",selected=s$sponsor_filter)
+      if(!is.null(s$product_search))
+        updateSelectizeInput(session,"product_search",selected=s$product_search)
       if(!is.null(s$text_search))
         updateTextInput(session,"text_search",value=s$text_search)
     },error=function(e)showNotification(paste("Could not load filters:",e$message),type="error"))
@@ -3869,15 +3982,15 @@ server <- function(input, output, session) {
 
 
   pip_decision_substance_index <- reactive({
-    load_pip_decisions() %>%
-      filter(!is.na(active_substance), nchar(str_trim(active_substance)) > 0) %>%
-      mutate(
-        pip_decision_label = coalesce(pip_decision_number, pip_procedure_number, ema_url),
-        substance_token = lapply(active_substance, norm_pip_substance)
-      ) %>%
-      unnest(substance_token) %>%
-      filter(!is.na(substance_token), nchar(str_trim(substance_token)) > 0) %>%
-      distinct(substance_token, pip_decision_label, .keep_all = TRUE)
+    req(rv$data)
+    idx <- attr(rv$data, "pip_decision_substance_index")
+    if (is.null(idx)) build_pip_decision_substance_index() else idx
+  })
+
+  pip_trial_substance_index <- reactive({
+    req(rv$data)
+    idx <- attr(rv$data, "pip_trial_substance_index")
+    if (is.null(idx)) build_trial_pip_substance_index(rv$data) else idx
   })
 
   pip_complex_compounds <- reactive({
@@ -3897,19 +4010,11 @@ server <- function(input, output, session) {
       ))
     }
 
-    trial_tokens <- filt() %>%
-      mutate(raw_substance = if_else(
-        !is.na(DIMP_inn_name) & nchar(str_trim(DIMP_inn_name)) > 0,
-        DIMP_inn_name, DIMP_product_name)) %>%
-      filter(!is.na(raw_substance), nchar(str_trim(raw_substance)) > 0) %>%
-      separate_rows(raw_substance, sep = " / ") %>%
-      mutate(
-        active_substance = resolve_substance_label(raw_substance),
-        substance_token  = lapply(raw_substance, norm_pip_substance)
-      ) %>%
-      unnest(substance_token) %>%
-      filter(is_exploratory_substance(active_substance),
-             !is.na(substance_token), nchar(str_trim(substance_token)) > 0)
+    filtered_meta <- filt() %>% select(`_id`, register, year)
+    trial_tokens <- pip_trial_substance_index() %>%
+      semi_join(filtered_meta, by = "_id") %>%
+      select(`_id`, active_substance, substance_token) %>%
+      left_join(filtered_meta, by = "_id")
 
     trial_tokens %>%
       inner_join(decision_counts %>% select(substance_token), by = "substance_token") %>%
@@ -4341,6 +4446,30 @@ server <- function(input, output, session) {
       plt_layout(
         xaxis = list(title = "Trial Phase"),
         yaxis = list(title = "% Completed", range = c(0, 105)))
+  })
+
+  output$plot_trial_duration <- renderPlotly({
+    df <- filt() %>%
+      filter(status == "Completed",
+             !is.na(trial_duration_days), is.finite(trial_duration_days),
+             trial_duration_days >= 0, trial_duration_days < 3650) %>%
+      mutate(
+        duration_months = trial_duration_days / 30.4375,
+        register = coalesce(analysis_register, register)
+      )
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No duration data for current filters", font = list(size = 14, color = "#888")),
+      annotations = list(text = "Completed trials need both start and end-date information.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    plot_ly(df, x = ~register, y = ~duration_months,
+            color = ~register, colors = register_cols(),
+            type = "box", boxpoints = "outliers",
+            customdata = ~paste0(CT_number, "<br>", status_raw),
+            hovertemplate = "%{customdata}<br>%{y:.1f} months<extra>%{x}</extra>") %>%
+      plt_layout(
+        xaxis = list(title = "Register"),
+        yaxis = list(title = "Trial duration (months)"),
+        showlegend = FALSE)
   })
 
   output$plot_timeline_q <- renderPlotly({
@@ -5109,38 +5238,8 @@ server <- function(input, output, session) {
 
   # ── Map tab ───────────────────────────────────────────────────────────────
 
-  eu_map_ongoing <- reactive({
-    req(rv$data)
-    df <- rv$data %>% filter(status != "Completed")
-    # Apply all sidebar filters except status (map always shows Ongoing)
-    if(length(input$register_filter) > 0)
-      df <- df %>% filter(register %in% input$register_filter)
-    if(!is.null(input$date_range))
-      df <- df %>% filter(is.na(submission_date_parsed) |
-                            (submission_date_parsed >= input$date_range[1] &
-                             submission_date_parsed <= input$date_range[2]))
-    if(length(input$organ_class_filter) > 0)
-      df <- df %>% filter(str_detect(MEDDRA_organ_class,
-                                     regex(paste(input$organ_class_filter, collapse="|"), ignore_case=TRUE)))
-    if(length(input$condition_filter) > 0)
-      df <- df %>% filter(str_detect(MEDDRA_term,
-                                     regex(paste(input$condition_filter, collapse="|"), ignore_case=TRUE)))
-    if(length(input$country_filter) > 0) {
-      pat <- paste(str_replace_all(input$country_filter, "([.()\\[\\]{}+*?^$|\\\\])", "\\\\\\1"), collapse="|")
-      df <- df %>% filter(str_detect(Member_state, regex(pat, ignore_case=TRUE)))
-    }
-    if(input$pip_filter != "All")
-      df <- df %>% filter(has_PIP == input$pip_filter)
-    if(length(input$sponsor_filter) > 0)
-      df <- df %>% filter(sponsor_label %in% input$sponsor_filter)
-    if(nzchar(input$text_search)) {
-      pat <- regex(input$text_search, ignore_case=TRUE)
-	      df <- df %>% filter(str_detect(Full_title, pat) | str_detect(DIMP_product_name, pat) |
-	                            str_detect(coalesce(DIMP_inn_name, ""), pat) |
-	                            str_detect(coalesce(trial_identifiers, CT_number), pat) |
-	                            str_detect(MEDDRA_term, pat) |
-	                            str_detect(coalesce(sponsor_label,""), pat))
-    }
+  eu_map_trials <- reactive({
+    df <- filt()
     df %>%
       filter(!is.na(Member_state)) %>%
       separate_rows(Member_state, sep = " / ") %>%
@@ -5149,7 +5248,7 @@ server <- function(input, output, session) {
   })
 
   eu_country_counts <- reactive({
-    eu_map_ongoing() %>%
+    eu_map_trials() %>%
       group_by(Member_state) %>%
       summarise(n_trials = n_distinct(`_id`), .groups = "drop") %>%
       left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
@@ -5207,13 +5306,13 @@ server <- function(input, output, session) {
       trials_per_million_children = "per million children (0-17)",
       trials_per_million_adults   = "per million adults (18+)",
       trials_per_million_total    = "per million total population",
-      "open trial(s)"
+      "trial(s)"
     )
     legend_title <- switch(metric,
       trials_per_million_children = "Trials / M children",
       trials_per_million_adults   = "Trials / M adults",
       trials_per_million_total    = "Trials / M population",
-      "Open Trials"
+      "Trials"
     )
 
     cc_ok <- cc %>% filter(!is.na(.data[[metric]]))
@@ -5221,7 +5320,7 @@ server <- function(input, output, session) {
 
     cc_ok$display_val <- cc_ok[[metric]]
     cc_ok$popup_html  <- if (metric == "n_trials") {
-      paste0("<b>", cc_ok$Member_state, "</b><br/>", cc_ok$n_trials, " open trial(s)")
+      paste0("<b>", cc_ok$Member_state, "</b><br/>", cc_ok$n_trials, " trial(s)")
     } else {
       paste0("<b>", cc_ok$Member_state, "</b><br/>",
              cc_ok$display_val, " ", metric_label, "<br/>",
@@ -5262,7 +5361,7 @@ server <- function(input, output, session) {
     if (metric != "n_trials" && nrow(cc_na) > 0) {
       cc_na$display_val <- cc_na$n_trials
       cc_na$popup_html  <- paste0("<b>", cc_na$Member_state, "</b><br/>",
-                                  cc_na$n_trials, " open trial(s)<br/>",
+                                  cc_na$n_trials, " trial(s)<br/>",
                                   "<i>Population data unavailable</i>")
       m <- m %>%
         addCircleMarkers(
@@ -5752,13 +5851,13 @@ server <- function(input, output, session) {
     req(input$eu_map_bounds, input$eu_map_zoom)
     req(input$eu_map_zoom >= 5)
     bounds <- input$eu_map_bounds
-    visible_ids <- eu_map_ongoing() %>%
+    visible_ids <- eu_map_trials() %>%
       left_join(COUNTRY_COORDS, by = c("Member_state" = "country")) %>%
       filter(!is.na(lat),
              lat >= bounds$south & lat <= bounds$north,
              lng >= bounds$west & lng <= bounds$east) %>%
       pull(`_id`) %>% unique()
-    validate(need(length(visible_ids) > 0, "No open trials in current map view."))
+    validate(need(length(visible_ids) > 0, "No trials in current map view."))
     metric <- if (is.null(input$map_metric)) "n_trials" else input$map_metric
     if (!metric %in% c("n_trials", "trials_per_million_children", "trials_per_million_adults", "trials_per_million_total"))
       metric <- "n_trials"
@@ -5771,7 +5870,7 @@ server <- function(input, output, session) {
     cc_lookup <- eu_country_counts() %>%
       mutate(map_metric_value = .data[[metric]]) %>%
       select(Member_state, n_trials, map_metric_value)
-    rv$data %>%
+    filt() %>%
       filter(`_id` %in% visible_ids) %>%
       arrange(desc(submission_date_parsed)) %>%
       mutate(
@@ -5828,7 +5927,7 @@ server <- function(input, output, session) {
       # Phase Analytics
       "plot_phase", "plot_phase_status", "plot_phase_sponsor",
       "plot_phase_funnel", "plot_completion_cohort",
-      "plot_completion_sponsor", "plot_completion_phase",
+      "plot_completion_sponsor", "plot_completion_phase", "plot_trial_duration",
       # Sponsor Comparison
       "sponsor_compare_tab_ui",
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",

@@ -51,6 +51,27 @@ run_pipeline(
 )
 message("=== Substance labels build complete ===")
 
+message("=== Refreshing cache with latest substance labels and PIP helpers ===")
+tryCatch({
+  if (!file.exists(CACHE_PATH))
+    stop("Cache not found at ", CACHE_PATH)
+  d <- readRDS(CACHE_PATH)
+  substance_labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
+  if (file.exists(substance_labels_path)) {
+    d <- dplyr::select(d, -dplyr::any_of("substance_label"))
+    sub_labels <- readr::read_csv(substance_labels_path, show_col_types = FALSE,
+                                  col_types = readr::cols(
+                                    `_id` = readr::col_character(),
+                                    substance_label = readr::col_character()))
+    d <- dplyr::left_join(d, sub_labels, by = "_id")
+  }
+  d <- add_pip_analysis_cache(d)
+  saveRDS(d, CACHE_PATH)
+  message("=== Cache PIP helper refresh complete ===")
+}, error = function(e) {
+  message("WARNING: cache PIP helper refresh failed — ", conditionMessage(e))
+})
+
 message("=== Cache rebuild complete ===")
 
 # ── Regenerate preprocessing report ──────────────────────────────────────────
@@ -94,11 +115,13 @@ if (!render_preprocessing) {
     if (!dir.exists("www")) dir.create("www")
     rmarkdown::render(
       input       = preprocessing_path,
-      output_file = normalizePath(file.path("www", "preprocessing.html"), mustWork = FALSE),
+      output_file = "preprocessing.html",
+      output_dir  = normalizePath("www", mustWork = TRUE),
       params      = list(
-        cache_path = normalizePath("trials_cache.rds", mustWork = FALSE),
-        log_dir = normalizePath("data", mustWork = FALSE)
+        cache_path = "trials_cache.rds",
+        log_dir = "data"
       ),
+      knit_root_dir = getwd(),
       quiet       = TRUE
     )
     message("=== Preprocessing report written to www/preprocessing.html ===")

@@ -2,7 +2,6 @@
 title: "Data Preprocessing Report"
 subtitle: "EU Paediatric Clinical Trials — Pipeline Audit"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-knit: (function(inputFile, encoding) { out <- file.path(dirname(inputFile), "..", "www", "preprocessing.html"); rmarkdown::render(inputFile, encoding = encoding, output_file = out) })
 output:
   html_document:
     toc: true
@@ -49,7 +48,7 @@ RED    <- "#BF616A"; PURPLE <- "#B48EAD"; GRAY   <- "#4C566A"
 LIGHT  <- "#ECEFF4"; DARK   <- "#2E3440"
 NORD8  <- c(BLUE, GREEN, YELLOW, RED, PURPLE, ORANGE, TEAL, FROST)
 
-STATUS_COLS <- c(Ongoing = GREEN, Completed = BLUE, Other = ORANGE)
+STATUS_COLS <- c(Ongoing = GREEN, Completed = BLUE, Withdrawn = ORANGE, Other = RED)
 REG_COLS    <- c(EUCTR = BLUE, CTIS = TEAL)
 
 # ── ggplot theme ───────────────────────────────────────────────────────────────
@@ -1197,6 +1196,54 @@ spon_log %>%
   theme_pre()
 ```
 
+```{r spon-trial-dist, fig.height=3.5, eval=!is.null(spon_log)}
+spon_dist <- spon_log %>%
+  group_by(raw_sponsor) %>%
+  summarise(
+    n_trials     = sum(n_trials, na.rm = TRUE),
+    match_status = first(match_status),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    bin = case_when(
+      n_trials == 1  ~ "1",
+      n_trials == 2  ~ "2",
+      n_trials == 3  ~ "3",
+      n_trials <= 5  ~ "4–5",
+      n_trials <= 10 ~ "6–10",
+      n_trials <= 20 ~ "11–20",
+      TRUE           ~ "21+"
+    ),
+    bin = factor(bin, levels = c("1", "2", "3", "4–5", "6–10", "11–20", "21+"))
+  )
+
+pct_spon_one <- round(100 * mean(spon_dist$n_trials == 1))
+n_spon_one   <- sum(spon_dist$n_trials == 1)
+
+spon_dist %>%
+  count(bin, match_status) %>%
+  mutate(match_status = factor(match_status,
+    levels = c("accepted", "review", "rejected", "unknown"))) %>%
+  ggplot(aes(bin, n, fill = match_status)) +
+  geom_col(width = 0.7) +
+  scale_fill_manual(
+    values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED),
+    name   = NULL
+  ) +
+  annotate("text", x = 1, y = Inf,
+    label  = sprintf("%d%% of raw strings\nappear in only 1 trial", pct_spon_one),
+    hjust  = 0.5, vjust = 1.3, size = 3.2, colour = GRAY) +
+  labs(
+    title    = "Sponsor string frequency distribution",
+    subtitle = sprintf(
+      "%s unique strings appear in exactly 1 trial — the main curation opportunity",
+      fmt_n(n_spon_one)
+    ),
+    x = "Trials per raw sponsor string", y = "Unique raw strings"
+  ) +
+  theme_pre()
+```
+
 ### Review queue
 
 ```{r spon-queue-kpis, results='asis', eval=!is.null(spon_queue)}
@@ -1385,7 +1432,7 @@ Status is derived in three layers:
 
 1. **`status_raw_orig`** — coalesce of EUCTR end-of-trial status, CTIS status code, and EUCTR trial status; CTIS numeric codes (1–6) mapped to labels
 2. **`status_raw`** — standardised display string: splits multi-country aggregations, removes numeric tokens, normalises casing
-3. **`status`** — three-category classification: `Ongoing`, `Completed`, `Other`
+3. **`status`** — four-category classification: `Ongoing`, `Completed`, `Withdrawn`, `Other`
 
 ```{r status-dist, fig.height=3.5}
 df %>%
@@ -1666,6 +1713,54 @@ top_sub %>%
   labs(title = "Top 20 active substances by trial count",
        subtitle = "Accepted matches only; one trial counted once per substance",
        x = "Trials", y = NULL) +
+  theme_pre()
+```
+
+```{r sub-trial-dist, fig.height=3.5, eval=!is.null(sub_log)}
+sub_dist <- sub_log %>%
+  group_by(raw_substance) %>%
+  summarise(
+    n_trials     = n_distinct(`_id`),
+    match_status = first(match_status),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    bin = case_when(
+      n_trials == 1  ~ "1",
+      n_trials == 2  ~ "2",
+      n_trials == 3  ~ "3",
+      n_trials <= 5  ~ "4–5",
+      n_trials <= 10 ~ "6–10",
+      n_trials <= 20 ~ "11–20",
+      TRUE           ~ "21+"
+    ),
+    bin = factor(bin, levels = c("1", "2", "3", "4–5", "6–10", "11–20", "21+"))
+  )
+
+pct_sub_one <- round(100 * mean(sub_dist$n_trials == 1))
+n_sub_one   <- sum(sub_dist$n_trials == 1)
+
+sub_dist %>%
+  count(bin, match_status) %>%
+  mutate(match_status = factor(match_status,
+    levels = c("accepted", "review", "rejected", "unknown"))) %>%
+  ggplot(aes(bin, n, fill = match_status)) +
+  geom_col(width = 0.7) +
+  scale_fill_manual(
+    values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED),
+    name   = NULL
+  ) +
+  annotate("text", x = 1, y = Inf,
+    label  = sprintf("%d%% of raw strings\nappear in only 1 trial", pct_sub_one),
+    hjust  = 0.5, vjust = 1.3, size = 3.2, colour = GRAY) +
+  labs(
+    title    = "Substance string frequency distribution",
+    subtitle = sprintf(
+      "%s unique strings appear in exactly 1 trial — the main curation opportunity",
+      fmt_n(n_sub_one)
+    ),
+    x = "Trials per raw substance string", y = "Unique raw strings"
+  ) +
   theme_pre()
 ```
 
