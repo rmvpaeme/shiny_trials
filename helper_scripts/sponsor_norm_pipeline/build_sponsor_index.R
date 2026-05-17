@@ -83,6 +83,7 @@ OUT_LLM      <- file.path(SNP, "sponsor_llm_reviewed.csv")
 OUT_AMBIG    <- file.path(SNP, "sponsor_ambiguous_aliases.csv")
 OUT_NEW      <- file.path(SNP, "new_sponsor_candidates.csv")
 OUT_ORGS     <- file.path(SNP, "ctis_org_candidates.csv")
+OUT_LOC_REVIEW <- file.path(SNP, "postcode_sponsor_candidates.csv")
 OUT_FINAL_MAP    <- file.path(SNP, "final_sponsor_canonical_map.csv")
 OUT_FINAL_FAMILY_MAP <- file.path(SNP, "final_sponsor_family_map.csv")
 OUT_FINAL_REVIEW <- file.path(SNP, "final_sponsor_canonical_review.csv")
@@ -175,6 +176,13 @@ review_bucket_for_key <- function(key) {
     first >= "M" & first <= "R" ~ "M-R",
     first >= "S" & first <= "Z" ~ "S-Z",
     TRUE ~ "other"
+  )
+}
+
+entity_key_is_classed <- function(key) {
+  stringr::str_detect(
+    dplyr::coalesce(as.character(key), ""),
+    "\\b(hospital|university|foundation|trust|institute)\\b$"
   )
 }
 
@@ -312,6 +320,9 @@ final_review_empty <- function() {
   tibble::tibble(
     cluster_key = character(),
     entity_key = character(),
+    entity_anchor_key = character(),
+    entity_class_key = character(),
+    department_parent_key = character(),
     suggested_canonical = character(),
     sponsor_labels = character(),
     aliases_sample = character(),
@@ -433,6 +444,7 @@ expand_final_family_map <- function(combined, family_map) {
         "; generated from target sponsor aliases"
       )
     ) |>
+    dplyr::filter(entity_key_is_classed(entity_key)) |>
     dplyr::distinct(entity_key, sponsor_clean_to, .keep_all = TRUE)
 
   generated_conflicts <- generated_from_target |>
@@ -441,7 +453,8 @@ expand_final_family_map <- function(combined, family_map) {
     dplyr::filter(n_targets > 1L)
 
   dplyr::bind_rows(
-    family_map,
+    family_map |>
+      dplyr::filter(entity_key_is_classed(entity_key)),
     generated_from_target |>
       dplyr::filter(!entity_key %in% generated_conflicts$entity_key)
   ) |>
@@ -457,26 +470,47 @@ build_final_family_review <- function(combined, family_map) {
       sponsor_types = paste(sort(unique(stats::na.omit(sponsor_type))), collapse = "|"),
       sources = paste(sort(unique(stats::na.omit(source))), collapse = "|"),
       aliases_sample = paste(utils::head(sort(unique(alias_clean)), 8L), collapse = "|"),
-      label_entity_key = sponsor_entity_key_one(sponsor_clean[[1L]]),
       label_blocked = sponsor_is_cross_entity_combined_one(sponsor_clean[[1L]]),
       .groups = "drop"
     )
+
+  label_stats <- dplyr::bind_cols(
+    label_stats,
+    sponsor_entity_profile(label_stats$sponsor_clean)
+  )
+
+  label_stats <- label_stats |>
+    dplyr::mutate(label_entity_key = entity_family_key)
 
   label_members <- label_stats |>
     dplyr::transmute(
       entity_key = label_entity_key,
       sponsor_clean,
       member_blocked = label_blocked,
-      evidence = "shared final-label entity key"
+      evidence = paste0(
+        "shared final-label entity key",
+        "; anchor=", dplyr::coalesce(entity_anchor_key, ""),
+        "; class=", dplyr::coalesce(entity_class_key, "")
+      )
     )
 
-  alias_members <- combined |>
-    dplyr::filter(!is.na(alias_clean), !is.na(sponsor_clean)) |>
+  alias_source <- combined |>
+    dplyr::filter(!is.na(alias_clean), !is.na(sponsor_clean))
+
+  alias_members <- dplyr::bind_cols(
+    alias_source,
+    sponsor_entity_profile_basic(alias_source$alias_clean)
+  ) |>
     dplyr::mutate(
-      entity_key = sponsor_entity_key(alias_clean),
+      entity_key = entity_family_key,
       member_blocked = sponsor_is_cross_entity_combined(alias_clean) |
         sponsor_is_cross_entity_combined(sponsor_clean),
-      evidence = "shared alias entity key"
+      evidence = paste0(
+        "shared alias entity key",
+        "; anchor=", dplyr::coalesce(entity_anchor_key, ""),
+        "; class=", dplyr::coalesce(entity_class_key, ""),
+        "; department_parent=", dplyr::coalesce(department_parent_key, "")
+      )
     ) |>
     dplyr::select(entity_key, sponsor_clean, member_blocked, evidence)
 
@@ -513,6 +547,9 @@ build_final_family_review <- function(combined, family_map) {
     dplyr::summarise(
       sponsor_labels = paste(sort(unique(sponsor_clean)), collapse = "|"),
       labels_list = list(sort(unique(sponsor_clean))),
+      entity_anchor_key = paste(sort(unique(stats::na.omit(entity_anchor_key))), collapse = "|"),
+      entity_class_key = paste(sort(unique(stats::na.omit(entity_class_key))), collapse = "|"),
+      department_parent_key = paste(sort(unique(stats::na.omit(department_parent_key))), collapse = "|"),
       aliases_sample = paste(utils::head(sort(unique(unlist(strsplit(aliases_sample, "\\|", fixed = FALSE)))), 8L), collapse = "|"),
       sources = paste(sort(unique(unlist(strsplit(sources, "\\|", fixed = FALSE)))), collapse = "|"),
       sponsor_types = paste(sort(unique(unlist(strsplit(sponsor_types, "\\|", fixed = FALSE)))), collapse = "|"),
@@ -547,7 +584,8 @@ build_final_family_review <- function(combined, family_map) {
       applied = confidence_bucket == "auto"
     ) |>
     dplyr::select(
-      cluster_key, entity_key, suggested_canonical, sponsor_labels,
+      cluster_key, entity_key, entity_anchor_key, entity_class_key,
+      department_parent_key, suggested_canonical, sponsor_labels,
       aliases_sample, sources, sponsor_types, score, evidence,
       confidence_bucket, blocked_reason, review_bucket, applied
     ) |>
@@ -623,6 +661,15 @@ build_final_groups <- function(combined) {
       .groups = "drop"
     )
 
+  label_stats <- dplyr::bind_cols(
+    label_stats,
+    sponsor_entity_profile(label_stats$sponsor_clean)
+  ) |>
+    dplyr::mutate(
+      final_entity_key = dplyr::coalesce(department_parent_key, entity_family_key),
+      final_entity_blocked = sponsor_is_cross_entity_combined(sponsor_clean)
+    )
+
   exact_groups <- label_stats |>
     dplyr::mutate(cluster_key = purrr::map_chr(sponsor_clean, final_exact_key)) |>
     dplyr::filter(nchar(cluster_key) >= 3L) |>
@@ -639,9 +686,30 @@ build_final_groups <- function(combined) {
     dplyr::mutate(evidence = "stripped legal/group/foundation tokens", score = 98) |>
     dplyr::ungroup()
 
+  entity_groups <- label_stats |>
+    dplyr::filter(
+      !is.na(final_entity_key), final_entity_key != "",
+      nchar(final_entity_key) >= 3L,
+      entity_key_is_classed(final_entity_key),
+      !final_entity_blocked
+    ) |>
+    dplyr::mutate(cluster_key = paste0("entity-final:", final_entity_key)) |>
+    dplyr::group_by(cluster_key) |>
+    dplyr::filter(dplyr::n_distinct(sponsor_clean) > 1L) |>
+    dplyr::mutate(
+      evidence = paste0(
+        "shared multilingual entity family",
+        "; anchor=", dplyr::coalesce(entity_anchor_key, ""),
+        "; class=", dplyr::coalesce(entity_class_key, ""),
+        "; department_parent=", dplyr::coalesce(department_parent_key, "")
+      ),
+      score = 98
+    ) |>
+    dplyr::ungroup()
+
   fuzzy_groups <- build_final_fuzzy_groups(label_stats)
 
-  dplyr::bind_rows(exact_groups, stripped_groups, fuzzy_groups) |>
+  dplyr::bind_rows(exact_groups, stripped_groups, entity_groups, fuzzy_groups) |>
     dplyr::distinct(cluster_key, sponsor_clean, .keep_all = TRUE)
 }
 
@@ -710,6 +778,10 @@ apply_auto_final_canonicalization <- function(combined, review_path, seed_review
     dplyr::summarise(
       sponsor_labels = paste(sort(unique(sponsor_clean)), collapse = "|"),
       labels_list = list(sort(unique(sponsor_clean))),
+      entity_key = first_non_missing(final_entity_key),
+      entity_anchor_key = paste(sort(unique(stats::na.omit(entity_anchor_key))), collapse = "|"),
+      entity_class_key = paste(sort(unique(stats::na.omit(entity_class_key))), collapse = "|"),
+      department_parent_key = paste(sort(unique(stats::na.omit(department_parent_key))), collapse = "|"),
       aliases_sample = paste(utils::head(sort(unique(unlist(strsplit(aliases_sample, "\\|", fixed = FALSE)))), 8L), collapse = "|"),
       sources = paste(sort(unique(unlist(strsplit(sources, "\\|", fixed = FALSE)))), collapse = "|"),
       sponsor_types = paste(sort(unique(unlist(strsplit(sponsor_types, "\\|", fixed = FALSE)))), collapse = "|"),
@@ -739,7 +811,10 @@ apply_auto_final_canonicalization <- function(combined, review_path, seed_review
     dplyr::filter(!auto_apply) |>
     dplyr::transmute(
       cluster_key,
-      entity_key = NA_character_,
+      entity_key,
+      entity_anchor_key,
+      entity_class_key,
+      department_parent_key,
       suggested_canonical,
       sponsor_labels,
       aliases_sample,
@@ -1499,7 +1574,23 @@ if (!no_db) {
       }
 
       loc_rows <- dplyr::bind_rows(new_loc)
-      message(sprintf("  %d new alias entries", nrow(loc_rows)))
+      if (nrow(loc_rows) > 0L) {
+        readr::write_csv(
+          loc_rows |>
+            dplyr::select(
+              alias_clean, suggested_canonical = sponsor_clean,
+              sponsor_parent, sponsor_group, sponsor_type,
+              source, confidence_prior
+            ) |>
+            dplyr::arrange(suggested_canonical, alias_clean),
+          OUT_LOC_REVIEW
+        )
+      }
+      message(sprintf(
+        "  %d postcode candidates written to %s (review-only, not added to alias index)",
+        nrow(loc_rows), OUT_LOC_REVIEW
+      ))
+      loc_rows <- empty_index_rows()
     }
   }
 }

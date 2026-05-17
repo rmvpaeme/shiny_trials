@@ -1,76 +1,44 @@
 alias_clean,sponsors_all,n_sponsors,sources
-fundacin para la investigacin biomdica del hospital universitario ramn y cajal madrid,Fundacin para la Investigacin Biomdica del Hospital Universitario Ramn y Cajal|Fundacion Para La Investigacion Biomedica Del Hospital Universitario Ramon Y Cajal|Fundación para la Investigación e Innovación Biomédica FIIB del HU Infanta Sofía|Hospital Ramón y Cajal,4,location_postcode
-fundacion publica andaluza para la gestion de la investigacion en salud de sevilla,FISEVI|Fundacin Pblica Andaluza para la Gestion de la Investigacin en Salud de Sevilla|Fundacion Para La Gestion De La Investigacion En Salud De Sevilla|Fundación Pública Andaluza para la Gestión de la Investigación en Salud de Sevilla FISEVI,4,location_postcode
-cliniques universitaires saint luc universit catholique de louvain bruxelles,Cliniques Universitaires Saint-Luc|Cliniques Universitaires St Luc|University College London,3,location_postcode
-fundaci sant joan de du fsjd,FUNDACI SANT JOAN DE DEU|Fundacio Sant Joan De Deu|Hospital Sant Joan de Deu,3,location_postcode
-fundacin para la investigacin biomedica del hospital clinico san carlos de madrid,Fundacin para la Inv. Biomdica Hospital Clnico San Carlos|Fundación para la Investigación Biomédica del Hospital Clínico San Carlos|IRICYS - Fundación para la Investigación Biomédica del Hospital Clínico San Carlos,3,location_postcode
-fundacion fls de lucha contra el sida las enfermedades infecciosas y la promocion de la salud y la ciencia,"FUNDACIN FLS DE LUCHA CONTRA EL SIDA, LAS ENFERMEDADES INFECCIOSAS Y LA PROMOCIN DE LA SALUD Y LA CIENCIA|Fundacio FLS de Lluita contra la Sida, les Malalties Infeccioses i la Promocio de la Salut i La Ciencia|Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C",3,ctis_businesskey|location_postcode
-laboratorios thea s a,Laboratoires Tha|Laboratorios Salvat|Théa,3,location_postcode
-mitsubishi tanabe pharma america inc,"Mitsubishi Tanabe Development America Inc.|Mitsubishi Tanabe Pharma|Mitsubishi Tanabe Pharma Development America, Inc.",3,location_postcode
-mitsubishi tanabe pharma america mtpa inc,"Mitsubishi Tanabe Development America Inc.|Mitsubishi Tanabe Pharma|Mitsubishi Tanabe Pharma Development America, Inc.",3,location_postcode
-nordic society of gynaecological oncology - clinical trial unit,Nordic Society of Gynaecological Oncology - Clinical Trial Unit NSGO-CTU|Nordic Society of Gynaecological Oncology NSGO|Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,3,location_postcode
-nordic society of gynaecological oncology nsgo - ctu,Nordic Society of Gynaecological Oncology - Clinical Trial Unit NSGO-CTU|Nordic Society of Gynaecological Oncology NSGO|Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,3,location_postcode
-nordic society of gynaecological oncology nsgo-ctu,Nordic Society of Gynaecological Oncology - Clinical Trial Unit NSGO-CTU|Nordic Society of Gynaecological Oncology NSGO|Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,3,location_postcode
-university of leipzig,Leipzig University|Universitaet Leipzig|Universitt Leipzig,3,ctis_businesskey|location_postcode
 a r t i c association pour la recherche de thrapeutiques innovantes en cancrologie,A.R.T.I.C Association pour la Recherche de Thérapeutiques Innovantes en Cancérologie|ARTIC,2,llm_reviewed
-angelini pharma s p a,A.C.R.A.F. S.p.A. - Angelini|ANGELINI,2,bulk_reviewed|epar_mah
-asociacin instituto biodonostia,Asociación Instituto Biodonostia|Asociacion Instituto Biogipuzkoa,2,llm_reviewed
-azienda ospedaliera universitaria meyer irccs,AZIENDA OSPEDALIERA UNIVERSITARIA CAREGGI|Azienda Ospedaliero Universitaria Meyer IRCCS,2,ctis_businesskey|location_postcode
-azienda ospedaliero universitaria careggi firenze,AZIENDA OSPEDALIERA UNIVERSITARIA CAREGGI|Azienda Ospedaliero-Universitaria,2,location_postcode
-aziende chimiche riunite angelini francesco - acraf s p a,A.C.R.A.F. S.p.A. - Angelini|Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,2,location_postcode
-bethesda diabetes research center b v,Bethesda Diabetes Research Center|Bethesda Diabetes research Center BDRC,2,location_postcode
-biontech cell gene therapies gmbh,BioNTech Cell & Gene Therapies GmbH|BioNTech SE,2,euctr_email_domain:biontech.de|location_postcode
-bioprojet pharma,BIOPROJET|Bioprojet Pharma,2,bulk_reviewed|epar_mah
-bioverativ therapeutic inc,Bioverativ|Bioverativ Therapeutics Inc.,2,location_postcode
-bispebjerg frederiksberg hospital,Bispebjerg Hospital|Copenhagen University Hospital - Bispebjerg and Frederiksberg,2,location_postcode
-bracco imaging s p a,BRACCO|Bracco Imaging,2,epar_mah|llm_reviewed
-casa sollievo della sofferenza irccs,Casa Sollievo della Sofferenza|FONDAZIONE CASA SOLLIEVO DELLA SOFFERENZA OPERA DI SAN PIO DA PIETRELCINA OSPEDALE IRCCS,2,euctr_email_domain:operapadrepio.it|location_postcode
-clinica universidad de navarra,Clínica Universidad de Navarra|University Clinic Of Navarra,2,ctis_businesskey|location_postcode
-consorci mar parc de salut de barcelona,Consorci Mar Parc de Salut|Parc De Salut Mar,2,ctis_businesskey|location_postcode
-debiopharm s a,Debiopharm|Debiopharm International SA,2,llm_reviewed
-department of experimental clinical oncology,Department of Endocrinology|Department of Medicine and Endocrinology,2,location_postcode
-department of otorhinolaryngology head neck and audiology rigshospitalet copenhagen denmark,"Department of Otorhinolaryngology, Head and Neck Surgery|Department of Otorhinolaryngology, Head and Neck Surgery and Audiology",2,location_postcode
-durata therapeutic international b v an allergan affiliate,"Allergan|Durata Therapeutics, Inc",2,euctr_email_domain:allergan.com|location_postcode
-fundaci de lluita contra la sida,Fundaci Lluita contra la SIDA|Fundació Lluita contra la SIDA,2,llm_reviewed
-fundaci privada per a la recerca y la docencia sant joan de du,Fundaci per la Recerca i la Docncia Sant Joan de Du|Fundaci Privada per a la Recerca i la Docncia Sant Joan de Du,2,location_postcode
-fundacin para la formacin e investigacin sanitarias de la regin de murcia,Fundacin para la Formacin e Investigacin Sanitaria de la Regin de Murcia|Fundación para la Formación e Investigación Sanitarias de la Región de Murcia,2,llm_reviewed
-fundacin para la investigacin biomdica del hospital 12 de octubre,Fundacin para la Investigacin Biomdica del Hospital Universitario 12 de Octubre|Fundación para la Investigación Biomédica Hospital Universitario 12 de Octubre,2,location_postcode
-fundacin pblica andaluza para la gestin de la investigacin en salud de sevilla fisevi,FISEVI|Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,2,llm_reviewed
-fundacio sant joan de deu,Fundacio Sant Joan De Deu|Hospital Sant Joan de Deu,2,llm_reviewed
-generics uk ltd,Generics UK|Merck Generics,2,llm_reviewed
-genmab a/s,Genmab|Genmab A/S,2,manual|review_queue
-german pediatric oncology group gpoh ggmbh,German Paediatric Oncology Group GPOH|GPOH,2,euctr_email_domain:forschung-paediatrie.de|location_postcode
-gfm-groupe francophone des mylodysplasies,Groupe Francophone Des Myelodysplasies|Groupe Francophone des Mylodysplasies GFM,2,location_postcode
+aalborg university hospital,Aalborg University|Aalborg University Hospital,2,llm_reviewed|ror
+aarhus university hospital,Aarhus University|Aarhus University Hospital,2,manual|ror
+air liquide sante international,Air Liquide|Air Liquide Santé International,2,epar_mah|llm_reviewed
+angelini pharma s p a,Angelini|Angelini Pharma S.p.A.,2,epar_mah|llm_reviewed
+azienda ospedaliero-universitaria careggi,Azienda Ospedaliero-Universitaria|Azienda Ospedaliero-Universitaria Careggi,2,llm_reviewed|ror
+bioprojet pharma,Bioprojet|Bioprojet Pharma,2,epar_mah|llm_reviewed
+bracco imaging s p a,Bracco|Bracco Imaging S.p.A,2,epar_mah|llm_reviewed
+centre hospitalier universitaire vaudois,Centre Hospitalier Universitaire|Centre Hospitalier Universitaire Vaudois,2,llm_reviewed|ror
+cub hopital erasme,CUB - Hôpital Erasme|Erasme Hospital,2,llm_reviewed|manual
+dr gerhard mann chem -pharm fabrik gmbh,Dr|Dr. Gerhard Mann chem.-pharm Fabrik GmbH,2,epar_mah|llm_reviewed
+estetra sprl,Estetra|Estetra SPRL,2,epar_mah|llm_reviewed
+fresenius kabi deutschland gmbh,Fresenius Kabi|Fresenius Kabi Deutschland GmbH,2,epar_mah|llm_reviewed
+fundacio institut d investigacio biomedica de bellvitge idibell,Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL|Institut d'Investigació Biomèdica de Bellvitge - IDIBELL,2,ctis_businesskey|llm_reviewed
+genmab a/s,Genmab|Genmab A/S,2,epar_mah|manual
 gitmo,GITMO|Gitmo - Gruppo Italiano Trapianto di Midollo Osseo ONLUS,2,llm_reviewed|manual
-grupo de tratamiento de los tumores digestivos ttd group,Grupo de Tratamiento de los Tumores Digestivos|Grupo TTD,2,location_postcode
 grupo espaol de trasplante hematopoytico y terapia celular geth,GETH|GETH - Grupo Español de Trasplante Hematopoyético y Terapia Celular,2,llm_reviewed|manual
-infectopharm arzneimittel und consilium gmbh,InfectoPharm|InfectoPharm Arzneimittel GmbH,2,llm_reviewed
-institut klinick a experimentln medicny,Institut klinick a experimentln medicny|Institut Klinické a Experimentální Medicíny (IKEM),2,llm_reviewed
-institut national de la sante et de la recherche medicale,Inserm|Institut National de la Sant et de la Research Mdicale,2,ctis_businesskey|location_postcode
-institut rgional du cancer de montpellier icm,Centre Val d'Aurelle - Paul Lamarque|Institut Régional du Cancer de Montpellier,2,location_postcode
-instituto de investigacin sanitaria la fe de,Instituto de Investigacin Sanitaria La Fe|INSTITUTO DE INVESTIGACIN SANITARIA LA FE DE VALENCIA,2,location_postcode
-instituto de investigacion sanitaria la e,Instituto de Investigacin Sanitaria La Fe|INSTITUTO DE INVESTIGACIN SANITARIA LA FE DE VALENCIA,2,location_postcode
-instituto de investigacion sanitaria la fe de valencia,Instituto de Investigacin Sanitaria La Fe|INSTITUTO DE INVESTIGACIN SANITARIA LA FE DE VALENCIA,2,location_postcode
+hospital clinico universitario de valencia,Hospital Clínico Universitario|Hospital Clínico Universitario de Valencia,2,llm_reviewed|ror
+italfarmaco s p a,Italfarmaco|Italfarmaco S.p.A.,2,epar_mah|llm_reviewed
 itf research pharma s l u,ITF Research Pharma S.L.|ITF Research Pharma SLU,2,llm_reviewed
-mereo biopharma group ltd,Mereo BioPharma 1 Ltd|Mereo BioPharma 2,2,location_postcode
+jazz pharmaceuticals ireland limited,Jazz Pharmaceuticals Ireland Limited|Jazz Pharmaceuticals PLC,2,epar_mah|llm_reviewed
+kedrion s p a,KEDRION|Kedrion S.P.A,2,epar_mah|llm_reviewed
+medica scientia innovation research s l medsir,Medica Scientia Innovation Research MedSIR|MedSIR - Medica Scientia Innovation Research,2,llm_reviewed|manual
 neuraxpharm pharmaceuticals s l,"Laboratorios Lesvi S.L.|Laboratorios Lesvi, S.L. Neuraxpharm group",2,ctis_businesskey|euctr_email_domain:neuraxpharm.com
-nightstarx ltd,NightstaRx|NightstaRx Ltd A Biogen Company,2,euctr_email_domain:nightstarx.com|location_postcode
-odense universitets hospital,Odense Universitetshospital/Syddansk Universitet|Odense University Hospital,2,llm_reviewed|manual
-red andaluza de diseno y traslacion de terapias avanzadas fundacion publica andaluza progreso y salud,Red Andaluza de Diseño y Traslación de Terapias Avanzadas|Red Andaluza de Diseo y Traslacin de Terapias Avanzadas-Fundacin Progreso y Salud,2,location_postcode
-region rebro ln,Region Örebro|Region Örebro Län,2,llm_reviewed
-rottapharm,Rottapharm Biotech s.r.l.|Rottapharm S.p.A.,2,euctr_email_domain:rottapharm.com|location_postcode
-ruprecht-karls-universitt heidelberg medical faculty represented by universittsklinikum heidelberg,Heidelberg University|Ruprecht-Karls-Universität Heidelberg,2,location_postcode
-swedish orphan biovitrum ab publ,Sobi|Swedish Orphan Biovitrum AB publ,2,epar_mah|llm_reviewed
-swedish orphan biovitrum ag,Sobi|Swedish Orphan Biovitrum AB publ,2,location_postcode
-tecnimede sociedade tcnico-medicinal s a,"Tecnimede-Sociedade Tecnico-Medicinal|Tecnimede, Sociedade Tcnico-Medicinal, S.A.",2,llm_reviewed
-the karolinska instutute clintrid,"Karolinska Institutet|The Karolinska Institutet, ClinTRID",2,location_postcode
-the university of edinburgh / nhs lothian,NHS Lothian|The University Of Edinburgh / NHS Lothian,2,llm_reviewed
-theravance biopharma uc inc,Theravance|Theravance Biopharma Ireland Limited,2,location_postcode
-theravance biopharma us inc,Theravance|Theravance Biopharma Ireland Limited,2,location_postcode
+oxford university hospitals nhs trust,Oxford University Hospitals NHS Trust|University Of Oxford,2,llm_reviewed|ror
+radboud university nijmegen,Radboud University|Radboud University Nijmegen,2,llm_reviewed|ror
+recordati rare diseases,Recordati|Recordati Rare Diseases,2,epar_mah|llm_reviewed
+rwth aachen university,RWTH Aachen University|University Hospital,2,llm_reviewed|ror
+sanofi pasteur,Sanofi|Sanofi Pasteur,2,epar_mah|manual
+steno diabetes center copenhagen,Steno Diabetes Center|Steno Diabetes Center Copenhagen,2,llm_reviewed|ror
+swedish orphan biovitrum ab publ,Swedish Orphan Biovitrum AB|Swedish Orphan Biovitrum AB publ,2,epar_mah|llm_reviewed
 tobira therapeutics inc a subsidiary of allergan plc,Allergan|Tobira Therapeutics,2,llm_reviewed
-universiteit maastricht,Maastricht University|University Hospital Maastricht,2,ctis_businesskey|location_postcode
-universittsklinik fr augenheilkunden und optometrie medizinische universitt wien,Medical University Of Vienna|Universitätsklinik für Augenheilkunde und Optometrie,2,location_postcode
-university medical school of the johannes gutenberg university mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR|University Medical Center,2,location_postcode
-univerzity hospital krlovsk vinohrady,Fakultn nemocnice Krlovsk Vinohrady|University Hospital,2,euctr_email_domain:fnkv.cz|location_postcode
-verisfield s m s a,Verisfield Single Member S.A.|VERISFIELD UK LTD,2,euctr_email_domain:verisfield.gr|location_postcode
-vstra gtaland regionen,Västra Götalandsregionen|Vstra Gtalandsregionen,2,location_postcode
+ulb erasme,CUB - Hôpital Erasme|ULB Erasme,2,llm_reviewed|manual
+university hospital antwerp,University Hospital|University Hospital Antwerp,2,llm_reviewed|ror
+university hospital brno,Fakultni Nemocnice Brno|University Hospital,2,llm_reviewed|ror
+university hospital innsbruck,Medical University Of Innsbruck|University Hospital,2,llm_reviewed|ror
+university hospital kralovske vinohrady,Fakultni Nemocnice Kralovske Vinohrady|University Hospital,2,llm_reviewed|ror
+university hospital magdeburg,Otto-von-Guericke University|University Hospital,2,llm_reviewed|ror
+university hospital regensburg,Universität Regensburg|University Hospital,2,llm_reviewed|ror
+university hospital schleswig-holstein,Universitätsklinikum Schleswig-Holstein|University Hospital,2,llm_reviewed|ror
+university hospital southampton nhs foundation trust,University Hospital|University Hospital Southampton NHS Foundation Trust,2,llm_reviewed|ror
+university hospital ulm,Universitaetsklinikum Ulm AöR|University Hospital,2,llm_reviewed|ror
+university medical center freiburg,Universitätsklinikum Freiburg|University Medical Center,2,llm_reviewed|ror
