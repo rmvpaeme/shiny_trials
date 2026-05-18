@@ -56,8 +56,9 @@ to `final_sponsor_canonical_review.csv` for manual review before being added to
 one of the final maps.
 
 Latest recommended rebuild (`--no-ror --no-location`, EPAR + strong DB tiers):
-12,281 alias-index rows, 12,221 unique aliases, 7,707 canonical sponsor
-labels, and 60 remaining exact alias conflicts after final canonicalization.
+~12,000 alias-index rows after Phase 9 alias curation (see below), 0 duplicate
+alias_clean entries in `sponsor_llm_reviewed.csv`, and 54 undecided rows in
+the review queue.
 
 **CTIS businessKey** is ground truth: EMA's own organisation registry links name variants
 that are definitively the same entity (e.g. "AstraZeneca AB" / "Astrazeneca AB",
@@ -155,6 +156,31 @@ opt-in via `--allow-fuzzy` and only emits review suggestions.
 
 ---
 
+### Step 4b — Alias table cleanup (Python)
+
+After large curation batches, run the cleanup script to remove generic dept
+aliases, person-name canonicals, and apply canonical convergence and legal
+suffix stripping:
+
+```bash
+# From repo root:
+python3 helper_scripts/sponsor_norm_pipeline/clean_llm_reviewed.py
+```
+
+The script encodes all cleanup rules as explicit sets/dicts and is safe to
+re-run. It writes in-place to `sponsor_llm_reviewed.csv`,
+`manual_sponsor_aliases.csv`, and appends to `final_sponsor_canonical_map.csv`.
+
+**Rules encoded in `clean_llm_reviewed.py`:**
+
+- Deletes overly generic dept aliases (`university hospital`, `department of cardiology`, etc.) — adds them to `sponsor_ambiguous_aliases.csv`
+- Deletes confirmed person-name aliases (investigators listed as sponsors)
+- Fixes known university ↔ hospital conflations in the canonical
+- Title-cases ALL-CAPS institutional canonicals (Italian/Spanish hospital names)
+- Strips trailing legal suffixes from `sponsor_clean` (Inc., Ltd., GmbH, AG, B.V., S.A., A/S, AB, etc.) while protecting hospital/university names
+
+---
+
 ### Step 4 — Interactive curation
 
 For the detailed manual/LLM-assisted curation protocol, see
@@ -248,6 +274,10 @@ The current recommended rebuild used EPAR and all local database-derived tiers w
 ## Key rules
 
 - **MSD ≠ Merck KGaA**: "Merck Sharp & Dohme" and "MSD" → `MSD / Merck & Co.`; "Merck KGaA" and "Merck Serono" → `Merck KGaA / EMD Serono`. Never collapsed.
+- **University ≠ University Hospital**: "University of Bonn" ≠ "Universitätsklinikum Bonn"; "University of Aarhus" ≠ "Aarhus University Hospital". These are distinct legal entities and must have separate aliases.
+- **No legal suffixes in canonicals**: `sponsor_clean` should not include Inc., Ltd., GmbH, B.V., S.A., A/S, AG, AB, etc. Use `clean_llm_reviewed.py` to strip them. Exception: institutional abbreviations like AöR (Anstalt des öffentlichen Rechts) may be kept.
+- **No department labels as canonicals**: aliases mapping a dept description to itself (e.g. `Klinisk Farmakologisk Afdeling` → `Klinisk Farmakologisk Afdeling`) are useless and should be moved to `sponsor_ambiguous_aliases.csv`.
+- **No person-name canonicals**: individual investigators listed as sponsors should be left undecided in the review queue, not accepted with the person's name as canonical.
 - **Academic/hospital names are not auto-shortened**: "University Hospital Tübingen" stays as-is unless there is an explicit alias.
 - **Acronyms only when manually curated**: GSK, BMS, MSD, EORTC, HOVON etc. are in the alias table. Unknown short strings are not auto-mapped.
 - **Final canonical labels are post-merge decisions**: use `final_sponsor_canonical_map.csv` for label-to-label cleanup such as `GELA Group` → `GELA`; keep upstream review/manual evidence untouched.
