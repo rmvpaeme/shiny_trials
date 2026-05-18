@@ -1,6 +1,6 @@
 alias_clean,sponsor_clean,sponsor_parent,sponsor_group,sponsor_type,source,confidence_prior,alias_type
-ac immune sa,AC Immune SA,NA,NA,NA,ctis_businesskey,0.95,NA
-adc therapeutics sa,ADC Therapeutics SA,NA,NA,NA,ctis_businesskey,0.95,NA
+ac immune sa,AC Immune,NA,NA,NA,ctis_businesskey,0.95,NA
+adc therapeutics sa,ADC Therapeutics,NA,NA,NA,ctis_businesskey,0.95,NA
 aio-studien-ggmbh,AIO-Studien-gGmbH,NA,NA,NA,ctis_businesskey,0.95,NA
 alk abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
 alk-abello,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
@@ -17,16 +17,16 @@ abbvie inc,AbbVie,AbbVie,AbbVie,industry,manual,1,NA
 abbott,Abbott,Abbott,Abbott,industry,manual,0.9,NA
 abbott gmbh,Abbott,Abbott,Abbott,industry,manual,1,NA
 abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,1,NA
-aco hud nordic ab,Aco Hud Nordic AB,NA,NA,NA,ctis_businesskey,0.95,NA
+aco hud nordic ab,Aco Hud Nordic,NA,NA,NA,ctis_businesskey,0.95,NA
 actelion,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,0.9,NA
 actelion pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1,NA
 actelion pharmaceuticals ltd,Actelion Pharmaceuticals,Actelion Pharmaceuticals,Actelion Pharmaceuticals,industry,manual,1,NA
-agomab spain s l,Agomab Spain S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+agomab spain s l,Agomab Spain,NA,NA,NA,ctis_businesskey,0.95,NA
 alexion,Alexion,AstraZeneca,AstraZeneca,industry,manual,1,NA
 alexion pharmaceuticals,Alexion,AstraZeneca,AstraZeneca,industry,manual,1,NA
 allergan,Allergan,AbbVie,AbbVie,industry,manual,1,NA
 allergan limited,Allergan,AbbVie,AbbVie,industry,manual,1,NA
-alx oncology inc,Alx Oncology Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+alx oncology inc,Alx Oncology,NA,NA,NA,ctis_businesskey,0.95,NA
 amgen,Amgen,Amgen,Amgen,industry,manual,1,NA
 amgen inc,Amgen,Amgen,Amgen,industry,manual,1,NA
 academic medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
@@ -40,12 +40,12 @@ vu medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,m
 vu university medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
 vu university medical center amsterdam,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
 vumc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
-angelini pharma italia aziende chimiche riunite angelini francesc o a c r a f s p a,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,NA,NA,NA,ctis_businesskey,0.95,NA
-antibiotice s a / iasis pharmaceuticals hellas s a,Antibiotice S.A. / Iasis Pharmaceuticals Hellas S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+angelini pharma italia aziende chimiche riunite angelini francesc o a c r a f s p a,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F.,NA,NA,NA,ctis_businesskey,0.95,NA
+antibiotice s a / iasis pharmaceuticals hellas s a,Antibiotice S.A. / Iasis Pharmaceuticals Hellas,NA,NA,NA,ctis_businesskey,0.95,NA
 antwerp university hospital,Antwerp University Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
 arcagy gineco,Arcagy Gineco,NA,NA,NA,ctis_businesskey,0.95,NA
 arctic therapeutics hf,Arctic Therapeutics hf.,NA,NA,NA,ctis_businesskey,0.95,NA
-armgo pharma inc,Armgo Pharma Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+armgo pharma inc,Armgo Pharma,NA,NA,NA,ctis_businesskey,0.95,NA
 association international extranodal lymphoma study group,Association International Extranodal Lymphoma Study Group,NA,NA,NA,ctis_businesskey,0.95,NA
 astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,0.9,NA
 astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
@@ -55,7 +55,7 @@ astrazeneca ab,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
 astrazeneca plc,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
 azienda ospedaliera di padova,Azienda Ospedaliera di Padova,NA,NA,NA,ctis_businesskey,0.95,NA
 azienda ospedaliero universitaria meyer irccs,Azienda Ospedaliero Universitaria Meyer IRCCS,NA,NA,NA,ctis_businesskey,0.95,NA
-biotest ag,BIOTEST AG,NA,NA,NA,ctis_businesskey,0.95,NA
+biotest ag,BIOTEST,NA,NA,NA,ctis_businesskey,0.95,NA
 bms,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
 bristol myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
 bristol-myers squibb,BMS,Bristol-Myers Squibb,BMS,industry,manual,1,NA
@@ -75,7 +75,7 @@ biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioM
 biogen,Biogen,Biogen,Biogen,industry,manual,1,NA
 biogen idec,Biogen,Biogen,Biogen,industry,manual,1,NA
 biogen idec research limited,Biogen,Biogen,Biogen,industry,manual,1,NA
-bioinvent international ab,Bioinvent International AB,NA,NA,NA,ctis_businesskey,0.95,NA
+bioinvent international ab,Bioinvent International,NA,NA,NA,ctis_businesskey,0.95,NA
 biotechnology institue i mas d s l,Biotechnology Institue I Mas D S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
 boehringer ing,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
 boehringer ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,Boehringer Ingelheim,industry,manual,1,NA
@@ -238,7 +238,7 @@ canisius wilhelmina hospital,Canisius Wilhelmina Hospital,NA,NA,NA,ctis_business
 cardiff university,Cardiff University,Cardiff University,Cardiff University,academic,manual,1,NA
 celgene,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1,NA
 celgene corporation,Celgene,Bristol-Myers Squibb,BMS,industry,manual,1,NA
-cell2cure aps,Cell2cure ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+cell2cure aps,Cell2cure,NA,NA,NA,ctis_businesskey,0.95,NA
 centocor,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,0.9,NA
 centocor bv,Centocor,Johnson & Johnson,Janssen / Johnson & Johnson,industry,manual,1,NA
 centre for human drug research,Centre For Human Drug Research,NA,NA,NA,ctis_businesskey,0.95,NA
@@ -266,16 +266,16 @@ charité - universitätsmedizin berlin,Charité Universitätsmedizin Berlin,Char
 chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,0.9,NA
 chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
 chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
-curevac ag,Curevac AG,NA,NA,NA,ctis_businesskey,0.95,NA
-dice therapeutics inc,DICE Therapeutics Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+curevac ag,Curevac,NA,NA,NA,ctis_businesskey,0.95,NA
+dice therapeutics inc,DICE Therapeutics,NA,NA,NA,ctis_businesskey,0.95,NA
 daiichi sankyo,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1,NA
 daiichi sankyo inc,Daiichi Sankyo,Daiichi Sankyo,Daiichi Sankyo,industry,manual,1,NA
-debiopharm international sa,Debiopharm International SA,NA,NA,NA,ctis_businesskey,0.95,NA
+debiopharm international sa,Debiopharm International,NA,NA,NA,ctis_businesskey,0.95,NA
 deuteroncology,Deuteroncology,NA,NA,NA,ctis_businesskey,0.95,NA
 deutsches krebsforschungszentrum dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,NA,ctis_businesskey,0.95,NA
 dr falk pharma,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1,NA
 dr falk pharma gmbh,Dr. Falk Pharma,Dr. Falk Pharma,Dr. Falk Pharma,industry,manual,1,NA
-dr reddy's laboratories limited,Dr. Reddy's Laboratories Limited,NA,NA,NA,ctis_businesskey,0.95,NA
+dr reddy's laboratories limited,Dr. Reddy's Laboratories,NA,NA,NA,ctis_businesskey,0.95,NA
 emd serono,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
 emd serono inc,EMD Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
 eortc,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
@@ -295,7 +295,7 @@ erasmus universitair medisch centrum rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,
 erasmus university medical center,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
 erasmusMC,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
 esbjerg sygehus,Esbjerg Sygehus,NA,NA,NA,ctis_businesskey,0.95,NA
-eyepoint inc,Eyepoint Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+eyepoint inc,Eyepoint,NA,NA,NA,ctis_businesskey,0.95,NA
 ferring,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,0.9,NA
 ferring pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1,NA
 ferring pharmaceuticals as,Ferring Pharmaceuticals,Ferring Pharmaceuticals,Ferring Pharmaceuticals,industry,manual,1,NA
@@ -310,7 +310,7 @@ fundacion fls de lucha contra el sida las enfermedades infecciosas y la promocio
 fundacion instituto de investigacion sanitaria de santiago de compostela,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA,NA,NA,ctis_businesskey,0.95,NA
 fundacion para la gestion de la investigacion en salud de sevilla,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA,NA,NA,ctis_businesskey,0.95,NA
 fundacion oncosur,Fundación Oncosur,NA,NA,NA,ctis_businesskey,0.95,NA
-fundacion para la investigacion biomedica del hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,NA,ctis_businesskey,0.95,NA
+fundacion para la investigacion biomedica del hospital universitario la paz,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,NA,ctis_businesskey,0.95,NA
 gcs ramsay sante enseignement et recherche,GCS Ramsay Sante Enseignement Et Recherche,NA,NA,NA,ctis_businesskey,0.95,NA
 gercor,GERCOR,GERCOR,GERCOR,cooperative_group,manual,1,NA
 goirc gruppo oncologico italiano di ricerca clinica,GOIRC Gruppo Oncologico Italiano Di Ricerca Clinica,NA,NA,NA,ctis_businesskey,0.95,NA
@@ -321,7 +321,7 @@ gsk,GSK,GSK,GSK,industry,manual,1,NA
 smithkline beecham,GSK,GSK,GSK,industry,manual,1,NA
 galapagos,Galapagos,Galapagos,Galapagos,industry,manual,0.9,NA
 galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,1,NA
-gcp-service international west gmbh,Gcp-Service International West GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+gcp-service international west gmbh,Gcp-Service International West,NA,NA,NA,ctis_businesskey,0.95,NA
 genentech,Genentech,Roche,Roche,industry,manual,1,NA
 genentech inc,Genentech,Roche,Roche,industry,manual,1,NA
 genmab,Genmab,Genmab,Genmab,industry,manual,0.9,NA
@@ -352,19 +352,19 @@ helsinn healthcare,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,indu
 helsinn healthcare sa,Helsinn Healthcare,Helsinn Healthcare,Helsinn Healthcare,industry,manual,1,NA
 herlev hospital,Herlev Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
 hospices civils de lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,Hospices Civils de Lyon,hospital,manual,1,NA
-io biotech aps,IO Biotech ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+io biotech aps,IO Biotech,NA,NA,NA,ctis_businesskey,0.95,NA
 irccs istituto giannina gaslini,IRCCS Istituto Giannina Gaslini,NA,NA,NA,ctis_businesskey,0.95,NA
 ifom istituto fondazione di oncologia molecolare ets in breve ifom ets,Ifom Istituto Fondazione Di Oncologia Molecolare Ets In Breve Ifom Ets,NA,NA,NA,ctis_businesskey,0.95,NA
 imperial college healthcare nhs trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,Imperial College Healthcare NHS Trust,hospital,manual,1,NA
 imperial college london,Imperial College London,Imperial College London,Imperial College London,academic,manual,1,NA
-incyte,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,0.9,NA
-incyte corporation,Incyte Corporation,Incyte Corporation,Incyte Corporation,industry,manual,1,NA
+incyte,Incyte,Incyte Corporation,Incyte Corporation,industry,manual,0.9,NA
+incyte corporation,Incyte,Incyte Corporation,Incyte Corporation,industry,manual,1,NA
 inserm,Inserm,NA,NA,NA,ctis_businesskey,0.95,NA
 institut fur frauengesundheit gmbh,Institut Für Frauengesundheit GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
 institut paoli-calmettes,Institut Paoli-Calmettes,NA,NA,NA,ctis_businesskey,0.95,NA
 institut fuer klinische krebsforschung ikf gmbh,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
 instituto de investigacion sanitaria fundacion para la investigacion del hospital clinico de valencia-incliva,Instituto de Investigacion Sanitaria Fundacion para la Investigacion del Hospital Clinico de Valencia-INCLIVA,NA,NA,NA,ctis_businesskey,0.95,NA
-insusense aps / insusense aps,Insusense ApS / Insusense ApS,NA,NA,NA,ctis_businesskey,0.95,NA
+insusense aps / insusense aps,Insusense ApS / Insusense,NA,NA,NA,ctis_businesskey,0.95,NA
 intergroupe francophone de cancerologie thoracique,Intergroupe Francophone de Cancerologie Thoracique,NA,NA,NA,ctis_businesskey,0.95,NA
 ionis,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,0.9,NA
 ionis pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,Ionis Pharmaceuticals,industry,manual,1,NA
@@ -394,17 +394,17 @@ kobenhavns universitet,Kobenhavns Universitet,NA,NA,NA,ctis_businesskey,0.95,NA
 leo pharma,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1,NA
 leo pharma as,LEO Pharma,LEO Pharma,LEO Pharma,industry,manual,1,NA
 lysarc,LYSARC,LYSARC,LYSARC,cooperative_group,manual,1,NA
-laboratorios lesvi s l,Laboratorios Lesvi S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
+laboratorios lesvi s l,Laboratorios Lesvi,NA,NA,NA,ctis_businesskey,0.95,NA
 leiden university medical center,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
 leids universitair medisch centrum,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
 lumc,Leiden University Medical Center,Leiden University Medical Center,Leiden University Medical Center,hospital,manual,1,NA
-litevax b v,Litevax B.V.,NA,NA,NA,ctis_businesskey,0.95,NA
-lumos pharma inc,Lumos Pharma Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+litevax b v,Litevax,NA,NA,NA,ctis_businesskey,0.95,NA
+lumos pharma inc,Lumos Pharma,NA,NA,NA,ctis_businesskey,0.95,NA
 h lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
 h lundbeck a/s,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
 lundbeck,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
 lundbeck as,Lundbeck,Lundbeck,Lundbeck,industry,manual,1,NA
-lupin atlantis holdings sa,Lupin Atlantis Holdings SA,NA,NA,NA,ctis_businesskey,0.95,NA
+lupin atlantis holdings sa,Lupin Atlantis Holdings,NA,NA,NA,ctis_businesskey,0.95,NA
 laboratoires merck sharp dohme chibret,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
 merck and co,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
 merck and co inc,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
@@ -433,23 +433,23 @@ medical university of graz,Medical University Of Graz,Medical University Of Graz
 medical university of innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,1,NA
 medical university of vienna,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
 medizinische universitaet wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
-medice arzneimittel puetter gmbh and co kg,Medice Arzneimittel Puetter GmbH & Co. KG,NA,NA,NA,ctis_businesskey,0.95,NA
-merck europe bv,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
-merck healthcare,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,0.9,NA
-merck healthcare kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
-merck kgaa,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
-merck kgaa darmstadt germany,Merck KGaA,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+medice arzneimittel puetter gmbh and co kg,Medice Arzneimittel Puetter,NA,NA,NA,ctis_businesskey,0.95,NA
+merck europe bv,Merck,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck healthcare,Merck,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,0.9,NA
+merck healthcare kgaa,Merck,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck kgaa,Merck,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
+merck kgaa darmstadt germany,Merck,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
 merck serono,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
 merck serono sa,Merck Serono,Merck KGaA,Merck KGaA / EMD Serono,industry,manual,1,NA
-merus b v,Merus B.V.,NA,NA,NA,ctis_businesskey,0.95,NA
+merus b v,Merus,NA,NA,NA,ctis_businesskey,0.95,NA
 merz pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1,NA
 merz pharmaceuticals gmbh,Merz Pharmaceuticals,Merz Pharmaceuticals,Merz Pharmaceuticals,industry,manual,1,NA
 millennium pharmaceuticals inc,Millennium Pharmaceuticals,Takeda,Takeda,industry,manual,1,NA
-moderna inc,Moderna Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+moderna inc,Moderna,NA,NA,NA,ctis_businesskey,0.95,NA
 narodowy instytut onkologii im marii sklodowskiej-curie-panstwowy instytut badawczy,Narodowy Instytut Onkologii Im. Marii Sklodowskiej-Curie-Panstwowy Instytut Badawczy,NA,NA,NA,ctis_businesskey,0.95,NA
 national institute of cardiology,National Institute Of Cardiology,NA,NA,NA,ctis_businesskey,0.95,NA
 nord ostdeutsche gesellschaft fuer gynaekologische onkologie e v,Nord Ostdeutsche Gesellschaft Fuer Gynaekologische Onkologie e.V.,NA,NA,NA,ctis_businesskey,0.95,NA
-novimmune sa,NovImmune SA,NA,NA,NA,ctis_businesskey,0.95,NA
+novimmune sa,NovImmune,NA,NA,NA,ctis_businesskey,0.95,NA
 novartis,Novartis,Novartis,Novartis,industry,manual,1,NA
 novartis ag,Novartis,Novartis,Novartis,industry,manual,1,NA
 novartis oncology,Novartis,Novartis,Novartis,industry,manual,1,NA
@@ -457,12 +457,12 @@ novartis pharma,Novartis,Novartis,Novartis,industry,manual,1,NA
 novartis pharma ag,Novartis,Novartis,Novartis,industry,manual,1,NA
 novo nordisk,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1,NA
 novo nordisk as,Novo Nordisk,Novo Nordisk,Novo Nordisk,industry,manual,1,NA
-om pharma sa,OM Pharma SA,NA,NA,NA,ctis_businesskey,0.95,NA
+om pharma sa,OM Pharma,NA,NA,NA,ctis_businesskey,0.95,NA
 odense universitetshospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1,NA
 odense university hospital,Odense University Hospital,Odense University Hospital,Odense University Hospital,hospital,manual,1,NA
-oncoinvent asa,Oncoinvent ASA,NA,NA,NA,ctis_businesskey,0.95,NA
-oncomatryx biopharma s l,Oncomatryx Biopharma S.L.,NA,NA,NA,ctis_businesskey,0.95,NA
-oncoverity inc,Oncoverity Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+oncoinvent asa,Oncoinvent,NA,NA,NA,ctis_businesskey,0.95,NA
+oncomatryx biopharma s l,Oncomatryx Biopharma,NA,NA,NA,ctis_businesskey,0.95,NA
+oncoverity inc,Oncoverity,NA,NA,NA,ctis_businesskey,0.95,NA
 nv organon,Organon,Organon,Organon,industry,manual,1,NA
 organon,Organon,Organon,Organon,industry,manual,0.9,NA
 oslo university hospital,Oslo University Hospital,Oslo University Hospital,Oslo University Hospital,hospital,manual,1,NA
@@ -491,8 +491,8 @@ region midtjylland,Region Midtjylland,Region Midtjylland,Region Midtjylland,hosp
 region sjaelland,Region Sjaelland,NA,NA,NA,ctis_businesskey,0.95,NA
 region skane,Region Skane,NA,NA,NA,ctis_businesskey,0.95,NA
 region vasterbotten / umea university,Region Västerbotten / Umea University,NA,NA,NA,ctis_businesskey,0.95,NA
-replimune inc,Replimune Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
-rheinische friedrich wilhelms universitat bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,ctis_businesskey,0.95,NA
+replimune inc,Replimune,NA,NA,NA,ctis_businesskey,0.95,NA
+rheinische friedrich wilhelms universitat bonn,Rheinische Friedrich-Wilhelms-Universität Bonn,NA,NA,NA,ctis_businesskey,0.95,NA
 copenhagen university hospital rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1,NA
 rigshospitalet,Rigshospitalet,Rigshospitalet,Rigshospitalet,hospital,manual,1,NA
 f hoffman-la roche,Roche,Roche,Roche,industry,manual,1,NA
@@ -534,7 +534,7 @@ stichting het nederlands kanker instituut-antoni van leeuwenhoek ziekenhuis,Stic
 stichting radboud university medical center,Stichting Radboud University Medical Center,NA,NA,NA,ctis_businesskey,0.95,NA
 stichting rijnstate ziekenhuis,Stichting Rijnstate Ziekenhuis,NA,NA,NA,ctis_businesskey,0.95,NA
 stichting zuyderland medisch centrum,Stichting Zuyderland Medisch Centrum,NA,NA,NA,ctis_businesskey,0.95,NA
-summit therapeutics inc,Summit Therapeutics Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+summit therapeutics inc,Summit Therapeutics,NA,NA,NA,ctis_businesskey,0.95,NA
 sun pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,0.9,NA
 sun pharmaceutical industries limited,Sun Pharmaceutical,Sun Pharmaceutical,Sun Pharmaceutical,industry,manual,1,NA
 takeda,Takeda,Takeda,Takeda,industry,manual,1,NA
@@ -547,7 +547,7 @@ teva pharmaceutical,Teva,Teva,Teva,industry,manual,1,NA
 teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,1,NA
 the christie nhs foundation trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,The Christie NHS Foundation Trust,hospital,manual,1,NA
 the royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,1,NA
-tolremo therapeutics ag,Tolremo Therapeutics AG,NA,NA,NA,ctis_businesskey,0.95,NA
+tolremo therapeutics ag,Tolremo Therapeutics,NA,NA,NA,ctis_businesskey,0.95,NA
 turku university hospital,Turku University Hospital,NA,NA,NA,ctis_businesskey,0.95,NA
 ucb,UCB,UCB,UCB,industry,manual,1,NA
 ucb biopharma,UCB,UCB,UCB,industry,manual,1,NA
@@ -591,30 +591,30 @@ umc utrecht,University Medical Center Utrecht,University Medical Center Utrecht,
 umcu,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
 universitair medisch centrum utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
 university medical center utrecht,University Medical Center Utrecht,University Medical Center Utrecht,University Medical Center Utrecht,hospital,manual,1,NA
-university of birmingham,University Of Birmingham,University Of Birmingham,University Of Birmingham,academic,manual,1,NA
-university of cardiff,University Of Cardiff,University Of Cardiff,University Of Cardiff,academic,manual,1,NA
-university of cologne,University Of Cologne,University Of Cologne,University Of Cologne,academic,manual,1,NA
-university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
-university of leeds,University Of Leeds,University Of Leeds,University Of Leeds,academic,manual,1,NA
+university of birmingham,University of Birmingham,University Of Birmingham,University Of Birmingham,academic,manual,1,NA
+university of cardiff,University of Cardiff,University Of Cardiff,University Of Cardiff,academic,manual,1,NA
+university of cologne,University of Cologne,University Of Cologne,University Of Cologne,academic,manual,1,NA
+university of dundee,University of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
+university of leeds,University of Leeds,University Of Leeds,University Of Leeds,academic,manual,1,NA
 university of milano bicocca,University Of Milano Bicocca,NA,NA,NA,ctis_businesskey,0.95,NA
-university of nottingham,University Of Nottingham,University Of Nottingham,University Of Nottingham,academic,manual,1,NA
-university of oxford,University Of Oxford,University Of Oxford,University Of Oxford,academic,manual,1,NA
-university of saarland,University Of Saarland,NA,NA,NA,ctis_businesskey,0.95,NA
+university of nottingham,University of Nottingham,University Of Nottingham,University Of Nottingham,academic,manual,1,NA
+university of oxford,University of Oxford,University Of Oxford,University Of Oxford,academic,manual,1,NA
+university of saarland,University of Saarland,NA,NA,NA,ctis_businesskey,0.95,NA
 universitaetsklinikum tuebingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,Universitätsklinikum Tübingen,hospital,manual,1,NA
 vall d'hebron institut de recerca,Vall D'hebron Institut De Recerca,NA,NA,NA,ctis_businesskey,0.95,NA
-vandria sa,Vandria SA,NA,NA,NA,ctis_businesskey,0.95,NA
+vandria sa,Vandria,NA,NA,NA,ctis_businesskey,0.95,NA
 vastra gotalandsregionen,Vastra Gotalandsregionen,NA,NA,NA,ctis_businesskey,0.95,NA
 vertex,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,0.9,NA
 vertex pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1,NA
 vertex pharmaceuticals incorporated,Vertex Pharmaceuticals,Vertex Pharmaceuticals,Vertex Pharmaceuticals,industry,manual,1,NA
-vigeneron gmbh,ViGeneron GmbH,NA,NA,NA,ctis_businesskey,0.95,NA
+vigeneron gmbh,ViGeneron,NA,NA,NA,ctis_businesskey,0.95,NA
 viiv healthcare,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1,NA
 viiv healthcare uk limited,ViiV Healthcare,ViiV Healthcare,ViiV Healthcare,industry,manual,1,NA
-win medica pharmaceutical s a,Win Medica Pharmaceutical S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
+win medica pharmaceutical s a,Win Medica Pharmaceutical,NA,NA,NA,ctis_businesskey,0.95,NA
 wyeth,Wyeth,Pfizer,Pfizer,industry,manual,1,NA
 wyeth pharmaceuticals,Wyeth,Pfizer,Pfizer,industry,manual,1,NA
-zaklady farmaceutyczne polpharma s a,Zaklady Farmaceutyczne Polpharma S.A.,NA,NA,NA,ctis_businesskey,0.95,NA
-zymeworks inc,Zymeworks Inc.,NA,NA,NA,ctis_businesskey,0.95,NA
+zaklady farmaceutyczne polpharma s a,Zaklady Farmaceutyczne Polpharma,NA,NA,NA,ctis_businesskey,0.95,NA
+zymeworks inc,Zymeworks,NA,NA,NA,ctis_businesskey,0.95,NA
 i-getaid,i-GETAID,NA,NA,NA,ctis_businesskey,0.95,NA
 uzleuven,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1,NA
 universittsklinikum essen,Universitätsklinikum Essen,Universitätsklinikum Essen,Universitätsklinikum Essen,hospital,manual,1,NA
@@ -685,7 +685,7 @@ university medical centre hamburg-eppendorf,University Medical Center Hamburg-Ep
 sint antonius ziekenhuis stichting,St Antonius Hospital,NA,NA,NA,manual,1,NA
 royal marsden nhs foundation trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,The Royal Marsden NHS Foundation Trust,hospital,manual,1,NA
 universittsmedizin der johannes gutenberg-universitt mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,NA,manual,1,NA
-rheinische friedrich-wilhelms-universitat bonn,Rheinische Friedrich Wilhelms Universität Bonn,NA,NA,NA,manual,1,NA
+rheinische friedrich-wilhelms-universitat bonn,Rheinische Friedrich-Wilhelms-Universität Bonn,NA,NA,NA,manual,1,NA
 runmc,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
 the leeds teaching hospitals nhs trust,The Leeds Teaching Hospitals NHS Trust,The Leeds Teaching Hospitals NHS Trust,The Leeds Teaching Hospitals NHS Trust,hospital,manual,1,NA
 university hospital birmingham nhs foundation trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,University Hospitals Birmingham NHS Foundation Trust,hospital,manual,1,NA
@@ -695,7 +695,7 @@ university of leuven,KU Leuven,KU Leuven,KU Leuven,academic,manual,1,NA
 charit - university hospital of berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
 vu medical center,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
 erasmus medical centre,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
-university of dundee/nhs tayside,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
+university of dundee/nhs tayside,University of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
 hellenic cooperative oncology group hecog,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,Hellenic Cooperative Oncology Group,cooperative_group,manual,1,NA
 technische universitt mnchen,Technische Universität München,Technische Universität München,Technische Universität München,academic,manual,1,NA
 med univ wien,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
@@ -721,22 +721,22 @@ turku pet centre,Turku University Hospital,NA,NA,hospital,manual,1,NA
 axcan pharma inc,Axcan Pharma,NA,NA,industry,manual,1,NA
 royal brompton harefield nhs trust,Royal Brompton and Harefield NHS Foundation Trust,Royal Brompton and Harefield NHS Foundation Trust,Royal Brompton and Harefield NHS Foundation Trust,hospital,manual,1,NA
 newcastle upon tyne hospitals nhs trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,Newcastle upon Tyne Hospitals NHS Foundation Trust,hospital,manual,1,NA
-almirall prodesfarma,Almirall S.A.,Almirall S.A.,Almirall S.A.,industry,manual,1,NA
+almirall prodesfarma,Almirall,Almirall S.A.,Almirall S.A.,industry,manual,1,NA
 lilly icos llc,Eli Lilly,Eli Lilly,Eli Lilly,industry,manual,1,NA
 erasmus medical centre rotterdam,Erasmus MC,Erasmus MC,Erasmus MC,hospital,manual,1,NA
 laboratoires merck sharp dohme - chibret,MSD,Merck & Co.,MSD / Merck & Co.,industry,manual,1,NA
-ch-versailles,Centre Hospitalier De Versailles,NA,NA,hospital,manual,1,NA
+ch-versailles,Centre Hospitalier de Versailles,NA,NA,hospital,manual,1,NA
 sahlgrenska universitetssjukhuset,Sahlgrenska University Hospital,NA,NA,hospital,manual,1,NA
-the university of dundee,University Of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
+the university of dundee,University of Dundee,University Of Dundee,University Of Dundee,academic,manual,1,NA
 aio studien ggmbh,AIO-Studien-gGmbH,NA,NA,NA,manual,1,NA
 charit university medicine berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
-fundacin para la investigacin biomdica del hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
+fundacin para la investigacin biomdica del hospital universitario la paz fibhulp,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
 dompe s p a,Dompé Farmaceutici,Dompé Farmaceutici,Dompé Farmaceutici,industry,manual,1,NA
 london school of hygiene tropical medicine,London School of Hygiene and Tropical Medicine,NA,NA,academic,manual,1,NA
 universitatsklinikum bonn,Universitätsklinikum Bonn,NA,NA,hospital,manual,1,NA
 f hoffmann- la roche ltd,Roche,Roche,Roche,industry,manual,1,NA
 skne university hospital,Skåne University Hospital,NA,NA,hospital,manual,1,NA
-argenx bvba,argenx BV,argenx BV,argenx BV,industry,manual,1,NA
+argenx bvba,argenx,argenx BV,argenx BV,industry,manual,1,NA
 gruenenthal gmbh,Grünenthal,Grünenthal,Grünenthal,industry,manual,1,NA
 european organisation for the research and treatment of cancer,EORTC,EORTC,EORTC,cooperative_group,manual,1,NA
 centre hospitalier departemental vendee,Centre Hospitalier Départemental Vendée,NA,NA,hospital,manual,1,NA
@@ -754,18 +754,18 @@ azienda ospedaliera santandrea,Azienda Ospedaliera Sant'Andrea,NA,NA,hospital,ma
 azienda ospedaliero universitaria maggiore della carit di novara,Azienda Ospedaliero Universitaria Maggiore della Carità di Novara,NA,NA,hospital,manual,1,NA
 universita' vita-salute s. raffaele,Università Vita-Salute San Raffaele,NA,NA,academic,manual,1,NA
 universita' degli studi di perugia,Università degli Studi di Perugia,NA,NA,academic,manual,1,NA
-serono international sa,Serono International SA,NA,NA,industry,manual,1,NA
+serono international sa,Serono International,NA,NA,industry,manual,1,NA
 azienda ospedaliera umberto i,Azienda Ospedaliera Umberto I,NA,NA,hospital,manual,1,NA
 eau european association of urology,European Association of Urology,NA,NA,public_body,manual,1,NA
 sanofi-synthelabo rt,Sanofi,Sanofi,Sanofi,industry,manual,1,NA
-aesca pharma gesmbh,AESCA Pharma GmbH,NA,NA,industry,manual,1,NA
+aesca pharma gesmbh,AESCA Pharma,NA,NA,industry,manual,1,NA
 laboratorios leti,Laboratorios Leti,NA,NA,industry,manual,1,NA
 institut de recherches internationales,Servier,Servier,Servier,industry,manual,0.9,NA
 universittskinderklinik innsbruck,Universitätskinderklinik Innsbruck,NA,NA,hospital,manual,1,NA
 therakos,Therakos,NA,NA,industry,manual,1,NA
 grupo espaol de investigacin en cncer de mama geicam,GEICAM,NA,NA,cooperative_group,manual,1,NA
 geicam grupo espaol de investigacion en cancer de mama,GEICAM,NA,NA,cooperative_group,manual,1,NA
-charit campus mitte klinik fr psychiatrie und psychotherapie,Charité Campus Mitte; Klinik für Psychiatrie und Psychotherapie,NA,NA,hospital,manual,1,NA
+charit campus mitte klinik fr psychiatrie und psychotherapie,"Charité Campus Mitte, Klinik für Psychiatrie und Psychotherapie",NA,NA,hospital,manual,1,NA
 allergie-centrum-charit,Allergie-Centrum-Charité,NA,NA,hospital,manual,1,NA
 johann wolfgang goethe-universitt frankfurt am main,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
 fondazione sendo,Fondazione Sendo,NA,NA,foundation,manual,1,NA
@@ -777,7 +777,7 @@ medizinische fakultt der technischen universitt mnchen,Medizinische Fakultät de
 stiftung institut fr herzinfarktforschung,Stiftung Institut für Herzinfarktforschung,NA,NA,foundation,manual,1,NA
 universittsklinikum bonn klinik und poliklinik fr psychiatrie und psychotherapie,Universitaetsklinikum Bonn,NA,NA,hospital,manual,1,NA
 klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen,Klinik für Herz- und Kreislauferkrankungen; Deutsches Herzzentrum München,NA,NA,hospital,manual,1,NA
-stallergenes sa,Stallergenes S.A.,NA,NA,industry,manual,1,NA
+stallergenes sa,Stallergenes,NA,NA,industry,manual,1,NA
 grupo espaol de tratamiento de los tumores de cabeza y cuello ttcc,Grupo Español de Tratamiento de los Tumores de Cabeza y Cuello TTCC,NA,NA,cooperative_group,manual,1,NA
 charit universitaetsmedizin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
 an-institut fr qualittssicherung in der operativen medizin ggmbh,An-Institut für Qualitätssicherung in der operativen Medizin gGmbH,NA,NA,unknown,manual,1,NA
@@ -812,7 +812,7 @@ fundaci privada clnic per a la recerca biomdica,Fundació Clínic per a la Recer
 chu-hopitaux de rouen,CHU de Rouen,NA,NA,hospital,manual,1,NA
 instituto cataln de oncologa,Instituto Catalán de Oncología,NA,NA,hospital,manual,1,NA
 centre georges franois leclerc,Centre Georges François Leclerc,NA,NA,hospital,manual,1,NA
-curevac gmbh,CureVac AG,NA,NA,industry,manual,1,NA
+curevac gmbh,CureVac,NA,NA,industry,manual,1,NA
 geltamo grupo espaol de linfoma y transplante autlogo de mdula sea,GELTAMO,NA,NA,cooperative_group,manual,1,NA
 alk-abell arzneimittel gmbh,ALK-Abello,ALK-Abello,ALK-Abello,industry,manual,1,NA
 istituto mediterraneo per i trapianti e terapie ad alta  specializzazione,ISMETT,NA,NA,hospital,manual,1,NA
@@ -848,7 +848,7 @@ grupo espaol de investigacin en cncer de ovario,Grupo Español de Investigación
 grupo espaol de tumores neuroendocrinos,Grupo Español de Tumores Neuroendocrinos,NA,NA,cooperative_group,manual,1,NA
 antonio van leeuwenhoek ziekenhuis,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,hospital,manual,1,NA
 university medical center goettingen,University Medical Center Göttingen,NA,NA,hospital,manual,1,NA
-apotex inc.,Apotex Inc.,NA,NA,industry,manual,1,NA
+apotex inc.,Apotex,NA,NA,industry,manual,1,NA
 german cancer research center dkfz,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,academic,manual,1,NA
 medizinische universitt innsbruck / univ -klinik fr allgemeine und chirurgische intensivmedizin,Medical University Of Innsbruck,Medical University Of Innsbruck,Medical University Of Innsbruck,hospital,manual,1,NA
 medizinische universitt wien universittsklinik fr innere medizin 3 abteilung fr gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
@@ -862,13 +862,13 @@ loreal recherche,L'Oréal Recherche,NA,NA,industry,manual,1,NA
 county council of stergtland,County Council of Östergötland,NA,NA,public_body,manual,1,NA
 vall dhebron institut de recerca vhir,Vall D'hebron Institut De Recerca,NA,NA,hospital,manual,1,NA
 universittsklinikum ulm ar,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,Universitaetsklinikum Ulm AöR,hospital,manual,1,NA
-universitt innsbruck institut fr biomedizinische alternsforschung,Universität Innsbruck; Institut für Biomedizinische Alternsforschung,NA,NA,academic,manual,1,NA
+universitt innsbruck institut fr biomedizinische alternsforschung,"Universität Innsbruck, Institut für Biomedizinische Alternsforschung",NA,NA,academic,manual,1,NA
 universittsklinik fr augenheilkunde und optometrie,Universitätsklinik für Augenheilkunde und Optometrie,NA,NA,hospital,manual,1,NA
 georg-august-universitt gttingen stiftung ffentlichen rechts universittsmedizin gttingen,Universitätsmedizin Göttingen,NA,NA,hospital,manual,1,NA
 gteborgs universitet,University of Gothenburg,NA,NA,academic,manual,1,NA
 fondazione irccs ca granda ospedale maggiore policlinico milano,Fondazione IRCCS Ca' Granda Ospedale Maggiore Policlinico,NA,NA,hospital,manual,1,NA
 orthopädisches spital speising,Orthopädisches Spital Speising,NA,NA,hospital,manual,1,NA
-pascoe pharmazeutische prparate gmbh,Pascoe pharmazeutische Präparate GmbH,NA,NA,industry,manual,1,NA
+pascoe pharmazeutische prparate gmbh,Pascoe pharmazeutische Präparate,NA,NA,industry,manual,1,NA
 gesellschaft fr pdiatrische onkologie und hmatologie gpoh ggmbh,GPOH,NA,NA,cooperative_group,manual,1,NA
 agmt  arbeitsgemeinschaft medikamentse tumortherapie gemeinntzige,AGMT,NA,NA,cooperative_group,manual,1,NA
 fondazione telethon,Fondazione Telethon,NA,NA,foundation,manual,1,NA
@@ -905,17 +905,17 @@ department of hepatology and gastroenterology aarhus university hospital,Aarhus 
 vhio vall dhebron institute of oncology,Vall d'Hebron Institute of Oncology (VHIO),NA,NA,hospital,manual,1,NA
 dipartimento di medicina di precisione - universit degli studi della campania l vanvitelli,Università degli Studi della Campania Luigi Vanvitelli,NA,NA,academic,manual,1,NA
 cmc ambroise par,CMC Ambroise Paré,NA,NA,hospital,manual,1,NA
-cosmo technologies limited,Cosmo Technologies Ltd,NA,NA,industry,manual,1,NA
+cosmo technologies limited,Cosmo Technologies,NA,NA,industry,manual,1,NA
 azienda ospedaliera universitaria citta della salute e della scienza di torino,AOU Città della Salute e della Scienza di Torino,NA,NA,hospital,manual,1,NA
 hospital general universitario gregorio maranon,Hospital General Universitario Gregorio Marañón,NA,NA,hospital,manual,1,NA
-ngm biopharmaceuticals inc.,NGM Biopharmaceuticals; Inc.,NA,NA,industry,manual,1,NA
+ngm biopharmaceuticals inc.,NGM Biopharmaceuticals;,NA,NA,industry,manual,1,NA
 verein zur praevention und therapie boesartiger erkrankungen austrian breast and colorectal cancer study group,ABCSG,NA,NA,cooperative_group,manual,1,NA
 istituti clinici scientifici maugeri in forma abbreviata istituti clinici scientifici maugeri o anche ics maugeri o maugeri s p a sb,ICS Maugeri S.p.A. SB,NA,NA,hospital,manual,1,NA
 gemeinnutzige salzburger landes kliniken betriebsgesellschaft mbh,Salzburger Landeskliniken,NA,NA,hospital,manual,1,NA
 centro cardiologico monzino s p a,Fondazione Centro Cardiologico Monzino,NA,NA,hospital,manual,1,NA
-diater laboratorio de diagnostico y aplicaciones terapeuticas s a,Diater Laboratorio de Diagnóstico y Aplicaciones Terapéuticas S.A.,NA,NA,industry,manual,1,NA
-industrial farmaceutica cantabria s a,Industrial Farmacéutica Cantabria S.A.,NA,NA,industry,manual,1,NA
-itf research pharma s l,ITF Research Pharma S.L.,NA,NA,industry,manual,1,NA
+diater laboratorio de diagnostico y aplicaciones terapeuticas s a,Diater Laboratorio de Diagnóstico y Aplicaciones Terapéuticas,NA,NA,industry,manual,1,NA
+industrial farmaceutica cantabria s a,Industrial Farmacéutica Cantabria,NA,NA,industry,manual,1,NA
+itf research pharma s l,ITF Research Pharma,NA,NA,industry,manual,1,NA
 universittshautklinik kiel,Universitätshautklinik Kiel,NA,NA,hospital,manual,1,NA
 universittsklinik fr innere medizin iv klinische abteilung gastroenterologie und hepatologie,Medical University Of Vienna,Medical University Of Vienna,Medical University Of Vienna,hospital,manual,1,NA
 groupement des hopitaux de l'institut catholique de lille,Groupement des Hôpitaux de l'Institut Catholique de Lille (GHICL),NA,NA,hospital,manual,1,NA
@@ -946,7 +946,7 @@ university hospital hamburg-eppendorf psychiatry,University Medical Center Hambu
 georg-august-universitt gttingen bereich humanmedizin,Universitätsmedizin Göttingen,NA,NA,hospital,manual,1,NA
 nephrology department hospital universitary of bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,manual,1,NA
 klinik fr ansthesiologie und operative intensivmedizin charit  universittsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
-brainsgate ltd,BrainsGate Ltd,NA,NA,industry,manual,1,NA
+brainsgate ltd,BrainsGate,NA,NA,industry,manual,1,NA
 azienda ospedaliera maggiore della carita,Azienda Ospedaliera Maggiore della Carità,NA,NA,hospital,manual,1,NA
 universita  degli studi di pavia,Università degli Studi di Pavia,NA,NA,academic,manual,1,NA
 gel/tamo grupo cooperativo espaol de linfoma/transplante antlogo de mdula sea,GELTAMO,NA,NA,cooperative_group,manual,1,NA
@@ -961,7 +961,7 @@ universittsklinik mainz pneumologie,Universitatsmedizin der Johannes Gutenberg-U
 universittsklinikum der medizinischen fakultt freiburg,Universitätsklinikum Freiburg,NA,NA,hospital,manual,1,NA
 azienda ospedaliera s. filippo neri,Azienda Ospedaliera S. Filippo Neri,NA,NA,hospital,manual,1,NA
 emma childrens hospital-amc,Amsterdam UMC,Amsterdam UMC,Amsterdam UMC,hospital,manual,1,NA
-weleda ag deutschland,Weleda AG,NA,NA,industry,manual,1,NA
+weleda ag deutschland,Weleda,NA,NA,industry,manual,1,NA
 azienda ospedaliera l. sacco  a o di rilievo nazionale,Azienda Ospedaliera L. Sacco,NA,NA,hospital,manual,1,NA
 universittsmedizin der johannes-gutenberg universitt mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,hospital,manual,1,NA
 university hospital vienna,AKH Wien,AKH Wien,AKH Wien,hospital,manual,1,NA
@@ -982,7 +982,7 @@ giovanni-wolfgang goethe-universitt,Goethe-Universität Frankfurt am Main,NA,NA,
 dekan des fb medizin der johann-wolfgang goethe-universitt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
 umcn department pharm-tox,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
 universita degli studi di ferrara,Università degli Studi di Ferrara,NA,NA,academic,manual,1,NA
-genmab a/s,Genmab A/S,NA,NA,industry,manual,1,NA
+genmab a/s,Genmab,NA,NA,industry,manual,1,NA
 radboud university medical centre,Radboudumc,Radboudumc,Radboudumc,hospital,manual,1,NA
 u z gasthuisberg,UZ Leuven,UZ Leuven,UZ Leuven,hospital,manual,1,NA
 zari - univeristtsmedizin gttingen,Universitätsmedizin Göttingen,NA,NA,hospital,manual,1,NA
@@ -1067,7 +1067,7 @@ department of hematology aalborg university hospital,Aalborg University Hospital
 department of cardiology aarhus university hospital skejby,Aarhus University Hospital,NA,NA,hospital,manual,1,NA
 dept of infectious diseases aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,manual,1,NA
 section of orofacial pain and jaw function aarhus university,Aarhus University,NA,NA,academic,manual,1,NA
-oa dr philipp becker c/o abteilung fur wirbelsaulenchirurgie orthopadisches spital speising gmbh,Orthopädisches Spital Speising GmbH,NA,NA,hospital,manual,1,NA
+oa dr philipp becker c/o abteilung fur wirbelsaulenchirurgie orthopadisches spital speising gmbh,Orthopädisches Spital Speising,NA,NA,hospital,manual,1,NA
 vital therapies incorporated,Vital Therapies,NA,NA,industry,manual,1,NA
 vital therapies inc,Vital Therapies,NA,NA,industry,manual,1,NA
 s.e. carburos metalicos s.a. grupo air products,S.E. Carburos Metálicos S.A. grupo Air Products,NA,NA,industry,manual,1,NA
@@ -1080,7 +1080,7 @@ copenhagen university hospital bispebjerg,Copenhagen University Hospital - Bispe
 bispebjerg hospital,Bispebjerg Hospital,NA,NA,hospital,manual,1,NA
 lungemedicinsk forskningsenhed bispebjerg hospital,Bispebjerg Hospital,NA,NA,hospital,manual,1,NA
 limoges hospital,CHU de Limoges,NA,NA,hospital,manual,1,NA
-tayside medical sciences centre on behalf of university of dundee,University Of Dundee,NA,NA,academic,manual,1,NA
+tayside medical sciences centre on behalf of university of dundee,University of Dundee,NA,NA,academic,manual,1,NA
 institut de recherches internationales servier i.r.i.s. / laboratorios servier,Servier,NA,NA,industry,manual,1,NA
 medical university vienna gender medicine unit div of endocrinology,Medical University Of Vienna,NA,NA,hospital,manual,1,NA
 medical university of vienna department of obstetrics and gynecology,Medical University Of Vienna,NA,NA,hospital,manual,1,NA
@@ -1186,7 +1186,7 @@ hospital universitario la paz,Hospital Universitario La Paz,NA,NA,hospital,manua
 servicio de anestesiologia y reanimacion hospital universitario la paz,Hospital Universitario La Paz,NA,NA,hospital,manual,1,NA
 servicio de angiologia y cirugia vascular hospital universitario la paz,Hospital Universitario La Paz,NA,NA,hospital,manual,1,NA
 servicio de urologia hospital universitario la paz,Hospital Universitario La Paz,NA,NA,hospital,manual,1,NA
-fundacin para la investigacin biomdica hospital universitario la paz,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
+fundacin para la investigacin biomdica hospital universitario la paz,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
 assistance pubique hopitaux de marseille,Assistance Publique - Hôpitaux de Marseille,NA,NA,hospital,manual,1,NA
 charit universittsmedizin berlin campus benjamin franklin,Charité Universitätsmedizin Berlin,NA,NA,hospital,manual,1,NA
 ibsal instituto de investigacin biomdica de salamanca-fundacin institu,IBSAL - Instituto de Investigación Biomédica de Salamanca,NA,NA,academic,manual,1,NA
@@ -1254,8 +1254,8 @@ department of hematology herlev and gentofte university hospital,Herlev og Gento
 dept of hematology herlev hospital,Herlev og Gentofte Hospital,NA,NA,hospital,manual,1,NA
 birte nygaard dept of endocrinology herlev hospital,Herlev og Gentofte Hospital,NA,NA,hospital,manual,1,NA
 servicio de anestesiologia y reanimacion del hospital universitario la paz,Hospital Universitario La Paz,NA,NA,hospital,manual,1,NA
-fundacion de investigacion del hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
-fundacin de investigacin del hospital universitario la paz fibhulp,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
+fundacion de investigacion del hospital universitario la paz fibhulp,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
+fundacin de investigacin del hospital universitario la paz fibhulp,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,foundation,manual,1,NA
 ikf klinische krebsforschung gmbh am krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,1,NA
 institut fur klinische krebsforschung ikf gmbh at krankenhaus nordwest,Institut fuer Klinische Krebsforschung IKF GmbH,NA,NA,unknown,manual,1,NA
 fundacin oncosur,Fundación Oncosur,NA,NA,foundation,manual,1,NA
@@ -1280,10 +1280,10 @@ hvidovre hospital region hovedstaden,Hvidovre Hospital,NA,NA,hospital,manual,1,N
 anaesthesia department hvidovre hospital,Hvidovre Hospital,NA,NA,hospital,manual,1,NA
 respiratory research unit hvidovre,Hvidovre Hospital,NA,NA,hospital,manual,1,NA
 copenhagen university hospital hvidovre,Hvidovre Hospital,NA,NA,hospital,manual,1,NA
-sdersjukhuset,Södersjukhuset AB,NA,NA,hospital,manual,1,NA
+sdersjukhuset,Södersjukhuset,NA,NA,hospital,manual,1,NA
 the royal marsden nhs foundation,The Royal Marsden NHS Foundation Trust,NA,NA,hospital,manual,1,NA
-zambon spa,Zambon SpA,NA,NA,industry,manual,1,NA
-zambon spoa,Zambon SpA,NA,NA,industry,manual,1,NA
+zambon spa,Zambon,NA,NA,industry,manual,1,NA
+zambon spoa,Zambon,NA,NA,industry,manual,1,NA
 goethe-universitt frankfurt,Goethe-Universität Frankfurt am Main,NA,NA,academic,manual,1,NA
 ruprecht-karls university heidelberg medical faculty university hosp,Ruprecht-Karls-Universität Heidelberg,NA,NA,academic,manual,1,NA
 ruprecht-karls-university of heidelberg medical faculty,Ruprecht-Karls-Universität Heidelberg,NA,NA,academic,manual,1,NA
@@ -1369,7 +1369,7 @@ ruprecht-karls-universitt heidelberg medical faculty university hosp 36,Ruprecht
 institut de recerca h santa creu i sant pau,Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,manual,1,NA
 guys and st thomas nhs foundation trust / kings college london,Guy's and St Thomas' NHS Foundation Trust,NA,NA,hospital,manual,1,NA
 region rebro,Region Örebro,NA,NA,hospital,manual,1,NA
-biogaia pharma,BioGaia Pharma AB,NA,NA,industry,manual,1,NA
+biogaia pharma,BioGaia Pharma,NA,NA,industry,manual,1,NA
 finba,Fundación para la Investigación e Innovación Biosanitaria de Asturias FINBA,NA,NA,foundation,manual,1,NA
 fundacin para la investigacin y la innovacin biosanitaria de asturias,Fundación para la Investigación e Innovación Biosanitaria de Asturias FINBA,NA,NA,foundation,manual,1,NA
 aphp drci,AP-HP,NA,NA,hospital,manual,1,NA
