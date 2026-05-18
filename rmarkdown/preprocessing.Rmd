@@ -931,7 +931,7 @@ Current curation loop:
 4. Rebuild with:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
 Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
 ```
 

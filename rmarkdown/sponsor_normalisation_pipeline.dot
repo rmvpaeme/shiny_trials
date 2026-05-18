@@ -1,0 +1,127 @@
+digraph sponsor_normalisation_pipeline {
+  graph [
+    rankdir = TB,
+    bgcolor = "white",
+    pad = "0.35",
+    nodesep = "0.42",
+    ranksep = "0.55",
+    splines = ortho,
+    outputorder = edgesfirst
+  ];
+
+  node [
+    shape = box,
+    style = "rounded,filled",
+    fontname = "Helvetica",
+    fontsize = 11,
+    color = "#6B7280",
+    penwidth = 1.2,
+    fillcolor = "#F8FAFC",
+    margin = "0.12,0.08"
+  ];
+
+  edge [
+    fontname = "Helvetica",
+    fontsize = 9,
+    color = "#6B7280",
+    arrowsize = 0.7
+  ];
+
+  cache [label = "Trial cache\ntrials_cache.rds / DB", fillcolor = "#E0F2FE", color = "#0284C7"];
+  export [label = "export_trial_sponsors.R", fillcolor = "#DBEAFE", color = "#2563EB"];
+  raw [label = "data/trial_sponsors_raw.csv\n_id, raw_sponsor, is_commercial", fillcolor = "#EFF6FF", color = "#2563EB"];
+
+  subgraph cluster_config {
+    label = "Curated Source Config";
+    color = "#CBD5E1";
+    style = "rounded,dashed";
+    aliases [label = "manual_sponsor_aliases.csv", fillcolor = "#ECFDF5", color = "#059669"];
+    overrides [label = "manual_sponsor_overrides.csv", fillcolor = "#ECFDF5", color = "#059669"];
+    negatives [label = "sponsor_negative_aliases.csv", fillcolor = "#FEF2F2", color = "#DC2626"];
+    reviewed [label = "sponsor_review_decisions.csv\naccepted queue decisions", fillcolor = "#ECFDF5", color = "#059669"];
+    final_map [label = "final_sponsor_canonical_map.csv\nlabel -> label", fillcolor = "#F5F3FF", color = "#7C3AED"];
+    family_map [label = "final_sponsor_family_map.csv\nentity_key -> canonical sponsor", fillcolor = "#F5F3FF", color = "#7C3AED"];
+  }
+
+  subgraph cluster_external {
+    label = "External / Derived Sources";
+    color = "#CBD5E1";
+    style = "rounded,dashed";
+    epar [label = "EPAR MAH names", fillcolor = "#FFF7ED", color = "#EA580C"];
+    ctis [label = "CTIS businessKey groups", fillcolor = "#FFF7ED", color = "#EA580C"];
+    euctr [label = "EUCTR email-domain groups", fillcolor = "#FFF7ED", color = "#EA580C"];
+    postcode [label = "Postcode + country matches", fillcolor = "#FFF7ED", color = "#EA580C"];
+    ror [label = "Optional ROR", fillcolor = "#FFF7ED", color = "#EA580C"];
+  }
+
+  index [label = "build_sponsor_index.R", fillcolor = "#DBEAFE", color = "#2563EB"];
+  canonical [label = "Final canonicalisation pass\nexplicit map -> family map -> exact collapse\n-> stripped-token collapse -> high-JW review", fillcolor = "#F5F3FF", color = "#7C3AED"];
+
+  alias_index [label = "sponsor_alias_index.csv\nalias_clean -> sponsor_clean", fillcolor = "#ECFDF5", color = "#059669"];
+  llm [label = "sponsor_llm_reviewed.csv", fillcolor = "#F8FAFC"];
+  ambiguous [label = "sponsor_ambiguous_aliases.csv", fillcolor = "#FEFCE8", color = "#CA8A04"];
+  candidates [label = "new_sponsor_candidates.csv", fillcolor = "#FEFCE8", color = "#CA8A04"];
+  final_review [label = "final_sponsor_canonical_review.csv\nauto / review / blocked clusters", fillcolor = "#FEFCE8", color = "#CA8A04"];
+
+  labels_script [label = "build_sponsor_labels.R\n(default deterministic; --allow-fuzzy opt-in)", fillcolor = "#DBEAFE", color = "#2563EB"];
+  normalise [label = "normalise_sponsors.R", fillcolor = "#DBEAFE", color = "#2563EB"];
+
+  clean [label = "Clean raw sponsor text", fillcolor = "#F8FAFC"];
+  candidates_step [label = "Generate candidates", fillcolor = "#F8FAFC"];
+  match [label = "Match sequence\n1 override\n2 negative alias\n3 exact alias\n4 high-confidence containment\n5 optional fuzzy review\n6 unknown / suggested_clean", fillcolor = "#F8FAFC"];
+
+  trial_labels [label = "data/trial_sponsor_labels.csv\napp-facing sponsor_clean labels", fillcolor = "#DCFCE7", color = "#16A34A"];
+  norm_log [label = "data/sponsor_normalisation_log.csv\naudit log", fillcolor = "#DCFCE7", color = "#16A34A"];
+  queue [label = "sponsor_review_queue.csv\nraw aliases needing curation", fillcolor = "#FEFCE8", color = "#CA8A04"];
+
+  app [label = "app.R", fillcolor = "#E0F2FE", color = "#0284C7"];
+  selector [label = "Sponsor selector / filters\nsponsor_label = sponsor_clean", fillcolor = "#E0F2FE", color = "#0284C7"];
+
+  curation [label = "Manual review loop\nqueue + candidates + final review", fillcolor = "#FEE2E2", color = "#DC2626"];
+
+  cache -> export -> raw;
+
+  aliases -> index;
+  overrides -> index;
+  negatives -> index;
+  reviewed -> index;
+  final_map -> index;
+  family_map -> index;
+
+  epar -> index;
+  ctis -> index;
+  euctr -> index;
+  postcode -> index;
+  ror -> index;
+
+  index -> canonical;
+  canonical -> alias_index;
+  index -> llm;
+  index -> ambiguous;
+  index -> candidates;
+  canonical -> final_review;
+
+  raw -> labels_script;
+  alias_index -> labels_script;
+  overrides -> labels_script;
+  negatives -> labels_script;
+
+  labels_script -> normalise;
+  normalise -> clean -> candidates_step -> match;
+
+  match -> trial_labels;
+  match -> norm_log;
+  match -> queue;
+
+  trial_labels -> app -> selector;
+
+  queue -> curation;
+  candidates -> curation;
+  final_review -> curation;
+
+  curation -> aliases;
+  curation -> overrides;
+  curation -> negatives;
+  curation -> final_map;
+  curation -> family_map;
+}

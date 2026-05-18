@@ -5,3 +5,5 @@
 5. Trial status: add "withdrawn" as seperate category
 6. CTIS: if one location says terminated, the trial is marked as terminated - this is undesired behavour
 7. overview Figure with trial duration
+8. get number of trial participants
+9. track sponsor over time
