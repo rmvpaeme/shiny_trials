@@ -38,7 +38,6 @@ a o san gerardo di monza,A.O. San Gerardo di Monza,NA,NA,unknown,llm_reviewed,1,
 a o u universit degli studi della campania luigi vanvitelli,AOU Università degli Studi della Campania Luigi Vanvitelli,NA,NA,academic,llm_reviewed,1,llm_reviewed
 a o universitaria integrata di verona,Azienda Ospedaliera Universitaria Integrata di Verona,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 a p pharma inc,"A.P. Pharma, Inc.",NA,NA,unknown,llm_reviewed,1,llm_reviewed
-a r t i c association pour la recherche de thrapeutiques innovantes en cancrologie,A.R.T.I.C Association pour la Recherche de Thérapeutiques Innovantes en Cancérologie,NA,NA,NA,llm_reviewed,1,llm_reviewed
 a r t i c association pour la recherche de thrapeutiques innovantes en cancrologie,ARTIC,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 a s l 2,A.S.L. 2,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 a s l 2 savona,A.S.L. 2 Savona,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2062,7 +2061,6 @@ centre hospitalier rgional universitaire lille,Centre Hospitalier Universitaire 
 centre hospitalier sainte-anne,Centre Hospitalier Sainte-Anne,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier sud francilien,Centre Hospitalier Sud Francilien,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier universiatire de lille,Centre Hospitalier Universitaire de Lille,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-centre hospitalier universitaire,Centre Hospitalier Universitaire,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire chu de dijon,CHU Dijon Bourgogne,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire damiens,CHU d'Amiens,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire dangers,CHU d'Angers,NA,NA,unknown,review_queue,1,review_queue
@@ -2797,19 +2795,15 @@ departamento de oftalmologa hospital clnico san carlos,Hospital Clínico San Car
 department fr kinder- und jugendheilkunde pdiatrie i,"Department für Kinder- und Jugendheilkunde, Pädiatrie I",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department fr virologie medizinische universitt wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department integrative medicine kliniken essen mitte,"Department Integrative Medicine, Kliniken Essen Mitte",NA,NA,hospital,llm_reviewed,1,llm_reviewed
-department of anaesethesia,Department of Anaesthesia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of anaesthesia,Department of Anaesthesia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anaesthesia and general intensive care medicine,Department of Anaesthesia and General Intensive Care Medicine,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anaesthesia and intensive care medicine aalborg university hospital,Aalborg University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesia general intensive care medicine,Department of Anaesthesia General Intensive Care Medicine,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anaesthesia university college hospital galway,University College Hospital Galway,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesiaintensive care b vienna medical university,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of anaesthesiology,Department of Anaesthesiology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anaesthesiology aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesiology and intensive care university of tartu,"Department of Anaesthesiology and Intensive Care, University of Tartu",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesia and intensive care medicine nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anesthesia reanimation of university of liege,Université de Liège,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of anesthesiology,Department of anesthesiology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesiology and intensive care medicine,Department of Anesthesiology and Intensive Care Medicine,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesiology and operative intensive care medicine charit cbf,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesiology and perioperative medicine,Department of Anesthesiology and Perioperative Medicine,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2823,7 +2817,6 @@ department of asthma allergy and respiratory science gkt school of medicine king
 department of biomedical metabolic and neural sciences,Department of Biomedical Metabolic and Neural Sciences,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of biomedical sciences faculty of health sciences university of copenhagen,"Department of Biomedical Sciences, Faculty of Health Sciences, University of Copenhagen",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of cardio-thoracic and vascular surgery aarhus university hospital,"Department of Cardio-Thoracic and Vascular Surgery, Aarhus University Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
-department of cardiology,Department of Cardiology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of cardiology aalborg hospital,"Department of Cardiology, Aalborg Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of cardiology aarhus university hospital denmark,Aarhus University Hospital,NA,NA,academic,llm_reviewed,1,llm_reviewed
 department of cardiology aarhus university hospital skejby,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2848,7 +2841,6 @@ department of clinical sciences danderyd hospital,"Department of Clinical Scienc
 department of clinical sciences danderyd hospital karolinska intitutet,Karolinska Institutet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of clinical sciences karolinska institutet danderyd hospital,Karolinska Institutet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of dentistry and oral health,Department of Dentistry and Oral Health,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of dermatology,Department of Dermatology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of dermatology and copenhagen wound healing center bispebjerg hospital,Bispebjerg Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of dermatology bispebjerg hospital,"Department of Dermatology, Bispebjerg Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of dermatology bispebjerg university hospital,"Department of Dermatology, Bispebjerg University Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2857,7 +2849,6 @@ department of dermatology erasmus university medical center,Erasmus MC,NA,NA,unk
 department of dermatology hospital of the medical university graz,Medical University Of Graz,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of dermatology odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of endocrine oncology,Department of Endocrine Oncology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of endocrinology,Department of Endocrinology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of endocrinology and internal medicine,Department of Endocrinology and Internal Medicine,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of endocrinology sahlgrenska university hospital,Sahlgrenska University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of endocrinology university of debrecen medical and health science center,Department of Endocrinology University of Debrecen Medical and Health Science Center,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2869,11 +2860,9 @@ department of general psychiatry,Department of General Psychiatry,NA,NA,unknown,
 department of genito-urinary medicine and infectious diseases,Department of Genito-Urinary Medicine and Infectious Diseases,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of gynaecology and obstetrics nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of gynaecology helse finnmark klinikk hammerfest,Klinikk Hammerfest,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of haematology,Department of Haematology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of haematology aalborg university hospital,"Department of Haematology, Aalborg University Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of haematology zealand university hospital,"Sjællands University Hospital, Køge",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of health,Department of Health,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of hematology,Department of Hematology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of hematology aalborg university hospital,Aalborg University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of hematology herlev and gentofte university hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of hepatology and gastroenterology aarhus university hospital,Aarhus University,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2901,12 +2890,10 @@ department of medicine i university hospital st josef-hospital ruhr university b
 department of medicine kge university hospital / department of medicine kge university hospital,"Sjællands University Hospital, Køge",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of medicine zealand university hospital,Zealand University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of molecular and clinical medicine sapienza university of rome,Department of Molecular and Clinical Medicine Sapienza University of Rome,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of nephrology,Department of Nephrology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of nephrology and renal transplantation,Department of Nephrology and Renal Transplantation,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of nephrology and renal transplantation ku leuven,"Department of Nephrology and Renal Transplantation, KU Leuven",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of nephrology and renal transplantation university hospitals leuven,UZ Leuven,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of nephrology rigshospitalet university of copenhagen,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-department of neurology,Department of Neurology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of neurology and clinical neurophysiology st olavs hospital trondheim university hospital,"St. Olavs Hospital, Trondheim University Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of neurology christian doppler medical center paracelsus medical university salzburg,Paracelsus Medical University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of neurology division of clinical neuroscience oslo university hospital,Oslo University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2922,7 +2909,6 @@ department of nuclear medicine and endocrinology paracelsus medical university s
 department of nuclear medicine medical university innsbruck,Medical University Of Innsbruck,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of nuclear medicine odense university hospital,"Department of Nuclear Medicine, Odense University Hospital",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of obstetrics and gynecolog randers centralsygehusy,"Department of Obstetrics and Gynecolog, Randers Centralsygehusy",NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of oncology,Department of Oncology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of oncology aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology herlev gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology karolinska,Karolinska University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2933,7 +2919,6 @@ department of oncology university hospital herlev,Herlev og Gentofte Hospital,NA
 department of oncology university hospital uppsala,Uppsala University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology uppsala university hospita,Uppsala University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of oncologyherlev university hospital,Department of OncologyHerlev University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-department of ophthalmology,Department of Ophthalmology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of ophthalmology at st franziskus hospital,Department of Ophthalmology at St. Franziskus Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of ophthalmology bonn university,"Department of Ophthalmology, Bonn University",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of ophthalmology hietzing hospital,Krankenhaus Hietzing,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2952,13 +2937,11 @@ department of pediatrics aarhus university hospital,Aarhus University Hospital,N
 department of pediatrics aarhus university hospital skejby,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of pediatrics holbaek hospital,Department of Pediatrics Holbaek Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of pharmaceutical biosciences uppsala university,Uppsala University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of pharmacology-toxicology,Department of Pharmacology-Toxicology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of pharmacology-toxicology runmc,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of pharmacy universitaetsmedizin mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of pharmacy unversittsmedizin mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of physiology and cardiothoracic surgery faculty of medicine university of porto,University of Porto,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of plastic surgery breast and burns treatment,"Department of Plastic Surgery, Breast and Burns Treatment",NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of psychiatry,Department of Psychiatry,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychiatry and psychotherapy charity university medicine,Charité Universitätsmedizin Berlin,NA,NA,charity,llm_reviewed,1,llm_reviewed
 department of psychiatry and psychotherapy cologne,Department of Psychiatry and Psychotherapy Cologne,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychiatry and psychotherapy medical university of vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2966,13 +2949,11 @@ department of psychiatry and psychotherapy university of erlangen-nuremberg,"Dep
 department of psychiatry ludwig-maximilian university munich,Klinikum Der Universitat Munchen AöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychiatry section of sleep research and pharmacopsychiatry,Department of Psychiatry Section of Sleep Research and Pharmacopsychiatry,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychology stockholm university,Stockholm University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-department of pulmonology,Department of Pulmonology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of r d central manchester and manchester childrens hospital nhs trust,Manchester University NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of radiology rigshospitalet denmark,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of renal medicine aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of research development theleeds teaching hospitals nhs trust,Leeds Teaching Hospitals NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of respiratory diseases aarhus university hospital,Aarhus University,NA,NA,academic,llm_reviewed,1,llm_reviewed
-department of rheumatology,Department of Rheumatology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of rheumatology hvidovre hospital,Hvidovre Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of rheumatology internal medicine iii medical university of vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of rheumatology university hospital lund,Skåne University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -3173,7 +3154,6 @@ division of allergy immunology and transplantation national institute of allergy
 division of anaesthesiology - department of acute medicine - geneva childrens hospital university hospitals of geneva,Geneva University Hospitals (HUG),NA,NA,hospital,llm_reviewed,1,llm_reviewed
 division of angiology graz,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 division of cardiology robert-bosch-krankenhaus,Robert-Bosch-Krankenhaus,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-division of rheumatology,Division of Rheumatology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 division of special and environmental dermatology,Division of Special and Environmental Dermatology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 division of thoracic and hyperbaric surgery medical university graz,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 division pf paediatric and adolescent medicine oslo university hospital,Oslo University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -4573,7 +4553,6 @@ genera research ltd,Genera Research Ltd,NA,NA,unknown,llm_reviewed,1,llm_reviewe
 general hospital linz,General Hospital Linz,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general hospital vienna dept cardio-thoracic surgeray,AKH Wien,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general practitioners research institute,General Practitioners Research Institute,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-general teaching hospital,General Teaching Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general university hospital in prague,General University Hospital in Prague,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 generate biomedicines inc,Generate Biomedicines,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 generex biotechnology corp,Generex Biotechnology Corporation,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6126,7 +6105,6 @@ iteos belgium,iTeos Belgium,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 iteos belgium sa,iTeos Belgium SA,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 iterum therapeutics international limited,Iterum Therapeutics International Limited,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 itf research pharma s l,ITF Research Pharma S.L.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-itf research pharma s l u,ITF Research Pharma S.L.,NA,NA,NA,llm_reviewed,1,llm_reviewed
 itf research pharma s l u,ITF Research Pharma SLU,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 itf research pharma slu,ITF Research Pharma SLU,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 itm oncologics gmbh,ITM Oncologics GmbH,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7233,7 +7211,6 @@ medical centre haaglanden mch / medical centre haaglanden mch,Haaglanden Medisch
 medical centre leeuwarden,Medical Centre Leeuwarden,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medical centre of postgraduate education poland,Medical Centre of Postgraduate Education,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medical department haukeland university hospital,Haukeland University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-medical department i,Medical Department I,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medical department m endocrinology diabetes,Medical Department M Endocrinology Diabetes,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medical developments international limited,Medical Developments International,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medical enterprises europe b v,Medical Enterprises Europe B.V.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9336,7 +9313,6 @@ research and innovation nottingham university hospital,Nottingham University Hos
 research and innovation services,Research and Innovation Services,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 research and innovation services university of dundee,University Of Dundee,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 research center for emergency medicine department of clinical medicine aarhus university,"Research Center for Emergency Medicine, Department of Clinical Medicine",NA,NA,unknown,llm_reviewed,1,llm_reviewed
-research development department,Research & Development Department,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 research development department hull east yorkshire hospitals nhs trust,Hull University Teaching Hospitals NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 research enterprise development red university of bristol,University of Bristol,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 research enterprise development uob,University of Bristol,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10773,7 +10749,6 @@ tno,TNO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tno netherlands organisation for applied scientific research,TNO Netherlands Organisation for Applied Scientific Research,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tno netherlands organization for applied scientific research,TNO.Netherlands Organization for Applied Scientific Research,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 to-bbb technologies b v,to-BBB technologies B.V.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-tobira therapeutics inc a subsidiary of allergan plc,Allergan,NA,NA,NA,llm_reviewed,1,llm_reviewed
 tobira therapeutics inc a subsidiary of allergan plc,Tobira Therapeutics,NA,NA,industry,llm_reviewed,1,llm_reviewed
 toga thoracic oncology group antwerp,TOGA Thoracic Oncology Group Antwerp,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tokai pharmaceuticals inc,Tokai Pharmaceuticals Inc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11194,7 +11169,6 @@ university antwerp / university hospital leuven gasthuisberg,UZ Leuven,NA,NA,hos
 university bonn,Universitaetsklinikum Bonn,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university center hospital of guadeloupe,University Center Hospital of Guadeloupe,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university childrens hospital,University Childrens Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-university childrins hospital,University Childrens Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic erlangen medical clinic ii,Universitätsklinikum Erlangen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic essen,Universitätsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic golnik,University Clinic Golnik,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -11219,7 +11193,6 @@ university cologne,University of Cologne,NA,NA,unknown,llm_reviewed,1,llm_review
 university department of general visceral and transplant surgery tuebingen,Universitätsklinikum Tübingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university erlangen-nuremberg,Universitätsklinikum Erlangen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university eye clinic maastricht umc,Maastricht University Medical Center+,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-university eye hospital,University Eye Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university federico ii,Università degli Studi di Napoli Federico II,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university ghent,University Ghent,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university health network,University Health Network,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
@@ -11229,7 +11202,6 @@ university heart center freiburg - bad krozingen,Universitäts-Herzzentrum Freib
 university heidelberg,Heidelberg University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university heidelberg med fac repr by university hospital and its commercial managing director,Ruprecht-Karls-Universität Heidelberg,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hopsital tuebingen,University of Tübingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
-university hospital,University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital aintree nhs trust,University Hospital Aintree NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital antwerp,University Hospital Antwerp,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital antwerp department respiratory medicine,University Hospital Antwerp,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -11365,7 +11337,6 @@ university hospitals st luc,Cliniques Universitaires St Luc,NA,NA,hospital,llm_r
 university hosptial bristol nhs foundation trust,University Hospitals Bristol NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university leipzig,University Leipzig,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university medial center groningen,University Medical Center Groningen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
-university medical center,University Medical Center,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university medical center eppendorf,University Medical Center Hamburg - Eppendorf,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university medical center freiburg,Universitätsklinikum Freiburg,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university medical center goettingen,University Medical Center Göttingen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
