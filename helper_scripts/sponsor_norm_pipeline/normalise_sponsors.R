@@ -72,10 +72,10 @@ clean_sponsor_alias <- function(x) {
   "\\b(",
   paste(c(
     "department", "dept", "departement", "department of", "dept of",
-    "service", "division", "unit", "section", "clinic", "klinik",
-    "laboratory", "laboratories", "lab", "abteilung", "afdeling",
+    "unit", "section", "klinik",
+    "abteilung", "afdeling",
     "heilkunde", "dermatology", "neurology", "endocrinology",
-    "pharmacy", "pharmacology", "toxicology"
+    "pharmacology", "toxicology"
   ), collapse = "|"),
   ")\\b"
 )
