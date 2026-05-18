@@ -67,8 +67,7 @@ Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,F
 7TM Pharma A/S,7TM Pharma,NA,NA,NA,legal suffix stripped
 89bio Inc.,89bio,NA,NA,NA,legal suffix stripped
 A.C.O.M. Advanced Center Oncology Macerata S.r.l.,A.C.O.M. Advanced Center Oncology Macerata,NA,NA,NA,legal suffix stripped
-A.C.R.A.F. S.p.A.,A.C.R.A.F.,NA,NA,NA,legal suffix stripped
-A.C.R.A.F. SpA Angelini SpA,A.C.R.A.F. SpA Angelini,NA,NA,NA,legal suffix stripped
+A.C.R.A.F. SpA Angelini SpA,A.C.R.A.F.,NA,NA,NA,legal suffix stripped
 A. Carlsson Research AB,A. Carlsson Research,NA,NA,NA,legal suffix stripped
 A. Menarini Farmaceutica Internazionale s.r.l.,A. Menarini Farmaceutica Internazionale,NA,NA,NA,legal suffix stripped
 "A.P. Pharma, Inc.",A.P. Pharma,NA,NA,NA,legal suffix stripped
@@ -102,7 +101,7 @@ Achilles Therapeutics UK Limited,Achilles Therapeutics UK,NA,NA,NA,legal suffix 
 "Achillion Pharmaceuticals, Inc., a wholly owned subsidiary of Alexion Pharmaceuticals Inc.","Achillion Pharmaceuticals, Inc., a wholly owned subsidiary of Alexion Pharmaceuticals",NA,NA,NA,legal suffix stripped
 "Aclaris Therapeutics, Inc.",Aclaris Therapeutics,NA,NA,NA,legal suffix stripped
 Acousia Therapeutics GmbH,Acousia Therapeutics,NA,NA,NA,legal suffix stripped
-Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F.,NA,NA,NA,legal suffix stripped
+Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F. S.p.A.,A.C.R.A.F.,NA,NA,NA,legal suffix stripped
 Acrux Pharma Pty Ltd,Acrux Pharma Pty,NA,NA,NA,legal suffix stripped
 "ACT BIOTECH, Inc.",ACT BIOTECH,NA,NA,NA,legal suffix stripped
 Actavis Deutschland GmbH & Co. KG,Actavis Deutschland,NA,NA,NA,legal suffix stripped
@@ -2765,7 +2764,7 @@ AUSL di Piacenza,AUSL Piacenza,NA,NA,NA,canonical review: label variant accepted
 Ospedale Niguarda Ca' Granda,Azienda Ospedaliera Ospedale Niguarda Ca' Granda,NA,NA,NA,canonical review: label variant accepted
 Azienda Provinciale per i Servizi Sanitari di Trento,Azienda Provinciale per i Servizi Sanitari della Provincia Autonoma di Trento,NA,NA,NA,canonical review: label variant accepted
 Azienda Universitaria Policlinico Umberto I,Azienda Ospedaliero-Universitaria Policlinico Umberto I,NA,NA,NA,canonical review: label variant accepted
-A.C.R.A.F. S.p.A. - Angelini,A.C.R.A.F. S.p.A.,NA,NA,NA,canonical review: label variant accepted
+A.C.R.A.F. S.p.A. - Angelini,A.C.R.A.F.,NA,NA,NA,canonical review: label variant accepted
 "Basilea Pharmaceutica International Ltd, Allschwil",Basilea Pharmaceutica International Ltd,NA,NA,NA,canonical review: label variant accepted
 Belfast City Hospital,Belfast Health & Social Care Trust,NA,NA,NA,canonical review: label variant accepted
 Berlin-Chemie AG Menarini Group,Berlin-Chemie Menarini,NA,NA,NA,canonical review: label variant accepted
@@ -2803,9 +2802,8 @@ ANAVEX Life Sciences,Anavex Life Sciences,NA,NA,NA,final canonical review: accep
 ANTHERA Pharmaceuticals,Anthera Pharmaceuticals,NA,NA,NA,final canonical review: accepted
 ASLAN Pharmaceuticals,Aslan Pharmaceuticals,NA,NA,NA,final canonical review: accepted
 Astellas Pharma US,Astellas Pharma,NA,NA,NA,final canonical review: accepted
-A.C.R.A.F.,A.C.R.A.F. S.p.A.,NA,NA,NA,final canonical review: accepted
-Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F.,A.C.R.A.F. S.p.A.,NA,NA,NA,final canonical review: accepted
-A.C.R.A.F. SpA Angelini,A.C.R.A.F. S.p.A.,NA,NA,NA,final canonical review: accepted
+Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesc O A.C.R.A.F.,A.C.R.A.F.,NA,NA,NA,final canonical review: accepted
+A.C.R.A.F. SpA Angelini,A.C.R.A.F.,NA,NA,NA,final canonical review: accepted
 ALTANA Pharma,Altana Pharma,NA,NA,NA,final canonical review: accepted
 Amphia Hospital,Amphia Ziekenhuis,NA,NA,NA,final canonical review: accepted
 Baxalta US,Baxalta,NA,NA,NA,final canonical review: accepted
