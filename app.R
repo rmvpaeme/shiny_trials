@@ -860,6 +860,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "dimp.d391_inn_generic_name",
     "f11_trial_has_subjects_under_18",
     "f12_adults_1864_years","f13_elderly_65_years",
+    "f422_in_the_whole_clinical_trial",
     "e12_meddra_classification.e12_term",
     "e12_meddra_classification.e12_system_organ_class",
     "a1_member_state_concerned","a3_full_title_of_the_trial",
@@ -903,7 +904,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "ageGroup",
     # Per-country decision dates (numeric: days since 1970-01-01, one per MS)
     "authorizedApplication.memberStatesConcerned.firstDecisionDate",
-    "authorizedApplication.memberStatesConcerned.lastDecisionDate")
+    "authorizedApplication.memberStatesConcerned.lastDecisionDate",
+    "authorizedApplication.authorizedPartI.rowSubjectCount",
+    "totalNumberEnrolled")
   
   # ── DB cleanup: remove records with invalid IDs before any processing ────────
   raw_con <- DBI::dbConnect(RSQLite::SQLite(), db_path)
@@ -1024,6 +1027,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "e71_human_pharmacology_phase_i","e72_therapeutic_exploratory_phase_ii",
     "e73_therapeutic_confirmatory_phase_iii","e74_therapeutic_use_phase_iv",
     "trialPhase",
+    "f422_in_the_whole_clinical_trial",
+    "authorizedApplication.authorizedPartI.rowSubjectCount",
+    "totalNumberEnrolled",
     "authorizedApplication.applicationInfo.decisionDate")
   for (col in all_expected)
     if (!col %in% names(result)) result[[col]] <- NA_character_
@@ -1464,6 +1470,15 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   if (!"p_end_of_trial_status" %in% names(result)) result$p_end_of_trial_status <- NA_character_
   if (!"ctStatus" %in% names(result)) result$ctStatus <- NA_character_
   result <- result %>% mutate(across(c(p_end_of_trial_status, ctStatus, trial_status_raw), as.character))
+
+  parse_participant_count <- function(x) {
+    if (is.na(x) || !nzchar(str_trim(as.character(x)))) return(NA_real_)
+    parts <- str_trim(unlist(str_split(as.character(x), " / ")))
+    parts <- parts[nzchar(parts)]
+    vals <- suppressWarnings(as.numeric(str_replace_all(parts, "[^0-9.]", "")))
+    vals <- vals[!is.na(vals) & is.finite(vals) & vals > 0]
+    if (!length(vals)) NA_real_ else max(vals)
+  }
   
   ongoing_pat <- regex(paste(c(
     "Recruiting","Active","Ongoing","Temporarily Halted","Restarted",
@@ -1539,6 +1554,31 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       suppressWarnings(as.integer(substr(transition_eudract_number, 1, 4))),
       year
     ),
+    participants_n = {
+      euctr_n <- vapply(
+        as.character(f422_in_the_whole_clinical_trial),
+        parse_participant_count,
+        numeric(1),
+        USE.NAMES = FALSE
+      )
+      ctis_total_n <- vapply(
+        as.character(totalNumberEnrolled),
+        parse_participant_count,
+        numeric(1),
+        USE.NAMES = FALSE
+      )
+      ctis_row_n <- vapply(
+        as.character(`authorizedApplication.authorizedPartI.rowSubjectCount`),
+        parse_participant_count,
+        numeric(1),
+        USE.NAMES = FALSE
+      )
+      case_when(
+        register == "EUCTR" ~ euctr_n,
+        register == "CTIS"  ~ coalesce(ctis_total_n, ctis_row_n),
+        TRUE ~ NA_real_
+      )
+    },
     has_PIP = case_when(
       str_detect(tolower(PIP_status), "yes|true") ~ "Yes",
       str_detect(tolower(PIP_status), "no|false") ~ "No",
@@ -1815,9 +1855,12 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "dimp.d25_the_imp_has_been_designated_in_this_indication_as_an_orphan_drug_in_the_community",
     "authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber",
     "f11_trial_has_subjects_under_18", "f12_adults_1864_years",
-    "f13_elderly_65_years", "ageGroup")))
+    "f13_elderly_65_years", "ageGroup",
+    "f422_in_the_whole_clinical_trial",
+    "authorizedApplication.authorizedPartI.rowSubjectCount",
+    "totalNumberEnrolled")))
 
-  result <- result %>% mutate(data_processing_version = "2026-05-status-pip-duration")
+  result <- result %>% mutate(data_processing_version = "2026-05-status-pip-duration-participants")
 
   # ── Sponsor labels (from pipeline) ───────────────────────────────────────────
   sponsor_labels_path <- file.path(dirname(db_path), "trial_sponsor_labels.csv")
@@ -1854,6 +1897,7 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
                      "DIMP_inn_name", "application_status_raw",
                      "member_state_status_raw", "pip_active_substances",
                      "pip_substance_tokens", "trial_duration_days",
+                     "participants_n",
                      "data_processing_version")
   !is.null(d) && all(required_cols %in% names(d))
 }
@@ -2594,7 +2638,7 @@ ui <- tagList(
                                   box(title="Top Sponsors / Companies",status="primary",solidHeader=TRUE,width=12,
                                       sliderInput("top_n_sponsor","Top N:",min=5,max=30,value=20),
                                       uiOutput("plot_top_sponsors_ui"))),
-                                uiOutput("sponsor_timeline_ui"),
+                                uiOutput("sponsor_portfolio_ui"),
                                 fluidRow(
                                   box(title="Time from Submission to Decision (days)",status="info",solidHeader=TRUE,width=12,height=460,
                                       withSpinner(plotlyOutput("plot_decision_time",height="400px"),type=6))),
@@ -2637,6 +2681,11 @@ ui <- tagList(
                                       p(em("Completed trials with reliable start and authorization/end-date information. Durations above 10 years are excluded as likely source-data anomalies."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       withSpinner(plotlyOutput("plot_trial_duration",height="340px"),type=6))),
+                                fluidRow(
+                                  box(title="Trial Participants per Trial",status="primary",solidHeader=TRUE,width=12,height=430,
+                                      p(em("Planned/enrolled participant counts from EUCTR and CTIS, shown on a log10 scale because trial sizes are highly skewed."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_participants_hist",height="340px"),type=6))),
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
@@ -2915,6 +2964,25 @@ server <- function(input, output, session) {
     "Other" = tc()$s_other
   ))
   register_cols <- reactive(c("EUCTR"=tc()$r_euctr,"CTIS"=tc()$r_ctis))
+
+  plot_status_cols <- function(values = NULL) {
+    pal <- status_cols()
+    vals <- unique(as.character(values))
+    missing <- setdiff(vals[!is.na(vals)], names(pal))
+    if (length(missing)) pal <- c(pal, setNames(rep(tc()$fg, length(missing)), missing))
+    pal
+  }
+
+  plot_phase_cols <- function(values = NULL) {
+    t <- tc()
+    pal <- c("Phase I" = t$frost1, "Phase II" = t$green,
+             "Phase III" = t$orange, "Phase IV" = t$purple,
+             "Unknown" = t$fg)
+    vals <- unique(as.character(values))
+    missing <- setdiff(vals[!is.na(vals)], names(pal))
+    if (length(missing)) pal <- c(pal, setNames(rep(t$fg, length(missing)), missing))
+    pal
+  }
   
   observe({
     req(rv$data)
@@ -3559,14 +3627,16 @@ server <- function(input, output, session) {
 	      select(CT_number,trial_identifiers,transition_eudract_number,register,
 	             Full_title,DIMP_product_name,DIMP_inn_name,MEDDRA_term,
 	             MEDDRA_organ_class,Member_state,n_countries,status_raw,has_PIP,
-	             phase,sponsor_label,sponsor_type,submission_date_parsed,start_date,decision_date,`CT Number`)%>%
+	             phase,participants_n,sponsor_label,sponsor_type,
+               submission_date_parsed,start_date,decision_date,`CT Number`)%>%
 	      select(-CT_number)%>%
 	      rename(Identifiers=trial_identifiers, `Transition EudraCT`=transition_eudract_number,
 	             Register=register,Title=Full_title,
 	             Product=DIMP_product_name,INN=DIMP_inn_name,Condition=MEDDRA_term,
 	             `Organ Class`=MEDDRA_organ_class,Country=Member_state,
 	             `# Countries`=n_countries,Status=status_raw,PIP=has_PIP,
-             Phase=phase,`Sponsor Name`=sponsor_label,`Sponsor Type`=sponsor_type,
+             Phase=phase,Participants=participants_n,
+             `Sponsor Name`=sponsor_label,`Sponsor Type`=sponsor_type,
              Submitted=submission_date_parsed,Started=start_date,
              `Decision Date`=decision_date)%>%
       relocate(`CT Number`)
@@ -3617,6 +3687,9 @@ server <- function(input, output, session) {
             tags$dt("Register"),   tags$dd(coalesce(reg, "—")),
             tags$dt("Status"),     tags$dd(coalesce(row$status_raw, "—")),
             tags$dt("Phase"),      tags$dd(coalesce(row$phase, "—")),
+            tags$dt("Participants"),
+            tags$dd(ifelse(is.na(row$participants_n), "—",
+                           format(row$participants_n, big.mark = ",", scientific = FALSE))),
             tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_label, "—")),
             tags$dt("Sponsor Type"),  tags$dd(coalesce(row$sponsor_type, "—"))
           ),
@@ -4306,7 +4379,7 @@ server <- function(input, output, session) {
       count(phase, status) %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
     validate(need(nrow(df) > 0, "No phase data available."))
-    pal <- status_cols()
+    pal <- plot_status_cols(df$status)
     plot_ly(df, x = ~phase, y = ~n, color = ~status, colors = pal, type = "bar",
             text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
       plt_layout(barmode = "stack",
@@ -4472,6 +4545,35 @@ server <- function(input, output, session) {
         showlegend = FALSE)
   })
 
+  output$plot_participants_hist <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(participants_n), is.finite(participants_n), participants_n > 0) %>%
+      mutate(
+        participants_log10 = log10(participants_n),
+        register = coalesce(analysis_register, register)
+      )
+    if (nrow(df) == 0) return(plotly_empty() %>% layout(
+      title = list(text = "No participant count data for current filters",
+                   font = list(size = 14, color = "#888")),
+      annotations = list(text = "Participant counts are available only where the source registry reports them.",
+                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
+    tick_vals <- c(1, 10, 100, 1000, 10000, 100000)
+    plot_ly(df, x = ~participants_log10,
+            color = ~register, colors = register_cols(),
+            type = "histogram", nbinsx = 30,
+            hovertemplate = "log10 participants: %{x:.2f}<br>Trials: %{y}<extra>%{fullData.name}</extra>") %>%
+      plt_layout(
+        barmode = "stack",
+        bargap = 0.05,
+        xaxis = list(
+          title = "Participants per trial",
+          tickvals = log10(tick_vals),
+          ticktext = format(tick_vals, big.mark = ",", scientific = FALSE)
+        ),
+        yaxis = list(title = "Number of Trials"),
+        legend = list(orientation = "h", y = -0.2))
+  })
+
   output$plot_timeline_q <- renderPlotly({
     df<-filt()%>%filter(!is.na(start_date))%>%mutate(quarter=floor_date(start_date,"quarter"))%>%
       count(quarter,register)
@@ -4604,25 +4706,255 @@ server <- function(input, output, session) {
         margin = list(l = 180))
   })
 
-  output$sponsor_timeline_ui <- renderUI({
-    req(length(input$sponsor_filter) == 1)
-    fluidRow(
-      box(title = paste0("Trial Timeline — ", input$sponsor_filter[[1]]),
-          status = "info", solidHeader = TRUE, width = 12, height = 460,
-          withSpinner(plotlyOutput("plot_sponsor_timeline", height = "380px"), type = 6)))
+  output$sponsor_portfolio_ui <- renderUI({
+    n <- length(input$sponsor_filter)
+    help_box <- function(icon_name, icon_color = "#3c8dbc", title, lines) {
+      fluidRow(column(12, div(
+        style = "padding:42px 20px;text-align:center;",
+        tags$i(class = paste0("fa fa-", icon_name),
+               style = paste0("font-size:42px;color:", icon_color, ";margin-bottom:14px;")),
+        h3(title),
+        tagList(lines))))
+    }
+
+    if (n == 0) return(help_box("building", title = "Sponsor Portfolio Over Time", lines = tagList(
+      p("Select one sponsor in the sidebar to inspect its trial-level portfolio over time."),
+      p(em("The portfolio view shows event strips, trial swimlanes, therapeutic-area bubbles, and cumulative growth."),
+        style = "color:#888;"))))
+
+    if (n > 1) return(help_box("building", icon_color = "#e67e22",
+      title = "Single Sponsor Portfolio", lines = tagList(
+        p(paste0(n, " sponsors are currently selected.")),
+        p("Narrow the Sponsor / Company filter to one sponsor to show trial-level portfolio views."))))
+
+    tagList(
+      fluidRow(column(12,
+        div(
+          div(style = "display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;",
+            h3(style = "margin:0;", icon("stream"), " Sponsor Portfolio Over Time — ", input$sponsor_filter[[1]]),
+            div(style = "min-width:220px;",
+              selectInput("portfolio_y_group", "Group trial strip by:",
+                choices = c("Therapeutic area", "Phase", "Status", "Substance"),
+                selected = isolate(if (!is.null(input$portfolio_y_group)) input$portfolio_y_group else "Therapeutic area"),
+                width = "220px")
+            )
+          ),
+          p(em("Each view keeps the current sidebar filters and shows individual trials for the selected sponsor."),
+            style = "font-size:12px;opacity:0.7;margin:4px 0 8px;")
+        )
+      )),
+      fluidRow(
+        tabBox(id = "sponsor_portfolio_tabs", width = 12,
+          tabPanel("1. Event Strip",
+            withSpinner(plotlyOutput("plot_sponsor_event_strip", height = "420px"), type = 6)),
+          tabPanel("2. Swimlane",
+            withSpinner(plotlyOutput("plot_sponsor_swimlane", height = "480px"), type = 6)),
+          tabPanel("3. Therapeutic Bubbles",
+            withSpinner(plotlyOutput("plot_sponsor_bubble_area", height = "420px"), type = 6)),
+          tabPanel("4. Cumulative Growth",
+            withSpinner(plotlyOutput("plot_sponsor_cumulative_markers", height = "440px"), type = 6))
+        )
+      )
+    )
   })
 
-  output$plot_sponsor_timeline <- renderPlotly({
+  sponsor_portfolio_data <- reactive({
+    req(input$tabs == "analytics_sponsors")
     req(length(input$sponsor_filter) == 1)
-    df <- filt() %>%
-      filter(!is.na(sponsor_label), !is.na(submission_date_parsed)) %>%
-      mutate(year = year(submission_date_parsed)) %>%
+    d <- filt() %>%
+      filter(!is.na(sponsor_label), sponsor_label %in% input$sponsor_filter)
+
+    empty_chr <- rep(NA_character_, nrow(d))
+    unknown_chr <- rep("Unknown", nrow(d))
+    get_chr <- function(nm) {
+      if (nm %in% names(d)) as.character(d[[nm]]) else empty_chr
+    }
+    get_date <- function(nm) {
+      if (nm %in% names(d)) as.Date(d[[nm]]) else as.Date(rep(NA_character_, nrow(d)))
+    }
+
+    trial_id <- dplyr::coalesce(
+      get_chr("CT_number"),
+      get_chr("canonical_trial_id"),
+      get_chr("trial_base_id"),
+      get_chr("_id")
+    )
+    title <- dplyr::coalesce(get_chr("Full_title"), trial_id)
+    submission <- get_date("submission_date_parsed")
+    member_state <- get_chr("Member_state")
+    country_count <- vapply(member_state, function(x) {
+      if (is.na(x) || !nzchar(str_trim(x))) return(NA_integer_)
+      parts <- unique(str_trim(unlist(strsplit(x, " / ", fixed = TRUE))))
+      length(parts[nzchar(parts)])
+    }, integer(1))
+
+    tibble(
+      `_id` = get_chr("_id"),
+      trial_id = trial_id,
+      trial_title = title,
+      trial_label = if_else(
+        !is.na(trial_id) & nzchar(str_trim(trial_id)),
+        trial_id,
+        str_trunc(title, 42)
+      ),
+      register = dplyr::coalesce(get_chr("analysis_register"), get_chr("register"), unknown_chr),
+      status = dplyr::coalesce(get_chr("status"), unknown_chr),
+      phase = dplyr::coalesce(get_chr("phase"), unknown_chr),
+      therapeutic_area = dplyr::coalesce(get_chr("MEDDRA_organ_class"), unknown_chr),
+      condition = dplyr::coalesce(get_chr("MEDDRA_term"), unknown_chr),
+      substance = dplyr::coalesce(get_chr("substance_label"), unknown_chr),
+      pip = dplyr::coalesce(get_chr("has_PIP"), unknown_chr),
+      countries = member_state,
+      country_count = country_count,
+      submission_date = submission,
+      start_date = get_date("start_date"),
+      decision_date = get_date("decision_date")
+    ) %>%
+      mutate(
+        event_date = submission_date,
+        hover = paste0(
+          "<b>", htmltools::htmlEscape(str_trunc(trial_title, 120)), "</b><br>",
+          "Trial: ", htmltools::htmlEscape(trial_label), "<br>",
+          "Register: ", htmltools::htmlEscape(register), "<br>",
+          "Status: ", htmltools::htmlEscape(status), "<br>",
+          "Phase: ", htmltools::htmlEscape(phase), "<br>",
+          "Area: ", htmltools::htmlEscape(therapeutic_area), "<br>",
+          "Condition: ", htmltools::htmlEscape(condition), "<br>",
+          "Substance: ", htmltools::htmlEscape(substance), "<br>",
+          "Countries: ", htmltools::htmlEscape(dplyr::coalesce(countries, unknown_chr)), "<br>",
+          "PIP: ", htmltools::htmlEscape(pip)
+        )
+      )
+  })
+
+  output$plot_sponsor_event_strip <- renderPlotly({
+    req(input$tabs == "analytics_sponsors")
+    req(length(input$sponsor_filter) == 1)
+    group_choice <- if (is.null(input$portfolio_y_group)) "Therapeutic area" else input$portfolio_y_group
+    group_col <- switch(group_choice,
+      "Phase" = "phase",
+      "Status" = "status",
+      "Substance" = "substance",
+      "therapeutic_area")
+
+    df <- sponsor_portfolio_data() %>%
+      filter(!is.na(event_date)) %>%
+      mutate(portfolio_group = .data[[group_col]]) %>%
+      separate_rows(portfolio_group, sep = " / ") %>%
+      mutate(portfolio_group = str_squish(portfolio_group)) %>%
+      filter(!is.na(portfolio_group), nzchar(portfolio_group))
+    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
+
+    pal <- plot_status_cols(df$status)
+    df$status <- factor(df$status, levels = unique(c(names(pal), sort(unique(df$status)))))
+    plot_ly(df,
+            x = ~event_date, y = ~portfolio_group,
+            color = ~status, colors = pal,
+            symbol = ~register, symbols = c("circle", "diamond", "square"),
+            type = "scatter", mode = "markers",
+            marker = list(size = 10, opacity = 0.82, line = list(width = 0.5, color = "white")),
+            text = ~hover, hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Submission Date"),
+        yaxis = list(title = group_choice, automargin = TRUE),
+        legend = list(orientation = "h", y = -0.25),
+        margin = list(l = 210))
+  })
+
+  output$plot_sponsor_swimlane <- renderPlotly({
+    req(input$tabs == "analytics_sponsors")
+    req(length(input$sponsor_filter) == 1)
+    df <- sponsor_portfolio_data() %>%
+      mutate(
+        span_start = dplyr::coalesce(start_date, submission_date),
+        span_end = case_when(
+          status == "Completed" & !is.na(decision_date) ~ decision_date,
+          status %in% c("Ongoing", "Active", "Recruiting") ~ Sys.Date(),
+          !is.na(decision_date) ~ decision_date,
+          TRUE ~ as.Date(NA)
+        ),
+        span_end = if_else(!is.na(span_start) & !is.na(span_end) & span_end < span_start, span_start, span_end),
+        duration_days = as.numeric(span_end - span_start),
+        trial_axis = str_trunc(paste0(trial_label, " | ", str_trunc(trial_title, 45)), 80),
+        swim_hover = paste0(
+          hover, "<br>",
+          "Start: ", if_else(is.na(span_start), "Unknown", as.character(span_start)), "<br>",
+          "End: ", if_else(is.na(span_end), "Unknown", as.character(span_end)), "<br>",
+          "Duration: ", if_else(is.na(duration_days), "Unknown", paste0(round(duration_days), " days"))
+        )
+      ) %>%
+      filter(!is.na(span_start), !is.na(span_end)) %>%
+      arrange(desc(span_start))
+    validate(need(nrow(df) > 0, "No start/end date data available for this sponsor."))
+
+    pal <- plot_status_cols(df$status)
+    df$trial_axis <- factor(df$trial_axis, levels = rev(unique(df$trial_axis)))
+    plot_ly(df) %>%
+      add_segments(x = ~span_start, xend = ~span_end,
+                   y = ~trial_axis, yend = ~trial_axis,
+                   color = ~status, colors = pal,
+                   line = list(width = 7),
+                   text = ~swim_hover, hoverinfo = "text") %>%
+      add_markers(x = ~span_start, y = ~trial_axis,
+                  color = ~status, colors = pal,
+                  marker = list(size = 7),
+                  text = ~swim_hover, hoverinfo = "text",
+                  showlegend = FALSE) %>%
+      plt_layout(
+        xaxis = list(title = "Trial Timeline"),
+        yaxis = list(title = "", automargin = TRUE, tickfont = list(size = 9)),
+        legend = list(orientation = "h", y = -0.22),
+        margin = list(l = 260))
+  })
+
+  output$plot_sponsor_bubble_area <- renderPlotly({
+    req(input$tabs == "analytics_sponsors")
+    req(length(input$sponsor_filter) == 1)
+    df <- sponsor_portfolio_data() %>%
+      filter(!is.na(event_date)) %>%
+      mutate(
+        country_count = if_else(is.na(country_count) | country_count < 1L, 1L, country_count)
+      ) %>%
+      separate_rows(therapeutic_area, sep = " / ") %>%
+      separate_rows(phase, sep = " / ") %>%
+      mutate(
+        therapeutic_area = str_squish(therapeutic_area),
+        phase = str_squish(phase)
+      ) %>%
+      filter(!is.na(therapeutic_area), nzchar(therapeutic_area))
+    validate(need(nrow(df) > 0, "No therapeutic-area date data available for this sponsor."))
+
+    phase_pal <- plot_phase_cols(df$phase)
+    plot_ly(df,
+            x = ~event_date, y = ~therapeutic_area,
+            color = ~phase, colors = phase_pal,
+            size = ~country_count, sizes = c(7, 26),
+            type = "scatter", mode = "markers",
+            marker = list(opacity = 0.72, line = list(width = 0.5, color = "white")),
+            text = ~paste0(hover, "<br>Member States: ", country_count),
+            hoverinfo = "text") %>%
+      plt_layout(
+        xaxis = list(title = "Submission Date"),
+        yaxis = list(title = "Therapeutic Area", automargin = TRUE),
+        legend = list(orientation = "h", y = -0.25),
+        margin = list(l = 230))
+  })
+
+  output$plot_sponsor_cumulative_markers <- renderPlotly({
+    req(input$tabs == "analytics_sponsors")
+    req(length(input$sponsor_filter) == 1)
+    df <- sponsor_portfolio_data() %>%
+      filter(!is.na(event_date))
+    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
+
+    t <- tc()
+    yearly <- df %>%
+      mutate(year = year(event_date)) %>%
       count(year, name = "n") %>%
       arrange(year) %>%
       mutate(cumulative = cumsum(n))
-    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
-    t <- tc()
-    plot_ly(df) %>%
+
+    p_counts <- plot_ly(yearly) %>%
       add_bars(x = ~year, y = ~n, name = "New trials per year",
                marker = list(color = t$frost1),
                text = ~paste0(year, "<br>", n, " new trial(s)"),
@@ -4632,13 +4964,27 @@ server <- function(input, output, session) {
                 yaxis = "y2",
                 text = ~paste0(year, "<br>", cumulative, " total"),
                 hoverinfo = "text") %>%
-      plt_layout(
-        xaxis = list(title = "Year", dtick = 1, tickformat = "d"),
-        yaxis = list(title = "New Trials per Year", rangemode = "tozero"),
-        yaxis2 = list(title = "Cumulative Trials", overlaying = "y",
+      layout(
+        xaxis = list(title = "", dtick = 1, tickformat = "d"),
+        yaxis = list(title = "New Trials", rangemode = "tozero"),
+        yaxis2 = list(title = "Cumulative", overlaying = "y",
                       side = "right", rangemode = "tozero",
                       showgrid = FALSE),
-        legend = list(orientation = "h", y = -0.2))
+        showlegend = TRUE)
+
+    pal <- plot_status_cols(df$status)
+    p_markers <- plot_ly(df,
+                         x = ~event_date, y = ~status,
+                         color = ~status, colors = pal,
+                         type = "scatter", mode = "markers",
+                         marker = list(size = 9, opacity = 0.82, line = list(width = 0.5, color = "white")),
+                         text = ~hover, hoverinfo = "text",
+                         showlegend = FALSE) %>%
+      layout(xaxis = list(title = "Submission Date"),
+             yaxis = list(title = "Trial Markers", automargin = TRUE))
+
+    subplot(p_counts, p_markers, nrows = 2, shareX = TRUE, heights = c(0.56, 0.44), margin = 0.06) %>%
+      plt_layout(legend = list(orientation = "h", y = -0.18))
   })
 
   # ── Sponsor Comparison tab ────────────────────────────────────────────────
@@ -5920,14 +6266,18 @@ server <- function(input, output, session) {
 	      "table_pip_compound_decisions", "plot_pip", "plot_pip_year",
 	      "plot_top_substances", "plot_substance_timeline",
 	      "plot_substance_register", "plot_substance_age",
-	      "plot_migration_signal", "plot_migration_timeline",
+      "plot_migration_signal", "plot_migration_timeline",
 	      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
       "plot_ctis_date_spread",
-      "plot_top_sponsors_ui", "plot_top_sponsors", "sponsor_timeline_ui", "plot_sponsor_timeline",
+      "plot_top_sponsors_ui", "plot_top_sponsors",
+      "sponsor_portfolio_ui", "plot_sponsor_event_strip",
+      "plot_sponsor_swimlane", "plot_sponsor_bubble_area",
+      "plot_sponsor_cumulative_markers",
       # Phase Analytics
       "plot_phase", "plot_phase_status", "plot_phase_sponsor",
       "plot_phase_funnel", "plot_completion_cohort",
       "plot_completion_sponsor", "plot_completion_phase", "plot_trial_duration",
+      "plot_participants_hist",
       # Sponsor Comparison
       "sponsor_compare_tab_ui",
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
