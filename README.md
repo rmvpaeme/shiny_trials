@@ -117,10 +117,11 @@ Filter state is encoded in the URL (`?f=` query param, base64 JSON) for bookmark
 install.packages(c(
   "shiny", "shinydashboard", "fresh", "shinycssloaders",
   "ctrdata", "nodbi", "RSQLite", "DBI",
-  "dplyr", "tidyr", "stringr", "lubridate",
+  "dplyr", "tidyr", "stringr", "stringi", "stringdist", "lubridate",
   "ggplot2", "plotly", "leaflet", "scales", "forcats",
   "DT", "jsonlite", "base64enc",
-  "readr", "writexl",
+  "readr", "readxl", "writexl",
+  "purrr", "tibble", "httr2", "rvest", "xml2",
   "rmarkdown", "knitr", "kableExtra"
 ))
 ```
