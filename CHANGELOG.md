@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.12.0 — 2026-05-19
+
+- **Major navigation rework**: Analysis now starts with General Statistics, and country/sponsor comparisons live under a dedicated Compare Data section.
+- **General Statistics tab**: added filtered trial counts by year, completion rate by sponsor type, and participant-count distribution with participant-scale axis labels.
+- **Streamlined analytics**: Active Substances now focuses on top substances and yearly evolution; Phase Analytics removes the funnel and keeps phase/status/sponsor and completion views.
+- **Sponsor portfolio cleanup**: keeps the readable swimlane and therapeutic-area bubble views, enlarges bubbles, shortens swimlane labels, and removes event strip/cumulative growth views.
+- **Sponsor normalisation workflow**: root documentation now covers `helper_scripts/sponsor_norm_pipeline/`, including raw sponsor export, alias-index rebuild, app-facing label generation, review-queue curation, LLM-reviewed cleanup, final canonical maps, and app/cache integration via `data/trial_sponsor_labels.csv`.
+- **Result Reporting denominator fix**: Academic and Industry no-results KPIs use sponsor-type denominators under the active filters.
+- **Filtered map language**: Map titles and drill-down table now explicitly state that sidebar filters are applied.
+- **Rebuild resilience**: cache rebuilds have a local deduplication fallback if `ctrdata::dbFindIdsUniqueTrials()` fails on malformed registry identifiers.
+
 ## v0.11.0 — 2026-05-06
 
 - **EUCTR A.8 extraction**: EUCTR records now extract `a8_ema_decision_number_of_paediatric_investigation_plan`, clean noisy suffix text, and normalise EMA decision numbers such as `P/026/2010` and `P/26/2010` to the same canonical form.

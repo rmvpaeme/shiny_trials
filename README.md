@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.11.0** · R Shiny · EUCTR + CTIS · ~17 500 trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.12.0** · R Shiny · EUCTR + CTIS · ~16 200 deduplicated trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
 
 A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
 
@@ -43,10 +43,10 @@ The dashboard is designed for specific analytical workflows, not just browsing. 
 Select a MedDRA organ class or specific condition, set a date range, and see how trial activity has changed year by year — including which sponsors are most active, whether the Phase I → Phase III pipeline is growing or stalling, and which EU member states participate most. The Chart Builder lets you cross any two dimensions without writing code.
 
 **Result reporting overview**
-The Result Reporting tab shows which completed trials have reported results to the registry and which have not. Results data is sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`) — not estimated. KPI cards show total completed trials, results reported (% of total), Academic without results (% of total), and Industry without results (% of total). Charts break down by authorization year and sponsor type; the full list of completed trials without results is downloadable as CSV.
+The Result Reporting tab shows which completed trials have reported results to the registry and which have not. Results data is sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`) — not estimated. KPI cards show total completed trials, results reported (% of completed trials), and Academic / Industry completed trials without results as a percentage of all currently filtered trials in that sponsor type. Charts break down reporting by authorization year and sponsor type; the full list of completed trials without results is downloadable as CSV.
 
-**Comparing sponsor portfolios**
-Select 2–3 sponsors and the Sponsor Comparison tab renders side-by-side breakdowns of phase distribution, trial status, therapeutic areas, geographic reach, PIP involvement, and submission volume over time. Useful for competitive intelligence, partnership scoping, or regulatory submissions that require landscape context.
+**Comparing countries and sponsor portfolios**
+Use the Compare Data section to compare 2–3 countries or 2–3 sponsors. The comparison tabs render side-by-side breakdowns of phase distribution, trial status, therapeutic areas, geographic reach, PIP involvement, submission volume over time, and result reporting. Useful for competitive intelligence, partnership scoping, or regulatory submissions that require landscape context.
 
 **PIP waiver landscape**
 EUCTR A.8 EMA PIP decision numbers and CTIS PIP procedure numbers are normalised and joined to EMA's official PIP decision feed. When identifiers are missing, EUCTR INN/proposed INN names and trial product names are used as a conservative substance fallback. The Trial filters and PIP Analysis tab separate full waivers, records with no waiver indicated in the EMA decision type, and records where the bulk feed is ambiguous because the same compound has multiple possible EMA PIP decisions.
@@ -54,8 +54,8 @@ EUCTR A.8 EMA PIP decision numbers and CTIS PIP procedure numbers are normalised
 **Orphan / rare disease landscape**
 The Orphan Designation filter (sourced from EUCTR DIMP D.2.5 and CTIS orphan designation numbers) narrows the dataset to orphan-designated products. Combined with MedDRA filtering, this surfaces the rare disease trial landscape for a given indication without manual registry searches.
 
-**Pipeline maturity assessment**
-The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what percentage of trials authorized in each year have since completed, split by register. More recent cohorts naturally show lower rates; a plateauing line in an older cohort signals trials that have stalled rather than completed.
+**General statistics and pipeline maturity**
+The General Statistics tab gives the filtered trial count by year, completion rate by sponsor type, and participant-count distribution. Phase Analytics shows phase distribution by register, status, and sponsor type, plus completion rates by authorization cohort and phase. More recent cohorts naturally show lower completion rates; a plateauing line in an older cohort signals trials that have stalled rather than completed.
 
 ---
 
@@ -65,16 +65,19 @@ The Completion Rate by Authorization Cohort chart (Phase Analytics) shows what p
 | --- | ------------- |
 | **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcut cards (CSS grid, mobile-friendly); example questions that apply filters in one click; prominent "Compare Paediatric vs Adult" button in sidebar; 5 most recently authorized trials |
 | **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types; age-aware country per-million normalisation |
-| **Map** | Open trials by country (circle map); age-aware per-million normalisation; sortable country table at zoom ≥ 5 |
+| **Map** | Filtered trials by country (circle map); age-aware per-million normalisation; filtered trial table at zoom ≥ 5 |
 | **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
 | **Analysis** *(collapsible group)* | |
+| &nbsp;&nbsp;General Statistics | Filtered trials by year, completion rate by sponsor type, and participant-count distribution |
+| &nbsp;&nbsp;Active Substances | Top active substances and yearly evolution over time |
 | &nbsp;&nbsp;Therapeutic Areas | Top organ classes and top MedDRA terms |
 | &nbsp;&nbsp;Geography | Country-level trial distribution under the active sidebar filters |
 | &nbsp;&nbsp;PIP Analysis | PIP status, waiver/deferral evidence, match ambiguity, and waiver evolution over time |
-| &nbsp;&nbsp;Phase Analytics | Phase by register / status / sponsor type, phase funnel, completion cohort |
-| &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 7 dimensions including result reporting |
-| &nbsp;&nbsp;Country Comparison | Side-by-side comparison of 2–3 selected countries across 7 dimensions including result reporting |
+| &nbsp;&nbsp;Phase Analytics | Phase by register / status / sponsor type, completion cohort, and completion by phase |
 | &nbsp;&nbsp;Result Reporting | Results reported vs not reported for completed trials, by year and sponsor type; downloadable list |
+| **Compare Data** *(collapsible group)* | |
+| &nbsp;&nbsp;Country Comparison | Side-by-side comparison of 2–3 selected countries across 7 dimensions including result reporting |
+| &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 7 dimensions including result reporting |
 | **About** | Data sources, preprocessing audit report, changelog, trial status definitions |
 
 ### Sidebar filters
@@ -88,7 +91,7 @@ All charts and tables update simultaneously when filters change. Active filters 
 | Free-text search | Title, CT number, condition, product name, sponsor |
 | Country / Member State | Multi-select; normalised country names from the registry data |
 | Sponsor / Company | Multi-select; normalised names (legal suffixes stripped) |
-| Trial Status | Ongoing / Completed / Other |
+| Trial Status | Ongoing / Completed / Withdrawn / Not Authorised |
 | Source Register | EUCTR / CTIS |
 | Trial Phase | Phase I / II / III / IV |
 | Part of PIP | Yes / No / Unknown |
@@ -182,35 +185,59 @@ Alternatively, back up the full database and temporarily rename/copy the local s
 
 Both files are local generated artifacts and should stay out of normal commits.
 
-### Sponsor alias review
+### Sponsor normalisation workflow
 
-Sponsor-name cleanup in the app is deterministic code in `app.R`. The generated file `data/sponsor_alias_candidates.csv` and reviewed file `config/sponsor_aliases.csv` are **manual curation aids**: candidates are not applied to the app data or cache by themselves.
+Sponsor-name cleanup is now a deterministic, auditable pipeline under `helper_scripts/sponsor_norm_pipeline/`. The app reads the generated `data/trial_sponsor_labels.csv` during cache load; sponsor matching is not done interactively at runtime. The full workflow is documented in [helper_scripts/sponsor_norm_pipeline/README.md](helper_scripts/sponsor_norm_pipeline/README.md).
 
-See [sponsor_curation/README.md](sponsor_curation/README.md) for the full guide.
-
-To refresh the candidate review queue:
+Run the pipeline in order after rebuilding the trial cache, adding manual aliases, accepting review-queue decisions, or refreshing external evidence:
 
 ```bash
-Rscript sponsor_curation/audit_sponsors.R
+# 1. Extract one primary sponsor string per trial
+Rscript helper_scripts/sponsor_norm_pipeline/export_trial_sponsors.R
+
+# 2. Build the sponsor alias index from manual aliases, accepted reviews,
+#    EMA EPAR MAH names, CTIS businessKey groups, and EUCTR email domains
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
+
+# 3. Build app-facing trial sponsor labels and audit logs
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
+
+# Optional: emit unresolved/review rows for curation
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
 ```
 
-Review candidates manually; some high-scoring pairs are intentionally separate organisations. To approve rows, set `approved=TRUE` directly in `data/sponsor_alias_candidates.csv`, optionally adjust `canonical_suggestion` or `notes`, then run:
+Important generated outputs:
+
+| File | Purpose |
+| ---- | ------- |
+| `data/trial_sponsors_raw.csv` | Raw primary sponsor strings exported from the cache |
+| `config/sponsor_norm_pipeline/sponsor_alias_index.csv` | Merged alias index used by `normalise_sponsors.R` |
+| `data/trial_sponsor_labels.csv` | App-facing trial sponsor labels read by Shiny |
+| `data/sponsor_normalisation_log.csv` | Full audit log used by the preprocessing report |
+| `config/sponsor_norm_pipeline/sponsor_review_queue.csv` | Optional unresolved/review queue generated with `--write-queue` |
+
+The alias index merges several evidence tiers. Manual aliases and accepted review decisions have highest priority. EMA EPAR marketing authorisation holder names, CTIS `businessKey` organisation groups, and EUCTR sponsor email-domain groups add registry-derived evidence. ROR variants and postcode/country evidence are available but intentionally optional; the recommended local rebuild skips the slower ROR query and keeps postcode evidence review-only.
+
+Manual and LLM-assisted curation is kept in CSV configuration files rather than hard-coded into the app:
 
 ```bash
-Rscript sponsor_curation/approve_sponsor_aliases.R
+# Review unresolved sponsor rows interactively
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R 100
+
+# Include previously skipped rows
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --include-skipped
+
+# Export accepted/rejected/override decisions to config files
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
 ```
 
-For a guided review, use the interactive reviewer instead:
+After exporting decisions, rerun `build_sponsor_index.R --no-ror --no-location` and then `build_sponsor_labels.R`. Large curation batches can be cleaned with:
 
 ```bash
-Rscript sponsor_curation/review_sponsor_aliases.R
+python3 helper_scripts/sponsor_norm_pipeline/clean_llm_reviewed.py
 ```
 
-It shows one candidate at a time and lets you approve, skip, edit, or quit. The interactive reviewer saves approvals and skips immediately to `config/sponsor_review_decisions.csv`, so reopening it resumes at the next unreviewed candidate. Both approval scripts append approved rows to `config/sponsor_aliases.csv` and regenerate the candidate queue after applying the reviewed aliases, so accepted pairs disappear from later review rounds. The preprocessing audit also reports how many sponsor labels are new since `config/sponsor_curation_baseline.csv`. After review, apply the decisions to `app.R`, refresh the cache, regenerate candidates/logs, update the baseline, and render preprocessing with:
-
-```sh
-Rscript sponsor_curation/apply_sponsor_aliases.R
-```
+That cleanup script removes generic department aliases, person-name canonicals, known university/hospital conflations, legal suffix noise, and appends safe final-canonical decisions to the relevant config files. Final label clusters that are too risky to merge automatically are reviewed through `final_sponsor_canonical_review.csv` and accepted into `final_sponsor_canonical_map.csv` or `final_sponsor_family_map.csv`.
 
 ### Run the app
 
@@ -280,11 +307,22 @@ EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I +
 Cross-register deduplication uses CT number matching first, then normalised title matching (first 80 characters, lowercased, punctuation stripped). Unusual title formatting or very short titles can result in missed matches (same trial counted twice) or false matches (different trials merged). The deduplication log is printed to console during cache rebuild.
 
 **Cache invalidation**
-The cache is invalidated only when the SQLite database file is newer than the RDS. If you edit `prepare_trial_data()` logic without touching the database, delete `trials_cache.rds` manually before restarting the app to force a rebuild.
+The cache is invalidated when the SQLite database file is newer than the RDS or when `DATA_PROCESSING_VERSION` in `app.R` changes. If you are testing local pipeline edits without bumping that version string, delete `trials_cache.rds` manually before restarting the app to force a rebuild.
 
 ---
 
 ## Changelog
+
+### v0.12.0 — 2026-05-19
+
+- **Major navigation rework**: Analysis now starts with General Statistics, and country/sponsor comparisons live under a dedicated Compare Data section.
+- **Sponsor normalisation workflow**: documents the new `helper_scripts/sponsor_norm_pipeline/` workflow for exporting raw sponsors, building the alias index, producing app-facing labels, curating unresolved rows, and cleaning accepted review batches.
+- **General Statistics tab**: adds filtered trial counts by year, completion rate by sponsor type, and participant-count distribution with participant-scale axis labels.
+- **Streamlined analytics**: Active Substances now focuses on top substances and yearly evolution; Phase Analytics removes the funnel and keeps phase/status/sponsor and completion views.
+- **Sponsor portfolio cleanup**: keeps the readable swimlane and therapeutic-area bubble views, enlarges bubbles, shortens swimlane labels, and removes event strip/cumulative growth views.
+- **Result Reporting denominator fix**: Academic and Industry no-results KPIs use sponsor-type denominators under the active filters.
+- **Filtered map language**: Map titles and drill-down table now explicitly state that sidebar filters are applied.
+- **Rebuild resilience**: cache rebuilds have a local deduplication fallback if `ctrdata::dbFindIdsUniqueTrials()` fails on malformed registry identifiers.
 
 ### v0.11.0 — 2026-05-06
 
@@ -308,7 +346,14 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 ├── helper_scripts/
 │   ├── update_pip_decisions.R           # Refreshes local EMA PIP decisions lookup
 │   ├── create_local_test_db.R           # Creates a smaller random SQLite DB for local testing
-│   └── clean_db.R                       # Cleans invalid SQLite records before rebuilds
+│   ├── clean_db.R                       # Cleans invalid SQLite records before rebuilds
+│   └── sponsor_norm_pipeline/           # Deterministic sponsor normalisation workflow
+│       ├── export_trial_sponsors.R      # Exports raw sponsor strings from the cache
+│       ├── build_sponsor_index.R        # Builds alias index from manual/review/external evidence
+│       ├── build_sponsor_labels.R       # Writes app-facing trial_sponsor_labels.csv
+│       ├── normalise_sponsors.R         # Sponsor normaliser and CLI fixture runner
+│       ├── curate_sponsors.R            # Interactive review/export of unresolved sponsor rows
+│       └── clean_llm_reviewed.py        # Cleanup for accepted review batches
 ├── rmarkdown/
 │   ├── report.Rmd                       # PDF report template (rendered on demand)
 │   ├── comparison_report.Rmd            # Paediatric vs adult PDF report template
@@ -318,23 +363,17 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 │   ├── nightly_deploy.sh                # Legacy shinyapps.io deploy helper
 │   └── nightly_deploy_docker.sh         # Legacy Docker deploy helper
 ├── AGENTS/                      # Local agent notes and handovers (git-ignored)
-├── sponsor_curation/
-│   ├── README.md                        # Sponsor curation guide
-│   ├── audit_sponsors.R                 # Generates sponsor alias review candidates
-│   ├── approve_sponsor_aliases.R        # Promotes approved candidate rows into config
-│   ├── apply_sponsor_aliases.R          # Applies reviewed aliases to app/cache/baseline
-│   ├── review_sponsor_aliases.R         # Interactive sponsor alias reviewer
-│   └── sponsors.md                      # Sponsor normalisation handover notes
 ├── trials_cache.rds             # Processed data cache (git-ignored)
 ├── config/
 │   ├── pip_decisions.csv                # Cached EMA PIP decisions lookup
-│   ├── sponsor_aliases.csv              # Manual sponsor alias review decisions
+│   ├── sponsor_norm_pipeline/           # Sponsor alias, review, final-canonical maps
 │   └── sponsor_curation_baseline.csv    # Sponsor labels present at last manual curation
 ├── Dockerfile
 ├── docker-compose.yml
 ├── data/
 │   ├── trials.sqlite                    # Raw trial data from ctrdata (git-ignored)
-│   ├── sponsor_alias_candidates.csv     # Generated review queue; not applied automatically
+│   ├── trial_sponsors_raw.csv           # Raw sponsor strings exported for normalisation
+│   ├── trial_sponsor_labels.csv         # App-facing sponsor labels
 │   ├── sponsor_normalisation_log.csv
 │   ├── country_normalisation_log.csv
 │   ├── meddra_term_normalisation_log.csv

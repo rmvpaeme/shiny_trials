@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.11.0 — PIP waiver enrichment)
+# app.R  (v0.12.0 — major analysis UI rework)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -251,7 +251,8 @@ DB_PATH       <- Sys.getenv("DB_PATH", unset = "./data/trials.sqlite")
 DB_COLLECTION <- Sys.getenv("DB_COLLECTION", unset = "trials")
 CACHE_PATH    <- Sys.getenv("CACHE_PATH", unset = "trials_cache.rds")
 PIP_DECISIONS_PATH <- Sys.getenv("PIP_DECISIONS_PATH", unset = "config/pip_decisions.csv")
-STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Other")
+STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
+DATA_PROCESSING_VERSION <- "2026-05-v0.12.0-status-administrative-pip-duration-participants"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -853,6 +854,13 @@ write_norm_log <- function(raw_vec, norm_vec, register_vec, type_name, log_dir) 
 prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   
   db <- nodbi::src_sqlite(dbname = db_path, collection = collection)
+
+  get_fields_into_df <- function(fields, con, chunk_size = 45) {
+    fields <- unique(fields)
+    chunks <- split(fields, ceiling(seq_along(fields) / chunk_size))
+    dfs <- lapply(chunks, function(chunk) dbGetFieldsIntoDf(fields = chunk, con = con))
+    Reduce(function(x, y) full_join(x, y, by = "_id"), dfs)
+  }
   
   EUCTR_fields <- c(
     "a2_eudract_number","dimp.d31_product_name",
@@ -921,7 +929,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     message(sprintf("DB cleanup: removed %d UUID(s), %d meta-info, %d -3RD record(s)",
                     n_uuid, n_meta, n_3rd))
 
-  result <- dbGetFieldsIntoDf(fields = c(EUCTR_fields, CTIS_fields), con = db)
+  result <- get_fields_into_df(fields = c(EUCTR_fields, CTIS_fields), con = db)
   message(sprintf("Raw: %d x %d", nrow(result), ncol(result)))
   
   # ── AGGRESSIVE flatten: two passes ────────────────────────────────────────
@@ -1127,7 +1135,43 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 	      str_trim(str_split_fixed(transition_eudract_number, " / ", 2)[, 1]),
 	    TRUE ~ `_id`))
 
-  unique_ids <- dbFindIdsUniqueTrials(con = db)
+  fallback_unique_trial_ids <- function(df, prefer_member_state = "BE") {
+    df %>%
+      filter(!is.na(`_id`), !is.na(trial_base_id), nzchar(trial_base_id)) %>%
+      mutate(
+        register_rank = case_when(
+          register == "CTIS" ~ 1L,
+          register == "EUCTR" ~ 2L,
+          TRUE ~ 3L
+        ),
+        preferred_member_state = if_else(
+          register == "EUCTR" & str_detect(`_id`, paste0("-", prefer_member_state, "$")),
+          0L, 1L
+        ),
+        ctis_version = suppressWarnings(as.integer(str_extract(`_id`, "\\d+$"))),
+        ctis_version = if_else(is.na(ctis_version), -1L, ctis_version)
+      ) %>%
+      arrange(trial_base_id, register_rank, preferred_member_state, desc(ctis_version), `_id`) %>%
+      group_by(trial_base_id) %>%
+      slice_head(n = 1) %>%
+      ungroup() %>%
+      pull(`_id`) %>%
+      unique()
+  }
+
+  unique_ids <- tryCatch(
+    dbFindIdsUniqueTrials(con = db),
+    error = function(e) {
+      warning(
+        "ctrdata::dbFindIdsUniqueTrials() failed; using local trial_base_id fallback: ",
+        conditionMessage(e),
+        call. = FALSE
+      )
+      ids <- fallback_unique_trial_ids(result)
+      message(sprintf("Local fallback selected %d unique trial record(s)", length(ids)))
+      ids
+    }
+  )
   
   agg_field <- function(df, col) {
     df %>% filter(!is.na(!!sym(col)) & !!sym(col) != "") %>%
@@ -1488,8 +1532,15 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     # CTIS-specific status values
     "Authorised","In Progress","Temporarily halted"
   ), collapse = "|"), ignore_case = TRUE)
-  completed_pat <- regex("Completed|COMPLETED|Ended", ignore_case = TRUE)
+  completed_pat <- regex("\\b(Completed|Ended|Terminated)\\b", ignore_case = TRUE)
   withdrawn_pat <- regex("\\bWithdrawn\\b", ignore_case = TRUE)
+  not_authorised_pat <- regex(paste(c(
+    "Not Authorised", "Prohibited", "Cancelled", "Expired",
+    "Suspended"
+  ), collapse = "|"), ignore_case = TRUE)
+  administrative_pat <- regex(paste(c(
+    "Trial now transitioned", "GB - no longer in EU/EEA"
+  ), collapse = "|"), ignore_case = TRUE)
 
   # CTIS numeric status code mapping (CTIS API stores status as integer enums).
   # Prefer the textual application status when available; ctStatus can be a
@@ -1497,12 +1548,18 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   ctis_status_map <- c(
     "1" = "Authorised", "2" = "In Progress", "3" = "Completed",
     "4" = "Terminated",  "5" = "Temporarily halted", "6" = "Withdrawn",
-    "8" = "Ended")
+    "7" = "Suspended", "8" = "Ended", "9" = "Expired",
+    "11" = "Not Authorised", "12" = "Cancelled")
 
   result <- result %>% mutate(
+    ctis_status_from_code = if_else(
+      register == "CTIS" & !is.na(ctStatus) &
+        str_trim(ctStatus) %in% names(ctis_status_map),
+      ctis_status_map[str_trim(ctStatus)],
+      NA_character_),
     # status_raw_orig: used for dashboard status classification only.
     status_raw_orig = case_when(
-      register == "CTIS" ~ coalesce(application_status_raw, trial_status_raw, ctStatus, p_end_of_trial_status),
+      register == "CTIS" ~ coalesce(ctis_status_from_code, trial_status_raw, application_status_raw, p_end_of_trial_status),
       TRUE ~ coalesce(p_end_of_trial_status, ctStatus, trial_status_raw)
     ),
     # For CTIS, map numeric codes to human-readable labels before any processing.
@@ -1535,12 +1592,16 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
     }, FUN.VALUE = character(1L), USE.NAMES = FALSE),
     status = case_when(
+      str_detect(coalesce(status_raw_orig, ""), withdrawn_pat) ~ "Withdrawn",
+      str_detect(coalesce(status_raw_orig, ""), administrative_pat) ~ "Administrative",
+      str_detect(coalesce(status_raw_orig, ""), not_authorised_pat) ~ "Not Authorised",
       str_detect(coalesce(status_raw_orig, ""), ongoing_pat) ~ "Ongoing",
       str_detect(coalesce(status_raw_orig, ""), completed_pat) ~ "Completed",
-      str_detect(coalesce(status_raw_orig, ""), withdrawn_pat) ~ "Withdrawn",
-      TRUE ~ "Other")) %>%
+      TRUE ~ "Not Authorised")) %>%
     # Ensure the display column is never blank: fall back to the status category.
-    mutate(status_raw = if_else(is.na(status_raw) & !is.na(status), status, status_raw))
+    mutate(status_raw = case_when(
+      is.na(status_raw) & !is.na(status) ~ status,
+      TRUE ~ status_raw))
   
   # ── Derived ───────────────────────────────────────────────────────────────
   result <- result %>% mutate(
@@ -1698,7 +1759,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   
   write_norm_log(result$status_raw_orig, result$status,     result$register, "status_category", dirname(db_path))
   write_norm_log(result$status_raw_orig, result$status_raw, result$register, "status_display",  dirname(db_path))
-  result <- result %>% select(-status_raw_orig)
+  result <- result %>% select(-status_raw_orig, -ctis_status_from_code)
 
   # ── Decision date & time-to-decision ─────────────────────────────────────
   # For CTIS: prefer the per-country minimum (earliest MS decision), falling
@@ -1860,7 +1921,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "authorizedApplication.authorizedPartI.rowSubjectCount",
     "totalNumberEnrolled")))
 
-  result <- result %>% mutate(data_processing_version = "2026-05-status-pip-duration-participants")
+  result <- result %>% mutate(data_processing_version = DATA_PROCESSING_VERSION)
 
   # ── Sponsor labels (from pipeline) ───────────────────────────────────────────
   sponsor_labels_path <- file.path(dirname(db_path), "trial_sponsor_labels.csv")
@@ -1899,7 +1960,9 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
                      "pip_substance_tokens", "trial_duration_days",
                      "participants_n",
                      "data_processing_version")
-  !is.null(d) && all(required_cols %in% names(d))
+  !is.null(d) &&
+    all(required_cols %in% names(d)) &&
+    identical(unique(d$data_processing_version), DATA_PROCESSING_VERSION)
 }
 
 load_trial_data <- function(force_rebuild = FALSE) {
@@ -2202,6 +2265,7 @@ ui <- tagList(
                                                  menuItem("Map",tabName="map",icon=icon("map")),
                                                  menuItem("Data Explorer",tabName="data",icon=icon("table")),
                                                  menuItem("Analysis",icon=icon("chart-bar"),startExpanded=FALSE,
+                                                   menuSubItem("General Statistics",tabName="analytics_general_stats",icon=icon("chart-pie")),
                                                    menuSubItem("Active Substances",tabName="analytics_substances",icon=icon("pills")),
 	                                                   menuSubItem("Geography",tabName="analytics_geography",icon=icon("globe")),
                                                    menuSubItem("Phase Analytics",tabName="phase",icon=icon("flask")),
@@ -2209,7 +2273,9 @@ ui <- tagList(
 	                                                   menuSubItem("Register Migration",tabName="migration",icon=icon("route")),
                                                    menuSubItem("Result Reporting",tabName="compliance",icon=icon("file-medical-alt")),
 	                                                   menuSubItem("Sponsors",tabName="analytics_sponsors",icon=icon("building")),
-	                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope")),
+	                                                   menuSubItem("Therapeutic Areas",tabName="analytics_therapeutic",icon=icon("stethoscope"))
+                                                 ),
+                                                 menuItem("Compare Data",icon=icon("balance-scale"),startExpanded=FALSE,
                                                    menuSubItem("Country Comparison",tabName="country_compare",icon=icon("globe")),
                                                    menuSubItem("Sponsor Comparison",tabName="sponsor_compare",icon=icon("exchange-alt"))
                                                  ),
@@ -2437,6 +2503,10 @@ ui <- tagList(
                                 )),
                                 fluidRow(column(12,
                                   tags$div(class = "qs-grid",
+                                    tags$div(class="qs-card", `data-tab`="analytics_general_stats",
+                                      tags$div(class="qs-icon", icon("chart-pie")),
+                                      tags$strong("General Statistics"),
+                                      tags$p("Completion and participant distributions")),
                                     tags$div(class="qs-card", `data-tab`="chartbuilder",
                                       tags$div(class="qs-icon", icon("chart-line")),
                                       tags$strong("Chart Builder"),
@@ -2468,7 +2538,7 @@ ui <- tagList(
                                     tags$div(class="qs-card", `data-tab`="phase",
                                       tags$div(class="qs-icon", icon("flask")),
                                       tags$strong("Phase Analytics"),
-                                      tags$p("Phase distribution, completion rates, and trends")),
+                                      tags$p("Phase distribution and completion by phase")),
                                     tags$div(class="qs-card", `data-tab`="sponsor_compare",
                                       tags$div(class="qs-icon", icon("exchange")),
                                       tags$strong("Sponsor Comparison"),
@@ -2597,27 +2667,15 @@ ui <- tagList(
                         ),
                         tabItem(tabName="analytics_substances",
                                 fluidRow(
-                                  box(width=12, background="light-blue",
+                                  box(title="Active Substance Selection",status="primary",solidHeader=TRUE,width=12,
                                       sliderInput("sub_top_n", "Number of top substances to show:",
-                                                  min=5, max=50, value=20, step=5, width="400px"))),
+                                                  min=5, max=50, value=20, step=5, width="100%"))),
                                 fluidRow(
                                   box(title="Top N Active Substances by Trial Count",status="primary",solidHeader=TRUE,width=12,height=480,
                                       withSpinner(plotlyOutput("plot_top_substances",height="420px"),type=6))),
                                 fluidRow(
                                   box(title="Active Substance Evolution Over Time",status="info",solidHeader=TRUE,width=12,height=480,
-                                      withSpinner(plotlyOutput("plot_substance_timeline",height="420px"),type=6))),
-                                fluidRow(
-                                  box(title="Register Mix for Top Substances",status="warning",solidHeader=TRUE,width=6,height=420,
-                                      withSpinner(plotlyOutput("plot_substance_register",height="360px"),type=6)),
-                                  box(title="Age Group Profile for Top Substances",status="success",solidHeader=TRUE,width=6,height=420,
-                                      withSpinner(plotlyOutput("plot_substance_age",height="360px"),type=6))),
-                                fluidRow(
-                                  box(title="Substance Debut Year",status="primary",solidHeader=TRUE,width=6,height=460,
-                                      p(em("First year each substance appeared in the filtered trials."),style="font-size:11px;opacity:0.7;"),
-                                      withSpinner(plotlyOutput("plot_substance_debut",height="380px"),type=6)),
-                                  box(title="Top Conditions for Top Substances",status="info",solidHeader=TRUE,width=6,height=460,
-                                      p(em("Most common MedDRA conditions associated with each of the top substances."),style="font-size:11px;opacity:0.7;"),
-                                      withSpinner(plotlyOutput("plot_substance_condition",height="380px"),type=6)))
+                                      withSpinner(plotlyOutput("plot_substance_timeline",height="420px"),type=6)))
                         ),
 	                        tabItem(tabName="migration",
 	                                fluidRow(
@@ -2648,6 +2706,23 @@ ui <- tagList(
                                   box(title="Days Between First and Last Member State Decision in CTIS Multinational Trials",status="info",solidHeader=TRUE,width=6,
                                       withSpinner(plotlyOutput("plot_ctis_date_spread",height="400px"),type=6)))
                         ),
+                        tabItem(tabName="analytics_general_stats",
+                                fluidRow(
+                                  box(title="Number of Trials by Year",status="primary",solidHeader=TRUE,width=12,height=430,
+                                      p(em("Filtered trials by registration/submission year. Migrated CTIS trials are shown in their original EudraCT year."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_general_trials_year",height="340px"),type=6))),
+                                fluidRow(
+                                  box(title="Completion Rate by Sponsor Type",status="warning",solidHeader=TRUE,width=12,height=460,
+                                      p(em("% completed per authorization year, split by Academic vs Industry sponsor."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_completion_sponsor",height="370px"),type=6))),
+                                fluidRow(
+                                  box(title="Trial Participants per Trial",status="primary",solidHeader=TRUE,width=12,height=430,
+                                      p(em("Planned/enrolled participant counts from EUCTR and CTIS. The axis uses linear participant labels on a log-spaced scale because trial sizes are highly skewed."),
+                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
+                                      withSpinner(plotlyOutput("plot_participants_hist",height="340px"),type=6)))
+                        ),
                         tabItem(tabName="phase",
                                 fluidRow(
                                   box(title="Trial Phase by Register",status="primary",solidHeader=TRUE,width=6,height=420,
@@ -2659,38 +2734,20 @@ ui <- tagList(
                                       withSpinner(plotlyOutput("plot_phase_sponsor",height="360px"),type=6))),
                                 fluidRow(column(12, h4(icon("chart-area"), " Phase Distribution & Completion", class="analytics-section-header"))),
                                 fluidRow(
-                                  box(title="Phase Distribution (Funnel)",status="primary",solidHeader=TRUE,width=5,height=460,
-                                      p(em("Each trial phase shown as a proportion of all phased trials."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_phase_funnel",height="370px"),type=6)),
-                                  box(title="Completion Rate by Authorization Cohort",status="info",solidHeader=TRUE,width=7,height=460,
+                                  box(title="Completion Rate by Authorization Cohort",status="info",solidHeader=TRUE,width=12,height=460,
                                       p(em("% of trials authorized in each year that have completed. More recent cohorts naturally show lower rates."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       withSpinner(plotlyOutput("plot_completion_cohort",height="370px"),type=6))),
                                 fluidRow(
-                                  box(title="Completion Rate by Sponsor Type",status="warning",solidHeader=TRUE,width=6,height=460,
-                                      p(em("% completed per authorization year, split by Academic vs Industry sponsor."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_completion_sponsor",height="370px"),type=6)),
-                                  box(title="Completion Rate by Phase",status="primary",solidHeader=TRUE,width=6,height=460,
+                                  box(title="Completion Rate by Phase",status="primary",solidHeader=TRUE,width=12,height=460,
                                       p(em("% of trials in each phase that have completed, based on current filters."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_completion_phase",height="370px"),type=6))),
-                                fluidRow(
-                                  box(title="Trial Duration by Register",status="info",solidHeader=TRUE,width=12,height=430,
-                                      p(em("Completed trials with reliable start and authorization/end-date information. Durations above 10 years are excluded as likely source-data anomalies."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_trial_duration",height="340px"),type=6))),
-                                fluidRow(
-                                  box(title="Trial Participants per Trial",status="primary",solidHeader=TRUE,width=12,height=430,
-                                      p(em("Planned/enrolled participant counts from EUCTR and CTIS, shown on a log10 scale because trial sizes are highly skewed."),
-                                        style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
-                                      withSpinner(plotlyOutput("plot_participants_hist",height="340px"),type=6))),
+                                      withSpinner(plotlyOutput("plot_completion_phase",height="370px"),type=6)))
                         ),
                         tabItem(tabName="map",
                                 fluidRow(
-                                  box(title="Trials by Country", status="primary", solidHeader=TRUE, width=12,
-                                      p(em("Circle size and colour reflect trial count under the current sidebar filters. Zoom in to level 5+ to see a trial list below the map."),
+                                  box(title="Filtered Trials by Country", status="primary", solidHeader=TRUE, width=12,
+                                      p(em("Circle size and colour reflect the currently filtered trial set. All sidebar filters apply before country counts are calculated. Zoom in to level 5+ to see the filtered trial list below the map."),
                                         style="font-size:11px;opacity:0.7;margin-bottom:6px;"),
                                       div(style="margin-bottom:8px;",
                                         uiOutput("map_metric_ui")),
@@ -2754,7 +2811,7 @@ ui <- tagList(
                                       ),
                                       h4(icon("filter")," Filters & Features"),
                                       tags$ul(
-                                        tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, withdrawn, or other trial status."),
+                                        tags$li(tags$b("Trial Status:"), " Filter by ongoing, completed, withdrawn, not authorised, or administrative trial status."),
                                         tags$li(tags$b("Source Register:"), " View data from EUCTR, CTIS, or both."),
                                         tags$li(tags$b("Date Range:"), " Restrict results to a specific submission period."),
                                         tags$li(tags$b("MedDRA Organ Class / Condition:"), " Filter by therapeutic area using standardised MedDRA terminology. Numeric codes (EUCTR prefix format and CTIS EMA vocabulary codes) are automatically resolved to human-readable SOC names."),
@@ -2776,6 +2833,17 @@ ui <- tagList(
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+	                                        tags$li(tags$b("v0.12.0 (2026-05-19):"),
+		                                          tags$ul(
+		                                            tags$li("Analysis navigation is reorganised with General Statistics first and a separate Compare Data section for country and sponsor comparisons."),
+		                                            tags$li("General Statistics adds filtered trials by year, completion by sponsor type, and participant-count distribution with participant-scale axis labels."),
+		                                            tags$li("Active Substances is streamlined to top substances and their evolution over time."),
+		                                            tags$li("Sponsor Portfolio keeps the readable swimlane and therapeutic-bubble views while removing event strip and cumulative growth."),
+		                                            tags$li("Phase Analytics removes the funnel view and keeps phase/status/sponsor and completion analytics."),
+		                                            tags$li("Result Reporting percentages now use sponsor-type denominators for Academic and Industry no-results KPIs."),
+		                                            tags$li("Map copy and drill-down table now explicitly reflect the active sidebar filters."),
+		                                            tags$li("Cache rebuilds have a defensive fallback when registry identifier deduplication fails.")
+		                                          )),
 	                                        tags$li(tags$b("v0.11.0 (2026-05-06):"),
 		                                          tags$ul(
 		                                            tags$li("EUCTR A.8 EMA PIP decision numbers are now extracted and normalised alongside CTIS PIP procedure numbers."),
@@ -2783,19 +2851,19 @@ ui <- tagList(
 		                                            tags$li("The Trial filter panel adds a PIP Waiver filter, and Data Explorer exports now include PIP decision, procedure, waiver, deferral, and EMA URL fields."),
 		                                            tags$li("PIP Analysis highlights waiver evidence strength, ambiguous compound matches, waiver status over time, and deferral status."),
 		                                            tags$li("Geography remains a separate Analysis subsection for country-level trial distribution."),
-		                                            tags$li("Active Substances now focuses on exploratory substance views: top substances, evolution over time, register mix, and age-group profile."),
+		                                            tags$li("Active Substances now focuses on top substances and their evolution over time."),
 		                                            tags$li("Cache validation now requires the new PIP enrichment columns so stale caches rebuild automatically.")
 		                                          ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-	                                      p(em(paste0("v0.11.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+	                                      p(em(paste0("v0.12.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
                                   box(title="Trial Status Definitions", width=12, status="warning", solidHeader=TRUE,
-                                      p("The dashboard groups all trials into four categories based on their registry status.
+                                      p("The dashboard groups all trials into five categories based on their registry status.
                                         The table below shows how each registry-specific status maps to a dashboard category,
                                         followed by a definition of each status."),
                                       fluidRow(
@@ -2810,13 +2878,13 @@ ui <- tagList(
                                             tags$tbody(
                                               tags$tr(style="background:#E8F5E9;",
                                                 tags$td(style="padding:8px 12px;font-weight:bold;color:#2E7D32;border-bottom:1px solid #C8E6C9;","Ongoing"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #C8E6C9;","Ongoing, Restarted, Temporarily halted"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #C8E6C9;","Ongoing, Recruiting, Active, Restarted, Temporarily halted"),
                                                 tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #C8E6C9;","Authorised, In Progress, Temporarily halted")
                                               ),
                                               tags$tr(style="background:#E3F2FD;",
                                                 tags$td(style="padding:8px 12px;font-weight:bold;color:#1565C0;border-bottom:1px solid #BBDEFB;","Completed"),
                                                 tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed, Prematurely Ended"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed")
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #BBDEFB;","Completed, Ended, Terminated")
                                               ),
                                               tags$tr(style="background:#FFF8E1;",
                                                 tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;border-bottom:1px solid #FFE0B2;","Withdrawn"),
@@ -2824,9 +2892,14 @@ ui <- tagList(
                                                 tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #FFE0B2;","Withdrawn")
                                               ),
                                               tags$tr(style="background:#FFF3E0;",
-                                                tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;","Other"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Not Authorised"),
-                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Terminated, Not Authorised")
+                                                tags$td(style="padding:8px 12px;font-weight:bold;color:#E65100;border-bottom:1px solid #FFE0B2;","Not Authorised"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #FFE0B2;","Not Authorised, Prohibited by CA, Suspended by CA"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;border-bottom:1px solid #FFE0B2;","Not Authorised, Cancelled, Expired, Suspended")
+                                              ),
+                                              tags$tr(style="background:#F5F5F5;",
+                                                tags$td(style="padding:8px 12px;font-weight:bold;color:#455A64;","Administrative"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","Trial now transitioned, GB - no longer in EU/EEA"),
+                                                tags$td(style="padding:8px 12px;color:#1C1C1C;","None")
                                               )
                                             )
                                           )
@@ -2848,11 +2921,13 @@ ui <- tagList(
                                             tags$dt(tags$b("Prematurely Ended (EUCTR)")),
                                             tags$dd(style="margin-bottom:6px;","Stopped before completion (e.g. poor recruitment, sponsor decision, safety). Counted as Completed."),
                                             tags$dt(tags$b("Terminated (CTIS)")),
-                                            tags$dd(style="margin-bottom:6px;","Permanently stopped before completion; not expected to resume. Counted as Other."),
+                                            tags$dd(style="margin-bottom:6px;","Permanently stopped before completion; counted as Completed for dashboard reporting."),
                                             tags$dt(tags$b("Withdrawn")),
                                             tags$dd(style="margin-bottom:6px;","Sponsor withdrew before trial start; no participants enrolled. Counted separately as Withdrawn."),
                                             tags$dt(tags$b("Not Authorised")),
-                                            tags$dd(style="margin-bottom:6px;","Application refused by competent authority or Ethics Committee. Counted as Other.")
+                                            tags$dd(style="margin-bottom:6px;","Application refused, cancelled, expired, prohibited, or suspended. Counted as Not Authorised."),
+                                            tags$dt(tags$b("Administrative")),
+                                            tags$dd(style="margin-bottom:6px;","Legacy EUCTR administrative records that have transitioned to CTIS or are no longer in EU/EEA. Counted separately as Administrative.")
                                           )
                                         )
                                       )
@@ -2961,7 +3036,8 @@ server <- function(input, output, session) {
     "Ongoing" = tc()$s_ongoing,
     "Completed" = tc()$s_completed,
     "Withdrawn" = tc()$s_withdrawn,
-    "Other" = tc()$s_other
+    "Not Authorised" = tc()$s_other,
+    "Administrative" = tc()$bg3
   ))
   register_cols <- reactive(c("EUCTR"=tc()$r_euctr,"CTIS"=tc()$r_ctis))
 
@@ -2969,7 +3045,7 @@ server <- function(input, output, session) {
     pal <- status_cols()
     vals <- unique(as.character(values))
     missing <- setdiff(vals[!is.na(vals)], names(pal))
-    if (length(missing)) pal <- c(pal, setNames(rep(tc()$fg, length(missing)), missing))
+    if (length(missing)) pal <- c(pal, setNames(rep(tc()$fg0, length(missing)), missing))
     pal
   }
 
@@ -3286,8 +3362,8 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(style = "margin:0 -6px 4px;",
         column(3, style = "padding:0 6px;", make_kpi("kpi_total",     n_total,     "Total Trials", "flask",        t$frost3)),
-        column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$green)),
-        column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$yellow)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_ongoing",   n_ongoing,   "Ongoing",      "play-circle",  t$s_ongoing)),
+        column(3, style = "padding:0 6px;", make_kpi("kpi_completed", n_completed, "Completed",    "check-circle", t$s_completed)),
         column(3, style = "padding:0 6px;", make_kpi("kpi_pip",       n_pip,       "With PIP",     "child",        t$purple))
       ),
       tags$p("Click any card to filter the dashboard by that group.",
@@ -3498,13 +3574,19 @@ server <- function(input, output, session) {
   })
   
   output$plot_status_pie <- renderPlotly({
-    df<-filt()%>%filter(!is.na(status_raw))%>%count(status_raw)%>%arrange(desc(n))
+    df<-filt()%>%
+      filter(!is.na(status))%>%
+      mutate(status = factor(status, levels = STATUS_CHOICES))%>%
+      count(status)%>%
+      filter(n > 0)%>%
+      arrange(status)
     validate(need(nrow(df)>0,"No data."))
     t<-tc()
-    pal<-colorRampPalette(c(tc()$s_completed,tc()$s_ongoing,tc()$frost1,tc()$purple,tc()$orange,tc()$s_other))(nrow(df))
-    plot_ly(df,labels=~status_raw,values=~n,type="pie",hole=0.45,
-            marker=list(colors=pal,line=list(color=t$chart_bg,width=2)),
-            textfont=list(color=t$chart_bg),textinfo="label+percent",hoverinfo="label+value+percent")%>%
+    pal <- plot_status_cols(df$status)
+    slice_cols <- unname(pal[as.character(df$status)])
+    plot_ly(df,labels=~status,values=~n,type="pie",hole=0.45,
+            marker=list(colors=slice_cols,line=list(color=t$chart_bg,width=2)),
+            textfont=list(color=t$chart_bg),textinfo="label",hoverinfo="label+value+percent")%>%
       plt_layout(showlegend=TRUE,legend=list(orientation="v"))
   })
   
@@ -3517,6 +3599,21 @@ server <- function(input, output, session) {
     plot_ly(df,x=~analysis_year,y=~n,color=~register,colors=register_cols(),type="bar")%>%
 	      plt_layout(barmode="stack",legend=list(orientation="h",y=-0.2))
 	  })
+
+  output$plot_general_trials_year <- renderPlotly({
+    df <- filt() %>%
+      filter(!is.na(analysis_year)) %>%
+      count(analysis_year, name = "n") %>%
+      arrange(analysis_year)
+    validate(need(nrow(df) > 0, "No year data for current filters."))
+    plot_ly(df, x = ~analysis_year, y = ~n, type = "bar",
+            marker = list(color = tc()$frost3),
+            hovertemplate = "%{x}<br>%{y} trials<extra></extra>") %>%
+      plt_layout(
+        xaxis = list(title = "Year", dtick = 2, tickformat = "d"),
+        yaxis = list(title = "Number of Trials", rangemode = "tozero"),
+        showlegend = FALSE)
+  })
 
 	  output$plot_migration_signal <- renderPlotly({
 	    df <- filt() %>%
@@ -3603,16 +3700,15 @@ server <- function(input, output, session) {
       )
   })
 
-	  output$plot_register <- renderPlotly({
-    base <- filt() %>% filter(!is.na(status_raw))
+  output$plot_register <- renderPlotly({
+    base <- filt() %>% filter(!is.na(status))
     validate(need(nrow(base) > 0, "No data."))
-    df2 <- base %>% count(register, status_raw)
-    t <- tc()
-    all_statuses <- unique(df2$status_raw)
-    pal <- setNames(
-      colorRampPalette(c(t$s_completed, t$s_ongoing, t$frost1, t$purple, t$orange, t$s_other))(length(all_statuses)),
-      all_statuses)
-    plot_ly(df2, x = ~register, y = ~n, color = ~status_raw,
+    df2 <- base %>%
+      mutate(status = factor(status, levels = STATUS_CHOICES)) %>%
+      count(register, status) %>%
+      filter(n > 0)
+    pal <- plot_status_cols(df2$status)
+    plot_ly(df2, x = ~register, y = ~n, color = ~status,
             colors = pal, type = "bar") %>%
       plt_layout(barmode = "stack", legend = list(orientation = "h", y = -0.2))
   })
@@ -4363,7 +4459,7 @@ server <- function(input, output, session) {
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
     if(nrow(df)==0) return(plotly_empty()%>%layout(title=list(text="No data for current filters",font=list(size=14,color="#888")),annotations=list(text="Adjust the sidebar filters to see data here.",showarrow=FALSE,font=list(size=12,color="#aaa"))))
     plot_ly(df, x = ~phase, y = ~n, color = ~register, colors = register_cols(), type = "bar",
-            text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
+            hovertemplate = "%{x}<br>%{y} trials<extra>%{fullData.name}</extra>") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = "Trial Phase"),
                  yaxis = list(title = "Number of Trials"),
@@ -4381,7 +4477,7 @@ server <- function(input, output, session) {
     validate(need(nrow(df) > 0, "No phase data available."))
     pal <- plot_status_cols(df$status)
     plot_ly(df, x = ~phase, y = ~n, color = ~status, colors = pal, type = "bar",
-            text = ~n, textposition = "outside", hoverinfo = "x+y+text") %>%
+            hovertemplate = "%{x}<br>%{y} trials<extra>%{fullData.name}</extra>") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = "Trial Phase"),
                  yaxis = list(title = "Number of Trials"),
@@ -4406,30 +4502,6 @@ server <- function(input, output, session) {
                  xaxis = list(title = "Trial Phase"),
                  yaxis = list(title = "Number of Trials"),
                  legend = list(orientation = "h", y = -0.2))
-  })
-
-  # ── Phase funnel ─────────────────────────────────────────────────────────────
-  output$plot_phase_funnel <- renderPlotly({
-    df <- filt() %>%
-      filter(!is.na(phase), nzchar(str_trim(phase))) %>%
-      separate_rows(phase, sep = " / ") %>%
-      mutate(phase = str_trim(phase)) %>%
-      filter(phase %in% c("Phase I","Phase II","Phase III","Phase IV")) %>%
-      count(phase) %>%
-      mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV"))) %>%
-      arrange(phase)
-    if (nrow(df) == 0) return(plotly_empty() %>% layout(
-      title = list(text = "No data for current filters", font = list(size = 14, color = "#888")),
-      annotations = list(text = "Adjust the sidebar filters to see data here.",
-                         showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
-    t <- tc()
-    pal <- colorRampPalette(c(t$frost1, t$frost3, t$orange, t$yellow))(nrow(df))
-    plot_ly(df, type = "funnel",
-            y = ~phase, x = ~n,
-            textinfo = "value+percent total",
-            marker = list(color = pal),
-            connector = list(line = list(color = t$chart_grid, width = 1))) %>%
-      plt_layout(yaxis = list(title = ""), xaxis = list(title = "Number of Trials"))
   })
 
   # ── Completion rate by authorization cohort ───────────────────────────────
@@ -4513,7 +4585,6 @@ server <- function(input, output, session) {
     plot_ly(df, x = ~phase, y = ~pct_completed,
             type = "bar",
             marker = list(color = pal),
-            text = ~paste0(pct_completed, "% (", n_completed, "/", n_total, ")"),
             customdata = ~paste0(n_completed, " / ", n_total, " completed"),
             hovertemplate = "%{x}<br>%{customdata}<br>%{y:.1f}%<extra></extra>") %>%
       plt_layout(
@@ -4546,32 +4617,55 @@ server <- function(input, output, session) {
   })
 
   output$plot_participants_hist <- renderPlotly({
+    bin_width <- 0.1
     df <- filt() %>%
       filter(!is.na(participants_n), is.finite(participants_n), participants_n > 0) %>%
       mutate(
         participants_log10 = log10(participants_n),
-        register = coalesce(analysis_register, register)
+        register = coalesce(analysis_register, register),
+        bin_start = floor(participants_log10 / bin_width) * bin_width,
+        bin_end = bin_start + bin_width,
+        bin_mid = bin_start + bin_width / 2
+      ) %>%
+      count(register, bin_start, bin_end, bin_mid, name = "n") %>%
+      mutate(
+        bin_low = pmax(1, floor(10^bin_start)),
+        bin_high = ceiling(10^bin_end),
+        bin_label = paste0(
+          format(bin_low, big.mark = ",", scientific = FALSE),
+          "-",
+          format(bin_high, big.mark = ",", scientific = FALSE),
+          " participants"
+        )
       )
     if (nrow(df) == 0) return(plotly_empty() %>% layout(
       title = list(text = "No participant count data for current filters",
                    font = list(size = 14, color = "#888")),
       annotations = list(text = "Participant counts are available only where the source registry reports them.",
                          showarrow = FALSE, font = list(size = 12, color = "#aaa"))))
-    tick_vals <- c(1, 10, 100, 1000, 10000, 100000)
-    plot_ly(df, x = ~participants_log10,
+    tick_vals <- c(10, 100, 1000, 10000, 100000)
+    plot_ly(df, x = ~bin_mid, y = ~n,
             color = ~register, colors = register_cols(),
-            type = "histogram", nbinsx = 30,
-            hovertemplate = "log10 participants: %{x:.2f}<br>Trials: %{y}<extra>%{fullData.name}</extra>") %>%
+            type = "bar", width = bin_width,
+            customdata = ~bin_label,
+            hovertemplate = "%{customdata}<br>Trials: %{y}<extra>%{fullData.name}</extra>") %>%
       plt_layout(
         barmode = "stack",
         bargap = 0.05,
         xaxis = list(
           title = "Participants per trial",
+          tickmode = "array",
           tickvals = log10(tick_vals),
           ticktext = format(tick_vals, big.mark = ",", scientific = FALSE)
         ),
         yaxis = list(title = "Number of Trials"),
-        legend = list(orientation = "h", y = -0.2))
+        legend = list(orientation = "h", y = -0.2)) %>%
+      layout(xaxis = list(
+        title = "Participants per trial",
+        tickmode = "array",
+        tickvals = log10(tick_vals),
+        ticktext = format(tick_vals, big.mark = ",", scientific = FALSE)
+      ))
   })
 
   output$plot_timeline_q <- renderPlotly({
@@ -4697,8 +4791,8 @@ server <- function(input, output, session) {
     pal <- c(Academic = t$frost1, Industry = t$orange, Unknown = t$fg)
     plot_ly(sp, x = ~n, y = ~sponsor_label, color = ~sponsor_type, colors = pal,
             type = "bar", orientation = "h",
-            text = ~paste0(sponsor_label, "<br>", n, " trial(s) — ", sponsor_type),
-            hoverinfo = "text") %>%
+            customdata = ~paste0(sponsor_label, "<br>", n, " trial(s) — ", sponsor_type),
+            hovertemplate = "%{customdata}<extra></extra>") %>%
       plt_layout(
         xaxis = list(title = "Number of Trials"),
         yaxis = list(title = "", tickfont = list(size = 11)),
@@ -4719,7 +4813,7 @@ server <- function(input, output, session) {
 
     if (n == 0) return(help_box("building", title = "Sponsor Portfolio Over Time", lines = tagList(
       p("Select one sponsor in the sidebar to inspect its trial-level portfolio over time."),
-      p(em("The portfolio view shows event strips, trial swimlanes, therapeutic-area bubbles, and cumulative growth."),
+      p(em("The portfolio view shows trial swimlanes and therapeutic-area bubbles."),
         style = "color:#888;"))))
 
     if (n > 1) return(help_box("building", icon_color = "#e67e22",
@@ -4730,29 +4824,17 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(column(12,
         div(
-          div(style = "display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;",
-            h3(style = "margin:0;", icon("stream"), " Sponsor Portfolio Over Time — ", input$sponsor_filter[[1]]),
-            div(style = "min-width:220px;",
-              selectInput("portfolio_y_group", "Group trial strip by:",
-                choices = c("Therapeutic area", "Phase", "Status", "Substance"),
-                selected = isolate(if (!is.null(input$portfolio_y_group)) input$portfolio_y_group else "Therapeutic area"),
-                width = "220px")
-            )
-          ),
+          h3(style = "margin:0;", icon("stream"), " Sponsor Portfolio Over Time — ", input$sponsor_filter[[1]]),
           p(em("Each view keeps the current sidebar filters and shows individual trials for the selected sponsor."),
             style = "font-size:12px;opacity:0.7;margin:4px 0 8px;")
         )
       )),
       fluidRow(
         tabBox(id = "sponsor_portfolio_tabs", width = 12,
-          tabPanel("1. Event Strip",
-            withSpinner(plotlyOutput("plot_sponsor_event_strip", height = "420px"), type = 6)),
-          tabPanel("2. Swimlane",
+          tabPanel("Swimlane",
             withSpinner(plotlyOutput("plot_sponsor_swimlane", height = "480px"), type = 6)),
-          tabPanel("3. Therapeutic Bubbles",
-            withSpinner(plotlyOutput("plot_sponsor_bubble_area", height = "420px"), type = 6)),
-          tabPanel("4. Cumulative Growth",
-            withSpinner(plotlyOutput("plot_sponsor_cumulative_markers", height = "440px"), type = 6))
+          tabPanel("Therapeutic Bubbles",
+            withSpinner(plotlyOutput("plot_sponsor_bubble_area", height = "420px"), type = 6))
         )
       )
     )
@@ -4827,40 +4909,6 @@ server <- function(input, output, session) {
       )
   })
 
-  output$plot_sponsor_event_strip <- renderPlotly({
-    req(input$tabs == "analytics_sponsors")
-    req(length(input$sponsor_filter) == 1)
-    group_choice <- if (is.null(input$portfolio_y_group)) "Therapeutic area" else input$portfolio_y_group
-    group_col <- switch(group_choice,
-      "Phase" = "phase",
-      "Status" = "status",
-      "Substance" = "substance",
-      "therapeutic_area")
-
-    df <- sponsor_portfolio_data() %>%
-      filter(!is.na(event_date)) %>%
-      mutate(portfolio_group = .data[[group_col]]) %>%
-      separate_rows(portfolio_group, sep = " / ") %>%
-      mutate(portfolio_group = str_squish(portfolio_group)) %>%
-      filter(!is.na(portfolio_group), nzchar(portfolio_group))
-    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
-
-    pal <- plot_status_cols(df$status)
-    df$status <- factor(df$status, levels = unique(c(names(pal), sort(unique(df$status)))))
-    plot_ly(df,
-            x = ~event_date, y = ~portfolio_group,
-            color = ~status, colors = pal,
-            symbol = ~register, symbols = c("circle", "diamond", "square"),
-            type = "scatter", mode = "markers",
-            marker = list(size = 10, opacity = 0.82, line = list(width = 0.5, color = "white")),
-            text = ~hover, hoverinfo = "text") %>%
-      plt_layout(
-        xaxis = list(title = "Submission Date"),
-        yaxis = list(title = group_choice, automargin = TRUE),
-        legend = list(orientation = "h", y = -0.25),
-        margin = list(l = 210))
-  })
-
   output$plot_sponsor_swimlane <- renderPlotly({
     req(input$tabs == "analytics_sponsors")
     req(length(input$sponsor_filter) == 1)
@@ -4875,7 +4923,7 @@ server <- function(input, output, session) {
         ),
         span_end = if_else(!is.na(span_start) & !is.na(span_end) & span_end < span_start, span_start, span_end),
         duration_days = as.numeric(span_end - span_start),
-        trial_axis = str_trunc(paste0(trial_label, " | ", str_trunc(trial_title, 45)), 80),
+        trial_axis = str_trunc(trial_label, 36),
         swim_hover = paste0(
           hover, "<br>",
           "Start: ", if_else(is.na(span_start), "Unknown", as.character(span_start)), "<br>",
@@ -4904,7 +4952,7 @@ server <- function(input, output, session) {
         xaxis = list(title = "Trial Timeline"),
         yaxis = list(title = "", automargin = TRUE, tickfont = list(size = 9)),
         legend = list(orientation = "h", y = -0.22),
-        margin = list(l = 260))
+        margin = list(l = 150))
   })
 
   output$plot_sponsor_bubble_area <- renderPlotly({
@@ -4928,9 +4976,9 @@ server <- function(input, output, session) {
     plot_ly(df,
             x = ~event_date, y = ~therapeutic_area,
             color = ~phase, colors = phase_pal,
-            size = ~country_count, sizes = c(7, 26),
+            size = ~country_count, sizes = c(14, 44),
             type = "scatter", mode = "markers",
-            marker = list(opacity = 0.72, line = list(width = 0.5, color = "white")),
+            marker = list(opacity = 0.78, line = list(width = 0.7, color = "white")),
             text = ~paste0(hover, "<br>Member States: ", country_count),
             hoverinfo = "text") %>%
       plt_layout(
@@ -4938,53 +4986,6 @@ server <- function(input, output, session) {
         yaxis = list(title = "Therapeutic Area", automargin = TRUE),
         legend = list(orientation = "h", y = -0.25),
         margin = list(l = 230))
-  })
-
-  output$plot_sponsor_cumulative_markers <- renderPlotly({
-    req(input$tabs == "analytics_sponsors")
-    req(length(input$sponsor_filter) == 1)
-    df <- sponsor_portfolio_data() %>%
-      filter(!is.na(event_date))
-    validate(need(nrow(df) > 0, "No submission date data available for this sponsor."))
-
-    t <- tc()
-    yearly <- df %>%
-      mutate(year = year(event_date)) %>%
-      count(year, name = "n") %>%
-      arrange(year) %>%
-      mutate(cumulative = cumsum(n))
-
-    p_counts <- plot_ly(yearly) %>%
-      add_bars(x = ~year, y = ~n, name = "New trials per year",
-               marker = list(color = t$frost1),
-               text = ~paste0(year, "<br>", n, " new trial(s)"),
-               hoverinfo = "text") %>%
-      add_lines(x = ~year, y = ~cumulative, name = "Cumulative",
-                line = list(color = t$orange, width = 2.5),
-                yaxis = "y2",
-                text = ~paste0(year, "<br>", cumulative, " total"),
-                hoverinfo = "text") %>%
-      layout(
-        xaxis = list(title = "", dtick = 1, tickformat = "d"),
-        yaxis = list(title = "New Trials", rangemode = "tozero"),
-        yaxis2 = list(title = "Cumulative", overlaying = "y",
-                      side = "right", rangemode = "tozero",
-                      showgrid = FALSE),
-        showlegend = TRUE)
-
-    pal <- plot_status_cols(df$status)
-    p_markers <- plot_ly(df,
-                         x = ~event_date, y = ~status,
-                         color = ~status, colors = pal,
-                         type = "scatter", mode = "markers",
-                         marker = list(size = 9, opacity = 0.82, line = list(width = 0.5, color = "white")),
-                         text = ~hover, hoverinfo = "text",
-                         showlegend = FALSE) %>%
-      layout(xaxis = list(title = "Submission Date"),
-             yaxis = list(title = "Trial Markers", automargin = TRUE))
-
-    subplot(p_counts, p_markers, nrows = 2, shareX = TRUE, heights = c(0.56, 0.44), margin = 0.06) %>%
-      plt_layout(legend = list(orientation = "h", y = -0.18))
   })
 
   # ── Sponsor Comparison tab ────────────────────────────────────────────────
@@ -5096,7 +5097,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~phase, y = y_col, color = ~sponsor_label, colors = compare_pal(),
-            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl),
@@ -5117,7 +5118,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~status, y = y_col, color = ~sponsor_label, colors = compare_pal(),
-            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl),
@@ -5210,8 +5211,7 @@ server <- function(input, output, session) {
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~sponsor_label, y = y_col,
             color = ~has_PIP, colors = pip_pal,
-            type = "bar", text = txt, textposition = "outside",
-            hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl,
@@ -5262,8 +5262,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Completed Trials" else "Completed Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~sponsor_label, y = y_col, color = ~results_status, colors = pal,
-            type = "bar", text = txt, textposition = "outside",
-            hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl,
@@ -5388,7 +5387,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~phase, y = y_col, color = ~Member_state, colors = country_compare_pal(),
-            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl),
@@ -5409,7 +5408,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Trials" else "Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~status, y = y_col, color = ~Member_state, colors = country_compare_pal(),
-            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl),
@@ -5432,7 +5431,7 @@ server <- function(input, output, session) {
     t <- tc()
     stype_pal <- c("Academic" = t$frost1, "Industry" = t$orange)
     plot_ly(df, x = ~Member_state, y = y_col, color = ~sponsor_type, colors = stype_pal,
-            type = "bar", text = txt, textposition = "outside", hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "group",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl),
@@ -5456,8 +5455,7 @@ server <- function(input, output, session) {
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~Member_state, y = y_col,
             color = ~has_PIP, colors = pip_pal,
-            type = "bar", text = txt, textposition = "outside",
-            hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl,
@@ -5540,8 +5538,7 @@ server <- function(input, output, session) {
     y_lbl <- if (use_pct) "% of Completed Trials" else "Completed Trials"
     txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
     plot_ly(df, x = ~Member_state, y = y_col, color = ~results_status, colors = pal,
-            type = "bar", text = txt, textposition = "outside",
-            hoverinfo = "x+y+name") %>%
+            type = "bar", hoverinfo = "x+y+name") %>%
       plt_layout(barmode = "stack",
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl,
@@ -5557,7 +5554,7 @@ server <- function(input, output, session) {
     t<-tc()
     pal<-c("Academic"=t$frost1,"Industry"=t$orange)
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
-            text=~n,textposition="outside",hoverinfo="x+y+text")%>%
+            hovertemplate="%{x}<br>%{y} trials<extra>%{fullData.name}</extra>")%>%
       plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
   })
 
@@ -5569,7 +5566,7 @@ server <- function(input, output, session) {
     t<-tc()
     pal<-c("Academic"=t$frost1,"Industry"=t$orange)
     plot_ly(df,x=~register,y=~n,color=~sponsor_type,colors=pal,type="bar",
-            text=~n,textposition="outside",hoverinfo="x+y+text")%>%
+            hovertemplate="%{x}<br>%{y} trials<extra>%{fullData.name}</extra>")%>%
       plt_layout(barmode="group",xaxis=list(title=""),yaxis=list(title="Number of Trials"))
   })
 
@@ -5731,7 +5728,7 @@ server <- function(input, output, session) {
     zoom <- input$eu_map_zoom
     if (!is.null(zoom) && zoom >= 5) {
       fluidRow(
-        box(title = "Trials in Current Map View", status = "info",
+        box(title = "Filtered Trials in Current Map View", status = "info",
             solidHeader = TRUE, width = 12,
             withSpinner(DT::dataTableOutput("map_trials_table"), type = 6))
       )
@@ -6021,24 +6018,25 @@ server <- function(input, output, session) {
   output$kpi_strip_compliance <- renderUI({
     t   <- tc()
     df  <- compliance_base()
+    df_all <- filt()
     n_completed <- nrow(df)
     has_res <- "has_results" %in% names(df)
     n_posted <- if (has_res) sum(df$has_results, na.rm = TRUE) else NA_integer_
     d_acad <- if (has_res) df %>% filter(!is.na(sponsor_type), sponsor_type == "Academic") else NULL
     d_ind  <- if (has_res) df %>% filter(!is.na(sponsor_type), sponsor_type == "Industry") else NULL
     n_acad       <- if (has_res) sum(!d_acad$has_results, na.rm = TRUE) else NA_integer_
-    n_acad_total <- if (has_res) nrow(d_acad) else NA_integer_
+    n_acad_total <- if (has_res) sum(df_all$sponsor_type == "Academic", na.rm = TRUE) else NA_integer_
     n_ind        <- if (has_res) sum(!d_ind$has_results,  na.rm = TRUE) else NA_integer_
-    n_ind_total  <- if (has_res) nrow(d_ind)  else NA_integer_
+    n_ind_total  <- if (has_res) sum(df_all$sponsor_type == "Industry", na.rm = TRUE) else NA_integer_
     fmt <- function(x) if (is.na(x)) "N/A" else format(x, big.mark = ",")
     pct_lbl <- if (!is.na(n_posted) && n_completed > 0)
       paste0(fmt(n_posted), " (", round(n_posted / n_completed * 100), "%)")
     else fmt(n_posted)
-    acad_lbl <- if (!is.na(n_acad) && n_completed > 0)
-      paste0(fmt(n_acad), " (", round(n_acad / n_completed * 100), "%)")
+    acad_lbl <- if (!is.na(n_acad) && n_acad_total > 0)
+      paste0(fmt(n_acad), " (", round(n_acad / n_acad_total * 100), "%)")
     else fmt(n_acad)
-    ind_lbl  <- if (!is.na(n_ind) && n_completed > 0)
-      paste0(fmt(n_ind),  " (", round(n_ind  / n_completed * 100), "%)")
+    ind_lbl  <- if (!is.na(n_ind) && n_ind_total > 0)
+      paste0(fmt(n_ind),  " (", round(n_ind  / n_ind_total * 100), "%)")
     else fmt(n_ind)
     make_kpi <- function(id, val, label, ico, col) {
       tags$div(id = id, class = "kpi-card",
@@ -6203,7 +6201,7 @@ server <- function(input, output, session) {
              lat >= bounds$south & lat <= bounds$north,
              lng >= bounds$west & lng <= bounds$east) %>%
       pull(`_id`) %>% unique()
-    validate(need(length(visible_ids) > 0, "No trials in current map view."))
+    validate(need(length(visible_ids) > 0, "No filtered trials in the current map view."))
     metric <- if (is.null(input$map_metric)) "n_trials" else input$map_metric
     if (!metric %in% c("n_trials", "trials_per_million_children", "trials_per_million_adults", "trials_per_million_total"))
       metric <- "n_trials"
@@ -6249,7 +6247,7 @@ server <- function(input, output, session) {
   # Setting suspendWhenHidden = TRUE defers rendering until the tab is first
   # opened, so the Overview tab loads immediately and other tabs render on demand.
   #
-  # Overview tab outputs (vb_total/ongoing/completed/pip, recent_trials_table,
+  # Overview tab outputs (status KPI cards, recent_trials_table,
   # plot_yearly, plot_register, plot_sponsor_top) and global sidebar outputs
   # are intentionally excluded — they render eagerly.
   local({
@@ -6265,18 +6263,17 @@ server <- function(input, output, session) {
 	      "table_pip_compound_complexity", "pip_compound_decision_picker",
 	      "table_pip_compound_decisions", "plot_pip", "plot_pip_year",
 	      "plot_top_substances", "plot_substance_timeline",
-	      "plot_substance_register", "plot_substance_age",
       "plot_migration_signal", "plot_migration_timeline",
 	      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
       "plot_ctis_date_spread",
       "plot_top_sponsors_ui", "plot_top_sponsors",
-      "sponsor_portfolio_ui", "plot_sponsor_event_strip",
-      "plot_sponsor_swimlane", "plot_sponsor_bubble_area",
-      "plot_sponsor_cumulative_markers",
+      "sponsor_portfolio_ui", "plot_sponsor_swimlane", "plot_sponsor_bubble_area",
       # Phase Analytics
       "plot_phase", "plot_phase_status", "plot_phase_sponsor",
-      "plot_phase_funnel", "plot_completion_cohort",
-      "plot_completion_sponsor", "plot_completion_phase", "plot_trial_duration",
+      "plot_completion_cohort",
+      "plot_completion_phase",
+      # General Statistics
+      "plot_general_trials_year", "plot_completion_sponsor",
       "plot_participants_hist",
       # Sponsor Comparison
       "sponsor_compare_tab_ui",
