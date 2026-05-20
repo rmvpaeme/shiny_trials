@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.12.0 — major analysis UI rework)
+# app.R  (v0.12.1 — startup performance fix)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -252,7 +252,7 @@ DB_COLLECTION <- Sys.getenv("DB_COLLECTION", unset = "trials")
 CACHE_PATH    <- Sys.getenv("CACHE_PATH", unset = "trials_cache.rds")
 PIP_DECISIONS_PATH <- Sys.getenv("PIP_DECISIONS_PATH", unset = "config/pip_decisions.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
-DATA_PROCESSING_VERSION <- "2026-05-v0.12.0-status-administrative-pip-duration-participants"
+DATA_PROCESSING_VERSION <- "2026-05-v0.12.1-ctis-status-codes-corrected"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -1529,27 +1529,35 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
     "Ongoing, recruiting","Ongoing, recruitment ended",
     "Ongoing, not yet recruiting","Authorised, not started",
     "Active, not recruiting","Enrolling by invitation","Not yet recruiting",
-    # CTIS-specific status values
-    "Authorised","In Progress","Temporarily halted"
+    # CTIS-specific status values (aligned with ctrdata f.statusRecruitment groupings)
+    "Authorised","In Progress","Temporarily halted",
+    "Halted",     # shorthand used in applicationInfo.trialStatus text
+    "Suspended"   # ctrdata groups suspended with ongoing (trial may resume)
   ), collapse = "|"), ignore_case = TRUE)
   completed_pat <- regex("\\b(Completed|Ended|Terminated)\\b", ignore_case = TRUE)
   withdrawn_pat <- regex("\\bWithdrawn\\b", ignore_case = TRUE)
   not_authorised_pat <- regex(paste(c(
-    "Not Authorised", "Prohibited", "Cancelled", "Expired",
-    "Suspended"
+    "Not Authorised", "Prohibited", "Cancelled", "Expired"
   ), collapse = "|"), ignore_case = TRUE)
   administrative_pat <- regex(paste(c(
     "Trial now transitioned", "GB - no longer in EU/EEA"
   ), collapse = "|"), ignore_case = TRUE)
 
-  # CTIS numeric status code mapping (CTIS API stores status as integer enums).
-  # Prefer the textual application status when available; ctStatus can be a
-  # compact code such as 8 while trialStatus carries "Ended".
+  # CTIS numeric status code mapping — authoritative values from ctrdata's
+  # f.statusRecruitment function (ctPublicStatusCode and ctStatus share this schema).
   ctis_status_map <- c(
-    "1" = "Authorised", "2" = "In Progress", "3" = "Completed",
-    "4" = "Terminated",  "5" = "Temporarily halted", "6" = "Withdrawn",
-    "7" = "Suspended", "8" = "Ended", "9" = "Expired",
-    "11" = "Not Authorised", "12" = "Cancelled")
+    "1"  = "Under evaluation",
+    "2"  = "Authorised, recruitment pending",
+    "3"  = "Authorised, recruiting",
+    "4"  = "Ongoing, recruiting",
+    "5"  = "Ongoing, recruitment ended",
+    "6"  = "Temporarily halted",
+    "7"  = "Suspended",
+    "8"  = "Ended",
+    "9"  = "Expired",
+    "10" = "Revoked",
+    "11" = "Not authorised",
+    "12" = "Cancelled")
 
   result <- result %>% mutate(
     ctis_status_from_code = if_else(
@@ -1578,6 +1586,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       parts <- dplyr::recode(parts,
         "temporarily halted"          = "Temporarily halted",
         "temporarily halted (current)"= "Temporarily halted",
+        "halted"                      = "Temporarily halted",
         "restarted"                   = "Restarted",
         "withdrawn"                   = "Withdrawn",
         "terminated"                  = "Terminated",
@@ -1587,6 +1596,9 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
         "in progress"                 = "Ongoing",
         "ongoing"                     = "Ongoing",
         "not authorised"              = "Not Authorised",
+        "suspended"                   = "Suspended",
+        "under evaluation"            = "Under evaluation",
+        "revoked"                     = "Revoked",
         .default = stringr::str_to_sentence(parts))
       parts <- unique(parts)
       if (length(parts) == 0) NA_character_ else paste(parts, collapse = " / ")
@@ -2005,7 +2017,6 @@ load_trial_data <- function(force_rebuild = FALSE) {
       }, error = function(e) message("Could not attach sponsor labels: ", e$message))
     }
     if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
-    d <- add_pip_analysis_cache(d)
     return(d)
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }

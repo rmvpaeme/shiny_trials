@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.1 — 2026-05-20
+
+- **Startup performance fix**: removed redundant PIP substance index rebuild from the cache-load path. The `pip_active_substances` / `pip_substance_tokens` columns are already persisted in the cache; the substance match indices are now built lazily on first access of the PIP Analysis tab rather than on every app start. Restores pre-v0.11 startup speed.
+- **CTIS status code mapping corrected**: the `ctis_status_map` used an incorrect numeric-to-label mapping for `ctStatus` / `ctPublicStatusCode`. Critically, code `4` was mapped to `"Terminated"` when the authoritative mapping (from ctrdata's `f.statusRecruitment`) defines it as `"Ongoing, recruiting"`. This caused the majority of active CTIS trials — 3,771 records (33%) with code 4, plus 2,088 (18%) with code 5 — to be misclassified. Full corrected mapping: 1=Under evaluation, 2=Authorised recruitment pending, 3=Authorised recruiting, 4=Ongoing recruiting, 5=Ongoing recruitment ended, 6=Temporarily halted, 7=Suspended, 8=Ended, 9=Expired, 10=Revoked, 11=Not authorised, 12=Cancelled.
+- **Status grouping updated**: `Suspended` moved from Not Authorised to Ongoing (per ctrdata; trial may resume). `Halted` (shorthand in `applicationInfo.trialStatus` text) added to Ongoing alongside `Temporarily halted`. Display recode extended with canonical labels for `Suspended`, `Under evaluation`, and `Revoked`. Cache invalidated via updated `DATA_PROCESSING_VERSION`.
+
 ## v0.12.0 — 2026-05-19
 
 - **Major navigation rework**: Analysis now starts with General Statistics, and country/sponsor comparisons live under a dedicated Compare Data section.
