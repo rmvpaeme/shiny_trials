@@ -1,5 +1,4 @@
-./data/*
-data/*
+data/*sqlite*
 .DS_Store
 data/.DS_Store
 trials_cache_local.rds

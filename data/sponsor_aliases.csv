@@ -1,0 +1,13 @@
+priority,pattern,canonical,match_type,approved,notes
+10,"\bH\.?\s*Lundbeck\b","Lundbeck","regex",TRUE,"Reviewed high-count Lundbeck variants"
+20,"\bMerck\s*(Amp\s*)?&?\s*Co\b|\bMerck\s+And\s+Co\b","MSD","regex",TRUE,"Reviewed MSD / Merck & Co variants; generic Merck remains separate"
+30,"\b(UZ|Universitair\s+Ziekenhuis|University\s+Hospital)\s+Brussel(s)?\b|\bUZBrussel\b|\bUZ\s+Brussel\s+VUB\b|\bCrg\s+UZ\s+Brussel\b","UZ Brussel","regex",TRUE,"Reviewed UZ Brussel variants"
+40,"\bRigshospitalet\b|\bCopenhagen\s+University\s+Hospital\s*,?\s*Rigshospitalet\b|\bRigshospitalet\s*,?\s*Copenhagen\s+University\s+Hospitals?\b","Rigshospitalet","regex",TRUE,"Reviewed Rigshospitalet / Copenhagen University Hospital variants"
+50,"\b(Policlinico\s+(Universitario\s+)?(Agostino\s+)?A\.?\s*Gemelli|Fondazione\s+Policlinico\s+Universitario\s+Agostino\s+Gemelli|Universit\s+Cattolica\s+Del\s+Sacro\s+Cuore\s*[- ]\s*Policlinico\s+A\.?\s*Gemelli)\b","Policlinico Universitario Agostino Gemelli","regex",TRUE,"Reviewed Gemelli variants"
+60,"\b(Institut\s+)?Gustave\s+Roussy\b|\bInstitut\s+De\s+Cancrologie\s+Gustave\s+Roussy\b","Gustave Roussy","regex",TRUE,"Reviewed Gustave Roussy variants"
+70,"\b(S?Tichting\s+)?Het\s+Nederlands\s+Kanker\s+Instituut(?=\b|_)|\bNederlands\s+Kanker\s+Instutuut\b","Het Nederlands Kanker Instituut","regex",TRUE,"Reviewed Dutch Cancer Institute variants"
+80,"\bFundaci[oó]?\s+(Privada\s+)?(Cl[ií]n?ic|Cln[ií]c)\s+((Per\s+A\s+(La\s+)?)|Per\s+La\s+)?Recerca\s+Biom[èe]?dica(\s+FCRB)?\b|\bFundaci[oó]?\s+(Privada\s+)?(Cl[ií]n?ic|Cln[ií]c)\b|\bFundaci[oó]?\s+De\s+Recerca\s+(Cl[ií]n?ic|Cln[ií]c)\s+Barcelona\b|\bFundaci[oó]?\s+(Privada\s+)?Clinic\s+Per\s+A\s+La\s+Recerca\s+Biomedica\b","Fundacio Clinic Per A La Recerca Biomedica","regex",TRUE,"Reviewed Fundacio Clinic Barcelona variants"
+90,"\bCentre\s+(Leon|Lon)\s+B[ée]?rard\b","Centre Leon Berard","regex",TRUE,"Reviewed Centre Leon Berard variants"
+100,"\b(Irccs\s+)?Istituto\s+Giannina\s+Gaslini\b|\bGiannina\s+Gaslini\s+Institute\b","Istituto Giannina Gaslini","regex",TRUE,"Reviewed Gaslini variants"
+110,"\b(Irccs\s+)?Istituto\s+Clinico\s+Humanitas\b|\bInstituto\s+Clinico\s+Humanitas\b|\bHumanitas\s+Mirasole\b","Istituto Clinico Humanitas","regex",TRUE,"Reviewed Humanitas variants"
+120,"\bKing'?s?\s+College\s+Hospital(\s+Foundtion)?\s+(Nhs\s+)?(Foundation\s+)?Trust\b|\bKing'?s?\s+College\s+Hospital\s+Trust\b","Kings College Hospital NHS Foundation Trust","regex",TRUE,"Reviewed King's College Hospital variants"
