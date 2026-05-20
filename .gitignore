@@ -1,4 +1,7 @@
 data/*sqlite*
+data/*log*
+data/*labels*
+
 .DS_Store
 data/.DS_Store
 trials_cache_local.rds
@@ -14,6 +17,8 @@ claude.md
 AGENTS.md
 AGENTS/
 AGENTS/*
+
+Screenshot*
 
 INFRA.md
 
