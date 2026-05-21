@@ -2579,7 +2579,7 @@ ui <- tagList(
                                         column(3,
                                                selectInput("explore_x","X axis:",
                                                            choices=c(
-                                                             "Year of submission"="year",
+                                                             "Year of submission"="analysis_year",
                                                              "Status"="status",
                                                              "Register"="register",
                                                              "Phase"="phase",
@@ -2589,12 +2589,12 @@ ui <- tagList(
                                                              "Organ Class (MedDRA SOC)"="MEDDRA_organ_class",
                                                              "Condition (MedDRA term)"="MEDDRA_term",
                                                              "Country / Member State"="Member_state"),
-                                                           selected="year")),
+                                                           selected="analysis_year")),
                                         column(3,
                                                selectInput("explore_group","Group by (optional):",
                                                            choices=c(
                                                              "None"="None",
-                                                             "Year of submission"="year",
+                                                             "Year of submission"="analysis_year",
                                                              "Status"="status",
                                                              "Register"="register",
                                                              "Phase"="phase",
@@ -5752,6 +5752,7 @@ server <- function(input, output, session) {
 
   EXPLORE_LABELS <- c(
     "None"               = "None",
+    "analysis_year"      = "Year of Submission",
     "status"             = "Status",
     "register"           = "Register",
     "phase"              = "Phase",
@@ -5881,7 +5882,7 @@ server <- function(input, output, session) {
     validate(need(nrow(d) > 0, "No data available for this selection."))
 
     x_lbl  <- unname(EXPLORE_LABELS[x_var])
-    x_tick  <- if (x_var == "year") list(dtick = 1, tickformat = "d") else list()
+    x_tick  <- if (x_var == "analysis_year") list(dtick = 1, tickformat = "d") else list()
     y_lbl  <- if (chart_type == "bar_pct") "Percentage of Trials (%)" else "Number of Trials"
 
     if (isTRUE(input$explore_per_million) && chart_type != "bar_pct") {
