@@ -1,0 +1,83 @@
+"register","raw","normalised","n_trials","changed"
+"CTIS","Ongoing, recruiting","Ongoing, recruiting",2702,FALSE
+"CTIS","Ended","Completed",2643,TRUE
+"CTIS","Ongoing, recruitment ended","Ongoing, recruitment ended",1510,FALSE
+"CTIS","Authorised, recruitment pending","Authorised, recruitment pending",1085,FALSE
+"CTIS","Authorised, recruiting","Authorised, recruiting",533,FALSE
+"CTIS","Authorised / Authorised","Authorised",468,TRUE
+"CTIS","Authorised","Authorised",460,FALSE
+"CTIS","Authorised / Authorised / Authorised","Authorised",300,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised","Authorised",217,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",206,TRUE
+"CTIS","Ended / Ended","Completed",173,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",143,TRUE
+"CTIS","Ended / Ended / Ended","Completed",119,TRUE
+"CTIS","Not authorised","Not Authorised",106,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",100,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",92,TRUE
+"CTIS","Ended / Ended / Ended / Ended","Completed",88,TRUE
+"CTIS","Temporarily halted","Temporarily halted",69,FALSE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",64,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended","Completed",51,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",42,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",40,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended","Completed",39,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",29,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",26,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",25,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",20,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",18,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",18,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",16,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",15,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",14,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",11,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",10,TRUE
+"CTIS","Expired","Expired",10,FALSE
+"CTIS","Halted / Halted","Temporarily halted",10,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",9,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",6,TRUE
+"CTIS","Halted","Temporarily halted",6,TRUE
+"CTIS","Halted / Halted / Halted / Halted","Temporarily halted",6,TRUE
+"CTIS","Halted / Halted / Halted","Temporarily halted",5,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",4,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",4,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",4,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",4,TRUE
+"CTIS","Suspended","Suspended",4,FALSE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",3,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",2,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",2,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",2,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted","Temporarily halted",2,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Cancelled","Cancelled",1,FALSE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Temporarily halted",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Temporarily halted",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Temporarily halted",1,TRUE
+"CTIS","Revoked","Revoked",1,FALSE
+"CTIS","Under evaluation","Under evaluation",1,FALSE
+"CTIS","Under evaluation / Under evaluation / Under evaluation / Under evaluation","Under evaluation",1,TRUE
+"CTIS","Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation","Under evaluation",1,TRUE
+"EUCTR","Completed","Completed",27398,FALSE
+"EUCTR","Prematurely Ended","Prematurely ended",6041,TRUE
+"EUCTR","Ongoing","Ongoing",4559,FALSE
+"EUCTR","GB - no longer in EU/EEA","Gb - no longer in eu/eea",950,TRUE
+"EUCTR","Temporarily Halted","Temporarily halted",65,TRUE
+"EUCTR","Trial now transitioned","Trial now transitioned",34,FALSE
+"EUCTR","Restarted","Restarted",24,FALSE
+"EUCTR","Not Authorised","Not Authorised",14,FALSE
+"EUCTR","Prohibited by CA","Prohibited by ca",12,TRUE
+"EUCTR","Suspended by CA","Suspended by ca",5,TRUE

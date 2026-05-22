@@ -1,0 +1,83 @@
+"register","raw","normalised","n_trials","changed"
+"CTIS","Ongoing, recruiting","Ongoing",2702,TRUE
+"CTIS","Ended","Completed",2643,TRUE
+"CTIS","Ongoing, recruitment ended","Ongoing",1510,TRUE
+"CTIS","Authorised, recruitment pending","Ongoing",1085,TRUE
+"CTIS","Authorised, recruiting","Ongoing",533,TRUE
+"CTIS","Authorised / Authorised","Ongoing",468,TRUE
+"CTIS","Authorised","Ongoing",460,TRUE
+"CTIS","Authorised / Authorised / Authorised","Ongoing",300,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised","Ongoing",217,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",206,TRUE
+"CTIS","Ended / Ended","Completed",173,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",143,TRUE
+"CTIS","Ended / Ended / Ended","Completed",119,TRUE
+"CTIS","Not authorised","Not Authorised",106,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",100,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",92,TRUE
+"CTIS","Ended / Ended / Ended / Ended","Completed",88,TRUE
+"CTIS","Temporarily halted","Ongoing",69,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",64,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended","Completed",51,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",42,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",40,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended","Completed",39,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",29,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",26,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",25,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",20,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",18,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",18,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",16,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",15,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",14,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",11,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",10,TRUE
+"CTIS","Expired","Not Authorised",10,TRUE
+"CTIS","Halted / Halted","Ongoing",10,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",9,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",6,TRUE
+"CTIS","Halted","Ongoing",6,TRUE
+"CTIS","Halted / Halted / Halted / Halted","Ongoing",6,TRUE
+"CTIS","Halted / Halted / Halted","Ongoing",5,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",4,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",4,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",4,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",4,TRUE
+"CTIS","Suspended","Ongoing",4,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",3,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",2,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",2,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",2,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted","Ongoing",2,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Ongoing",1,TRUE
+"CTIS","Cancelled","Not Authorised",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended / Ended","Completed",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Ongoing",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Ongoing",1,TRUE
+"CTIS","Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted / Halted","Ongoing",1,TRUE
+"CTIS","Revoked","Not Authorised",1,TRUE
+"CTIS","Under evaluation","Not Authorised",1,TRUE
+"CTIS","Under evaluation / Under evaluation / Under evaluation / Under evaluation","Not Authorised",1,TRUE
+"CTIS","Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation / Under evaluation","Not Authorised",1,TRUE
+"EUCTR","Completed","Completed",27398,FALSE
+"EUCTR","Prematurely Ended","Completed",6041,TRUE
+"EUCTR","Ongoing","Ongoing",4559,FALSE
+"EUCTR","GB - no longer in EU/EEA","Administrative",950,TRUE
+"EUCTR","Temporarily Halted","Ongoing",65,TRUE
+"EUCTR","Trial now transitioned","Administrative",34,TRUE
+"EUCTR","Restarted","Ongoing",24,TRUE
+"EUCTR","Not Authorised","Not Authorised",14,FALSE
+"EUCTR","Prohibited by CA","Not Authorised",12,TRUE
+"EUCTR","Suspended by CA","Ongoing",5,TRUE

@@ -1,0 +1,29 @@
+"register","raw","normalised","n_trials","changed"
+"CTIS",NA,NA,3169,FALSE
+"CTIS","Therapeutic exploratory (Phase II)","Phase II",2462,TRUE
+"CTIS","Therapeutic confirmatory  (Phase III)","Phase III",2350,TRUE
+"CTIS","Therapeutic use (Phase IV)","Phase IV",851,TRUE
+"CTIS","Human Pharmacology (Phase I)-  Other","Phase I",759,TRUE
+"CTIS","Human Pharmacology (Phase I)- First administration to humans","Phase I",561,TRUE
+"CTIS","Phase I and Phase II (Integrated)- Other","Phase I",435,TRUE
+"CTIS","Phase I and Phase II (Integrated)- First administration to humans","Phase I",310,TRUE
+"CTIS","Phase II and Phase III (Integrated)","Phase III",283,TRUE
+"CTIS","Human Pharmacology (Phase I)- Bioequivalence Study","Phase I",217,TRUE
+"CTIS","Phase III and phase IV (Integrated)","Phase IV",152,TRUE
+"CTIS","Phase I and Phase II (Integrated)- Bioequivalence Study","Phase I",7,TRUE
+"EUCTR","Phase II","Phase II",15209,FALSE
+"EUCTR","Phase III","Phase III",11996,FALSE
+"EUCTR","Phase IV","Phase IV",9013,FALSE
+"EUCTR","Phase I / Phase II","Phase I / Phase II",1598,FALSE
+"EUCTR","Phase II / Phase III","Phase II / Phase III",552,FALSE
+"EUCTR","Phase I","Phase I",384,FALSE
+"EUCTR","Phase III / Phase IV","Phase III / Phase IV",134,FALSE
+"EUCTR",NA,NA,70,FALSE
+"EUCTR","Phase I / Phase IV","Phase I / Phase IV",55,FALSE
+"EUCTR","Phase I / Phase III","Phase I / Phase III",37,FALSE
+"EUCTR","Phase II / Phase IV","Phase II / Phase IV",27,FALSE
+"EUCTR","Phase I / Phase II / Phase III","Phase I / Phase II / Phase III",17,FALSE
+"EUCTR","Phase II / Phase III / Phase IV","Phase II / Phase III / Phase IV",5,FALSE
+"EUCTR","Phase I / Phase II / Phase IV","Phase I / Phase II / Phase IV",2,FALSE
+"EUCTR","Phase I / Phase III / Phase IV","Phase I / Phase III / Phase IV",2,FALSE
+"EUCTR","Phase I / Phase II / Phase III / Phase IV","Phase I / Phase II / Phase III / Phase IV",1,FALSE
