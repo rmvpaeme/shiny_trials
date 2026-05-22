@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.12.2 — 2026-05-22
+
+### Substance normalisation pipeline — major curation session
+
+- **Full queue curation**: worked through all 8,765 substance review-queue entries in 11 chunks (500–800 rows each), hand-accepting, overriding, or skipping every entry. All decisions exported to `substance_llm_reviewed.csv` (6,325+ new alias→INN mappings).
+- **ChEMBL index integration**: rebuilt `substance_alias_index.csv` with the full ChEMBL REST API (16,754 Phase ≥1 molecules, 108k+ alias pairs). Accepted rate rose from ~50% to **72%** (22,463 accepted / 31,108 unique substances). Review queue reduced from 8,765 to **1,660 rows**.
+- **ChEMBL cache**: ChEMBL data is now cached to `config/substance_norm_pipeline/chembl_cache.csv` and committed to the repository. The new `--use-chembl-cache` flag on `build_substance_index.R` enables fast (~5 s), reproducible rebuilds without network access — the recommended mode for CI/CD and everyday use.
+- **Ambiguous alias resolution**: 1,898 ambiguous aliases (one alias → multiple substances) were triaged: 1,001 salt/hydrate pairs auto-resolved to the free-base INN; 200 EPAR vs ChEMBL conflicts resolved in favour of EPAR (authoritative EU source); 70 ChEMBL-only conflicts resolved manually; 23 truly ambiguous entries (radioisotope codes, code↔code conflicts) retained in `ambiguous_needs_review.csv`.
+- **`manual_brand_to_substance.csv` expanded**: grew from 150 to **1,380 entries** covering brand-to-INN mappings for EPAR products, salt/hydrate resolutions, and ChEMBL conflict overrides.
+- **`build_substance_index.R` flags**: added `--use-chembl-cache` (use committed cache), `--refresh-chembl` (force re-download and update cache), `--no-chembl` (skip ChEMBL). Default (no flag) fetches live and saves cache.
+- **Pipeline tier documentation**: README updated to describe all four priority tiers (manual brands → llm_reviewed → EPAR → ChEMBL), the ChEMBL cache workflow, and the ambiguous alias resolution process.
+
 ## v0.12.1 — 2026-05-20
 
 - **Startup performance fix**: removed redundant PIP substance index rebuild from the cache-load path. The `pip_active_substances` / `pip_substance_tokens` columns are already persisted in the cache; the substance match indices are now built lazily on first access of the PIP Analysis tab rather than on every app start. Restores pre-v0.11 startup speed.
@@ -8,6 +20,7 @@
 - **App/report parity refresh**: Chart Builder now uses a shared dimension registry and exposes orphan designation, result-reporting status, active substance, analysis register, trial-scope bins, participant-size bins, and CTIS decision-spread bins when available.
 - **Data Explorer audit detail**: trial-detail modals now show retained registry raw/source values next to normalised sponsor, substance, MedDRA, status, date, and result-reporting values to make curation errors easier to spot.
 - **Filter state consistency**: URL state, JSON save/load, and PDF report filters now use the same filter-state object, including product/substance, orphan designation, and mononational filters; stale PIP waiver display is hidden unless matching cache columns exist.
+- **Substance Tracker added**: added a dedicated Analysis sidebar panel for following one active substance across KPIs, yearly status, country, sponsor, condition, and trial-list views. The tracker selection participates in the shared filter state used by active-filter chips and the paediatric-vs-adult comparison PDF, without auto-selecting a substance or looping with the sidebar product filter.
 - **Report coverage expanded**: the main PDF now includes General Statistics participant distribution, completion by sponsor type/cohort, Register Migration, and Active Substances figures. The paediatric-vs-adult PDF now includes participant-size, completion-cohort, and active-substance comparisons.
 - **UI cleanup**: moved Completion Rate by Authorization Cohort into General Statistics, fixed the participant-count Plotly layout to fill its box, added a CTIS results-source audit table, and hid the visible dark-theme option while retaining the dark theme code.
 - **Trial duration added and corrected**: completed-trial duration is now exposed as a Chart Builder dimension, shown in General Statistics, included in trial-detail modals, and carried into both main and paediatric-vs-adult reports. Duration now uses real EUCTR global end dates and CTIS estimated start/end dates instead of falling back to authorization dates, preventing zero-duration artifacts.

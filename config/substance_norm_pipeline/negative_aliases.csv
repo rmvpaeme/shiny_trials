@@ -95,3 +95,31 @@ bispecific antibody,mechanism class not substance — too generic
 recombinant protein,mechanism class not substance — too generic
 vlp vaccine,vaccine component — not a substance
 adjuvant system,vaccine component — not a substance
+powdered cellulose,formulation excipient
+crospovidone,formulation excipient
+povidone,formulation excipient
+hydroxypropyl cellulose,formulation excipient
+stearic acid,formulation excipient
+talc,formulation excipient
+silicon dioxide,formulation excipient
+titanium dioxide,formulation excipient (tablet coating)
+polyethylene glycol,formulation excipient
+poloxamer,formulation excipient
+carbomer,formulation excipient
+carrageenan,formulation excipient
+infusion,route/form descriptor — not a substance
+infusie,Dutch: route/form descriptor — not a substance
+injection,route/form descriptor — not a substance
+infusionslösung,German: infusion solution descriptor
+injektionslösung,German: injection solution descriptor
+konzentrat zur herstellung einer infusionslösung,German: concentrate for solution for infusion
+pour perfusion,French: for infusion — not a substance
+solution pour perfusion,French: solution for infusion — not a substance
+solution injectable,French: solution for injection — not a substance
+oplossing voor infusie,Dutch: solution for infusion — not a substance
+oplossing voor injectie,Dutch: solution for injection — not a substance
+concentraat voor oplossing voor infusie,Dutch: concentrate for infusion solution — not a substance
+soluzione iniettabile,Italian: solution for injection — not a substance
+concentrato per soluzione per infusione,Italian: concentrate for solution for infusion — not a substance
+sodio cloruro,Italian/Spanish: sodium chloride (formulation excipient)
+natriumklorid fresenius kabi 9 mg,German: sodium chloride brand (formulation excipient)

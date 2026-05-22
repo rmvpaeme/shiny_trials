@@ -1,14 +1,32 @@
-# helper_scripts/build_substance_index.R
-# Builds config/substance_alias_index.csv from manual overrides, EPAR, and ChEMBL.
-# Run once manually before cache rebuild, like update_pip_decisions.R.
+# helper_scripts/substance_norm_pipeline/build_substance_index.R
+# Builds substance_alias_index.csv from four prioritised sources:
+#   1. manual_brand_to_substance.csv   (confidence 1.00, curated brands)
+#   2. substance_llm_reviewed.csv      (confidence 1.00, human-reviewed queue decisions)
+#   3. EPAR medicines report           (confidence 0.95, EMA EU products)
+#   4. ChEMBL REST API                 (confidence 0.65–0.90, Phase-1+ molecules)
 #
 # Usage:
-#   Rscript helper_scripts/build_substance_index.R             # manual + EPAR + ChEMBL
-#   Rscript helper_scripts/build_substance_index.R --no-chembl # manual + EPAR only
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R
+#       Full rebuild: manual + llm_reviewed + EPAR + ChEMBL (fetches live, saves cache)
+#
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --no-chembl
+#       Skip ChEMBL entirely (fastest, use after adding llm_reviewed entries only)
+#
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+#       Use cached ChEMBL data instead of re-downloading (reproducible, ~instant)
+#       Cache file: config/substance_norm_pipeline/chembl_cache.csv
+#
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --refresh-chembl
+#       Force re-download ChEMBL and overwrite the cache (use when ChEMBL is updated)
+#
+# Reproducible workflow (recommended after curate_substances.R --export):
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
 #
 # Outputs:
-#   config/substance_alias_index.csv       full alias → substance table with metadata
-#   config/ambiguous_substance_aliases.csv aliases that map to more than one substance
+#   config/substance_norm_pipeline/substance_alias_index.csv
+#   config/substance_norm_pipeline/ambiguous_substance_aliases.csv
+#   config/substance_norm_pipeline/chembl_cache.csv   (when ChEMBL is fetched)
 
 suppressPackageStartupMessages({
   library(httr2)
@@ -20,12 +38,25 @@ suppressPackageStartupMessages({
   library(tibble)
 })
 
-args      <- commandArgs(trailingOnly = TRUE)
-no_chembl <- "--no-chembl" %in% args
+args            <- commandArgs(trailingOnly = TRUE)
+no_chembl       <- "--no-chembl"          %in% args
+use_cache       <- "--use-chembl-cache"   %in% args
+refresh_chembl  <- "--refresh-chembl"     %in% args
+
+# Resolve ChEMBL mode: refresh > cache > live > skip
+chembl_mode <- dplyr::case_when(
+  no_chembl      ~ "skip",
+  refresh_chembl ~ "fetch",
+  use_cache      ~ "cache",
+  TRUE           ~ "fetch"
+)
+
+CHEMBL_CACHE <- file.path("config", "substance_norm_pipeline", "chembl_cache.csv")
 
 SNP           <- file.path("config", "substance_norm_pipeline")
 OUT_INDEX     <- file.path(SNP, "substance_alias_index.csv")
 OUT_AMBIGUOUS <- file.path(SNP, "ambiguous_substance_aliases.csv")
+message(sprintf("ChEMBL mode: %s", chembl_mode))
 
 # ── Shared cleaning helpers ───────────────────────────────────────────────────
 # Canonical definitions — also sourced by normalise_substances.R via source().
@@ -70,6 +101,28 @@ manual_brand <- if (file.exists(manual_path)) {
   )
 }
 message(sprintf("Manual brands: %d entries", nrow(manual_brand)))
+
+# ── Reviewed queue decisions (human-curated, confidence 1.00) ─────────────────
+# Populated by curate_substances.R --export. Mirrors sponsor_llm_reviewed.csv.
+reviewed_path <- file.path(SNP, "substance_llm_reviewed.csv")
+llm_reviewed <- if (file.exists(reviewed_path) && file.size(reviewed_path) > 0) {
+  readr::read_csv(reviewed_path, show_col_types = FALSE) |>
+    dplyr::mutate(
+      alias_clean     = clean_alias(alias_clean),
+      substance_clean = clean_substance(substance_clean),
+      confidence_prior = 1.00
+    ) |>
+    dplyr::select(alias_clean, substance_clean, alias_type, source, confidence_prior)
+} else {
+  tibble::tibble(
+    alias_clean      = character(),
+    substance_clean  = character(),
+    alias_type       = character(),
+    source           = character(),
+    confidence_prior = numeric()
+  )
+}
+message(sprintf("Reviewed queue decisions: %d entries", nrow(llm_reviewed)))
 
 # ── EPAR ──────────────────────────────────────────────────────────────────────
 EPAR_URL <- "https://www.ema.europa.eu/en/documents/report/medicines-output-medicines-report_en.xlsx"
@@ -119,7 +172,7 @@ epar <- data_rows |>
 
 message(sprintf("EPAR: %d alias-substance pairs", nrow(epar)))
 
-# ── ChEMBL REST ───────────────────────────────────────────────────────────────
+# ── ChEMBL ───────────────────────────────────────────────────────────────────
 chembl <- tibble::tibble(
   alias_clean      = character(),
   substance_clean  = character(),
@@ -128,7 +181,20 @@ chembl <- tibble::tibble(
   confidence_prior = numeric()
 )
 
-if (!no_chembl) {
+if (chembl_mode == "cache") {
+  # ── Load cached ChEMBL data ──────────────────────────────────────────────
+  if (!file.exists(CHEMBL_CACHE)) {
+    stop(
+      "ChEMBL cache not found: ", CHEMBL_CACHE, "\n",
+      "Run without --use-chembl-cache first to generate it, or use --no-chembl."
+    )
+  }
+  chembl <- readr::read_csv(CHEMBL_CACHE, show_col_types = FALSE)
+  message(sprintf("ChEMBL: loaded %d alias-substance pairs from cache (%s)",
+                  nrow(chembl), CHEMBL_CACHE))
+
+} else if (chembl_mode == "fetch") {
+  # ── Fetch live ChEMBL and save cache ────────────────────────────────────
   CHEMBL_URL <- "https://www.ebi.ac.uk/chembl/api/data/molecule"
 
   fetch_page <- function(offset, limit = 1000) {
@@ -193,12 +259,17 @@ if (!no_chembl) {
 
   chembl <- dplyr::bind_rows(chembl_rows)
   message(sprintf("ChEMBL: %d alias-substance pairs", nrow(chembl)))
+
+  # Save cache for future runs
+  readr::write_csv(chembl, CHEMBL_CACHE)
+  message(sprintf("ChEMBL cache saved to %s", CHEMBL_CACHE))
 }
+# if chembl_mode == "skip": chembl stays as empty tibble
 
 # ── Merge ─────────────────────────────────────────────────────────────────────
-# Row order encodes priority: manual > epar > chembl.
+# Row order encodes priority: manual > llm_reviewed > epar > chembl.
 # Ambiguous aliases (one alias → multiple substances) are flagged but NOT dropped.
-combined <- dplyr::bind_rows(manual_brand, epar, chembl) |>
+combined <- dplyr::bind_rows(manual_brand, llm_reviewed, epar, chembl) |>
   dplyr::filter(
     !is.na(alias_clean),
     !is.na(substance_clean),

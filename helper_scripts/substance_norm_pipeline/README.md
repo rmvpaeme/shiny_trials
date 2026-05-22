@@ -98,19 +98,88 @@ tests/fixtures/
 `substance_alias_index.csv` must be generated before the app runs. All other config
 files are hand-maintained and version-controlled.
 
+## Alias index: four priority tiers
+
+`build_substance_index.R` merges four sources in descending priority order. Within each tier, the highest-confidence entry wins for any given alias.
+
+| Tier | Source | Confidence | File |
+| ---- | ------ | ---------- | ---- |
+| 1 | Manual brand-to-substance overrides | 1.00 | `manual_brand_to_substance.csv` |
+| 2 | Human-reviewed queue decisions | 1.00 | `substance_llm_reviewed.csv` |
+| 3 | EMA EPAR medicines report | 0.95 | fetched live |
+| 4 | ChEMBL REST API (Phase ≥ 1 molecules) | 0.65–0.90 | fetched live / cached |
+
+`substance_llm_reviewed.csv` is populated by `curate_substances.R --export`. It holds
+all manual queue decisions made during curation sessions and always overrides ChEMBL.
+
 ## Generating the alias index
 
 ```bash
-# Full run (EPAR + ChEMBL, ~10 min due to ChEMBL pagination)
-Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R
+# ── Everyday use (fast, reproducible, ~5 sec) ─────────────────────────────
+# Uses the committed ChEMBL cache — no network required.
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
 
-# EPAR only (faster, ~1 min)
+# ── After adding entries to substance_llm_reviewed.csv ────────────────────
+# Same as above; llm_reviewed is always re-read from disk.
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+
+# ── Skip ChEMBL entirely (fastest, after llm_reviewed-only changes) ───────
 Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --no-chembl
+
+# ── Force re-download ChEMBL and update cache (when ChEMBL is updated) ───
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --refresh-chembl
+
+# ── Full rebuild from scratch ─────────────────────────────────────────────
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R  # fetches live ChEMBL
 ```
+
+The ChEMBL cache (`config/substance_norm_pipeline/chembl_cache.csv`) is committed to
+the repository so that CI/CD and deployment can run `--use-chembl-cache` without
+network access. Refresh it periodically (e.g., quarterly) with `--refresh-chembl`.
 
 Outputs:
 - `config/substance_norm_pipeline/substance_alias_index.csv` — required at runtime
-- `config/substance_norm_pipeline/ambiguous_substance_aliases.csv` — review these
+- `config/substance_norm_pipeline/ambiguous_substance_aliases.csv` — aliases that map to >1 substance
+- `config/substance_norm_pipeline/chembl_cache.csv` — written/updated when ChEMBL is fetched
+
+## Ambiguous alias resolution
+
+When the same alias maps to multiple substances (e.g. a research code that resolves to
+both the free base and its hydrochloride salt), `build_substance_index.R` records the
+conflict in `ambiguous_substance_aliases.csv` without dropping either mapping. Priority
+order (tier 1 > tier 2 > … > tier 4) determines which canonical is used at normalisation
+time.
+
+Two categories of ambiguity are produced:
+
+**Salt/hydrate pairs** (auto-resolved) — Same drug, different ionic form. Example:
+`ibuprofen sodium` vs `ibuprofen`. These are written into
+`manual_brand_to_substance.csv` pointing to the shorter/simpler (free-base) canonical,
+so they resolve unambiguously on the next index rebuild.
+
+**Genuine conflicts** (manual review) — Different drug families mapped to the same alias
+(research code reuse, radioisotope labelling codes). These are written to
+`ambiguous_needs_review.csv` for human inspection. If one mapping comes from
+`substance_llm_reviewed.csv` (tier 2), that mapping wins automatically.
+
+Workflow to clean up after a new ChEMBL fetch:
+
+```bash
+# 1. Rebuild index
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+
+# 2. Inspect ambiguities
+cat config/substance_norm_pipeline/ambiguous_needs_review.csv
+
+# 3. For salt/hydrate pairs that slipped through: add to manual_brand_to_substance.csv
+# 4. For genuine conflicts: add resolution to manual_brand_to_substance.csv or
+#    to substance_llm_reviewed.csv via curate_substances.R --export
+
+# 5. Rebuild again
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+```
 
 ## Pipeline steps (per raw string)
 
@@ -160,7 +229,26 @@ tibble(
 ## Reviewing the queue
 
 After a cache rebuild, `substance_review_queue.csv` contains rows needing manual
-curation, sorted by `n_occurrences` descending.
+curation, sorted by `n_occurrences` descending. Typical queue sizes:
+
+| State | Queue size |
+| ----- | ---------- |
+| Before any curation | ~8,000–9,000 |
+| After initial manual curation session | ~2,000 |
+| After ChEMBL index rebuild | ~1,000–2,000 |
+| After resolving in-index queue entries | < 1,000 |
+
+**Remove already-indexed entries from queue** (auto-accept ChEMBL-matched rows):
+
+```r
+# In R — promotes queue rows with exact alias matches in the index to llm_reviewed
+source("helper_scripts/substance_norm_pipeline/normalise_substances.R")
+# Or run the one-liner:
+# Rscript -e "source('helper_scripts/substance_norm_pipeline/build_substance_index.R', ...)"
+```
+
+See `AGENTS/substance_manual_curation.md` for the full bulk-curation methodology
+(chunks of 500–800 rows, decision patterns, what was done in each session).
 
 **Queue inclusion rules:**
 
@@ -171,6 +259,9 @@ curation, sorted by `n_occurrences` descending.
   candidate are not actionable.
 - Strings filtered before normalisation (never reach the queue): length < 3 chars, no
   3-char alpha run, or starts with a dose amount (e.g. `0.56 mL solution for injection`).
+  This excludes only the raw trial-substance pair from substance label generation;
+  the trial itself remains in the cache with `substance_label = NA` if no other
+  accepted exploratory substance is found.
 
 Use the interactive curation tool:
 
