@@ -1,6 +1,6 @@
 ---
 title: "EU Paediatric Clinical Trials"
-subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.11.0"
+subtitle: "Paediatric vs Adult Comparison Report · Dashboard v0.12.1"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:
@@ -58,6 +58,8 @@ if (nzchar(params$data_path) && file.exists(params$data_path)) {
   df_all <- readRDS(cache)
 }
 f <- params$filters
+
+if (!"trial_duration_days" %in% names(df_all)) df_all$trial_duration_days <- NA_real_
 
 if (!"age_group" %in% names(df_all)) {
   cat("\\textbf{Data does not contain an age\\_group column. Cannot produce comparison.}")
@@ -163,7 +165,8 @@ fnames <- c(
   "Trial Status", "Source Register",
   "Submission Date (from)", "Submission Date (to)",
   "Sponsor / Company", "Country / Member State",
-  "Trial Phase", "Part of PIP", "PIP Waiver", "Orphan Designation",
+  "Product / Substance", "Trial Phase", "Part of PIP", "Orphan Designation",
+  "Trial Scope",
   "MedDRA Organ Class", "Condition / MedDRA Term",
   "Free-text search", "Age Group filter"
 )
@@ -174,10 +177,11 @@ fvals <- c(
   if (length(f$date_range) >= 2) as.character(f$date_range[2]) else "--",
   if (length(f$sponsor)     == 0 || identical(f$sponsor,     "All")) "All" else paste(f$sponsor,     collapse = "; "),
   if (length(f$country)     == 0 || identical(f$country,     "All")) "All" else paste(f$country,     collapse = "; "),
+  if (length(f$product)     == 0 || identical(f$product,     "All")) "All" else paste(f$product,     collapse = "; "),
   if (length(f$phase)       == 0 || identical(f$phase,       "All")) "All" else paste(f$phase,       collapse = ", "),
   if (is.null(f$pip)    || f$pip    == "All") "All" else f$pip,
-  if (is.null(f$pip_waiver) || f$pip_waiver == "All") "All" else f$pip_waiver,
   if (is.null(f$orphan) || f$orphan == "All") "All" else f$orphan,
+  if (is.null(f$mononational) || f$mononational == "All") "All" else f$mononational,
   if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All" else paste(f$organ_class, collapse = "; "),
   if (length(f$condition)   == 0 || identical(f$condition,   "All")) "All" else paste(f$condition,   collapse = "; "),
   if (is.null(f$text_search) || !nzchar(f$text_search) || f$text_search == "(none)") "(none)" else f$text_search,
@@ -210,6 +214,74 @@ nk(overview_df,
                 "Charts compare Paediatric and Adult groups only; ",
                 "Paediatric \\& Adult trials are shown separately."),
    cn = c("Age Group", "N", "\\% of Total"), al = c("l", "r", "r"))
+```
+
+# Trial Participants
+
+```{r participants-plot, fig.height=3.4}
+participants_df <- bind_rows(
+  df_paed %>% mutate(group = "Paediatric"),
+  df_adult %>% mutate(group = "Adult")
+) %>%
+  filter(!is.na(participants_n), is.finite(participants_n), participants_n > 0) %>%
+  mutate(
+    group = factor(group, levels = c("Paediatric", "Adult")),
+    bin = cut(
+      participants_n,
+      breaks = c(0, 10, 100, 1000, 10000, Inf),
+      labels = c("1-9", "10-99", "100-999", "1,000-9,999", "10,000+"),
+      right = FALSE
+    )
+  ) %>%
+  count(group, bin) %>%
+  group_by(group) %>%
+  mutate(pct = n / sum(n) * 100) %>%
+  ungroup()
+
+if (nrow(participants_df) > 0) {
+  ggplot(participants_df, aes(x = bin, y = pct, fill = group)) +
+    geom_col(position = position_dodge(0.72), width = 0.65) +
+    scale_fill_manual(values = GROUP_COLS) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.15)),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Trial Participants per Trial",
+         subtitle = "Trials with reported participant counts only",
+         x = "Participants per trial", y = "% of trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No participant-count data available for the current selection.}")
+}
+```
+
+# Trial Duration
+
+```{r trial-duration-plot, fig.height=3.4}
+duration_df <- bind_rows(
+  df_paed %>% mutate(group = "Paediatric"),
+  df_adult %>% mutate(group = "Adult")
+) %>%
+  filter(status == "Completed",
+         !is.na(trial_duration_days), is.finite(trial_duration_days),
+         trial_duration_days >= 0, trial_duration_days < 3650) %>%
+  mutate(
+    group = factor(group, levels = c("Paediatric", "Adult")),
+    duration_months = trial_duration_days / 30.4375
+  )
+
+if (nrow(duration_df) > 0) {
+  ggplot(duration_df, aes(x = group, y = duration_months, fill = group)) +
+    geom_boxplot(width = 0.55, outlier.alpha = 0.28) +
+    scale_fill_manual(values = GROUP_COLS) +
+    scale_y_continuous(expand = expansion(mult = c(0.02, 0.08)),
+                       labels = comma) +
+    labs(title = "Trial Duration",
+         subtitle = "Completed trials with start and end-date information only",
+         x = NULL, y = "Trial duration (months)") +
+    theme_rep() +
+    theme(legend.position = "none")
+} else {
+  cat("\\textit{No trial-duration data available for the current selection.}")
+}
 ```
 
 # Trial Status
@@ -709,6 +781,42 @@ if (nrow(res_year_df) > 0) {
 cat("\\textit{Results posting data not available in the current dataset.}")
 ```
 
+# Completion Rate by Authorisation Cohort
+
+```{r completion-cohort-age-plot, fig.height=3.4}
+cohort_age_df <- bind_rows(
+  df_paed %>% mutate(group = "Paediatric"),
+  df_adult %>% mutate(group = "Adult")
+) %>%
+  filter(!is.na(decision_date), !is.na(status)) %>%
+  mutate(auth_year = year(decision_date),
+         group = factor(group, levels = c("Paediatric", "Adult"))) %>%
+  filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
+  group_by(auth_year, group) %>%
+  summarise(n_total = n(),
+            n_completed = sum(status == "Completed", na.rm = TRUE),
+            pct_completed = n_completed / n_total * 100,
+            .groups = "drop") %>%
+  filter(n_total >= 5)
+
+if (nrow(cohort_age_df) > 0) {
+  ggplot(cohort_age_df, aes(x = auth_year, y = pct_completed,
+                            colour = group, group = group)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = GROUP_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(limits = c(0, 105),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Completion Rate by Authorisation Cohort",
+         subtitle = "Authorisation-year cohorts with fewer than 5 trials excluded",
+         x = NULL, y = "% completed") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data for completion cohort comparison.}")
+}
+```
+
 # Submission Timeline
 
 Annual submission counts by age group. "Paediatric \& Adult" trials (*n* = `r fmt_n(n_both)`) are excluded from both lines.
@@ -974,6 +1082,62 @@ if (!has_meddra_term) {
                          labels = function(x) paste0(x, "%")) +
       labs(title = "MedDRA Conditions - Top 15 per Group",
            subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may have multiple conditions",
+                              fmt_n(n_paed), fmt_n(n_adult)),
+           x = "% of trials", y = NULL) +
+      theme_rep() +
+      theme(axis.text.y = element_text(size = 7))
+  }
+}
+```
+
+# Active Substances
+
+Top 15 normalised active substances within each age group. A trial can include multiple substances, so percentages can sum to more than 100\%.
+
+```{r active-substance-plot, fig.height=5.8}
+has_substances <- "substance_label" %in% names(df_all)
+
+if (!has_substances) {
+  cat("\\textit{Normalised active substance data not available in the current dataset.}")
+} else {
+  sub_paed <- df_paed %>%
+    filter(!is.na(substance_label), nchar(str_trim(substance_label)) > 0) %>%
+    separate_rows(substance_label, sep = " / ") %>%
+    mutate(active_substance = str_squish(substance_label)) %>%
+    filter(active_substance != "") %>%
+    count(active_substance, sort = TRUE) %>%
+    mutate(pct = n / n_paed * 100, group = "Paediatric") %>%
+    slice_head(n = 15)
+
+  sub_adult <- df_adult %>%
+    filter(!is.na(substance_label), nchar(str_trim(substance_label)) > 0) %>%
+    separate_rows(substance_label, sep = " / ") %>%
+    mutate(active_substance = str_squish(substance_label)) %>%
+    filter(active_substance != "") %>%
+    count(active_substance, sort = TRUE) %>%
+    mutate(pct = n / n_adult * 100, group = "Adult") %>%
+    slice_head(n = 15)
+
+  if (nrow(sub_paed) == 0 && nrow(sub_adult) == 0) {
+    cat("\\textit{No normalised active substance data available.}")
+  } else {
+    all_substances <- union(sub_paed$active_substance, sub_adult$active_substance)
+
+    sub_plot_df <- bind_rows(sub_paed, sub_adult) %>%
+      complete(active_substance = all_substances, group,
+               fill = list(n = 0L, pct = 0)) %>%
+      mutate(
+        active_substance = factor(active_substance, levels = rev(all_substances)),
+        group = factor(group, levels = c("Paediatric", "Adult"))
+      )
+
+    ggplot(sub_plot_df, aes(x = pct, y = active_substance, fill = group)) +
+      geom_col(position = position_dodge(0.8), width = 0.7) +
+      scale_fill_manual(values = GROUP_COLS) +
+      scale_x_continuous(expand = expansion(mult = c(0, 0.15)),
+                         labels = function(x) paste0(x, "%")) +
+      labs(title = "Active Substances - Top 15 per Group",
+           subtitle = sprintf("Paediatric n=%s | Adult n=%s | trials may include multiple substances",
                               fmt_n(n_paed), fmt_n(n_adult)),
            x = "% of trials", y = NULL) +
       theme_rep() +

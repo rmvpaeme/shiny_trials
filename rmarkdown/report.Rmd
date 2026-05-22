@@ -1,6 +1,6 @@
 ---
 title: "EU Paediatric Clinical Trials"
-subtitle: "Summary Report · Dashboard v0.11.0"
+subtitle: "Summary Report · Dashboard v0.12.1"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   pdf_document:
@@ -61,6 +61,8 @@ if (nzchar(params$data_path) && file.exists(params$data_path)) {
 }
 N  <- nrow(df)
 f  <- params$filters
+
+if (!"trial_duration_days" %in% names(df)) df$trial_duration_days <- NA_real_
 
 if (N == 0) {
   cat("\\textbf{No trials match the current filter criteria.}")
@@ -242,7 +244,8 @@ fnames <- c(
   "Trial Status", "Source Register",
   "Submission Date (from)", "Submission Date (to)",
   "Sponsor / Company", "Country / Member State",
-  "Trial Phase", "Part of PIP", "PIP Waiver", "Orphan Designation",
+  "Product / Substance", "Trial Phase", "Part of PIP", "Orphan Designation",
+  "Trial Scope",
   "MedDRA Organ Class", "Condition / MedDRA Term",
   "Free-text search"
 )
@@ -255,11 +258,13 @@ fvals <- c(
     else paste(f$sponsor, collapse = "; "),
   if (length(f$country) == 0 || identical(f$country, "All")) "All"
     else paste(f$country, collapse = "; "),
+  if (length(f$product) == 0 || identical(f$product, "All")) "All"
+    else paste(f$product, collapse = "; "),
   if (length(f$phase) == 0 || identical(f$phase, "All")) "All"
     else paste(f$phase, collapse = ", "),
   if (is.null(f$pip)    || f$pip    == "All") "All" else f$pip,
-  if (is.null(f$pip_waiver) || f$pip_waiver == "All") "All" else f$pip_waiver,
   if (is.null(f$orphan) || f$orphan == "All") "All" else f$orphan,
+  if (is.null(f$mononational) || f$mononational == "All") "All" else f$mononational,
   if (length(f$organ_class) == 0 || identical(f$organ_class, "All")) "All"
     else paste(f$organ_class, collapse = "; "),
   if (length(f$condition) == 0 || identical(f$condition, "All")) "All"
@@ -346,6 +351,13 @@ nk(reg_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
 ## Per-trial Descriptive Statistics
 
 ```{r continuous-table}
+duration_months_summary <- df %>%
+  filter(status == "Completed",
+         !is.na(trial_duration_days), is.finite(trial_duration_days),
+         trial_duration_days >= 0, trial_duration_days < 3650) %>%
+  transmute(duration_months = trial_duration_days / 30.4375) %>%
+  pull(duration_months)
+
 cont_df <- tibble(
   Metric  = c("Member states per trial", "Conditions (MedDRA terms) per trial",
               "Submissions per year"),
@@ -370,10 +382,156 @@ cont_df <- tibble(
     sprintf("%d\u2013%d", min(year_total$n),         max(year_total$n))
   )
 )
+
+if (length(duration_months_summary) > 0) {
+  cont_df <- bind_rows(cont_df, tibble(
+    Metric  = "Trial duration (months, completed)",
+    Mean_SD = sprintf("%.1f \u00b1 %.1f",
+                      mean(duration_months_summary), sd(duration_months_summary)),
+    Median  = sprintf("%.1f", median(duration_months_summary)),
+    IQR     = iqr_str(duration_months_summary),
+    Min_Max = sprintf("%d\u2013%d",
+                      floor(min(duration_months_summary)),
+                      ceiling(max(duration_months_summary)))
+  ))
+}
+
 nk(cont_df,
    cap = "Descriptive statistics for continuous per-trial and per-year metrics.",
    cn  = c("Metric", "Mean \u00b1 SD", "Median", "IQR", "Min\u2013Max"),
    al  = c("l","r","r","r","r"))
+```
+
+\newpage
+
+# General Statistics
+
+```{r participants-distribution, fig.height=3.6, fig.cap="Distribution of planned or enrolled participants per trial. Bins are log-spaced but labelled on the original participant-count scale."}
+part_df <- df %>%
+  filter(!is.na(participants_n), is.finite(participants_n), participants_n > 0) %>%
+  mutate(
+    register = coalesce(analysis_register, register),
+    bin = cut(
+      participants_n,
+      breaks = c(0, 10, 100, 1000, 10000, Inf),
+      labels = c("1-9", "10-99", "100-999", "1,000-9,999", "10,000+"),
+      right = FALSE
+    )
+  ) %>%
+  count(bin, register, name = "n")
+
+if (nrow(part_df) > 0) {
+  part_df %>%
+    ggplot(aes(x = bin, y = n, fill = register)) +
+    geom_col(width = 0.72) +
+    scale_fill_manual(values = REG_COLS) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+    labs(title = "Trial Participants per Trial",
+         x = "Participants per trial", y = "Trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No participant-count data available for the current filter selection.}")
+}
+```
+
+```{r trial-duration-distribution, fig.height=3.4, fig.cap="Trial duration among completed trials with both start and end-date information. Duration is measured from recruitment start to the recorded or estimated trial end date."}
+duration_df <- df %>%
+  filter(status == "Completed",
+         !is.na(trial_duration_days), is.finite(trial_duration_days),
+         trial_duration_days >= 0, trial_duration_days < 3650) %>%
+  mutate(
+    register = coalesce(analysis_register, register),
+    duration_months = trial_duration_days / 30.4375
+  )
+
+if (nrow(duration_df) > 0) {
+  bind_rows(duration_df, duration_df %>% mutate(register = "All")) %>%
+    mutate(register = factor(register, levels = c("EUCTR", "CTIS", "All"))) %>%
+    ggplot(aes(x = register, y = duration_months, fill = register)) +
+    geom_boxplot(width = 0.55, outlier.alpha = 0.28) +
+    scale_fill_manual(values = c(REG_COLS, All = PURPLE)) +
+    scale_y_continuous(expand = expansion(mult = c(0.02, 0.08)),
+                       labels = comma) +
+    labs(title = "Trial Duration by Register",
+         x = "Register", y = "Trial duration (months)") +
+    theme_rep() +
+    theme(legend.position = "none")
+} else {
+  cat("\\textit{No trial-duration data available for the current filter selection.}")
+}
+```
+
+```{r completion-by-sponsor-type, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, by sponsor type. Cohorts with fewer than five trials are excluded."}
+completion_sponsor_df <- df %>%
+  filter(!is.na(decision_date), !is.na(status), !is.na(sponsor_type)) %>%
+  mutate(auth_year = year(decision_date)) %>%
+  filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
+  group_by(auth_year, sponsor_type) %>%
+  summarise(n_total = n(),
+            n_completed = sum(status == "Completed", na.rm = TRUE),
+            .groups = "drop") %>%
+  filter(n_total >= 5) %>%
+  mutate(pct_completed = n_completed / n_total * 100)
+
+if (nrow(completion_sponsor_df) > 0) {
+  completion_sponsor_df %>%
+    ggplot(aes(x = auth_year, y = pct_completed,
+               colour = sponsor_type, group = sponsor_type)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = c(Academic = GREEN, Industry = BLUE, Unknown = GRAY)) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(limits = c(0, 105),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Completion Rate by Sponsor Type",
+         x = "Authorisation Year", y = "% Completed") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data to render completion by sponsor type.}")
+}
+```
+
+```{r completion-cohort-general, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, by source register. Cohorts with fewer than five trials are excluded. More recent cohorts naturally show lower completion rates owing to shorter observation windows."}
+cohort_df <- df %>%
+  filter(!is.na(decision_date), !is.na(status)) %>%
+  mutate(auth_year = year(decision_date),
+         register = coalesce(analysis_register, register)) %>%
+  filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
+  group_by(auth_year, register) %>%
+  summarise(n_total     = n(),
+            n_completed = sum(status == "Completed", na.rm = TRUE),
+            .groups     = "drop") %>%
+  filter(n_total >= 5) %>%
+  mutate(pct_completed = n_completed / n_total * 100)
+
+if (nrow(cohort_df) > 0) {
+  cohort_df %>%
+    ggplot(aes(x = auth_year, y = pct_completed,
+               colour = register, group = register)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.8) +
+    scale_colour_manual(values = REG_COLS) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(limits = c(0, 105),
+                       labels = function(x) paste0(x, "%")) +
+    labs(title = "Completion Rate by Authorisation Cohort",
+         x = "Authorisation Year", y = "% Completed") +
+    theme_rep()
+} else {
+  cat("\\textit{Insufficient data to render completion cohort chart.}")
+}
+```
+
+```{r completion-cohort-general-table}
+if (nrow(cohort_df) > 0) {
+  nk(cohort_df %>%
+       mutate(pct_completed = sprintf("%.1f%%", pct_completed)) %>%
+       select(auth_year, register, n_total, n_completed, pct_completed) %>%
+       rename(Year = auth_year, Register = register,
+              Authorised = n_total, Completed = n_completed, `% Completed` = pct_completed),
+     cap = "Completion rates by authorisation year and register (cohorts with \u2265 5 trials).",
+     al  = c("l","l","r","r","r"))
+}
 ```
 
 \newpage
@@ -408,6 +566,76 @@ ytbl <- year_total %>%
   mutate(n = fmt_n(n), cumulative = fmt_n(cumulative)) %>%
   rename(Year = year, Submissions = n, Cumulative = cumulative)
 nk(ytbl, cap = "Submissions and cumulative total by year.", al = c("l","r","r"))
+```
+
+\newpage
+
+# Register Migration
+
+```{r migration-signal, fig.height=3.4, fig.cap="Trials by analysis year and source provenance. CTIS rows with transition EudraCT numbers are shown in their original EUCTR-era registration year."}
+migration_df <- df %>%
+  filter(!is.na(analysis_year)) %>%
+  mutate(
+    source_type = case_when(
+      register == "CTIS" & coalesce(analysis_register, register) == "EUCTR" ~
+        "CTIS source, EUCTR-era migrated",
+      register == "CTIS" ~ "CTIS source, native CTIS-era",
+      register == "EUCTR" ~ "EUCTR source",
+      TRUE ~ "Other"
+    ),
+    source_type = factor(source_type, levels = c(
+      "EUCTR source",
+      "CTIS source, EUCTR-era migrated",
+      "CTIS source, native CTIS-era",
+      "Other"
+    ))
+  ) %>%
+  count(analysis_year, source_type, name = "n")
+
+if (nrow(migration_df) > 0) {
+  migration_df %>%
+    ggplot(aes(x = analysis_year, y = n, fill = source_type)) +
+    geom_col(width = 0.75) +
+    scale_fill_manual(values = c(
+      "EUCTR source" = BLUE,
+      "CTIS source, EUCTR-era migrated" = ORANGE,
+      "CTIS source, native CTIS-era" = TEAL,
+      "Other" = GRAY
+    )) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.08)), labels = comma) +
+    labs(title = "EUCTR to CTIS Migration Signal",
+         x = "Analysis Year", y = "Trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No migration signal data available for the current selection.}")
+}
+```
+
+```{r migration-timeline, fig.height=3.2, fig.cap="New migrated CTIS records by CTIS authorization month, with cumulative total."}
+migration_timeline_df <- df %>%
+  filter(register == "CTIS", !is.na(transition_eudract_number), !is.na(decision_date)) %>%
+  mutate(month = floor_date(as.Date(decision_date), "month")) %>%
+  count(month, name = "n") %>%
+  arrange(month) %>%
+  mutate(cumulative = cumsum(n))
+
+if (nrow(migration_timeline_df) > 0) {
+  migration_timeline_df %>%
+    ggplot(aes(x = month)) +
+    geom_col(aes(y = n), fill = ORANGE, width = 25) +
+    geom_line(aes(y = cumulative / max(cumulative) * max(n)), colour = TEAL, linewidth = 0.9) +
+    geom_point(aes(y = cumulative / max(cumulative) * max(n)), colour = TEAL, size = 1.5) +
+    scale_y_continuous(
+      name = "New migrations / month",
+      sec.axis = sec_axis(~ . / max(migration_timeline_df$n) * max(migration_timeline_df$cumulative),
+                          name = "Cumulative")
+    ) +
+    labs(title = "Migration Timeline", x = NULL) +
+    theme_rep()
+} else {
+  cat("\\textit{No CTIS migration timeline data available for the current selection.}")
+}
 ```
 
 \newpage
@@ -486,6 +714,67 @@ nk(cond_tab %>% head(30) %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
 
 \newpage
 
+# Active Substances
+
+```{r active-substance-bar, fig.height=5.2, fig.cap="Top 20 normalised active substances by trial count, split by source register."}
+substance_rows <- if ("substance_label" %in% names(df)) {
+  df %>%
+    filter(!is.na(substance_label), nchar(str_trim(substance_label)) > 0) %>%
+    select(`_id`, register, year, substance_label) %>%
+    separate_rows(substance_label, sep = " / ") %>%
+    mutate(active_substance = str_squish(substance_label)) %>%
+    filter(nchar(active_substance) > 0)
+} else {
+  tibble(`_id` = character(), register = character(), year = integer(),
+         substance_label = character(), active_substance = character())
+}
+
+top_substances <- substance_rows %>%
+  count(active_substance, name = "total", sort = TRUE) %>%
+  slice_head(n = 20) %>%
+  pull(active_substance)
+
+if (length(top_substances) > 0) {
+  substance_rows %>%
+    filter(active_substance %in% top_substances) %>%
+    count(active_substance, register) %>%
+    mutate(active_substance = factor(active_substance, levels = rev(top_substances))) %>%
+    ggplot(aes(x = n, y = active_substance, fill = register)) +
+    geom_col(width = 0.72) +
+    scale_fill_manual(values = REG_COLS) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.15)), labels = comma) +
+    labs(title = "Top Active Substances", x = "Trials", y = NULL) +
+    theme_rep()
+} else {
+  cat("\\textit{No normalised active substance data available for the current selection.}")
+}
+```
+
+```{r active-substance-timeline, fig.height=3.6, fig.cap="Annual trial counts for the eight most frequent normalised active substances in the current selection."}
+timeline_substances <- head(top_substances, 8)
+
+if (length(timeline_substances) > 0) {
+  substance_rows %>%
+    filter(active_substance %in% timeline_substances, !is.na(year)) %>%
+    count(year, active_substance) %>%
+    mutate(active_substance = factor(active_substance, levels = timeline_substances)) %>%
+    ggplot(aes(x = year, y = n, colour = active_substance, group = active_substance)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 1.6) +
+    scale_colour_manual(values = setNames(colorRampPalette(NORD8)(length(timeline_substances)),
+                                          timeline_substances)) +
+    scale_x_continuous(breaks = pretty_breaks(8)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.12)), labels = comma) +
+    labs(title = "Active Substance Evolution Over Time",
+         x = NULL, y = "Trials") +
+    theme_rep()
+} else {
+  cat("\\textit{No active substance timeline data available for the current selection.}")
+}
+```
+
+\newpage
+
 # Trial Phases
 
 ```{r phase-dist, fig.height=3.0, fig.cap="Phase distribution across all selected trials. Trials with combined phase designations (e.g. Phase I/II) are counted once per constituent phase."}
@@ -548,50 +837,6 @@ nk(phase_tab %>% mutate(n = fmt_n(n), pct = fmt_pct(pct)),
    cn = c("Phase", "n", "%"), al = "lrr")
 nk(phase_reg %>% mutate(across(where(is.numeric), fmt_n)),
    cap = "Phase by register.", al = c("l", rep("r", ncol(phase_reg) - 1)))
-```
-
-## Completion Rate by Authorisation Cohort
-
-```{r completion-cohort, fig.height=3.4, fig.cap="Percentage of trials authorised in each calendar year that have subsequently reached completed status, by source register. Cohorts with fewer than five trials are excluded. More recent cohorts naturally show lower completion rates owing to shorter observation windows."}
-cohort_df <- df %>%
-  filter(!is.na(decision_date), !is.na(status)) %>%
-  mutate(auth_year = year(decision_date)) %>%
-  filter(auth_year >= 2004, auth_year < year(Sys.Date())) %>%
-  group_by(auth_year, register) %>%
-  summarise(n_total     = n(),
-            n_completed = sum(status == "Completed", na.rm = TRUE),
-            .groups     = "drop") %>%
-  filter(n_total >= 5) %>%
-  mutate(pct_completed = n_completed / n_total * 100)
-
-if (nrow(cohort_df) > 0) {
-  cohort_df %>%
-    ggplot(aes(x = auth_year, y = pct_completed,
-               colour = register, group = register)) +
-    geom_line(linewidth = 0.8) +
-    geom_point(size = 1.8) +
-    scale_colour_manual(values = REG_COLS) +
-    scale_x_continuous(breaks = pretty_breaks(8)) +
-    scale_y_continuous(limits = c(0, 105),
-                       labels = function(x) paste0(x, "%")) +
-    labs(title = "Completion Rate by Authorisation Cohort",
-         x = "Authorisation Year", y = "% Completed") +
-    theme_rep()
-} else {
-  cat("\\textit{Insufficient data to render completion cohort chart.}")
-}
-```
-
-```{r completion-cohort-table}
-if (nrow(cohort_df) > 0) {
-  nk(cohort_df %>%
-       mutate(pct_completed = sprintf("%.1f%%", pct_completed)) %>%
-       select(auth_year, register, n_total, n_completed, pct_completed) %>%
-       rename(Year = auth_year, Register = register,
-              Authorised = n_total, Completed = n_completed, `% Completed` = pct_completed),
-     cap = "Completion rates by authorisation year and register (cohorts with \u2265 5 trials).",
-     al  = c("l","l","r","r","r"))
-}
 ```
 
 \newpage
@@ -852,16 +1097,27 @@ cat("\\textit{No decision date data available for the current filter selection.}
 
 ```{r custom-chart-setup, include=FALSE}
 EXPLORE_LABELS <- c(
-  "year"               = "Year of Submission",
-  "status"             = "Status",
-  "register"           = "Register",
-  "phase"              = "Phase",
-  "sponsor_type"       = "Sponsor Type",
-  "has_PIP"            = "PIP Status",
-  "is_orphan"          = "Orphan Designation",
-  "MEDDRA_organ_class" = "Organ Class (MedDRA SOC)",
-  "MEDDRA_term"        = "Condition (MedDRA term)",
-  "Member_state"       = "Country / Member State"
+  "analysis_year"                 = "Year of Submission",
+  "status"                        = "Status",
+  "register"                      = "Source Register",
+  "analysis_register"             = "Analysis Register",
+  "phase"                         = "Phase",
+  "sponsor_type"                  = "Sponsor Type",
+  "has_PIP"                       = "PIP Status",
+  "is_orphan"                     = "Orphan Designation",
+  "has_results_label"             = "Results Reporting",
+  "age_group"                     = "Age Group",
+  "substance_label"               = "Active Substance",
+  "MEDDRA_organ_class"            = "Organ Class (MedDRA SOC)",
+  "MEDDRA_term"                   = "Condition (MedDRA term)",
+  "Member_state"                  = "Country / Member State",
+  "n_countries_bin"               = "Trial Scope (# Countries)",
+  "participants_n_bin"            = "Participant Size",
+  "trial_duration_days_bin"       = "Trial Duration",
+  "decision_date_spread_days_bin" = "CTIS Decision Spread",
+  "has_pip_waiver"                = "PIP Waiver",
+  "has_pip_deferral"              = "PIP Deferral",
+  "pip_waiver_status"             = "PIP Waiver Status"
 )
 
 chart_ed <- if (nzchar(params$chart_data_path) && file.exists(params$chart_data_path)) {
@@ -878,7 +1134,7 @@ chart_grp_lbl <- if (!is.null(chart_grp) && chart_grp != "None")
                    unname(EXPLORE_LABELS[chart_grp]) else NULL
 has_custom    <- nrow(chart_df) > 0
 
-if (chart_x_var == "year" && has_custom) {
+if (chart_x_var %in% c("year", "analysis_year") && has_custom) {
   chart_df <- chart_df %>% mutate(x_val = as.integer(x_val))
 }
 ```
@@ -921,7 +1177,7 @@ if (is.null(chart_grp) || chart_grp == "None") {
   p <- p + labs(x = chart_x_lbl, y = y_lbl)
 }
 
-if (!is.null(chart_x_var) && chart_x_var == "year") {
+if (!is.null(chart_x_var) && chart_x_var %in% c("year", "analysis_year")) {
   p <- p + scale_x_continuous(breaks = scales::breaks_width(1))
 }
 if (chart_type == "bar_pct") {

@@ -1,430 +1,412 @@
 # EU Paediatric Trial Monitor
 
-**v0.12.0** · R Shiny · EUCTR + CTIS · ~16 200 deduplicated trials · **License:** MIT · **Authors:** Ruben Van Paemel, Levi Hoste
+**v0.12.1** | R Shiny | EUCTR + CTIS | 16,209 deduplicated trials in the current local cache | MIT
 
-A research dashboard for exploring, analysing, and monitoring clinical trials registered in the European Union, with a focus on paediatric trials. The database covers all age groups so that paediatric and adult populations can be compared directly; the sidebar Age Group filter defaults to `< 18 years` to preserve the paediatric focus. Data is pulled from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS) using the [`ctrdata`](https://cran.r-project.org/package=ctrdata) package.
+Authors: Ruben Van Paemel and Levi Hoste
+
+EU Paediatric Trial Monitor is an R Shiny dashboard for exploring clinical trials registered in the European Union, with a practical focus on paediatric development. The database intentionally covers all age groups so paediatric and adult trial landscapes can be compared directly. The app defaults the Age Group filter to `< 18 years`, but adult and all-age views are available from the same dataset.
+
+The app combines records from the EU Clinical Trials Register (EUCTR) and the Clinical Trials Information System (CTIS), normalises key fields at cache-build time, and exposes the result through interactive charts, maps, tables, comparison views, and downloadable reports.
 
 ![Dashboard overview](overview.png)
 
----
+## What It Supports
 
-## Source data
+- Track trial activity by year, country, sponsor, phase, status, therapeutic area, MedDRA term, active substance, PIP status, orphan designation, and result-reporting status.
+- Compare paediatric and adult trial landscapes under the same filters.
+- Compare 2-3 countries or 2-3 sponsors side by side.
+- Identify completed trials with and without registry results.
+- Explore PIP decision and waiver evidence using EMA decision data.
+- Browse and export filtered trial-level records with expanded trial detail.
+- Audit data preprocessing through the generated preprocessing report in the app's About tab.
 
-Trial records are retrieved from two complementary EU registries using the `ctrdata` R package. Both queries fetch **all age groups** — paediatric and adult — so that the two populations can be compared directly in the dashboard.
 
-| Register | URL | Query |
-| -------- | --- | ----- |
-| **EUCTR** — EU Clinical Trials Register | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | All trials (no age filter) |
-| **CTIS** — Clinical Trials Information System | [euclinicaltrials.eu](https://euclinicaltrials.eu) | All trials (no age filter) |
+## Source Data
 
-### Search strings used
+Data is retrieved with [`ctrdata`](https://cran.r-project.org/package=ctrdata) from two official EMA registries:
 
-**EUCTR** — all trials, no age restriction:
+| Register | Source | Query |
+| --- | --- | --- |
+| EUCTR | [clinicaltrialsregister.eu](https://www.clinicaltrialsregister.eu) | All trials, no age filter |
+| CTIS | [euclinicaltrials.eu](https://euclinicaltrials.eu) | All trials, no age filter |
+
+The default update refreshes CTIS only. EUCTR is opt-in because the historical EUCTR load is large and changes slowly. Explicit EUCTR refreshes run in quarterly chunks from 2004 to the present, resume from `data/done_chunks.txt`, and write failed ranges or trial IDs to `data/failed_chunks.txt`.
+
+EUCTR result documents are not fetched by default because they add significant runtime. Use `--euctr-results` only when the full EUCTR result-document refresh is needed.
+
+## Dashboard Areas
+
+| Area | Purpose |
+| --- | --- |
+| Overview | KPI cards, recent trials, example questions, and shortcuts into the main workflows |
+| Chart Builder | Custom bar, line, grouped bar, and stacked charts from shared app dimensions |
+| Map | Filtered country distribution with age-aware per-million normalisation |
+| Data Explorer | Searchable, filterable trial table with CSV/Excel export and trial-detail modal |
+| General Statistics | Yearly volume, completion by cohort/sponsor type, participant-count distribution, and trial duration |
+| Active Substances | Top normalised substances and yearly evolution |
+| Therapeutic Areas | MedDRA organ class and condition views |
+| Geography | Country-level trial distribution under active filters |
+| PIP Analysis | PIP identifiers, EMA decision matches, waiver/deferral evidence, and ambiguity flags |
+| Phase Analytics | Phase distribution, status, sponsor type, and completion by phase |
+| Result Reporting | Completed trials with and without registry results |
+| Country Comparison | Side-by-side country comparison across phase, status, sponsor type, PIP/orphan status, trial scale, substances, time, and results |
+| Sponsor Comparison | Side-by-side sponsor comparison across phase, status, geography, PIP/orphan status, trial scale, substances, time, and results |
+| About | Data sources, audit report, definitions, and changelog |
+
+## Filters
+
+Most charts and tables respond to the same sidebar filters:
+
+- Age Group: `< 18 years` by default, `>= 18 years`, or `All`.
+- Submission date range.
+- Free-text search across title, trial identifier, condition, product, and sponsor fields.
+- Country / Member State.
+- Sponsor / Company.
+- Trial status.
+- Source register.
+- Trial phase.
+- PIP involvement and PIP waiver status.
+- Orphan designation.
+- MedDRA organ class and condition term.
+- Product / substance, backed by pre-computed substance labels.
+
+Filter state is encoded in the URL as a base64 JSON `?f=` query parameter, so filtered views can be bookmarked and shared.
+
+## How The Data Pipeline Works
+
+The app is designed so expensive data cleaning happens before Shiny sessions start.
 
 ```text
-https://www.clinicaltrialsregister.eu/ctr-search/search?query=
+update_data.R
+  -> data/trials.sqlite
+
+rebuild_cache.R
+  -> app.R data preparation
+  -> trials_cache.rds
+  -> sponsor normalisation pipeline
+  -> substance normalisation pipeline
+  -> PIP helper columns
+  -> www/preprocessing.html
+
+app.R startup
+  -> load trials_cache.rds
+  -> join data/trial_sponsor_labels.csv
+  -> join data/trial_substance_labels.csv
+  -> serve Shiny UI
 ```
 
-**CTIS** — all trials:
+Important generated files:
 
-```text
-https://euclinicaltrials.eu/ctis-public/search#searchCriteria={}
-```
+| File | Purpose |
+| --- | --- |
+| `data/trials.sqlite` | Local SQLite document store populated by `ctrdata` |
+| `trials_cache.rds` | Processed app cache |
+| `data/trial_sponsor_labels.csv` | App-facing normalised sponsor labels |
+| `data/trial_substance_labels.csv` | App-facing normalised substance labels |
+| `data/*_normalisation_log.csv` | Audit inputs for the preprocessing report |
+| `www/preprocessing.html` | Rendered preprocessing audit shown in the About tab |
 
-These URLs are defined in `update_data.R` and passed to `ctrdata::ctrLoadQueryIntoDb()`. The default update refreshes **CTIS only**, because EUCTR changes slowly and the full historical EUCTR load has already been captured. To refresh EUCTR explicitly, run `Rscript update_data.R --euctr` or `REFRESH_EUCTR=true Rscript update_data.R`. EUCTR is fetched in quarterly date-range chunks (2004 → present); if a range fails, the script recursively bisects it down toward single-day ranges before falling back to trial-by-trial loading. Completed chunks are logged to `data/done_chunks.txt` and failed chunks/trials to `data/failed_chunks.txt` so interrupted runs can resume. EUCTR result documents (`euctrresults`) are **not** fetched by default because they make ingestion much slower; use `Rscript update_data.R --euctr-results` or `FORCE_RESULTS=true Rscript update_data.R` when you explicitly want to refresh them.
+Most generated data artifacts are ignored by Git.
 
----
-
-## Example uses
-
-The dashboard is designed for specific analytical workflows, not just browsing. Here are the scenarios it was built to support.
-
-**Tracking a disease area over time**
-Select a MedDRA organ class or specific condition, set a date range, and see how trial activity has changed year by year — including which sponsors are most active, whether the Phase I → Phase III pipeline is growing or stalling, and which EU member states participate most. The Chart Builder lets you cross any two dimensions without writing code.
-
-**Result reporting overview**
-The Result Reporting tab shows which completed trials have reported results to the registry and which have not. Results data is sourced directly from EUCTR (`endPoints.endPoint.readyForValues`) and CTIS (`resultsFirstReceived`) — not estimated. KPI cards show total completed trials, results reported (% of completed trials), and Academic / Industry completed trials without results as a percentage of all currently filtered trials in that sponsor type. Charts break down reporting by authorization year and sponsor type; the full list of completed trials without results is downloadable as CSV.
-
-**Comparing countries and sponsor portfolios**
-Use the Compare Data section to compare 2–3 countries or 2–3 sponsors. The comparison tabs render side-by-side breakdowns of phase distribution, trial status, therapeutic areas, geographic reach, PIP involvement, submission volume over time, and result reporting. Useful for competitive intelligence, partnership scoping, or regulatory submissions that require landscape context.
-
-**PIP waiver landscape**
-EUCTR A.8 EMA PIP decision numbers and CTIS PIP procedure numbers are normalised and joined to EMA's official PIP decision feed. When identifiers are missing, EUCTR INN/proposed INN names and trial product names are used as a conservative substance fallback. The Trial filters and PIP Analysis tab separate full waivers, records with no waiver indicated in the EMA decision type, and records where the bulk feed is ambiguous because the same compound has multiple possible EMA PIP decisions.
-
-**Orphan / rare disease landscape**
-The Orphan Designation filter (sourced from EUCTR DIMP D.2.5 and CTIS orphan designation numbers) narrows the dataset to orphan-designated products. Combined with MedDRA filtering, this surfaces the rare disease trial landscape for a given indication without manual registry searches.
-
-**General statistics and pipeline maturity**
-The General Statistics tab gives the filtered trial count by year, completion rate by sponsor type, and participant-count distribution. Phase Analytics shows phase distribution by register, status, and sponsor type, plus completion rates by authorization cohort and phase. More recent cohorts naturally show lower completion rates; a plateauing line in an older cohort signals trials that have stalled rather than completed.
-
----
-
-## Dashboard tabs
-
-| Tab | What it shows |
-| --- | ------------- |
-| **Overview** | KPI cards (total / ongoing / completed / PIP); clickable navigation shortcut cards (CSS grid, mobile-friendly); example questions that apply filters in one click; prominent "Compare Paediatric vs Adult" button in sidebar; 5 most recently authorized trials |
-| **Chart Builder** | Fully custom bar / line chart — any column on X, optional grouping, 4 chart types; age-aware country per-million normalisation |
-| **Map** | Filtered trials by country (circle map); age-aware per-million normalisation; filtered trial table at zoom ≥ 5 |
-| **Data Explorer** | Filterable/searchable table with CSV & Excel export, click-to-expand trial detail modal |
-| **Analysis** *(collapsible group)* | |
-| &nbsp;&nbsp;General Statistics | Filtered trials by year, completion rate by sponsor type, and participant-count distribution |
-| &nbsp;&nbsp;Active Substances | Top active substances and yearly evolution over time |
-| &nbsp;&nbsp;Therapeutic Areas | Top organ classes and top MedDRA terms |
-| &nbsp;&nbsp;Geography | Country-level trial distribution under the active sidebar filters |
-| &nbsp;&nbsp;PIP Analysis | PIP status, waiver/deferral evidence, match ambiguity, and waiver evolution over time |
-| &nbsp;&nbsp;Phase Analytics | Phase by register / status / sponsor type, completion cohort, and completion by phase |
-| &nbsp;&nbsp;Result Reporting | Results reported vs not reported for completed trials, by year and sponsor type; downloadable list |
-| **Compare Data** *(collapsible group)* | |
-| &nbsp;&nbsp;Country Comparison | Side-by-side comparison of 2–3 selected countries across 7 dimensions including result reporting |
-| &nbsp;&nbsp;Sponsor Comparison | Side-by-side comparison of 2–3 selected sponsors across 7 dimensions including result reporting |
-| **About** | Data sources, preprocessing audit report, changelog, trial status definitions |
-
-### Sidebar filters
-
-All charts and tables update simultaneously when filters change. Active filters appear as chips above the content area with a one-click Reset all.
-
-| Filter | Options |
-| ------ | ------- |
-| **Age Group** | `< 18 years` (default) / `≥ 18 years` / `All` — trials enrolling both age groups ("Paediatric & Adult") appear under both |
-| Submission date range | Any date range from 2004 to today |
-| Free-text search | Title, CT number, condition, product name, sponsor |
-| Country / Member State | Multi-select; normalised country names from the registry data |
-| Sponsor / Company | Multi-select; normalised names (legal suffixes stripped) |
-| Trial Status | Ongoing / Completed / Withdrawn / Not Authorised |
-| Source Register | EUCTR / CTIS |
-| Trial Phase | Phase I / II / III / IV |
-| Part of PIP | Yes / No / Unknown |
-| PIP Waiver | Yes / No / Unknown |
-| Orphan Designation | Yes / No / Unknown |
-| MedDRA Organ Class | Multi-select |
-| Condition / MedDRA Term | Multi-select with server-side search |
-
-Filter state is encoded in the URL (`?f=` query param, base64 JSON) for bookmarking and sharing.
-
----
-
-## How to deploy
+## Quick Start
 
 ### Requirements
 
-- R ≥ 4.3
-- A LaTeX distribution for PDF export (TinyTeX recommended: `tinytex::install_tinytex()`)
+- R 4.3 or newer.
+- A working browser available to `ctrdata` for CTIS retrieval.
+- Pandoc for rendering the preprocessing report.
+- A LaTeX distribution with `xelatex` for PDF reports. TinyTeX is fine:
+
+```r
+tinytex::install_tinytex()
+```
 
 ### Install R packages
 
+This project does not currently use `renv`, so packages are installed from CRAN.
+
 ```r
 install.packages(c(
-  "shiny", "shinydashboard", "fresh", "shinycssloaders",
-  "ctrdata", "nodbi", "RSQLite", "DBI",
-  "dplyr", "tidyr", "stringr", "stringi", "stringdist", "lubridate",
-  "ggplot2", "plotly", "leaflet", "scales", "forcats",
+  "shiny", "shinydashboard", "fresh", "shinycssloaders", "htmltools",
+  "ctrdata", "nodbi", "RSQLite", "DBI", "jqr",
+  "dplyr", "tidyr", "purrr", "tibble",
+  "stringr", "stringi", "stringdist", "lubridate", "forcats",
+  "ggplot2", "plotly", "leaflet", "scales", "eulerr",
   "DT", "jsonlite", "base64enc",
   "readr", "readxl", "writexl",
-  "purrr", "tibble", "httr2", "rvest", "xml2",
+  "httr2", "rvest", "xml2",
   "rmarkdown", "knitr", "kableExtra"
 ))
 ```
 
-### Fetch data
+### Run from existing local data
 
-```bash
-Rscript update_data.R
-```
-
-By default, this refreshes CTIS only and leaves the already-loaded EUCTR history untouched. To include EUCTR, run:
-
-```bash
-Rscript update_data.R --euctr
-# or
-REFRESH_EUCTR=true Rscript update_data.R
-```
-
-To include EUCTR result documents (`euctrresults = TRUE`), run:
-
-```bash
-Rscript update_data.R --euctr-results
-# or, backwards-compatible alias
-FORCE_RESULTS=true Rscript update_data.R
-```
-
-Requesting EUCTR results automatically enables the EUCTR refresh path. It is significantly slower than the normal EUCTR metadata refresh.
-
-The explicit EUCTR refresh can take several hours because it checks ~44 000 registry rows in quarterly chunks. Completed chunks are logged to `data/done_chunks.txt`; delete this file only when you intentionally want a full EUCTR re-check. Failed ranges and trial IDs are written to `data/failed_chunks.txt` for follow-up.
-
-### Build the cache
-
-```r
-source("rebuild_cache.R")
-```
-
-Processes the SQLite database into `trials_cache.rds`. Run this after `update_data.R` or whenever the pipeline logic in `app.R` changes. The cache is automatically invalidated when the database file is newer.
-
-### Refresh EMA PIP decisions
-
-```bash
-Rscript helper_scripts/update_pip_decisions.R
-```
-
-Downloads EMA's official PIP decisions JSON feed into `config/pip_decisions.csv`. The Shiny app joins this local CSV during cache rebuild; it does not fetch EMA pages during startup. EUCTR INN/proposed INN names from `dimp.d38_imp_identification_details.d38_inn__proposed_inn` and `dimp.d391_inn_generic_name` improve substance-name fallback coverage for branded products.
-
-### Local test database
-
-The full SQLite database can be slow to process on the MacBook. For local testing, create an approximate 4 GB random subset without decoding the MessagePack blobs:
-
-```bash
-Rscript helper_scripts/create_local_test_db.R --target-gb=4 --output=./data/trials_local.sqlite
-```
-
-Then rebuild a separate local cache from that smaller database:
-
-```bash
-DB_PATH=./data/trials_local.sqlite CACHE_PATH=trials_cache_local.rds Rscript rebuild_cache.R
-```
-
-Alternatively, back up the full database and temporarily rename/copy the local subset to `data/trials.sqlite` before running the normal cache rebuild.
-
-Both files are local generated artifacts and should stay out of normal commits.
-
-### Sponsor normalisation workflow
-
-Sponsor-name cleanup is now a deterministic, auditable pipeline under `helper_scripts/sponsor_norm_pipeline/`. The app reads the generated `data/trial_sponsor_labels.csv` during cache load; sponsor matching is not done interactively at runtime. The full workflow is documented in [helper_scripts/sponsor_norm_pipeline/README.md](helper_scripts/sponsor_norm_pipeline/README.md).
-
-Run the pipeline in order after rebuilding the trial cache, adding manual aliases, accepting review-queue decisions, or refreshing external evidence:
-
-```bash
-# 1. Extract one primary sponsor string per trial
-Rscript helper_scripts/sponsor_norm_pipeline/export_trial_sponsors.R
-
-# 2. Build the sponsor alias index from manual aliases, accepted reviews,
-#    EMA EPAR MAH names, CTIS businessKey groups, and EUCTR email domains
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
-
-# 3. Build app-facing trial sponsor labels and audit logs
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
-
-# Optional: emit unresolved/review rows for curation
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
-```
-
-Important generated outputs:
-
-| File | Purpose |
-| ---- | ------- |
-| `data/trial_sponsors_raw.csv` | Raw primary sponsor strings exported from the cache |
-| `config/sponsor_norm_pipeline/sponsor_alias_index.csv` | Merged alias index used by `normalise_sponsors.R` |
-| `data/trial_sponsor_labels.csv` | App-facing trial sponsor labels read by Shiny |
-| `data/sponsor_normalisation_log.csv` | Full audit log used by the preprocessing report |
-| `config/sponsor_norm_pipeline/sponsor_review_queue.csv` | Optional unresolved/review queue generated with `--write-queue` |
-
-The alias index merges several evidence tiers. Manual aliases and accepted review decisions have highest priority. EMA EPAR marketing authorisation holder names, CTIS `businessKey` organisation groups, and EUCTR sponsor email-domain groups add registry-derived evidence. ROR variants and postcode/country evidence are available but intentionally optional; the recommended local rebuild skips the slower ROR query and keeps postcode evidence review-only.
-
-Manual and LLM-assisted curation is kept in CSV configuration files rather than hard-coded into the app:
-
-```bash
-# Review unresolved sponsor rows interactively
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R 100
-
-# Include previously skipped rows
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --include-skipped
-
-# Export accepted/rejected/override decisions to config files
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
-```
-
-After exporting decisions, rerun `build_sponsor_index.R --no-ror --no-location` and then `build_sponsor_labels.R`. Large curation batches can be cleaned with:
-
-```bash
-python3 helper_scripts/sponsor_norm_pipeline/clean_llm_reviewed.py
-```
-
-That cleanup script removes generic department aliases, person-name canonicals, known university/hospital conflations, legal suffix noise, and appends safe final-canonical decisions to the relevant config files. Final label clusters that are too risky to merge automatically are reviewed through `final_sponsor_canonical_review.csv` and accepted into `final_sponsor_canonical_map.csv` or `final_sponsor_family_map.csv`.
-
-### Run the app
+If `trials_cache.rds` is already present:
 
 ```r
 shiny::runApp()
 ```
 
-Or from the terminal:
+Or from a shell:
 
 ```bash
 Rscript -e "shiny::runApp(port = 3838)"
 ```
 
-### Docker
+The app loads the cache first. If the cache is missing, stale, or incompatible with the current `DATA_PROCESSING_VERSION`, it rebuilds from `data/trials.sqlite`.
 
-A `Dockerfile` and `docker-compose.yml` are included for container use. For local development, the R commands above are the canonical path. Before production Docker deployment, confirm the runtime `DB_PATH` and `CACHE_PATH` values point at `data/trials.sqlite` and `trials_cache.rds`.
+### Refresh CTIS and rebuild
 
 ```bash
-docker build -t paediatric-trials .
-docker run -p 3838:3838 \
-  -v $(pwd)/data:/shiny_trials/shiny_trials/data \
-  -v $(pwd)/trials_cache.rds:/shiny_trials/shiny_trials/trials_cache.rds \
-  paediatric-trials
+Rscript update_data.R
+Rscript rebuild_cache.R
 ```
 
-With Docker Compose:
+`rebuild_cache.R` rebuilds the RDS cache, regenerates sponsor and substance labels, refreshes PIP helper columns, and attempts to render `www/preprocessing.html`.
+
+### Refresh EUCTR too
+
+```bash
+Rscript update_data.R --euctr
+Rscript rebuild_cache.R
+```
+
+Equivalent environment-variable form:
+
+```bash
+REFRESH_EUCTR=true Rscript update_data.R
+Rscript rebuild_cache.R
+```
+
+### Refresh EUCTR result documents
+
+```bash
+Rscript update_data.R --euctr-results
+Rscript rebuild_cache.R
+```
+
+This automatically enables the EUCTR path and can be much slower than the normal metadata refresh.
+
+## Common Maintenance Workflows
+
+### Refresh EMA PIP Decisions
+
+```bash
+Rscript helper_scripts/update_pip_decisions.R
+Rscript rebuild_cache.R
+```
+
+The script downloads EMA's official PIP decisions feed into `config/pip_decisions.csv`. The Shiny app joins this local CSV during cache rebuild; it does not scrape EMA pages during startup.
+
+### Rebuild Sponsor Labels
+
+The sponsor pipeline is deterministic and app-facing labels are read from `data/trial_sponsor_labels.csv`. The full workflow is documented in [helper_scripts/sponsor_norm_pipeline/README.md](helper_scripts/sponsor_norm_pipeline/README.md).
+
+Recommended local rebuild:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/export_trial_sponsors.R
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
+```
+
+To emit an unresolved review queue:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+```
+
+Useful curation commands:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R 100
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --include-skipped
+Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
+python3 helper_scripts/sponsor_norm_pipeline/clean_llm_reviewed.py
+```
+
+After exporting decisions or cleaning reviewed rows, rerun `build_sponsor_index.R --no-ror --no-location` and `build_sponsor_labels.R`.
+
+### Rebuild Substance Labels
+
+The substance pipeline converts raw product/INN strings into pre-computed `substance_label` values. The full workflow is documented in [helper_scripts/substance_norm_pipeline/README.md](helper_scripts/substance_norm_pipeline/README.md).
+
+```bash
+Rscript helper_scripts/substance_norm_pipeline/export_trial_substances.R
+Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+```
+
+Alias-index refresh:
+
+```bash
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R
+# or EPAR only:
+Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --no-chembl
+```
+
+Manual queue review:
+
+```bash
+Rscript helper_scripts/substance_norm_pipeline/curate_substances.R
+Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --export
+```
+
+### Build A Smaller Local Test Database
+
+For quicker local testing, create a random SQLite subset:
+
+```bash
+Rscript helper_scripts/create_local_test_db.R --target-gb=4 --output=./data/trials_local.sqlite
+DB_PATH=./data/trials_local.sqlite CACHE_PATH=trials_cache_local.rds Rscript rebuild_cache.R
+```
+
+The preprocessing report is skipped automatically for non-standard cache paths unless `RENDER_PREPROCESSING=true` is set.
+
+### Scheduled Refresh
+
+A simple nightly refresh can run the root scripts:
+
+```bash
+0 3 * * * cd /path/to/rshiny_claude && Rscript update_data.R && Rscript rebuild_cache.R >> /var/log/trials_rebuild.log 2>&1
+```
+
+Deployment-oriented shell scripts live in `nightly_update/`. The Posit Cloud path is `nightly_update/nightly_deploy_posit.sh`.
+
+## Docker
+
+A `Dockerfile` and `docker-compose.yml` are included. For local development, the R commands above are the canonical workflow.
+
+Build and run:
+
+```bash
+docker build -t shiny_trials .
+docker run -p 3838:3838 \
+  -v "$(pwd)/data:/app/data" \
+  -e DB_PATH=/app/data/trials.sqlite \
+  -e CACHE_PATH=/app/data/trials_cache.rds \
+  shiny_trials
+```
+
+With Compose:
 
 ```bash
 docker compose up -d
-docker compose exec app Rscript /app/update_data.R  # first-time data load
+docker compose exec app Rscript /app/update_data.R
+docker compose exec app Rscript /app/rebuild_cache.R
 ```
 
-The PDF report uses `xelatex` so Unicode registry text (for example `≥`) does not break rendering. TinyTeX or a TeX Live installation with `xelatex` is sufficient.
-
-### Scheduled data updates
-
-To refresh overnight on a simple cron setup, schedule the root-level `update_data.R` and `rebuild_cache.R` scripts:
-
-```bash
-0 3 * * * Rscript /path/to/update_data.R && Rscript /path/to/rebuild_cache.R >> /var/log/trials_rebuild.log 2>&1
-```
-
-The deploy-oriented shell scripts live in `nightly_update/`. The Posit Cloud workflow uses `nightly_update/nightly_deploy_posit.sh` to rebuild the deploy branch from `main`, update the trial data, rebuild the cache and preprocessing report, and push generated deploy artifacts.
-
-After each rebuild the app loads the new RDS on the next session start (or immediately if `force_rebuild = TRUE` is passed to `load_trial_data()`).
-
----
-
-## Known issues and pipeline limitations
-
-**EUCTR first run is slow**
-The EUCTR refresh is opt-in. The initial explicit fetch downloads ~44 000 registry rows across quarterly date-range chunks (2004 → present). Expect several hours. Progress is logged to `data/done_chunks.txt`; if the run is interrupted, re-running `update_data.R --euctr` will skip already-completed chunks automatically. Some EUCTR date ranges return malformed responses; v18 bisects failing ranges toward single days and then tries individual trial IDs. `--euctr-results` / `FORCE_RESULTS=true` is slower again because it requests EUCTR result documents.
-
-**CTIS country field**
-CTIS stores member states as a nested JSON array. After flattening, some records return a string of numeric IDs or ISO codes rather than full country names. The `clean_member_state()` function resolves the majority, but edge cases (new member states, non-standard ISO entries) may appear as `NA` in the country column.
-
-**MedDRA classification divergence between registers**
-EUCTR stores MedDRA terms at the condition level; CTIS stores them at the trial level with additional codes. Trials appearing in both registers may show slightly different MedDRA assignments depending on which register version is kept after deduplication. The dashboard always prefers the CTIS record for trials present in both.
-
-**Results and orphan fields require cache rebuild**
-The `has_results` (results posted) and `is_orphan` (orphan designation) columns are derived during cache rebuild from registry fields added in v0.7.0. Re-run `rebuild_cache.R` after updating `app.R` pipeline logic.
-
-**Phase assignment for multi-phase trials**
-EUCTR allows a trial to tick multiple phase flags simultaneously (e.g. Phase I + Phase II). The dashboard preserves these as `/`-separated values (`Phase I / Phase II`) rather than arbitrarily picking one. Charts that use `separate_rows()` handle this correctly; any external analysis of the exported CSV should account for multi-valued phase cells.
-
-**Overlap detection accuracy**
-Cross-register deduplication uses CT number matching first, then normalised title matching (first 80 characters, lowercased, punctuation stripped). Unusual title formatting or very short titles can result in missed matches (same trial counted twice) or false matches (different trials merged). The deduplication log is printed to console during cache rebuild.
-
-**Cache invalidation**
-The cache is invalidated when the SQLite database file is newer than the RDS or when `DATA_PROCESSING_VERSION` in `app.R` changes. If you are testing local pipeline edits without bumping that version string, delete `trials_cache.rds` manually before restarting the app to force a rebuild.
-
----
-
-## Changelog
-
-### v0.12.0 — 2026-05-19
-
-- **Major navigation rework**: Analysis now starts with General Statistics, and country/sponsor comparisons live under a dedicated Compare Data section.
-- **Sponsor normalisation workflow**: documents the new `helper_scripts/sponsor_norm_pipeline/` workflow for exporting raw sponsors, building the alias index, producing app-facing labels, curating unresolved rows, and cleaning accepted review batches.
-- **General Statistics tab**: adds filtered trial counts by year, completion rate by sponsor type, and participant-count distribution with participant-scale axis labels.
-- **Streamlined analytics**: Active Substances now focuses on top substances and yearly evolution; Phase Analytics removes the funnel and keeps phase/status/sponsor and completion views.
-- **Sponsor portfolio cleanup**: keeps the readable swimlane and therapeutic-area bubble views, enlarges bubbles, shortens swimlane labels, and removes event strip/cumulative growth views.
-- **Result Reporting denominator fix**: Academic and Industry no-results KPIs use sponsor-type denominators under the active filters.
-- **Filtered map language**: Map titles and drill-down table now explicitly state that sidebar filters are applied.
-- **Rebuild resilience**: cache rebuilds have a local deduplication fallback if `ctrdata::dbFindIdsUniqueTrials()` fails on malformed registry identifiers.
-
-### v0.11.0 — 2026-05-06
-
-- **PIP decision enrichment**: EUCTR A.8 EMA decision numbers and CTIS PIP procedure numbers are extracted, normalised, and matched to EMA's official PIP decisions JSON feed, with EUCTR INN/generic names used as a conservative substance fallback when identifiers are absent.
-- **PIP waiver/deferral fields**: the cache now includes PIP decision/procedure identifiers, EMA URL, decision type, full-waiver status, waiver status, and deferral status.
-- **Dashboard controls**: the sidebar adds a PIP Waiver filter; Data Explorer exports include PIP decision fields; PIP Analysis adds waiver, deferral, evidence-strength, and ambiguity charts.
-- **Offline EMA refresh**: `helper_scripts/update_pip_decisions.R` refreshes `config/pip_decisions.csv` from EMA's bulk JSON feed so the Shiny app does not scrape live pages during startup.
-
-See [CHANGELOG.md](CHANGELOG.md) for the full version history.
-
-
----
-
-## Project structure
-
-```text
-.
-├── app.R                        # Main Shiny application
-├── update_data.R                # Fetches data from EUCTR and CTIS into SQLite
-├── rebuild_cache.R              # Rebuilds RDS cache from SQLite (no re-download)
-├── helper_scripts/
-│   ├── update_pip_decisions.R           # Refreshes local EMA PIP decisions lookup
-│   ├── create_local_test_db.R           # Creates a smaller random SQLite DB for local testing
-│   ├── clean_db.R                       # Cleans invalid SQLite records before rebuilds
-│   └── sponsor_norm_pipeline/           # Deterministic sponsor normalisation workflow
-│       ├── export_trial_sponsors.R      # Exports raw sponsor strings from the cache
-│       ├── build_sponsor_index.R        # Builds alias index from manual/review/external evidence
-│       ├── build_sponsor_labels.R       # Writes app-facing trial_sponsor_labels.csv
-│       ├── normalise_sponsors.R         # Sponsor normaliser and CLI fixture runner
-│       ├── curate_sponsors.R            # Interactive review/export of unresolved sponsor rows
-│       └── clean_llm_reviewed.py        # Cleanup for accepted review batches
-├── rmarkdown/
-│   ├── report.Rmd                       # PDF report template (rendered on demand)
-│   ├── comparison_report.Rmd            # Paediatric vs adult PDF report template
-│   └── preprocessing.Rmd                # Pipeline audit report source
-├── nightly_update/
-│   ├── nightly_deploy_posit.sh          # Deploy-branch refresh for Posit Cloud
-│   ├── nightly_deploy.sh                # Legacy shinyapps.io deploy helper
-│   └── nightly_deploy_docker.sh         # Legacy Docker deploy helper
-├── AGENTS/                      # Local agent notes and handovers (git-ignored)
-├── trials_cache.rds             # Processed data cache (git-ignored)
-├── config/
-│   ├── pip_decisions.csv                # Cached EMA PIP decisions lookup
-│   ├── sponsor_norm_pipeline/           # Sponsor alias, review, final-canonical maps
-│   └── sponsor_curation_baseline.csv    # Sponsor labels present at last manual curation
-├── Dockerfile
-├── docker-compose.yml
-├── data/
-│   ├── trials.sqlite                    # Raw trial data from ctrdata (git-ignored)
-│   ├── trial_sponsors_raw.csv           # Raw sponsor strings exported for normalisation
-│   ├── trial_sponsor_labels.csv         # App-facing sponsor labels
-│   ├── sponsor_normalisation_log.csv
-│   ├── country_normalisation_log.csv
-│   ├── meddra_term_normalisation_log.csv
-│   ├── organ_class_normalisation_log.csv
-│   ├── phase_normalisation_log.csv
-│   ├── status_category_normalisation_log.csv
-│   └── status_display_normalisation_log.csv
-└── www/
-    ├── favicon.svg
-    └── preprocessing.html        # Rendered pipeline audit report
-```
-
----
+Note: the current Docker defaults still use older `pediatric_trials.*` file names. Override `DB_PATH` and `CACHE_PATH` as above when running the all-ages dataset, or update the Compose environment to match `trials.sqlite` and `trials_cache.rds`.
 
 ## Configuration
 
 | Variable | Default | Description |
-| -------- | ------- | ----------- |
+| --- | --- | --- |
 | `DB_PATH` | `./data/trials.sqlite` | SQLite database file |
-| `DB_COLLECTION` | `trials` | Collection name within the database |
-| `CACHE_PATH` | `trials_cache.rds` | Processed data cache (app root) |
+| `DB_COLLECTION` | `trials` | Collection name inside the SQLite document store |
+| `CACHE_PATH` | `trials_cache.rds` | Processed app cache |
+| `REFRESH_EUCTR` | `false` | Include EUCTR in `update_data.R` |
+| `REFRESH_EUCTR_RESULTS` | `false` | Include EUCTR result documents |
+| `FORCE_RESULTS` | `false` | Backwards-compatible alias for EUCTR results |
+| `SKIP_CTIS` | `false` | Skip CTIS refresh |
+| `RENDER_PREPROCESSING` | `auto` | Render preprocessing report after cache rebuild |
 
----
+## Repository Map
 
-## Technology stack
+```text
+.
+├── app.R                         # Main Shiny app and cache-build data preparation
+├── update_data.R                 # Registry ingestion into SQLite
+├── rebuild_cache.R               # Cache rebuild plus sponsor/substance/report steps
+├── CHANGELOG.md                  # Full release history
+├── Dockerfile
+├── docker-compose.yml
+├── config/
+│   ├── pip_decisions.csv
+│   ├── sponsor_norm_pipeline/
+│   └── substance_norm_pipeline/
+├── data/                         # Local generated registry data and labels
+├── helper_scripts/
+│   ├── update_pip_decisions.R
+│   ├── create_local_test_db.R
+│   ├── sponsor_norm_pipeline/
+│   └── substance_norm_pipeline/
+├── rmarkdown/
+│   ├── report.Rmd
+│   ├── comparison_report.Rmd
+│   └── preprocessing.Rmd
+├── nightly_update/
+├── tests/
+│   └── fixtures/
+└── www/
+    ├── favicon.svg
+    └── preprocessing.html
+```
 
-| Layer | Package(s) | Role |
-| ----- | ---------- | ---- |
-| Data retrieval | [`ctrdata`](https://github.com/rfhb/ctrdata) | Unified access to EUCTR and CTIS |
-| Database | [`nodbi`](https://github.com/ropensci/nodbi) + [`RSQLite`](https://cran.r-project.org/package=RSQLite) | Local document store over SQLite |
-| Web framework | [`shiny`](https://shiny.posit.co/) + [`shinydashboard`](https://rstudio.github.io/shinydashboard/) + [`fresh`](https://dreamrs.github.io/fresh/) | Dashboard UI + AdminLTE theming |
-| Charts | [`plotly`](https://plotly.com/r/) + [`ggplot2`](https://ggplot2.tidyverse.org/) | Interactive + PDF visualisations |
-| Map | [`leaflet`](https://rstudio.github.io/leaflet/) | Country-level interactive map |
-| Tables | [`DT`](https://rstudio.github.io/DT/) | Interactive data tables |
-| Data wrangling | [`dplyr`](https://dplyr.tidyverse.org/), [`tidyr`](https://tidyr.tidyverse.org/), [`stringr`](https://stringr.tidyverse.org/), [`lubridate`](https://lubridate.tidyverse.org/) | Data manipulation |
-| Export | [`writexl`](https://cran.r-project.org/package=writexl), [`readr`](https://readr.tidyverse.org/) | CSV and Excel download |
-| URL state | [`base64enc`](https://cran.r-project.org/package=base64enc), [`jsonlite`](https://cran.r-project.org/package=jsonlite) | Filter serialisation to URL |
-| Report | [`rmarkdown`](https://rmarkdown.rstudio.com/) | PDF report generation |
+`AGENTS/` contains local handover notes and is ignored by Git.
 
----
+## Testing And Checks
+
+CLI smoke checks for the normalisers. These write result CSVs; the fixture files
+include expected columns for manual or scripted comparison.
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/normalise_sponsors.R \
+  --input=tests/fixtures/sponsor_normalisation_gold.csv \
+  --output=/tmp/sponsor_norm_out.csv \
+  --config-dir=config/sponsor_norm_pipeline \
+  --no-fuzzy
+
+Rscript helper_scripts/substance_norm_pipeline/normalise_substances.R \
+  --input=tests/fixtures/substance_normalisation_gold.csv \
+  --output=/tmp/substance_norm_out.csv \
+  --config-dir=config/substance_norm_pipeline \
+  --no-fuzzy
+```
+
+Operational smoke check:
+
+```bash
+Rscript rebuild_cache.R
+Rscript -e "shiny::runApp(port = 3838)"
+```
+
+## Known Limitations
+
+- EUCTR refreshes are slow. The first explicit EUCTR refresh can take several hours.
+- EUCTR result-document refreshes are slower again and should be run deliberately.
+- CTIS country/member-state fields can arrive as nested JSON, numeric IDs, or ISO-like strings; most are normalised, but edge cases can still produce missing country values.
+- EUCTR and CTIS can disagree on MedDRA structure for migrated or duplicated records. The dashboard prefers CTIS when the same real-world trial exists in both registers.
+- Multi-phase trials are preserved as slash-separated values such as `Phase I / Phase II`; downstream analysis of exported CSVs should split those fields when needed.
+- Cross-register deduplication uses trial identifiers first and normalised title fallbacks second. Very short or heavily changed titles can still cause missed or false merges.
+- Cache invalidation depends on SQLite/cache timestamps and `DATA_PROCESSING_VERSION`. Delete `trials_cache.rds` manually when testing data-prep changes without bumping the version.
+
+## Latest Release
+
+### v0.12.1 - 2026-05-20
+
+- Removed a redundant PIP substance-index rebuild from startup, restoring faster cache-load performance.
+- Corrected CTIS status-code mapping. Code `4` is now treated as ongoing/recruiting instead of terminated.
+- Updated status grouping so `Suspended` and `Halted` remain in the ongoing family, with expanded display recodes.
+- Invalidated the cache through a new `DATA_PROCESSING_VERSION`.
+
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
+
+## Technology Stack
+
+| Layer | Package(s) |
+| --- | --- |
+| Registry retrieval | `ctrdata` |
+| Database | `nodbi`, `RSQLite`, `DBI` |
+| Web app | `shiny`, `shinydashboard`, `fresh`, `shinycssloaders` |
+| Visualisation | `plotly`, `ggplot2`, `leaflet`, `DT` |
+| Data wrangling | `dplyr`, `tidyr`, `purrr`, `stringr`, `stringi`, `lubridate`, `stringdist` |
+| Export and reports | `readr`, `readxl`, `writexl`, `rmarkdown`, `knitr`, `kableExtra` |
+| URL state | `jsonlite`, `base64enc` |
 
 ## Acknowledgements
 
-Trial data is retrieved from two official EU registries:
-
-- **EUCTR** — [EU Clinical Trials Register](https://www.clinicaltrialsregister.eu), European Medicines Agency. Covers trials submitted from 2004 under Directive 2001/20/EC.
-- **CTIS** — [Clinical Trials Information System](https://euclinicaltrials.eu), European Medicines Agency. Mandatory for new applications from January 2023 under Regulation (EU) No 536/2014.
-
-Data retrieval is powered by the [`ctrdata`](https://cran.r-project.org/package=ctrdata) R package (Ralf Herold), which provides a unified interface for querying, downloading, and storing trial records from multiple EU and international registries.
+Trial records are retrieved from the [EU Clinical Trials Register](https://www.clinicaltrialsregister.eu) and the [Clinical Trials Information System](https://euclinicaltrials.eu), both operated by the European Medicines Agency. Data retrieval is powered by the [`ctrdata`](https://cran.r-project.org/package=ctrdata) R package.
 
 MedDRA terminology is the property of the International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use (ICH). Use of MedDRA terminology requires a licence; this dashboard uses MedDRA codes and terms as provided by the registries under their public data policies.
 
-Built with [R Shiny](https://shiny.posit.co), [shinydashboard](https://rstudio.github.io/shinydashboard/), [plotly](https://plotly.com/r/), [leaflet](https://rstudio.github.io/leaflet/), and [DT](https://rstudio.github.io/DT/).
+This project is released under the MIT License. See [LICENSE](LICENSE).
