@@ -127,8 +127,27 @@ labels <- trial_norm %>%
     sponsor_type, match_status
   )
 
+# Trials with no accepted/review sponsor fall back to the raw source value so
+# the app always has something to display rather than a blank.
+unknown_fallbacks <- trial_norm %>%
+  dplyr::filter(match_status == "unknown", !is.na(raw_sponsor), nzchar(trimws(raw_sponsor))) %>%
+  dplyr::anti_join(labels, by = "_id") %>%
+  dplyr::transmute(
+    `_id`,
+    sponsor_clean  = raw_sponsor,
+    sponsor_parent = NA_character_,
+    sponsor_group  = NA_character_,
+    sponsor_type,
+    match_status   = "unknown"
+  )
+
+labels <- dplyr::bind_rows(labels, unknown_fallbacks)
+
 readr::write_csv(labels, labels_path)
-message(sprintf("Wrote %d trial sponsor labels to %s", nrow(labels), labels_path))
+message(sprintf(
+  "Wrote %d trial sponsor labels to %s (%d raw-fallback rows)",
+  nrow(labels), labels_path, nrow(unknown_fallbacks)
+))
 
 # ── write sponsor normalisation log for preprocessing.Rmd ─────────────────────
 
@@ -162,6 +181,7 @@ if (write_queue) {
 
   new_queue <- norm %>%
     dplyr::filter(match_status %in% c("review", "unknown")) %>%
+    dplyr::filter(match_reason != "generic department label without parent institution") %>%
     dplyr::left_join(occ, by = "raw_sponsor") %>%
     dplyr::mutate(
       n_trials          = dplyr::coalesce(n_trials, 0L),
@@ -172,13 +192,26 @@ if (write_queue) {
       match_score, match_source, match_reason, n_trials
     )
 
-  # Preserve decisions from existing queue
+  # Preserve decisions from existing queue (guard against missing columns)
+  if (!all(c("decision", "canonical_sponsor", "comment") %in% names(existing_queue))) {
+    existing_queue <- existing_queue %>%
+      dplyr::mutate(
+        decision = NA_character_,
+        canonical_sponsor = NA_character_,
+        comment = NA_character_
+      )
+  }
   existing_decisions <- existing_queue %>%
     dplyr::filter(!is.na(decision) & nzchar(decision)) %>%
     dplyr::select(raw_sponsor, decision, canonical_sponsor, comment)
 
   queue_out <- new_queue %>%
     dplyr::anti_join(existing_decisions, by = "raw_sponsor") %>%
+    dplyr::mutate(
+      decision = NA_character_,
+      canonical_sponsor = NA_character_,
+      comment = NA_character_
+    ) %>%
     dplyr::arrange(dplyr::desc(n_trials))
 
   readr::write_csv(queue_out, queue_path)

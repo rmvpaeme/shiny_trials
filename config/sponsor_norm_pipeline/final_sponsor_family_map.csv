@@ -52,7 +52,7 @@ anaesthesia intensive care aalborg,Aalborg University Hospital,NA,NA,hospital,cu
 anaptysbio,AnaptysBio,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 anavex life,Anavex Life Sciences,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 andi ventis,Andi - Ventis,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-anesthesiology erlangen,"Department of Anesthesiology, University Hospital Erlangen",NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+anesthesiology erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 anesthesiology,Department of anesthesiology,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 angelini pharma,ANGELINI,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 angelini,A.C.R.A.F. S.p.A. - Angelini,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
@@ -158,7 +158,7 @@ casa sollievo della sofferenza irccs,Casa Sollievo della Sofferenza,NA,NA,hospit
 cassella med,Cassella-med GmbH & Co. KG,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 cassiopea,Cassiopea,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 catharina ziekenhuis,Catharina Ziekenhuis,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
-catharina,Stichting Catharina Hospital,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+catharina,Catharina Ziekenhuis,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 cell genesys,Cell Genesys,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 cellcentric,CellCentric,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 cellerix,Cellerix S.A.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
@@ -191,7 +191,7 @@ circassia,Circassia Ltd,NA,NA,unknown,curated entity canonical from final_sponso
 citospin,Citospin,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 clementia pharmaceuticals,Clementia Pharmaceuticals,NA,NA,industry,curated entity canonical from final_sponsor_canonical_review
 clinica navarra,Clínica Universidad de Navarra,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
-cliniques universitaires luc universit catholique louvain,Cliniques Universitaires St Luc,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
+cliniques universitaires luc universit catholique louvain,Cliniques Universitaires Saint-Luc,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 cliniques universitaires luc,Cliniques Universitaires Saint-Luc,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 clinuvel europe,Clinuvel Europe Ltd,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 clinuvel,Clinuvel,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
@@ -200,7 +200,7 @@ clnica navarra,Clínica Universidad de Navarra,NA,NA,academic,curated entity can
 cmc contrast,CMC Contrast,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 college dublin,University College Dublin,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 college london,University College London,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
-cologne,University Of Cologne,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
+cologne,University of Cologne,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 combinatorx,CombinatoRx,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 compass pathfinder,COMPASS Pathfinder,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 complutense madrid,Complutense University Of Madrid,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
@@ -211,8 +211,8 @@ copenhagen hvidovre,Hvidovre Hospital,NA,NA,hospital,curated entity canonical fr
 corxel pharmaceuticals,Corxel Pharmaceuticals Co. Ltd.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 coventry warwickshire,University Hospital Coventry Warwickshire,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 cristina avendano sola,Cristina Avendaño Sola,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-cub erasme,Hospital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
-cub hopital erasme,CUB - Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+cub erasme,Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+cub hopital erasme,Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 cubist pharmaceuticals,Cubist Pharmaceuticals,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 curalogic,CURALOGIC,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 curevac,CureVac AG,NA,NA,industry,curated entity canonical from final_sponsor_canonical_review
@@ -247,11 +247,11 @@ ente ospedaliero ospedali galliera genova,Ente Ospedaliero Ospedali Galliera Gen
 enyo pharma,Enyo Pharma SA,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 eortc european organisation treatment cancer,EORTC,NA,NA,cooperative_group,curated entity canonical from final_sponsor_canonical_review
 epifarma,EPIFARMA S.R.L.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-erasme,CUB - Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+erasme,Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 erasmus rotterdam,Erasmus MC,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 erasmus,Erasmus MC,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 erlangen nuremberg,Universitätsklinikum Erlangen,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
-erlangen,University Hospital Erlangen,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 essen,Universitätsklinikum Essen,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 estetra sprl,Estetra,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 estetra,Estetra,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
@@ -613,7 +613,7 @@ morphotek,Morphotek,NA,NA,unknown,curated entity canonical from final_sponsor_ca
 motif biosciences,Motif BioSciences,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 motol,University Hospital Motol,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 mucos pharma,MUCOS Pharma CZ s.r.o.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-muenster,University Hospital of Muenster,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+muenster,Universitätsklinikum Münster,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 mukoviszidose ggmbh,Mukoviszidose Institut gGmbH i. G.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 mumc,MUMC,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 mundipharma pharmaceuticals,Mundipharma,NA,NA,industry,curated entity canonical from final_sponsor_canonical_review
@@ -771,8 +771,8 @@ rheumatology,Amsterdam UMC,NA,NA,hospital,curated entity canonical from final_sp
 rhythm pharmaceuticals,Rhythm Pharmaceuticals Limited,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 ricerca traslazionale fort,FONDAZIONE RICERCA TRASLAZIONALE FORT,NA,NA,foundation,curated entity canonical from final_sponsor_canonical_review
 riga stradins,Riga Stradins University,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-rijnstate ziekenhuis,Rijnstate ziekenhuis,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
-rijnstate,Rijnstate Hospital,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+rijnstate ziekenhuis,Rijnstate,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+rijnstate,Rijnstate,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 river renal,River 2 Renal Corp.,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 roche,Roche,NA,NA,industry,curated entity canonical from final_sponsor_canonical_review
 rothschild,Hpital Fondation Adolphe de Rothschild,NA,NA,foundation,curated entity canonical from final_sponsor_canonical_review
@@ -836,7 +836,7 @@ son espases,Hospital Son Espases,NA,NA,hospital,curated entity canonical from fi
 sophiris bio,Sophiris Bio Corp,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 soria natural,Soria Natural,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 sotio biotech,Sotio Biotech,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-south manchester,South Manchester University Hospitals NHS Trust,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+south manchester,Manchester University NHS Foundation Trust,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 south tees,South Tees Hospitals NHS Trust,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 south west jutland,Hospital of South West Jutland,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 southampton,University Hospital Southampton NHS Foundation Trust,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
@@ -892,7 +892,7 @@ turku,Turku University Hospital,NA,NA,hospital,curated entity canonical from fin
 turnhout,AZ Turnhout,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 twente,University of Twente,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 ucl,University College London,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
-ulb erasme,CUB - Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
+ulb erasme,Hôpital Erasme,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 ulm,Universitaetsklinikum Ulm AöR,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 umcn pharm tox,Radboudumc,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 ume,Ume University,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
@@ -906,8 +906,8 @@ universita degli studi padova,Universita Degli Studi Di Padova,NA,NA,unknown,cur
 universita degli studi perugia,Università degli Studi di Perugia,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 universita degli studi torino,Università degli Studi di Torino,NA,NA,academic,curated entity canonical from final_sponsor_canonical_review
 universitaetsklinikum erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
-universitaetsklinikum essen,Universitaetsklinikum Essen,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
-universitaetsklinikum muenster,Universitaetsklinikum Muenster,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
+universitaetsklinikum essen,Universitätsklinikum Essen,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
+universitaetsklinikum muenster,Universitätsklinikum Münster,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 universitaetsklinikum wuerzburg,Universitaetsklinikum Wuerzburg AöR,NA,NA,unknown,curated entity canonical from final_sponsor_canonical_review
 universitari bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review
 universitari germans trias pujol,Hospital Universitari Germans Trias i Pujol,NA,NA,hospital,curated entity canonical from final_sponsor_canonical_review

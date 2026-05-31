@@ -1062,13 +1062,13 @@ normalise_one <- function(raw, cfg, allow_fuzzy = TRUE) {
     )))
   }
 
+  r <- check_alias(if (cross_entity) raw_clean else candidates, cfg)
+  if (!is.null(r)) return(.return_sponsor(raw, r))
+
   if (!cross_entity) {
     r <- check_family_entity(raw_clean, cfg)
     if (!is.null(r)) return(.return_sponsor(raw, r))
   }
-
-  r <- check_alias(if (cross_entity) raw_clean else candidates, cfg)
-  if (!is.null(r)) return(.return_sponsor(raw, r))
 
   if (cross_entity) {
     return(.return_sponsor(raw, .result(

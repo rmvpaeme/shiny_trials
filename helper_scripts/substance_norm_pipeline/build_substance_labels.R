@@ -158,8 +158,27 @@ labels <- trial_norm %>%
     .groups = "drop"
   )
 
+# Trials with no accepted substance label fall back to the raw source values
+# so the app always has something to display rather than a blank.
+raw_fallbacks <- trial_norm %>%
+  dplyr::anti_join(labels, by = "_id") %>%
+  dplyr::filter(is_exploratory_substance(raw_substance),
+                !is.na(raw_substance), nzchar(trimws(raw_substance))) %>%
+  dplyr::group_by(`_id`) %>%
+  dplyr::summarise(
+    substance_label = paste(
+      sort(unique(trimws(raw_substance))), collapse = " / "
+    ),
+    .groups = "drop"
+  )
+
+labels <- dplyr::bind_rows(labels, raw_fallbacks)
+
 readr::write_csv(labels, labels_path)
-message(sprintf("Wrote %d trial substance labels to %s", nrow(labels), labels_path))
+message(sprintf(
+  "Wrote %d trial substance labels to %s (%d raw-fallback trials)",
+  nrow(labels), labels_path, nrow(raw_fallbacks)
+))
 
 # ── write substance normalisation log for preprocessing.Rmd ──────────────────
 

@@ -14,7 +14,7 @@ aarhus universitetshospital,Aarhus University Hospital,Aarhus University Hospita
 aarhus university hospital,Aarhus University Hospital,Aarhus University Hospital,Aarhus University Hospital,hospital,manual,1,NA
 abbvie,AbbVie,AbbVie,AbbVie,industry,manual,1,NA
 abbvie inc,AbbVie,AbbVie,AbbVie,industry,manual,1,NA
-abbott,Abbott,Abbott,Abbott,industry,manual,0.9,NA
+abbott,Abbott,Abbott,Abbott,industry,manual,1,NA
 abbott gmbh,Abbott,Abbott,Abbott,industry,manual,1,NA
 abbott gmbh and co kg,Abbott,Abbott,Abbott,industry,manual,1,NA
 aco hud nordic ab,Aco Hud Nordic,NA,NA,NA,ctis_businesskey,0.95,NA
@@ -47,7 +47,7 @@ arcagy gineco,Arcagy Gineco,NA,NA,NA,ctis_businesskey,0.95,NA
 arctic therapeutics hf,Arctic Therapeutics hf.,NA,NA,NA,ctis_businesskey,0.95,NA
 armgo pharma inc,Armgo Pharma,NA,NA,NA,ctis_businesskey,0.95,NA
 association international extranodal lymphoma study group,Association International Extranodal Lymphoma Study Group,NA,NA,NA,ctis_businesskey,0.95,NA
-astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,0.9,NA
+astellas,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
 astellas pharma,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
 astellas pharma europe bv,Astellas Pharma,Astellas Pharma,Astellas Pharma,industry,manual,1,NA
 astrazeneca,AstraZeneca,AstraZeneca,AstraZeneca,industry,manual,1,NA
@@ -69,7 +69,7 @@ bayer healthcare,Bayer,Bayer,Bayer,industry,manual,1,NA
 bayer schering pharma,Bayer,Bayer,Bayer,industry,manual,1,NA
 bayer schering pharma ag,Bayer,Bayer,Bayer,industry,manual,1,NA
 bayer vital,Bayer,Bayer,Bayer,industry,manual,1,NA
-biomarin,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,0.9,NA
+biomarin,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
 biomarin pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
 biomarin pharmaceutical inc,BioMarin Pharmaceutical,BioMarin Pharmaceutical,BioMarin Pharmaceutical,industry,manual,1,NA
 biogen,Biogen,Biogen,Biogen,industry,manual,1,NA
@@ -263,7 +263,7 @@ charite - universitatsmedizin berlin,Charité Universitätsmedizin Berlin,Charit
 charite - universitsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
 charite universitaetsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
 charité - universitätsmedizin berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,Charité Universitätsmedizin Berlin,hospital,manual,1,NA
-chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,0.9,NA
+chiesi,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
 chiesi farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
 chiesi farmaceutici spa,Chiesi Farmaceutici,Chiesi Farmaceutici,Chiesi Farmaceutici,industry,manual,1,NA
 curevac ag,Curevac,NA,NA,NA,ctis_businesskey,0.95,NA
@@ -319,12 +319,12 @@ glaxosmithkline plc,GSK,GSK,GSK,industry,manual,1,NA
 glaxosmithkline research and development limited,GSK,GSK,GSK,industry,manual,1,NA
 gsk,GSK,GSK,GSK,industry,manual,1,NA
 smithkline beecham,GSK,GSK,GSK,industry,manual,1,NA
-galapagos,Galapagos,Galapagos,Galapagos,industry,manual,0.9,NA
+galapagos,Galapagos,Galapagos,Galapagos,industry,manual,1,NA
 galapagos nv,Galapagos,Galapagos,Galapagos,industry,manual,1,NA
 gcp-service international west gmbh,Gcp-Service International West,NA,NA,NA,ctis_businesskey,0.95,NA
 genentech,Genentech,Roche,Roche,industry,manual,1,NA
 genentech inc,Genentech,Roche,Roche,industry,manual,1,NA
-genmab,Genmab,Genmab,Genmab,industry,manual,0.9,NA
+genmab,Genmab,Genmab,Genmab,industry,manual,1,NA
 genmab as,Genmab,Genmab,Genmab,industry,manual,1,NA
 genzyme,Genzyme,Sanofi,Sanofi,industry,manual,1,NA
 genzyme corporation,Genzyme,Sanofi,Sanofi,industry,manual,1,NA
@@ -541,7 +541,7 @@ takeda,Takeda,Takeda,Takeda,industry,manual,1,NA
 takeda oncology,Takeda,Takeda,Takeda,industry,manual,1,NA
 takeda pharmaceutical company limited,Takeda,Takeda,Takeda,industry,manual,1,NA
 technische universitat dresden,Technische Universitat Dresden,NA,NA,NA,ctis_businesskey,0.95,NA
-teva,Teva,Teva,Teva,industry,manual,0.9,NA
+teva,Teva,Teva,Teva,industry,manual,1,NA
 teva branded pharmaceutical products rd inc,Teva,Teva,Teva,industry,manual,1,NA
 teva pharmaceutical,Teva,Teva,Teva,industry,manual,1,NA
 teva pharmaceutical industries ltd,Teva,Teva,Teva,industry,manual,1,NA

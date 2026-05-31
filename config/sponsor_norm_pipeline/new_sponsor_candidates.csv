@@ -5,12 +5,13 @@ Acadia Pharmaceuticals B.V.,epar_mah,Acadia,NA
 Accord Healthcare,epar_mah,Accord Healthcare,Accord Healthcare S.L.U.
 ACE Pharmaceuticals BV,epar_mah,Ace,NA
 Acino AG,epar_mah,Acino,NA
-Acino Pharma GmbH,epar_mah,Acino Pharma,Axunio Pharma GmbH | Axxonis Pharma AG
+Acino Pharma GmbH,epar_mah,Acino Pharma,Axunio Pharma GmbH
 Acusphere Ltd,epar_mah,Acusphere,NA
 ADIENNE S.r.l. S.U.,epar_mah,Adienne,Adienne S.r.l. S.U.
 A.C.O.M. - Advanced Center Oncology,epar_mah,Advanced Center,NA
 Advanz Pharma Limited,epar_mah,Advanz Pharma,NA
 Agenzia Industrie Difesa-Stabilimento Chimico Farmaceutico Militare,epar_mah,Agenzia Industrie Difesa-Stabilimento Chimico Farmaceutico Militare,NA
+Agepha Pharma s.r.o.,epar_mah,Agepha Pharma,NA
 Agios Netherlands B.V.,epar_mah,Agios,NA
 Akcea Therapeutics Ireland Limited,epar_mah,Akcea,NA
 Akebia Europe Limited,epar_mah,Akebia,NA
@@ -196,7 +197,7 @@ Medice Arzneimittel Pütter GmbH  Co. KG,epar_mah,Medice Arzneimittel Putter Gmb
 Medtronic BioPharma B.V.,epar_mah,Medtronic Biopharma,NA
 A. Menarini Industrie Farmaceutiche Riunite s.r.l.,epar_mah,Menarini Industrie Farmaceutiche Riunite,NA
 MendeliKABS Europe Ltd,epar_mah,Mendelikabs,NA
-Merck Europe B.V. ,epar_mah,Merck,Merck Europe B.V.
+Merck Europe B.V.,epar_mah,Merck,Merck Europe B.V. 
 Merck Sharp & Dohme B.V.,epar_mah,Merck Sharp And Dohme,Merck Sharp and Dohme B.V
 Merial,epar_mah,Merial,Mérial | Merial S.A.S.  | Merial S.A.S.
 Mirum Pharmaceuticals International B.V.,epar_mah,Mirum,NA
@@ -205,7 +206,6 @@ Mitsubishi Pharma Europe Ltd,epar_mah,Mitsubishi Pharma,NA
 L. Molteni & C. dei Fratelli Alitti Società di Esercizio S.p.A.,epar_mah,Molteni And Dei Fratelli Alitti Societa Di Esercizio,NA
 Mylan S.A.S.,epar_mah,Mylan,Mylan S.A.S | Mylan Ireland Limited | Mylan Pharmaceuticals Limited | Mylan dura GmbH
 Mylan IRE Healthcare Limited,epar_mah,Mylan Ire Healthcare,NA
-Nabriva Therapeutics Ireland DAC,epar_mah,Nabriva Dac,NA
 "Nanotherapeutics Bohumil, s.r.o.",epar_mah,Nanotherapeutics Bohumil,NA
 Navidea Biopharmaceuticals Europe Ltd.,epar_mah,Navidea Biopharmaceuticals,NA
 Neovii Biotech GmbH,epar_mah,Neovii Biotech,NA
@@ -322,6 +322,7 @@ Vaia S.A.,epar_mah,Vaia,NA
 Valneva Sweden AB,epar_mah,Valneva,NA
 Vanda Pharmaceuticals Ltd,epar_mah,Vanda,NA
 VBI Vaccines B.V.,epar_mah,Vbi Vaccines,NA
+Venipharm,epar_mah,Venipharm,NA
 Vericel Denmark ApS,epar_mah,Vericel Aps,NA
 Verona Pharma Ireland Limited,epar_mah,Verona Pharma,NA
 Viatris Limited,epar_mah,Viatris,NA

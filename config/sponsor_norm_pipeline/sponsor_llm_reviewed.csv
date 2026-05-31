@@ -113,6 +113,7 @@ abscience,ABScience,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 abscint,Abscint,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 abteilung fr anaesthesie und intensivmedizin medizinische universitt wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 abteilung fr augenheilkunde akh linz,Kepler Universitätsklinikum,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+abteilung fr hals nasen und ohrenkrankheiten muw akh wien,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 abteilung fr hals- nasen- ohrenkrankheiten muw akh wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 abteilung fr hals- nasen- und ohrenkrankheiten muw akh wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 abteilung fr neurologie der medizinischen universitt innsbruck,Medical University Of Innsbruck,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -282,8 +283,10 @@ aesrx,AesRx,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 aeterna zentaris gmbh,AEterna Zentaris,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 afar,AFAR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 afd a ouh,Odense University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+afdeling for rygkirurgi led og bindevvssygdomme rigshospitalet glostrup,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 afdeling for rygkirurgi led- og bindevvssygdomme rigshospitalet - glostrup,Rigshospitalet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 afdeling klinische neuropsychologie vrije universiteit amsterdam,Vrije Universiteit Amsterdam,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+afdeling urologie isala klinieken,Isala Klinieken,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 affectis pharmaceuticals ag,Affectis Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 afferent pharmaceuticals inc,Afferent Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 affibody ab,Affibody,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -306,6 +309,7 @@ agensys inc,Agensys,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 agenus inc,Agenus,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ageo,Ageo,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 agi therapeutics limited,AGI Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+agi therapeutics limtied,AGI Therapeutics,NA,NA,industry,llm_reviewed,1,llm_reviewed
 agi therapeutics research ltd,AGI Therapeutics Research,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 agiana pharmaceuticals as,Agiana Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 agile therapeutics inc,Agile Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -371,6 +375,7 @@ akershus university hospital trust hf,Akershus University Hospital,NA,NA,hospita
 akh linz,AKH Linz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 akh vienna,AKH Wien,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 akh wien,AKH Wien,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+akh wien klinik fr innere medizin i onkologie,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 akinion pharmaceuticals ab,Akinion Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 akl research and development limited,AKL Research and Development,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 akl research and development ltd,AKL Research and Development,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -561,6 +566,7 @@ amicus therapeutics inc,Amicus Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_rev
 amicus therapeutics uk limited,Amicus Therapeutics UK,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 amicus therapeutics uk ltd,Amicus Therapeutics UK,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ammax bio inc,AmMax Bio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+ammerland klinik westerstede,Ammerland-Klinik,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 ammerland-klinik westerstede,Ammerland-Klinik Westerstede,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 amo pharma limited,AMO Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 amo pharma ltd,AMO Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -662,6 +668,7 @@ annexon biosciences,Annexon,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 annexon inc,Annexon,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 annovis bio inc,Annovis Bio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 anocca ab,Anocca,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+anofi aventis recherche et dveloppement,Sanofi,NA,NA,industry,llm_reviewed,1,llm_reviewed
 anormed corp,AnorMED,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 anova andrologi sexualmedicin transmedicin karolinska universitetssjukhuset och ume universitet,Karolinska University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 anrs,ANRS,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -1140,6 +1147,7 @@ axovant sciences inc,Axovant Sciences,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 axovant sciences limited,Axovant Sciences,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 axovant sciences ltd,Axovant Sciences,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 axsome therapeutics inc,Axsome Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+axxonis pharma ag,Axxonis Pharma,NA,NA,industry,llm_reviewed,1,llm_reviewed
 axxonis pharma gmbh,Axxonis Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ayala pharmaceuticals inc,Ayala Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 aytu biopharma inc,Aytu BioPharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -1282,6 +1290,7 @@ azienda ulss n 9 - treviso uoc pediatria,Azienda ULSS n. 9 di Treviso,NA,NA,unkn
 azienda unit sanitaria locale - irccs di reggio emilia,Azienda Unità Sanitaria Locale - IRCCS di Reggio Emilia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 azienda unit sanitaria locale della romagna,Azienda Unità Sanitaria Locale della Romagna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 azienda unit sanitaria locale di modena,Azienda Unità Sanitaria Locale di Modena,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+azienda unit sanitaria locale irccs di reggio emilia,IRCCS di Reggio Emilia,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 azienda unit sanitaria locale-irccs di reggio emilia,Azienda Unità Sanitaria Locale - IRCCS di Reggio Emilia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 azienda unita sanitaria locale di bologna,Azienda Unita Sanitaria Locale Di Bologna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 azienda unita sanitaria locale di parma,Azienda Unità Sanitaria Locale di Parma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -1381,6 +1390,7 @@ beacon hospital,Beacon Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 beacon therapeutics usa inc,Beacon Therapeutics (USA),NA,NA,unknown,llm_reviewed,1,llm_reviewed
 beam therapeutics inc,Beam Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 beatrix childrens hospital university medical center groningen,University Medical Center Groningen (UMCG),NA,NA,hospital,llm_reviewed,1,llm_reviewed
+beaufour ipsen pharma ipsen biotech department,Ipsen,NA,NA,industry,llm_reviewed,1,llm_reviewed
 beaumont hospital,Beaumont Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 beaumont hospital/rcsi,Beaumont Hospital/RCSI,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 beckley canopy therapeutics ltd,Beckley Canopy Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -1818,6 +1828,7 @@ cardiorentis ltd,Cardiorentis,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 cardiothoracic surgery mater misericordiae university hospital,Mater Misericordiae University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cardiovascular centre aalst / kings college london,Cardiovascular Centre Aalst / Kings College London,NA,NA,academic,llm_reviewed,1,llm_reviewed
 cardiovascular laboratory 2014 the heart centre rigshospitalet / cardiovascular laboratory 2014 the heart centre rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+cardiovascular non invasive imaging research laboratory department of cardiology herlev and gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cardiovascular non-invasive imaging research laboratory department of cardiology herlev and gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cardioxyl pharmaceuticals inc,Cardioxyl Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 cardoz ab,Cardoz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -1946,6 +1957,7 @@ centauri therapeutics limited,Centauri Therapeutics,NA,NA,unknown,llm_reviewed,1
 center for biomedical research of la rioja cibir,Centro de Investigación Biomédica de La Rioja (CIBIR),NA,NA,unknown,llm_reviewed,1,llm_reviewed
 center for cancer immune therapy,Center for Cancer Immune Therapy,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 center for cancer immunterapi ccit hmatologisk afd 54p4,Herlev og Gentofte Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+center for clinical metabolic research at herlev gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 center for clinical metabolic research at herlev-gentofte hospital,Center for Clinical Metabolic Research at Herlev-Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 center for clinical metabolic research gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 center for diabetes research gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2051,6 +2063,7 @@ centre hospitalier universitaire de besanon,CHU de Besançon,NA,NA,unknown,revie
 centre hospitalier universitaire de bordeaux / centre hospitalier universitaire de bordeaux,CHU de Bordeaux,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire de bordeaux etablissement public,CHU de Bordeaux,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire de la runion,CHU de La Réunion,NA,NA,unknown,review_queue,1,review_queue
+centre hospitalier universitaire de liege,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire de lige,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire de lille / inbrain pharma,Centre Hospitalier Universitaire De Lille / InBrain Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 centre hospitalier universitaire de martinique,Centre Hospitalier Universitaire de Martinique,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2160,6 +2173,7 @@ charit - university hospital berlin,Charité Universitätsmedizin Berlin,NA,NA,h
 charit - university hospital of berlin,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit - unversittsmedizin berlin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 charit berlin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+charit berlin department of rheumatology charit berlin department of rheumatology charit berlin department of rheumatology,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit campus mitte,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 charit campus mitte klinik fr psychiatrie und psychotherapie,"Charité Campus Mitte, Klinik für Psychiatrie und Psychotherapie",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 charit cbf endokrinologie,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2173,6 +2187,10 @@ charit universittsmedizin berlin,Charité Universitätsmedizin Berlin,NA,NA,hosp
 charit universittsmedizin berlin - cvk,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit universittsmedizin berlin campus benjamin franklin,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit universittsmedizin berlin department of dermatology and allergy,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+charit universittsmedizin berlin department of rheumatology and clinical immunology,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+charit universittsmedizin berlin dpt of dermatology and allergy,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+charit universittsmedizin berlin klinik fr dermatologie und allergologie,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+charit universittsmedizin berlin klinik fr dermatologie venerologie und allergologie crc,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit university hospital berlin,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 charit university medicine,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 charit university medicine berlin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2290,6 +2308,7 @@ chu de besanon,CHU de Besançon,NA,NA,hospital,review_queue,1,review_queue
 chu de brest,CHU de Brest,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 chu de clermont ferrand,CHU de Clermont-Ferrand,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 chu de fort-de-france,CHU de Fort-de-France,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+chu de liege,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 chu de lige,Centre Hospitalier Universitaire de Liège,NA,NA,hospital,review_queue,1,review_queue
 chu de martinique,Centre Hospitalier Universitaire de Martinique,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 chu de nmes,CHU de Nîmes,NA,NA,hospital,review_queue,1,review_queue
@@ -2365,6 +2384,7 @@ clinical center ljubljana,Clinical Center Ljubljana,NA,NA,unknown,llm_reviewed,1
 clinical data care spain s l,Clinical Data Care Spain,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 clinical director daiichi sankyo inc,"Clinical Director, Daiichi Sankyo",NA,NA,industry,llm_reviewed,1,llm_reviewed
 clinical immunology and rheumatology,Clinical Immunology and Rheumatology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+clinical immunology division,Clinical Immunology Division,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 clinical institute of medical and chemical laboratory diagnostics graz,Clinical Institute of Medical and Chemical Laboratory Diagnostics Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 clinical pharmacology,Clinical Pharmacology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 clinical pharmacology spanish society,Clinical Pharmacology Spanish Society,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2380,6 +2400,7 @@ clinical trials and research governance ctrg,Clinical Trials and Research Govern
 clinical trials and research governance ctrg university of oxford,University of Oxford,NA,NA,academic,llm_reviewed,1,llm_reviewed
 clinical trials and research governance university of oxford,University of Oxford,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 clinical trials center aachen university of aachen,Universitätsklinikum Aachen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+clinical trials unit rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 clinique juge,Clinique Juge,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 clinique mutualiste chirurgicale,Clinique Mutualiste Chirurgicale,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 cliniques hopitaux universitaires nantes,CHU de Nantes,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2602,8 +2623,10 @@ cub - hpital erasme,CUB - Hpital Erasme,NA,NA,hospital,llm_reviewed,1,llm_review
 cub erasme hospital,CUB Erasme Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cub hopital erasme,Hospital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cub hospital erasme,Hospital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+cub hpital erasme,Hôpital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cub ulb hpital erasme,CUB - Hôpital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 cub- hopital erasme,CUB - Hôpital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+cubist pharmaceuticals,Cubist Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_reviewed
 cubist pharmaceuticals inc,Cubist Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 cubist pharmaceuticals llc,Cubist Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 cubist pharmaceuticals llc an indirect wholly-owned subsidiary of merck sharp dohme corp,Cubist Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2769,6 +2792,7 @@ deparment of pediatrics skejby hospital denmark,"Deparment of pediatrics, Skejby
 departamento de microbiologa hospital clinico san carlos,Departamento de Microbiologa. Hospital Clinico San Carlos,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 departamento de oftalmologa hospital clnico san carlos,Hospital Clínico San Carlos,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department fr virologie medizinische universitt wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department integrative medicine kliniken essen mitte,Kliniken Essen-Mitte,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesia and intensive care medicine aalborg university hospital,Aalborg University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesia university college hospital galway,University College Hospital Galway,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anaesthesiaintensive care b vienna medical university,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2776,6 +2800,7 @@ department of anaesthesiology aarhus university hospital,Aarhus University Hospi
 department of anaesthesiology and intensive care university of tartu,University of Tartu,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesia and intensive care medicine nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anesthesia reanimation of university of liege,Université de Liège,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of anesthesiology and intensive care university hospital muenster,Universitätsklinikum Münster,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anesthesiology and operative intensive care medicine charit cbf,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of anesthesiology copenhagen university hospital hvidovre capital region of denmark,Hvidovre Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of anesthesiology nstved hospital,Næstved Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2811,9 +2836,11 @@ department of dermatology d92 bispebjerg hospital,Copenhagen University Hospital
 department of dermatology erasmus university medical center,Erasmus MC,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of dermatology hospital of the medical university graz,Medical University Of Graz,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of dermatology odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of endocrinology rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of endocrinology sahlgrenska university hospital,Sahlgrenska University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of endocrinology university of debrecen medical and health science center,University of Debrecen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of experimental and clinical pharmacology and toxicology friedrich-alexander-university,Friedrich-Alexander-Universität Erlangen-Nürnberg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of gastroenterology and hepatology erasmus mc rotterdam,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of gastroenterology university hospital of santiago,Complexo Hospitalario Universitario de Santiago,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of gynaecology and obstetrics nordsjllands hospital,Nordsjællands Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of gynaecology helse finnmark klinikk hammerfest,Klinikk Hammerfest,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2823,6 +2850,7 @@ department of health,Department of Health,NA,NA,unknown,llm_reviewed,1,llm_revie
 department of hematology aalborg university hospital,Aalborg University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of hematology herlev and gentofte university hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of hepatology and gastroenterology aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of human nutrition the royal veterinary and agricultural university,University of Copenhagen,NA,NA,academic,llm_reviewed,1,llm_reviewed
 department of infecitous diseases aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of infectious diseases,Department of Infectious diseases,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of infectious diseases - aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2830,11 +2858,13 @@ department of infectious diseases aarhus university hospital,Aarhus University H
 department of infectious diseases aarhus university hospital skejby,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of infectious diseases hvidovre hospital,Hvidovre Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of infectious diseases odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of intensive care rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of internal medicine of the university of munich,Klinikum Der Universitat Munchen AöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of internal medicine university hospital gasthuisberg,UZ Leuven,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of medical and clinical genetics university of helsinki,University of Helsinki,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of medical gastroenterology herlev hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of medical gastroenterology s odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of medical research,Department of Medical Research,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of medical sciences akademiska sjukhuset,Uppsala University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of medical sciences uppsala universitet,Uppsala University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of medicine haugesund hospital,Haugesund Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2851,6 +2881,8 @@ department of neurology christian doppler medical center paracelsus medical univ
 department of neurology division of clinical neuroscience oslo university hospital,Oslo University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of neurology medical university of vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of neurology odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of neurology umcg,University Medical Center Groningen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of neuroscience neurology,Norwegian University of Science and Technology,NA,NA,academic,llm_reviewed,1,llm_reviewed
 department of neuroscience ntnu,Norwegian University of Science and Technology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of neurosurgery medical university of vienna,Medical University Of Vienna,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of neurosurgery pmu,Paracelsus Medical University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2860,11 +2892,13 @@ department of nuclear medicine medical university innsbruck,Medical University O
 department of nuclear medicine odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of obstetrics and gynecolog randers centralsygehusy,Randers Regional Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of oncology aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of oncology herlev and gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology herlev gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology karolinska,Karolinska University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of oncology linkping university hospital linkping sweden,Linköping University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology odense universitetshospital,Odense University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of oncology odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+department of oncology rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology university hospital herlev,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology university hospital uppsala,Uppsala University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oncology uppsala university hospita,Uppsala University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2872,6 +2906,7 @@ department of oncologyherlev university hospital,Herlev og Gentofte Hospital,NA,
 department of ophthalmology bonn university,University of Bonn,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of ophthalmology hietzing hospital,Krankenhaus Hietzing,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of ophthalmology muw,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of ophthalmology rigshospitalet glostrup,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of oral surgery dental school med univ graz austria,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of orthopaedic surgery university hospital linkping,University Hospital of Linköping,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of otorhinolaryngology head and neck surgery and audiology rigshospitalet university hospital of cph dk,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2882,14 +2917,17 @@ department of pediatrics aarhus university hospital,Aarhus University Hospital,N
 department of pediatrics aarhus university hospital skejby,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of pediatrics holbaek hospital,Holbæk Sygehus,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of pharmaceutical biosciences uppsala university,Uppsala University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of pharmacology toxicology runmc,Radboudumc,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of pharmacology-toxicology runmc,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of pharmacy universitaetsmedizin mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of pharmacy unversittsmedizin mainz,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of physiology and cardiothoracic surgery faculty of medicine university of porto,University of Porto,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychiatry and psychotherapy charity university medicine,Charité Universitätsmedizin Berlin,NA,NA,charity,llm_reviewed,1,llm_reviewed
 department of psychiatry and psychotherapy medical university of vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of psychiatry helsinki university central hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of psychiatry ludwig-maximilian university munich,Klinikum Der Universitat Munchen AöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 department of psychology stockholm university,Stockholm University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+department of pulmonology rijnstate hospital,Rijnstate,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of r d central manchester and manchester childrens hospital nhs trust,Manchester University NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of radiology rigshospitalet denmark,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 department of renal medicine aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2912,11 +2950,13 @@ departmnet of nephrology,Departmnet of nephrology,NA,NA,unknown,llm_reviewed,1,l
 dept child adolescent psychiatry univ freiburg,University of Freiburg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept dermotology aarhus university,Aarhus University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept hematology hospital clinic,Hospital Clínic de Barcelona,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+dept hematology slb vejle dept hematology slb vejle,Sygehus Lillebælt,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept ob gyn univ oulu,Oulu University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept of anaestesiology university hospital in glostrup,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of anaesthesia university college hospital galway,University College Hospital Galway,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of anaesthesiology odense university hospital,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of anesthesiology and intensive care charit - campus benjamin franklin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+dept of anesthesiology and intensive care charit campus benjamin franklin,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of cardiology medical university of vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept of dermatology zealand university hospital roskilde,"Sjællands University Hospital, Køge",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of endocrinology j 106 herlev hosptial,Herlev og Gentofte Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2924,6 +2964,7 @@ dept of endocrinology o106 herlev hospital,Herlev og Gentofte Hospital,NA,NA,hos
 dept of gastroenterology universityhospital odense,Odense University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept of hematology herlev hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of infectious diseases aarhus university hospital,Aarhus University Hospital,NA,NA,academic,llm_reviewed,1,llm_reviewed
+dept of intensive care 4131 rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of intensive care rigshopitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of internal medicine ii university hospital giessen,Universitätsklinikum Gießen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of internal medicine iv med uni vienna,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -2943,7 +2984,9 @@ dept of pharmacology,Dept. of Pharmacology,NA,NA,unknown,llm_reviewed,1,llm_revi
 dept of plastic surgery breast surgery burns,"Dept of Plastic Surgery, Breast Surgery Burns",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept of psychiatry ume university hospital,Umeå University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of psychiaty university of freiburg,University of Freiburg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+dept of rheumatology lund university hospital lund sweden,Skåne University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of surgery / landstinget i uppsala,Uppsala Läns Landsting,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+dept of surgery landstinget i uppsala,Uppsala University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of transplantation surgery b 56 karolinska university hospital huddinge,Karolinska University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 dept of urology aarhus universityhospital,Aarhus University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dept oncology aarhus university hospital,Aarhus University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -2975,8 +3018,10 @@ deutsche diabetes forschungsgesellschaft e v,Deutsche Diabetes Forschungsgesells
 deutsche herzzentrum berlin kompetenznetz angeborene herzfehler,Deutsches Herzzentrum Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 deutsche homopathie-union dhu-arzneimittel gmbh co kg,"Deutsche Homöopathie-Union, DHU-Arzneimittel",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 deutsche krebsgesellschaft e v,Deutsche Krebsgesellschaft e.V.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+deutsche krebsgesellschaft sponsor gmbh,Deutsche Krebsgesellschaft,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 deutsches herzzentrum,Deutsches Herzzentrum Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 deutsches herzzentrum berlin,Deutsches Herzzentrum Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+deutsches herzzentrum mnchen klinik fr herz und kreislauferkrankungen,Deutsches Herzzentrum München,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 deutsches herzzentrum mnchen klinik fr herz- und kreislauferkrankungen,Deutsches Herzzentrum München,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 deutsches krebsforschungszentrum,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,unknown,llm_reviewed,1,llm_reviewed
 deutsches krebsforschungszentrum stiftung des ffentlichen rechts,Deutsches Krebsforschungszentrum (DKFZ),NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -3049,6 +3094,7 @@ dipartimento di neuroscienze oftalmologia e genetica dinog - universita di genov
 dipartimento di oncologia medica usl8,ASL 8 Arezzo,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dipartimento di oncologia-universit degli studi di torino,Università degli Studi di Torino,NA,NA,academic,llm_reviewed,1,llm_reviewed
 dipartimento di oncologia-universita degli studi di torino,Università degli Studi di Torino,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+dipartimento di pediatria universit federico ii di napoli,University of Naples Federico II,NA,NA,academic,llm_reviewed,1,llm_reviewed
 dipartimento di pediatria universita di napoli federico ii,Università degli Studi di Napoli Federico II,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 dipartimento di scienze biomediche sperimentali e cliniche universit di firenze,Università degli Studi di Firenze,NA,NA,academic,llm_reviewed,1,llm_reviewed
 dipartimento di scienze cardiologiche toraciche e vascolari-universit di padova,Azienda Ospedaliera di Padova,NA,NA,academic,llm_reviewed,1,llm_reviewed
@@ -3069,6 +3115,7 @@ disruptive pharma ab,Disruptive Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 diurnal limited,Diurnal,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 diurnal ltd,Diurnal,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 div kir amc,Amsterdam UMC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+division k krnsjukhuset,Karolinska University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 division of allergy immunology and transplantation national institute of allergy and infectious disease,National Institute of Allergy and Infectious Diseases (NIAID),NA,NA,unknown,llm_reviewed,1,llm_reviewed
 division of anaesthesiology - department of acute medicine - geneva childrens hospital university hospitals of geneva,Geneva University Hospitals (HUG),NA,NA,hospital,llm_reviewed,1,llm_reviewed
 division of angiology graz,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -3360,6 +3407,12 @@ erasme hospital - department of gastroenterology,Hospital Erasme,NA,NA,hospital,
 erasme hostpital - ulb,Hospital Erasme,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 erasme university hospital,CUB - Hôpital Erasme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 erasmus hospital,Erasmus Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc department of dermatology,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc department of neurology,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc department of pediatrics,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc dept anesthesiology,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc dept urology,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+erasmus mc more specifically for and on behalf of the department of neurology neuro oncology,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 erasmus mc-danil den hoed,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 erasmus mc-sophia childrens hospital,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 erasmus medical centre,Erasmus MC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -3395,6 +3448,7 @@ esperas pharma inc / esperas pharma inc,Esperas Pharma,NA,NA,unknown,llm_reviewe
 esperion therapeutics inc,Esperion Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 essa pharma inc,Essa Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 essa pharmaceuticals corp,Essa Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+essen university hospital university of essen klinik fur allgemein viszeral und transplantationschirugie,Universitätsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 essex italia,Essex Italia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 essex pharma gmbh,Essex Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 esteban ribera pascuet,Esteban Ribera Pascuet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -3484,6 +3538,7 @@ eyed pharma,Eyed Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 eyedna therapeutics,eyeDNA Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 eyegene inc,EyeGene,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 eyetech pharamceuticals inc,Eyetech Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+eyetech pharmaceuticals inc,Eyetech Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_reviewed
 f a r o fondazione per le attivita di ricerca in oncologia,F.A.R.O. Fondazione per le Attivita di Ricerca in Oncologia,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 f hoffmann- la roche ltd,Roche,NA,NA,industry,llm_reviewed,1,llm_reviewed
 f hoffmannla roche ltd,Roche,NA,NA,industry,llm_reviewed,1,llm_reviewed
@@ -3589,7 +3644,9 @@ ferring ventures gmbh,Ferring Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_
 ferring-leciva a s,Ferring-Leciva a.s.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ferrokin biosciences inc,Ferrokin Biosciences,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ferrosan a/s,Ferrosan,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+fertilitetsklinikken,Fertilitetsklinikken Nordica,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fertilitetsklinikken herlev hospital,Fertilitetsklinikken Herlev Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+fertilitetsklinikken nordica,Fertilitetsklinikken Nordica,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fertility clinic dept of obstetrics and gynecology ouh,Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fertility clinic herlev university hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fertility clinic odense university hospital,Fertility clinic Odense University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -4108,6 +4165,7 @@ fundacin sociedad espaola de mdicos de atencin primaria semergen,Fundacin Socied
 fundacin tefilo hernando,Fundación Teófilo Hernando,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 fundacin teknon,Fundacin Teknon,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 fundacin universidad de salamanca,Fundacin de la Universidad de Salamanca,NA,NA,academic,llm_reviewed,1,llm_reviewed
+fundacio assistencial de mutua de terrassa fpc,Fundació Assistencial Mútua de Terrassa,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 fundacio clinic per a la recerca biomdica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fundacio clinic per a la recerca biomedica,Fundació Clínic per a la Recerca Biomèdica,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fundacio fls de lluita contra la sida les malalties infeccioses i la promocio de la salut i la ciencia,"Fundacio FLS de Lluita contra la Sida, les Malalties Infeccioses i la Promocio de la Salut i La Ciencia",NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4121,6 +4179,7 @@ fundacio privada mon clinic barcelona,Fundació Privada Mon Clínic Barcelona,NA
 fundacio sant joan de deu,Hospital Sant Joan de Deu,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 fundacion c v hospital provincial de castellon,Fundación de la Comunidad Valenciana Hospital Provincial de Castellón,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fundacion casa del corazon,Fundación Casa del Corazón,NA,NA,foundation,llm_reviewed,1,llm_reviewed
+fundacion cris de investigacion para vencer el cancer,Fundación CRIS contra el Cáncer,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 fundacion cv investigacion hospital dr peset,Fundación CV Investigación Hospital Dr. Peset,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 fundacion de investigacion biomedica de salamanca,Fundacion De Investigacion Biomedica De Salamanca,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 fundacion de investigacion biomedica hospital universitario la paz fibhulp,Fundación para la Investigación Biomédica del Hospital Universitario La Paz,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -4322,6 +4381,7 @@ geltamo grupo espaol de linfomas y trasplante autlogo de mdula sea,GELTAMO,NA,NA
 gemcad,GEMCAD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gemcad grupo espaol multidisciplinar en cncer digestivo,GEMCAD Grupo Español Multidisciplinar en Cáncer Digestivo,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gemeinnutzige salzburger landes kliniken betriebsgesellschaft mbh,Salzburger Landeskliniken,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+gemin x pharmaceuticals us inc,Gemin X Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_reviewed
 gemma rialp,Gemma Rialp,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gemphire therapeutics inc,Gemphire Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gemvax and kael co ltd,Gemvax & Kael Co.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4339,6 +4399,7 @@ genera research ltd,Genera Research,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 general hospital linz,General Hospital Linz,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general hospital vienna dept cardio-thoracic surgeray,AKH Wien,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general practitioners research institute,General Practitioners Research Institute,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+general teaching hospital,General Teaching Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 general university hospital in prague,General University Hospital in Prague,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 generate biomedicines inc,Generate Biomedicines,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 generex biotechnology corp,Generex Biotechnology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4390,6 +4451,7 @@ georg-august-universitt gttingen stiftung ffentlichen rechts universittsmedizin 
 georg-august-universitt gttingen universittsmedizin,Universitätsmedizin Göttingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 georg-august-university gttingen,Universitätsmedizin Göttingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 george medicines pty ltd,George Medicines Pty,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+george washington university biostatistics center,George Washington University,NA,NA,academic,llm_reviewed,1,llm_reviewed
 gepepharm gmbh,gepepharm,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gerencia de atencin primaria,GERENCIA DE ATENCIN PRIMARIA,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 gerencia de atencin primaria de mallorca,Gerencia de Atencin Primaria de Mallorca,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4625,6 +4687,7 @@ grupo espanol de trasplantes hematopoyeticos y terapia celular,GETH - Grupo Espa
 grupo espanol de tratamiento de tumores de cabeza y cuello,Grupo Español de Tratamiento de Tumores de Cabeza y Cuello TTCC,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 grupo espanol de tumores neuroendocrinos,GETNE Grupo Español de Tumores Neuroendocrinos,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 grupo espanol multidisciplinar de melanoma,Grupo Espanol Multidisciplinar De Melanoma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+grupo espanol multidisciplinar en cancer digestivo,GEMCAD,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 grupo espaol de cncer de pulmn,Grupo Español de Cáncer de Pulmón,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 grupo espaol de enfermedades mieloproliferativas gemfin,Grupo Español de Enfermedades Mieloproliferativas GEMFIN,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 grupo espaol de investigacin en cancer de ovario,GEICO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4755,6 +4818,7 @@ haga hospital,Haga Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 haga teaching hospital,Haga Teaching Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 haga teaching hospital juliana childrens hospital,Haga Teaching Hospital Juliana Childrens Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hagaziekenhuis,Hagaziekenhuis,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+hagaziekenhuis pulmonary department,HagaZiekenhuis,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 haisco-usa pharmaceuticals inc,Haisco-USA Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hal allergy,HAL Allergy,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hal allergy b v,HAL Allergy,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -4898,6 +4962,7 @@ helsinki university,University of Helsinki,NA,NA,unknown,llm_reviewed,1,llm_revi
 helsinki university and university hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 helsinki university central hospital / helsinki university central hospital,HUS - Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 helsinki university central hospital pain clinic,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+helsinki university central hospital skin and allergy hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 helsinki university central hospital/ womens hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 helsinki university hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 helsinki university hospital department of gastroenterology,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -4918,14 +4983,18 @@ henrik kehlet,Henrik Kehlet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 henry dunant hospital center,Henry Dunant Hospital Center,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 heparegenix gmbh,HepaRegeniX,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hepatera llc,Hepatera,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+hephata klinik,Hephata Klinik,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hephata-klinik,Hephata-Klinik,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hepion pharmaceuticals inc,Hepion Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 herantis pharma oyj,Herantis Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 herantis pharma plc,Herantis Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 herlev and gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+herlev and gentofte hospital copenhagen prospective studies on asthma in childhood copsac,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+herlev and gentofte university hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev and gentofte university hospital department of obstetrics and gynecology,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev gentofte hospital - department of dermatology and allergy,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+herlev gentofte hospital department of dermatology and allergy,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev gentofte hospital oncology dept,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev og gentofte hospital,Herlev og Gentofte Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 herlev university hospital,Herlev Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -4953,6 +5022,8 @@ hipra scientific s l,Hipra Scientific,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hipra scientific s l / hipra scientific s l,Hipra Scientific,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hipra scientific s l u,Hipra Scientific,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 histocell s l,Histocell,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+hjertemedicinsk klinik b 2142 rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+hjertemedicinsk klinik rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hkan ledin investigator initiated trial,Hkan Ledin investigator initiated trial,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 hmatologisk afdeling roskilde sygehus region sjlland,"Sjællands University Hospital, Køge",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hmatologisk afdeling sjlland sygehus roskilde,"Sjællands University Hospital, Køge",NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -5085,6 +5156,7 @@ hospital universitario de canarias- dr francisco bosa ojeda,Hospital Universitar
 hospital universitario de fuenlabrada,Hospital Universitario de Fuenlabrada,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hospital universitario de la princesa,Hospital Universitario de La Princesa,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hospital universitario de mostoles,Hospital Universitario de Móstoles,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+hospital universitario de rennes,CHU de Rennes,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hospital universitario de torrevieja,Hospital Universitario de Torrevieja,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hospital universitario de valme,Hospital de Valme,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 hospital universitario dr negrin,Hospital Universitario Dr. Negrin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -5513,6 +5585,7 @@ institut de recerca h santa creu i sant pau,Institut de Recerca de l'Hospital de
 institut de recerca hospital de la sant creu i sant pau,Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 institut de recerca hospital de la santa creu i sant pau,Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 institut de recerca hospital de la santa creu i sant pau - iib sant pau,Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+institut de recerca hospital de la santa creu i sant pau iib sant pau,Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 institut de recerca hospital de sant pau,Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 institut de recerca hospital sant pau,Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 institut de recerca hospital sta creu i st pau,Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -6099,6 +6172,7 @@ k-group beta,K-Group Beta,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 k-group beta inc,K-Group Beta,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 k36 therapeutics inc,K36 Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ka rudolfstiftung - 2 medizinische abteilung,Krankenanstalt Rudolfstiftung,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+ka rudolfstiftung 2 medizinische abteilung,KA Rudolfstiftung,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 kadmon corporation llc,Kadmon,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kaerus bioscience limited,Kaerus Bioscience,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kai pharmaceuticals inc,KAI Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6162,6 +6236,7 @@ keele university,Keele University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 keele university / university hospital of north staffordshire nhs trust,Keele University / University Hospital of North Staffordshire NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 kell osterlind,Kell Osterlind,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kennedy krieger inst johns hopkins medicine,Kennedy Krieger Institute,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+kennemer gasthuis afdeling maag darm leverziekten,Kennemer Gasthuis,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 kennemer gasthuis afdeling maag- darm- leverziekten,Kennemer Gasthuis,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kenta biotech,Kenta Biotech,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kepler universittsklinikum linz neuromed campus,Kepler University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6222,6 +6297,8 @@ klaus olkkola/university of helsinki,University of Helsinki,NA,NA,unknown,llm_re
 klaus tapio olkkola,Klaus Tapio Olkkola,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 klear bio inc,Klear Bio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 klin abtlg fr thorax- hyperbare chirurgi,Klin. Abtlg. fr Thorax- Hyperbare Chirurgi,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+klinik for klinisk fysiologi nuklearmedicin og pet rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+klinik fr allgemein viszeral und transplantationschirurgie medizinische hochschule hannover,Medizinische Hochschule Hannover,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinik fr allgemein- viszeral- und transplantationschirurgie medizinische hochschule hannover,Medizinische Hochschule Hannover,NA,NA,academic,llm_reviewed,1,llm_reviewed
 klinik fr ansthesiologie johannes gutenberg universitt,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 klinik fr ansthesiologie und operative intensivmedizin charit universittsmedizin berlin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6229,6 +6306,9 @@ klinik fr ansthesiologie und operative intensivmedizin klinikum ludwigshafen,Kli
 klinik fr ansthesiologie universittsklinikum aachen,Universitätsklinikum Aachen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 klinik fr chirurgie charit campus virchow-klinikum,Charité Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinik fr dermatologie und allergologie der rub st josef hospital,St. Josef-Hospital Bochum,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+klinik fr dermatologie und venerologie universittsklinikum hamburg eppendorf,Universitätsklinikum Hamburg-Eppendorf,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+klinik fr dermatologie venerologie und allergologie charit universittsmedizin berlin,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+klinik fr herz und kreislauferkrankungen deutsches herzzentrum mnchen,Deutsches Herzzentrum München,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen,Deutsches Herzzentrum München,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 klinik fr innere medizin ii der klinikum chemnitz ggmbh,Klinikum Chemnitz gGmbH,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinik fr kardiologie herz- und diabeteszentrum nrw,Herz- und Diabeteszentrum NRW,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6278,6 +6358,8 @@ klinikum rechts der isar der technischen universitaet muenchen,Technische Univer
 klinikum rechts der isar der technischen universitt mnchen,Technische Universität München,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinikum rechts der isar technische universitt mnchen,Klinikum rechts der Isar der TU München,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinikum st georg ggmbh,Klinikum St. Georg gGmbH,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+klinische abteilung fr gastroenterologie und hepatologie medizinische universittsklinik mug,Medical University of Graz,NA,NA,academic,llm_reviewed,1,llm_reviewed
+klinisk farmakologisk afdeling bispebjerg,Copenhagen University Hospital - Bispebjerg and Frederiksberg,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 klinisk forskningsenhed medicinsk afdeling hmatologisk afsnit sygehus lilleblt vejle sygehus,"Klinisk Forskningsenhed, Medicinsk Afdeling, Hæmatologisk Afsnit",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kmia inc,Kmia,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 knappschaftskrankenhaus bochum,Knappschaftskrankenhaus Bochum,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6324,6 +6406,7 @@ krka tovarna zdravil d d novo mesto,KRKA,NA,NA,unknown,llm_reviewed,1,llm_review
 krka-farma d o o,KRKA-Farma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 krka-polska sp z o o,KRKA,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 kronos bio inc,Kronos Bio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+ku leuven departement ontwikkeling en regeneratie,KU Leuven,NA,NA,academic,llm_reviewed,1,llm_reviewed
 ku leuven-drug delivery and disposition,KU Leuven,NA,NA,academic,llm_reviewed,1,llm_reviewed
 ku leuven/uz leuven,UZ Leuven,NA,NA,academic,llm_reviewed,1,llm_reviewed
 kudos pharmaceuticals ltd a member of the astrazeneca group of companies,KuDOS Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6693,6 +6776,7 @@ luitpold pharmaceuticals inc,Luitpold Pharmaceuticals,NA,NA,unknown,llm_reviewed
 lukaskrankenhaus gmbh,Lukaskrankenhaus,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 lukcs s trsa gygyszerkereskedelmi betti trsasg,Lukcs s Trsa Gygyszerkereskedelmi Betti Trsasg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 lumavita ag,Lumavita,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+lumc department infection disease,Leiden University Medical Center,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 lumena pharmaceuticals inc,Lumena Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 lumena pharmaceuticals llc,Lumena Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 lument ab,Lument,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -6922,6 +7006,7 @@ mecklin jukka-pekka,Mecklin Jukka-Pekka,NA,NA,unknown,llm_reviewed,1,llm_reviewe
 med fakultaet der friedrich-alexander universitaet erlangen-nuernberg,Universitätsklinikum Erlangen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 med klinik / kardiologie der med fakultt carl gustav carus an der technischen unversitt dresden,Dresden University of Technology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 med klinik ii grosshadern klinikum der universitt mnchen,Klinikum Der Universitat Munchen AöR,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+med klinik kardiologie der med fakultt carl gustav carus an der technischen unversitt dresden,Universitätsklinikum Carl Gustav Carus,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 med uni graz abt fr neuro- u gesichtschirurgische ansthesie u intensivmedizin,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 med uni graz univ klinik dermatologie abteilung fr allgemeine dermatologie,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 med uni graz univ klinik innere medizin abt rheumatologie und immunologie,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7109,6 +7194,7 @@ medizinische fakultt der universitt rostock,Medizinische Fakultät der Universit
 medizinische fakultt otto von guericke universitt,Otto-von-Guericke University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinische hochschule hannover,Medizinische Hochschule Hannover,NA,NA,academic,llm_reviewed,1,llm_reviewed
 medizinische hochschule hannover / medizinische hochschule hannover,Medizinische Hochschule Hannover,NA,NA,academic,llm_reviewed,1,llm_reviewed
+medizinische hochschule hannover klinik fr pneumologie,Medizinische Hochschule Hannover,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 medizinische hochschule hannover mhh,Medizinische Hochschule Hannover,NA,NA,academic,llm_reviewed,1,llm_reviewed
 medizinische klinik b herzzentrum ludwigshafen,"Medizinische Klinik B, Herzzentrum Ludwigshafen",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinische klinik iii kardiologie,"Medizinische Klinik III, Kardiologie",NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7186,7 +7272,9 @@ medizinische universittsklinik,Medizinische Universittsklinik,NA,NA,unknown,llm_
 medizinische universittsklinik ii abteilung hmatologie onkologie immunologie und rheumatologie,Universitaetsklinikum Bonn,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinische universtittsklinik kantonsspital baselland,Kantonsspital Baselland,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinische universtt wien universittsklinik fr innere medizin i,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+medizinische unversitt wien abteilung fr kinder und jugendheilkunde,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 medizinische unversitt wien abteilung fr kinder- und jugendheilkunde,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+medizinischen klinik mit schwerpunkt nephrologie und internistische intensivmedizin charit universittsmedizin berlin,Charité - Universitätsmedizin Berlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 medizinischen klinik mit schwerpunkt nephrologie und internistische intensivmedizin/charit - universittsmedizin berlin,Charité Universitätsmedizin Berlin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinsche universitt wien univ klinik f ansthesie u allgem intensivmedizin,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 medizinsche universitt wien universittsklinik fr ansthesie allgemeine intensivmedizin und schmerztherapie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7206,6 +7294,7 @@ medytox inc,Medytox,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 meerkanten ggz,Meerkanten GGz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 megainpharm gmbh,MEGAINPHARM,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 mei pharma inc,MEI Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+meical university dpt internal medicine div of general internal me,Medical University,NA,NA,academic,llm_reviewed,1,llm_reviewed
 meiji seika kaisha ltd,Meiji Seika Kaisha,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 meiji seika pharma co ltd,Meiji Seika Pharma Co.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 meilahti vaccine research center - helsinki university hospital,Helsinki University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -7246,7 +7335,9 @@ mercator medsystems inc,Mercator MedSystems,NA,NA,unknown,llm_reviewed,1,llm_rev
 mercedes loscertales abril,Mercedes Loscertales Abril,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 mercedes zumarraga ortiz,Mercedes Zumarraga Ortiz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merck ab,Merck,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+merck and co,MSD,NA,NA,industry,llm_reviewed,1,llm_reviewed
 merck co,MSD,NA,NA,industry,llm_reviewed,1,llm_reviewed
+merck corporation inc,MSD,NA,NA,industry,llm_reviewed,1,llm_reviewed
 merck farma y qumica s a,Merck,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merck farma y qumica s l,Merck,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merck generics,Merck Generics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7263,6 +7354,7 @@ merck serona s a geneva switzerland,Merck Serono,NA,NA,unknown,llm_reviewed,1,ll
 merck sharp and dohme de espaa,MSD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merck sharp and dohme llc / merck sharp and dohme llc,MSD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merck sharp dohm corp,MSD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+merck sharp dohme clinical pharmacology europe,MSD,NA,NA,industry,llm_reviewed,1,llm_reviewed
 merck sharp dohme-clinical pharmacology europe,MSD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merckco inc,MSD,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 merckle gmbh,Merckle,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7475,11 +7567,13 @@ mural oncology inc,Mural Oncology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 must coordinating centre john hopkins bloomberg school of public health,"MUST Coordinating Centre, John Hopkins Bloomberg School of Public Health",NA,NA,public_body,llm_reviewed,1,llm_reviewed
 mutua universal mugenat,Mutua Universal MUGENAT,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 mutual pharmaceutical company,Mutual Pharmaceutical Company,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+muw department of clinical pharmacology,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 muw division of nephrology,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw innere med iii abt fr endokrinologie stoffwechsel,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw klinik f mund- kiefer und gesichtschirurgie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw klinik fr innere med i onkologie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw klinik fr innere medizin i onkologie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+muw klinik fr mund kiefer und gesichtschirurgie,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 muw klinik fr mund- kiefer-und gesichtschirurgie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw univ klinik f innere medizin ii abteilung f angiologie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 muw universittsklinik fr innere medizin i abteilung fr infektionskrankheiten und tropenmedizin,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7658,6 +7752,7 @@ neurim pharmaceuticals ltd,Neurim Pharmaceuticals 1991,NA,NA,unknown,llm_reviewe
 neurimmune ag,Neurimmune,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 neuro-consil gmbh,Neuro-Consil,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 neuro3d,Neuro3d,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+neuroanstesiologisk klinik rh glostrup,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 neuroanstesiologisk klinik rh/glostrup,Rigshospitalet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 neurobiological technologies inc,Neurobiological Technologies,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 neurobiotec gmbh,NeuroBiotec,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7815,6 +7910,7 @@ noora kaartinen / noora kaartinen,Noora Kaartinen,NA,NA,unknown,llm_reviewed,1,l
 noordwest ziekenhuisgroep,Noordwest Ziekenhuisgroep,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 noorik biopharmaceuticals ag,Noorik Biopharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nopho,NOPHO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+nopho nhl grupp,NOPHO,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 nopho nhl-group,NOPHO NHL-group,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nora therapeutics inc,Nora Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nordfjord psychiatric centre,Nordfjord Psychiatric Centre,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -7834,7 +7930,9 @@ nordic society for gynecological cancer,Nordic Society for Gynecological Cancer,
 nordic society of gynaecological oncology - clinical trial unit,Nordic Society of Gynaecological Oncology NSGO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nordic society of gynaecological oncology - clinical trial unit nsgo-ctu,Nordic Society of Gynaecological Oncology - Clinical Trial Unit NSGO-CTU,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nordic society of gynaecological oncology clinical trial unit,Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+nordic society of gynaecological oncology clinical trial unit nsgo ctu,NSGO Clinical Trial Unit,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 nordic society of gynaecological oncology nsgo,Nordic Society of Gynaecological Oncology NSGO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+nordic society of gynaecological oncology nsgo clinical trial unit,NSGO Clinical Trial Unit,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 nordic society of gynaecological oncology nsgo-clinical trial unit,Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nordic society of gynaecological oncology-clinical trial unit,Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 nordic society of gynecological oncology nsgo,Nordic Society of Gynecological Oncology NSGO,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -8237,6 +8335,7 @@ oulun yliopisto,University of Oulu,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 our ladys hospital for sick children,Children's Health Ireland at Crumlin,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 ouro medicines limited,Ouro Medicines,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ous,ous,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+ovation pharmaceuticals,Ovation Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_reviewed
 ovation pharmaceuticals inc,Ovation Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ove b schaffalitzky de muckadell,Ove B. Schaffalitzky de Muckadell,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 overlge dr med frederik grnhj,Overlge dr.med. Frederik Grnhj,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -8366,6 +8465,7 @@ pellepharm inc,PellePharm,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 peloton therapeutics inc,Peloton Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 penine acute nhs trust north manchester general hospital,Pennine Acute NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 peninsula pharmaceuticals inc,Peninsula Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+penta,PENTA Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 penta foundation,PENTA Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 penta foundation fondazione penta onlus,PENTA Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 penta foundation onlus,PENTA Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
@@ -8513,6 +8613,7 @@ pieris pharmaceuticals gmbh,Pieris Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,
 pieris pharmaceuticals inc,Pieris Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 pierre schydlowsky,Pierre Schydlowsky,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 pierrel research europe gmbh,Pierrel Research Europe,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+pifzer limited,Pfizer,NA,NA,industry,llm_reviewed,1,llm_reviewed
 pijt-hme central hospital,Pijt-Hme Central Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 pikralida sp z o o,Pikralida Sp. z o.o.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 pila pharma,PILA Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -8595,6 +8696,7 @@ poxel,Poxel,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 poxel s a,Poxel,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ppm services s a,Ppm Services,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 ppm services sa,Ppm Services,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+pr giampiero campanelli universit di milano dipartimento di scienze c,University of Milan,NA,NA,academic,llm_reviewed,1,llm_reviewed
 pr i johansson,Pr I Johansson,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 praehospitalet,Præhospitalet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 prague psychiatric center,Prague Psychiatric Center,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -8883,6 +8985,7 @@ razov nemocnice brno,razov nemocnice brno,NA,NA,unknown,llm_reviewed,1,llm_revie
 rb pharmaceuticals inc,RB Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rd addenbrookes hospital,Cambridge University Hospitals NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rd department / cambridge clinical trials unit,Cambridge University Hospitals NHS Foundation Trust,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+rd department cambridge clinical trials unit,Cambridge University Hospitals NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rd dept raigmore hospital inverness,NHS Highland,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rdd pharma ltd,RDD Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rdr pharma gmbh,RDR Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -8922,6 +9025,7 @@ recordati ag,Recordati,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 recordati rare diseases,Recordati Rare Diseases,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 recordati s p a,Recordati S.p.A,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 recovac consortium,RECOVAC consortium,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+red andaluza de diseno y traslacion de terapias avanzadas fundacion publica andaluza,Red Andaluza de Diseño y Traslación de Terapias Avanzadas,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 red andaluza de diseo y traslacin de terapias avanzadas - fundacin pblica andaluza progreso y salud,Red Andaluza de Diseño y Traslación de Terapias Avanzadas,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 red andaluza de diseo y traslacin de terapias avanzadas-fundacin progreso y salud,Fundación Progreso y Salud,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 red andaluza de diseo y traslacin en terapias avanzadas - fundacin pblica andaluza progreso y salud m p,Red Andaluza de Diseño y Traslación de Terapias Avanzadas,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9071,6 +9175,8 @@ respivert ltd,RespiVert,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rest therapeutics,Rest Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 restorbio inc,resTORbio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 resverlogix corp,Resverlogix,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+retinaklinikken aleris,Retinaklinikken,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+retinaklinikken omnia,Retinaklinikken,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 retrophin inc,Retrophin,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 retrotope inc,Retrotope,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 revalesio corporation,Revalesio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9118,6 +9224,14 @@ rigel pharmaceuticals inc,Rigel Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm
 rigontec gmbh,Rigontec,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rigshospital,Rigshospitalet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rigshospitalet center for aktiv sundhed section 7641,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet department of anaesthesia,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet department of clinical pharmacology,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet department of neurology,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet department of oncology,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet department of surgical gastroenterology c tx,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet ita 4131 department of intensive care,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet onkologisk klinik,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rigshospitalet psykiatrisk klinik,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rigshospitalet-glostrup,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 riika merivirta,Riika Merivirta,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 riitta veijola,Riitta Veijola,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9127,6 +9241,7 @@ rijnstate hospital,Rijnstate Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rijnstate hospital arnhem,"Rijnstate Hospital, Arnhem",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rijnstate hospital the netherlands,Rijnstate Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rijnstate ziekenhuis,Rijnstate Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+rijnstate ziekenhuis stichting,Rijnstate,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rikshospitalet,Rikshospitalet University Hospital,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 rikshospitalet university hospital university of oslo,Rikshospitalet University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 rita fior / champalimaud clinical centre / rita fior,Champalimaud Clinical Centre,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9326,6 +9441,7 @@ sanifit therapeutics s a,Sanifit Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_r
 saniona a/s,Saniona,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sankt eriks eye hospital,Sankt Eriks Eye Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 sankt lukas hospice,Sankt Lukas Hospice,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+sankyo pharma development sphd,Daiichi Sankyo,NA,NA,industry,llm_reviewed,1,llm_reviewed
 sankyo pharma gmbh,Sankyo Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sanna kivivuori,sanna kivivuori,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sanna vilo,Sanna Vilo,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9431,6 +9547,7 @@ seattle genetics inc,Seattle Genetics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sebastiano biondo aglio,Sebastiano Biondo Aglio,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 seccin de digestivo hospital comarcal de laredo,Seccin de Digestivo. Hospital Comarcal de Laredo,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 seconda universita degli studi di napoli,Università degli Studi della Campania Luigi Vanvitelli,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+section for surgical pathophysiology rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 section for transfusion medicine capital region blood bank copenhagen university hospital,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 section for transfusion medicine capitol region blood bank,Rigshospitalet,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 section for transfusion medicines capital region blood bank copenhagen university hospital,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -9462,6 +9579,7 @@ sentoclone ab,SentoClone,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sentryx b v,SentryX,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sepracor inc,Sepracor,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sepracor nv in care of sepracor inc,Sepracor NV in care of Sepracor,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+sepsicure llc,Sepsicure,NA,NA,industry,llm_reviewed,1,llm_reviewed
 seqirus uk limited,Seqirus UK,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 seqirus uk limited / seqirus uk limited / seqirus uk limited,Seqirus UK Limited / Seqirus UK Limited / Seqirus UK,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sequel pharmaceuticals inc,Sequel Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -9595,6 +9713,7 @@ sixera pharma ab,Sixera Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sjllands university hospital kge,"Sjællands University Hospital, Køge",NA,NA,hospital,llm_reviewed,1,llm_reviewed
 sk life science inc,SK Life Science,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 sk pharma schumann und kohl gmbh,SK Pharma Schumann und Kohl,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+skane university hospital department of rheumatology in lund and malmo,Skåne University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 skanes university hospital,Skåne University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 skaraborg hospital,Skaraborg Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 skne university hospital,Skåne University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -9916,6 +10035,7 @@ stichting longgeneeskunde fryslan,Stichting Longgeneeskunde Fryslan,NA,NA,founda
 stichting nvalt studies,Stichting NVALT studies,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 stichting pediatrisch onderzoek enschede,Stichting Pediatrisch Onderzoek Enschede,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 stichting radboud university medical center / stichting radboud university medical center,Radboud University Medical Center,NA,NA,foundation,llm_reviewed,1,llm_reviewed
+stichting rijnstate ziekenhuis,Rijnstate,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 stichting rotterdams onderzoeksconsortium kindergeneeskunde,Stichting Rotterdams Onderzoeksconsortium Kindergeneeskunde,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 stichting toegepast caridologisch onderzoek,Stichting Toegepast Caridologisch Onderzoek,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 stichting tricals foundation,Stichting TRICALS Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
@@ -10206,6 +10326,7 @@ tenax therapeutics inc,Tenax Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_revie
 tenboron oy,Tenboron,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tengion inc,Tengion,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tenvie therapeutics inc,Tenvie Therapeutics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+tenx biopharma inc,TenX Biopharma,NA,NA,industry,llm_reviewed,1,llm_reviewed
 terese katzenstein,Terese Katzenstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 tergooi hospital dep of internal medicine,Tergooi Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 terho heikkinen,Terho Heikkinen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10244,6 +10365,7 @@ the bonifin study group,The BONiFIN study group,NA,NA,cooperative_group,llm_revi
 the brigham and women's hospital inc,Brigham and Women's Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 the cardinal stefan wyszyski institute of cardiology,Instytut Kardiologii im. Kard. Stefana Wyszyńskiego,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 the cardiothoracic centre liverpool nhs trust,The Cardiothoracic Centre Liverpool NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+the cardiovascular mr group dept 2011 rigshospitalet,Rigshospitalet,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 the cardiovascular research foundation,The Cardiovascular Research Foundation,NA,NA,foundation,llm_reviewed,1,llm_reviewed
 the central remedial clinic and the childrens university hospital,The Central Remedial Clinic and The Childrens University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 the centre for child and adolescent mental health eastern and southern norway r bup,"The Centre for Child and Adolescent Mental Health, Eastern and Southern Norway R.BUP",NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10294,6 +10416,7 @@ the medicines company uk ltd,The Medicines Company,NA,NA,unknown,llm_reviewed,1,
 the medicines evaluation unit meu ltd investigator led study,The Medicines Evaluation Unit MEU,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 the mentholatum company ltd,The Mentholatum Company,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 the motol university hospital,The Motol University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+the multiple sclerosis research group department of clinical neuroscience,Karolinska Institutet,NA,NA,academic,llm_reviewed,1,llm_reviewed
 the national eye institute,The National Eye Institute,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 the netherlands cancer institute,The Netherlands Cancer Institute,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 the netherlands cancer institute - antoni van leeuwenhoek hospital nki-avl,Stichting Het Nederlands Kanker Instituut-Antoni Van Leeuwenhoek Ziekenhuis,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -10614,6 +10737,7 @@ umc groningen,University Medical Center Groningen,NA,NA,hospital,llm_reviewed,1,
 umc st radboud,Radboudumc,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 umc st radboud university hospital center,Radboudumc,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 umcn,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+umcn department pharm tox,Radboudumc,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 umcn department pharm-tox,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 umcn farm-tox,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 umcn st radboud,Radboudumc,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10630,6 +10754,7 @@ uni-pharma sa,UNI-PHARMA,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 uni-zentrum naturheilkunde,Uni-Zentrum naturheilkunde,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 unicyte ag,Unicyte,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 unidad de trasplantes y terapia celular del hospital general universitario central de asturias,Unidad de Trasplantes y Terapia Celular del Hospital General Universitario Central de Asturias,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+unidad de trasplantes y terapia celular del hospital universitario central de asturias,Hospital Universitario Central de Asturias,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 unidad de vih - servicio de enfermedades infecciosas hospital de bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 unidad de vih servicio de enfermedades infecciosas hospital de bellvitge,Hospital Universitari de Bellvitge - IDIBELL,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 unidad hepatica ciberehd hospital general universitario de alicante,Hospital General Universitario de Alicante,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -10671,6 +10796,7 @@ univ -prof dr karlheinz tscheliessnigg,Univ.-Prof. Dr. Karlheinz Tscheliessnigg,
 univ -prof dr oliver findl med univ wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 univ -prof dr volker wenzel,Univ.-Prof. Dr. Volker Wenzel,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 univ hospital dpt of anaesthesia,"Univ. hospital, Dpt. of anaesthesia",NA,NA,hospital,llm_reviewed,1,llm_reviewed
+univ klinik f ansthesie intensivmedizin und schmerztherapie,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 univ klinik fr ansthesiologie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 univ of iceland dept pharmacol,University of Iceland,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 univ prof dr christoph zielinski,Univ. Prof. Dr. Christoph Zielinski,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10811,9 +10937,12 @@ universittsklinik fr augenheilkunden und optometrie medizinische universitt wien
 universittsklinik fr dermatologie paracelsus medizinische privatuniversitt salzburg,Paracelsus Medical University,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr innere medizin iii klinische abteilung fr gastroenterologie und hepatologie,Universittsklinik Fr Innere Medizin Iii Klinische,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr innere medizin iv klinische abteilung gastroenterologie und hepatologie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+universittsklinik fr innere medizin klinische abteilung fr endokrinologie und nuklearmedizin,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 universittsklinik fr klinische pharmakologie medizinische universitt wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr neurologie innsbruck,Medical University Of Innsbruck,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr neurologie medizinische universitt wien,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+universittsklinik fr psychiatrie spezialambulanz fr abhangigkeitserkrankungen,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
+universittsklinik fr psychiatrie und psychotherapie i,Medical University of Vienna,NA,NA,academic,llm_reviewed,1,llm_reviewed
 universittsklinik fr psychiatrie und psychotherapie klin abteilung f biologische psychiatrie,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr radiodiagnostik,Medical University Of Vienna,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinik fr zahn- mund- und kieferheilkunde med uni graz department fr zahnrztliche chirurgie,Medical University Of Graz,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10831,8 +10960,10 @@ universittsklinikum erlangen,Universitätsklinikum Erlangen,NA,NA,unknown,llm_re
 universittsklinikum erlangen strahlenklinik insoweit handelnd fr den freistaat bayern,Universitätsklinikum Erlangen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum essen,Universitätsklinikum Essen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum essen - zentrum fr innere medizin - klinik fr endokrinologie,Universitätsklinikum Essen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+universittsklinikum essen zentrum fr innere medizin klinik fr endokrinologie,Universitätsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 universittsklinikum frankfurt,Goethe-Universität Frankfurt am Main,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum freiburg,Universitätsklinikum Freiburg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+universittsklinikum freiburg abteilung klinische chemie,Universitätsklinikum Freiburg,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 universittsklinikum freiburg leitender rztlicher direktor / universittsklinikum freiburg kaufmnnische direktorin,Universitätsklinikum Freiburg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum giessen und marburg - standort giessen,Universitätsklinikum Gießen und Marburg - Standort Gießen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum greifswald der ernst-moritz-arndt universitt greifswald ar,Universitätsklinikum Greifswald,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10842,6 +10973,7 @@ universittsklinikum knappschaftskrankenhaus bochum gmbh,Universitätsklinikum Kn
 universittsklinikum mannheim klinik fr ansthesiologie,Universitätsklinikum Mannheim,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum mannheim universittsklinik fr ansthesiologie und operative intensivmedizin,Universitätsklinikum Mannheim,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum mnster,Universitätsklinikum Münster,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+universittsklinikum schleswig holstein campus lbeck klinik fr strahlentherapie,Universitätsklinikum Schleswig-Holstein,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 universittsklinikum schleswig-holstein,Universitaetsklinikum Schleswig-Holstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum schleswig-holstein campus kiel,Universitaetsklinikum Schleswig-Holstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum schleswig-holstein campus lbeck,Universitaetsklinikum Schleswig-Holstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10849,6 +10981,8 @@ universittsklinikum schleswig-holstein campus lbeck klinik fr strahlentherapie,U
 universittsklinikum schleswig-holstein uk-sh,Universitätsklinikum Schleswig-Holstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum schleswig-holstein uksh,Universitätsklinikum Schleswig-Holstein,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum tbingen,Universitätsklinikum Tübingen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+universittsklinikum tbingen medizinische klinik i,Universitätsklinikum Tübingen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+universittsklinikum tbingen stz eyetrial am department fr augenheilkunde,Universitätsklinikum Tübingen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 universittsklinikum tuebingen,Universitätsklinikum Tübingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum ulm,Universitaetsklinikum Ulm AöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 universittsklinikum ulm / university clinical center ulm,Universitaetsklinikum Ulm AöR,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -10872,6 +11006,8 @@ university antwerp / university hospital leuven gasthuisberg,UZ Leuven,NA,NA,hos
 university bonn,University of Bonn,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university center hospital of guadeloupe,University Center Hospital of Guadeloupe,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university childrens hospital,University Childrens Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+university childrins hospital,University Children's Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+university clinic erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic erlangen medical clinic ii,Universitätsklinikum Erlangen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic essen,Universitätsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university clinic golnik,University Clinic Golnik,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -10894,6 +11030,7 @@ university cologne,University of Cologne,NA,NA,unknown,llm_reviewed,1,llm_review
 university department of general visceral and transplant surgery tuebingen,Universitätsklinikum Tübingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university erlangen-nuremberg,Friedrich-Alexander-Universität Erlangen-Nürnberg,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university eye clinic maastricht umc,Maastricht University Medical Center+,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+university eye hospital,University Eye Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university federico ii,Università degli Studi di Napoli Federico II,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university ghent,University Ghent,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university health network,University Health Network,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
@@ -10924,6 +11061,7 @@ university hospital dsseldorf,University Hospital Düsseldorf,NA,NA,hospital,llm
 university hospital erlangen,University Hospital Erlangen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital essen,Universitaetsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital essen anstalt des ffentlichen rechts,University Hospital Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+university hospital essen anstalt des offentlichen rechts,Universitätsklinikum Essen,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital frankfurt for its dermatology department clinical research,Goethe-Universität Frankfurt am Main,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital frankfurt goethe university,Goethe-Universität Frankfurt am Main,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university hospital gasthuisberg,UZ Leuven,NA,NA,hospital,llm_reviewed,1,llm_reviewed
@@ -11096,6 +11234,7 @@ university of cambridge,University of Cambridge,NA,NA,unknown,llm_reviewed,1,llm
 university of chicago,University of Chicago,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of cincinnati - academic medical center -department of neurology,University of Cincinnati,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of cincinnati college of medicine,University of Cincinnati,NA,NA,academic,llm_reviewed,1,llm_reviewed
+university of cologne,University of Cologne,NA,NA,academic,llm_reviewed,1,llm_reviewed
 university of copenhagen,University of Copenhagen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of copenhagen / jens astrup,University of Copenhagen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of copenhagen the novo nordisk foundation center for basic metabolic research section of metabolic genetic,University of Copenhagen,NA,NA,foundation,llm_reviewed,1,llm_reviewed
@@ -11104,6 +11243,7 @@ university of cyprus,University Of Cyprus,NA,NA,unknown,llm_reviewed,1,llm_revie
 university of debrecen,University of Debrecen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of debrecen faculty of medicine department of,University of Debrecen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of debrecen medical and health science center department of anaesthesiology and intensive therapy,University of Debrecen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+university of duisburg essen,University of Duisburg-Essen,NA,NA,academic,llm_reviewed,1,llm_reviewed
 university of duisburg-essen,University of Duisburg-Essen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of dundee/ nhs tayside,University of Dundee,NA,NA,academic,llm_reviewed,1,llm_reviewed
 university of dundee/nhs tayside,University of Dundee,NA,NA,academic,llm_reviewed,1,llm_reviewed
@@ -11145,6 +11285,7 @@ university of hull,University of Hull,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of iceland,University of Iceland,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of insubria,Università degli Studi dell'Insubria,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of jena,Friedrich-Schiller-Universitaet Jena,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+university of kiel department of dermatology,University of Kiel,NA,NA,academic,llm_reviewed,1,llm_reviewed
 university of kuopio,University of Eastern Finland,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of leeds/leeds teaching hospitals nhs trust,Leeds Teaching Hospitals NHS Foundation Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university of leicester,University of Leicester,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11223,6 +11364,7 @@ university of trieste,Università degli Studi di Trieste,NA,NA,unknown,llm_revie
 university of troms,University of Tromsø,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of trondheim ntnu norway,Norwegian University of Science and Technology,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of tuebingen,Eberhard-Karls-Universität Tübingen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+university of turin dept of clinical biological sciences,University of Turin,NA,NA,academic,llm_reviewed,1,llm_reviewed
 university of turku,University of Turku,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 university of turku / turku university hospital,Turku University Hospital,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 university of twente,University of Twente,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11299,6 +11441,7 @@ uswm ct llc,USWM Ct,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 uz brussels,Universitair Ziekenhuis Brussel,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 uz gasthuisberg,UZ Leuven,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 uz gasthuisberg leuven,UZ Leuven,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+uz leuven department of urology,UZ Leuven,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 uz leuven-department of urology,UZ Leuven,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 uz/ku leuven,UZ Leuven,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 uzdrowisko kamie pomorski s a,Uzdrowisko Kamień Pomorski,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11353,6 +11496,7 @@ vasa hvc,Vasa HVC,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vasaragen inc,VasaraGen,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vascular biogenics ltd,Vascular Biogenics,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vasculitis and lupus clinic,Vasculitis and Lupus Clinic,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+vasculitis clinical trial office,Vasculitis Clinical Research Consortium,NA,NA,cooperative_group,llm_reviewed,1,llm_reviewed
 vasopharm gmbh,vasopharm,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vassilis georgoulias prof of internal medicine-oncology of medical dpt university of crete,"Vassilis Georgoulias, Prof. of Internal Medicine-Oncology of Medical Dpt University of Crete",NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vaximm gmbh,Vaximm,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11372,6 +11516,7 @@ vejle hospital dept of oncology,Vejle Sygehus,NA,NA,hospital,llm_reviewed,1,llm_
 vejle sygehus,Vejle Sygehus,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vejle sygehus ortopdkirurgisk afdeling forskningsenheden cofu,Vejle Sygehus,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 velindre nhs trust,Velindre NHS Trust,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+veloxis pharmaceuticals a s,Veloxis Pharmaceuticals,NA,NA,industry,llm_reviewed,1,llm_reviewed
 venatorx pharmaceuticals inc,VenatoRx Pharmaceuticals,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vensica medical ltd,Vensica Medical,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 venter pharma s l,Venter Pharma,NA,NA,unknown,llm_reviewed,1,llm_reviewed
@@ -11529,6 +11674,8 @@ vu university medical center department of medical oncology,Amsterdam UMC,NA,NA,
 vu university medical center department of reproductive medicine,Amsterdam UMC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 vu university medical centre,Amsterdam UMC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 vuab pharma a s,VUAB Pharma a.s.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
+vumc dept urology,Amsterdam UMC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
+vumc neurology department,Amsterdam UMC,NA,NA,hospital,llm_reviewed,1,llm_reviewed
 vvog,VVOG,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vychodoslovensky onkologicky ustav a s,Vychodoslovensky Onkologicky Ustav a.s.,NA,NA,unknown,llm_reviewed,1,llm_reviewed
 vyluma inc,Vyluma,NA,NA,unknown,llm_reviewed,1,llm_reviewed

@@ -3633,8 +3633,62 @@ server <- function(input, output, session) {
     idx <- input$recent_trials_table_rows_selected
     req(length(idx) == 1)
     row <- recent_trials_src()[idx, ]
-    ct_raw <- row$CT_number
-    reg    <- row$register
+    row_val <- function(name) {
+      if (!name %in% names(row)) return(NA_character_)
+      val <- row[[name]][[1]]
+      if (length(val) == 0 || is.null(val)) NA_character_ else as.character(val)
+    }
+    show_val <- function(x) {
+      x <- as.character(x)
+      if (length(x) == 0 || is.na(x) || !nzchar(str_trim(x)) || identical(x, "NA")) "—" else x
+    }
+    bool_label <- function(x) {
+      if (isTRUE(x)) "Yes" else if (identical(x, FALSE)) "No" else "Unknown"
+    }
+    result_source_note <- function() {
+      raw <- row_val("results_source_raw")
+      if (!is.na(raw) && nzchar(str_trim(raw))) return(raw)
+      if (identical(row_val("register"), "CTIS")) {
+        "Derived from CTIS resultsFirstReceived; raw value not retained in this cache."
+      } else if (identical(row_val("register"), "EUCTR")) {
+        "Derived from EUCTR endPoints.endPoint.readyForValues; raw value not retained in this cache."
+      } else {
+        "Raw result source not retained in this cache."
+      }
+    }
+    duration_note <- function() {
+      days <- suppressWarnings(as.numeric(row_val("trial_duration_days")))
+      if (is.na(days) || !is.finite(days)) return("—")
+      sprintf("%.1f months (%s days)", days / 30.4375,
+              format(round(days), big.mark = ",", scientific = FALSE))
+    }
+    value_table <- function(rows) {
+      tags$table(class = "table table-condensed table-bordered",
+        style = "font-size:12px;margin-bottom:14px;",
+        tags$thead(tags$tr(
+          tags$th(style = "width:24%;", "Field"),
+          tags$th(style = "width:38%;", "Registry raw / source value"),
+          tags$th(style = "width:38%;", "Normalised dashboard value")
+        )),
+        tags$tbody(lapply(rows, function(r) {
+          tags$tr(
+            tags$th(r[[1]]),
+            tags$td(show_val(r[[2]])),
+            tags$td(show_val(r[[3]]))
+          )
+        }))
+      )
+    }
+    status_table <- function(rows) {
+      tags$table(class = "table table-condensed table-bordered",
+        style = "font-size:12px;margin-bottom:0;",
+        tags$tbody(lapply(rows, function(r) {
+          tags$tr(tags$th(style = "width:34%;", r[[1]]), tags$td(show_val(r[[2]])))
+        }))
+      )
+    }
+    ct_raw  <- row$CT_number
+    reg     <- row$register
     link <- if (reg == "EUCTR") {
       ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
       cc  <- str_extract(row$`_id`, "[A-Z]{2,3}$")
@@ -3649,35 +3703,53 @@ server <- function(input, output, session) {
       size  = "l",
       easyClose = TRUE,
       footer = modalButton("Close"),
-      tags$dl(
-        tags$dt("Full Title"),
-        tags$dd(style = "margin-bottom:10px;", coalesce(row$Full_title, "—")),
-	        tags$dt("CT Number"),
-	        tags$dd(style = "margin-bottom:10px;",
-	                tags$a(ct_display, href = link, target = "_blank")),
-	        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
-	          tagList(tags$dt("Transition EudraCT Number"),
-	                  tags$dd(style = "margin-bottom:10px;", row$transition_eudract_number)),
-	        fluidRow(
-          column(6,
-            tags$dt("Register"),      tags$dd(coalesce(reg, "—")),
-            tags$dt("Status"),        tags$dd(coalesce(row$status_raw, "—")),
-            tags$dt("Phase"),         tags$dd(coalesce(row$phase, "—")),
-            tags$dt("Sponsor Name"),  tags$dd(coalesce(row$sponsor_label, "—")),
-            tags$dt("Sponsor Type"),  tags$dd(coalesce(row$sponsor_type, "—"))
-          ),
-          column(6,
-            tags$dt("Product"),       tags$dd(coalesce(row$DIMP_product_name, "—")),
-            tags$dt("INN / Generic Name"), tags$dd(coalesce(row$DIMP_inn_name, "—")),
-            tags$dt("Organ Class"),   tags$dd(coalesce(row$MEDDRA_organ_class, "—")),
-            tags$dt("MedDRA Term"),   tags$dd(coalesce(row$MEDDRA_term, "—")),
-            tags$dt("Countries"),     tags$dd(coalesce(row$Member_state, "—")),
-            tags$dt("Submitted"),     tags$dd(as.character(coalesce(row$submission_date_parsed, NA))),
-            tags$dt("Start Date"),    tags$dd(as.character(coalesce(row$start_date, NA))),
-            tags$dt("Decision Date"), tags$dd(as.character(coalesce(row$decision_date, NA)))
-          )
-        )
-      )
+      tags$h4(show_val(row$Full_title)),
+      tags$p(style = "margin-bottom:12px;",
+        tags$b("CT Number: "),
+        tags$a(ct_display, href = link, target = "_blank"),
+        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
+          tagList(tags$br(), tags$b("Transition EudraCT Number: "),
+                  show_val(row$transition_eudract_number))
+      ),
+      tags$h4("Registry Raw Values vs Normalised Values"),
+      value_table(list(
+        list("Sponsor", coalesce(row_val("sponsor_name_raw"),
+                                 row_val("b1_sponsor.b11_name_of_sponsor"),
+                                 row_val("authorizedApplication.authorizedPartI.sponsors.organisation.name")),
+             paste(show_val(row_val("sponsor_name")),
+                   paste0("(final label: ", show_val(row_val("sponsor_label")), ")"))),
+        list("Sponsor type", coalesce(row_val("b1_sponsor.b31_and_b32_status_of_the_sponsor"),
+                                      row_val("authorizedApplication.authorizedPartI.sponsors.commercial")),
+             row_val("sponsor_type")),
+        list("Product", coalesce(row_val("DIMP_product_name_raw"), row_val("DIMP_product_name")),
+             row_val("DIMP_product_name")),
+        list("INN / Generic name", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_inn_name")),
+             row_val("DIMP_inn_name")),
+        list("Active substance", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_product_name_raw"),
+                                          row_val("DIMP_inn_name"), row_val("DIMP_product_name")),
+             row_val("substance_label")),
+        list("MedDRA organ class", coalesce(row_val("MEDDRA_organ_class_raw"), row_val("MEDDRA_organ_class")),
+             row_val("MEDDRA_organ_class")),
+        list("MedDRA term", coalesce(row_val("MEDDRA_term_raw"), row_val("MEDDRA_term")),
+             row_val("MEDDRA_term"))
+      )),
+      tags$h4("Dates, Status, and Results"),
+      status_table(list(
+        list("Register", reg),
+        list("Status", paste(show_val(row_val("status_raw")),
+                              paste0("(category: ", show_val(row_val("status")), ")"))),
+        list("Phase", row_val("phase")),
+        list("Participants", ifelse(is.na(row$participants_n), "—",
+                                    format(row$participants_n, big.mark = ",", scientific = FALSE))),
+        list("Countries", row_val("Member_state")),
+        list("Submitted", as.character(coalesce(row$submission_date_parsed, NA))),
+        list("Start Date", as.character(coalesce(row$start_date, NA))),
+        list("Decision Date", as.character(coalesce(row$decision_date, NA))),
+        list("Trial End Date", as.character(coalesce(row$trial_duration_end_date, NA))),
+        list("Trial duration", duration_note()),
+        list("Results reported", if ("has_results" %in% names(row)) bool_label(row$has_results[[1]]) else "Unknown"),
+        list("Result source", result_source_note())
+      ))
     ))
   })
 

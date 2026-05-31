@@ -1,553 +1,103 @@
 raw_sponsor,candidate_sponsor,sponsor_type,match_status,match_score,match_source,match_reason,n_trials,decision,canonical_sponsor,comment
-University of Cologne,University Of Cologne,NA,review,92,final_family_map,ambiguous entity-family match: cologne university,51,NA,NA,NA
-University Of Cologne,University Of Cologne,NA,review,92,final_family_map,ambiguous entity-family match: cologne university,21,NA,NA,NA
-Cliniques Universitaires Saint-Luc,Cliniques Universitaires Saint-Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,18,NA,NA,NA
-Cliniques universitaires Saint-Luc,Cliniques Universitaires Saint-Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,16,NA,NA,NA
-Universitaetsklinikum Erlangen AöR,Universitaetsklinikum Erlangen Aor,NA,review,92,final_family_map,ambiguous entity-family match: erlangen hospital,14,NA,NA,NA
-CHIESI,Chiesi Farmaceutici,industry,review,89,manual,alias match: 'chiesi' → 'Chiesi Farmaceutici',13,NA,NA,NA
-Hopital Erasme,Hopital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,12,NA,NA,NA
-University Hospital Essen,University Hospital Essen,NA,review,92,final_family_map,ambiguous entity-family match: essen hospital,10,NA,NA,NA
-Universitaetsklinikum Essen AöR,Universitaetsklinikum Essen Aor,NA,review,92,final_family_map,ambiguous entity-family match: essen hospital,10,NA,NA,NA
-Rijnstate Hospital,Rijnstate Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,8,NA,NA,NA
-University Hospital Erlangen,University Hospital Erlangen,NA,review,92,final_family_map,ambiguous entity-family match: erlangen hospital,8,NA,NA,NA
-Galapagos,Galapagos,industry,review,89,manual,alias match: 'galapagos' → 'Galapagos',8,NA,NA,NA
-Hannu Kokki,Hannu Kokki,unknown,unknown,0,NA,no reliable sponsor match,7,NA,NA,NA
-Catharina Ziekenhuis Stichting,Catharina Ziekenhuis Stichting,NA,review,92,final_family_map,ambiguous entity-family match: catharina hospital,7,NA,NA,NA
-Hpital Erasme,Hpital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,6,NA,NA,NA
-"Department of Oncology, Herlev  Gentofte Hospital",Herlev Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: oncology herlev gentofte hospital,6,NA,NA,NA
-Centre hospitalier universitaire de Liege,Centre Hospitalier Universitaire De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,6,NA,NA,NA
-University Hospital,University Hospital,hospital,unknown,0,NA,no reliable sponsor match,5,NA,NA,NA
-Ascendis Pharma Endocrinology Division A/S,Ascendis Pharma,unknown,unknown,0,NA,generic department label without parent institution,5,NA,NA,NA
-Dept of ped hem/onc,Dept Of Ped Hem/Onc,unknown,unknown,0,NA,generic department label without parent institution,4,NA,NA,NA
-University Medical Center,University Medical Center,unknown,unknown,0,NA,no reliable sponsor match,4,NA,NA,NA
-Department of Clinical Pharmacology,Department Of Clinical,unknown,unknown,0,NA,generic department label without parent institution,4,NA,NA,NA
-CUB - Hpital Erasme,Cub - Hpital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,4,NA,NA,NA
-Erasme hospital,Erasme Hospital,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,4,NA,NA,NA
-University Hospital Muenster,University Hospital Muenster,NA,review,92,final_family_map,ambiguous entity-family match: muenster hospital,4,NA,NA,NA
-University of Essen,University Of Essen,NA,review,92,final_family_map,ambiguous entity-family match: essen university,4,NA,NA,NA
-Department of Anaesthesia,Department Of Anaesthesia,unknown,unknown,0,NA,generic department label without parent institution,4,NA,NA,NA
-CUB Erasme Hospital,Cub Erasme Hospital,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,4,NA,NA,NA
-Universitaetsklinikum Muenster AöR,Universitaetsklinikum Muenster Aor,NA,review,92,final_family_map,ambiguous entity-family match: muenster hospital,4,NA,NA,NA
-Department of Health,Department Of Health,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-ERASME HOSPITAL,Erasme Hospital,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,3,NA,NA,NA
-Department of Nephrology,Department Of Nephrology,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-Abbott,Abbott,industry,review,89,manual,alias match: 'abbott' → 'Abbott',3,NA,NA,NA
-Erasme Hospital,Erasme Hospital,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,3,NA,NA,NA
-Oncology Department,Oncology Department,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-Cliniques universitaires Saint Luc,Cliniques Universitaires Saint Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,3,NA,NA,NA
-"Deutsches Herzzentrum Mnchen, Klinik fr Herz- und Kreislauferkrankungen",Deutsches Herzzentrum Mnchen,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-Cliniques Universitaires Saint Luc,Cliniques Universitaires Saint Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,3,NA,NA,NA
-"Erling Bjerregaard Pedersen, Medicinsk forskningsafsnit, Regionshospitalet Holstebro",Erling Bjerregaard Pedersen Medicinsk Forskningsafsnit Regionshospitalet Holstebro,unknown,unknown,0,NA,no reliable sponsor match,3,NA,NA,NA
-UCL,University College London,academic,review,84,manual,alias match: 'ucl' → 'University College London',3,NA,NA,NA
-Arthroscopic Surgery Unit,Arthroscopic Surgery,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-"Department of Neuroscience, NTNU",Department Of Neuroscience Ntnu,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-AZIENDA UNIT SANITARIA LOCALE DELLA ROMAGNA,Azienda,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-"The Parker Institute, Bispebjerg and Frederiksberg Hospital, The Capital Region of Denmark",The Parker Institute,NA,review,92,final_family_map,ambiguous entity-family match: parker bispebjerg frederiksberg capital region hospital,3,NA,NA,NA
-"Abteilung fr Hals-, Nasen- und Ohrenkrankheiten MUW, AKH Wien",Abteilung Fr Hals- Nasen- Und Ohrenkrankheiten Muw Akh Wien,unknown,unknown,0,NA,generic department label without parent institution,3,NA,NA,NA
-Institut de Recerca Hospital de la Santa Creu i Sant Pau - IIB Sant Pau,Institut De Recerca Hospital De La Santa Creu I Sant Pau - Iib Sant Pau,NA,review,92,final_family_map,ambiguous entity-family match: recerca santa creu sant pau iib hospital,3,NA,NA,NA
-CHU De Liege,Chu De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,3,NA,NA,NA
-Centre Hospitalier Universitaire De Liege,Centre Hospitalier Universitaire De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,3,NA,NA,NA
-"Charit Campus Mitte, Klinik fr Psychiatrie und Psychotherapie",Charit Campus Mitte,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Greater Glasgow NHS Health Board / University of Glasgow co-sponsorship,University Of Glasgow Co-Sponsorship,NA,review,92,final_family_map,ambiguous entity-family match: greater glasgow health board sponsorship trust|glasgow sponsorship university,2,NA,NA,NA
-"Department of Oncology, Rigshospitalet",Department Of Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-TB Investigation Unit of Barcelona,Tb Investigation,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Aalst Dermatology Group,Aalst,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Universittsklinikum Bonn Klinik und Poliklinik fr Psychiatrie und Psychotherapie,Universittsklinikum Bonn,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-University Hospital of Muenster,University Hospital Of Muenster,NA,review,92,final_family_map,ambiguous entity-family match: muenster hospital,2,NA,NA,NA
-"Klinik fr Herz- und Kreislauferkrankungen, Deutsches Herzzentrum Mnchen",Klinik Fr Herz- Und Kreislauferkrankungen Deutsches Herzzentrum Mnchen,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Department of Neurology UMCG,Department Of,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Department of anesthesiology,Department Of Anesthesiology,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-"Universittsklinikum Mannheim, Klinik fr Ansthesiologie",Universittsklinikum Mannheim,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Klinik Lwenstein gGmbH,Klinik Lwenstein Ggmbh,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Centre Hospitalier Universitaire,Centre Hospitalier Universitaire,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Universittsklinikum Essen - Zentrum fr Innere Medizin - Klinik fr Endokrinologie,Universittsklinikum Essen - Zentrum Fr Innere Medizin -,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-University of Duisburg-Essen,University Of Duisburg-Essen,NA,review,92,final_family_map,ambiguous entity-family match: duisburg essen university,2,NA,NA,NA
-Prof. Dr. med. Margitta Worm,Prof Dr Med Margitta Worm,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-"Department of Nephrology and Renal Transplantation, KU Leuven",Department Of Nephrology And Renal Transplantation Ku Leuven,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Servicio de Anestesiologa y Reanimacin,Servicio De Anestesiologa Y Reanimacin,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-"Charit-Universittsmedizin Berlin, Klinik fr Dermatologie, Venerologie und Allergologie, CRC",Charit-Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Universitaetsklinikum Muenster,Universitaetsklinikum Muenster,NA,review,92,final_family_map,ambiguous entity-family match: muenster hospital,2,NA,NA,NA
-Cliniques Universitaires St Luc,Cliniques Universitaires St Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,2,NA,NA,NA
-Department of Oncology,Department Of,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Department of Orthopaedics IKE,Department Of Orthopaedics Ike,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
+UCL,University College London,academic,review,84,manual,alias match: 'ucl' → 'University College London',4,NA,NA,NA
+Institut de Recherches Internationales,Servier,industry,review,89,manual,alias match: 'institut de recherches internationales' → 'Servier',3,NA,NA,NA
+Mitsubishi Tanabe Pharma Corporation / KUREHA CORPORATION,Kureha,unknown,review,84,euctr_email_domain:applicable.com,alias match: 'mitsubishi tanabe pharma corporation / kureha corporation' → 'Kureha',2,NA,NA,NA
 MIGUEL CASARES FERNNDEZ-ALVS,Miguel Casares Fernndez-Alvs,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Prof. Dr. Kristian Reich,Prof Dr Kristian Reich,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Prof., dr. med. Anders Fink-Jensen",Prof Dr Med Anders Fink-Jensen,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-Hospital Erasme,Hospital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,2,NA,NA,NA
-"Erasmus MC, Dept. Urology",Erasmus Mc,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Dipartimento di Medicina,Dipartimento Di Medicina,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
-"Section for Surgical Pathophysiology, Rigshospitalet",Section For Surgical Pathophysiology Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-"Abteilung fr Augenheilkunde, AKH Linz",Abteilung Fr Augenheilkunde Akh Linz,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-"Department of Cardiology, Rigshospitalet",Department Of Cardiology Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Rijnstate ziekenhuis,Rijnstate Ziekenhuis,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,2,NA,NA,NA
-Catharina Hospital Eindhoven,Catharina Hospital Eindhoven,NA,review,92,final_family_map,ambiguous entity-family match: catharina eindhoven hospital,2,NA,NA,NA
-Catharina Ziekenhuis,Catharina Ziekenhuis,NA,review,92,final_family_map,ambiguous entity-family match: catharina hospital,2,NA,NA,NA
-Charit - Universittsmedizin Berlin Klinik fr Dermatologie und Allergologie,Charit - Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-The Medicines Evaluation Unit MEU Ltd. Investigator led study,The Medicines Evaluation,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Center for Clinical Metabolic Research at Herlev-Gentofte Hospital,Center For Clinical Metabolic Research At Herlev-Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: clinical metabolic herlev gentofte hospital,2,NA,NA,NA
-"Plastikkirurgisk og brystkirurgisk afdeling, Region Sjlland",Plastikkirurgisk Og Brystkirurgisk,unknown,unknown,0,NA,generic department label without parent institution,2,NA,NA,NA
-Universite De Liege / CHU De Liege,Chu De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,2,NA,NA,NA
+"Polaris Pharmaceuticals, Inc.",Polaris Group,unknown,review,84,euctr_email_domain:polarispharma.com,alias match: 'polaris pharmaceuticals inc' → 'Polaris Group',2,NA,NA,NA
 Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL,Fundacio Institut D Investigacio Biomedica De Bellvitge Idibell,NA,review,94,ctis_businesskey|manual,ambiguous alias maps to multiple sponsors,2,NA,NA,NA
-Rijnstate Ziekenhuis Stichting,Rijnstate Ziekenhuis Stichting,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,2,NA,NA,NA
-TEVA,Teva,industry,review,89,manual,alias match: 'teva' → 'Teva',1,NA,NA,NA
-ABBOTT,Abbott,industry,review,89,manual,alias match: 'abbott' → 'Abbott',1,NA,NA,NA
-"Prof  Allan Glanville, St Vincents Hospital",St Vincents Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CONCEPCION MORO SERRANO,Concepcion Moro Serrano,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of General Psychiatry,Department Of General Psychiatry,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Clinical Pharmacology,Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Prof. B. Wiedenmann, Klinik fr Gastroenterologie, Charit, Campus Virchow",Prof B Wiedenmann,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Medizinische Klinik B, Herzzentrum Ludwigshafen",Medizinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept of Dermatology,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsklinik fr Innere Medizin IV, Klinische Abteilung Gastroenterologie und Hepatologie",Universittsklinik Fr Innere Medizin Iv Klinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Antonio Noda Cabrera,Antonio Noda Cabrera,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept. of Clinical Pharmacology,Dept Of Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Enric Pedrol Clotet. Unidad Enfermedades Infecciosas.Hospital de Granollers,Enric Pedrol Clotet Unidad Enfermedades Infecciosas Hospital De Granollers,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Unidad de Neuroinmunologa,Unidad De Neuroinmunologa,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University Hospital Bern,University Hospital Bern,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Neurologisk afdeling F,Neurologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept. of Neurology Vienna,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University Clinic of Dermatology Division of Special and Enviromental Dermatology,University Clinic Of Dermatology Division Of Special And Enviromental Dermatology,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Centre Hospitalier Universitaire de Liege,Centre Hospitalier Universitaire De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,1,NA,NA,NA
-"Universittsklinikum Aachen, Klinik f. Psychiatrie und Psychotherapie",Universittsklinikum Aachen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof David Cunningham,Prof David Cunningham,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Nephrology and Renal Transplantation,Department Of Nephrology And Renal Transplantation,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-DAVID DALMAU,David Dalmau,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept. of Rhematology UMAS,Dept Of Rhematology Umas,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Christian Geisler, Righospitalet, dept. Haematology 4042",Christian Geisler Righospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dra. Almudena Zapatero Laborda,Dra Almudena Zapatero Laborda,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Lund University, Malm University Hospital",Lund University,NA,review,92,final_family_map,ambiguous entity-family match: lund malm hospital,1,NA,NA,NA
-"Department of Obstetrics and Gynecolog, Randers Centralsygehusy",Department Of Obstetrics And Gynecolog Randers Centralsygehusy,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department Integrative Medicine, Kliniken Essen Mitte",Department Integrative Medicine Kliniken Essen Mitte,NA,review,92,final_family_map,ambiguous entity-family match: integrative essen mitte hospital,1,NA,NA,NA
-Prof. Dr.Christian Werner,Prof Dr Christian Werner,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-RAFAEL GARCIA LOPEZ,Rafael Garcia Lopez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Ophthalmology,Department Of Ophthalmology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Ambria Dermatology,Ambria,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Endocrinology,Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Prof. Gustav Dobos, Kliniken Essen Mitte",Prof Gustav Dobos Kliniken Essen Mitte,NA,review,92,final_family_map,ambiguous entity-family match: prof gustav dobos essen mitte hospital,1,NA,NA,NA
-"Medizinische Klinik III, Kardiologie",Medizinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept. of Nephrology,Dept Of Nephrology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik fr Ansthesiologie und operative Intensivmedizin, Charit  Universittsmedizin Berlin",Klinik Fr Ansthesiologie Und Operative Intensivmedizin Charit Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Abteilung fr Anaesthesiologie und Intensivmedizin,Abteilung Fr Anaesthesiologie Und Intensivmedizin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Dr. H. Lode,Prof Dr H Lode,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Medizinische Universittsklinik II , Abteilung Hmatologie, Onkologie, Immunologie und Rheumatologie",Medizinische Universittsklinik Ii,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Beaufour Ipsen Pharma-Ipsen Biotech Department,Beaufour Ipsen Pharma-Ipsen Biotech,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept anaesthesiology and intensive care,Dept Anaesthesiology And Intensive Care,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Neurologische Klinik Bad Neustadt,Neurologische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik fr Allgemein-, Viszeral- und Transplantationschirurgie, Medizinische Hochschule Hannover",Klinik Fr Allgemein- Viszeral- Und Transplantationschirurgie Medizinische Hochschule Hannover,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-XAVIER CARBONELL ESTRANY,Xavier Carbonell Estrany,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Klinik Neuropdiatrie und Muskelkrankheiten,Klinik Neuropdiatrie Und Muskelkrankheiten,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Medical Department I,Medical Department I,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ANGEL LANAS,Angel Lanas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Psychiatry and Psychotherapy Cologne,Department Of Psychiatry And Psychotherapy Cologne,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik for Klinisk Fysiologi, Nuklearmedicin og PET, Rigshospitalet",Klinik For Klinisk Fysiologi Nuklearmedicin Og Pet Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik fr Psychiatrie und Psychotherapie, Universittsklinikum Aachen",Klinik Fr Psychiatrie Und Psychotherapie Universittsklinikum Aachen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University of Liverpool/Liverpool Womens Hospital,University Of Liverpool,NA,review,92,final_family_map,ambiguous entity-family match: liverpool womens hospital|liverpool university,1,NA,NA,NA
-Neurology Unit,Neurology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept of Anaesthesiology 530,Dept Of Anaesthesiology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-West Yorkshire Primary Care RD Unit,West Yorkshire Primary Care Rd,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Merck, Sharp  Dohme-Clinical Pharmacology,Europe",Merck Sharp Dohme-Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Abteilung Klinische Chemie, UKL Freiburg",Abteilung Klinische Chemie Ukl Freiburg,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-ESTHER URIARTE ITZAZELAIA,Esther Uriarte Itzazelaia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Britt Skogseid,Britt Skogseid,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Cardiology, UK Aachen",Department Of Cardiology Aachen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof.Dr.Hartmut ZWICK,Prof Dr Hartmut Zwick,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Psychiatry, Ludwig-Maximilians-University Munich",Ludwig-Maximilians-University Munich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Abteilung fr Herz-Thorax-Gef Ansthesie  Intensivmedizin HTG,Abteilung Fr Herz-Thorax-Gef Ansthesie Intensivmedizin Htg,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"R  D Directorate,Central Manchester and Manchester Childrens University Hospitals NHS Trust",Central Manchester And Manchester Childrens University Hospitals Nhs Trust,NA,review,92,final_family_map,ambiguous entity-family match: directorate central manchester childrens hospital,1,NA,NA,NA
-Prof V Lund,Prof V Lund,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Haematology,Department Of Haematology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Dr. R. Kreutz Leiter der Abteilung Klinische Pharmakologie der Charite Berlin,Prof Dr R Kreutz Leiter Der,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Institut de Recherches Internationales,Servier,industry,review,89,manual,alias match: 'institut de recherches internationales' → 'Servier',1,NA,NA,NA
-UZLeuven Afdeling Oogziekten,Uzleuven,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University Cologne,University Cologne,NA,review,92,final_family_map,ambiguous entity-family match: cologne university,1,NA,NA,NA
-Universitaetsklinikum Erlangen,Universitaetsklinikum Erlangen,NA,review,92,final_family_map,ambiguous entity-family match: erlangen hospital,1,NA,NA,NA
-Division of Rheumatology,Division Of Rheumatology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University Clinic Essen,University Clinic Essen,NA,review,92,final_family_map,ambiguous entity-family match: essen hospital,1,NA,NA,NA
-UCL Biomedicine RD Unit,Ucl Biomedicine Rd,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Dermatology, University of Kiel",University Of Kiel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Universitres Herzzentrum, Klinik fr Kardiologie und Angiologie",Universitres Herzzentrum,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Med. Klinik / Kardiologie der Med. Fakultt Carl Gustav Carus an der Technischen Unversitt Dresden,Med,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof Jes Olesen,Prof Jes Olesen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Helsinki University Central Hospital, Skin and Allergy Hospital",Helsinki University Central Hospital,NA,review,92,final_family_map,ambiguous entity-family match: helsinki central skin allergy hospital,1,NA,NA,NA
-HANNA THORN,Hanna Thorn,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-BIOMARIN,BioMarin Pharmaceutical,industry,review,89,manual,alias match: 'biomarin' → 'BioMarin Pharmaceutical',1,NA,NA,NA
-Univ.Clinic of Dermatology,Univ Clinic Of Dermatology,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"John L. Berk, M.D.",John L Berk M D,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of  Gynaecology, Helse Finnmark, Klinikk  Hammerfest",Department Of Gynaecology Helse Finnmark Klinikk Hammerfest,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Dr. Peter Eickholz,Prof Dr Peter Eickholz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-department of clinical pharmacology,Department Of Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Kliniken Essen Mitte,Kliniken Essen Mitte,NA,review,92,final_family_map,ambiguous entity-family match: essen mitte hospital,1,NA,NA,NA
-"Rigshospitalet, Psykiatrisk Klinik",Rigshospitalet Psykiatrisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Bert Mueller, Dep. Ophthalmology",Bert Mueller Dep Ophthalmology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Prof. Herta Flor, Head of the Institute of Clinical and Cognitive Neuroscience",Head Of The Institute Of Clinical And Cognitive Neuroscience,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"University Clinic Erlangen, Medical Clinic II",University Clinic Erlangen,NA,review,92,final_family_map,ambiguous entity-family match: erlangen hospital,1,NA,NA,NA
-"S.G.O. Johansson, MD PhD Professor",S G O Johansson Md Phd Professor,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University Eye Hospital,University Eye Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department Of Paediatric Cardiology,Department Of Paediatric Cardiology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
+Dept. of Internal Medicine,Dept Of Internal Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Department of Nuclear Medicine,Department Of Nuclear Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Merck  Co,MSD,industry,review,89,manual,alias match: 'merck co' → 'MSD',1,NA,NA,NA
-"Prof. Sechtem, Department of Cardiology, Robert Bosch Hospital",Robert Bosch Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Charit-Universittsmedizin Berlin Department of Rheumatology and Clinical Immunology,Charit-Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-GENMAB,Genmab,industry,review,89,manual,alias match: 'genmab' → 'Genmab',1,NA,NA,NA
-Cliniques Universitaires SAINT-LUC,Cliniques Universitaires Saint-Luc,NA,review,92,final_family_map,ambiguous entity-family match: universitaires luc hospital,1,NA,NA,NA
-"Department of Gynecological Oncology, University Hospital, rebro",University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Pr Giampiero CAMPANELLI Universit di Milano, Dipartimento di Scienze Chirurgiche, Ospedale Maggior",Ospedale Maggior,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Dept of Medicine,Dept Of Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Prim. Univ.Prof. Dr. Christian Pirich Department of Nuclear Medicine and Endocrinology, PMU Salzburg",Prim Univ Prof Dr Christian Pirich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Meical University, Dpt. Internal Medicine, Div. of General Internal Medicine",Meical University,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Oncology Karolinska,Department Of Karolinska,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Charit Universittsmedizin Berlin, Department of Dermatology and Allergy",Charit Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"The Royal Group of Hospitals, Belfast Health and Social Care Trust / Queens University Belfast",The Royal Group Of Hospitals,NA,review,92,final_family_map,ambiguous entity-family match: royal belfast health social care queens hospital|royal belfast health social care hospital,1,NA,NA,NA
-"CUB Hpital Erasme, Department of Anesthesiology",Cub Hpital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme anesthesiology hospital|cub erasme hospital,1,NA,NA,NA
-"Department of Rheumatology,University hospital,Lund",University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rheumatology lund hospital,1,NA,NA,NA
-Prof Vassilis Georgoulias,Prof Vassilis Georgoulias,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Klinik fr Dermatologie und Venerologie, Universittsklinikum Hamburg-Eppendorf",Klinik Fr Dermatologie Und Venerologie Universittsklinikum Hamburg-Eppendorf,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Astellas,Astellas Pharma,industry,review,89,manual,alias match: 'astellas' → 'Astellas Pharma',1,NA,NA,NA
-Dipartimento di Pediatria,Dipartimento Di Pediatria,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Klinik fr Ansthesiologie Universittsklinikum Aachen,Klinik Fr Ansthesiologie Universittsklinikum Aachen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Research and Development Department, University Hospital of South Manchester NHS Foundation Trust",University Hospital Of South Manchester Nhs Foundation Trust,NA,review,92,final_family_map,ambiguous entity-family match: development south manchester hospital,1,NA,NA,NA
+Light Science Oncology Inc.,Light Sciences Oncology,unknown,review,84,euctr_email_domain:lsoncology.com,alias match: 'light science oncology inc' → 'Light Sciences Oncology',1,NA,NA,NA
 Antonio Cubillo Gracin Servicio de Oncologa Mdica - Hospital MD Anderson,Antonio Cubillo Gracin Servicio De Oncologa Mdica - Hospital Md Anderson,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-The Department of Calcium- and Bone-metabolic Diseases,The,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsklinikum Freiburg, Abteilung klinische Chemie",Universittsklinikum Freiburg,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Leiden University Medical Center, department of rheumatology",Leiden University Medical Center,NA,review,92,final_family_map,ambiguous entity-family match: leiden rheumatology hospital,1,NA,NA,NA
-Unit de Recherches Thrapeutiques,Unit De Recherches Thrapeutiques,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University Childrins Hospital,University Childrins Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-UMCN department Pharm-Tox,Umcn,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Cardiology,Department Of Cardiology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Rijnstate hospital,Rijnstate Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,1,NA,NA,NA
-Hpital ERASME,Hpital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,1,NA,NA,NA
-Division of Special and Environmental Dermatology,Division Of Special And Environmental,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-JOAQUIN PORTILLA,Joaquin Portilla,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Onkologisk afdeling R and the Unit for Experimental Chemotherapy,Onkologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-General Teaching Hospital,General Teaching Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dra. Carmen Ispa Calln,Dra Carmen Ispa Calln,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Psychiatry, LMU Munich",Department Of Psychiatry Lmu Munich,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Asklepios-Klinik Sankt Augustin,Asklepios-Klinik Sankt Augustin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Anaesthesia, Rotunda Hospital",Rotunda Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Psychiatry, RWTH Aachen",Department Of Psychiatry Rwth Aachen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University Hospital of Erlangen,University Hospital Of Erlangen,NA,review,92,final_family_map,ambiguous entity-family match: erlangen hospital,1,NA,NA,NA
-CESAR MARGARIT FERRI,Cesar Margarit Ferri,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Rigshospitalet, Onkologisk Klinik",Rigshospitalet Onkologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Medizinische Unversitt Wien, Abteilung fr Kinder- und Jugendheilkunde",Medizinische Unversitt Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Servicio de Neurologa,Servicio De Neurologa,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Lab for pharmaceutical biology / Department of Urology,Lab For Pharmaceutical Biology /,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Dr. Istvan Racz,Prof Dr Istvan Racz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"dept of endocrinology J 106, herlev Hosptial",Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Cardiothoracic and Vascular Surgery,Department Of Cardiothoracic And Vascular Surgery,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Pulmonology, Rijnstate Hospital",Rijnstate Hospital,NA,review,92,final_family_map,ambiguous entity-family match: pulmonology rijnstate hospital,1,NA,NA,NA
-"Department of Medicine I, Clinical Dep. f. Oncology, University Hospital,",University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Rheumatology,Department Of Rheumatology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-KA Rudolfstiftung - 2. Medizinische Abteilung,Ka Rudolfstiftung - 2 Medizinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"University of Kiel, Department of Dermatology",University Of Kiel,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Hospital Universitario Vall dHebron. Barcelona. Spain,Hospital Universitario Vall Dhebron Barcelona Spain,NA,review,92,final_family_map,ambiguous entity-family match: vall dhebron barcelona hospital,1,NA,NA,NA
-Belgian Study Group for Pediatric Endocrinology,Belgian Study Group For Pediatric,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Ammerland-Klinik Westerstede,Ammerland-Klinik Westerstede,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsklinikum Tbingen, Medizinische Klinik I",Universittsklinikum Tbingen Medizinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Helsinki University Central Hospital, Pain Clinic",Helsinki University Central Hospital,NA,review,92,final_family_map,ambiguous entity-family match: helsinki central pain hospital,1,NA,NA,NA
-"Universittsklinikum Schleswig-Holstein, Campus Lbeck: Klinik fr Strahlentherapie",Universittsklinikum Schleswig-Holstein Campus Lbeck,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinische Abteilung fr Gastroenterologie und Hepatologie, Medizinische Universittsklinik, MUG",Klinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-department of Pharmacology-Toxicology RUNMC,Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept. Pharmacology and Toxicology,Dept,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Psychiatry and Psychotherapy, Ludwig-Maximilians-University Munich",Ludwig-Maximilians-University Munich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"University Hospital Tubeingen, Department for Anaesthesiology and Intensive Care Medicine",University Hospital Tubeingen,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Neuroscience, neurology",Department Of Neuroscience,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"University Hospital Virgen del Roco, Andalousian Health Service",University Hospital Virgen Del Roco,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Meletios Athanasios Dimopoulos,Meletios Athanasios Dimopoulos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Universittsklinik fr Psychiatrie und Psychotherapie, Klin. Abteilung f. Biologische Psychiatrie",Universittsklinik Fr Psychiatrie Und Psychotherapie Klin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Medicinsk afdeling,Medicinsk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. M.A. Dimopoulos,Prof M A Dimopoulos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Greater Glasgow Health Board/University of Glasgow GU,NHS Greater Glasgow and Clyde,hospital,review,84,euctr_email_domain:clinmed.gla.ac.uk,alias match: 'greater glasgow health board/university of glasgow gu' → 'NHS Greater Glasgow and Clyde',1,NA,NA,NA
 "Anaesthesiology Department. Universitary Hospital Vall dHebron, Barcelona.",Anaesthesiology Department Universitary Hospital Vall Dhebron,NA,review,92,final_family_map,ambiguous entity-family match: anaesthesiology universitary vall dhebron barcelona hospital,1,NA,NA,NA
-MAR ESPINO HERNANDEZ,Mar Espino Hernandez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept of Rheumatology, Lund University Hospital, Lund, Sweden",Lund University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rheumatology lund hospital,1,NA,NA,NA
-JOS ANTONIO SERRANO TRENAS,Jos Antonio Serrano Trenas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MIKEL URRETAVIZCAYA SARACHAGA,Mikel Urretavizcaya Sarachaga,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Cardiac Reserch Unit,Cardiac Reserch,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-M ANGELES CALDERON,M Angeles Calderon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Univ. Klinik f. Ansthesie, Intensivmedizin und Schmerztherapie",Univ,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept. Child  Adolescent Psychiatrie,Dept Child Adolescent Psychiatrie,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Fundacion Hospital Alcorcon,Fundacion Hospital Alcorcon,NA,review,92,final_family_map,ambiguous entity-family match: alcorcon hospital,1,NA,NA,NA
-Klinik Loewenstein gGmbH,Klinik Loewenstein Ggmbh,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
 "Kirurginen sairaala, suu- ja leukakirurgian klinikka Satu Yli-Petys",Kirurginen Sairaala Suu- Ja Leukakirurgian Klinikka Satu Yli-Petys,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-SE Dept. of Psychiatry and Psychotherapy,Se Dept Of Psychiatry And Psychotherapy,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dra. Beatriz Sanchez Sobrino,Dra Beatriz Sanchez Sobrino,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ADELAIDA LAMAS FERREIRO,Adelaida Lamas Ferreiro,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MedUni Innsbruck Klinik fr Strahlentherapie,Meduni Innsbruck,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Afdeling for Traumatisk Hjerneskade,Afdeling For Traumatisk Hjerneskade,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Rigshospitalet, Department of Clinical Pharmacology",Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-HANNU KOKKI,Hannu Kokki,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept of Neurology,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"MUW, Universittsklinik fr Innere Medizin III, Abteilung fr Nephrologie und Dialyse",Muw Universittsklinik Fr Innere Medizin Iii,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Unidad de Trasplantes y Terapia Celular  del Hospital Universitario Central de Asturias,Unidad De Trasplantes Y Terapia Celular Del Hospital Universitario Central De Asturias,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Johannes Frster, anest.lkri",Johannes Frster Anest Lkri,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Prof Alice Stanton,Prof Alice Stanton,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Anaesthesie, General Intensive Care and Pain Therapy",Department Of Anaesthesie General Intensive Care And Pain Therapy,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Anaesethesia,Department Of Anaesethesia,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Medizinische Hochschule Hannover, Klinik fr Pneumologie",Medizinische Hochschule Hannover,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Salvatore Grisanti,Prof Salvatore Grisanti,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dra. Rosario Blasco,Dra Rosario Blasco,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-PEDRO ACIEN ALVAREZ,Pedro Acien Alvarez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Adj,Professor, Torsten Gordh",Adj Professor Torsten Gordh,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Pharmacology-Toxicology,Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dra Maria Jos Colomina Soler,Dra Maria Jos Colomina Soler,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Hephata-Klinik,Hephata-Klinik,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik f. Innere Med., Fachabteilung Hmatologie",Klinik F Innere Med Fachabteilung Hmatologie,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Sten Walther,Sten Walther,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Pertti Suominen,Pertti Suominen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Gastroenterology and Hepatology, Erasmus MC, Rotterdam",Department Of Gastroenterology And Hepatology Erasmus Mc Rotterdam,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"RD Department, / Cambridge Clinical Trials Unit",Rd Department / Cambridge Clinical Trials Unit,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"MUW, Universittsklinik fr Innere Medizin I,  Abteilung fr Infektionskrankheiten und Tropenmedizin",Muw Universittsklinik Fr Innere Medizin I,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"AKH Wien, Klinik fr Innere Medizin I, Onkologie",Akh Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
+Department of Medical Gastroenterology,Department Of Medical Gastroenterology,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Servicio de Anestesia-Reanimacin,Servicio De Anestesia-Reanimacin,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"The Multiple Sclerosis Research Group, Department of Clinical Neuroscience",The Multiple Sclerosis Research Group,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MUW, Department of Clinical Pharmacology",Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-PROF. ALFREDO CHETTA,Prof Alfredo Chetta,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Intensive Care, Rigshopitalet",Dept Of Intensive Care Rigshopitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dott.ssa Elena Santagostino,Dott Ssa Elena Santagostino,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MUW, Klinik fr Innere Med. I, Onkologie",Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Erasmus MC - Department of Pediatrics,Erasmus Mc -,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Isala Klinieken Department Cardiology,Isala Klinieken,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
+"The Centre for Child and Adolescent Mental Health, Eastern and Southern",The Centre For Child And Adolescent Mental Health,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Ludwig-Maximilian-University of Munich, Department of Psychiatry",Ludwig-Maximilian-University Of Munich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Erasmus MC, more specifically for and on behalf of the department of Neurology/Neuro-Oncology",Erasmus Mc More Specifically For And On Behalf Of The,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Endocrine Oncology,Department Of Endocrine,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof Bart Neyns,Prof Bart Neyns,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ALFREDO TAGARRO GARCIA,Alfredo Tagarro Garcia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "rhus University Hospital, Department of Dermatology",Rhus University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-NHS Greater Glasgow and Clyde Health Board,Nhs Greater Glasgow And Clyde Health Board,NA,review,92,final_family_map,ambiguous entity-family match: greater glasgow clyde health board trust,1,NA,NA,NA
-C.U.B ERASME HOSPITAL,C U B Erasme Hospital,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,1,NA,NA,NA
-"Charit Berlin, Department of rheumatology / Charit Berlin, department of rheumatology / Charit Berlin, department of rheumatology",Charit Berlin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"KH der Elisabethinen Linz GmbH, I. Interne Abteilung",Kh Der Elisabethinen Linz Gmbh I Interne,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Ivana Zavaroni,Prof Ivana Zavaroni,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Medizinische Universitsklinik Graz, Abteilung fr Endokrinologie und Nuklearmedizin",Medizinische Universitsklinik Graz,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsklinik fr Innere Medizin, Klinische Abteilung fr Endokrinologie und Nuklearmedizin",Universittsklinik Fr Innere Medizin Klinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-PROF. TIZIANO GHERLI,Prof Tiziano Gherli,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Universittsklinik fr Psychiatrie - Spezialambulanz fr Abhangigkeitserkrankungen,Universittsklinik Fr Psychiatrie - Spezialambulanz Fr Abhangigkeitserkrankungen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CESAR AUGUSTO VALERO MARTINEZ,Cesar Augusto Valero Martinez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MUW, Klinik fr Innere Medizin I, Onkologie",Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Leiden University Medical Center, Department of Rheumatology",Leiden University Medical Center,NA,review,92,final_family_map,ambiguous entity-family match: leiden rheumatology hospital,1,NA,NA,NA
-Dept of Oncology,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Insitute of Endocrinology,Insitute Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Orthopaedic Syrgery Unit Northern Jytland,Orthopaedic Syrgery,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Kliniken Essen-Mitte,Kliniken Essen-Mitte,NA,review,92,final_family_map,ambiguous entity-family match: essen mitte hospital,1,NA,NA,NA
-"UO Divisione Nefrologia, Dialisi e Trapianto renale",Uo Divisione Nefrologia Dialisi E Trapianto Renale,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"MUW, Klinik f. Mund-, Kiefer, und Gesichtschirurgie",Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Anesthesiology and Intensive Care, University Hospital Muenster",University Hospital Muenster,NA,review,92,final_family_map,ambiguous entity-family match: anesthesiology intensive care muenster hospital,1,NA,NA,NA
-Erasmus MC - Department of Neurology,Erasmus Mc -,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Research  Development Department,Research Development,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Dermatology,Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"ERASMUS MC, Dept Anesthesiology",Erasmus Mc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-VUmc Dept Urology,Vumc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Asklepios Klinik Sankt Augustin,Asklepios,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
+Atrium Medical Corporation,Atrium Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Servicio Enfermedades Infecciosas,Servicio Enfermedades Infecciosas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Department of Genito-Urinary Medicine and Infectious Diseases,Department Of Genito-Urinary Medicine And Infectious Diseases,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Allergiklinikken,Allergiklinikken,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Myeloproliferative Disease Research Consortium MPD-RC,Myeloproliferative Disease Research Consortium Mpd-Rc,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+POLICHEM,Polichem,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+University of Modena and Reggio Emilia,University Of Modena And Reggio Emilia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Departments of Medical Research and Medicine,Departments Of Medical Research And Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Tampere University, Faculty of Medicine, Department of Ophthalmology",Tampere University,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dra. M Dolores Arenas,Dra M Dolores Arenas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-FRANCISCO BORJA BARRACHINA LARRAZA,Francisco Borja Barrachina Larraza,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Ortopdkirurgisk afdeling,Ortopdkirurgisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Overlge, dr.med. Claus Zachariae",Overlge Dr Med Claus Zachariae,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-FRANCISCO JOSE MORALES PONCE,Francisco Jose Morales Ponce,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CAROLINA IBAEZ LOPEZ,Carolina Ibaez Lopez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Klinisk Farmakologisk Afdeling, Bispebjerg",Klinisk Farmakologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Anesthesiology  Intensive Care,Department Of Anesthesiology Intensive Care,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-MANUEL NGEL GMEZ ROS,Manuel Ngel Gmez Ros,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Lorenzo Victor, PhD",Lorenzo Victor Phd,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-JESUS GONZALEZ BARBOTEO,Jesus Gonzalez Barboteo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CHU de Liege,Chu De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,1,NA,NA,NA
-"Dipartimento Integrato di Oncologia, Ematologia e Patologie dellApparato Respiratorio",Dipartimento Integrato Di Oncologia Ematologia E Patologie Dellapparato Respiratorio,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Catalyst Pharmaceutical Partners, Inc.",Catalyst Pharmaceuticals,unknown,review,84,euctr_email_domain:catalystpharma.com,alias match: 'catalyst pharmaceutical partners inc' → 'Catalyst Pharmaceuticals',1,NA,NA,NA
+Aptevo Europe Limited,Aptevo,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 JOSEP MARIA BOTARGUES BOT,Josep Maria Botargues Bot,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-JUAN MACIAS SANCHEZ,Juan Macias Sanchez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Hematology,Department Of Hematology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
 JUAN IGNACIO ARENAS RUIZ-TAPIADOR,Juan Ignacio Arenas Ruiz-Tapiador,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-FERNADO PEREZ RUIZ,Fernado Perez Ruiz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-RICARDO MOUZO MIRCO,Ricardo Mouzo Mirco,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept. of Pharmacology,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-JOSE MANUEL GARCIA DOMINGUEZ,Jose Manuel Garcia Dominguez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Anaesthesiology, University Hospital of Skejby",University Hospital Of Skejby,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Johanna Menp,Johanna Menp,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Isala klinieken department Cardiology,Isala Klinieken,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Hjertemedicinsk klinik B, 2142, Rigshospitalet",Hjertemedicinsk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsklinik fr Innere Medizin III, Klinische Abteilung fr Gastroenterologie und Hepatologie",Universittsklinik Fr Innere Medizin Iii Klinische,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Klinik fr Dermatologie, Venerologie und Allergologie Charit - Universittsmedizin Berlin",Klinik Fr Dermatologie Venerologie Und Allergologie Charit - Universittsmedizin Berlin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
 Meletios-Athanasios Dimopoulos,Meletios-Athanasios Dimopoulos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Professor Reich,Professor Reich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"HagaZiekenhuis, pulmonary department",Hagaziekenhuis Pulmonary,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"MUW, Klinik fr Mund-, Kiefer-und Gesichtschirurgie",Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Nephrology, OUH, Odense, DK",Department Of Nephrology Ouh Odense Dk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Rigshospitalet, ITA 4131, Department of Intensive care",Rigshospitalet Ita,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Dept. of Intensive Care 4131, Rigshospitalet",Dept Of Intensive Care Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Rune Rasmussen,Rune Rasmussen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Orthopaedics IKE / Department of Orthopaedics IKE,Department Of Orthopaedics Ike /,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Med. Uni. Wien, Klinik fr Innere I",Med Uni Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Neurosurgery, PMU",Department Of Neurosurgery Pmu,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Oliver Ploder MD, DDS, PhD",Oliver Ploder Md Dds Phd,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Psychiatry,Department Of Psychiatry,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
 LUIS FERNNDEZ- LLEBREZ DEL REY,Luis Fernndez- Llebrez Del Rey,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Consorci Mar Parc de Salut de Barcelona / Department of Dermatology and Allergy Charit- Universittsmedizin Berlin,Consorci Mar Parc De Salut De Barcelona /,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Abteilung fr Pulmologie, Landesklinikum Thermenregion Hochegg",Abteilung Fr Pulmologie Landesklinikum Thermenregion Hochegg,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-MARIA TERESA PARRAS MALDONADO,Maria Teresa Parras Maldonado,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Neurologisk Afdeling,Neurologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"LUMC, Department Infection Disease",Lumc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-CLINICAL PHARMACOLOGY SPANISH SOCIETY,Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-JOSE LUIS MONTERO ALVAREZ,Jose Luis Montero Alvarez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ANTONIO JEREZ CALERO,Antonio Jerez Calero,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Anesthesiology and Intensive Care, Charit - Campus Benjamin Franklin",Dept Of Anesthesiology And Intensive Care Charit - Campus Benjamin Franklin,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Eero Pesonen,Eero Pesonen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Per Lindner,Per Lindner,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Juan Crdoba,Juan Crdoba,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Prof. Per Soelberg Srensen,Prof Per Soelberg Srensen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Experimental Clinical Oncology,Department Of Experimental Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Signe H. stoft, Diabetes Research Division",Signe H Stoft Diabetes Research Division,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Jess Villar Hernndez,Jess Villar Hernndez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Unidad de Gestin Clnica de Endocrinologa y Nutricin,Unidad De Gestin Clnica De Endocrinologa Y Nutricin,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Anni Ravnbek Jensen,Anni Ravnbek Jensen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-JAVIER MARTN BROTO,Javier Martn Broto,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Antonio Moreno Gald,Antonio Moreno Gald,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Mika Harju,Mika Harju,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Universittsklinik fr Psychiatrie und Psychotherapie I,Universittsklinik Fr Psychiatrie Und Psychotherapie I,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Afdeling Urologie, Isala Klinieken",Afdeling Urologie Isala Klinieken,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Abteilung fr Ansthesie, Intensiv- und Schmerzmedizin, Wilhelminenspital der Stadt Wien",Abteilung Fr Ansthesie Intensiv- Und Schmerzmedizin Wilhelminenspital Der Stadt Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Per H. Rosenberg,Per H Rosenberg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dipartimento di Pediatria Universit Federico II di Napoli,Dipartimento Di Pediatria Universit Federico Ii Di Napoli,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Servicio de Neurologa, HU. Germans Trias i Pujol",Servicio De Neurologa Hu Germans Trias I Pujol,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Universittsklinik fr Zahn-, Mund- und Kieferheilkunde, Med Uni Graz, Department fr zahnrztliche Chirurgie",Universittsklinik Fr Zahn- Mund- Und Kieferheilkunde Med Uni Graz,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Unidad de Investigacin en Tuberculosis de Barcelona UITB,Unidad De Investigacin En Tuberculosis De Barcelona Uitb,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept of Surgery / Landstinget i Uppsala,Dept Of Surgery / Landstinget I Uppsala,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University of Leeds/Leeds Teaching Hospitals NHS Trust,University Of Leeds,NA,review,92,final_family_map,ambiguous entity-family match: leeds teaching hospital|leeds university,1,NA,NA,NA
-"Orthopaedic Research Laboratory, rhus University Hospital",Rhus University Hospital,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Dermatology and Allergology, University of Szeged",University Of Szeged,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Central Institute of Mental Health, Department of Psychiatry and Psychotherapy",Central Institute Of Mental Health,NA,review,92,final_family_map,ambiguous entity-family match: central mental health psychiatry psychotherapy institute,1,NA,NA,NA
-Rigshospitalet Department of Anaesthesia,Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Kennemer Gasthuis, afdeling maag-, darm-, leverziekten",Kennemer Gasthuis,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Brneafdelingen Kolding,Brneafdelingen Kolding,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-FRANCISCO J. BLANCO GARCA,Francisco J Blanco Garca,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Innocrin Pharmaceuticals, Inc.",Innocrin,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Dept of Renal medicine,Dept Of Renal Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Fa. Dr. Franz Khler Chemie GmbH,Fa Dr Franz Khler Chemie,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Rib-X Pharmaceuticals, Inc",Rib-X,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Dept of medical sciences, Rheumatology",Dept Of Medical,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-ANTONIO PEREZ MARTINEZ,Antonio Perez Martinez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-LAURA TARRATS VELASCO,Laura Tarrats Velasco,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-UZ Leuven-Department of Urology,Uz Leuven-Department Of Urology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept of oncology,Dept Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Hanna Pitknen,Hanna Pitknen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Institute of oncology,Institute Of,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dept. of Clinical Immunology,Dept Of Clinical Immunology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-KU Leuven Departement Ontwikkeling en Regeneratie,Ku Leuven,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Pharmacy Unversittsmedizin Mainz,Department Of Pharmacy Unversittsmedizin Mainz,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Uppsala University Hospital, MHT, Department of Nephrology",Uppsala University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: uppsala mht nephrology hospital,1,NA,NA,NA
-Medizinischen Klinik mit Schwerpunkt Nephrologie und Internistische Intensivmedizin/Charit - Universittsmedizin Berlin,Medizinischen,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"University Hospital Aachen AR, represented by the executive board, represented by the Dean of the Medical Faculty",University Hospital Aachen Ar,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Dra. Cristina Avendao Sol,Dra Cristina Avendao Sol,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+University of Dsseldorf,University Of Dsseldorf,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 dipartimento di neurologia e psichiatria,Dipartimento Di Neurologia E Psichiatria,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University of cologne,University Of Cologne,NA,review,92,final_family_map,ambiguous entity-family match: cologne university,1,NA,NA,NA
-Unidad de Cirugia Artroscpica,Unidad De Cirugia Artroscpica,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dipartimento di Scienze Chirurgiche, Oncologiche e Gastroenterologiche",Dipartimento Di Scienze Chirurgiche Oncologiche E Gastroenterologiche,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CARLOS SANTOS VILLAR,Carlos Santos Villar,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Med. Uni. Wien, Klinik f. Innere Med. I",Med Uni Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-CUB Hopital Erasme,Cub Hopital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,1,NA,NA,NA
-Jens Hilligs,Jens Hilligs,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Clinical Evaluation Research Unit CERU,Clinical Evaluation Research,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Prof. Dr. Karl-Heinz Emmerich,Prof Dr Karl-Heinz Emmerich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Ana de Pedro Muoz,Ana De Pedro Muoz,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Heidi Mkinen,Heidi Mkinen,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Essen University Hospital, University of Essen, Klinik fr Allgemein-,  Viszeral- und Transplantationschirugie",Essen University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: essen allgemein viszeral und transplantationschirugie hospital,1,NA,NA,NA
-"DEPARTMENT OF DERMATOLOGY, UNIVERSITY OF MODENA AND REGGIO EMILIA",University Of Modena And Reggio Emilia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Rigshospitalet, Department of Oncology",Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"rijnstate hospital, the netherlands",Rijnstate Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,1,NA,NA,NA
-Department of Neurology,Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Dept of Plastic Surgery, Breast Surgery  Burns",Dept Of Plastic Surgery Breast Surgery Burns,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Peter Licht,Prof Peter Licht,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Department of Clinical Pharmacology Q,Department Of Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"The Newcastle Upon Tyne Hospital NHS Foundation Trust, Freeman Hospital",The Newcastle Upon Tyne Hospital Nhs Foundation Trust,NA,review,92,final_family_map,ambiguous entity-family match: newcastle upon tyne freeman hospital,1,NA,NA,NA
-Royal Papworth Hospital NHS Foundation Trust,Royal Papworth Hospital Nhs Foundation Trust,NA,review,92,final_family_map,ambiguous entity-family match: royal papworth hospital,1,NA,NA,NA
-ALEJANDRA GARCIA BOTELLA,Alejandra Garcia Botella,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Clinical Trials Unit, Rigshospitalet",Clinical Trials,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Psychiatry, Helsinki University Central Hospital",Helsinki University Central Hospital,NA,review,92,final_family_map,ambiguous entity-family match: psychiatry helsinki central hospital,1,NA,NA,NA
-"Section For Surgical Pathophysiology, Rigshospitalet",Section For Surgical Pathophysiology Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Anaesthesiology,Department Of Anaesthesiology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Nordic Society of Gynaecological Oncology - Clinical Trial Unit,Nordic Society Of Gynaecological - Clinical Trial,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-CUB Hospital Erasme,Cub Hospital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,1,NA,NA,NA
+Kompetenznetz TDM-KJP e.V.,Kompetenznetz Tdm-Kjp E V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Department of experimental and clincial medicine F. Magrassi,Department Of Experimental And Clincial Medicine F Magrassi,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Menzies Research Institute Tasmania,Menzies Institute of Medical Research University of Tasmania,unknown,review,84,euctr_email_domain:dhhs.tas.gov.au,alias match: 'menzies research institute tasmania' → 'Menzies Institute of Medical Research University of Tasmania',1,NA,NA,NA
+Pharmacyclics,Pharmacyclics,unknown,review,84,euctr_email_domain:pcyc.com,alias match: 'pharmacyclics' → 'Pharmacyclics',1,NA,NA,NA
+department of experimental and clinical medicine F. Magrassi,Department Of Experimental And Clinical Medicine F Magrassi,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Department of Medicine and Endocrinology,Department Of Medicine And,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Immunicum Aktiebolag,Immunicum,unknown,review,84,euctr_email_domain:immunicum.com,alias match: 'immunicum aktiebolag' → 'Immunicum',1,NA,NA,NA
 "Clinic for General Anesthesiology, Intensive Care and Pain Management",Clinic For General Anesthesiology,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Universittsklinikum Tbingen, STZ eyetrial am Department fr Augenheilkunde",Universittsklinikum Tbingen Stz Eyetrial Am,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dept Hematology SLB Vejle / Dept Hematology SLB Vejle,Dept Hematology Slb Vejle /,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Rigshospitalet, department of surgical Gastroenterology, C-Tx",Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"The Cardiovascular MR Group, Dept. 2011, Rigshospitalet",The Cardiovascular Mr Group,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-prof. dr. M.A.F.J. van de Laar,Prof Dr M A F J Van De Laar,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-CHU of Liege,Chu Of Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,1,NA,NA,NA
-Universitaetsklinikum Essen,Universitaetsklinikum Essen,NA,review,92,final_family_map,ambiguous entity-family match: essen hospital,1,NA,NA,NA
-Erasmus MC Dept. Urology,Erasmus Mc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Juan Luis Bonilla Palomas,Juan Luis Bonilla Palomas,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Unidad de investigacin en Tuberculosis de Barcelona,Unidad De Investigacin En Tuberculosis De Barcelona,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Smerteklinikken,Smerteklinikken,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Akcea Therapeutics,Akcea,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 ANGELA PUENTE,Angela Puente,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Ophthalmology, Rigshospitalet  Glostrup",Dept Of Ophthalmology Rigshospitalet Glostrup,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"PRIMENT Clinical Trials Unit, UCL",Priment Clinical Trials,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"OA Dr. Philipp Becker c/o Abteilung fr Wirbelsulenchirurgie, Orthopdisches Spital Speising GmbH",Oa Dr Philipp Becker C/O,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Infectious Diseases,Department Of Infectious Diseases,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-CUB- Hopital Erasme,Cub- Hopital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,1,NA,NA,NA
-AZIENDA UNIT SANITARIA LOCALE DI MODENA,Azienda,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-LIEGE University Hospital,Liege University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,1,NA,NA,NA
-"Klinik fr Kardiologie, Herz- und Diabeteszentrum NRW",Klinik Fr Kardiologie Herz- Und Diabeteszentrum Nrw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Nordic Society of Gynaecological Oncology NSGO-Clinical Trial Unit,Nordic Society Of Gynaecological Nsgo-Clinical Trial,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Herlev  Gentofte Hospital, Oncology Dept.",Herlev Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: herlev gentofte oncology hospital,1,NA,NA,NA
-"Hjertemedicinsk klinik, Rigshospitalet",Hjertemedicinsk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-UCL Comprehensive Clinical Trials Unit,Ucl Comprehensive Clinical Trials,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Oncology  Rigshospitalet,Department Of Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department fr Kinder- und Jugendheilkunde, Pdiatrie I",Department Fr Kinder- Und Jugendheilkunde Pdiatrie I,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-University Hospital Essen Anstalt des ffentlichen Rechts,University Hospital Essen Anstalt Des Ffentlichen Rechts,NA,review,92,final_family_map,ambiguous entity-family match: essen anstalt des ffentlichen rechts hospital,1,NA,NA,NA
-SERVICIO DE NEFROLOGIA,Servicio De Nefrologia,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-MRC Clinical Trials Unit at UCL,Mrc Clinical Trials,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Charit - Universittsmedizin Berlin Dpt. of Dermatology and Allergy,Charit - Universittsmedizin Berlin Dpt Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Plastic Surgery, Breast and Burns Treatment",Department Of Plastic Surgery Breast And Burns Treatment,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Prof. Harry Siristatidis,Prof Harry Siristatidis,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-The Department of Urology,The,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dra. A. Teresa Caldern Duque,Dra A Teresa Caldern Duque,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Neuroanstesiologisk Klinik, RH/Glostrup",Neuroanstesiologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"MedUni Vienna, Dept of Anesthesia, Critical Care, Div. of Cardiothoracic and Vascular Anesthesia",Meduni Vienna,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Ophthalmology, MUW",Department Of Ophthalmology Muw,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Aalborg university hospital dept. of rheumatology,Aalborg University Hospital Dept Of Rheumatology,NA,review,92,final_family_map,ambiguous entity-family match: aalborg rheumatology hospital,1,NA,NA,NA
-"Afdeling for Rygkirurgi, Led- og Bindevvssygdomme  Rigshospitalet - Glostrup",Afdeling For Rygkirurgi Led- Og Bindevvssygdomme Rigshospitalet - Glostrup,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"KH Hietzing, Department of Ophthalmology",Kh Hietzing,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Kepler Universittsklinikum, Medcampus III, Klinik fr Interne 2",Kepler Universittsklinikum Medcampus Iii,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Otorhinolaryngology, Head and Neck Surgery",Department Of Otorhinolaryngology Head And Neck Surgery,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Azienda Unit Sanitaria Locale - IRCCS di Reggio Emilia,Azienda,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Clinical Physiology and Nuclear Medicine, Herlev and Gentofte Hospital",Herlev And Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: clinical physiology nuclear herlev gentofte hospital,1,NA,NA,NA
-CUB HOPITAL ERASME,Cub Hopital Erasme,NA,review,92,final_family_map,ambiguous entity-family match: cub erasme hospital,1,NA,NA,NA
-Dipartimento di Scienze della Vita e Biotecnologie dellUniversit degli Studi di Ferrara,Dipartimento Di Scienze Della Vita E Biotecnologie Delluniversit Degli Studi Di Ferrara,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-HOSPITAL UNIVERSITARIO FUNDACION ALCORCON,Hospital Universitario Fundacion Alcorcon,NA,review,92,final_family_map,ambiguous entity-family match: alcorcon hospital,1,NA,NA,NA
-Dra. Virginia Raquel Cspedes Nava,Dra Virginia Raquel Cspedes Nava,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Nordic Society of Gynaecological Oncology-Clinical Trial Unit,Nordic Society Of Gynaecological -Clinical Trial,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-NHS Greater Glasgow and Clyde Health Board / University of Glasgow,University Of Glasgow,NA,review,92,final_family_map,ambiguous entity-family match: greater glasgow clyde health board trust|glasgow university,1,NA,NA,NA
-"Department of Hematology, Herlev and Gentofte University Hospital",Herlev And Gentofte University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: hematology herlev gentofte hospital,1,NA,NA,NA
-Erasme University Hospital,Erasme University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: erasme hospital,1,NA,NA,NA
-Klinisk Farmakologisk Afdeling,Klinisk Farmakologisk,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dermatology Specialities Limited Partnership DSLP,Dermatology Specialities Limited Partnership Dslp,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Pulmonology,Department Of Pulmonology,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Abteilung fr Hals- Nasen- Ohrenkrankheiten MUW, AKH Wien",Abteilung Fr Hals- Nasen- Ohrenkrankheiten Muw Akh Wien,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Universittsspital Zrich, Klinik fr Angiologie",Universittsspital Zrich,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Afsnit 360, Gastroenheden",Afsnit Gastroenheden,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"The Parker Institute, Bispebjerg and Frederiksberg Hospital",The Parker Institute,NA,review,92,final_family_map,ambiguous entity-family match: parker bispebjerg frederiksberg hospital,1,NA,NA,NA
-Dra. Julia Origen Sabater,Dra Julia Origen Sabater,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Rijnstate Hospital, Arnhem",Rijnstate Hospital,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate arnhem hospital,1,NA,NA,NA
-VUmc Neurology Department,Vumc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Dentistry and Oral Health,Department Of Dentistry And Oral Health,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
+NightstaRx Ltd,NightstaRx,unknown,review,84,euctr_email_domain:nightstarx.com,alias match: 'nightstarx ltd' → 'NightstaRx',1,NA,NA,NA
+BenevolentAI Cambridge Ltd.,Benevolentai Cambridge,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+International Extranodal Lymphoma Study Group - IELSG,IELSG,cooperative_group,review,84,euctr_email_domain:eoc.ch,alias match: 'international extranodal lymphoma study group - ielsg' → 'IELSG',1,NA,NA,NA
+Dpt. of Growth and Reproduction,Dpt Of Growth And Reproduction,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+"Department of Clinical Physiology, Nuclear Medicin and PET",Department Of Clinical Physiology Nuclear Medicin And Pet,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Mendus bv former Immunicum,Mendus Bv Former Immunicum,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Psychiatric Research Unit,Psychiatric Research,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Dova Pharmaceuticals,Dova,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Ichnos Sciences SA,Ichnos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+AzurRx,Azurrx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Prof Mathias Abegg,Prof Mathias Abegg,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Department of Radiology, Rigshospitalet, Denmark",Department Of Radiology Rigshospitalet Denmark,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-World Health Organisation / Department of Health,World Health Organisation /,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Department of Infectious diseases,Department Of Infectious Diseases,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Azienda Unit Sanitaria Locale-IRCCS di Reggio Emilia,Azienda,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Dra Ana Pueyo Bastida,Dra Ana Pueyo Bastida,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"Dept. of Obstetrics and Gynecology, Sodersjukhuset",Dept Of Obstetrics And Gynecology Sodersjukhuset,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Endocrinology, Rigshospitalet",Department Of,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Department of Intensive Care, Rigshospitalet",Department Of Intensive Care Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-DIPARTIMENTO DI SCIENZE CLINICHE E BIOLOGICHE UNITO,Dipartimento Di Scienze Cliniche E Biologiche Unito,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Stichting Catharina Hospital,Stichting Catharina Hospital,NA,review,92,final_family_map,ambiguous entity-family match: catharina hospital,1,NA,NA,NA
-"Erasmus MC, Department of Dermatology",Erasmus Mc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"University hospital Bispebjerg and Frederiksberg, Department of Clinical Pharmacology",University Hospital Bispebjerg And Frederiksberg,NA,review,92,final_family_map,ambiguous entity-family match: bispebjerg frederiksberg clinical pharmacology hospital,1,NA,NA,NA
-Nordic Society of Gynaecological Oncology - Clinical Trial Unit NSGO-CTU,Nordic Society Of Gynaecological - Clinical Trial,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Herlev and Gentofte University Hospital, Department of Obstetrics and Gynecology",Herlev And Gentofte University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: herlev gentofte obstetrics gynecology hospital,1,NA,NA,NA
-"Skne University Hospital, department of rheumatology in Lud and Malm",Skne University Hospital,NA,review,92,final_family_map,ambiguous entity-family match: skne rheumatology lud malm hospital,1,NA,NA,NA
-"Cardiovascular Non-Invasive Imaging Research Laboratory, Department of Cardiology, Herlev and Gentofte Hospital",Herlev And Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: cardiovascular non invasive imaging cardiology herlev gentofte hospital,1,NA,NA,NA
-Dept. of Growth and Reproduction,Dept Of Growth And Reproduction,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Rigshospitalet, department of Neurology",Rigshospitalet,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Herlev Gentofte Hospital - Department of Dermatology and Allergy,Herlev Gentofte Hospital - Department Of Dermatology And Allergy,NA,review,92,final_family_map,ambiguous entity-family match: herlev gentofte dermatology allergy hospital,1,NA,NA,NA
-"Erasmus MC, department of dermatology",Erasmus Mc,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Bispebjerg and Frederiksberg Hospital, University of Copenhagen",Bispebjerg And Frederiksberg Hospital,NA,review,92,final_family_map,ambiguous entity-family match: bispebjerg frederiksberg copenhagen hospital,1,NA,NA,NA
-Dra.Margarita RamirezDra.Ifara Snchez,Dra Margarita Ramirezdra Ifara Snchez,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-"University Medical Center Groningen, Department of Rheumatology and Clinical Immunology",University Medical Center Groningen,NA,review,92,final_family_map,ambiguous entity-family match: groningen rheumatology clinical immunology hospital,1,NA,NA,NA
-Dra. Nuria Gutierrez Dubn,Dra Nuria Gutierrez Dubn,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Stichting Rijnstate Ziekenhuis,Stichting Rijnstate Ziekenhuis,NA,review,92,final_family_map,ambiguous entity-family match: rijnstate hospital,1,NA,NA,NA
-"Herlev and Gentofte Hospital, Copenhagen Prospective Studies on Asthma in Childhood (COPSAC)",Herlev And Gentofte Hospital,NA,review,92,final_family_map,ambiguous entity-family match: herlev gentofte copenhagen prospective studies asthma childhood copsac hospital,1,NA,NA,NA
-Nordic Society Of Gynaecological Oncology Clinical Trial Unit,Nordic Society Of Gynaecological Clinical Trial,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-"Clinical Pharmacology, Department of",Clinical,unknown,unknown,0,NA,generic department label without parent institution,1,NA,NA,NA
-Centre Hospitalier Universitaire D Orleans,Centre Hospitalier Universitaire D Orleans,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Universite De Liege / Centre Hospitalier Universitaire De Liege,Centre Hospitalier Universitaire De Liege,NA,review,92,final_family_map,ambiguous entity-family match: liege hospital,1,NA,NA,NA
-University Hospital Of Canary Islands,University Hospital Of Canary Islands,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-University Hospital Of Ferrara,University Hospital Of Ferrara,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Murdoch Childrens Research Institute MCRI,Murdoch Childrens Research Institute Mcri,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+LAVA Therapeutics B.V.,Lava B V,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Ivascular S.L.,Ivascular S L,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Synthorx Inc.,Synthorx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Grupo Gallego De Investigacion En Tumores Digestivos / Grupo Gallego De Investigacion En Tumores Digestivos,Grupo Gallego De Investigacion En Tumores Digestivos / Grupo Gallego De Investigacion En Tumores Digestivos,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Biocompatibles UK Limited,Biocompatibles,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Fundacion Biomedica Galicia Sur,Fundacion Biomedica Galicia Sur,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Bioline Rx Ltd.,Bioline Rx,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+AL-S Pharma AG,AL-S Pharma,unknown,review,84,euctr_email_domain:lists.lilly.com,alias match: 'al-s pharma ag' → 'AL-S Pharma',1,NA,NA,NA
+Evaxion A/S,Evaxion,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Nanobiotix,Nanobiotix,unknown,review,84,euctr_email_domain:nanobiotix.com,alias match: 'nanobiotix' → 'Nanobiotix',1,NA,NA,NA
+European Uro-Oncology Group Stichting,European Uro- Group Stichting,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Cavion Inc.,Cavion,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Iqvia Rds France,Iqvia Rds,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Esteve Pharmaceuticals S.A.,Esteve S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Parc Tauli Hospital Universitari,Parc Tauli Hospital Universitari,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Ocumension (Hong Kong) Ltd.,Ocumension Hong Kong,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Cullinan Pearl Corp.,Cullinan Pearl,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Instituto De Investigacion En Oncología Radioterapica FEOR,Instituto De Investigacion En Oncologia Radioterapica Feor,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Dra. Nuria Gutierrez Dubón,Dra Nuria Gutierrez Dubon,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Laboratorios Thea S.A.,Laboratorios Thea S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Department Of Biomedical Metabolic And Neural Sciences,Department Of Biomedical Metabolic And Neural,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+F4-Pharma Ges.m.b.H.,F4-Pharma Ges M B H,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Hospital Germans Trias I Pujol,Hospital Germans Trias I Pujol,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+La Fundacion Para La Gestion De La Investigacion Biomedica De Cadiz,La Fundacion Para La Gestion De La Investigacion Biomedica De Cadiz,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Pontificia Universidad Catolica de Chile,Pontificia Universidad Catolica De Chile,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Fundacion Canaria Instituto De Investigacion Sanitaria De Canarias,Fundacion Canaria Instituto De Investigacion Sanitaria De Canarias,foundation,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Hospital Universitario Tajo,Hospital Universitario Tajo,hospital,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Centre Hospitalier Universite De Laval,Centre Hospitalier Universite De Laval,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Croatian Cooperative Group For Clinical Trial Research In Oncology,Croatian Cooperative Group For Clinical Trial Research In,cooperative_group,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
+Gedeon Richter Iberica S.A.,Gedeon Richter Iberica S A,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA

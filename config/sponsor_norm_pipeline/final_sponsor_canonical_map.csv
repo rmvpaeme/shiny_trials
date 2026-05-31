@@ -3108,3 +3108,75 @@ Polpharma Biologics,Polpharma,NA,NA,NA,generic descriptor stripped
 Procter & Gamble Pharmaceuticals,Procter & Gamble,NA,NA,NA,generic descriptor stripped
 Scandinavian Biopharma Holding,Scandinavian Biopharma,NA,NA,NA,generic descriptor stripped
 Summit Therapeutics,Summit,NA,NA,NA,generic descriptor stripped
+"Hôpital Erasme, ULB",Hôpital Erasme,NA,NA,hospital,collapse Erasme → Hôpital Erasme (transitive anchor)
+CUB Erasme Hospital,Hôpital Erasme,NA,NA,hospital,collapse Erasme variants
+CUB - Hpital Erasme,Hôpital Erasme,NA,NA,hospital,collapse Erasme variants
+Erasme University Hospital,Hôpital Erasme,NA,NA,hospital,collapse Erasme variants
+Rijnstate Hospital,Rijnstate,NA,NA,hospital,collapse Rijnstate variants
+"Rijnstate Hospital, Arnhem",Rijnstate,NA,NA,hospital,collapse Rijnstate variants
+Rijnstate Ziekenhuis,Rijnstate,NA,NA,hospital,collapse Rijnstate variants
+Rijnstate Ziekenhuis Stichting,Rijnstate,NA,NA,hospital,collapse Rijnstate variants
+Stichting Rijnstate Ziekenhuis,Rijnstate,NA,NA,hospital,collapse Rijnstate variants
+Catharina Hospital Eindhoven,Catharina Ziekenhuis,NA,NA,hospital,collapse Catharina variants
+Catharina Ziekenhuis Stichting,Catharina Ziekenhuis,NA,NA,hospital,collapse Catharina variants
+Stichting Catharina Hospital,Catharina Ziekenhuis,NA,NA,hospital,collapse Catharina variants
+Cliniques universitaires Saint-Luc,Cliniques Universitaires Saint-Luc,NA,NA,hospital,collapse Saint-Luc variants
+Cliniques Universitaires St Luc,Cliniques Universitaires Saint-Luc,NA,NA,hospital,collapse Saint-Luc variants
+"Centre du Cancer, Cliniques universitaires Saint-Luc",Cliniques Universitaires Saint-Luc,NA,NA,hospital,collapse Saint-Luc variants
+Centre du Cancer des Cliniques Universitaires Saint-Luc,Cliniques Universitaires Saint-Luc,NA,NA,hospital,collapse Saint-Luc variants
+Universitaetsklinikum Erlangen AöR,Universitätsklinikum Erlangen,NA,NA,hospital,collapse Erlangen hospital variants
+University Hospital Erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,collapse Erlangen hospital variants
+Universitaetsklinikum Erlangen,Universitätsklinikum Erlangen,NA,NA,hospital,collapse Erlangen hospital variants
+Universitaetsklinikum Essen AöR,Universitätsklinikum Essen,NA,NA,hospital,collapse Essen hospital variants
+University Hospital Essen,Universitätsklinikum Essen,NA,NA,hospital,collapse Essen hospital variants
+Universitaetsklinikum Essen,Universitätsklinikum Essen,NA,NA,hospital,collapse Essen hospital variants
+University of Essen,University of Duisburg-Essen,NA,NA,academic,predecessor institution
+Universitaetsklinikum Muenster AöR,Universitätsklinikum Münster,NA,NA,hospital,collapse Münster hospital variants
+Universitaetsklinikum Muenster,Universitätsklinikum Münster,NA,NA,hospital,collapse Münster hospital variants
+University Hospital Muenster,Universitätsklinikum Münster,NA,NA,hospital,collapse Münster hospital variants
+University Hospital of Muenster,Universitätsklinikum Münster,NA,NA,hospital,collapse Münster hospital variants
+Kliniken Essen Mitte,Kliniken Essen-Mitte,NA,NA,hospital,canonical form uses hyphen
+"Prof. Gustav Dobos, Kliniken Essen Mitte",Kliniken Essen-Mitte,NA,NA,hospital,strip person prefix
+AGI Therapeutics Research,AGI Therapeutics,NA,NA,industry,canonical review cluster collapse
+Anne Mette Hvas,Anne-Mette Hvas,NA,NA,unknown,canonical review cluster collapse
+AskBio France,Askbio,NA,NA,industry,canonical review cluster collapse
+Bionorica SE,Bionorica,NA,NA,industry,canonical review cluster collapse
+BioNTech Cell & Gene Therapies,BioNTech SE,NA,NA,industry,canonical review cluster collapse
+Biontech US,BioNTech SE,NA,NA,industry,canonical review cluster collapse
+B. Braun Medical s.r.o.,B. Braun Medical,NA,NA,industry,canonical review cluster collapse
+Cristina Avendaño-Sola,Cristina Avendaño Sola,NA,NA,unknown,canonical review cluster collapse
+Enlivex Therapeutics RD,Enlivex Therapeutics,NA,NA,industry,canonical review cluster collapse
+Fresenius Kabi Deutschland,Fresenius Kabi,NA,NA,industry,canonical review cluster collapse
+IVI Valencia S.L. / IVI Valencia,IVI Valencia,NA,NA,industry,canonical review cluster collapse
+Ismail Ggenur,Ismail Gögenür,NA,NA,unknown,canonical review cluster collapse
+Jorge Orduna Valls,Jorge Orduña Valls,NA,NA,unknown,canonical review cluster collapse
+KBP BioSciences PTE.,KBP BioSciences Co.,NA,NA,industry,canonical review cluster collapse
+LFB USA,LFB SA,NA,NA,industry,canonical review cluster collapse
+McNeil,Johnson & Johnson,NA,NA,industry,canonical review cluster collapse
+MeiraGTx UK II,MeiraGTx UK,NA,NA,industry,canonical review cluster collapse
+A. Menarini I.F.R.,Menarini,NA,NA,industry,canonical review cluster collapse
+Merck,MSD,NA,NA,industry,canonical review cluster collapse
+Mereo BioPharma 1,Mereo BioPharma Group,NA,NA,industry,canonical review cluster collapse
+Mereo BioPharma 2,Mereo BioPharma Group,NA,NA,industry,canonical review cluster collapse
+Mereo BioPharma 3,Mereo BioPharma Group,NA,NA,industry,canonical review cluster collapse
+Mereo BioPharma 4,Mereo BioPharma Group,NA,NA,industry,canonical review cluster collapse
+Minoryx Therapeutics BE,Minoryx Therapeutics,NA,NA,industry,canonical review cluster collapse
+Mucos Pharma CZ s.r.o.,Mucos Pharma,NA,NA,industry,canonical review cluster collapse
+NeuroSearch Sweden,NeuroSearch,NA,NA,industry,canonical review cluster collapse
+OxThera IP,OxThera,NA,NA,industry,canonical review cluster collapse
+ProQR Therapeutics IV,ProQR Therapeutics,NA,NA,industry,canonical review cluster collapse
+Sangamo Therapeutics France,Sangamo Therapeutics,NA,NA,industry,canonical review cluster collapse
+SciClone Pharmaceuticals Italy,SciClone Pharmaceuticals,NA,NA,industry,canonical review cluster collapse
+Seqirus UK Limited / Seqirus UK,Seqirus UK,NA,NA,industry,canonical review cluster collapse
+SOM Innovation Biotech SL SOM Biotech,SOM Innovation Biotech SA SOM Biotech,NA,NA,industry,canonical review cluster collapse
+South Manchester University Hospitals NHS Trust,Manchester University NHS Foundation Trust,NA,NA,hospital,canonical review cluster collapse
+South Manchester University Hospitals NHS Trust / University of Manchester,Manchester University NHS Foundation Trust,NA,NA,hospital,canonical review cluster collapse
+Stealth Peptides,Stealth BioTherapeutics,NA,NA,industry,canonical review cluster collapse
+Topotarget Germany,Topotarget,NA,NA,industry,canonical review cluster collapse
+Wave Life Sciences UK,Wave Life Sciences,NA,NA,industry,canonical review cluster collapse
+Integrative Research Laboratories Sweden,Integrative Research Laboratories,NA,NA,industry,canonical review cluster collapse
+Gan & Lee Pharmaceuticals USA,Gan & Lee Pharmaceuticals,NA,NA,industry,canonical review cluster collapse
+Fundación de Investigación del Hospital Infantil Universitario Niño Jesús,Hospital Universitario Niño Jesús,NA,NA,hospital,canonical review cluster collapse
+"Department of Dermatology, Bispebjerg Hospital",Copenhagen University Hospital - Bispebjerg and Frederiksberg,NA,NA,hospital,canonical review cluster collapse
+ECRI-9,ECRI,NA,NA,unknown,canonical review cluster collapse
+Antonio Prez Martnez,Antonio Pérez-Martínez,NA,NA,unknown,canonical review cluster collapse
