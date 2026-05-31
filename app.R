@@ -3103,10 +3103,10 @@ server <- function(input, output, session) {
     t <- tc()
     pal <- c("Phase I" = t$frost1, "Phase II" = t$green,
              "Phase III" = t$orange, "Phase IV" = t$purple,
-             "Unknown" = t$fg)
+             "Unknown" = t$bg3)
     vals <- unique(as.character(values))
     missing <- setdiff(vals[!is.na(vals)], names(pal))
-    if (length(missing)) pal <- c(pal, setNames(rep(t$fg, length(missing)), missing))
+    if (length(missing)) pal <- c(pal, setNames(rep(t$bg3, length(missing)), missing))
     pal
   }
   
