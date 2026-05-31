@@ -123,3 +123,102 @@ soluzione iniettabile,Italian: solution for injection — not a substance
 concentrato per soluzione per infusione,Italian: concentrate for solution for infusion — not a substance
 sodio cloruro,Italian/Spanish: sodium chloride (formulation excipient)
 natriumklorid fresenius kabi 9 mg,German: sodium chloride brand (formulation excipient)
+pending,junk — not a substance
+none yet,not a substance
+not applied,not a substance
+not known,not a substance
+various,non-specific generic term
+inn,INN is an abbreviation not a substance name
+combinations,non-specific generic term
+pca,prostate cancer abbreviation
+ovca,ovarian cancer abbreviation
+til,tumor-infiltrating lymphocytes — cell therapy category without INN
+-like virus antigen,fragment — partial antigen string
+vari,ambiguous fragment
+nap,ambiguous abbreviation
+g ointment,dose fragment
+g gel,dose fragment
+g cream,dose fragment
+g creme,dose fragment (German)
+"v, eye drops suspension",formulation fragment
+7.2 micrograms,dose fragment
+"160 micrograms pressurised inhalation, suspension",dose + formulation
+film-coated tablet without jnj-77242113,placebo description — contains drug name negation
+dose dispersion for injection covid-19 mrna vaccine,formulation description
+"ml), émulsion injectable ou pour perfusion",French formulation fragment
+acide clavulanique : 8,French — dose/salt fragment for amoxicillin-clavulanate
+s95031 250mg film-coated tablet,research code with dose/formulation
+pf-07850327 round,Pfizer research code with tablet descriptor
+bi 1744 2.5 g solution for inhalation,BI 1744 (olodaterol) dose + formulation fragment
+bi 1744 5 g solution for inhalation,BI 1744 (olodaterol) dose + formulation fragment
+vial,container — not a substance
+99 ivr-116,influenza vaccine strain code
+2005 nymcx-161,influenza vaccine strain code
+2006 ivr-145,influenza vaccine strain code
+2009 h1n1v-like,influenza vaccine strain fragment
+2007 ivr-148,influenza vaccine strain code
+2007 nymc x-175c,influenza vaccine strain code
+2005 nymcx-161b,influenza vaccine strain code
+2005 nycmcx-161b,influenza vaccine strain code (spelling variant)
+254 measured as amount of total protein containing the pora p1.4,meningococcal protein quantity descriptor — not a substance
+"infusionsvätska, lösning",Swedish — infusion fluid (formulation term)
+"infusjonsvæske, oppløsning",Norwegian — infusion fluid (formulation term)
+"infusionsvæske, opløsning",Danish/Norwegian — infusion fluid (formulation term)
+"infuusioneste, liuos",Finnish — infusion preparation (formulation term)
+"infuusiokuiva-aine, liuosta varten",Finnish — lyophilized infusion preparation
+electrolytes,non-specific generic term
+mars,MARS = Molecular Adsorbent Recirculating System (liver dialysis device)
+sodium,elemental sodium — non-specific
+agua para preparaciones inyectables,Spanish — water for injections (excipient)
+diluyente. solucin salina fenolada glicerinada,Spanish — diluent solution (excipient/formulation)
+dppg,dipalmitoylphosphatidylglycerol — lipid excipient
+skin prick test positive control,diagnostic test — positive control
+skin prick test negative control,diagnostic test — negative control
+prick test histamin leti positivkontrolle 10 mg,diagnostic test — histamine positive control
+"prick test katzenepithel leti, 30 hep",diagnostic test — cat allergen prick test
+"prick test beifuss leti, 30 hep",diagnostic test — mugwort allergen prick test
+diagnóstico prick control positivo,Spanish — diagnostic prick test positive control
+diagnóstico prick control negativo,Spanish — diagnostic prick test negative control
+double encapsulated oral transplant of fecal microbiota,FMT procedure — not a drug substance
+enema transplant of fecal microbiota,FMT procedure — not a drug substance
+hyperpolarized [1-13c]pyruvate,metabolic MRI imaging agent — not therapeutic
+[18f]-alf-fapi-74,radiolabeled FAP PET imaging agent
+[18f]fapi-74,radiolabeled FAP PET imaging agent
+18fhx4,18F-labeled PET tracer
+11cpk11195,[11C]PK11195 — TSPO PET radioligand
+plasma rich in growth factors,PRGF — autologous blood product without INN
+prgf-endoret,PRGF — autologous blood product without INN
+mesenchymal stem cells,mesenchymal stem cell therapy — cell therapy category without INN
+mesenchymal stromal cells,mesenchymal stromal cell therapy — cell therapy category
+human autologous mesenchymal stem cells,autologous MSC therapy — cell therapy category
+"msc, adipose tissue",adipose-derived MSC therapy — cell therapy category
+allob cells,allogeneic bone marrow osteogenic progenitor cells — no INN
+ascs,adipose-derived stem cells — cell therapy category
+mb-cart19.1,CD19-directed CAR-T cell therapy — no INN
+mb-cart2019.1,CD19-directed CAR-T cell therapy — no INN
+dc-vaccine_irstirccs,institution-specific dendritic cell vaccine — no INN
+kyv-101,CD19-directed CAR-T cell therapy (Kyverna) — no INN
+dcvac,autologous dendritic cell cancer vaccine — no INN
+tedopi,investigational neoantigen cancer vaccine — no INN
+recmage-a3 recombinant protein formulated in as15 adjuvant,discontinued GSK cancer immunotherapeutic — no INN
+"no inn proposed, rhgad65 formulated in alum gad-alum",explicitly no INN in raw field
+mva me-trap,Modified Vaccinia Ankara malaria vaccine — no INN
+maat013,MaaT Pharma microbiome product — no INN
+sgm-101,anti-CEA fluorescent antibody for surgical imaging — diagnostic not therapeutic
+custodiol-n,organ preservation/cardioplegia solution — not a drug substance
+nasturtium herb powder,herbal preparation — not a standard drug INN
+horseradish root powder,herbal/laboratory reagent — not a therapeutic substance
+fc- and cdr-modified humanised monoclonal antibody against c5,descriptive — C5 complement inhibitor without INN
+hib conjugate to meningococcal outer membrane protein complex,Hib conjugate vaccine component descriptor — not a substance INN
+identical to nbi-1065845 tablets without active drug,placebo description
+heterologous human adult liver-derived progenitor cells,cell therapy — no INN
+wt1 lamp mrna dc,DC vaccine loaded with WT1 mRNA — cell therapy without INN
+rsv mat,RSV maternal antibody/vaccine — insufficient info
+nnc0487-0111 b 10141,NNC0487-0111 batch code — not a substance name
+nnc0487-0111 b 10142,NNC0487-0111 batch code — not a substance name
+nnc0487-0111 b 10143,NNC0487-0111 batch code — not a substance name
+nnc0487-0111 b 10144,NNC0487-0111 batch code — not a substance name
+nnc0487-0111 b 10145,NNC0487-0111 batch code — not a substance name
+nnc0487-0111 b 10146,NNC0487-0111 batch code — not a substance name
+"multienzymes lipase, protease etc.",enzyme mixture — no specific INN
+prp,platelet-rich plasma — autologous blood product without INN

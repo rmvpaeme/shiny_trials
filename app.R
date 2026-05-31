@@ -142,17 +142,6 @@ norm_pip_substance <- function(x) {
   unique(tokens[nchar(tokens) >= 4])
 }
 
-source(
-  file.path("helper_scripts", "substance_norm_pipeline", "normalise_substances.R"),
-  local = FALSE
-)
-.substance_cfg <- load_substance_configs()
-
-resolve_substance_label <- function(x) {
-  result <- normalise_substances(as.character(x), configs = .substance_cfg)
-  stringr::str_to_sentence(result$active_substance_clean)
-}
-
 is_exploratory_substance <- function(x) {
   key <- str_to_lower(coalesce(as.character(x), ""))
   nchar(key) >= 3 &
@@ -1719,68 +1708,20 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
                       sum(!is.na(result$substance_label)), nrow(result)))
     }, error = function(e) message("Could not load substance labels: ", e$message))
   } else {
-    # Inline fallback: single resolve_substance_label() call for both
-    # the substance_label column and the preprocessing.Rmd CSV log.
-    message("trial_substance_labels.csv not found — computing substance labels inline.")
-    message("Run build_substance_labels.R after cache rebuild to avoid this at startup.")
+    message("trial_substance_labels.csv not found — run build_substance_labels.R after cache rebuild.")
     tryCatch({
-      inn_log_rows <- result %>%
+      sub_labels <- result %>%
         filter(!is.na(DIMP_inn_name), nchar(str_trim(DIMP_inn_name)) > 0) %>%
-        select(`_id`, register, year, age_group, raw_substance = DIMP_inn_name) %>%
-        mutate(source_label = "INN")
-      product_log_rows <- result %>%
-        filter(is.na(DIMP_inn_name) | nchar(str_trim(DIMP_inn_name)) == 0,
-               !is.na(DIMP_product_name), nchar(str_trim(DIMP_product_name)) > 0) %>%
-        select(`_id`, register, year, age_group, raw_substance = DIMP_product_name) %>%
-        mutate(source_label = "Product")
-
-      all_rows <- bind_rows(inn_log_rows, product_log_rows) %>%
-        separate_rows(raw_substance, sep = " / ") %>%
-        mutate(
-          active_substance    = resolve_substance_label(raw_substance),
-          exploratory_include = is_exploratory_substance(active_substance)
-        )
-
-      sub_labels <- all_rows %>%
-        filter(exploratory_include,
-               !is.na(active_substance), nchar(trimws(active_substance)) > 0) %>%
+        select(`_id`, DIMP_inn_name) %>%
+        distinct() %>%
+        separate_rows(DIMP_inn_name, sep = " / ") %>%
+        mutate(DIMP_inn_name = str_to_sentence(str_squish(DIMP_inn_name))) %>%
+        filter(is_exploratory_substance(DIMP_inn_name), nchar(DIMP_inn_name) > 0) %>%
         group_by(`_id`) %>%
-        summarise(substance_label = paste(sort(unique(active_substance)), collapse = " / "),
+        summarise(substance_label = paste(sort(unique(DIMP_inn_name)), collapse = " / "),
                   .groups = "drop")
       result <- result %>% left_join(sub_labels, by = "_id")
-
-      sub_log <- all_rows %>%
-        filter(exploratory_include) %>%
-        rowwise() %>%
-        mutate(token = list(norm_pip_substance(active_substance))) %>%
-        ungroup() %>%
-        unnest(token) %>%
-        filter(!is.na(token), nchar(token) >= 4) %>%
-        left_join(pip_by_substance %>% select(sub_tok, sub_n),
-                  by = c("token" = "sub_tok")) %>%
-        mutate(
-          ema_match = case_when(
-            is.na(sub_n) ~ "no match",
-            sub_n == 1   ~ "unambiguous",
-            TRUE         ~ paste0("ambiguous (", sub_n, " decisions)")
-          ),
-          n_decisions = coalesce(sub_n, 0L)
-        ) %>%
-        select(register, year, age_group, source = source_label, raw_substance,
-               active_substance, exploratory_include,
-               token, ema_match, n_decisions) %>%
-        group_by(register, year, age_group, source, raw_substance,
-                 active_substance, exploratory_include,
-                 token, ema_match, n_decisions) %>%
-        summarise(n_trials = n(), .groups = "drop") %>%
-        arrange(register, desc(n_trials))
-      write.csv(sub_log,
-                file.path(dirname(db_path), "substance_normalisation_log.csv"),
-                row.names = FALSE)
-      message(sprintf("Substance normalisation log: %d rows -> %s",
-                      nrow(sub_log), file.path(dirname(db_path), "substance_normalisation_log.csv")))
-    }, error = function(e)
-      message("Could not compute substance labels: ", e$message))
+    }, error = function(e) message("Could not build fallback substance labels: ", e$message))
   }
   if (!"substance_label" %in% names(result)) result$substance_label <- NA_character_
   
@@ -2772,7 +2713,10 @@ ui <- tagList(
                                       withSpinner(plotlyOutput("plot_top_substances",height="420px"),type=6))),
                                 fluidRow(
                                   box(title="Active Substance Evolution Over Time",status="info",solidHeader=TRUE,width=12,height=480,
-                                      withSpinner(plotlyOutput("plot_substance_timeline",height="420px"),type=6)))
+                                      withSpinner(plotlyOutput("plot_substance_timeline",height="420px"),type=6))),
+                                fluidRow(
+                                  box(title="First Year Active Substances Appeared",status="warning",solidHeader=TRUE,width=12,height=480,
+                                      withSpinner(plotlyOutput("plot_substance_debut",height="420px"),type=6)))
                         ),
 	                        tabItem(tabName="migration",
 	                                fluidRow(
@@ -4556,8 +4500,8 @@ server <- function(input, output, session) {
     plot_ly(df, x = ~debut, y = ~active_substance, type = "scatter", mode = "markers",
             marker = list(color = tc()$frost1, size = 10, opacity = 0.85),
             customdata = ~total,
-            hovertemplate = "<b>%{y}</b><br>First trial year: %{x}<br>Total trials: %{customdata}<extra></extra>") %>%
-      plt_layout(xaxis = list(title = "First trial year", tickformat = "d"),
+            hovertemplate = "<b>%{y}</b><br>First year appeared: %{x}<br>Total trials: %{customdata}<extra></extra>") %>%
+      plt_layout(xaxis = list(title = "First year appeared", tickformat = "d"),
                  yaxis = list(title = ""),
                  margin = list(l = 180))
   })
@@ -6819,7 +6763,7 @@ server <- function(input, output, session) {
 	      "plot_organ", "plot_term", "plot_country", "plot_country_cooccur",
 	      "table_pip_compound_complexity", "pip_compound_decision_picker",
 	      "table_pip_compound_decisions", "plot_pip", "plot_pip_year",
-	      "plot_top_substances", "plot_substance_timeline",
+	      "plot_top_substances", "plot_substance_timeline", "plot_substance_debut",
       "plot_migration_signal", "plot_migration_timeline",
 	      "plot_timeline_q", "plot_decision_time", "plot_decision_time_sponsor",
       "plot_ctis_date_spread",

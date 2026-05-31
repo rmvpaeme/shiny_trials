@@ -43,6 +43,7 @@ if (is.na(max_review) || max_review <= 0L) max_review <- 50L
 
 queue_path     <- project_path("config", "substance_norm_pipeline", "substance_review_queue.csv")
 overrides_path <- project_path("config", "substance_norm_pipeline", "manual_substance_overrides.csv")
+reviewed_path  <- project_path("config", "substance_norm_pipeline", "substance_llm_reviewed.csv")
 negatives_path <- project_path("config", "substance_norm_pipeline", "negative_aliases.csv")
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -118,6 +119,35 @@ if (export_mode) {
     }
   }
 
+  # --- export accepted decisions → substance_llm_reviewed.csv (alias index tier)
+  n_reviewed_added <- 0L
+  if (nrow(accepted) && file.exists(reviewed_path)) {
+    reviewed <- tryCatch(
+      read.csv(reviewed_path, stringsAsFactors = FALSE, check.names = FALSE),
+      error = function(e) data.frame(
+        alias_clean = character(), substance_clean = character(),
+        alias_type = character(), source = character(),
+        confidence_prior = numeric(), stringsAsFactors = FALSE
+      )
+    )
+    new_rev <- data.frame(
+      alias_clean      = tolower(trimws(accepted$raw_substance)),
+      substance_clean  = tolower(trimws(accepted$canonical_substance)),
+      alias_type       = "reviewed_queue",
+      source           = "llm_reviewed",
+      confidence_prior = 1.0,
+      stringsAsFactors = FALSE
+    )
+    key_existing_r <- paste(reviewed$alias_clean, reviewed$substance_clean, sep = "\r")
+    key_new_r      <- paste(new_rev$alias_clean,   new_rev$substance_clean,  sep = "\r")
+    new_rev        <- new_rev[!key_new_r %in% key_existing_r, , drop = FALSE]
+    n_reviewed_added <- nrow(new_rev)
+    if (n_reviewed_added > 0L) {
+      combined_r <- rbind(reviewed, new_rev)
+      write.csv(combined_r, reviewed_path, row.names = FALSE, na = "")
+    }
+  }
+
   # --- export rejected rows → negative_aliases.csv
   rejected <- queue[tolower(trimws(queue$decision)) %in% "rejected", ]
 
@@ -144,9 +174,12 @@ if (export_mode) {
 
   message("Export complete.")
   message("  Accepted overrides added to manual_substance_overrides.csv: ", n_override_added)
+  message("  Accepted aliases added to substance_llm_reviewed.csv:       ", n_reviewed_added)
   message("  Rejected aliases added to negative_aliases.csv:             ", n_negative_added)
   message("")
-  message("Re-run normalise_substances.R to apply decisions to the queue.")
+  message("Next steps:")
+  message("  Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R")
+  message("  Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue")
   quit(save = "no", status = 0L)
 }
 

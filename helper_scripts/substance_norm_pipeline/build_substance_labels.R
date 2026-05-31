@@ -93,8 +93,10 @@ message(sprintf("Input: %d trial-substance pairs, %d unique substances, %d trial
                 dplyr::n_distinct(raw$raw_substance),
                 dplyr::n_distinct(raw$`_id`)))
 
-# ── pre-filter: drop strings that cannot be substance names ──────────────────
-# Removes split fragments (single letters, units, pure numbers) and
+# ── pre-filter: exclude strings that cannot be substance names ───────────────
+# This filters only trial-substance pairs before label normalisation. It does
+# not remove trials from the cache; downstream joins keep unlabeled trials.
+# Excludes split fragments (single letters, units, pure numbers) and
 # formulation-only strings that start with a dose amount.
 n_raw_before <- nrow(raw)
 raw <- raw %>%
@@ -103,9 +105,11 @@ raw <- raw %>%
     nchar(trimws(raw_substance)) >= 3,
     grepl("[A-Za-z]{3,}", raw_substance),
     !grepl("^[0-9][0-9.,]* *(mg|ml|g|mcg|mL|IU|ui|%|ppm|mBq|GBq|L\\b)",
-           raw_substance, ignore.case = TRUE)
+           raw_substance, ignore.case = TRUE),
+    !grepl("^m[Ll][[:space:].,]", raw_substance,    # unit-first fragments: "mL concentrate...", "ml solution..."
+           ignore.case = TRUE)
   )
-message(sprintf("Pre-filter: %d → %d pairs (%d removed as non-substance fragments)",
+message(sprintf("Pre-filter: %d → %d pairs (%d excluded from substance labels; trials retained)",
                 n_raw_before, nrow(raw), n_raw_before - nrow(raw)))
 
 # ── normalise unique substances ────────────────────────────────────────────────
@@ -138,11 +142,13 @@ trial_norm <- raw %>%
                              exploratory),
             by = "raw_substance")
 
-# Aggregate per trial: sorted unique exploratory accepted/review substances
+# Aggregate per trial: sorted unique exploratory accepted substances only.
+# review-status matches (fuzzy candidates, ambiguous aliases) go to the queue
+# for LLM/manual curation and are NOT included in app labels until accepted.
 labels <- trial_norm %>%
   filter(
     exploratory,
-    match_status %in% c("accepted", "review"),
+    match_status == "accepted",
     !is.na(active_substance_clean),
     nchar(stringr::str_trim(active_substance_clean)) > 0
   ) %>%
@@ -169,7 +175,12 @@ message(sprintf("Wrote substance normalisation log: %d rows to %s", nrow(log_row
 
 if (write_queue) {
   existing_queue <- if (file.exists(queue_path)) {
-    readr::read_csv(queue_path, show_col_types = FALSE)
+    q <- readr::read_csv(queue_path, show_col_types = FALSE)
+    # guard: queue may have been written without decision columns
+    if (!"decision"            %in% names(q)) q$decision             <- NA_character_
+    if (!"canonical_substance" %in% names(q)) q$canonical_substance  <- NA_character_
+    if (!"comment"             %in% names(q)) q$comment              <- NA_character_
+    q
   } else {
     tibble::tibble(
       raw_substance = character(), active_substance_clean = character(),
@@ -200,7 +211,7 @@ if (write_queue) {
     select(raw_substance, decision, canonical_substance, comment)
 
   queue_out <- new_queue %>%
-    left_join(existing_decisions, by = "raw_substance") %>%
+    anti_join(existing_decisions, by = "raw_substance") %>%
     arrange(desc(n_occurrences))
 
   readr::write_csv(queue_out, queue_path)

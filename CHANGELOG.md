@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.3 — 2026-05-31
+
+### Substance normalisation — queue curation + label gap analysis
+
+- **Queue curation (high-n entries)**: worked through all queue entries with n_occurrences ≥ 4. Added 99 new `negative_aliases.csv` entries covering junk strings, Scandinavian/Finnish infusion-fluid translations, influenza vaccine strain codes, cell-therapy categories without INNs (MSC, CAR-T, TIL, DC vaccines), PET imaging agents, diagnostic prick-test materials, and FMT procedure descriptions. Added 15 new `substance_llm_reviewed.csv` brand→INN entries: Boostrix → diphtheria toxoid/pertussis vaccine/tetanus toxoid, Zelvina → drospirenone, Vyxeos Liposomal → cytarabine/daunorubicin, ASTX727 → cedazuridine/decitabine, TQJ230 → pelacarsen, ARO-APOC3 → olezarsen, AMG 133 → maridebart cafraglutide, JNJ-77242113 → icotrokinra, [68Ga]Ga-PentixaFor → pentixafor, Pred Forte → prednisolone, Genoxal → cyclophosphamide, DARAXONRASIB (RMC-6236) → daraxonrasib. Queue reduced from 1,437 → **1,317 rows**; accepted rate 73% (22,881 / 31,229); trial labels 39,025 → **39,065**.
+- **Label gap analysis**: diagnosed the 11,483 trials (22%) without substance labels — 4,924 have no substance data in the registry (device/behavioural/non-drug trials), 5,054 have substance strings that are all rejected/unknown by the pipeline, and 1,505 have review/unknown candidates awaiting curation.
+- **Phase 5 (final canonical map) removed from roadmap**: `canonical_substances.csv` + direct-to-INN curation in `substance_llm_reviewed.csv` + `str_to_sentence()` normalisation already cover the same ground; a separate redirect layer is not needed.
+
 ## v0.12.2 — 2026-05-22
 
 ### Substance normalisation pipeline — major curation session
@@ -20,7 +28,6 @@
 - **App/report parity refresh**: Chart Builder now uses a shared dimension registry and exposes orphan designation, result-reporting status, active substance, analysis register, trial-scope bins, participant-size bins, and CTIS decision-spread bins when available.
 - **Data Explorer audit detail**: trial-detail modals now show retained registry raw/source values next to normalised sponsor, substance, MedDRA, status, date, and result-reporting values to make curation errors easier to spot.
 - **Filter state consistency**: URL state, JSON save/load, and PDF report filters now use the same filter-state object, including product/substance, orphan designation, and mononational filters; stale PIP waiver display is hidden unless matching cache columns exist.
-- **Substance Tracker added**: added a dedicated Analysis sidebar panel for following one active substance across KPIs, yearly status, country, sponsor, condition, and trial-list views. The tracker selection participates in the shared filter state used by active-filter chips and the paediatric-vs-adult comparison PDF, without auto-selecting a substance or looping with the sidebar product filter.
 - **Report coverage expanded**: the main PDF now includes General Statistics participant distribution, completion by sponsor type/cohort, Register Migration, and Active Substances figures. The paediatric-vs-adult PDF now includes participant-size, completion-cohort, and active-substance comparisons.
 - **UI cleanup**: moved Completion Rate by Authorization Cohort into General Statistics, fixed the participant-count Plotly layout to fill its box, added a CTIS results-source audit table, and hid the visible dark-theme option while retaining the dark theme code.
 - **Trial duration added and corrected**: completed-trial duration is now exposed as a Chart Builder dimension, shown in General Statistics, included in trial-detail modals, and carried into both main and paediatric-vs-adult reports. Duration now uses real EUCTR global end dates and CTIS estimated start/end dates instead of falling back to authorization dates, preventing zero-duration artifacts.

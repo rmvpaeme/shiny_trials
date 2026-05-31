@@ -113,6 +113,13 @@ generate_candidates <- function(raw) {
   ) |> stringr::str_squish()
 
   first_token <- stringr::str_extract(x_no_form, "^[a-z0-9][a-z0-9\\-]*")
+  # Only include first_token when it is long enough to be specific (>= 5 chars)
+  # OR when it equals x0 (the raw string IS that short code, e.g. "AZT", "3TC").
+  # Short first-tokens extracted from longer strings (e.g. "same" from
+  # "same excipients...", "18f" from "18F-DPA-714") cause spurious alias hits.
+  if (!is.na(first_token) && nchar(first_token) < 5 && first_token != x0) {
+    first_token <- NA_character_
+  }
 
   unique(stats::na.omit(c(x0, x_no_dose, x_no_form, first_token)))
 }
@@ -164,7 +171,8 @@ check_placebo <- function(raw) {
   "\\bclass\\b",
   "\\bstudy drug\\b",
   "\\binvestigational product\\b",
-  "\\binvestigational medicinal product\\b"
+  "\\binvestigational medicinal product\\b",
+  "\\bfusion protein\\b"                     # overly generic — no specific therapeutic substance
 )
 
 check_negative <- function(candidates, cfg) {
@@ -241,6 +249,18 @@ check_alias <- function(candidates, cfg) {
   top_hits  <- hits |> dplyr::filter(match_score >= top_score - 2)
 
   if (dplyr::n_distinct(top_hits$substance_clean) > 1) {
+    # llm_reviewed is a curated decision — let it resolve ambiguity from other tiers
+    reviewed_hits <- top_hits |> dplyr::filter(source == "llm_reviewed")
+    if (nrow(reviewed_hits) > 0 && dplyr::n_distinct(reviewed_hits$substance_clean) == 1) {
+      hit <- reviewed_hits |> dplyr::slice(1)
+      return(.result(
+        hit$substance_clean,
+        status = "accepted", score = hit$match_score,
+        source = hit$source,
+        reason = paste0("alias match (llm_reviewed): '", hit$alias_clean,
+                        "' -> '", hit$substance_clean, "'")
+      ))
+    }
     return(.result(
       NA_character_,
       status = "review", score = top_score,

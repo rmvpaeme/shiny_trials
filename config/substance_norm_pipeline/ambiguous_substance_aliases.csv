@@ -19,6 +19,7 @@ abexinostat,abexinostat|zabadinostat,2,chembl|llm_reviewed
 abituzumab,abituzumab|tigatuzumab,2,chembl|llm_reviewed
 abrysvo,"respiratory syncytial virus pre-fusion glycoprotein f|respiratory syncytial virus vaccine (bivalent, recombinant)",2,chembl|epar|manual
 abt-492,delafloxacin|delafloxacin meglumine,2,chembl|manual
+ac010220.2hcl,quizartinib|quizartinib dihydrochloride,2,chembl
 ac0137,pramlintide|pramlintide acetate,2,chembl|manual
 ac220,quizartinib|quizartinib dihydrochloride,2,chembl|manual
 ac2307,davalintide|davalintide acetate,2,chembl|manual
@@ -42,9 +43,13 @@ adct-402,loncastuximab|loncastuximab tesirine,2,chembl|manual
 adecatumumab,adecatumumab|daratumumab,2,chembl|llm_reviewed
 ademetionine,ademetionine|dimetindene,2,chembl|llm_reviewed
 "adjupanrix (previously pandemic influenza vaccine (h5n1) (split virion, inactivated, adjuvanted) glaxosmithkline biologicals)","influenza a virus, split virion|split influenza virus, inactivated, containing antigen: a|vietnam|1194|2004 (h5n1) like strain used (nibrg-14)",2,chembl|epar|manual
+adl-5747,adl-5747|adl-5747 free base,2,chembl
+adl5747,adl-5747|adl-5747 free base,2,chembl
+adoport,tacrolimus|tacrolimus anhydrous,2,chembl
 adrecizumab,daclizumab|enibarcimab,2,chembl|llm_reviewed
 adriamycin,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
 adrovance,alendronate sodium|colecalciferol|alendronic acid (as sodium trihydrate),2,chembl|epar|manual
+advagraf,tacrolimus|tacrolimus anhydrous,2,chembl|epar|manual
 advil,ibuprofen|ibuprofen sodium,2,chembl|manual
 adynovi,"antihemophilic factor, pegylated (mw 20000) human sequence recombinant|rurioctocog alfa pegol",2,chembl|epar|manual
 adzynma,apadamtase alfa|radamts13,2,chembl|epar|manual
@@ -52,6 +57,7 @@ aeb071,sotrastaurin|sotrastaurin acetate,2,chembl|manual
 aegr-733,lomitapide|lomitapide mesylate,2,chembl|manual
 aerivio spiromax,fluticasone propionate|salmeterol xinafoate|fluticasone propionate,2,chembl|epar|manual
 af37702,peginesatide|peginesatide acetate,2,chembl|manual
+afatinib dimaleate,afatinib|afatinib dimaleate,2,chembl
 afegostat tartrate,afegostat|afegostat tartrate,2,chembl|llm_reviewed|manual
 aflunov,a|vietnam|1194|2004|influenza vaccine|influenza virus surface antigens (haemagglutinin and neuraminidase) of strain: a|turkey|turkey|1|05 (h5n1)-like strain (nibrg-23),3,epar|llm_reviewed
 agilus,"dantrolene sodium|dantrolene sodium, hemiheptahydrate",2,chembl|epar|manual
@@ -65,6 +71,7 @@ ald518,clazakizumab|sarilumab,2,chembl|llm_reviewed
 aldomet,methyldopa|methyldopate hydrochloride,2,chembl|manual
 aldoxorubicin,aldoxorubicin|doxorubicin,2,chembl|llm_reviewed
 alecensa,alectinib|alectinib hydrochloride,2,chembl|epar|manual
+alectinib hydrochloride,alectinib|alectinib hydrochloride,2,chembl
 alendronate sodium trihydrate,alendronate sodium|alendronic acid,2,chembl|llm_reviewed
 alfentanil hydrochloride,alfentanil|alfentanil hydrochloride,2,chembl|llm_reviewed|manual
 alimta,pemetrexed|pemetrexed disodium,2,chembl|epar|manual
@@ -136,6 +143,7 @@ armisarte (previously pemetrexed actavis),pemetrexed diacid monohydrate|pemetrex
 articaine hydrochloride,articaine|articaine hydrochloride,2,chembl|llm_reviewed|manual
 arundic acid,arundic acid|hyaluronic acid,2,chembl|llm_reviewed
 arzoxifene,arzoxifene|raloxifene,2,chembl|llm_reviewed
+asp2215 hemifumarate,gilteritinib|gilteritinib fumarate,2,chembl|llm_reviewed
 asparaginase erwinia chrysanthemi (recombinant),asparaginase erwinia chrysanthemi|crisantaspase,2,chembl|manual
 aspegic,acetylsalicylic acid|aspirin dl-lysine,2,chembl|llm_reviewed
 astegolimab,astegolimab|atezolizumab,2,chembl|llm_reviewed
@@ -147,6 +155,7 @@ atb200,avalglucosidase alfa|cipaglucosidase alfa,2,chembl|llm_reviewed
 atenativ,antithrombin iii|antithrombin iii human,2,chembl|llm_reviewed|manual
 ati-5923,tecarfarin|tecarfarin sodium,2,chembl|manual
 atomoxetine hydrochloride,atomoxetine|atomoxetine hydrochloride,2,chembl|llm_reviewed|manual
+atorvastatin calcium,atorvastatin|atorvastatin calcium,2,chembl
 atosiban,atosiban|retosiban,2,chembl|llm_reviewed
 atosiban sun,atosiban (as acetate)|atosiban acetate,2,chembl|epar|manual
 atracurium,atracurium|gantacurium,2,chembl|llm_reviewed
@@ -157,11 +166,16 @@ avandia,rosiglitazone|rosiglitazone maleate,2,chembl|epar|manual
 avelox,moxifloxacin|moxifloxacin hydrochloride,2,chembl|llm_reviewed|manual
 aventyl,nortriptyline|nortriptyline hydrochloride,2,chembl|manual
 avibactam sodium,avibactam|avibactam sodium,2,chembl|llm_reviewed|manual
-avonex,interferon beta|interferon beta-1a,2,chembl|epar|manual
+avl-292,spebrutinib|spebrutinib besylate,2,chembl
+avonex,interferon beta|interferon beta-1a,2,chembl|manual
 axatilimab,axatilimab|daxdilimab,2,chembl|llm_reviewed
 axumin,fluciclovine (18f)|fluciclovine f18,2,chembl|epar|manual
 ay-5710,magaldrate|magaldrate anhydrous,2,chembl|manual
+azd-2811,barasertib|defosbarasertib,2,chembl
+azd-6244 hyd-sulfate,selumetinib|selumetinib sulfate,2,chembl
+azd-6244 hydrogen sulfate,selumetinib|selumetinib sulfate,2,chembl
 azd0171,azd-4017|falbikitug,2,chembl|llm_reviewed
+azd1722,tenapanor|tenapanor hydrochloride,2,chembl
 azelastine hydrochloride,azelastine|azelastine hydrochloride,2,chembl|llm_reviewed|manual
 azilect,rasagiline|rasagiline mesylate,2,chembl|epar|manual
 azithromycin monohydrate,azithromycin|azithromycin monohydrate,2,chembl|llm_reviewed|manual
@@ -205,11 +219,13 @@ betrixaban,betrixaban|betrixaban maleate,2,chembl|llm_reviewed|manual
 betrixaban maleate,betrixaban|betrixaban maleate,2,chembl|llm_reviewed|manual
 bevantolol hydrochloride,bevantolol|bevantolol hydrochloride,2,chembl|llm_reviewed|manual
 bia 2-093,eslicarbazepine|eslicarbazepine acetate,2,chembl|llm_reviewed|manual
+bibw2992-ma2,afatinib|afatinib dimaleate,2,chembl
+bicalutamide,bicalutamide|talazoparib,2,chembl
 bicillin,penicillin g benzathine|procaine benzylpenicillin,2,chembl|manual
 bifonazole,bifonazole|miconazole,2,chembl|llm_reviewed
 biib091,biib-015|biib-091,2,chembl|llm_reviewed
 biib115,biib-015|salanersen,2,chembl|llm_reviewed
-biktarvy,bictegravir|bictegravir|emtricitabine|tenofovir alafenamide|bictegravir|emtricitabine|tenofovir alafenamide|fumarate,3,epar|manual
+biktarvy,bictegravir|bictegravir|emtricitabine|tenofovir alafenamide|bictegravir|emtricitabine|tenofovir alafenamide|fumarate,3,epar|llm_reviewed|manual
 bimervax,sars-cov-2 virus recombinant spike (s) protein receptor binding domain (rbd) fusion dimer produced by recombinant dna technology|selvacovatein,2,chembl|epar|manual
 bindren,colestilan|colestilan chloride,2,chembl|epar|manual
 binosto,alendronate sodium|alendronic acid,2,chembl|manual
@@ -221,6 +237,7 @@ bisoprolol hemifumarate,bisoprolol|bisoprolol fumarate,2,chembl|llm_reviewed|man
 blarcamesine,acadesine|blarcamesine,2,chembl|llm_reviewed
 blenoxane,bleomycin|bleomycin sulfate,2,chembl|manual
 blocadren,timolol|timolol maleate,2,chembl|manual
+bms-907351,cabozantinib|cabozantinib s-malate,2,chembl
 bnt162b2,"covid-19 mrna vaccine, nucleoside-modified|tozinameran",2,chembl|llm_reviewed
 bodyfolin,levomefolate calcium|levomefolic acid,2,chembl|manual
 bondenza (previously ibandronic acid roche),ibandronate sodium|ibandronic acid,2,chembl|epar|manual
@@ -255,8 +272,10 @@ byfavo,remimazolam besilate|remimazolam besylate,2,chembl|epar|manual
 bylvay,odevixibat|odevixibat sesquihydrate,2,chembl|epar|manual
 cabometyx,cabozantinib|cabozantinib (s)-malate|cabozantinib s-malate,3,chembl|epar|manual
 cabotegravir sodium,cabotegravir|cabotegravir sodium,2,chembl|llm_reviewed|manual
+cabozantinib s-malate,cabozantinib|cabozantinib s-malate,2,chembl
 caelyx,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
 cafedrine,cafedrine|caffeine,2,chembl|llm_reviewed
+calcichew d3,calcium carbonate|cholecalciferol|cholecalciferol,2,chembl|llm_reviewed
 calcium,calcium|caplacizumab,2,chembl|llm_reviewed
 calcium acetate,calcium acetate|caplacizumab,2,chembl|llm_reviewed
 calcium acetate anhydrous,calcium acetate|caplacizumab,2,chembl|llm_reviewed
@@ -270,11 +289,13 @@ camostat mesylate,camostat|camostat mesilate,2,chembl|llm_reviewed|manual
 camptosar,irinotecan|irinotecan hydrochloride,2,chembl|manual
 camrelizumab,camrelizumab|ocrelizumab,2,chembl|llm_reviewed
 cancidas (previously caspofungin msd),caspofungin (as acetate)|caspofungin acetate,2,chembl|epar|manual
+canertinib dihydrochloride,canertinib|canertinib dihydrochloride,2,chembl
 canfosfamide hcl,canfosfamide|canfosfamide hydrochloride,2,chembl|llm_reviewed|manual
 cangrelor tetrasodium,cangrelor|cangrelor tetrasodium,2,chembl|llm_reviewed|manual
 cannabinol,cannabidiol|cannabinol,2,chembl|llm_reviewed
 canrenone,balcinrenone|canrenone,2,chembl|llm_reviewed
 capadenoson,apadenoson|capadenoson,2,chembl|llm_reviewed
+capexion,tacrolimus|tacrolimus anhydrous,2,chembl
 capozide,captopril|hydrochlorothiazide|co-zidocapt,2,chembl|llm_reviewed
 capromab pendetide,capromab pendetide|indium in 111 capromab pendetide,2,chembl|manual
 capsicum oleoresin,capsicum|capsicum oleoresin,2,chembl|llm_reviewed|manual
@@ -291,6 +312,9 @@ caspofungin diacetate,caspofungin|caspofungin acetate,2,chembl|llm_reviewed|manu
 cathine,cathine|creatine,2,chembl|llm_reviewed
 cb-01-11,rifamycin|rifamycin sodium,2,chembl|manual
 cc-220,iberdomide|iberdomide hydrochloride,2,chembl|manual
+cc-292,spebrutinib|spebrutinib besylate,2,chembl
+cdz-173,leniolisib|leniolisib phosphate,2,chembl
+cdz173,leniolisib|leniolisib phosphate,2,chembl|llm_reviewed
 cea-scan,arcitumomab|technetium tc 99m arcitumomab,2,chembl|epar|manual
 cefalexin,cefalexin|cephalexin|cephalexin anhydrous,3,chembl|llm_reviewed
 cefazolin sodium,cefazolin|cefazolin sodium,2,chembl|llm_reviewed|manual
@@ -298,6 +322,7 @@ cefepime dihydrochloride monohydrate,cefepime|cefepime hydrochloride,2,chembl|ll
 cefepime hydrochloride,cefepime|cefepime hydrochloride,2,chembl|llm_reviewed|manual
 ceflatonin,melatonin|omacetaxine mepesuccinate,2,chembl|llm_reviewed
 cefotaxime sodium,cefotaxime|cefotaxime sodium,2,chembl|llm_reviewed|manual
+cefrom,cefpirome|cefpirome sulfate,2,chembl|llm_reviewed
 ceftaroline,ceftaroline|ceftriaxone,2,chembl|llm_reviewed
 ceftobiprole,ceftobiprole|ceftobiprole medocaril,2,chembl|llm_reviewed|manual
 ceftobiprole medocaril,ceftobiprole medocaril|ceftobiprole medocaril free acid|ceftobiprole medocaril sodium,3,chembl|llm_reviewed
@@ -306,6 +331,7 @@ ceftriaxone sodium,ceftriaxone|ceftriaxone sodium,2,chembl|llm_reviewed|manual
 cefuroxime,cefuroxime|cefuroxime sodium,2,chembl|llm_reviewed|manual
 cefuroxime sodium,cefuroxime|cefuroxime sodium,2,chembl|llm_reviewed|manual
 celestone,betamethasone|betamethasone sodium phosphate,2,chembl|llm_reviewed|manual
+celiprolol hydrochloride,celiprolol hydrochloride|clopidogrel hydrochloride,2,chembl|llm_reviewed
 celsunax,ioflupane (123i)|ioflupane i 123,2,chembl|epar|manual
 celvapan,"influenza a virus, inactivated whole virion|whole virion influenza vaccine, inactivated containing antigen of strain a|california|07|2009 (h1n1)v",2,chembl|epar|manual
 cend-1,certepetide|irgd,2,chembl
@@ -323,6 +349,7 @@ cetrorelix,cetrorelix|cetrorelix acetate,2,chembl|llm_reviewed|manual
 cetrorelix acetate,cetrorelix|cetrorelix acetate,2,chembl|llm_reviewed|manual
 cetrotide,cetrorelix|cetrorelix (as acetate)|cetrorelix acetate,3,chembl|epar
 cetylpyridinium chloride,cetylpyridinium|cetylpyridinium chloride,2,chembl|llm_reviewed|manual
+cfi-400945,cfi-400945|ocifisertib,2,chembl
 cg-315e,tramadol|tramadol hydrochloride,2,chembl|manual
 cg250,cg250 111in|cg250 177lu|girentuximab,3,chembl
 champix,varenicline|varenicline tartrate,2,chembl|epar|manual
@@ -339,6 +366,7 @@ chondroitin sulfate sodium,chondroitin sulfate|chondroitin sulfate sodium,2,chem
 choriogonadotropin beta,"choriogonadotropin alfa|gonadotropin, chorionic",2,chembl|llm_reviewed
 chorionic gonadotrophin,"chorionic gonadotropin|gonadotropin, chorionic",2,chembl|llm_reviewed
 chorionic gonadotropin,"chorionic gonadotropin|gonadotropin, chorionic",2,chembl|llm_reviewed
+ci-1033,canertinib|canertinib dihydrochloride,2,chembl
 ciclofosfamida,cyclophosphamide|cyclophosphamide anhydrous,2,chembl|llm_reviewed|manual
 ciclopirox olamine,ciclopirox|ciclopirox olamine,2,chembl|llm_reviewed|manual
 cilastatin sodium,cilastatin|cilastatin sodium,2,chembl|llm_reviewed|manual
@@ -388,6 +416,7 @@ clopidogrel teva pharma,clopidogrel|clopidogrel hydrochloride,2,chembl|epar|manu
 clopidogrel teva pharma (previously clopidogrel hcs),clopidogrel (as hydrochloride)|clopidogrel hydrochloride,2,chembl|epar|manual
 clopidogrel teva pharma b.v.,clopidogrel (as hydrobromide)|clopidogrel hydrobromide,2,chembl|epar|manual
 clopidogrel zentiva (previously clopidogrel winthrop),clopidogrel|clopidogrel bisulfate,2,chembl|epar|manual
+"clopra-""yellow""",metoclopramide|metoclopramide hydrochloride,2,chembl
 clorazepate dipotassique,clorazepate|clorazepate dipotassium,2,chembl|llm_reviewed|manual
 cloretazine,creatine|laromustine,2,chembl|llm_reviewed
 clotiazepam,clonazepam|clotiazepam,2,chembl|llm_reviewed
@@ -421,6 +450,8 @@ cotara,iodine i 131 derlotuximab biotin|tnt-1b,2,chembl
 cotellic,cobimetinib fumarate|cobimetinib hemifumarate,2,chembl|epar|manual
 covid-19 mrna vaccine,"covid-19 mrna vaccine, nucleoside-modified|covid-19 sa-mrna vaccine",2,llm_reviewed
 "covid-19 vaccine (inactivated, adjuvanted) valneva","covid-19 vaccine (inactivated, adjuvanted, adsorbed)|sars-cov-2 virus, inactivated",2,chembl|epar|manual
+cp-690550-10,tofacitinib|tofacitinib citrate,2,chembl
+cpd 23,redafamdastat|tomivosertib,2,chembl
 cpg-1018,1018 iss|pg-110,2,chembl|llm_reviewed
 crenezumab,crenezumab|erenumab,2,chembl|llm_reviewed
 crenolanib besylate,crenolanib|crenolanib besylate,2,chembl|llm_reviewed|manual
@@ -466,6 +497,7 @@ decadron,dexamethasone|dexamethasone sodium phosphate,2,chembl|manual
 dectancyl,dexamethasone|dexamethasone acetate,2,chembl|llm_reviewed|manual
 dectova,zanamivir|zanamivir hydrate,2,chembl|epar|manual
 defactinib,alectinib|defactinib,2,chembl|llm_reviewed
+defactinib hydrochloride,defactinib|defactinib hydrochloride,2,chembl
 deferoxamine mesilate,deferoxamine|deferoxamine mesylate,2,chembl|llm_reviewed|manual
 defitelio,defibrotide|defibrotide sodium,2,chembl|epar|manual
 degarelix acetate,degarelix|degarelix acetate,2,chembl|llm_reviewed|manual
@@ -504,6 +536,7 @@ diltiazem hydrochloride,diltiazem hydrochloride|lidocaine hydrochloride,2,chembl
 dimesna,"2,2'-dithiodiethanesulfonic acid|dimesna",2,chembl|manual
 dimethisterone,dimethisterone|dimethisterone anhydrous,2,chembl|manual
 dimetindene maleate,dimethindene|dimethindene maleate,2,chembl|llm_reviewed|manual
+dims0150,cobitolimod|cobitolimod sodium,2,chembl|llm_reviewed
 dipalmitoylphosphatidylcholine,colfosceril palmitate|dipalmitoylphosphatidylcholine,2,chembl|llm_reviewed
 diphenhydramine hydrochloride,diphenhydramine|diphenhydramine hydrochloride,2,chembl|llm_reviewed|manual
 diractin,ketoprofen|ketoprofen sodium,2,chembl|epar|manual
@@ -534,6 +567,7 @@ doptelet,avatrombopag|avatrombopag maleate,2,chembl|epar|manual
 doribax,doripenem|doripenem monohydrate,2,chembl|epar|manual
 doripenem monohydrate,doripenem|doripenem monohydrate,2,chembl|llm_reviewed|manual
 dorzolamide hydrochloride,dorzolamide|dorzolamide hydrochloride,2,chembl|llm_reviewed|manual
+dosulepin hydrochloride,dothiepin|dothiepin hydrochloride,2,chembl|llm_reviewed
 "dov 216,419",centanafadine|centanafadine hydrochloride,2,chembl|manual
 dov 21947,amitifadine|amitifadine hydrochloride,2,chembl|manual
 dovato,dolutegravir sodium|dolutegravir sodium|lamivudine,2,chembl|epar|manual
@@ -578,6 +612,7 @@ elagolix sodium,elagolix|elagolix sodium,2,chembl|llm_reviewed|manual
 eldisine,felodipine|vindesine sulfate,2,chembl|llm_reviewed
 eliapixant,camlipixant|eliapixant,2,chembl|llm_reviewed
 eligard,leuprolide acetate|leuprorelin,2,chembl|manual
+eliglustat tartrate,eliglustat|eliglustat tartrate,2,chembl|llm_reviewed
 ellaone,ulipristal|ulipristal acetate,2,chembl|epar|manual
 ellence,epirubicin|epirubicin hydrochloride,2,chembl|manual
 elsiglutide,elsiglutide|liraglutide,2,chembl|llm_reviewed
@@ -595,6 +630,7 @@ enoblituzumab,elotuzumab|enoblituzumab,2,chembl|llm_reviewed
 enoxolone,enoximone|enoxolone,2,chembl|llm_reviewed
 entecavir monohydrate,entecavir|entecavir monohydrate,2,chembl|llm_reviewed|manual
 entecavir viatris (previously entecavir mylan),entecavir|entecavir monohydrate,2,chembl|epar|manual
+envarsus,tacrolimus|tacrolimus anhydrous,2,chembl|epar
 enviage,aliskiren|aliskiren fumarate,2,chembl|epar|manual
 enzepi,"pancreas powder|pancreas powder, porcine",2,chembl|epar|manual
 eperisone,eperisone|ephedrine,2,chembl|llm_reviewed
@@ -611,7 +647,7 @@ ertugliflozin,ertugliflozin|ertugliflozin pidolate,2,chembl|llm_reviewed|manual
 ervebo,"recombinant vesicular stomatitis virus (strain indiana) with a deletion of the envelope glycoprotein, replaced with the zaire ebolavirus (strain kikwit 1995) surface glycoprotein|vesicular stomatitis virus encoding ebola virus glycoprotein",2,chembl|epar|manual
 erythromycin lactobionate,erythromycin|erythromycin lactobionate,2,chembl|llm_reviewed|manual
 escitalopram,citalopram|escitalopram,2,chembl|llm_reviewed
-escitalopram oxalate,citalopram|escitalopram oxalate,2,chembl|llm_reviewed
+escitalopram oxalate,citalopram|escitalopram|escitalopram oxalate,3,chembl|llm_reviewed
 esflurbiprofen,esflurbiprofen|flurbiprofen,2,chembl|llm_reviewed
 esketamine hydrochloride,esketamine|esketamine hydrochloride,2,chembl|llm_reviewed|manual
 esmirtazapine,esmirtazapine|mirtazapine,2,chembl|llm_reviewed
@@ -647,6 +683,7 @@ fareston,toremifene|toremifene citrate,2,chembl|epar|manual
 farmorubicina,epirubicin|epirubicin hydrochloride,2,chembl|llm_reviewed|manual
 faropenem medoxomil,faropenem medoxomil|meropenem,2,chembl|llm_reviewed
 farydak,panobinostat|panobinostat lactate|panobinostat lactate anhydrous,3,chembl|epar
+fasudil hydrochloride,fasudil|fasudil hydrochloride,2,chembl|llm_reviewed
 "fbs0701, spd602",deferitazole|deferitazole magnesium,2,chembl|manual
 fc41-12 (perflenapent/perflisopent mixture),perflenapent|perflisopent,2,chembl
 fedratinib,fedratinib|neratinib,2,chembl|llm_reviewed
@@ -669,6 +706,9 @@ fintepla,fenfluramine|fenfluramine hydrochloride,2,chembl|epar|manual
 firazyr,icatibant|icatibant acetate,2,chembl|epar|manual
 firdapse (previously zenas),amifampridine|amifampridine phosphate,2,chembl|epar|manual
 firmagon,degarelix|degarelix acetate,2,chembl|epar|manual
+fk 506,tacrolimus|tacrolimus anhydrous,2,chembl
+fk-506,tacrolimus|tacrolimus anhydrous,2,chembl
+fk506,tacrolimus|tacrolimus anhydrous,2,chembl
 flebaven,diosmin|hesperidin,2,chembl|llm_reviewed
 flebogamma dif (previously flebogammadif),human immunoglobulin g|human normal immunoglobulin,2,chembl|epar|manual
 flecainide acetate,flecainide|flecainide acetate,2,chembl|llm_reviewed|manual
@@ -678,6 +718,7 @@ florbetaben,florbetaben|florbetaben (18f),2,chembl|llm_reviewed|manual
 florbetaben (18f),florbetaben (18f)|florbetaben f18,2,chembl|llm_reviewed
 florbetapir,florbetapir|florbetapir (18f),2,chembl|llm_reviewed|manual
 florbetapir (18f),florbetapir (18f)|florbetapir f 18,2,chembl|llm_reviewed
+florquinitau f-18,florquinitau f-18|florquinitau f18,2,chembl|llm_reviewed
 flortaucipir,flortaucipir|flortaucipir f-18,2,chembl|llm_reviewed|manual
 flortaucipir (18f),flortaucipir (18f)|flortaucipir f 18,2,chembl|llm_reviewed
 flortaucipir f18,flortaucipir f 18|flortaucipir f-18,2,chembl|llm_reviewed
@@ -715,6 +756,7 @@ fosfomycin sodium,fosfomycin|fosfomycin sodium,2,chembl|llm_reviewed|manual
 fosfomycin trometamol,fosfomycin|fosfomycin tromethamine,2,chembl|llm_reviewed|manual
 fosgemcitabine palabenamide,fosgemcitabine palabenamide|gemcitabine,2,chembl|llm_reviewed
 fotivda,tivozanib|tivozanib hydrochloride,2,chembl|epar|manual
+fr900506,tacrolimus|tacrolimus anhydrous,2,chembl
 fresolimumab,fresolimumab|golimumab,2,chembl|llm_reviewed
 frovatriptan succinate,frovatriptan succinate|sumatriptan succinate,2,chembl|llm_reviewed
 fsh,follitropin alfa|menotropins,2,chembl|llm_reviewed
@@ -732,6 +774,8 @@ galantamine hydrobromide,galantamine|galantamine hydrobromide,2,chembl|llm_revie
 galicaftor,galicaftor|ivacaftor,2,chembl|llm_reviewed
 galinpepimut-s,galinpepimut-s|nelipepimut-s,2,chembl|llm_reviewed
 galiximab,daxdilimab|galiximab,2,chembl|llm_reviewed
+gallium (68ga) edotreotide,edotreotide|edotreotide gallium ga-68,2,chembl|llm_reviewed
+gallium (68ga) gozetotide,gallium ga 68 gozetotide|gozetotide,2,chembl|llm_reviewed
 gallopamil,gallopamil|methoxyverapamil,2,chembl|manual
 gamophen,hexachlorophene|triclosan,2,chembl
 ganciclovir sodium,ganciclovir|ganciclovir sodium,2,chembl|llm_reviewed|manual
@@ -776,9 +820,11 @@ grepid,clopidogrel (as besilate)|clopidogrel besilate,2,chembl|epar|manual
 grn163l,imetelstat|imetelstat sodium,2,chembl|manual
 gs-9883,bictegravir|bictegravir sodium,2,chembl|manual
 gs-9883-01,bictegravir|bictegravir sodium,2,chembl|manual
+gsk1120212b,trametinib|trametinib dimethyl sulfoxide,2,chembl|llm_reviewed
 gsk1349572a,dolutegravir|dolutegravir sodium,2,chembl|manual
 gsk3640254d,fipravirimat|fipravirimat mesylate,2,chembl|llm_reviewed|manual
 gsk557296b,epelsiban|epelsiban besylate,2,chembl|manual
+gw572016f,lapatinib|lapatinib ditosylate,2,chembl
 halaven,eribulin|eribulin mesylate,2,chembl|epar|manual
 haldol,haloperidol|haloperidol decanoate|haloperidol lactate,3,chembl
 haloperidol decanoate,haloperidol|haloperidol decanoate,2,chembl|llm_reviewed|manual
@@ -854,6 +900,7 @@ imatinib accord,imatinib|imatinib mesylate,2,chembl|epar|manual
 imatinib actavis,imatinib|imatinib mesylate,2,chembl|epar|manual
 imatinib koanaa,imatinib mesilate|imatinib mesylate,2,chembl|epar|manual
 imatinib medac,imatinib|imatinib mesylate,2,chembl|epar|manual
+imatinib mesylate,imatinib|imatinib mesylate,2,chembl
 imatinib teva,imatinib|imatinib mesylate,2,chembl|epar|manual
 imatinib teva b.v.,imatinib mesilate|imatinib mesylate,2,chembl|epar|manual
 imciromab,imciromab|imciromab pentetate,2,chembl|manual
@@ -865,6 +912,7 @@ immu-107,clivatuzumab tetraxetan|yttrium y 90 clivatuzumab tetraxetan,2,chembl|m
 immunogam,hepatitis b immune globulin|human hepatitis b immunoglobulin,2,chembl|epar|manual
 imuran,azathioprine|azathioprine sodium,2,chembl|manual
 imvanex,"modified vaccinia ankara - bavarian nordic (mva-bn) virus|vaccinia virus, live modified",2,chembl|epar|manual
+incb-018424 salt,ruxolitinib|ruxolitinib phosphate,2,chembl
 indatuximab ravtansine,indatuximab ravtansine|isatuximab,2,chembl|llm_reviewed
 indigo carmine,indigo carmine|indigotindisulfonate sodium,2,chembl|llm_reviewed
 indinavir sulfate,indinavir|indinavir sulfate,2,chembl|llm_reviewed|manual
@@ -951,6 +999,8 @@ lamisil,terbinafine|terbinafine hydrochloride,2,chembl|llm_reviewed|manual
 lamisil at,terbinafine|terbinafine hydrochloride,2,chembl|manual
 landiolol hydrochloride,landiolol|landiolol hydrochloride,2,chembl|llm_reviewed|manual
 lanreotide acetate,lanreotide|lanreotide acetate,2,chembl|llm_reviewed|manual
+lapatinib ditosylate,lapatinib|lapatinib ditosylate,2,chembl
+lapatinib ditosylate monohydrate,lapatinib|lapatinib ditosylate,2,chembl
 laromustine,laromustine|lomustine,2,chembl|llm_reviewed
 larotrectinib,larotrectinib|larotrectinib sulfate,2,chembl|llm_reviewed|manual
 lasofoxifene,lasofoxifene|lasofoxifene tartrate,2,chembl|llm_reviewed|manual
@@ -1003,7 +1053,7 @@ lodipressin,amlodipine besilate|amlodipine besylate,2,chembl|epar|manual
 lofexidine hydrochloride,lofexidine|lofexidine hydrochloride,2,chembl|llm_reviewed|manual
 lojuxta,lomitapide|lomitapide mesylate,2,chembl|epar|manual
 lonidamine,clonidine|lonidamine,2,chembl|llm_reviewed
-lonsurf,tipiracil|trifluridine|trifluridine|tipiracil hydrochloride,2,epar|manual
+lonsurf,tipiracil|trifluridine|trifluridine|tipiracil|trifluridine|tipiracil hydrochloride,3,epar|llm_reviewed|manual
 loperamide hydrochloride,loperamide|loperamide hydrochloride,2,chembl|llm_reviewed|manual
 lopressor,metoprolol fumarate|metoprolol tartrate,2,chembl|manual
 lorediplon,iloperidone|lorediplon,2,chembl|llm_reviewed
@@ -1104,6 +1154,7 @@ milrinone lactate,milrinone|milrinone lactate,2,chembl|llm_reviewed|manual
 mirapexin,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar|manual
 misonidazole,miconazole|misonidazole,2,chembl|llm_reviewed
 mk-4827,niraparib|niraparib tosylate monohydrate,2,chembl|manual
+modigraf,tacrolimus|tacrolimus anhydrous,2,chembl|epar
 molidustat,molidustat|molidustat sodium,2,chembl|llm_reviewed|manual
 monalizumab,monalizumab|omalizumab,2,chembl|llm_reviewed
 monistat,miconazole|miconazole nitrate,2,chembl|manual
@@ -1131,7 +1182,7 @@ mupirocin calcium,mupirocin|mupirocin calcium,2,chembl|llm_reviewed|manual
 mvabea,"recombinant modified vaccinia ankara bavarian nordic virus encoding the: ebola virus zaire (zebov) mayinga strain glycoprotein (gp)|ebola virus sudan gulu strain gp|ebola virus taï forest strain nucleoprotein and the marburg virus musoke strain gp|vaccinia virus, modified encoding ebola virus glycoprotein and nucleoprotein",2,chembl|epar|manual
 mycamine,micafungin|micafungin sodium,2,chembl|epar|manual
 mycograb,efungumab|recombinant human monoclonal antibody to hsp,2,chembl|epar|manual
-myfortic,mycophenolate sodium|mycophenolic acid,2,chembl|manual
+myfortic,mycophenolate sodium|mycophenolic acid,2,chembl|llm_reviewed|manual
 myocet,doxorubicin|doxorubicin hydrochloride,2,chembl|manual
 mysildecard,sildenafil|sildenafil citrate,2,chembl|epar|manual
 mysimba,bupropion hydrochloride|bupropion hydrochloride|naltrexone hydrochloride,2,chembl|epar|manual
@@ -1170,7 +1221,7 @@ nemvaleukin alfa,efavaleukin alfa|nemvaleukin alfa,2,chembl|llm_reviewed
 neoatricon,dopamine hydrochloride|dopamine hydrochloride|dopamine,2,chembl|epar|manual
 neofordex,dexamethasone|dexamethasone acetate,2,chembl|epar|manual
 neomycin sulfate,neomycin|neomycin sulfate,2,chembl|llm_reviewed|manual
-neoral,ciclosporin|cyclosporine,2,chembl|manual
+neoral,ciclosporin|cyclosporine,2,chembl|llm_reviewed|manual
 neostigmine methylsulfate,neostigmine|neostigmine methylsulfate,2,chembl|llm_reviewed|manual
 neostigmine metilsulfate,neostigmine|neostigmine methylsulfate,2,chembl|llm_reviewed|manual
 nerlynx,neratinib|neratinib maleate,2,chembl|epar|manual
@@ -1200,6 +1251,7 @@ nitrogen,nitrogen|nitroglycerin,2,chembl|llm_reviewed
 nitroprusside,nitroprusside|nitrous oxide,2,chembl|llm_reviewed
 nizatidine,nizatidine|ranitidine,2,chembl|llm_reviewed
 nodetrip (previously xeristar),duloxetine|duloxetine hydrochloride,2,chembl|epar|manual
+nolpitantium besylate,nolpitantium|nolpitantium besilate,2,chembl|llm_reviewed
 nomegestrol,nomegestrol|nomegestrol acetate,2,chembl|llm_reviewed|manual
 nonacog gamma,coagulation factor ix recombinant human|nonacog gamma,2,chembl|llm_reviewed
 nonafact,coagulation factor ix human|human coagulation factor ix,2,chembl|epar|manual
@@ -1210,7 +1262,6 @@ norursodeoxycholic acid,norucholic acid|norursodeoxycholic acid,2,chembl|llm_rev
 norvasc,amlodipine|amlodipine besylate,2,chembl|manual
 nsc-751452,dextromethorphan|dextromethorphan polistirex,2,chembl|manual
 nsc-758421,paromomycin sulfate|penicillamine,2,chembl
-nuedexta,dextromethorphan hydrobromide|dextromethorphan|quinidine,2,chembl|epar|manual
 nulibry,fosdenopterin hydrobromide|fosdenopterin hydrobromide dihydrate,2,chembl|epar|manual
 nutrifolin,levomefolate calcium|levomefolic acid,2,chembl|manual
 nuvaxovid,sars cov-2 (original) recombinant spike protein|sars-cov-2 (omicron xbb.1.5) recombinant spike protein|sars-cov-2 virus spike protein,2,chembl|epar|manual
@@ -1264,6 +1315,7 @@ oxycontin,oxycodone hydrochloride|oxytocin,2,chembl|llm_reviewed
 oxymetazoline hydrochloride,oxymetazoline|oxymetazoline hydrochloride,2,chembl|llm_reviewed|manual
 ozawade,pitolisant|pitolisant hydrochloride,2,chembl|epar|manual
 pacritinib,ceritinib|pacritinib,2,chembl|llm_reviewed
+palbociclib isethionate,palbociclib|palbociclib isethionate,2,chembl
 palonosetron accord,palonosetron|palonosetron hydrochloride,2,chembl|epar|manual
 palonosetron hcl,palonosetron|palonosetron hydrochloride,2,chembl|llm_reviewed|manual
 panadol,acetaminophen|tapentadol,2,chembl|llm_reviewed
@@ -1287,6 +1339,9 @@ pasireotide diaspartate,pasireotide|pasireotide diaspartate,2,chembl|llm_reviewe
 patiromer calcium,patiromer|patiromer calcium,2,chembl|llm_reviewed|manual
 patrex,sildenafil|sildenafil citrate,2,chembl|epar|manual
 pazzul,eslicarbazepine|eslicarbazepine acetate,2,chembl|manual
+pd-0183805,canertinib|canertinib dihydrochloride,2,chembl
+pd-03329910054,palbociclib|palbociclib isethionate,2,chembl
+pd-183805,canertinib|canertinib dihydrochloride,2,chembl
 pecfent,fentanyl|fentanyl citrate,2,chembl|epar|manual
 pefloxacin,difloxacin|pefloxacin,2,chembl|llm_reviewed
 pegph20,pegvorhyaluronidase alfa|pegvorhyluronidase alfa,2,chembl|llm_reviewed
@@ -1307,10 +1362,13 @@ peposertib,nedisertib|peposertib,2,chembl|llm_reviewed
 percorten,desoxycorticosterone|desoxycorticosterone acetate|desoxycorticosterone pivalate,3,chembl|manual
 perhexiline maleate,perhexiline|perhexiline maleate,2,chembl|llm_reviewed|manual
 periciazine,cetirizine|periciazine,2,chembl|llm_reviewed
+perixis,tacrolimus|tacrolimus anhydrous,2,chembl
 persicabtagen lemgedleucel,peluntamig|persicabtagene lemgedleucel,2,chembl|manual
+pertechnetate (99mtc) sodium,sodium pertechnetate (99mtc)|sodium pertechnetate tc 99m,2,chembl|llm_reviewed
 pertussis toxoid pt,pertussis toxoid|pertussis vaccine,2,llm_reviewed
 pethidine hydrochloride,meperidine|meperidine hydrochloride,2,chembl|llm_reviewed|manual
 petrolatum,"petrolatum|petrolatum, white",2,chembl|llm_reviewed|manual
+pf-0008066573,palbociclib|palbociclib isethionate,2,chembl
 pf-3512676,agatolimod|agatolimod sodium,2,chembl|manual
 phenoxymethylpenicillin potassium,penicillin v|penicillin v potassium,2,chembl|llm_reviewed|manual
 phentermine hydrochloride,apomorphine hydrochloride|phentermine hydrochloride,2,chembl|llm_reviewed
@@ -1318,6 +1376,7 @@ phentolamine,phentolamine|phenytoin,2,chembl|llm_reviewed
 phenylephrine hydrochloride,phenylephrine|phenylephrine hydrochloride,2,chembl|llm_reviewed|manual
 phenytoin sodium,phenytoin|phenytoin sodium,2,chembl|llm_reviewed|manual
 phospholipids egg,lecithin|phosphatidylcholine,2,chembl
+physostigmine salicylate,physostigmine|physostigmine salicylate,2,chembl|llm_reviewed
 picoplatin,cisplatin|picoplatin,2,chembl|llm_reviewed
 piflufolastat (18f),piflufolastat f-18|piflufolastat f18,2,chembl|llm_reviewed
 pilocarpine,pilocarpine|prilocaine,2,chembl|llm_reviewed
@@ -1357,6 +1416,7 @@ pramipexole dihydrochloride monohydrate,pramipexole dihydrochloride|pramipexole 
 pramipexole teva,pramipexole dihydrochloride|pramipexole dihydrochloride monohydrate,2,chembl|epar|manual
 prasugrel viatris (previously prasugrel mylan),prasugrel besilate|prasugrel besylate,2,chembl|epar|manual
 prazosin hydrochloride,pazopanib hydrochloride|prazosin hydrochloride,2,chembl|llm_reviewed
+pred forte,prednisolone|prednisolone acetate,2,chembl|llm_reviewed
 pregnenolone,pregnenolone|pregnenolone succinate,2,chembl|manual
 prehevbri,hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar|manual
 preotact,parathyroid hormone|parathyroid hormone (rdna),2,chembl|epar|manual
@@ -1376,6 +1436,7 @@ procaine hydrochloride,procainamide|procaine hydrochloride,2,chembl|llm_reviewed
 procarbazine hydrochloride,procarbazine|procarbazine hydrochloride,2,chembl|llm_reviewed|manual
 procomvax,hepatitis b virus hbsag surface protein antigen|polyribosylribitol phosphate from haemophilus influenzae type b as prp-ompc|outer membrane protein complex of neisseria meningitidis (outer membrane protein complex of the b11 strain of neisseria meningitidis subgroup b)|adsorbed hepatitis b surface antigen produced in recombinant yeast cells (saccharomyces cerevisiae),2,chembl|epar|manual
 procysbi,cysteamine bitartrate|mercaptamine bitartrate,2,chembl|epar|manual
+prograf,tacrolimus|tacrolimus anhydrous,2,chembl|manual
 proguanil hydrochloride,proguanil|proguanil hydrochloride,2,chembl|llm_reviewed|manual
 promazine,pramoxine|promazine,2,chembl|llm_reviewed
 promestriene,progesterone|promestriene,2,chembl|llm_reviewed
@@ -1414,6 +1475,7 @@ quilizumab,ibalizumab|quilizumab,2,chembl|llm_reviewed
 quinidine,quinidine|quinine,2,chembl|llm_reviewed
 quinidine sulfate,quinidine sulfate|quinine,2,chembl|llm_reviewed
 quinine sulphate,quinine|quinine sulfate,2,chembl|llm_reviewed|manual
+quizartinib dihydrochloride,quizartinib|quizartinib dihydrochloride,2,chembl
 rabeprazole sodium,rabeprazole|rabeprazole sodium,2,chembl|llm_reviewed|manual
 raclopride,prucalopride|raclopride,2,chembl|llm_reviewed
 radiprodil,radiprodil|ramipril,2,chembl|llm_reviewed
@@ -1430,6 +1492,8 @@ rasagiline mesilate,rasagiline|rasagiline mesylate,2,chembl|llm_reviewed|manual
 rasagiline mesylate,rasagiline|rasagiline mesylate,2,chembl|llm_reviewed|manual
 rasagiline ratiopharm,rasagiline|rasagiline mesylate,2,chembl|epar|manual
 rasilez,aliskiren|aliskiren fumarate,2,chembl|epar|manual
+rdx-5791,tenapanor|tenapanor hydrochloride,2,chembl
+rdx5791,tenapanor|tenapanor hydrochloride,2,chembl
 reagila,cariprazine|cariprazine hydrochloride,2,chembl|epar|manual
 rebif,interferon beta|interferon beta-1a,2,chembl|epar|manual
 reboxetine,esreboxetine|reboxetine,2,chembl|llm_reviewed
@@ -1507,6 +1571,7 @@ rubraca,rucaparib|rucaparib camsylate,2,chembl|epar|manual
 ruconest,conestat alfa|recombinant human c1-inhibitor,2,chembl|epar|manual
 rukobia,fostemsavir trometamol|fostemsavir tromethamine,2,chembl|epar|manual
 runcaciguat,cinaciguat|runcaciguat,2,chembl|llm_reviewed
+ruxolitinib phosphate,ruxolitinib|ruxolitinib phosphate,2,chembl
 rwj-333369,brivaracetam|carisbamate,2,chembl|llm_reviewed
 rx 31,elamipretide|elamipretide hydrochloride,2,chembl|manual
 rx-3341,delafloxacin|delafloxacin meglumine,2,chembl|manual
@@ -1514,7 +1579,7 @@ rytelo,imetelstat|imetelstat sodium,2,chembl|epar|manual
 safinamide methansulfonate,safinamide mesylate|safinamide methanesulfonate,2,chembl|llm_reviewed
 samarium sm 153 lexidronam pentasodium,samarium (153sm) lexidronam pentasodium|samarium sm 153 lexidronam pentasodium,2,chembl|llm_reviewed
 samidorphan l-malate,samidorphan|samidorphan l-malate,2,chembl|llm_reviewed|manual
-sandimmun,ciclosporin|cyclosporine,2,chembl|manual
+sandimmun,ciclosporin|cyclosporine,2,chembl|llm_reviewed|manual
 sanfetrinem,sanfetrinem|sanfetrinem cilexetil,2,chembl|manual
 sapacitabine,sapacitabine|somapacitan,2,chembl|llm_reviewed
 sapropterin hydrochloride,sapropterin|sapropterin dihydrochloride,2,chembl|llm_reviewed|manual
@@ -1528,6 +1593,7 @@ scenesse,afamelanotide|afamelanotide acetate,2,chembl|epar|manual
 scopolamine hydrobromide,scopolamine|scopolamine hydrobromide,2,chembl|llm_reviewed|manual
 selincro,nalmefene|nalmefene hydrochloride dihydrate,2,chembl|epar|manual
 seloken,metoprolol|metoprolol tartrate,2,chembl|llm_reviewed|manual
+selumetinib sulfate,selumetinib|selumetinib sulfate,2,chembl|llm_reviewed
 senaparib,niraparib|senaparib,2,chembl|llm_reviewed
 seralutinib,lestaurtinib|seralutinib,2,chembl|llm_reviewed
 serenoa repens,saw palmetto|saw palmetto extract,2,chembl|llm_reviewed|manual
@@ -1549,8 +1615,10 @@ sinequan,doxepin|doxepin hydrochloride,2,chembl|manual
 singulair,montelukast|montelukast sodium,2,chembl|llm_reviewed|manual
 siplizumab,ibalizumab|siplizumab,2,chembl|llm_reviewed
 sitagliptin accord,sitagliptin hydrochloride|sitagliptin hydrochloride monohydrate,2,chembl|epar|manual
+sitravatinib malate,sitravatinib|sitravatinib malate,2,chembl|llm_reviewed
 sivextro,tedizolid|tedizolid phosphate,2,chembl|epar|manual
 skelid,tiludronate disodium|tiludronic acid,2,chembl|manual
+sn-26606,canertinib|canertinib dihydrochloride,2,chembl
 soblidotin,silodosin|soblidotin,2,chembl|llm_reviewed
 sodium alendronate,alendronate sodium|alendronic acid,2,chembl|llm_reviewed
 sodium cromoglicate,cromoglicate sodium|cromolyn sodium,2,chembl|llm_reviewed
@@ -1576,6 +1644,7 @@ sotalol hydrochloride,sotalol|sotalol hydrochloride,2,chembl|llm_reviewed|manual
 sotrastaurin,rosuvastatin|sotrastaurin,2,chembl|llm_reviewed
 sp-304,pirnabine|plecanatide,2,chembl|manual
 spebrutinib,spebrutinib|spebrutinib besylate,2,chembl|manual
+spebrutinib besylate,spebrutinib|spebrutinib besylate,2,chembl
 spermidine,meperidine|spermidine,2,chembl|llm_reviewed
 spikevax (previously covid-19 vaccine moderna),"elasomeran|single-stranded, 5'-capped messenger rna (mrna) produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",2,chembl|epar|manual
 spl 7013,astodrimer|astodrimer sodium,2,chembl|manual
@@ -1584,6 +1653,7 @@ spl7013,astodrimer|astodrimer sodium,2,chembl|manual
 spp100,aliskiren|aliskiren fumarate,2,chembl|manual
 sprimeo,aliskiren|aliskiren fumarate,2,chembl|epar|manual
 ss 31,elamipretide|elamipretide hydrochloride,2,chembl|manual
+sta-5326 mesylate,apilimod|apilimod mesylate,2,chembl|llm_reviewed
 staril,estriol|fosinopril sodium,2,chembl|llm_reviewed
 stayveer,bosentan|bosentan (as monohydrate),2,chembl|epar|manual
 stedesa,eslicarbazepine|eslicarbazepine acetate,2,chembl|manual
@@ -1592,10 +1662,13 @@ stelazine,trifluoperazine|trifluoperazine hydrochloride,2,chembl|manual
 sterane,prednisolone|prednisolone acetate,2,chembl|manual
 sterile water,serine|water,2,chembl|llm_reviewed
 sterile water for injection,serine|water,2,chembl|llm_reviewed
+sti-571,imatinib|imatinib mesylate,2,chembl
+sti571,imatinib|imatinib mesylate,2,chembl
 stilnox,zolpidem|zolpidem tartrate,2,chembl|llm_reviewed|manual
 striascan,ioflupane (123l)|ioflupane i 123,2,chembl|epar|manual
 strimvelis,autologous cd34+ enriched cell fraction that contains cd34+ cells transduced with retroviral vector that encodes for the human ada cdna sequence|autologous cd34+ enriched cell fraction that contains cd34+ cells transduced with retroviral vector that encodes for the human adenosine deaminase (ada) cdna sequence from human haematopoietic stem|progenitor (cd34+) cells,2,chembl|epar|manual
 striverdi respimat,olodaterol|olodaterol hydrochloride,2,chembl|manual
+su011248 l-malate salt,sunitinib|sunitinib malate,2,chembl|llm_reviewed
 suboxone,buprenorphine|buprenorphine|naloxone,2,chembl|epar|manual
 succinylcholine,succinylcholine|suxamethonium,2,chembl|llm_reviewed
 sucralose,sucralose|sucrose,2,chembl|llm_reviewed
@@ -1618,6 +1691,9 @@ tabalumab,ianalumab|tabalumab,2,chembl|llm_reviewed
 tabrecta,capmatinib dihydrochloride monohydrate|capmatinib hydrochloride,2,chembl|epar|manual
 tacaryl,methdilazine|methdilazine hydrochloride,2,chembl|manual
 tacforius,tacrolimus|tacrolimus monohydrate,2,chembl|epar|manual
+tacni,tacrolimus|tacrolimus anhydrous,2,chembl
+tacrolimus,tacrolimus|tacrolimus anhydrous,2,chembl
+tacrolimus hydrate,tacrolimus|tacrolimus anhydrous,2,chembl
 tafinlar,dabrafenib|dabrafenib mesilate|dabrafenib mesylate,3,chembl|epar
 tagamet,cimetidine|cimetidine hydrochloride,2,chembl|manual
 tagrisso,osimertinib|osimertinib mesilate|osimertinib mesylate,3,chembl|epar|manual
@@ -1627,6 +1703,7 @@ tak-652,cenicriviroc|cenicriviroc mesylate,2,chembl|manual
 tak-954,felcisetrag|tak-994,2,chembl|llm_reviewed
 talabostat mesylate,talabostat|talabostat mesylate,2,chembl|llm_reviewed|manual
 talaporfin sodium,enoxaparin sodium|talaporfin sodium,2,chembl|llm_reviewed
+talazoparib tosylate,talazoparib|talazoparib tosylate,2,chembl
 talzenna,talazoparib|talazoparib tosylate,2,chembl|epar|manual
 tamibarotene,amsilarotene|tamibarotene,2,chembl|llm_reviewed
 tamiflu,oseltamivir|oseltamivir phosphate,2,chembl|epar|manual
@@ -1636,6 +1713,7 @@ tanespimycin,retaspimycin|tanespimycin,2,chembl|llm_reviewed
 tapentadol hydrochloride,tapentadol|tapentadol hydrochloride,2,chembl|llm_reviewed|manual
 tarceva,erlotinib|erlotinib hydrochloride,2,chembl|epar|manual
 tasigna,nilotinib|nilotinib hydrochloride monohydrate,2,chembl|epar|manual
+tasocitinib citrate,tofacitinib|tofacitinib citrate,2,chembl|llm_reviewed
 tasquinimod,laquinimod|tasquinimod,2,chembl|llm_reviewed
 tauroursodeoxycholic acid,tauroursodeoxycholic acid|taurursodiol,2,chembl|llm_reviewed
 tauvid,flortaucipir (18f)|flortaucipir f 18,2,chembl|epar|manual
@@ -1736,13 +1814,14 @@ trospium chloride,potassium chloride|trospium chloride,2,chembl|llm_reviewed
 trovan iv,alatrofloxacin mesilate|alatrofloxacin mesylate,2,chembl|epar|manual
 trumenba,neisseria meningitidis factor h binding protein|neisseria meningitidis serogroup b fhbp (recombinant lipidated fhbp (factor h binding protein)) subfamily a|neisseria meningitidis serogroup b fhbp (recombinant lipidated fhbp (factor h binding protein)) subfamily b,2,chembl|epar|manual
 trusopt,dorzolamide|dorzolamide hydrochloride,2,chembl|manual
-truvada,emtricitabine|emtricitabine|tenofovir disoproxil|emtricitabine|tenofovir disoproxil fumarate,3,epar|manual
+truvada,emtricitabine|emtricitabine|tenofovir disoproxil|emtricitabine|tenofovir disoproxil fumarate,3,epar|llm_reviewed|manual
 trypsin,"trypsin|trypsin, crystallized",2,chembl|llm_reviewed|manual
 tucotuzumab celmoleukina,talacotuzumab|tucotuzumab celmoleukin,2,chembl|llm_reviewed
 turalio,pexidartinib|pexidartinib hydrochloride,2,chembl|epar|manual
 turvel iv,alatrofloxacin mesilate|alatrofloxacin mesylate,2,chembl|epar|manual
 twinrix adult,hepatitis a virus (inactivated)|hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar|manual
 twinrix paediatric,hepatitis a virus (inactivated)|hepatitis b surface antigen|hepatitis b virus hbsag surface protein antigen,2,chembl|epar|manual
+tykerb,lapatinib|lapatinib ditosylate,2,chembl
 typhoid vi polysaccharide vaccine,salmonella typhi ty2 vi polysaccharide antigen|typhoid vi polysaccharide vaccine,2,chembl|manual
 tyvaso,treprostinil|treprostinil sodium,2,chembl|epar|manual
 tyverb,lapatinib|lapatinib ditosylate,2,chembl|epar|manual
@@ -1815,6 +1894,8 @@ vitamin a,retinol|vitamin e,2,chembl|llm_reviewed
 vitamin d,ergocalciferol|vitamin d,2,chembl|llm_reviewed
 vitamin d nos,cholecalciferol|ergocalciferol,2,chembl|llm_reviewed
 vitamina d3,cholecalciferol|vitamin k,2,llm_reviewed
+vitrakvi,larotrectinib|larotrectinib sulfate,2,chembl|epar
+vivadex,tacrolimus|tacrolimus anhydrous,2,chembl
 vivagel,astodrimer|astodrimer sodium,2,chembl|manual
 vivanza,vardenafil|vardenafil hydrochloride,2,chembl|epar|manual
 vizamyl,flutemetamol (18f)|flutemetamol f 18,2,chembl|epar|manual
@@ -1842,15 +1923,19 @@ x0002,ibuprofen trelamine|ibuprofen trelamine hydrochloride,2,chembl|manual
 xadago,safinamide|safinamide mesylate|safinamide methanesulfonate,3,chembl|epar
 xagrid,anagrelide|anagrelide hydrochloride,2,chembl|epar|manual
 xaluprine (previously mercaptopurine nova laboratories),6-mercaptopurine monohydrate|mercaptopurine,2,chembl|epar|manual
+xanomeline tartrate,xanomeline|xanomeline tartrate,2,chembl|llm_reviewed
 xelevia,sitagliptin|sitagliptin phosphate,2,chembl|epar|manual
 xeljanz,tofacitinib|tofacitinib citrate,2,chembl|epar|manual
 xerava,eravacycline|eravacycline dihydrochloride,2,chembl|epar|manual
 xermelo,telotristat ethyl|telotristat etiprate,2,chembl|epar|manual
+xl-184,cabozantinib|cabozantinib s-malate,2,chembl
 xl-652,bms-779788|bms-852927,2,chembl
+xl184,cabozantinib|cabozantinib s-malate,2,chembl
 xofigo,radium (223ra) dichloride|radium ra 223 dichloride,2,chembl|epar|manual
 xospata,gilteritinib|gilteritinib fumarate,2,chembl|epar|manual
 xromi,hydroxycarbamide|hydroxyurea,2,chembl|epar|manual
 xylocaine,lidocaine|lidocaine hydrochloride,2,chembl|llm_reviewed|manual
+xylometazoline hydrochloride,xylometazoline|xylometazoline hydrochloride,2,chembl|llm_reviewed
 xyzal,levocetirizine|levocetirizine dihydrochloride,2,chembl|manual
 yellox,bromfenac sodium|bromfenac sodium sesquihydrate,2,chembl|epar|manual
 ytracis,yttrium (90y) chloride|yttrium chloride y-90,2,chembl|epar|manual
@@ -1896,4 +1981,4 @@ zutectra,hepatitis b immune globulin|human hepatitis b immunoglobulin,2,chembl|e
 zycortal,desoxycorticosterone pivalate|desoxycortone pivalate,2,chembl|epar|manual
 zyllt,clopidogrel (as hydrogen sulfate)|clopidogrel bisulfate,2,chembl|epar|manual
 zynteglo,autologous cd34+ cell enriched population that contains haematopoietic stem cells transduced with lentiviral vector encoding the βa-t87q-globin gene|betibeglogene autotemcel,2,chembl|epar|manual
-zytiga,abiraterone|abiraterone acetate,2,chembl|epar|manual
+zytiga,abiraterone|abiraterone acetate,2,chembl|epar|llm_reviewed|manual

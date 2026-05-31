@@ -178,7 +178,7 @@ if (write_queue) {
     dplyr::select(raw_sponsor, decision, canonical_sponsor, comment)
 
   queue_out <- new_queue %>%
-    dplyr::left_join(existing_decisions, by = "raw_sponsor") %>%
+    dplyr::anti_join(existing_decisions, by = "raw_sponsor") %>%
     dplyr::arrange(dplyr::desc(n_trials))
 
   readr::write_csv(queue_out, queue_path)

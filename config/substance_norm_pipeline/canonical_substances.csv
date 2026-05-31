@@ -321,6 +321,9 @@ faricimab,faricimab,inn,manual
 brolucizumab,brolucizumab,inn,manual
 metformin,metformin,inn,manual
 metformin hydrochloride,metformin,salt,manual
+insulin isophane,insulin isophane,inn,manual
+insulin glulisine,insulin glulisine,inn,manual
+insulin icodec,insulin icodec,inn,manual
 insulin glargine,insulin glargine,inn,manual
 insulin degludec,insulin degludec,inn,manual
 insulin detemir,insulin detemir,inn,manual
@@ -355,3 +358,14 @@ evolocumab,evolocumab,inn,manual
 alirocumab,alirocumab,inn,manual
 inclisiran,inclisiran,inn,manual
 inclisiran sodium,inclisiran,salt,manual
+folinic acid,folinic acid,inn,manual
+calcium folinate,folinic acid,salt,manual
+levoleucovorin,levoleucovorin,inn,manual
+calcium levofolinate,levoleucovorin,salt,manual
+rifampicin,rifampicin,inn,manual
+calcipotriol,calcipotriol,inn,manual
+triamcinolone acetonide,triamcinolone acetonide,inn,manual
+lidocaine hydrochloride,lidocaine,salt,manual
+datopotamab deruxtecan,datopotamab deruxtecan,inn,manual
+thrombin alfa,thrombin alfa,inn,manual
+hepatitis b surface antigen,hepatitis b surface antigen,inn,manual

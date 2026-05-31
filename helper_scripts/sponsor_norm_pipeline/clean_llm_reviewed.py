@@ -38,6 +38,7 @@ DELETE_GENERIC = {
     'dipartimento di scienze della vita e biotecnologie delluniversit degli studi di ferrara',
     'hillbom matti oys/neurologian klinikka',
     'klinisk farmakologisk afdeling',
+    'klinisk forskningsenhed medicinsk afdeling hmatologisk afsnit',
     'klinisk forskningsenhed medicinsk afdeling hmatologisk afsnit sygehus f',
     'medicinsk afdeling',
     'neurologisk afdeling',
@@ -66,6 +67,75 @@ DELETE_GENERIC = {
     'universittsklinik fr klinische pharmakologie',
     'universittsklinik fr psychiatrie - spezialambulanz fr abhangigkeitserkrankungen',
     'universittsklinik fr psychiatrie und psychotherapie i',
+    # Phase 10 additions — department canonicals with no institution anchor
+    'afdeling for traumatisk hjerneskade',
+    'allergiklinikken',
+    'arthroscopic surgery unit',
+    'cardiac reserch unit',
+    'clinical evaluation research unit ceru',
+    'clinical immunology division',
+    'department fr kinder- und jugendheilkunde pdiatrie i',
+    'department integrative medicine kliniken essen mitte',
+    'department of anaesthesia and general intensive care medicine',
+    'department of anaesthesia general intensive care medicine',
+    'department of anesthesiology and intensive care medicine',
+    'department of anesthesiology and perioperative medicine',
+    'department of anesthesiology intensive care',
+    'department of biomedical metabolic and neural sciences',
+    'department of biomedical sciences faculty of health sciences university of copenhagen',
+    'department of cardiothoracic and vascular surgery',
+    'department of clinical physiology nuclear medicin and pet',
+    'department of clinical pharmacology',
+    'department of clinical pharmacology q',
+    'department of endocrine oncology',
+    'department of endocrinology and internal medicine',
+    'department of experimental and clincial medicine f magrassi',
+    'department of experimental and clinical medicine f magrassi',
+    'department of general psychiatry',
+    'department of genito-urinary medicine and infectious diseases',
+    'department of human nutrition the royal veterinary and agricultural university',
+    'department of medical gastroenterology',
+    'department of medical research',
+    'department of medicine and endocrinology',
+    'department of nephrology and renal transplantation',
+    'department of neuroscience neurology',
+    'department of nuclear medicine',
+    'department of ophthalmology at st franziskus hospital',
+    'department of orthopaedics ike',
+    'department of orthopaedics ike / department of orthopaedics ike',
+    'department of otorhinolaryngology head and neck surgery',
+    'department of paediatric cardiology',
+    'department of plastic surgery breast and burns treatment',
+    'department of psychiatry and psychotherapy cologne',
+    'department of psychiatry and psychotherapy university of erlangen-nuremberg',
+    'department of psychiatry section of sleep research and pharmacopsychiatry',
+    'departments of medical research and medicine',
+    'dept anaesthesiology and intensive care',
+    'dept child adolescent psychiatrie',
+    'dept hematology slb vejle / dept hematology slb vejle',
+    'dept of anaesthesiology 530',
+    'dept of clinical immunology',
+    'dept of dermatology',
+    'dept of growth and reproduction',
+    'dept of internal medicine',
+    'dept of medicine',
+    'dept of nephrology',
+    'dept of oncology',
+    'dept of ped hem/onc',
+    'dept of renal medicine',
+    'dept of rhematology umas',
+    'dept pharmacology and toxicology',
+    'division k krnsjukhuset',
+    'dpt of growth and reproduction',
+    'fertilitetsklinikken',
+    'psychiatric research unit',
+    'retinaklinikken aleris',
+    'retinaklinikken omnia',
+    'servicio de angiologa y ciruga vascular del hospital universitario cruces',
+    'servicio digestivo',
+    'servicio enfermedades infecciosas',
+    'smerteklinikken',
+    'uk fr ansthesiologie und allgemeine intensivmedizin',
 }
 
 # Person + dept aliases that map to person or person+dept canonical
@@ -130,10 +200,11 @@ FIX_CANONICAL = {
     'nyremedicinsk afdeling aalborg sygehus': 'Aalborg University Hospital',
     'paracelsus medizinische universitt - universittsklinik fr ansthesie':
         'Paracelsus Medical University',
-    'section for transfusion medicine capitol region blood bank':
-        'Section for Transfusion Medicine, Capital Region Blood Bank, Copenhagen University Hospital',
-    'section for transfusion medicines capital region blood bank copenhagen':
-        'Section for Transfusion Medicine, Capital Region Blood Bank, Copenhagen University Hospital',
+    'section for transfusion medicine capitol region blood bank': 'Rigshospitalet',
+    'section for transfusion medicine capital region blood bank copenhagen university hospital':
+        'Rigshospitalet',
+    'section for transfusion medicines capital region blood bank copenhagen university hospital':
+        'Rigshospitalet',
     'servicio de alergia hospital civil mlaga spain': 'Hospital Regional Universitario de Málaga',
     'servicio de gastroenterologa del hospital universitario mtua de terrassa':
         'Hospital Universitari Mútua Terrassa',
@@ -178,6 +249,59 @@ FIX_CANONICAL = {
     'university of lige': 'Université de Liège',
     'university of lige- dpt de mdecine gnrale': 'Université de Liège',
     'universitaet muenster': 'Westfälische Wilhelms-Universität Münster',
+    # Phase 10 — dept→institution fixes (institution identifiable from alias)
+    'department of anaesthesiology and intensive care university of tartu': 'University of Tartu',
+    'department of anesthesiology nstved hospital': 'Næstved Hospital',
+    'department of anesthesiology university hospital erlangen': 'Universitätsklinikum Erlangen',
+    'department of anesthesiology university hospital of erlangen': 'Universitätsklinikum Erlangen',
+    'department of asthma allergy and respiratory science gkt school of medicine kings college london':
+        "King's College London",
+    'department of cardio-thoracic and vascular surgery aarhus university hospital':
+        'Aarhus University Hospital',
+    'department of cardiology aalborg hospital': 'Aalborg University Hospital',
+    'department of cardiology odense university hospital': 'Odense University Hospital',
+    'department of clinical sciences danderyd hospital': 'Danderyd Hospital',
+    'department of dermatology bispebjerg hospital': 'Bispebjerg Hospital',
+    'department of dermatology bispebjerg university hospital': 'Bispebjerg Hospital',
+    'department of endocrinology university of debrecen medical and health science center':
+        'University of Debrecen',
+    'department of experimental and clinical pharmacology and toxicology friedrich-alexander-university':
+        'Friedrich-Alexander-Universität Erlangen-Nürnberg',
+    'department of haematology aalborg university hospital': 'Aalborg University Hospital',
+    'department of infectious diseases odense university hospital': 'Odense University Hospital',
+    'department of molecular and clinical medicine sapienza university of rome':
+        'Sapienza University of Rome',
+    'department of nephrology and renal transplantation ku leuven': 'KU Leuven',
+    'department of neurology medical university of vienna': 'Medical University Of Vienna',
+    'department of neurology odense university hospital': 'Odense University Hospital',
+    'department of neuroscience ntnu': 'Norwegian University of Science and Technology',
+    'department of nuclear medicine odense university hospital': 'Odense University Hospital',
+    'department of obstetrics and gynecolog randers centralsygehusy': 'Randers Regional Hospital',
+    'department of oncologyherlev university hospital': 'Herlev og Gentofte Hospital',
+    'department of ophthalmology bonn university': 'University of Bonn',
+    'department of otorhinolaryngology head and neck surgery and audiology rigshospitalet university hospital of cph dk':
+        'Rigshospitalet',
+    'department of pediatrics holbaek hospital': 'Holbæk Sygehus',
+    'department of gastroenterology university hospital of santiago':
+        'Complexo Hospitalario Universitario de Santiago',
+    'dept hematology hospital clinic': 'Hospital Clínic de Barcelona',
+    'dept of anaesthesia university college hospital galway': 'University College Hospital Galway',
+    'dept of anaestesiology university hospital in glostrup': 'Rigshospitalet',
+    'dept of neurology odense university hospital': 'Odense University Hospital',
+    'dept of ophthalmology medical university of vienna': 'Medical University Of Vienna',
+    'dept of ophthalmology rigshospitalet glostrup': 'Rigshospitalet',
+    'dept of paediatric anaesthesia karolinska university hospital-solna': 'Karolinska University Hospital',
+    'dept of neurology - univ of kansas medical center': 'University of Kansas Medical Center',
+    'deutsches herzzentrum mnchen klinik fr herz- und kreislauferkrankungen':
+        'Deutsches Herzzentrum München',
+    'german heart centre munich department of cardiovascular diseases': 'Deutsches Herzzentrum München',
+    'institute of anaesthesiology german heart centre': 'Deutsches Herzzentrum München',
+    'klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen':
+        'Deutsches Herzzentrum München',
+    'pediatric unit hillerd hospital': 'Nordsjællands Hospital Hillerød',
+    'psychiatric research unit frederiksborg general hospital': 'Nordsjællands Hospital',
+    'universitetsklinik for nyresygdomme og blodtryksforhjelse regionshospitalet holstebro hospitalsenheden vest':
+        'Regionshospitalet Holstebro',
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -312,17 +436,36 @@ def run():
         writer.writerows(deduped)
 
     # Fix manual_sponsor_aliases.csv
+    MAN_FIXES = {
+        'department of hepatology and gastroenterology aarhus university hospital':
+            'Aarhus University Hospital',
+        # Phase 10 — dept canonicals in manual_aliases → parent institution
+        # Bare Universitätsklinik für X entries (no hospital specified) → Medical University Of Vienna
+        # (Vienna AKH is the most common context; AKH-specific variants already exist)
+        'universittsklinik fr klinische pharmakologie': 'Medical University Of Vienna',
+        'universittsklinik fr augenheilkunde und optometrie': 'Medical University Of Vienna',
+        'universittsklinik fr kinder-und jugendheilkunde': 'Medical University Of Vienna',
+        'universittsklinik fr kinder- und jugendheilkunde': 'Medical University Of Vienna',
+        # Deutsches Herzzentrum München — dept → institution
+        'klinik fr herz- und kreislauferkrankungen deutsches herzzentrum mnchen':
+            'Deutsches Herzzentrum München',
+        'german heart centre munich department of cardiovascular diseases':
+            'Deutsches Herzzentrum München',
+    }
     with open(MAN_FILE, encoding='utf-8') as f:
         reader = csv.DictReader(f)
         man_fields = reader.fieldnames
         man_rows = list(reader)
+    man_fixed = 0
     for r in man_rows:
-        if r['alias_clean'] == 'department of hepatology and gastroenterology aarhus university hospital':
-            r['sponsor_clean'] = 'Aarhus University Hospital'
+        if r['alias_clean'] in MAN_FIXES:
+            r['sponsor_clean'] = MAN_FIXES[r['alias_clean']]
+            man_fixed += 1
     with open(MAN_FILE, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=man_fields)
         writer.writeheader()
         writer.writerows(man_rows)
+    print(f"manual_sponsor_aliases fixes: {man_fixed}")
 
     print(f"Stats: {stats}")
     print(f"Final llm_reviewed entries: {len(deduped)}")
