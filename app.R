@@ -5225,13 +5225,10 @@ server <- function(input, output, session) {
             width = 6, height = 420,
             withSpinner(plotlyOutput("plot_compare_orphan", height = "340px"), type = 6)),
         box(title = "Trial Scope", status = "info", solidHeader = TRUE,
-            width = 6, height = 420,
-            withSpinner(plotlyOutput("plot_compare_scope", height = "340px"), type = 6))
-      ),
-      fluidRow(
-        box(title = "Top Active Substances", status = "primary", solidHeader = TRUE,
-            width = 12, height = 460,
-            withSpinner(plotlyOutput("plot_compare_substances", height = "380px"), type = 6))
+            width = 6, height = 445,
+            withSpinner(plotlyOutput("plot_compare_scope", height = "320px"), type = 6),
+            p(em("Trial scope = number of EEA countries in which a trial is registered. 1 = national only; 2 = two countries; 3–5, 6–9, 10+ = progressively multinational."),
+              style = "font-size:11px;opacity:0.6;margin:6px 0 0;"))
       ),
       fluidRow(
         box(title = "Submissions per Year", status = "warning", solidHeader = TRUE,
@@ -5269,15 +5266,22 @@ server <- function(input, output, session) {
       ungroup() %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
     validate(need(nrow(df) > 0, "No phase data for selected sponsors."))
-    y_col <- if (use_pct) ~pct else ~n
-    y_lbl <- if (use_pct) "% of Trials" else "Trials"
-    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~phase, y = y_col, color = ~sponsor_label, colors = compare_pal(),
-            type = "bar", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = ""),
-                 yaxis = list(title = y_lbl),
-                 legend = list(orientation = "h", y = -0.25))
+    if (use_pct) {
+      plot_ly(df, x = ~sponsor_label, y = ~pct, color = ~phase,
+              colors = plot_phase_cols(df$phase),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "stack",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "% of Trials", range = list(0, 110)),
+                   legend = list(orientation = "h", y = -0.25))
+    } else {
+      plot_ly(df, x = ~phase, y = ~n, color = ~sponsor_label, colors = compare_pal(),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "group",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "Trials"),
+                   legend = list(orientation = "h", y = -0.25))
+    }
   })
 
   output$plot_compare_status <- renderPlotly({
@@ -5290,15 +5294,22 @@ server <- function(input, output, session) {
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     validate(need(nrow(df) > 0, "No status data for selected sponsors."))
-    y_col <- if (use_pct) ~pct else ~n
-    y_lbl <- if (use_pct) "% of Trials" else "Trials"
-    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~status, y = y_col, color = ~sponsor_label, colors = compare_pal(),
-            type = "bar", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = ""),
-                 yaxis = list(title = y_lbl),
-                 legend = list(orientation = "h", y = -0.25))
+    if (use_pct) {
+      plot_ly(df, x = ~sponsor_label, y = ~pct, color = ~status,
+              colors = plot_status_cols(df$status),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "stack",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "% of Trials", range = list(0, 110)),
+                   legend = list(orientation = "h", y = -0.25))
+    } else {
+      plot_ly(df, x = ~status, y = ~n, color = ~sponsor_label, colors = compare_pal(),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "group",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "Trials"),
+                   legend = list(orientation = "h", y = -0.25))
+    }
   })
 
   output$plot_compare_organ <- renderPlotly({
@@ -5504,43 +5515,6 @@ server <- function(input, output, session) {
                  legend = list(orientation = "h", y = -0.25, title = list(text = "# countries")))
   })
 
-  output$plot_compare_substances <- renderPlotly({
-    req(length(input$sponsor_filter) >= 2)
-    use_pct <- isTRUE(input$compare_pct == "pct")
-    base <- filt() %>%
-      filter(sponsor_label %in% input$sponsor_filter)
-    denom <- base %>% count(sponsor_label, name = "total_trials")
-    df <- base %>%
-      filter(!is.na(substance_label), nzchar(str_trim(substance_label))) %>%
-      select(`_id`, sponsor_label, substance_label) %>%
-      separate_rows(substance_label, sep = " / ") %>%
-      mutate(substance_label = str_squish(substance_label)) %>%
-      filter(nzchar(substance_label)) %>%
-      distinct(`_id`, sponsor_label, substance_label) %>%
-      count(sponsor_label, substance_label, name = "n") %>%
-      left_join(denom, by = "sponsor_label") %>%
-      mutate(pct = round(n / total_trials * 100, 1))
-    top_sub <- df %>%
-      group_by(substance_label) %>%
-      summarise(total = sum(n), .groups = "drop") %>%
-      slice_max(total, n = 10) %>%
-      pull(substance_label)
-    df <- df %>%
-      filter(substance_label %in% top_sub) %>%
-      mutate(sort_val = if (use_pct) pct else n)
-    validate(need(nrow(df) > 0, "No active substance data for selected sponsors."))
-    x_col <- if (use_pct) ~pct else ~n
-    x_lbl <- if (use_pct) "% of Sponsor Trials" else "Trials"
-    plot_ly(df, y = ~reorder(substance_label, sort_val), x = x_col,
-            color = ~sponsor_label, colors = compare_pal(),
-            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = x_lbl),
-                 yaxis = list(title = ""),
-                 legend = list(orientation = "h", y = -0.22),
-                 margin = list(l = 230))
-  })
-
   output$plot_compare_year <- renderPlotly({
     req(length(input$sponsor_filter) >= 2)
     df <- filt() %>%
@@ -5674,13 +5648,10 @@ server <- function(input, output, session) {
             width = 6, height = 420,
             withSpinner(plotlyOutput("plot_cc_orphan", height = "340px"), type = 6)),
         box(title = "Trial Scope", status = "info", solidHeader = TRUE,
-            width = 6, height = 420,
-            withSpinner(plotlyOutput("plot_cc_scope", height = "340px"), type = 6))
-      ),
-      fluidRow(
-        box(title = "Top Active Substances", status = "primary", solidHeader = TRUE,
-            width = 12, height = 460,
-            withSpinner(plotlyOutput("plot_cc_substances", height = "380px"), type = 6))
+            width = 6, height = 445,
+            withSpinner(plotlyOutput("plot_cc_scope", height = "320px"), type = 6),
+            p(em("Trial scope = number of EEA countries in which a trial is registered. 1 = national only; 2 = two countries; 3–5, 6–9, 10+ = progressively multinational."),
+              style = "font-size:11px;opacity:0.6;margin:6px 0 0;"))
       ),
       fluidRow(
         box(title = "Submissions per Year", status = "primary", solidHeader = TRUE,
@@ -5726,15 +5697,22 @@ server <- function(input, output, session) {
       ungroup() %>%
       mutate(phase = factor(phase, levels = c("Phase I","Phase II","Phase III","Phase IV")))
     validate(need(nrow(df) > 0, "No phase data for selected countries."))
-    y_col <- if (use_pct) ~pct else ~n
-    y_lbl <- if (use_pct) "% of Trials" else "Trials"
-    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~phase, y = y_col, color = ~Member_state, colors = country_compare_pal(),
-            type = "bar", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = ""),
-                 yaxis = list(title = y_lbl),
-                 legend = list(orientation = "h", y = -0.25))
+    if (use_pct) {
+      plot_ly(df, x = ~Member_state, y = ~pct, color = ~phase,
+              colors = plot_phase_cols(df$phase),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "stack",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "% of Trials", range = list(0, 110)),
+                   legend = list(orientation = "h", y = -0.25))
+    } else {
+      plot_ly(df, x = ~phase, y = ~n, color = ~Member_state, colors = country_compare_pal(),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "group",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "Trials"),
+                   legend = list(orientation = "h", y = -0.25))
+    }
   })
 
   output$plot_cc_status <- renderPlotly({
@@ -5747,15 +5725,22 @@ server <- function(input, output, session) {
       mutate(pct = round(n / sum(n) * 100, 1)) %>%
       ungroup()
     validate(need(nrow(df) > 0, "No status data for selected countries."))
-    y_col <- if (use_pct) ~pct else ~n
-    y_lbl <- if (use_pct) "% of Trials" else "Trials"
-    txt   <- if (use_pct) ~paste0(pct, "%") else ~as.character(n)
-    plot_ly(df, x = ~status, y = y_col, color = ~Member_state, colors = country_compare_pal(),
-            type = "bar", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = ""),
-                 yaxis = list(title = y_lbl),
-                 legend = list(orientation = "h", y = -0.25))
+    if (use_pct) {
+      plot_ly(df, x = ~Member_state, y = ~pct, color = ~status,
+              colors = plot_status_cols(df$status),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "stack",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "% of Trials", range = list(0, 110)),
+                   legend = list(orientation = "h", y = -0.25))
+    } else {
+      plot_ly(df, x = ~status, y = ~n, color = ~Member_state, colors = country_compare_pal(),
+              type = "bar", hoverinfo = "x+y+name") %>%
+        plt_layout(barmode = "group",
+                   xaxis = list(title = ""),
+                   yaxis = list(title = "Trials"),
+                   legend = list(orientation = "h", y = -0.25))
+    }
   })
 
   output$plot_cc_sponsor_type <- renderPlotly({
@@ -5775,9 +5760,9 @@ server <- function(input, output, session) {
     stype_pal <- c("Academic" = t$frost1, "Industry" = t$orange)
     plot_ly(df, x = ~Member_state, y = y_col, color = ~sponsor_type, colors = stype_pal,
             type = "bar", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
+      plt_layout(barmode = if (use_pct) "stack" else "group",
                  xaxis = list(title = ""),
-                 yaxis = list(title = y_lbl),
+                 yaxis = list(title = y_lbl, range = if (use_pct) list(0, 110) else NULL),
                  legend = list(orientation = "h", y = -0.25))
   })
 
@@ -5943,42 +5928,6 @@ server <- function(input, output, session) {
                  xaxis = list(title = ""),
                  yaxis = list(title = y_lbl, range = if (use_pct) list(0, 110) else NULL),
                  legend = list(orientation = "h", y = -0.25, title = list(text = "# countries")))
-  })
-
-  output$plot_cc_substances <- renderPlotly({
-    req(length(input$country_filter) >= 2)
-    use_pct <- isTRUE(input$country_compare_pct == "pct")
-    base <- cc_data()
-    denom <- base %>% count(Member_state, name = "total_trials")
-    df <- base %>%
-      filter(!is.na(substance_label), nzchar(str_trim(substance_label))) %>%
-      select(`_id`, Member_state, substance_label) %>%
-      separate_rows(substance_label, sep = " / ") %>%
-      mutate(substance_label = str_squish(substance_label)) %>%
-      filter(nzchar(substance_label)) %>%
-      distinct(`_id`, Member_state, substance_label) %>%
-      count(Member_state, substance_label, name = "n") %>%
-      left_join(denom, by = "Member_state") %>%
-      mutate(pct = round(n / total_trials * 100, 1))
-    top_sub <- df %>%
-      group_by(substance_label) %>%
-      summarise(total = sum(n), .groups = "drop") %>%
-      slice_max(total, n = 10) %>%
-      pull(substance_label)
-    df <- df %>%
-      filter(substance_label %in% top_sub) %>%
-      mutate(sort_val = if (use_pct) pct else n)
-    validate(need(nrow(df) > 0, "No active substance data for selected countries."))
-    x_col <- if (use_pct) ~pct else ~n
-    x_lbl <- if (use_pct) "% of Country Trials" else "Trials"
-    plot_ly(df, y = ~reorder(substance_label, sort_val), x = x_col,
-            color = ~Member_state, colors = country_compare_pal(),
-            type = "bar", orientation = "h", hoverinfo = "x+y+name") %>%
-      plt_layout(barmode = "group",
-                 xaxis = list(title = x_lbl),
-                 yaxis = list(title = ""),
-                 legend = list(orientation = "h", y = -0.22),
-                 margin = list(l = 230))
   })
 
   output$plot_cc_year <- renderPlotly({
@@ -6853,12 +6802,12 @@ server <- function(input, output, session) {
       "plot_compare_phase", "plot_compare_status", "plot_compare_organ",
       "plot_compare_country", "plot_compare_pip", "plot_compare_participants",
       "plot_compare_duration", "plot_compare_orphan", "plot_compare_scope",
-      "plot_compare_substances", "plot_compare_year", "plot_compare_results",
+      "plot_compare_year", "plot_compare_results",
       # Country Comparison
       "country_compare_tab_ui",
       "plot_cc_phase", "plot_cc_status", "plot_cc_sponsor_type",
       "plot_cc_pip", "plot_cc_organ", "plot_cc_participants", "plot_cc_duration",
-      "plot_cc_orphan", "plot_cc_scope", "plot_cc_substances",
+      "plot_cc_orphan", "plot_cc_scope",
       "plot_cc_year", "plot_cc_results",
       # Result Reporting
       "kpi_strip_compliance",

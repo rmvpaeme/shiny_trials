@@ -2,6 +2,12 @@
 
 ## v0.12.4 — 2026-05-31
 
+### Compare tabs — UX improvements
+
+- **Trial Scope caption**: both Country Comparison and Sponsor Comparison now show an explanatory caption beneath the Trial Scope chart clarifying that the categories reflect the number of EEA countries a trial is registered in (1 = national only through 10+ = multinational).
+- **Top Active Substances removed**: the Top Active Substances chart has been removed from both comparison tabs — cross-country/cross-sponsor substance comparison was not meaningful at this level of aggregation.
+- **Percentage mode — stacked bar layout**: switching to Percentage flips the Phase Distribution and Trial Status charts so that the compared entities (countries or sponsors) sit on the x-axis and the categorical variable (phase or status) becomes the stacked fill colour. Sponsor Type (country comparison) also switches from grouped to stacked in percentage mode. Top Organ Classes and Trials by Country (sponsor comparison) keep their existing layout regardless of mode.
+
 ### UI
 
 - **5 Most Recently Authorized Trials**: clicking a trial now shows the same detailed modal as the Data Explorer (raw vs normalised values, full dates/status/results section).
