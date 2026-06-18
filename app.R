@@ -2188,8 +2188,11 @@ ui <- tagList(
                           .kpi-icon { font-size: 20px; margin-bottom: 6px; }
                           .kpi-val  { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
                           .kpi-lbl  { font-size: 12px; font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.6px; }
-                          @media (max-width: 767px) {
+                          @media (max-width: 1199px) {
                             #nav_subtitle { display: none !important; }
+                          }
+                          @media (max-width: 767px) {
+                            #testing_banner_li { display: none !important; }
                             #kpi_strip .col-sm-3,
                             #kpi_strip_compliance .col-sm-3 { width: 50% !important; float: left !important; padding: 0 5px 10px !important; }
                             .kpi-card { padding: 8px 10px 7px; }
@@ -2313,6 +2316,16 @@ ui <- tagList(
                       ),
                       icon("child"), " EU Paediatric Trial Monitor"
                     ), titleWidth = 300,
+                    tags$li(class = "dropdown", id = "testing_banner_li",
+                      tags$div(
+                        style = "display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#9A6400;background:#FCEEC6;border:1px solid #EBCB8B;border-radius:4px;padding:6px 10px;margin:9px 0;white-space:nowrap;",
+                        icon("flask"),
+                        tags$span("Testing phase — verify conclusions independently."),
+                        tags$a(href = "mailto:ruben.vanpaemel@uzgent.be",
+                               style = "color:#9A6400;text-decoration:underline;margin-left:2px;",
+                               "Feedback")
+                      )
+                    ),
                     tags$li(class = "dropdown",
                       tags$a(id = "nav_subtitle", style = "cursor:default;font-size:13px;opacity:0.65;padding:15px 20px;pointer-events:none;",
                              "Browse and analyse clinical trials in EUCTR and CTIS with a focus on the pediatric population")
