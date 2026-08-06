@@ -12,6 +12,11 @@
 #   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
 #   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
 #   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --allow-fuzzy
+#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --keep-decided
+#
+# By default a rebuilt queue drops rows that already carry a decision, so it
+# reads as a to-do list. --keep-decided carries the decisions forward instead,
+# which is useful for inspecting past work; undecided rows still sort first.
 #
 # Environment:
 #   DATA_DIR    override for data directory (default: data/)
@@ -40,9 +45,10 @@ script_dir   <- if (!is.na(script_path)) dirname(script_path) else getwd()
 project_root <- normalizePath(file.path(script_dir, "..", ".."), mustWork = TRUE)
 project_path <- function(...) file.path(project_root, ...)
 
-args        <- commandArgs(trailingOnly = TRUE)
-write_queue <- "--write-queue" %in% args
-allow_fuzzy <- "--allow-fuzzy" %in% args
+args         <- commandArgs(trailingOnly = TRUE)
+write_queue  <- "--write-queue" %in% args
+allow_fuzzy  <- "--allow-fuzzy" %in% args
+keep_decided <- "--keep-decided" %in% args
 
 data_dir   <- Sys.getenv("DATA_DIR",   unset = project_path("data"))
 config_dir <- Sys.getenv("CONFIG_DIR", unset = project_path("config", "sponsor_norm_pipeline"))
@@ -205,18 +211,27 @@ if (write_queue) {
     dplyr::filter(!is.na(decision) & nzchar(decision)) %>%
     dplyr::select(raw_sponsor, decision, canonical_sponsor, comment)
 
-  queue_out <- new_queue %>%
-    dplyr::anti_join(existing_decisions, by = "raw_sponsor") %>%
-    dplyr::mutate(
-      decision = NA_character_,
-      canonical_sponsor = NA_character_,
-      comment = NA_character_
-    ) %>%
-    dplyr::arrange(dplyr::desc(n_trials))
+  queue_out <- if (keep_decided) {
+    # Carry decisions forward so the queue doubles as a decision record.
+    new_queue %>%
+      dplyr::left_join(existing_decisions, by = "raw_sponsor") %>%
+      dplyr::arrange(!is.na(decision), dplyr::desc(n_trials))
+  } else {
+    new_queue %>%
+      dplyr::anti_join(existing_decisions, by = "raw_sponsor") %>%
+      dplyr::mutate(
+        decision = NA_character_,
+        canonical_sponsor = NA_character_,
+        comment = NA_character_
+      ) %>%
+      dplyr::arrange(dplyr::desc(n_trials))
+  }
 
   readr::write_csv(queue_out, queue_path)
   message(sprintf(
-    "Wrote review queue: %d rows to %s", nrow(queue_out), queue_path
+    "Wrote review queue: %d rows to %s%s", nrow(queue_out), queue_path,
+    if (keep_decided) sprintf(" (%d decided rows kept)",
+                              sum(!is.na(queue_out$decision))) else ""
   ))
 }
 

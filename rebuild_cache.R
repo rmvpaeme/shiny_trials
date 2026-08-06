@@ -36,7 +36,8 @@ message("=== Building sponsor labels ===")
 run_pipeline(
   file.path("helper_scripts", "sponsor_norm_pipeline", "export_trial_sponsors.R"),
   file.path("helper_scripts", "sponsor_norm_pipeline", "build_sponsor_labels.R"),
-  "Sponsor normalisation"
+  "Sponsor normalisation",
+  "--write-queue"
 )
 message("=== Sponsor labels build complete ===")
 

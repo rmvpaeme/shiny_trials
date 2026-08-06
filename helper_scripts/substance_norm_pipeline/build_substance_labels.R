@@ -12,6 +12,11 @@
 # Usage:
 #   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R
 #   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue --keep-decided
+#
+# By default a rebuilt queue drops rows that already carry a decision, so it
+# reads as a to-do list. --keep-decided carries the decisions forward instead,
+# which is useful for inspecting past work; undecided rows still sort first.
 #
 # Environment:
 #   DATA_DIR    override for data directory (default: data/)
@@ -41,8 +46,9 @@ script_dir   <- if (!is.na(script_path)) dirname(script_path) else getwd()
 project_root <- normalizePath(file.path(script_dir, "..", ".."), mustWork = TRUE)
 project_path <- function(...) file.path(project_root, ...)
 
-args        <- commandArgs(trailingOnly = TRUE)
-write_queue <- "--write-queue" %in% args
+args         <- commandArgs(trailingOnly = TRUE)
+write_queue  <- "--write-queue" %in% args
+keep_decided <- "--keep-decided" %in% args
 
 data_dir   <- Sys.getenv("DATA_DIR",   unset = project_path("data"))
 config_dir <- Sys.getenv("CONFIG_DIR", unset = project_path("config", "substance_norm_pipeline"))
@@ -229,13 +235,27 @@ if (write_queue) {
     filter(!is.na(decision) & nzchar(decision)) %>%
     select(raw_substance, decision, canonical_substance, comment)
 
-  queue_out <- new_queue %>%
-    anti_join(existing_decisions, by = "raw_substance") %>%
-    arrange(desc(n_occurrences))
+  queue_out <- if (keep_decided) {
+    # Carry decisions forward so the queue doubles as a decision record.
+    new_queue %>%
+      left_join(existing_decisions, by = "raw_substance") %>%
+      arrange(!is.na(decision), desc(n_occurrences))
+  } else {
+    new_queue %>%
+      anti_join(existing_decisions, by = "raw_substance") %>%
+      mutate(
+        decision            = NA_character_,
+        canonical_substance = NA_character_,
+        comment             = NA_character_
+      ) %>%
+      arrange(desc(n_occurrences))
+  }
 
   readr::write_csv(queue_out, queue_path)
-  message(sprintf("Wrote review queue: %d rows to %s (review: all; unknown: n>=2 only)",
-                  nrow(queue_out), queue_path))
+  message(sprintf("Wrote review queue: %d rows to %s (review: all; unknown: n>=2 only%s)",
+                  nrow(queue_out), queue_path,
+                  if (keep_decided) sprintf("; %d decided rows kept",
+                                            sum(!is.na(queue_out$decision))) else ""))
 }
 
 message("Done.")
