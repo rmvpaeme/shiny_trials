@@ -24,6 +24,90 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
+# A fragment decision collapses several canonical spellings into one. The
+# pipeline already has the mechanism: apply_explicit_final_map() in
+# build_sponsor_index.R rewrites sponsor_clean via final_sponsor_canonical_map,
+# so this only has to append the losing spellings as `from` rows.
+apply_sponsor_fragments <- function(root, ledger, write) {
+  dec <- ledger[ledger$tier == "sponsor_fragments" &
+                  ledger$action %in% c("accept", "edit"), , drop = FALSE]
+  if (!nrow(dec)) return(invisible(NULL))
+  path <- file.path(root, "config", "sponsor_norm_pipeline",
+                    "final_sponsor_canonical_map.csv")
+  if (!file.exists(path)) {
+    warning("Missing final_sponsor_canonical_map.csv, skipping sponsor_fragments")
+    return(invisible(NULL))
+  }
+  map <- readr::read_csv(path, show_col_types = FALSE, progress = FALSE)
+  groups <- load_sponsor_fragments(root)
+
+  new_rows <- list()
+  for (i in seq_len(nrow(dec))) {
+    row <- dec[i, ]
+    grp <- groups[groups$row_key == row$row_key, , drop = FALSE]
+    if (!nrow(grp) || is.na(row$final_value)) next
+    variants <- trimws(sub("\\s*\\(\\d+\\)$", "",
+                           strsplit(grp$variants[[1]], "  |  ", fixed = TRUE)[[1]]))
+    losing <- setdiff(variants, row$final_value)
+    if (!length(losing)) next
+    new_rows[[length(new_rows) + 1L]] <- tibble::tibble(
+      sponsor_clean_from = losing,
+      sponsor_clean_to   = row$final_value,
+      sponsor_parent_to  = NA_character_,
+      sponsor_group_to   = NA_character_,
+      sponsor_type_to    = NA_character_,
+      reason             = "collapse fragmented canonical (human review)"
+    )
+  }
+  if (!length(new_rows)) return(invisible(NULL))
+  add <- dplyr::bind_rows(new_rows) |>
+    dplyr::filter(!sponsor_clean_from %in% map$sponsor_clean_from)
+
+  message(sprintf("%-22s collapse=%d canonical spellings", "sponsor_fragments", nrow(add)))
+  if (write && nrow(add)) {
+    write_csv_atomic(dplyr::bind_rows(map, add), path, eol = detect_eol(path))
+  }
+  invisible(NULL)
+}
+
+# A conflict decision picks one of the competing targets. Every other target
+# for that raw string is removed from both files that carry it, which is what
+# the chunked curation should have done when it corrected itself.
+apply_substance_conflicts <- function(root, ledger, write) {
+  dec <- ledger[ledger$tier == "substance_conflicts" &
+                  ledger$action %in% c("accept", "edit"), , drop = FALSE]
+  if (!nrow(dec)) return(invisible(NULL))
+
+  targets <- list(
+    list(path = file.path(root, "config", "substance_norm_pipeline",
+                          "manual_substance_overrides.csv"),
+         key = "raw_clean", val = "substance_clean", quote = "all"),
+    list(path = file.path(root, "config", "substance_norm_pipeline",
+                          "substance_llm_reviewed.csv"),
+         key = "alias_clean", val = "substance_clean", quote = "needed")
+  )
+  total <- 0L
+  for (t in targets) {
+    if (!file.exists(t$path)) next
+    d <- readr::read_csv(t$path, show_col_types = FALSE, progress = FALSE)
+    keep <- rep(TRUE, nrow(d))
+    for (i in seq_len(nrow(dec))) {
+      row <- dec[i, ]
+      if (is.na(row$final_value)) next
+      hit <- d[[t$key]] == row$row_key & d[[t$val]] != row$final_value
+      keep <- keep & !hit
+    }
+    dropped <- sum(!keep)
+    total <- total + dropped
+    if (write && dropped) {
+      write_csv_atomic(d[keep, , drop = FALSE], t$path,
+                       eol = detect_eol(t$path), quote = t$quote)
+    }
+  }
+  message(sprintf("%-22s drop=%d losing rows", "substance_conflicts", total))
+  invisible(NULL)
+}
+
 apply_main <- function(root, write = FALSE) {
   paths  <- store_paths(root)
   ledger <- latest_decisions(read_ledger(paths))
@@ -132,6 +216,9 @@ apply_main <- function(root, write = FALSE) {
     }
   }
 
+  apply_sponsor_fragments(root, ledger, write)
+  apply_substance_conflicts(root, ledger, write)
+
   if (!write) {
     message("\nDry run — nothing written. Re-run with --write to apply.")
   } else {
@@ -148,6 +235,7 @@ if (!interactive() && any(grepl("apply\\.R$", commandArgs(FALSE)))) {
   file_arg <- commandArgs(FALSE)[grepl("^--file=", commandArgs(FALSE))][1]
   here <- dirname(normalizePath(sub("^--file=", "", file_arg)))
   root <- normalizePath(file.path(here, ".."))
+  suppressPackageStartupMessages(library(tibble))
   source(file.path(here, "R", "store.R"), local = FALSE)
   source(file.path(here, "R", "tiers.R"), local = FALSE)
   apply_main(root, write = "--write" %in% commandArgs(trailingOnly = TRUE))

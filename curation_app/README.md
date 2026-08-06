@@ -26,6 +26,8 @@ REVIEWER="rvp" Rscript -e 'shiny::runApp("curation_app")'
 
 | Tier | Rows | Source |
 |---|---:|---|
+| **Sponsor fragments** | 130 | canonicals differing only by casing/punctuation/article — same entity, split trial counts |
+| **Substance conflicts** | 42 | one raw string overridden to two different substances |
 | Sponsor queue | 102 | `config/sponsor_norm_pipeline/sponsor_review_queue.csv` |
 | Substance queue | 1,317 | `config/substance_norm_pipeline/substance_review_queue.csv` |
 | Sponsor LLM aliases | 1,383 | `manual_sponsor_aliases.csv` where `source == llm_curated` |
@@ -91,10 +93,14 @@ Rscript curation_app/apply.R           # dry run — reports what would change
 Rscript curation_app/apply.R --write   # apply
 ```
 
-`apply.R` covers the alias tiers. Accepted rows get `source: manual`, edited
-rows have their canonical and extra fields rewritten, and rejected rows are
-removed from the alias table and added to the negative-alias list. It replays
-the whole ledger every run, so running it twice is a no-op the second time.
+`apply.R` covers the alias and conflict tiers. It replays the whole ledger every
+run, so running it twice is a no-op the second time.
+
+| Tier | What applying does |
+|---|---|
+| alias tiers | accept → `source: manual`; edit → rewrite canonical and extra fields; reject → remove the row and add it to the negative-alias list |
+| **Sponsor fragments** | append the losing spellings to `final_sponsor_canonical_map.csv` as `from` rows, which `apply_explicit_final_map()` in `build_sponsor_index.R` already collapses on the next rebuild |
+| **Substance conflicts** | drop every competing target for that raw string from `manual_substance_overrides.csv` and `substance_llm_reviewed.csv`, keeping the chosen one |
 
 Queue tiers use the existing exporters instead:
 
