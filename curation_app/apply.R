@@ -50,6 +50,20 @@ apply_main <- function(root, write = FALSE) {
       key       = "substance_clean",
       canonical = "parent_substance",
       negatives = NULL
+    ),
+    # Not review tiers of their own — these receive "detach" rejections raised
+    # from the sibling panel while reviewing some other row.
+    sponsor_llm_reviewed = list(
+      file      = file.path(root, "config", "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv"),
+      key       = "alias_clean",
+      canonical = "sponsor_clean",
+      negatives = file.path(root, "config", "sponsor_norm_pipeline", "sponsor_negative_aliases.csv")
+    ),
+    substance_llm_reviewed = list(
+      file      = file.path(root, "config", "substance_norm_pipeline", "substance_llm_reviewed.csv"),
+      key       = "alias_clean",
+      canonical = "substance_clean",
+      negatives = file.path(root, "config", "substance_norm_pipeline", "negative_aliases.csv")
     )
   )
 

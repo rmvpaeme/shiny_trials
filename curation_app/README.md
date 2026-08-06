@@ -39,9 +39,22 @@ match score (worst first).
 
 ## Reviewing
 
-Each row shows the raw string, the normalisation currently claimed for it, the
-evidence behind that claim, and every other alias mapping to the same canonical
-— that last panel is usually what makes a wrong canonical obvious.
+Each row shows the raw string, the normalisation currently claimed for it, and
+three evidence panels:
+
+- **Evidence** — match score, source, reason, and impact.
+- **Other aliases mapping to this canonical** — usually what makes a wrong
+  canonical obvious. Each sibling is actionable: **Detach** records a rejection
+  against the file that alias actually lives in, so a bad sibling can be fixed
+  without navigating to it. Aliases from the generated tiers (EPAR, CTIS
+  businessKey, email domain, ChEMBL) are shown read-only and marked
+  `generated`, because they are re-derived on every rebuild and an edit would
+  be silently undone.
+- **Registered trials using this raw value** — the EUCTR/CTIS trial IDs this
+  string actually came from, linked to the public registers, with a country
+  summary. This is what settles an ambiguous name: `UCL` appears on four
+  trials, all `-GB`, so it is University College London and not Université
+  catholique de Louvain (`-BE`).
 
 The proposed value is a dropdown over existing canonical names (8,309 sponsors,
 17,603 substances, loaded server-side) rather than a free text box. Typing a
@@ -49,6 +62,11 @@ name that does not exist offers to create it, but that path shows a warning and
 is recorded as `created_new_canonical` in the ledger. Uncontrolled canonical
 creation is how the near-duplicate canonicals accumulated in the first place, so
 it is deliberately visible rather than convenient.
+
+Classification fields are constrained too: `sponsor_type`, `alias_type` and
+`substance_type` are fixed-vocabulary dropdowns (`FIELD_CHOICES` in
+`R/tiers.R`), and `sponsor_parent` / `sponsor_group` use the canonical pool.
+Free text on these fields is how one type becomes three spellings.
 
 Actions: **Accept**, **Save edit**, **Reject** (comment required), **Skip**.
 

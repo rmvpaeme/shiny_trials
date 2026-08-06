@@ -6,6 +6,10 @@
 # path is flagged in the UI and recorded in the ledger — uncontrolled canonical
 # creation is how near-duplicate canonicals accumulated in the first place.
 
+# Sibling detach buttons need a fixed set of observers, so the number of
+# sibling rows shown has to be bounded and known up front.
+MAX_SIBLINGS <- 12L
+
 review_card_ui <- function(id) {
   ns <- shiny::NS(id)
   bslib::layout_sidebar(
@@ -51,7 +55,7 @@ review_card_ui <- function(id) {
       )
     ),
     bslib::layout_columns(
-      col_widths = c(6, 6),
+      col_widths = c(4, 4, 4),
       bslib::card(
         bslib::card_header("Evidence"),
         bslib::card_body(shiny::tableOutput(ns("evidence")))
@@ -59,12 +63,21 @@ review_card_ui <- function(id) {
       bslib::card(
         bslib::card_header("Other aliases mapping to this canonical"),
         bslib::card_body(shiny::uiOutput(ns("siblings")))
+      ),
+      bslib::card(
+        bslib::card_header("Registered trials using this raw value"),
+        bslib::card_body(shiny::uiOutput(ns("trials")))
       )
     )
   )
 }
 
 review_card_server <- function(id, tier, root, paths, reviewer, canonicals, on_decision) {
+  # These are forced deliberately. This function is called from a for loop over
+  # TIERS, and every argument below is used lazily inside observers — without
+  # forcing, all six modules would bind to the loop's final tier.
+  force(tier); force(root); force(paths); force(canonicals); force(on_decision)
+
   shiny::moduleServer(id, function(input, output, session) {
 
     rows      <- shiny::reactiveVal(NULL)
@@ -155,9 +168,38 @@ review_card_server <- function(id, tier, root, paths, reviewer, canonicals, on_d
         shiny::hr(),
         lapply(tier$extra_fields, function(f) {
           val <- if (f %in% names(cur) && !is.na(cur[[f]][[1]])) as.character(cur[[f]][[1]]) else ""
-          shiny::textInput(ns(paste0("extra_", f)), f, value = val, width = "100%")
+          if (!is.null(FIELD_CHOICES[[f]])) {
+            # Fixed vocabulary — no free text, so synonyms cannot be invented.
+            shiny::selectInput(
+              ns(paste0("extra_", f)), f,
+              choices  = c("(unset)" = "", FIELD_CHOICES[[f]]),
+              selected = val, width = "100%"
+            )
+          } else if (f %in% POOL_FIELDS) {
+            # Canonical sponsor names — same pool as `proposed`, server-side.
+            shiny::selectizeInput(
+              ns(paste0("extra_", f)), f, choices = NULL, width = "100%",
+              options = list(create = TRUE, createOnBlur = TRUE, maxOptions = 200,
+                             placeholder = "Search canonical names")
+            )
+          } else {
+            shiny::textInput(ns(paste0("extra_", f)), f, value = val, width = "100%")
+          }
         })
       )
+    })
+
+    # The pool-backed extra fields are created dynamically, so their choices
+    # have to be pushed after the UI renders rather than at construction.
+    shiny::observeEvent(current(), {
+      cur <- current()
+      shiny::req(cur)
+      for (f in intersect(tier$extra_fields, POOL_FIELDS)) {
+        val <- if (f %in% names(cur) && !is.na(cur[[f]][[1]])) as.character(cur[[f]][[1]]) else ""
+        shiny::updateSelectizeInput(session, paste0("extra_", f),
+                                    choices = canonicals, selected = val,
+                                    server = TRUE)
+      }
     })
 
     output$evidence <- shiny::renderTable({
@@ -174,11 +216,111 @@ review_card_server <- function(id, tier, root, paths, reviewer, canonicals, on_d
       )
     }, colnames = FALSE, width = "100%")
 
-    output$siblings <- shiny::renderUI({
+    siblings <- shiny::reactive({
       cur <- current(); if (is.null(cur)) return(NULL)
-      sib <- sibling_aliases(root, tier$domain, cur$proposed[[1]], cur$raw[[1]])
-      if (!length(sib)) return(shiny::em("No other alias maps here."))
-      shiny::tags$ul(lapply(sib, shiny::tags$li))
+      sibling_aliases(root, tier$domain, cur$proposed[[1]], cur$raw[[1]],
+                      limit = MAX_SIBLINGS)
+    })
+
+    output$siblings <- shiny::renderUI({
+      sib <- siblings()
+      if (is.null(sib) || !nrow(sib)) return(shiny::em("No other alias maps here."))
+      ns <- session$ns
+      shiny::tagList(
+        shiny::tags$small(class = "text-muted d-block mb-2",
+                          "Detach removes the alias from this canonical."),
+        shiny::tags$ul(
+          class = "list-unstyled mb-0",
+          lapply(seq_len(nrow(sib)), function(i) {
+            shiny::tags$li(
+              class = "d-flex justify-content-between align-items-center gap-2 mb-1",
+              shiny::span(
+                sib$alias_clean[[i]],
+                shiny::tags$small(class = "text-muted",
+                                  paste0(" (", sib$source[[i]], ")"))
+              ),
+              if (isTRUE(sib$editable[[i]])) {
+                shiny::actionButton(ns(paste0("detach_", i)), "Detach",
+                                    class = "btn-sm btn-outline-danger py-0")
+              } else {
+                # Generated tiers are re-derived on rebuild, so an edit here
+                # would not survive; say so rather than offer a dead button.
+                shiny::tags$small(class = "text-muted", "generated")
+              }
+            )
+          })
+        )
+      )
+    })
+
+    # Fixed set of observers, one per possible sibling slot — Shiny cannot
+    # observe inputs that are created and destroyed per render.
+    lapply(seq_len(MAX_SIBLINGS), function(i) {
+      shiny::observeEvent(input[[paste0("detach_", i)]], {
+        sib <- siblings()
+        shiny::req(sib, nrow(sib) >= i, isTRUE(sib$editable[[i]]))
+        cur <- current(); shiny::req(cur)
+        home <- alias_home(tier$domain, sib$source[[i]])
+        shiny::req(home)
+
+        append_decision(paths, list(
+          decision_id           = paste0(home$tier, "-",
+                                         row_hash(sib$alias_clean[[i]], utc_now(), reviewer())),
+          decided_at_utc        = utc_now(),
+          reviewer              = reviewer(),
+          tier                  = home$tier,
+          domain                = tier$domain,
+          source_file           = home$file,
+          row_key               = sib$alias_clean[[i]],
+          raw_value             = sib$alias_clean[[i]],
+          proposed_value        = cur$proposed[[1]],
+          final_value           = NA_character_,
+          action                = "reject",
+          created_new_canonical = "FALSE",
+          extra_fields          = NA_character_,
+          comment               = sprintf("detached from '%s' while reviewing '%s'",
+                                          cur$proposed[[1]], cur$raw[[1]]),
+          input_hash            = row_hash(sib$alias_clean[[i]], cur$proposed[[1]])
+        ))
+        refresh_decisions()
+        on_decision()
+        shiny::showNotification(sprintf("Detached '%s'", sib$alias_clean[[i]]),
+                                duration = 2)
+      }, ignoreInit = TRUE)
+    })
+
+    output$trials <- shiny::renderUI({
+      cur <- current(); if (is.null(cur)) return(NULL)
+      tr <- trial_references(root, tier$domain, cur$raw[[1]])
+      if (!nrow(tr)) return(shiny::em("No registered trial found for this raw value."))
+
+      # The country spread is usually what disambiguates a name — "UCL" on four
+      # GB trials is University College London, not the Belgian UCL.
+      countries <- tr$country[!is.na(tr$country)]
+      summary <- if (length(countries)) {
+        tab <- sort(table(countries), decreasing = TRUE)
+        paste(sprintf("%s x%d", names(tab), as.integer(tab)), collapse = " · ")
+      } else NULL
+
+      shiny::tagList(
+        if (!is.null(summary)) {
+          shiny::div(class = "mb-2", shiny::strong("Countries: "), summary)
+        },
+        shiny::tags$ul(
+          class = "list-unstyled mb-0",
+          lapply(seq_len(min(nrow(tr), 15L)), function(i) {
+            shiny::tags$li(
+              shiny::tags$a(href = tr$url[[i]], target = "_blank", tr$id[[i]]),
+              shiny::tags$small(class = "text-muted", paste0(" ", tr$register[[i]]))
+            )
+          })
+        ),
+        if (nrow(tr) > 15L) {
+          shiny::tags$small(class = "text-muted",
+                            sprintf("… and %d more (%d trials total)",
+                                    nrow(tr) - 15L, nrow(tr)))
+        }
+      )
     })
 
     output$progress <- shiny::renderUI({
