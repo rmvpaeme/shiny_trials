@@ -29,6 +29,7 @@ review_card_ui <- function(id) {
       ),
       shiny::hr(),
       shiny::checkboxInput(ns("hide_decided"), "Hide decided rows", value = TRUE),
+      shiny::uiOutput(ns("scope_controls")),
       shiny::uiOutput(ns("progress"))
     ),
     shiny::uiOutput(ns("empty_notice")),
@@ -100,12 +101,71 @@ review_card_server <- function(id, tier, root, paths, reviewer, canonicals, on_d
       d$row_key[d$action %in% c("accept", "edit", "reject")]
     })
 
-    visible <- shiny::reactive({
+    min_impact_default <- if (is.null(tier$min_impact)) 0 else tier$min_impact
+    auditable <- isTRUE(tier$auditable)
+
+    output$scope_controls <- shiny::renderUI({
+      if (!auditable) return(NULL)
       r <- rows()
+      shiny::req(r)
+      ns <- session$ns
+      shiny::tagList(
+        shiny::hr(),
+        shiny::radioButtons(
+          ns("mode"), "Scope",
+          choices = c("Above threshold" = "head", "Audit sample of the tail" = "audit"),
+          selected = "head"
+        ),
+        shiny::conditionalPanel(
+          condition = sprintf("input['%s'] == 'head'", ns("mode")),
+          shiny::sliderInput(ns("min_impact"),
+                             sprintf("Minimum %s", tier$impact_label),
+                             min = 0, max = 10, value = min_impact_default, step = 1)
+        ),
+        shiny::tags$small(class = "text-muted", shiny::uiOutput(ns("scope_note")))
+      )
+    })
+
+    min_impact <- shiny::reactive({
+      if (!auditable) return(0)
+      if (identical(input$mode, "audit")) return(min_impact_default)
+      if (is.null(input$min_impact)) min_impact_default else input$min_impact
+    })
+
+    # The audited set is drawn from the rows the threshold excludes, so
+    # reviewing it measures exactly the population that is otherwise skipped.
+    in_scope <- shiny::reactive({
+      r <- rows()
+      shiny::req(r)
+      if (!auditable) return(r)
+      if (identical(input$mode, "audit")) {
+        audit_sample(r, tier$id, min_impact_default)
+      } else {
+        r[r$impact >= min_impact(), , drop = FALSE]
+      }
+    })
+
+    output$scope_note <- shiny::renderUI({
+      r <- rows(); shiny::req(r)
+      if (identical(input$mode, "audit")) {
+        tail_n <- sum(r$impact < min_impact_default)
+        shiny::HTML(sprintf(
+          "Reviewing %d of the %d rows below the threshold. Their error rate estimates the whole tail.",
+          nrow(in_scope()), tail_n))
+      } else {
+        shiny::HTML(sprintf("%d of %d rows; %d excluded resolve nothing at all.",
+                            nrow(in_scope()), nrow(r), sum(r$impact == 0)))
+      }
+    })
+
+    visible <- shiny::reactive({
+      r <- in_scope()
       shiny::req(r)
       if (isTRUE(input$hide_decided)) r <- r[!r$row_key %in% decided_keys(), , drop = FALSE]
       r
     })
+
+    shiny::observeEvent(list(input$mode, input$min_impact), cursor(1L), ignoreInit = TRUE)
 
     current <- shiny::reactive({
       v <- visible()

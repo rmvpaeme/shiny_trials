@@ -167,6 +167,82 @@ empty_tier_rows <- function() {
                  proposed = character(), impact = numeric())
 }
 
+# ── llm_reviewed tiers ────────────────────────────────────────────────────────
+#
+# 24,302 rows between them — far too many to review row by row, and most of it
+# would be wasted effort: 4,428 sponsor rows (37%) resolve zero trials, and
+# another 4,866 resolve exactly one. Rows with >= 3 trials are 1,509 of the
+# sponsor tier but carry 61% of its impact, so that is the default threshold.
+#
+# The sub-threshold rows are not abandoned, they are *sampled* — see
+# audit_sample() below. A clean sample is what makes the tail provably not
+# worth reviewing; without one, "we skipped 9,000 rows" has no error bar.
+
+load_sponsor_llm_reviewed <- function(root) {
+  p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv")
+  if (!file.exists(p)) return(empty_tier_rows())
+  log_p <- data_path(root, "sponsor_normalisation_log.csv")
+  imp <- if (file.exists(log_p)) {
+    read_csv_quiet(log_p) |>
+      dplyr::mutate(alias_clean = tolower(trimws(raw_sponsor))) |>
+      dplyr::group_by(alias_clean) |>
+      dplyr::summarise(impact = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
+  } else {
+    tibble::tibble(alias_clean = character(), impact = numeric())
+  }
+  read_csv_quiet(p) |>
+    dplyr::left_join(imp, by = "alias_clean") |>
+    dplyr::mutate(impact = dplyr::coalesce(impact, 0),
+                  row_key = alias_clean, raw = alias_clean, proposed = sponsor_clean) |>
+    dplyr::arrange(dplyr::desc(impact), raw)
+}
+
+load_substance_llm_reviewed <- function(root) {
+  p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_reviewed.csv")
+  if (!file.exists(p)) return(empty_tier_rows())
+  log_p <- data_path(root, "substance_normalisation_log.csv")
+  imp <- if (file.exists(log_p)) {
+    read_csv_quiet(log_p) |>
+      dplyr::mutate(alias_clean = tolower(trimws(raw_substance))) |>
+      dplyr::count(alias_clean, name = "impact")
+  } else {
+    tibble::tibble(alias_clean = character(), impact = integer())
+  }
+  read_csv_quiet(p) |>
+    dplyr::left_join(imp, by = "alias_clean") |>
+    dplyr::mutate(impact = dplyr::coalesce(impact, 0),
+                  row_key = alias_clean, raw = alias_clean, proposed = substance_clean) |>
+    dplyr::arrange(dplyr::desc(impact), raw)
+}
+
+# A fixed, seeded random sample of the rows the impact threshold excludes.
+# Seeded on the tier id so the same rows come back every session and across
+# reviewers — an audit whose sample moves is not an audit.
+AUDIT_SIZE <- 200L
+
+audit_sample <- function(rows, tier_id, min_impact, n = AUDIT_SIZE) {
+  tail_rows <- rows[rows$impact < min_impact, , drop = FALSE]
+  if (!nrow(tail_rows)) return(tail_rows[0, , drop = FALSE])
+  seed <- sum(utf8ToInt(tier_id)) * 7919L
+  withr_seed <- .Random.seed
+  set.seed(seed)
+  on.exit({ if (!is.null(withr_seed)) .Random.seed <<- withr_seed }, add = TRUE)
+  idx <- sample.int(nrow(tail_rows), min(n, nrow(tail_rows)))
+  tail_rows[sort(idx), , drop = FALSE]
+}
+
+# Wilson interval — the normal approximation misbehaves when the observed error
+# rate is near 0, which is the outcome an audit is most likely to produce.
+wilson_ci <- function(k, n, conf = 0.95) {
+  if (n == 0) return(c(NA_real_, NA_real_))
+  z <- stats::qnorm(1 - (1 - conf) / 2)
+  p <- k / n
+  d <- 1 + z^2 / n
+  centre <- (p + z^2 / (2 * n)) / d
+  half <- z * sqrt(p * (1 - p) / n + z^2 / (4 * n^2)) / d
+  c(max(0, centre - half), min(1, centre + half))
+}
+
 # ── conflict tiers ────────────────────────────────────────────────────────────
 #
 # These two hold rows that are already known to be wrong, rather than merely
@@ -295,6 +371,28 @@ TIERS <- list(
     evidence = c("candidates", "chunks"),
     extra_fields = character(),
     impact_label = "occurrences",
+    queue = NULL
+  ),
+  sponsor_llm_reviewed = list(
+    id = "sponsor_llm_reviewed", label = "Sponsor LLM-reviewed", domain = DOMAIN_SPONSOR,
+    loader = load_sponsor_llm_reviewed,
+    source_file = "config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv",
+    evidence = c("source", "confidence_prior", "sponsor_parent", "sponsor_group"),
+    extra_fields = c("sponsor_type", "sponsor_parent", "sponsor_group"),
+    impact_label = "trials",
+    min_impact = 3,     # 1,509 rows carrying 61% of the tier's impact
+    auditable = TRUE,
+    queue = NULL
+  ),
+  substance_llm_reviewed = list(
+    id = "substance_llm_reviewed", label = "Substance LLM-reviewed", domain = DOMAIN_SUBSTANCE,
+    loader = load_substance_llm_reviewed,
+    source_file = "config/substance_norm_pipeline/substance_llm_reviewed.csv",
+    evidence = c("source", "alias_type", "confidence_prior"),
+    extra_fields = c("alias_type"),
+    impact_label = "occurrences",
+    min_impact = 3,
+    auditable = TRUE,
     queue = NULL
   ),
   sponsor_queue = list(
