@@ -111,7 +111,7 @@ if (export_mode) {
       reason         = ifelse(
         !is.na(accepted$comment) & nzchar(trimws(accepted$comment)),
         accepted$comment,
-        "accepted during manual curation"
+        "accepted during queue curation"
       ),
       stringsAsFactors = FALSE
     )
@@ -136,7 +136,7 @@ if (export_mode) {
       reason      = ifelse(
         !is.na(rejected$comment) & nzchar(trimws(rejected$comment)),
         rejected$comment,
-        "rejected during manual curation"
+        "rejected during queue curation"
       ),
       stringsAsFactors = FALSE
     )
