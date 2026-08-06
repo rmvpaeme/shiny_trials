@@ -28,6 +28,8 @@ REVIEWER="rvp" Rscript -e 'shiny::runApp("curation_app")'
 |---|---:|---|
 | **Sponsor fragments** | 130 | canonicals differing only by casing/punctuation/article — same entity, split trial counts |
 | **Substance conflicts** | 42 | one raw string overridden to two different substances |
+| Sponsor LLM-reviewed | 1,509 of 11,899 | `sponsor_llm_reviewed.csv`, filtered to ≥3 trials |
+| Substance LLM-reviewed | 2,623 of 10,250 | `substance_llm_reviewed.csv`, filtered to ≥3 occurrences |
 | Sponsor queue | 102 | `config/sponsor_norm_pipeline/sponsor_review_queue.csv` |
 | Substance queue | 1,317 | `config/substance_norm_pipeline/substance_review_queue.csv` |
 | Sponsor LLM aliases | 1,383 | `manual_sponsor_aliases.csv` where `source == llm_curated` |
@@ -38,6 +40,26 @@ REVIEWER="rvp" Rscript -e 'shiny::runApp("curation_app")'
 The queue tiers are ordered by trial/occurrence impact, the alias tiers by how
 many trials currently resolve through them, and fuzzy singletons by ascending
 match score (worst first).
+
+## Scope: why the LLM-reviewed tiers are filtered
+
+Those two tiers hold 22,149 rows between them, which nobody is going to review.
+Most of it would be wasted effort anyway — 4,428 sponsor rows (37%) resolve
+**zero** trials, and another 4,866 resolve exactly one. Rows with ≥3 trials are
+1,509 of the sponsor tier but carry **61% of its impact**, so that is the
+default threshold. The slider moves it.
+
+The excluded tail is not abandoned, it is sampled. Switch **Scope** to *Audit
+sample of the tail* and the tier serves a fixed random sample of 200 rows drawn
+from below the threshold, seeded on the tier id so the same rows come back every
+session and for every reviewer. Review them, and the **Tail audit** table on the
+Progress tab reports the observed error rate with a Wilson 95% interval and the
+implied number of bad rows in the whole tail.
+
+That is the point of it: a clean sample is what makes skipping ~18,000 rows
+defensible. Without one, "we didn't look at the tail" has no error bar. With
+0 errors in 200 the tail is at most 1.9% wrong and you can stop; with 30 it is
+10.7–20.6% and it has earned attention.
 
 ## Reviewing
 

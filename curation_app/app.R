@@ -87,6 +87,14 @@ ui <- bslib::page_navbar(
       )
     ),
     bslib::card(
+      bslib::card_header("Tail audit"),
+      bslib::card_body(
+        shiny::p(class = "text-muted mb-2",
+          shiny::HTML("Error rate of the rows the impact threshold excludes, estimated from a fixed random sample. A clean sample is what makes skipping the tail defensible; without one, the skipped rows have no error bar. <b>Accept</b> counts as correct, <b>edit</b> or <b>reject</b> as an error.")),
+        shiny::tableOutput("audit_report")
+      )
+    ),
+    bslib::card(
       bslib::card_header("Decision ledger"),
       bslib::card_body(
         shiny::downloadButton("download_ledger", "Download ledger CSV",
@@ -169,6 +177,38 @@ server <- function(input, output, session) {
     totals$decided <- dplyr::coalesce(totals$decided, 0L)
     totals$remaining <- totals$rows - totals$decided
     totals[, c("label", "rows", "decided", "remaining")]
+  }, width = "100%")
+
+  output$audit_report <- shiny::renderTable({
+    led <- latest_decisions(ledger())
+    auditable <- Filter(function(t) isTRUE(t$auditable), TIERS)
+    if (!length(auditable)) return(NULL)
+
+    out <- lapply(auditable, function(t) {
+      rws <- tryCatch(t$loader(ROOT), error = function(e) NULL)
+      if (is.null(rws) || !nrow(rws)) return(NULL)
+      samp <- audit_sample(rws, t$id, t$min_impact)
+      tail_n <- sum(rws$impact < t$min_impact)
+      d <- led[led$tier == t$id & led$row_key %in% samp$row_key &
+                 led$action %in% c("accept", "edit", "reject"), , drop = FALSE]
+      n <- nrow(d)
+      k <- sum(d$action %in% c("edit", "reject"))
+      ci <- wilson_ci(k, n)
+      data.frame(
+        tier        = t$label,
+        `tail rows` = tail_n,
+        sampled     = nrow(samp),
+        audited     = n,
+        errors      = k,
+        `error rate`= if (n == 0) "—" else sprintf("%.1f%%", 100 * k / n),
+        `95% CI`    = if (n == 0) "—" else sprintf("%.1f–%.1f%%", 100 * ci[1], 100 * ci[2]),
+        `implied bad rows in tail` =
+          if (n == 0) "—" else sprintf("%.0f–%.0f", tail_n * ci[1], tail_n * ci[2]),
+        check.names = FALSE, stringsAsFactors = FALSE
+      )
+    })
+    out <- do.call(rbind, Filter(Negate(is.null), out))
+    if (is.null(out)) NULL else out
   }, width = "100%")
 
   output$ledger_table <- DT::renderDT({
