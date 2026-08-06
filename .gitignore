@@ -32,3 +32,25 @@ test_report.pdf
 *.aux
 *.out
 todo.md
+
+# Reviewer app — credentials, sessions and anything identifying a reviewer.
+# Never commit these: the app is deployed multi-user, so these files hold
+# password hashes, session tokens and per-user activity.
+curation_app/auth/
+curation_app/secrets/
+curation_app/**/users.csv
+curation_app/**/users.rds
+curation_app/**/credentials*
+curation_app/**/sessions/
+curation_app/**/*session*.json
+curation_app/**/*.sqlite
+curation_app/**/*.sqlite-*
+.Renviron
+.Renviron.local
+*.pem
+*.key
+*.p12
+*_secret*
+*_secrets*
+*.env
+.env.*
