@@ -167,9 +167,136 @@ empty_tier_rows <- function() {
                  proposed = character(), impact = numeric())
 }
 
+# ── conflict tiers ────────────────────────────────────────────────────────────
+#
+# These two hold rows that are already known to be wrong, rather than merely
+# unverified, which makes them the highest-value review targets in the app.
+
+# Articles, prepositions and legal/structural suffixes only. Entity-type words
+# (university, hospital, institute) are deliberately NOT stripped — they
+# distinguish real entities, and removing them merges a university with its
+# teaching hospital.
+FRAGMENT_STOPWORDS <- c(
+  "the", "of", "de", "di", "del", "della", "des", "du", "da", "el", "la", "le",
+  "les", "het", "der", "den", "a", "and", "fur",
+  "nhs", "trust", "foundation", "gmbh", "ag", "sa", "as", "ab", "bv", "nv",
+  "srl", "spa", "inc", "ltd", "limited", "llc", "plc", "corp", "co",
+  "irccs", "aor", "ev", "asbl", "vzw", "aps", "oy", "ehf"
+)
+
+fragment_key <- function(x) {
+  y <- tolower(iconv(x, to = "ASCII//TRANSLIT", sub = ""))
+  y <- gsub("[^a-z0-9 ]", " ", y)
+  vapply(strsplit(trimws(gsub(" +", " ", y)), " "), function(t) {
+    paste(sort(unique(setdiff(t, FRAGMENT_STOPWORDS))), collapse = " ")
+  }, character(1))
+}
+
+# Canonicals that differ only by casing, punctuation, an article or a legal
+# suffix — the same entity under several spellings, splitting its trial count.
+load_sponsor_fragments <- function(root) {
+  rev_p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv")
+  log_p <- data_path(root, "sponsor_normalisation_log.csv")
+  if (!file.exists(rev_p) || !file.exists(log_p)) return(empty_tier_rows())
+
+  imp <- read_csv_quiet(log_p) |>
+    dplyr::mutate(alias_clean = tolower(trimws(raw_sponsor))) |>
+    dplyr::group_by(alias_clean) |>
+    dplyr::summarise(trials = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
+
+  cw <- read_csv_quiet(rev_p) |>
+    dplyr::left_join(imp, by = "alias_clean") |>
+    dplyr::mutate(trials = dplyr::coalesce(trials, 0)) |>
+    dplyr::group_by(sponsor_clean) |>
+    dplyr::summarise(trials = sum(trials), .groups = "drop") |>
+    dplyr::filter(trials > 0) |>
+    dplyr::mutate(fkey = fragment_key(sponsor_clean)) |>
+    dplyr::filter(nzchar(fkey))
+
+  cw |>
+    dplyr::group_by(fkey) |>
+    dplyr::filter(dplyr::n() > 1) |>
+    dplyr::arrange(dplyr::desc(trials), .by_group = TRUE) |>
+    dplyr::summarise(
+      variants   = paste(sprintf("%s (%d)", sponsor_clean, as.integer(trials)),
+                         collapse = "  |  "),
+      n_variants = dplyr::n(),
+      # Default to the highest-impact spelling; the reviewer can pick another.
+      proposed   = dplyr::first(sponsor_clean),
+      losing     = paste(sponsor_clean[-1], collapse = "|"),
+      impact     = sum(trials),
+      .groups    = "drop"
+    ) |>
+    dplyr::mutate(row_key = fkey, raw = variants) |>
+    dplyr::arrange(dplyr::desc(impact))
+}
+
+# One raw string overridden to two different substances. The chunked LLM
+# curation appended its corrections instead of replacing the original rows, so
+# both the mistake and its fix are on file and the earlier one wins.
+load_substance_conflicts <- function(root) {
+  ov_p <- cfg_path(root, "substance_norm_pipeline", "manual_substance_overrides.csv")
+  rv_p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_reviewed.csv")
+  if (!file.exists(ov_p)) return(empty_tier_rows())
+
+  ov <- read_csv_quiet(ov_p) |>
+    dplyr::select(alias = raw_clean, target = substance_clean, reason)
+  rv <- if (file.exists(rv_p)) {
+    read_csv_quiet(rv_p) |>
+      dplyr::select(alias = alias_clean, target = substance_clean) |>
+      dplyr::mutate(reason = NA_character_)
+  } else {
+    ov[0, ]
+  }
+  both <- dplyr::bind_rows(ov, rv) |> dplyr::distinct(alias, target, .keep_all = TRUE)
+
+  log_p <- data_path(root, "substance_normalisation_log.csv")
+  uses <- if (file.exists(log_p)) {
+    read_csv_quiet(log_p) |>
+      dplyr::mutate(alias = tolower(trimws(raw_substance))) |>
+      dplyr::count(alias, name = "impact")
+  } else {
+    tibble::tibble(alias = character(), impact = integer())
+  }
+
+  both |>
+    dplyr::group_by(alias) |>
+    dplyr::filter(dplyr::n_distinct(target) > 1) |>
+    dplyr::summarise(
+      candidates = paste(unique(target), collapse = "  |  "),
+      chunks     = paste(unique(stats::na.omit(reason)), collapse = "  |  "),
+      # Whichever currently wins is only first-in-file, not a judgement.
+      proposed   = dplyr::first(target),
+      .groups    = "drop"
+    ) |>
+    dplyr::left_join(uses, by = "alias") |>
+    dplyr::mutate(impact = dplyr::coalesce(impact, 0L),
+                  row_key = alias, raw = alias) |>
+    dplyr::arrange(dplyr::desc(impact))
+}
+
 # ── tier registry ─────────────────────────────────────────────────────────────
 
 TIERS <- list(
+  # Conflict tiers first — these are known-wrong rows, not merely unverified.
+  sponsor_fragments = list(
+    id = "sponsor_fragments", label = "Sponsor fragments", domain = DOMAIN_SPONSOR,
+    loader = load_sponsor_fragments,
+    source_file = "config/sponsor_norm_pipeline/final_sponsor_canonical_map.csv",
+    evidence = c("variants", "n_variants"),
+    extra_fields = character(),
+    impact_label = "trials",
+    queue = NULL
+  ),
+  substance_conflicts = list(
+    id = "substance_conflicts", label = "Substance conflicts", domain = DOMAIN_SUBSTANCE,
+    loader = load_substance_conflicts,
+    source_file = "config/substance_norm_pipeline/manual_substance_overrides.csv",
+    evidence = c("candidates", "chunks"),
+    extra_fields = character(),
+    impact_label = "occurrences",
+    queue = NULL
+  ),
   sponsor_queue = list(
     id = "sponsor_queue", label = "Sponsor queue", domain = DOMAIN_SPONSOR,
     loader = load_sponsor_queue,
