@@ -7,7 +7,7 @@ ACE Pharmaceuticals BV,epar_mah,Ace,NA
 Acino AG,epar_mah,Acino,NA
 Acino Pharma GmbH,epar_mah,Acino Pharma,Axunio Pharma GmbH
 Acusphere Ltd,epar_mah,Acusphere,NA
-ADIENNE S.r.l. S.U.,epar_mah,Adienne,Adienne S.r.l. S.U.
+Adienne S.r.l. S.U.,epar_mah,Adienne,NA
 A.C.O.M. - Advanced Center Oncology,epar_mah,Advanced Center,NA
 Advanz Pharma Limited,epar_mah,Advanz Pharma,NA
 Agenzia Industrie Difesa-Stabilimento Chimico Farmaceutico Militare,epar_mah,Agenzia Industrie Difesa-Stabilimento Chimico Farmaceutico Militare,NA
@@ -66,6 +66,7 @@ Biovest Europe Ltd,epar_mah,Biovest,NA
 bluebird bio (Netherlands) B.V.,epar_mah,Bluebird Bio,NA
 Cancer Prevention Pharma (Ireland) Limited,epar_mah,Cancer Prevention Pharma,NA
 Canyon Pharmaceuticals Ltd.,epar_mah,Canyon,NA
+CATS Consultants GmbH,epar_mah,Cats Consultants,NA
 Ceft Biopharma s.r.o.,epar_mah,Ceft Biopharma,NA
 CellSeed Europe Ltd,epar_mah,Cellseed,NA
 Celltrion Healthcare Hungary Kft.,epar_mah,Celltrion Healthcare Kft,NA
@@ -88,7 +89,7 @@ Covis Pharma Europe B.V.,epar_mah,Covis Pharma,NA
 CP-Pharma Handelsgesellschaft mbH,epar_mah,Cp-Pharma Handelsgesellschaft Mbh,NA
 Cstone Pharmaceuticals Ireland Limited,epar_mah,Cstone,NA
 CTI Life Sciences Ltd,epar_mah,Cti Life,CTI Life Sciences Limited
-CuraTeQ Biologics s.r.o,epar_mah,Curateq Biologics,NA
+CuraTeQ Biologics s.r.o,epar_mah,Curateq Biologics,CuraTeQ Biologics (Malta) Limited
 Curium Romania S.R.L.,epar_mah,Curium,NA
 Cycle Pharmaceuticals (Europe) Ltd,epar_mah,Cycle,NA
 Cytonet GmbH KG,epar_mah,Cytonet,Cytokinetics (Ireland) Limited
@@ -145,7 +146,6 @@ Holostem s.r.l.,epar_mah,Holostem,NA
 Hospira UK Limited,epar_mah,Hospira,NA
 Hutchmed Europe B.V.,epar_mah,Hutchmed,NA
 Idorsia Pharmaceuticals Deutschland GmbH,epar_mah,Idorsia Deutschland,NA
-Immedica Netherlands B.V.,epar_mah,Immedica,NA
 Immunitybio Ireland Limited,epar_mah,Immunitybio,NA
 Immunocore Ireland Limited,epar_mah,Immunocore,NA
 Inceptua AB,epar_mah,Inceptua,NA
@@ -154,7 +154,7 @@ Indivior Europe Limited,epar_mah,Indivior,NA
 Insmed Limited,epar_mah,Insmed,Insmed Europe Ltd | Insmed Netherlands B.V.
 "INFAI, Institut für biomedizinische Analytik  NMR-Imaging GmbH",epar_mah,Institut Fur Biomedizinische Analytik Nmr-Imaging,NA
 Intas Third Party Sales 2005 S.L.,epar_mah,Intas Third Party Sales,NA
-Intervet International BV,epar_mah,Intervet,NA
+Intervet International BV,epar_mah,Intervet,Intervet International B.V.
 Intrabio Ireland Limited,epar_mah,Intrabio,NA
 Iovance Biotherapeutics B.V.,epar_mah,Iovance Biotherapeutics,NA
 Istituto Gentili S.r.l.,epar_mah,Istituto Gentili,NA
@@ -180,6 +180,7 @@ Le Vet Beheer B.V.,epar_mah,Le Vet Beheer,NA
 Leadiant GmbH,epar_mah,Leadiant,NA
 Legacy Healthcare (France) S.A.S.,epar_mah,Legacy Healthcare,NA
 LEO Laboratories Ltd.,epar_mah,Leo Laboratories,NA
+LIB Therapeutics B.V.,epar_mah,Lib,NA
 Linde Healthcare AB,epar_mah,Linde Healthcare,NA
 Lipomed GmbH,epar_mah,Lipomed,NA
 Lucane Pharma,epar_mah,Lucane Pharma,NA
@@ -196,6 +197,7 @@ medac Gesellschaft für klinische Spezialpräparate mbH,epar_mah,Medac Gesellsch
 Medice Arzneimittel Pütter GmbH  Co. KG,epar_mah,Medice Arzneimittel Putter Gmbh,Medice Arzneimittel Pütter GmbH & Co. KG
 Medtronic BioPharma B.V.,epar_mah,Medtronic Biopharma,NA
 A. Menarini Industrie Farmaceutiche Riunite s.r.l.,epar_mah,Menarini Industrie Farmaceutiche Riunite,NA
+A. Menarini International Licensing S.A.,epar_mah,Menarini Licensing,NA
 MendeliKABS Europe Ltd,epar_mah,Mendelikabs,NA
 Merck Europe B.V.,epar_mah,Merck,Merck Europe B.V. 
 Merck Sharp & Dohme B.V.,epar_mah,Merck Sharp And Dohme,Merck Sharp and Dohme B.V
@@ -223,6 +225,7 @@ NPS Pharma Holdings Limited,epar_mah,Nps Pharma Holdings,NA
 Octapharma AB,epar_mah,Octapharma,NA
 Ology Bioservices Ireland LTD,epar_mah,Ology Bioservices,NA
 Olympus Biotech International Limited,epar_mah,Olympus Biotech,NA
+Omeros Ireland Limited,epar_mah,Omeros,NA
 Omrix Biopharmaceuticals N. V.,epar_mah,Omrix Biopharmaceuticals,NA
 Orchard Therapeutics (Netherlands) B.V.,epar_mah,Orchard,NA
 Oresund Pharma ApS,epar_mah,Oresund Pharma Aps,NA
@@ -289,7 +292,7 @@ SK Chemicals GmbH,epar_mah,Sk Chemicals,NA
 Sloan Pharma S.a.r.l,epar_mah,Sloan Pharma,NA
 Sonus Pharmaceuticals Ltd.,epar_mah,Sonus,NA
 SP Europe,epar_mah,Sp Europe,NA
-STADA Arzneimittel AG,epar_mah,Stada Arzneimittel,Stada Arzneimittel AG
+Stada Arzneimittel AG,epar_mah,Stada Arzneimittel,STADA Arzneimittel AG
 Stemline Therapeutics B.V.,epar_mah,Stemline,NA
 Strides Pharma (Cyprus) Limited,epar_mah,Strides Pharma,NA
 Strongbridge Dublin Limited,epar_mah,Strongbridge Dublin,NA
@@ -333,7 +336,6 @@ Vita (Europe) Limited,epar_mah,Vita,NA
 Vivus BV,epar_mah,Vivus,NA
 Warner Chilcott UK Ltd.,epar_mah,Warner Chilcott,Warner Chilcott  Deutschland GmbH
 Whiteoak Pharmaceutical B.V.,epar_mah,Whiteoak Pharmaceutical,NA
-X4 Pharmaceuticals GmbH,epar_mah,X4 Pharmaceuticals,NA
 YES Pharmaceutical Development Services GmbH,epar_mah,Yes Pharmaceutical Development Services,NA
 Zaklady FarmaFarmaceutyczne Polpharma S.Aceutyczne Polpharma S.A.,epar_mah,Zaklady Farmafarmaceutyczne Polpharma Aceutyczne Polpharma,NA
 Zoetis Belgium,epar_mah,Zoetis,Zoetis Belgium SA

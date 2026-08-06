@@ -41,7 +41,7 @@ AP1189 Tablet,Resomelagon acetate,review,63,chembl,alias match (chembl_synonym):
 BAY 734506,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
 CHF6001 DPI,Tranimilast,review,63,chembl,alias match (chembl_synonym): 'chf6001' → 'tranimilast',4,NA,NA,NA
 INCB099280,Incb-059872,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),4,NA,NA,NA
-AloCelyvir,Acyclovir,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),4,NA,NA,NA
+AloCelyvir,Acyclovir,unknown,81,fuzzy:llm_curated,fuzzy match (jw similarity 81%),4,NA,NA,NA
 AZD7789,Azd-8797,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),4,NA,NA,NA
 Benda-5 FU 50 mg,NA,unknown,0,NA,no reliable match,4,NA,NA,NA
 AZD0780,Azd-1080,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),4,NA,NA,NA
@@ -283,7 +283,7 @@ ADHEXIL,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 LC002 DermaVir Patch,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Trivax,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 AAV1,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-SERCA2a,Serclutamab,unknown,80,fuzzy:manual,fuzzy match (jw similarity 80%),2,NA,NA,NA
+SERCA2a,Serclutamab,unknown,80,fuzzy:llm_curated,fuzzy match (jw similarity 80%),2,NA,NA,NA
 ChronVac-C,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Alutard SQ,Paluratide,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
 Bone marrow mononuclear cells,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -411,7 +411,7 @@ Keratinocytes,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 None available,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 "RTS,S",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 INN Not yet proposed,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-Salsola kali,Sotalol,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Salsola kali,Sotalol,unknown,81,fuzzy:llm_curated,fuzzy match (jw similarity 81%),2,NA,NA,NA
 PRX167700,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 NYMC X-223A reass. derived from A,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 2011-like A,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -555,7 +555,7 @@ PDNO,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Omomyc,Paromomycin,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),2,NA,NA,NA
 Rabeximod,Icanbelimod,unknown,80,fuzzy:chembl,fuzzy match (jw similarity 80%),2,NA,NA,NA
 AZD0466,Azd2066,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),2,NA,NA,NA
-Bevacizumab-IRDye800CW,Bevacizumab,unknown,83,fuzzy:manual,fuzzy match (jw similarity 83%),2,NA,NA,NA
+Bevacizumab-IRDye800CW,Bevacizumab,unknown,83,fuzzy:llm_curated,fuzzy match (jw similarity 83%),2,NA,NA,NA
 Exo-CD24,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 High dose RSVPreF3,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Anti-SARS-CoV-2 Fab2 fragments,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -623,7 +623,7 @@ AT-1501 190 mg Vial,Tegoprubart,review,62,chembl,alias match (chembl_synonym): '
 infusion or oral solution,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 g granules,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 same excipients except no hypromellose,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
-infundiranje,Vinflunine,unknown,82,fuzzy:manual,fuzzy match (jw similarity 82%),2,NA,NA,NA
+infundiranje,Vinflunine,unknown,82,fuzzy:llm_curated,fuzzy match (jw similarity 82%),2,NA,NA,NA
 JNJ-54179060,Jnj-54175446,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
 ApTOLL,Practolol,unknown,83,fuzzy:chembl,fuzzy match (jw similarity 83%),2,NA,NA,NA
 Omicron BA.4-5 (15,Emicerfont,unknown,82,fuzzy:chembl,fuzzy match (jw similarity 82%),2,NA,NA,NA
@@ -710,7 +710,7 @@ Humanized IgG1 monoclonal antibody against GD2,Bumadizone,unknown,83,fuzzy:chemb
 P-Tabletten weiß 10 mm Lichtenstein,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 PBO PH20 SC,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 LTP001,Dp001,unknown,82,fuzzy:llm_reviewed,fuzzy match (jw similarity 82%),2,NA,NA,NA
-Isocyclosporin A,Ciclosporin,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Isocyclosporin A,Ciclosporin,unknown,81,fuzzy:llm_curated,fuzzy match (jw similarity 81%),2,NA,NA,NA
 anti-IL8 mAb,Anti-cd18,unknown,81,fuzzy:chembl,fuzzy match (jw similarity 81%),2,NA,NA,NA
 "RIMSTAR®, COMPRIMIDOS RECUBIERTOS CON PELÍCULA",Zimistobart,unknown,80,fuzzy:llm_reviewed,fuzzy match (jw similarity 80%),2,NA,NA,NA
 PL1 - Powder for injection,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -789,7 +789,7 @@ Corn starch 70mg","Starch, corn",review,62,chembl,"alias match (chembl_synonym):
 "tablet
 Cellulose microcrystalline 55mg",NA,review,62,chembl,ambiguous alias maps to multiple substances,2,NA,NA,NA
 "tablet
-Silicium dioxide anhydrous 20mg",Aclidinium,unknown,81,fuzzy:manual,fuzzy match (jw similarity 81%),2,NA,NA,NA
+Silicium dioxide anhydrous 20mg",Aclidinium,unknown,81,fuzzy:llm_curated,fuzzy match (jw similarity 81%),2,NA,NA,NA
 CYB003,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 Powder for reconstitution for enteral administration,NA,unknown,0,NA,no reliable match,2,NA,NA,NA
 "Oxígeno Medicinal Gas Carburos Metálicos, 99.5% v",NA,unknown,0,NA,no reliable match,2,NA,NA,NA
@@ -1041,17 +1041,20 @@ recombinant human plasma Gelsolin,Recombinant adamts13,review,85,fuzzy:llm_revie
 ACT-01,Act-001,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),1,NA,NA,NA
 RECOMBINANT HUMAN ECTONUCLEOTIDE PYROPHOSPHATASE,Recombinant adamts13,review,85,fuzzy:llm_reviewed,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Recombinant Human Anti-IL12 Monoclonal Antibody,Recombinant adamts13,review,85,fuzzy:llm_reviewed,fuzzy match (jw similarity 85%),1,NA,NA,NA
+"ALLOGENEIC FAECAL MICROBIOTA, POOLED","Allogeneic faecal microbiota, pooled",review,100,fuzzy:epar,fuzzy match (jw similarity 100%),1,NA,NA,NA
 Recombinant Anti-VEGF Humanized Monoclonal Antibody Ophthalmic Injection,Recombinant adamts13,review,85,fuzzy:llm_reviewed,fuzzy match (jw similarity 85%),1,NA,NA,NA
 RECOMBINANT INTERFERON BETA-1B,Recombinant adamts13,review,85,fuzzy:llm_reviewed,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Cannabis FM2 Olio,Cannabinol,review,86,fuzzy:chembl,fuzzy match (jw similarity 86%),1,NA,NA,NA
 ATH434 Mesylate,Pbt-434,review,63,chembl,alias match (chembl_synonym): 'ath434' → 'pbt-434',1,NA,NA,NA
 Avipendekin pegol,Navepdekinra,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
+"COVID-19 Vaccine recombinant, non-adjuvanted","Covid-19 vaccine (recombinant, adjuvanted)",review,92,fuzzy:epar,fuzzy match (jw similarity 92%),1,NA,NA,NA
 TMB-001 ointment 0.05,Kb-001,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Fluad Tetra,NA,review,94,epar,ambiguous alias maps to multiple substances,1,NA,NA,NA
 Ad26.RSV-B.preF2,Ad26.rsv.pref,review,94,fuzzy:chembl,fuzzy match (jw similarity 94%),1,NA,NA,NA
 Laxabon,Azabon,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 VTX-958.Adipate,Vt-1598,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
-"Lorastad 10 mg, tabletten",Losartan,review,87,fuzzy:manual,fuzzy match (jw similarity 87%),1,NA,NA,NA
+"COVID-19 Vaccine recombinant, adjuvanted","Covid-19 vaccine (recombinant, adjuvanted)",review,98,fuzzy:epar,fuzzy match (jw similarity 98%),1,NA,NA,NA
+"Lorastad 10 mg, tabletten",Losartan,review,87,fuzzy:llm_curated,fuzzy match (jw similarity 87%),1,NA,NA,NA
 ACI-7104.056,Ci-1040,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
 Identical to IMP except for Active Substance,Idremcinal,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Hydrogénophosphate de calcium dihydraté : Fournisseur Brenntag,Hydrogen,review,92,fuzzy:chembl,fuzzy match (jw similarity 92%),1,NA,NA,NA
@@ -1289,7 +1292,7 @@ AZD0516,Azd-0156,review,91,fuzzy:chembl,fuzzy match (jw similarity 91%),1,NA,NA,
 VENT-03,Ent-03,review,95,fuzzy:chembl,fuzzy match (jw similarity 95%),1,NA,NA,NA
 Nasolin 1 mg,Lanolin,review,85,fuzzy:llm_reviewed,fuzzy match (jw similarity 85%),1,NA,NA,NA
 "oral GLP-1R agonist (CT-996) Capsule, hard 0 mg",Glp-1,review,94,fuzzy:chembl,fuzzy match (jw similarity 94%),1,NA,NA,NA
-"BUPIVACAÍNA PHYSAN 0,25% SOLUCIÓN INYECTABLE",Bupivacaine,review,91,fuzzy:manual,fuzzy match (jw similarity 91%),1,NA,NA,NA
+"BUPIVACAÍNA PHYSAN 0,25% SOLUCIÓN INYECTABLE",Bupivacaine,review,91,fuzzy:llm_curated,fuzzy match (jw similarity 91%),1,NA,NA,NA
 Descartes-08,Descartes 30,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
 AZD6793,Azd-6703,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA
 "FOLINORAL 25 mg, gélule",Fluindarol,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
@@ -1321,7 +1324,7 @@ TUB-030,Tb-403,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 ASP3082,Asp-8302,review,89,fuzzy:chembl,fuzzy match (jw similarity 89%),1,NA,NA,NA
 "Oxiklorin 100 mg tabletti, kalvopäällysteinen",Hydroxychloroquine sulfate,review,62,chembl,alias match (chembl_synonym): 'oxiklorin' → 'hydroxychloroquine sulfate',1,NA,NA,NA
 Birelentinib,Bemcentinib,review,86,fuzzy:llm_reviewed,fuzzy match (jw similarity 86%),1,NA,NA,NA
-Methadon,Methadone,review,96,fuzzy:manual,fuzzy match (jw similarity 96%),1,NA,NA,NA
+Methadon,Methadone,review,96,fuzzy:llm_curated,fuzzy match (jw similarity 96%),1,NA,NA,NA
 LTG-001 tablet,Stg-001,review,90,fuzzy:chembl,fuzzy match (jw similarity 90%),1,NA,NA,NA
 TERSOLISIB,Taselisib,review,85,fuzzy:chembl,fuzzy match (jw similarity 85%),1,NA,NA,NA
 Liquid Alpha1-Proteinase Inhibitor (Human) (Prolastin®-C Liquid or Liquid Alpha1-PI),Gliquidone,review,87,fuzzy:chembl,fuzzy match (jw similarity 87%),1,NA,NA,NA

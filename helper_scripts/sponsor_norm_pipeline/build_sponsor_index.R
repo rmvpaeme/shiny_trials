@@ -3,6 +3,8 @@
 #
 # Sources (priority order):
 #   1. manual_sponsor_aliases.csv  (seed, confidence 1.00) — always included
+#      `source` records who decided the row: `llm_curated` for the LLM curation
+#      pass, `manual` only for rows a human verified in the reviewer app.
 #   2. sponsor_llm_reviewed.csv (accepted queue decisions, confidence 1.00)
 #   3. EMA EPAR Marketing Authorisation Holders (confidence 0.85) — MAH name variants
 #      for sponsors already in the manual alias table
@@ -187,9 +189,12 @@ entity_key_is_classed <- function(key) {
 }
 
 pick_final_canonical <- function(labels, combined) {
+  # `manual` is reserved for rows a human verified in the reviewer app;
+  # `llm_curated` is the LLM curation pass that produced most of the seed
+  # table. Both rank 1 — the relabel of llm_curated must not change output.
   source_priority <- c(
-    manual = 1, llm_reviewed = 2, review_queue = 3, bulk_reviewed = 4,
-    ctis_businesskey = 5, epar_mah = 6, ror = 7
+    manual = 1, llm_curated = 1, llm_reviewed = 2, review_queue = 3,
+    bulk_reviewed = 4, ctis_businesskey = 5, epar_mah = 6, ror = 7
   )
   candidates <- combined |>
     dplyr::filter(sponsor_clean %in% labels) |>
@@ -1590,7 +1595,7 @@ if (!no_db) {
         "  %d postcode candidates written to %s (review-only, not added to alias index)",
         nrow(loc_rows), OUT_LOC_REVIEW
       ))
-      loc_rows <- empty_index_rows()
+      loc_rows <- empty_tier
     }
   }
 }
@@ -1599,9 +1604,11 @@ db_rows <- dplyr::bind_rows(bk_rows, email_rows, loc_rows)
 
 # ── Merge ─────────────────────────────────────────────────────────────────────
 
-# Prepare manual seed in the same schema
+# Prepare the seed table in the same schema. alias_type mirrors the row's own
+# source rather than a blanket "manual" — the seed file holds llm_curated rows,
+# ctis_businesskey rows, and (once reviewed) human-verified `manual` rows.
 manual_index <- manual |>
-  dplyr::mutate(alias_type = "manual") |>
+  dplyr::mutate(alias_type = source) |>
   dplyr::select(
     alias_clean, sponsor_clean, sponsor_parent, sponsor_group,
     sponsor_type, alias_type, source, confidence_prior
@@ -1616,7 +1623,7 @@ llm_index <- llm_reviewed |>
     sponsor_type, alias_type, source, confidence_prior
   )
 
-# Row order = priority: manual > reviewed queue > epar > ror > db
+# Row order = priority: seed table > reviewed queue > epar > ror > db
 # (businesskey > email > location)
 combined <- dplyr::bind_rows(manual_index, llm_index, epar_rows, ror_rows, db_rows) |>
   dplyr::filter(

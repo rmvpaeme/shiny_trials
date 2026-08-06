@@ -1,14 +1,14 @@
 raw_sponsor,candidate_sponsor,sponsor_type,match_status,match_score,match_source,match_reason,n_trials,decision,canonical_sponsor,comment
-UCL,University College London,academic,review,84,manual,alias match: 'ucl' → 'University College London',4,NA,NA,NA
-Institut de Recherches Internationales,Servier,industry,review,89,manual,alias match: 'institut de recherches internationales' → 'Servier',3,NA,NA,NA
+UCL,University College London,academic,review,84,llm_curated,alias match: 'ucl' → 'University College London',4,NA,NA,NA
+Institut de Recherches Internationales,Servier,industry,review,89,llm_curated,alias match: 'institut de recherches internationales' → 'Servier',3,NA,NA,NA
 Mitsubishi Tanabe Pharma Corporation / KUREHA CORPORATION,Kureha,unknown,review,84,euctr_email_domain:applicable.com,alias match: 'mitsubishi tanabe pharma corporation / kureha corporation' → 'Kureha',2,NA,NA,NA
 MIGUEL CASARES FERNNDEZ-ALVS,Miguel Casares Fernndez-Alvs,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Prof., dr. med. Anders Fink-Jensen",Prof Dr Med Anders Fink-Jensen,unknown,unknown,0,NA,no reliable sponsor match,2,NA,NA,NA
 "Polaris Pharmaceuticals, Inc.",Polaris Group,unknown,review,84,euctr_email_domain:polarispharma.com,alias match: 'polaris pharmaceuticals inc' → 'Polaris Group',2,NA,NA,NA
-Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL,Fundacio Institut D Investigacio Biomedica De Bellvitge Idibell,NA,review,94,ctis_businesskey|manual,ambiguous alias maps to multiple sponsors,2,NA,NA,NA
+Fundacio Institut D Investigacio Biomedica De Bellvitge IDIBELL,Fundacio Institut D Investigacio Biomedica De Bellvitge Idibell,NA,review,94,ctis_businesskey|llm_curated,ambiguous alias maps to multiple sponsors,2,NA,NA,NA
 Dept. of Internal Medicine,Dept Of Internal Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Department of Nuclear Medicine,Department Of Nuclear Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
-Merck  Co,MSD,industry,review,89,manual,alias match: 'merck co' → 'MSD',1,NA,NA,NA
+Merck  Co,MSD,industry,review,89,llm_curated,alias match: 'merck co' → 'MSD',1,NA,NA,NA
 "Pr Giampiero CAMPANELLI Universit di Milano, Dipartimento di Scienze Chirurgiche, Ospedale Maggior",Ospedale Maggior,academic,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 Dept of Medicine,Dept Of Medicine,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
 "Prim. Univ.Prof. Dr. Christian Pirich Department of Nuclear Medicine and Endocrinology, PMU Salzburg",Prim Univ Prof Dr Christian Pirich,unknown,unknown,0,NA,no reliable sponsor match,1,NA,NA,NA
