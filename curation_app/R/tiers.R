@@ -12,6 +12,23 @@
 DOMAIN_SPONSOR   <- "sponsor"
 DOMAIN_SUBSTANCE <- "substance"
 
+# Controlled vocabularies for the classification fields. Taken from the values
+# actually present in the config, so a reviewer picks from the existing
+# vocabulary instead of inventing a synonym by typing. `create = FALSE` on
+# these inputs is the point — free text here is how "hospital" and "Hospital"
+# end up as different types.
+FIELD_CHOICES <- list(
+  sponsor_type = c("industry", "hospital", "academic", "cooperative_group",
+                   "foundation", "public_body", "charity", "person", "unknown"),
+  alias_type   = c("manual_brand", "epar_brand", "combination_brand", "inn",
+                   "salt_hydrate_resolution", "chembl_conflict_resolved"),
+  substance_type = c("inn", "salt")
+)
+
+# sponsor_parent / sponsor_group are canonical sponsor names, not a fixed
+# vocabulary, so they stay selectize-over-the-canonical-pool instead.
+POOL_FIELDS <- c("sponsor_parent", "sponsor_group")
+
 cfg_path <- function(root, ...) file.path(root, "config", ...)
 data_path <- function(root, ...) file.path(root, "data", ...)
 
@@ -211,17 +228,143 @@ TIERS <- list(
 
 # Other aliases pointing at the same canonical — the context that makes a wrong
 # canonical obvious, and the piece the CLI curation loop never showed.
-sibling_aliases <- function(root, domain, canonical, exclude_alias, limit = 12L) {
-  if (is.null(canonical) || is.na(canonical) || !nzchar(canonical)) return(character())
+# The alias indexes are large (13k sponsor / 111k substance rows) and the
+# sibling lookup runs on every row change, so parse each one once per session.
+.alias_index_cache <- new.env(parent = emptyenv())
+
+alias_index <- function(root, domain) {
+  if (!is.null(.alias_index_cache[[domain]])) return(.alias_index_cache[[domain]])
   path <- if (identical(domain, DOMAIN_SPONSOR)) {
     cfg_path(root, "sponsor_norm_pipeline", "sponsor_alias_index.csv")
   } else {
     cfg_path(root, "substance_norm_pipeline", "substance_alias_index.csv")
   }
-  if (!file.exists(path)) return(character())
-  idx <- read_csv_quiet(path)
   col <- if (identical(domain, DOMAIN_SPONSOR)) "sponsor_clean" else "substance_clean"
-  hits <- idx$alias_clean[!is.na(idx[[col]]) & idx[[col]] == canonical]
-  hits <- setdiff(unique(hits), exclude_alias)
-  utils::head(hits, limit)
+  idx <- if (file.exists(path)) {
+    read_csv_quiet(path) |>
+      dplyr::select(alias_clean, canonical = dplyr::all_of(col), source)
+  } else {
+    tibble::tibble(alias_clean = character(), canonical = character(),
+                   source = character())
+  }
+  .alias_index_cache[[domain]] <- idx
+  idx
+}
+
+# ── trial references ──────────────────────────────────────────────────────────
+#
+# Which registered trials a raw string actually came from. This is what settles
+# an ambiguous name: "UCL" appears on four trials, all of them -GB, so it is
+# University College London and not Université catholique de Louvain (-BE).
+#
+# `_id` is a EudraCT number plus a country code for EUCTR (2012-005394-31-GB),
+# or a CTIS trial number ending in digits (2022-500007-52-00). URL shapes are
+# the same ones app.R:3721-3724 uses.
+
+.raw_pairs_cache <- new.env(parent = emptyenv())
+
+raw_pairs <- function(root, domain) {
+  if (!is.null(.raw_pairs_cache[[domain]])) return(.raw_pairs_cache[[domain]])
+  file <- if (identical(domain, DOMAIN_SPONSOR)) "trial_sponsors_raw.csv" else "trial_substances_raw.csv"
+  col  <- if (identical(domain, DOMAIN_SPONSOR)) "raw_sponsor" else "raw_substance"
+  path <- data_path(root, file)
+  out <- if (file.exists(path)) {
+    read_csv_quiet(path) |>
+      dplyr::select(id = `_id`, raw_value = dplyr::all_of(col)) |>
+      dplyr::distinct() |>
+      dplyr::mutate(raw_key = tolower(trimws(raw_value)))
+  } else {
+    tibble::tibble(id = character(), raw_value = character(), raw_key = character())
+  }
+  .raw_pairs_cache[[domain]] <- out
+  out
+}
+
+is_ctis_id <- function(id) !grepl("[A-Z]{2,3}$", id)
+
+trial_url <- function(id) {
+  ct <- sub("-[A-Z]{2,3}$", "", id)
+  ifelse(
+    is_ctis_id(id),
+    paste0("https://euclinicaltrials.eu/ctis-public/view/", id),
+    paste0("https://www.clinicaltrialsregister.eu/ctr-search/trial/", ct, "/",
+           sub("^.*-([A-Z]{2,3})$", "\\1", id))
+  )
+}
+
+# Alias tiers carry a cleaned alias rather than the raw string, so match on the
+# raw value first and fall back to its lowercased form.
+# Returns every matching trial. The caller caps how many links it renders, but
+# the country summary must be computed over the full set — truncating first
+# would make a sponsor spanning 12 countries look like it spans 2.
+trial_references <- function(root, domain, raw_value) {
+  if (is.null(raw_value) || is.na(raw_value) || !nzchar(raw_value)) {
+    return(tibble::tibble(id = character(), register = character(),
+                          country = character(), url = character()))
+  }
+  pairs <- raw_pairs(root, domain)
+  hits  <- pairs[pairs$raw_value == raw_value, , drop = FALSE]
+  if (!nrow(hits)) {
+    hits <- pairs[pairs$raw_key == tolower(trimws(raw_value)), , drop = FALSE]
+  }
+  if (!nrow(hits)) {
+    return(tibble::tibble(id = character(), register = character(),
+                          country = character(), url = character()))
+  }
+  hits |>
+    dplyr::distinct(id) |>
+    dplyr::mutate(
+      register = ifelse(is_ctis_id(id), "CTIS", "EUCTR"),
+      country  = ifelse(is_ctis_id(id), NA_character_,
+                        sub("^.*-([A-Z]{2,3})$", "\\1", id)),
+      url      = trial_url(id)
+    ) |>
+    dplyr::arrange(country, id)
+}
+
+# Which file a sibling alias actually lives in, so it can be edited in place.
+# Aliases from the generated tiers (EPAR, CTIS businessKey, email domain,
+# ChEMBL) have no hand-editable home — they are re-derived on every rebuild, so
+# detaching one there would be silently undone. Those stay read-only.
+alias_home <- function(domain, source) {
+  if (is.null(source) || is.na(source)) return(NULL)
+  if (identical(domain, DOMAIN_SPONSOR)) {
+    switch(source,
+      llm_curated  = ,
+      manual       = list(tier = "sponsor_aliases",
+                          file = "config/sponsor_norm_pipeline/manual_sponsor_aliases.csv"),
+      llm_reviewed = list(tier = "sponsor_llm_reviewed",
+                          file = "config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv"),
+      NULL)
+  } else {
+    switch(source,
+      llm_curated    = ,
+      manual         = list(tier = "substance_aliases",
+                            file = "config/substance_norm_pipeline/manual_brand_to_substance.csv"),
+      llm_reviewed   = ,
+      reviewed_queue = list(tier = "substance_llm_reviewed",
+                            file = "config/substance_norm_pipeline/substance_llm_reviewed.csv"),
+      NULL)
+  }
+}
+
+sibling_aliases <- function(root, domain, canonical, exclude_alias, limit = 12L) {
+  empty <- tibble::tibble(alias_clean = character(), source = character(),
+                          tier = character(), editable = logical())
+  if (is.null(canonical) || is.na(canonical) || !nzchar(canonical)) return(empty)
+  idx  <- alias_index(root, domain)
+  hits <- idx[!is.na(idx$canonical) & idx$canonical == canonical &
+                idx$alias_clean != exclude_alias, , drop = FALSE]
+  if (!nrow(hits)) return(empty)
+  hits |>
+    dplyr::distinct(alias_clean, source) |>
+    dplyr::mutate(
+      tier = vapply(source, function(s) {
+        h <- alias_home(domain, s)
+        if (is.null(h)) NA_character_ else h$tier
+      }, character(1)),
+      editable = !is.na(tier)
+    ) |>
+    dplyr::arrange(!editable, alias_clean) |>
+    utils::head(limit)
 }

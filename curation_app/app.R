@@ -109,7 +109,10 @@ server <- function(input, output, session) {
   ledger_bump <- shiny::reactiveVal(0L)
   on_decision <- function() ledger_bump(ledger_bump() + 1L)
 
-  for (tier in TIERS) {
+  # lapply, not a for loop: each call gets its own binding for `tier`, so the
+  # modules cannot all end up sharing the loop's final value. review_card_server
+  # also force()s its arguments, which is what actually guarantees it.
+  lapply(TIERS, function(tier) {
     review_card_server(
       id          = tier$id,
       tier        = tier,
@@ -119,7 +122,7 @@ server <- function(input, output, session) {
       canonicals  = POOLS[[tier$domain]],
       on_decision = on_decision
     )
-  }
+  })
 
   ledger <- shiny::reactive({
     ledger_bump()
