@@ -176,26 +176,109 @@ belongs in this plan and not the last one.
   a rebuilt index needs a redeploy to be seen. Decisions are unaffected — they
   live in the database.
 
-## 5. Workflow with several reviewers
+## 5. From reviewer decisions to production
+
+This is the part that has to be designed rather than assumed, because the
+reviewer app and the dashboard are two separate deployments that share no
+filesystem. Decisions live in Postgres; the dashboard reads `trials_cache.rds`
+built from the config CSVs in git. Nothing connects those two automatically, and
+nothing should — applying decisions rewrites tracked config files and changes
+what every downstream number means.
+
+### The pipeline
 
 ```
-reviewers decide in the deployed app   →   Postgres
-                                            │
-                          admin exports ledger CSV
-                                            │
-                             locally: Rscript curation_app/apply.R --write
-                                            │
-                             rebuild indexes, commit, redeploy
+  Posit Cloud: reviewer app          (several users, writes only to Postgres)
+        │
+        │  decisions accumulate
+        ▼
+  Postgres review_decisions
+        │
+        │  ① export_decisions.R   (pull ledger → CSV, local)
+        ▼
+  config/review_ledger/review_decisions.csv
+        │
+        │  ② curation_app/apply.R --write        alias tiers
+        │     curate_sponsors.R --export         queue tiers
+        │     curate_substances.R --export
+        ▼
+  config/*.csv   (manual_sponsor_aliases, negative_aliases, overrides …)
+        │
+        │  ③ build_sponsor_index.R --no-ror
+        │     build_substance_index.R --use-chembl-cache
+        ▼
+  config/*_alias_index.csv
+        │
+        │  ④ git commit + review the diff
+        ▼
+  main branch
+        │
+        │  ⑤ nightly_deploy_posit.sh  →  rebuild_cache.R  →  trials_cache.rds
+        ▼
+  Posit Cloud: dashboard app
+        │
+        │  ⑥ redeploy reviewer app so its backlog reflects applied decisions
+        ▼
+  reviewed rows disappear from the queue
 ```
 
-`apply.R` stays local and unchanged. Applying decisions edits tracked config
-files and must go through review and a commit — that should not happen from a
-web form.
+### Step by step
 
-Decide the conflict rule before going live: with several reviewers, the current
-"latest decision wins" silently lets a later reviewer overwrite an earlier one.
-Options are last-write-wins (current), first-write-wins, or route disagreements
-to an admin queue. The disagreement report makes whichever you pick auditable.
+**① Export** — new `helper_scripts/review/export_decisions.R`: connect to
+Postgres, pull `latest_decisions()`, write `config/review_ledger/review_decisions.csv`
+in exactly the shape `apply.R` already reads. Runs locally, needs the connection
+string in `.Renviron`. Records the max `decision_id` exported so the next run
+can report what is new.
+
+**② Apply** — unchanged from the single-user design. `apply.R --write` for the
+alias tiers, the two `curate_*.R --export` scripts for the queue tiers. Both are
+idempotent, so a re-export that includes already-applied decisions is harmless.
+
+**③ Rebuild indexes** — `--no-ror` on the sponsor side to match the committed
+baseline; `--use-chembl-cache` on the substance side to avoid a network fetch.
+~15 minutes, dominated by the sponsor DB tiers.
+
+**④ Commit and review the diff** — the gate. Run the gold fixtures and diff
+`data/trial_sponsor_labels.csv` before/after, the same checks used for the
+provenance correction. A reviewer decision that moves 4,000 trials between
+sponsors should be seen by a human before it ships, and this is where that
+happens. Nothing here is automated.
+
+**⑤ Dashboard** — no new machinery. `nightly_deploy_posit.sh` already resets
+`deploy` to `main`, runs `rebuild_cache.R`, and pushes to trigger Posit Cloud.
+Once step ④ is on `main`, the next nightly run carries the decisions into
+`trials_cache.rds`. Note the script aborts on a dirty work tree, so step ④ must
+be committed, not left in the working directory.
+
+**⑥ Redeploy the reviewer** — the one step easy to forget. The reviewer app
+reads config CSVs from *its own bundle*, so until it is redeployed it keeps
+showing rows that have already been decided and applied. Redeploy it in the same
+pass as step ④.
+
+### Cadence
+
+Weekly or per-milestone, not per-decision. Every cycle costs a 15-minute index
+rebuild, a human diff review, and two redeploys — batching a week of decisions
+costs the same as applying one. Between cycles reviewers keep working; the
+backlog they see is simply one cycle stale, which is harmless because the ledger
+keys on `row_key` and re-deciding an already-applied row is idempotent.
+
+### What deliberately stays manual
+
+- **Applying decisions** — rewrites tracked config, must go through a commit.
+- **Enabling the ROR tier** — a separate data decision, not a review outcome.
+- **Creating canonicals** — allowed in the app but flagged
+  (`created_new_canonical`); worth scanning in the admin panel each cycle before
+  applying, since that is the field most able to fragment the canonical set.
+
+### Conflict rule
+
+Decide before going live: with several reviewers, "latest decision wins"
+silently lets a later reviewer overwrite an earlier one. Options are
+last-write-wins (current), first-write-wins, or routing disagreements to an
+admin queue that blocks export until resolved. The disagreement report makes
+whichever you pick auditable, and step ④ is where an unresolved disagreement
+should stop the cycle.
 
 ## Verification
 
