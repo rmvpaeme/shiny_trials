@@ -3123,21 +3123,39 @@ server <- function(input, output, session) {
     pal
   }
   
+  # Selections pending restore from a ?f= URL state for the dynamic
+  # (server=TRUE) selectize inputs below. Those inputs have choices=NULL at
+  # UI-definition time, so a `selected=` value can only be applied once the
+  # choices are populated — setting it from a separate, later-firing
+  # observer races the choices update and silently no-ops. Stashing the
+  # pending selection here lets the choices-populating observer apply
+  # `selected=` in the same updateSelectizeInput() call that sets `choices=`.
+  pending_restore <- reactiveVal(NULL)
+
   observe({
     req(rv$data)
+    pr <- pending_restore()
+    pr_sel <- function(field) if (!is.null(pr) && has_filter_values(pr[[field]])) pr[[field]] else NULL
     updateSelectizeInput(session,"organ_class_filter",
-                         choices=extract_choices(rv$data$MEDDRA_organ_class),server=TRUE)
+                         choices=extract_choices(rv$data$MEDDRA_organ_class),
+                         selected=pr_sel("organ_class_filter"),server=TRUE)
     updateSelectizeInput(session,"condition_filter",
-                         choices=extract_choices(rv$data$MEDDRA_term),server=TRUE)
+                         choices=extract_choices(rv$data$MEDDRA_term),
+                         selected=pr_sel("condition_filter"),server=TRUE)
     updateSelectizeInput(session,"country_filter",
-                         choices=extract_choices(rv$data$Member_state,sep=" / "),server=TRUE)
+                         choices=extract_choices(rv$data$Member_state,sep=" / "),
+                         selected=pr_sel("country_filter"),server=TRUE)
     updateSelectizeInput(session,"phase_filter",
-                         choices=extract_choices(rv$data$phase),server=TRUE)
+                         choices=extract_choices(rv$data$phase),
+                         selected=pr_sel("phase_filter"),server=TRUE)
     updateSelectizeInput(session,"sponsor_filter",
-                         choices=sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),server=TRUE)
+                         choices=sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),
+                         selected=pr_sel("sponsor_filter"),server=TRUE)
     updateSelectizeInput(session, "product_search",
                          choices = extract_choices(rv$data$substance_label),
+                         selected=pr_sel("product_search"),
                          server = TRUE)
+    if (!is.null(pr)) pending_restore(NULL)
     x_choices <- chart_dimension_choices(rv$data)
     grp_choices <- chart_dimension_choices(rv$data, include_none = TRUE)
     updateSelectInput(session, "explore_x",
@@ -3233,34 +3251,29 @@ server <- function(input, output, session) {
   }
 
   restore_filter_settings <- function(s) {
+    # Dynamic (choices=NULL, server=TRUE) selectize inputs — organ_class_filter,
+    # condition_filter, country_filter, phase_filter, sponsor_filter,
+    # product_search — are NOT restored here. Their choices are populated
+    # asynchronously from rv$data, so setting `selected=` before that happens
+    # silently no-ops; see pending_restore() above, which applies these in
+    # the same updateSelectizeInput() call that sets `choices=`.
     if (!is.null(s$status_filter))
       updateSelectizeInput(session, "status_filter", selected = s$status_filter)
     if (!is.null(s$register_filter))
       updateSelectizeInput(session, "register_filter", selected = s$register_filter)
     if (!is.null(s$date_range) && length(s$date_range) == 2)
       updateDateRangeInput(session, "date_range", start = s$date_range[1], end = s$date_range[2])
-    if (!is.null(s$organ_class_filter))
-      updateSelectizeInput(session, "organ_class_filter", selected = s$organ_class_filter)
-    if (!is.null(s$condition_filter))
-      updateSelectizeInput(session, "condition_filter", selected = s$condition_filter)
-    if (!is.null(s$country_filter))
-      updateSelectizeInput(session, "country_filter", selected = s$country_filter)
-    if (!is.null(s$phase_filter))
-      updateSelectizeInput(session, "phase_filter", selected = s$phase_filter)
     if (!is.null(s$pip_filter))
       updateSelectInput(session, "pip_filter", selected = s$pip_filter)
     if (!is.null(s$orphan_filter))
       updateSelectInput(session, "orphan_filter", selected = s$orphan_filter)
     if (!is.null(s$age_group_filter))
       updateSelectInput(session, "age_group_filter", selected = s$age_group_filter)
-    if (!is.null(s$sponsor_filter))
-      updateSelectizeInput(session, "sponsor_filter", selected = s$sponsor_filter)
-    if (!is.null(s$product_search))
-      updateSelectizeInput(session, "product_search", selected = s$product_search)
     if (!is.null(s$text_search))
       updateTextInput(session, "text_search", value = s$text_search)
     if (!is.null(s$mononational_filter))
       mono_active(isTRUE(s$mononational_filter))
+    pending_restore(s)
   }
 
   report_filter_values <- function(s) {
