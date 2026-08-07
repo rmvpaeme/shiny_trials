@@ -18,6 +18,16 @@ AGENTS.md
 AGENTS/
 AGENTS/*
 
+# External review material — the repo is public, these are not.
+feedback/
+
+# Local agent tooling config.
+.claude/
+
+# Retired scripts and handover notes, kept on disk for reference only.
+# Git history is the real record; see LEGACY/README.md.
+LEGACY/
+
 Screenshot*
 
 INFRA.md
