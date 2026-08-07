@@ -743,8 +743,8 @@ load_sponsor_configs <- function(
   # Prefer the generated index (manual + EPAR + ROR) when available;
   # fall back to the hand-maintained seed table plus LLM-reviewed aliases if the
   # index hasn't been built.
-  alias_index <- file.path(config_dir, "sponsor_alias_index.csv")
-  alias_seed  <- file.path(config_dir, "manual_sponsor_aliases.csv")
+  alias_index <- file.path(config_dir, "2_sponsor_alias_index.csv")
+  alias_seed  <- file.path(config_dir, "sponsor_llm_aliases.csv")
   alias_llm   <- file.path(config_dir, "sponsor_llm_reviewed.csv")
   aliases <- if (file.exists(alias_index)) {
     read_csv_safe(alias_index)
@@ -759,7 +759,7 @@ load_sponsor_configs <- function(
     containment_token_index = targets$containment_token_index,
     fuzzy_targets = targets$fuzzy,
     family_targets = prepare_sponsor_family_targets(aliases, family_map),
-    overrides = read_csv_safe(file.path(config_dir, "manual_sponsor_overrides.csv")),
+    overrides = read_csv_safe(file.path(config_dir, "sponsor_llm_overrides.csv")),
     negatives = read_csv_safe(file.path(config_dir, "sponsor_negative_aliases.csv"))
   )
 }
@@ -1193,7 +1193,7 @@ if (!interactive() && sys.nframe() == 0L) {
   message(sprintf("Wrote %d rows to %s", nrow(out), output_csv))
 
   if (write_queue) {
-    queue_path <- file.path(config_dir, "sponsor_review_queue.csv")
+    queue_path <- file.path(config_dir, "3_sponsor_review_queue.csv")
     out_q <- if ("n_trials" %in% names(out)) out else
       dplyr::mutate(out, n_trials = 1L)
 

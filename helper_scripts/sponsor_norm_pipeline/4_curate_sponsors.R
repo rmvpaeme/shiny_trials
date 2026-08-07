@@ -1,20 +1,20 @@
 # Interactive sponsor review queue curation.
 #
 # Usage:
-#   Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R
-#   Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R 100
-#   Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --include-skipped
-#   Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
+#   Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R
+#   Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R 100
+#   Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --include-skipped
+#   Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
 #
-# For each pending row in sponsor_review_queue.csv, answer:
+# For each pending row in 3_sponsor_review_queue.csv, answer:
 #   a = accept suggested canonical sponsor
 #   r = reject (not a valid sponsor; adds to sponsor_negative_aliases.csv on --export)
 #   o = override with a different canonical sponsor
 #   s = skip (defer; re-shown with --include-skipped)
 #   q = quit and save progress
 #
-# Decisions are written back to sponsor_review_queue.csv immediately.
-# --export writes accepted overrides to manual_sponsor_overrides.csv and
+# Decisions are written back to 3_sponsor_review_queue.csv immediately.
+# --export writes accepted overrides to sponsor_llm_overrides.csv and
 # rejected rows to sponsor_negative_aliases.csv.
 
 script_path <- local({
@@ -41,8 +41,8 @@ export_mode     <- "--export" %in% flags
 max_review      <- if (length(pos_args) >= 1) suppressWarnings(as.integer(pos_args[[1]])) else 50L
 if (is.na(max_review) || max_review <= 0L) max_review <- 50L
 
-queue_path     <- project_path("config", "sponsor_norm_pipeline", "sponsor_review_queue.csv")
-overrides_path <- project_path("config", "sponsor_norm_pipeline", "manual_sponsor_overrides.csv")
+queue_path     <- project_path("config", "sponsor_norm_pipeline", "3_sponsor_review_queue.csv")
+overrides_path <- project_path("config", "sponsor_norm_pipeline", "sponsor_llm_overrides.csv")
 negatives_path <- project_path("config", "sponsor_norm_pipeline", "sponsor_negative_aliases.csv")
 
 # ── helpers ───────────────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ if (export_mode) {
   queue$canonical_sponsor <- as.character(queue$canonical_sponsor)
   queue$comment           <- as.character(queue$comment)
 
-  # accepted overrides → manual_sponsor_overrides.csv
+  # accepted overrides → sponsor_llm_overrides.csv
   accepted <- queue[
     tolower(trimws(queue$decision)) %in% "accepted" &
     !is.na(queue$canonical_sponsor) &
@@ -150,10 +150,10 @@ if (export_mode) {
   }
 
   message("Export complete.")
-  message("  Accepted overrides added to manual_sponsor_overrides.csv: ", n_override_added)
+  message("  Accepted overrides added to sponsor_llm_overrides.csv: ", n_override_added)
   message("  Rejected aliases added to sponsor_negative_aliases.csv:   ", n_negative_added)
   message("")
-  message("Re-run build_sponsor_labels.R to apply decisions.")
+  message("Re-run 3_build_sponsor_labels.R to apply decisions.")
   quit(save = "no", status = 0L)
 }
 
@@ -162,7 +162,7 @@ if (export_mode) {
 if (!file.exists(queue_path)) {
   stop(
     "Queue not found: ", queue_path,
-    "\nRun build_sponsor_labels.R --write-queue to generate it."
+    "\nRun 3_build_sponsor_labels.R --write-queue to generate it."
   )
 }
 

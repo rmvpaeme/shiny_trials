@@ -1,20 +1,20 @@
 # Interactive substance review queue curation.
 #
 # Usage:
-#   Rscript helper_scripts/substance_norm_pipeline/curate_substances.R
-#   Rscript helper_scripts/substance_norm_pipeline/curate_substances.R 100
-#   Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --include-skipped
-#   Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --export
+#   Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R
+#   Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R 100
+#   Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --include-skipped
+#   Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --export
 #
-# For each pending row in substance_review_queue.csv, answer:
+# For each pending row in 3_substance_review_queue.csv, answer:
 #   a = accept suggested canonical substance
 #   r = reject (not a substance; adds to negative_aliases.csv on --export)
 #   o = override with a different canonical substance
 #   s = skip (defer; re-shown with --include-skipped)
 #   q = quit and save progress
 #
-# Decisions are written back to substance_review_queue.csv immediately.
-# --export writes accepted overrides to manual_substance_overrides.csv and
+# Decisions are written back to 3_substance_review_queue.csv immediately.
+# --export writes accepted overrides to substance_llm_overrides.csv and
 # rejected rows to negative_aliases.csv.
 
 script_path <- local({
@@ -41,8 +41,8 @@ export_mode     <- "--export" %in% flags
 max_review      <- if (length(pos_args) >= 1) suppressWarnings(as.integer(pos_args[[1]])) else 50L
 if (is.na(max_review) || max_review <= 0L) max_review <- 50L
 
-queue_path     <- project_path("config", "substance_norm_pipeline", "substance_review_queue.csv")
-overrides_path <- project_path("config", "substance_norm_pipeline", "manual_substance_overrides.csv")
+queue_path     <- project_path("config", "substance_norm_pipeline", "3_substance_review_queue.csv")
+overrides_path <- project_path("config", "substance_norm_pipeline", "substance_llm_overrides.csv")
 reviewed_path  <- project_path("config", "substance_norm_pipeline", "substance_llm_reviewed.csv")
 negatives_path <- project_path("config", "substance_norm_pipeline", "negative_aliases.csv")
 
@@ -88,7 +88,7 @@ if (export_mode) {
   queue$canonical_substance <- as.character(queue$canonical_substance)
   queue$comment             <- as.character(queue$comment)
 
-  # --- export accepted overrides → manual_substance_overrides.csv
+  # --- export accepted overrides → substance_llm_overrides.csv
   accepted <- queue[
     tolower(trimws(queue$decision)) %in% "accepted" &
     !is.na(queue$canonical_substance) &
@@ -173,13 +173,13 @@ if (export_mode) {
   }
 
   message("Export complete.")
-  message("  Accepted overrides added to manual_substance_overrides.csv: ", n_override_added)
+  message("  Accepted overrides added to substance_llm_overrides.csv: ", n_override_added)
   message("  Accepted aliases added to substance_llm_reviewed.csv:       ", n_reviewed_added)
   message("  Rejected aliases added to negative_aliases.csv:             ", n_negative_added)
   message("")
   message("Next steps:")
-  message("  Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R")
-  message("  Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue")
+  message("  Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R")
+  message("  Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue")
   quit(save = "no", status = 0L)
 }
 

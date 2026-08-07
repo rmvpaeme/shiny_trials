@@ -1,8 +1,8 @@
-# Build config/sponsor_norm_pipeline/sponsor_alias_index.csv
+# Build config/sponsor_norm_pipeline/2_sponsor_alias_index.csv
 # from manual aliases, EMA EPAR MAH names, and optionally ROR + DB-sourced tiers.
 #
 # Sources (priority order):
-#   1. manual_sponsor_aliases.csv  (seed, confidence 1.00) — always included
+#   1. sponsor_llm_aliases.csv  (seed, confidence 1.00) — always included
 #      `source` records who decided the row: `llm_curated` for the LLM curation
 #      pass, `manual` only for rows a human verified in the reviewer app.
 #   2. sponsor_llm_reviewed.csv (accepted queue decisions, confidence 1.00)
@@ -21,27 +21,27 @@
 # Strategy: for EPAR/ROR, we look up each external name against the manual alias
 # table using the same candidate generation logic. If a match is found, the
 # external name becomes an additional alias for that canonical sponsor.
-# Unmatched external names are written to new_sponsor_candidates.csv for review.
+# Unmatched external names are written to 2_new_sponsor_candidates.csv for review.
 #
 # For DB-sourced tiers (4-6), aliases are only added when the resolved names for
 # a given businessKey / domain / location group all agree on the same canonical.
 # Ambiguous groups are silently skipped.
 #
 # Usage:
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-epar
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-db
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-businesskey --no-location
+#   Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R
+#   Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror
+#   Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-epar
+#   Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-db
+#   Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-businesskey --no-location
 #
 # Environment:
 #   DB_PATH  path to trials.sqlite (default: <project>/data/trials.sqlite)
 #
 # Outputs:
-#   config/sponsor_norm_pipeline/sponsor_alias_index.csv       full merged alias table
+#   config/sponsor_norm_pipeline/2_sponsor_alias_index.csv       full merged alias table
 #   config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv      accepted queue decisions
-#   config/sponsor_norm_pipeline/sponsor_ambiguous_aliases.csv aliases → multiple sponsors
-#   config/sponsor_norm_pipeline/new_sponsor_candidates.csv    unmatched for manual review
+#   config/sponsor_norm_pipeline/2_sponsor_ambiguous_aliases.csv aliases → multiple sponsors
+#   config/sponsor_norm_pipeline/2_new_sponsor_candidates.csv    unmatched for manual review
 
 suppressPackageStartupMessages({
   library(httr2)
@@ -80,15 +80,15 @@ no_email        <- "--no-email"        %in% args
 no_location     <- "--no-location"     %in% args
 
 SNP          <- project_path("config", "sponsor_norm_pipeline")
-OUT_INDEX    <- file.path(SNP, "sponsor_alias_index.csv")
+OUT_INDEX    <- file.path(SNP, "2_sponsor_alias_index.csv")
 OUT_LLM      <- file.path(SNP, "sponsor_llm_reviewed.csv")
-OUT_AMBIG    <- file.path(SNP, "sponsor_ambiguous_aliases.csv")
-OUT_NEW      <- file.path(SNP, "new_sponsor_candidates.csv")
-OUT_ORGS     <- file.path(SNP, "ctis_org_candidates.csv")
-OUT_LOC_REVIEW <- file.path(SNP, "postcode_sponsor_candidates.csv")
+OUT_AMBIG    <- file.path(SNP, "2_sponsor_ambiguous_aliases.csv")
+OUT_NEW      <- file.path(SNP, "2_new_sponsor_candidates.csv")
+OUT_ORGS     <- file.path(SNP, "2_ctis_org_candidates.csv")
+OUT_LOC_REVIEW <- file.path(SNP, "2_postcode_sponsor_candidates.csv")
 OUT_FINAL_MAP    <- file.path(SNP, "final_sponsor_canonical_map.csv")
 OUT_FINAL_FAMILY_MAP <- file.path(SNP, "final_sponsor_family_map.csv")
-OUT_FINAL_REVIEW <- file.path(SNP, "final_sponsor_canonical_review.csv")
+OUT_FINAL_REVIEW <- file.path(SNP, "2_final_sponsor_canonical_review.csv")
 
 # ── Load normaliser helpers ───────────────────────────────────────────────────
 source(
@@ -903,7 +903,7 @@ apply_final_canonicalization <- function(combined, map_path, family_map_path, re
 
 # ── Manual aliases (seed) ─────────────────────────────────────────────────────
 
-manual_path <- file.path(SNP, "manual_sponsor_aliases.csv")
+manual_path <- file.path(SNP, "sponsor_llm_aliases.csv")
 manual <- readr::read_csv(manual_path, show_col_types = FALSE) |>
   dplyr::mutate(alias_clean = clean_sponsor_alias(alias_clean))
 
@@ -1005,7 +1005,7 @@ export_llm_reviewed <- function(queue_path, out_path) {
 }
 
 llm_reviewed <- export_llm_reviewed(
-  queue_path = file.path(SNP, "sponsor_review_queue.csv"),
+  queue_path = file.path(SNP, "3_sponsor_review_queue.csv"),
   out_path   = OUT_LLM
 )
 
@@ -1123,7 +1123,7 @@ if (!no_epar) {
 
       n_unmatched <- length(mah_names) - nrow(epar_resolved)
       message(sprintf(
-        "EPAR: %d matched, %d unmatched (see new_sponsor_candidates.csv)",
+        "EPAR: %d matched, %d unmatched (see 2_new_sponsor_candidates.csv)",
         nrow(epar_resolved), n_unmatched
       ))
 
@@ -1825,4 +1825,4 @@ readr::write_csv(combined, OUT_INDEX)
 message(sprintf(
   "Wrote %d alias entries to %s", nrow(combined), OUT_INDEX
 ))
-message("Done. Run build_sponsor_labels.R to apply the new index.")
+message("Done. Run 3_build_sponsor_labels.R to apply the new index.")

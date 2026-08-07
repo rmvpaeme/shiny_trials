@@ -1693,7 +1693,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   # ── Substance labels for product_search dropdown ─────────────────────────────
   # Preferred: read pre-built trial_substance_labels.csv (written by
-  # build_substance_labels.R during cache rebuild — no runtime normalisation cost).
+  # 3_build_substance_labels.R during cache rebuild — no runtime normalisation cost).
   # Fallback: compute inline if the file is absent (first run / dev environment).
   substance_label_path <- file.path(dirname(db_path), "trial_substance_labels.csv")
   if (file.exists(substance_label_path)) {
@@ -1708,7 +1708,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
                       sum(!is.na(result$substance_label)), nrow(result)))
     }, error = function(e) message("Could not load substance labels: ", e$message))
   } else {
-    message("trial_substance_labels.csv not found — run build_substance_labels.R after cache rebuild.")
+    message("trial_substance_labels.csv not found — run 3_build_substance_labels.R after cache rebuild.")
     tryCatch({
       sub_labels <- result %>%
         filter(!is.na(DIMP_inn_name), nchar(str_trim(DIMP_inn_name)) > 0) %>%

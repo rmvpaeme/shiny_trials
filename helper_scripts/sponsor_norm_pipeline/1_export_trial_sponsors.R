@@ -6,10 +6,10 @@
 #   is_commercial — trial-level commercial sponsor flag, when available
 #
 # One row per trial (trials have one primary sponsor).
-# This is the input to build_sponsor_labels.R.
+# This is the input to 3_build_sponsor_labels.R.
 #
 # Usage:
-#   Rscript helper_scripts/sponsor_norm_pipeline/export_trial_sponsors.R
+#   Rscript helper_scripts/sponsor_norm_pipeline/1_export_trial_sponsors.R
 #
 # Environment:
 #   CACHE_PATH  override for cache file (default: trials_cache.rds)

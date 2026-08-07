@@ -9,6 +9,18 @@ are called out where they mattered.
 The multi-user deployment is a separate plan:
 [`normalisation-reviewer-multiuser.md`](normalisation-reviewer-multiuser.md).
 
+> **Paths below are historical.** The repo cleanup that followed this work
+> renamed the config files whose contents were LLM-written rather than
+> hand-written, and numbered the pipeline scripts by execution order. Read the
+> old names as:
+> `manual_sponsor_aliases.csv` → `sponsor_llm_aliases.csv`,
+> `manual_sponsor_overrides.csv` → `sponsor_llm_overrides.csv`,
+> `manual_brand_to_substance.csv` → `substance_llm_brands.csv`,
+> `manual_substance_overrides.csv` → `substance_llm_overrides.csv`,
+> and `build_*`/`curate_*`/`export_*` → `2_build_*`/`4_curate_*`/`1_export_*`.
+> The `source` column values are unchanged — `manual` still means a human
+> verified the row, which is the distinction this plan established.
+
 ## Context
 
 Sponsor and substance normalisation on `main` were curated almost entirely by

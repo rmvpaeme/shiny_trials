@@ -114,7 +114,7 @@ latest_decisions <- function(ledger) {
 # ── queue CSV write-back ──────────────────────────────────────────────────────
 
 # Mirror a decision into the queue CSV's decision columns, which is the format
-# curate_sponsors.R --export / curate_substances.R --export already read.
+# 4_curate_sponsors.R --export / 4_curate_substances.R --export already read.
 write_queue_decision <- function(paths, queue_path, key_col, row_key,
                                  decision, canonical, comment,
                                  canonical_col) {

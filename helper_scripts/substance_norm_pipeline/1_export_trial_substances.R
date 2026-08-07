@@ -5,10 +5,10 @@
 #   raw_substance — individual substance string (split on " / ")
 #
 # One row per trial-substance pair (after splitting multi-substance strings).
-# This is the input to build_substance_labels.R.
+# This is the input to 3_build_substance_labels.R.
 #
 # Usage:
-#   Rscript helper_scripts/substance_norm_pipeline/export_trial_substances.R
+#   Rscript helper_scripts/substance_norm_pipeline/1_export_trial_substances.R
 #
 # Environment:
 #   CACHE_PATH  override for cache file (default: trials_cache.rds)

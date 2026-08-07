@@ -6,13 +6,13 @@
 #   3. Aggregate per trial → sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, match_status
 #   4. Write data/trial_sponsor_labels.csv  (_id + sponsor fields)
 #   5. Write data/sponsor_normalisation_log.csv  (for preprocessing.Rmd)
-#   6. Optionally write sponsor_review_queue.csv  (--write-queue)
+#   6. Optionally write 3_sponsor_review_queue.csv  (--write-queue)
 #
 # Usage:
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --allow-fuzzy
-#   Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue --keep-decided
+#   Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R
+#   Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue
+#   Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue --allow-fuzzy
+#   Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue --keep-decided
 #
 # By default a rebuilt queue drops rows that already carry a decision, so it
 # reads as a to-do list. --keep-decided carries the decisions forward instead,
@@ -56,7 +56,7 @@ config_dir <- Sys.getenv("CONFIG_DIR", unset = project_path("config", "sponsor_n
 raw_path    <- file.path(data_dir, "trial_sponsors_raw.csv")
 labels_path <- file.path(data_dir, "trial_sponsor_labels.csv")
 log_path    <- file.path(data_dir, "sponsor_normalisation_log.csv")
-queue_path  <- file.path(config_dir, "sponsor_review_queue.csv")
+queue_path  <- file.path(config_dir, "3_sponsor_review_queue.csv")
 
 # ── load normaliser ────────────────────────────────────────────────────────────
 
@@ -69,7 +69,7 @@ cfg <- load_sponsor_configs(config_dir = config_dir)
 # ── read raw sponsor pairs ─────────────────────────────────────────────────────
 
 if (!file.exists(raw_path)) {
-  stop("Input not found: ", raw_path, "\nRun export_trial_sponsors.R first.")
+  stop("Input not found: ", raw_path, "\nRun 1_export_trial_sponsors.R first.")
 }
 
 raw <- readr::read_csv(raw_path, show_col_types = FALSE,

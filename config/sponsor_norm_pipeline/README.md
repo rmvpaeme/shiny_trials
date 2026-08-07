@@ -1,0 +1,261 @@
+# Sponsor pipeline config — field reference
+
+Column-by-column reference for every CSV in this directory. For the *workflow*
+that reads and writes them, see
+[helper_scripts/sponsor_norm_pipeline/README.md](../../helper_scripts/sponsor_norm_pipeline/README.md).
+
+**Hand-edit only the curated files.** Generated files are rewritten from scratch
+on the next rebuild, so an edit there is silently discarded.
+
+| File | Rows | Written by | Hand-edit? |
+|---|---:|---|---|
+| `sponsor_llm_aliases.csv` | 1,514 | curation | ✅ curated seed |
+| `sponsor_llm_reviewed.csv` | 11,899 | curation, **rewritten by `2_build_sponsor_index.R`** | ⚠️ curated content, regenerated file |
+| `sponsor_llm_overrides.csv` | 0 | `4_curate_sponsors.R --export` | ✅ curated |
+| `sponsor_negative_aliases.csv` | 264 | curation | ✅ curated |
+| `final_sponsor_canonical_map.csv` | 3,181 | curation | ✅ curated |
+| `final_sponsor_family_map.csv` | 972 | curation | ✅ curated |
+| `2_sponsor_alias_index.csv` | 13,013 | `2_build_sponsor_index.R` | ❌ generated |
+| `2_final_sponsor_canonical_review.csv` | 1,225 | `2_build_sponsor_index.R` | ❌ generated (review queue) |
+| `2_sponsor_ambiguous_aliases.csv` | 3 | `2_build_sponsor_index.R` | ❌ generated |
+| `2_new_sponsor_candidates.csv` | 340 | `2_build_sponsor_index.R` | ❌ generated (review queue) |
+| `2_ctis_org_candidates.csv` | 131 | `2_build_sponsor_index.R` | ❌ generated (review queue) |
+| `2_postcode_sponsor_candidates.csv` | 1,484 | `2_build_sponsor_index.R --no-location` off | ❌ generated (review queue) |
+| `3_sponsor_review_queue.csv` | 102 | `3_build_sponsor_labels.R --write-queue` | ⚠️ decision columns only |
+
+---
+
+## Shared columns
+
+These mean the same thing everywhere they appear.
+
+| Column | Type | Meaning |
+|---|---|---|
+| `alias_clean` | string | **Lookup key.** The raw sponsor string after `clean_sponsor_alias()` (`normalise_sponsors.R:14`): transliterated to Latin-ASCII, lowercased, quotes/dashes unified, `&` → ` and `, punctuation → space, whitespace squished. Never contains uppercase or punctuation. Matching is on this value, so it must be produced by that function — not by `tolower(trimws(x))`, which misses every name with an accent or a period. |
+| `sponsor_clean` | string | **Canonical output label**, as shown in the app. Title-cased, no legal suffix (`Inc.`, `GmbH`, `B.V.`, …). One per organisation. |
+| `sponsor_parent` | string \| `NA` | Parent company or university system, e.g. `Radboudumc`. `NA` when the sponsor has no parent or it is unknown. |
+| `sponsor_group` | string \| `NA` | Broader analytical grouping used for charts, e.g. `MSD / Merck & Co.`. Coarser than `sponsor_parent`. |
+| `sponsor_type` | enum \| `NA` | `industry`, `academic`, `hospital`, `cooperative_group`, `foundation`, `public_body`, `charity`, `person`, `unknown`. `NA` means "derive it at label-build time from the trial's commercial flag", which is preferred over guessing here. |
+| `source` | enum | **Provenance — the field the reviewer app's metrics are cut by.** See the table below. |
+| `confidence_prior` | 0–1 | Tier confidence, multiplied into `match_score`. A score ≥ 90 after weighting auto-accepts; anything lower goes to `review`. |
+| `alias_type` | string \| `NA` | Sub-classification within a source. Mostly `NA` on the sponsor side. |
+| `reason` | free text | Why the row exists. Not parsed — but it is what a human reads when auditing, so keep it specific. |
+
+### `source` values
+
+The distinction that matters most in this repo:
+
+| Value | Who wrote it | Verified by a human? |
+|---|---|---|
+| `llm_curated` | an LLM curation pass | **No** |
+| `llm_reviewed` | an LLM decision on a review-queue row | **No** |
+| `manual` | `curation_app/apply.R` only | **Yes** |
+| `ctis_businesskey` | EMA organisation registry (ground truth) | n/a — registry |
+| `epar_mah` | EMA EPAR marketing-authorisation-holder names | n/a — registry |
+| `ror` | Research Organization Registry | n/a — registry |
+| `email_domain` | shared EUCTR corporate email domain | n/a — derived |
+| `location_postcode` | shared postcode + country + name similarity | n/a — derived |
+
+`manual` is written in exactly one place — `curation_app/apply.R:198` — when a
+person accepted or edited a row in the reviewer app. Do not hand-write it, and
+do not use it as a synonym for `llm_curated`: conflating the two once already
+cost ~3,100 rows their real provenance, and the admin panel's change-rate-by-source
+report is meaningless if `manual` stops meaning "a human checked this".
+
+---
+
+## Curated files
+
+### `sponsor_llm_aliases.csv` — the seed alias table
+
+`alias_clean, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, source, confidence_prior, alias_type`
+
+The primary lookup table: 1,383 rows `llm_curated`, 131 `ctis_businesskey`.
+Highest priority in the index merge. Add a row here when an alias should apply
+everywhere, not just to one raw string.
+
+### `sponsor_llm_reviewed.csv` — accepted queue decisions
+
+Same columns as above. Populated from accepted `3_sponsor_review_queue.csv` rows so
+those decisions reach the index without bloating the seed file. Where both files
+carry the same `alias_clean`, `llm_reviewed` wins over `bulk_reviewed`.
+
+**This file is both read and rewritten** by `2_build_sponsor_index.R`
+(`export_llm_reviewed()`, line ~1003): each rebuild merges the existing rows with
+newly-accepted queue rows, dedupes on `(alias_clean, sponsor_clean)` and re-sorts.
+Hand edits survive — the merge keeps existing rows — but formatting and row order
+will not. Note the asymmetry: the substance pipeline only *reads* its
+`substance_llm_reviewed.csv`.
+
+### `sponsor_llm_overrides.csv` — exact raw-string corrections
+
+`raw_clean, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, match_status, reason`
+
+| Column | Meaning |
+|---|---|
+| `raw_clean` | The **whole cleaned raw string**, not an alias fragment. Matched before anything else. |
+| `match_status` | Status to force: `accepted`, `review`, `rejected`, `unknown`. |
+
+Highest priority in the whole matcher — step 1 of the matching order. Use it to
+fix one specific trial's sponsor string without changing how that alias behaves
+elsewhere. Currently empty.
+
+### `sponsor_negative_aliases.csv` — never a sponsor
+
+`alias_clean, reason`
+
+Placeholders that must resolve to `rejected` rather than to a name: `unknown`,
+`n/a`, `multiple sponsors`, and similar. Checked at step 2, before alias lookup,
+so a placeholder can never fuzzy-match a real organisation.
+
+### `final_sponsor_canonical_map.csv` — label-to-label merges
+
+`sponsor_clean_from, sponsor_clean_to, sponsor_parent_to, sponsor_group_to, sponsor_type_to, reason`
+
+Applied **after** every alias source has been merged, so it operates on output
+labels rather than on aliases. `GELA Group` → `GELA`. The `*_to` columns
+overwrite the corresponding fields on every row that resolved to
+`sponsor_clean_from`.
+
+**Where its 3,181 rows came from.** The pipeline only ever *reads* this file —
+`apply_explicit_final_map()` in `2_build_sponsor_index.R` opens it with
+`read_csv()` and never writes it. Despite the `OUT_FINAL_MAP` variable name at
+`2_build_sponsor_index.R:89`, which is a misnomer, nothing generates it. Rows
+arrive two ways:
+
+1. **Copied out of `2_final_sponsor_canonical_review.csv`** — the generated
+   review queue. Accepted label-to-label clusters are moved here by hand;
+   broader entity-family decisions go to `final_sponsor_family_map.csv` instead.
+   Per the handover, a 1,076-row review pass sent 8 rows here and 971 to the
+   family map.
+2. **Historically appended** by the retired `clean_llm_reviewed.py`
+   (now in `LEGACY/`), which wrote canonical-convergence and legal-suffix-stripping
+   decisions here in bulk. That accounts for most of the row count and is why the
+   file is far larger than hand-review alone would produce.
+
+So: curated, but with a bulk-scripted history. Because nothing regenerates it,
+a deleted row is gone for good — take a diff before editing.
+
+### `final_sponsor_family_map.csv` — entity-family merges
+
+`entity_key, sponsor_clean_to, sponsor_parent_to, sponsor_group_to, sponsor_type_to, reason`
+
+| Column | Meaning |
+|---|---|
+| `entity_key` | An **anchor token** derived from the alias, e.g. `radboud` — deliberately coarser than a label. |
+
+Broader than the canonical map: one row catches every label sharing that anchor,
+including ones not yet seen. The rebuild also derives *related* keys from the
+target's existing high-confidence aliases, which is what keeps the family logic
+generic instead of special-casing organisations in code.
+
+---
+
+## Generated files
+
+### `2_sponsor_alias_index.csv` — the merged index
+
+`alias_clean, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, alias_type, source, confidence_prior`
+
+Every source flattened into one lookup table and passed through final
+canonicalisation. This is what `normalise_sponsors()` reads at match time.
+**Never edit it** — fix the upstream curated file and rebuild, or the change is
+gone on the next `2_build_sponsor_index.R` run.
+
+### `2_final_sponsor_canonical_review.csv` — the canonicalisation review queue
+
+| Column | Meaning |
+|---|---|
+| `cluster_key` | Identifier for the proposed merge, e.g. `entity-final:graz university`. |
+| `entity_key`, `entity_anchor_key`, `entity_class_key`, `department_parent_key` | Decomposition of the label into anchor (`graz`), class (`university`) and parent, used to judge whether a merge is safe. |
+| `suggested_canonical` | The label the cluster would collapse to. |
+| `sponsor_labels`, `aliases_sample` | `\|`-separated members of the cluster and example aliases. |
+| `sources`, `sponsor_types` | `\|`-separated provenance and types across the cluster. Mixed types are a red flag: `academic\|hospital` usually means a university is being merged with its teaching hospital. |
+| `score` | 0–100 similarity/confidence for the proposed merge. |
+| `evidence` | Human-readable justification. |
+| `confidence_bucket` | `auto` (applied), `review` (needs a decision), `blocked` (refused). |
+| `blocked_reason` | Why it was blocked, e.g. `sponsor types differ`. |
+| `review_bucket` | Alphabetical batch, e.g. `A-F`, for splitting review sessions. |
+| `applied` | `TRUE`/`FALSE` — whether the merge was applied this run. |
+
+Accepted rows are copied into `final_sponsor_canonical_map.csv` (label-to-label)
+or `final_sponsor_family_map.csv` (entity-family). The file itself is
+regenerated, so decisions recorded only here are lost.
+
+### `2_sponsor_ambiguous_aliases.csv`
+
+`alias_clean, sponsors_all, n_sponsors, sources` — one alias resolving to more
+than one canonical. `sponsors_all` and `sources` are `|`-separated and aligned.
+Priority order decides which wins; this file just records that a conflict exists.
+
+### `2_new_sponsor_candidates.csv`
+
+`raw_name, source, suggested_canonical, other_names` — EPAR MAH names that
+matched nothing. Review fodder for growing `sponsor_llm_aliases.csv`.
+
+### `2_ctis_org_candidates.csv`
+
+`businesskey, suggested_canonical, alias_clean, n_variants, other_names` — one
+row per EMA organisation whose `businessKey` group has no known canonical.
+`n_variants` is how many name spellings EMA lists for it; `businesskey` is EMA's
+own organisation ID (`ORG-…`) and is ground truth for identity.
+
+### `2_postcode_sponsor_candidates.csv`
+
+`alias_clean, suggested_canonical, sponsor_parent, sponsor_group, sponsor_type, source, confidence_prior`
+
+Same-postcode evidence, `confidence_prior` 0.7. **Never merged into the index** —
+too weak for app-facing labels, since unrelated organisations share buildings.
+Only produced when the `--no-location` flag is omitted.
+
+### `3_sponsor_review_queue.csv` — the curation backlog
+
+`raw_sponsor, candidate_sponsor, sponsor_type, match_status, match_score, match_source, match_reason, n_trials, decision, canonical_sponsor, comment`
+
+| Column | Meaning |
+|---|---|
+| `raw_sponsor` | Raw string as it appears in the register. The row key. |
+| `candidate_sponsor` | What the matcher proposed, if anything. |
+| `match_status` | `review` or `unknown` — accepted rows do not enter the queue. |
+| `match_score` | 0–100 confidence for the proposal. |
+| `match_source` | Which stage proposed it, e.g. `llm_curated`, `fuzzy:llm_reviewed`. |
+| `match_reason` | Human-readable explanation of the match. |
+| `n_trials` | Trials affected — the sort key, so the queue is worked highest-impact first. |
+| `decision` | **Written by the reviewer**: `accepted` or `rejected`. Blank = undecided. |
+| `canonical_sponsor` | **Written by the reviewer**: the chosen canonical, when overriding `candidate_sponsor`. |
+| `comment` | **Written by the reviewer**: free text. |
+
+The last three are the only hand-editable columns; everything else is
+regenerated. `3_build_sponsor_labels.R --write-queue` drops decided rows by
+default so the file reads as a to-do list — pass `--keep-decided` to retain them.
+Because rebuilds drop rows, the queue is **not** a durable record of decisions;
+the reviewer ledger is.
+
+---
+
+## Generated outputs in `data/`
+
+Gitignored (`data/*log*`, `data/*labels*`), so they are absent from `main` and
+must be rebuilt locally or shipped in a deploy bundle.
+
+### `data/trial_sponsors_raw.csv` — pipeline input
+
+`_id, raw_sponsor, is_commercial` — one row per trial, written by
+`1_export_trial_sponsors.R`. `is_commercial` is the register's own
+commercial/non-commercial flag and takes precedence over the rule-based
+`sponsor_type` classifier when present.
+
+### `data/trial_sponsor_labels.csv` — what the app reads
+
+`_id, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, match_status`
+
+One row per trial. `app.R` left-joins this at startup; no normalisation happens
+at runtime.
+
+### `data/sponsor_normalisation_log.csv` — the audit log
+
+`raw_sponsor, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, match_status, match_score, match_source, match_reason, suggested_clean, n_trials`
+
+Every distinct raw string with its outcome — the input to `preprocessing.Rmd`
+and to the reviewer app's impact ordering. `suggested_clean` is what fuzzy
+matching proposed even where it was not accepted.

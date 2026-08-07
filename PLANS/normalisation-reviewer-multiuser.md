@@ -190,14 +190,14 @@ actually opens — about 15 MB, not the whole repo:
 
 | From `main` | Size |
 |---|---:|
-| `config/sponsor_norm_pipeline/sponsor_review_queue.csv` | 14 K |
-| `config/sponsor_norm_pipeline/manual_sponsor_aliases.csv` | 157 K |
+| `config/sponsor_norm_pipeline/3_sponsor_review_queue.csv` | 14 K |
+| `config/sponsor_norm_pipeline/sponsor_llm_aliases.csv` | 157 K |
 | `config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv` | 1.2 M |
-| `config/sponsor_norm_pipeline/sponsor_alias_index.csv` | 1.4 M |
-| `config/substance_norm_pipeline/substance_review_queue.csv` | 121 K |
-| `config/substance_norm_pipeline/manual_brand_to_substance.csv` | 94 K |
+| `config/sponsor_norm_pipeline/2_sponsor_alias_index.csv` | 1.4 M |
+| `config/substance_norm_pipeline/3_substance_review_queue.csv` | 121 K |
+| `config/substance_norm_pipeline/substance_llm_brands.csv` | 94 K |
 | `config/substance_norm_pipeline/canonical_substances.csv` | 16 K |
-| `config/substance_norm_pipeline/substance_alias_index.csv` | 6.0 M |
+| `config/substance_norm_pipeline/2_substance_alias_index.csv` | 6.0 M |
 | `data/trial_sponsors_raw.csv` | 2.6 M |
 | `data/trial_substances_raw.csv` | 3.7 M |
 
@@ -387,13 +387,13 @@ what every downstream number means.
   config/*/*_review_queue.csv    (decision / canonical_* / comment filled)
         │
         │  ② curation_app/apply.R --write        alias tiers
-        │     curate_sponsors.R --export         queue tiers
-        │     curate_substances.R --export
+        │     4_curate_sponsors.R --export         queue tiers
+        │     4_curate_substances.R --export
         ▼
-  config/*.csv   (manual_sponsor_aliases, negative_aliases, overrides …)
+  config/*.csv   (sponsor_llm_aliases, negative_aliases, overrides …)
         │
-        │  ③ build_sponsor_index.R --no-ror
-        │     build_substance_index.R --use-chembl-cache
+        │  ③ 2_build_sponsor_index.R --no-ror
+        │     2_build_substance_index.R --use-chembl-cache
         ▼
   config/*_alias_index.csv
         │
@@ -522,7 +522,7 @@ right".
    that a second run is a no-op.
 5. **No secrets in git** — `git log -p` over the branch shows no connection
    string, hash, or key; `git check-ignore -v` confirms the reviewer-auth paths.
-6. **Round trip from `main`** — commit a change to `sponsor_review_queue.csv` on
+6. **Round trip from `main`** — commit a change to `3_sponsor_review_queue.csv` on
    `main`, press Refresh, confirm the row appears with no redeploy and the header
    SHA matches `git rev-parse --short main`.
 7. **Snapshot atomicity** — resolve a SHA, push to `main` mid-fetch, confirm every
@@ -539,7 +539,7 @@ right".
 11. **Queue export** — decide a sponsor-queue row in the deployed app, run
     `export_decisions.R --stamp-queues`, confirm the queue CSV gains
     `decision=accepted` and `canonical_sponsor`, then that
-    `curate_sponsors.R --export` writes the override and a second run is a no-op.
+    `4_curate_sponsors.R --export` writes the override and a second run is a no-op.
 12. **Provenance** — `config_sha` is populated on every decision including the
     sibling-detach path, and the stale-SHA warning fires for a decision made
     against a since-rewritten commit.

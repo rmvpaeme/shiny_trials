@@ -1,32 +1,32 @@
-# helper_scripts/substance_norm_pipeline/build_substance_index.R
-# Builds substance_alias_index.csv from four prioritised sources:
-#   1. manual_brand_to_substance.csv   (confidence 1.00, curated brands)
+# helper_scripts/substance_norm_pipeline/2_build_substance_index.R
+# Builds 2_substance_alias_index.csv from four prioritised sources:
+#   1. substance_llm_brands.csv   (confidence 1.00, curated brands)
 #   2. substance_llm_reviewed.csv      (confidence 1.00, human-reviewed queue decisions)
 #   3. EPAR medicines report           (confidence 0.95, EMA EU products)
 #   4. ChEMBL REST API                 (confidence 0.65–0.90, Phase-1+ molecules)
 #
 # Usage:
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R
+#   Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R
 #       Full rebuild: manual + llm_reviewed + EPAR + ChEMBL (fetches live, saves cache)
 #
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --no-chembl
+#   Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --no-chembl
 #       Skip ChEMBL entirely (fastest, use after adding llm_reviewed entries only)
 #
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+#   Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --use-chembl-cache
 #       Use cached ChEMBL data instead of re-downloading (reproducible, ~instant)
-#       Cache file: config/substance_norm_pipeline/chembl_cache.csv
+#       Cache file: config/substance_norm_pipeline/2_chembl_cache.csv
 #
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --refresh-chembl
+#   Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --refresh-chembl
 #       Force re-download ChEMBL and overwrite the cache (use when ChEMBL is updated)
 #
-# Reproducible workflow (recommended after curate_substances.R --export):
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+# Reproducible workflow (recommended after 4_curate_substances.R --export):
+#   Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --use-chembl-cache
+#   Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue
 #
 # Outputs:
-#   config/substance_norm_pipeline/substance_alias_index.csv
-#   config/substance_norm_pipeline/ambiguous_substance_aliases.csv
-#   config/substance_norm_pipeline/chembl_cache.csv   (when ChEMBL is fetched)
+#   config/substance_norm_pipeline/2_substance_alias_index.csv
+#   config/substance_norm_pipeline/2_ambiguous_substance_aliases.csv
+#   config/substance_norm_pipeline/2_chembl_cache.csv   (when ChEMBL is fetched)
 
 suppressPackageStartupMessages({
   library(httr2)
@@ -51,11 +51,11 @@ chembl_mode <- dplyr::case_when(
   TRUE           ~ "fetch"
 )
 
-CHEMBL_CACHE <- file.path("config", "substance_norm_pipeline", "chembl_cache.csv")
+CHEMBL_CACHE <- file.path("config", "substance_norm_pipeline", "2_chembl_cache.csv")
 
 SNP           <- file.path("config", "substance_norm_pipeline")
-OUT_INDEX     <- file.path(SNP, "substance_alias_index.csv")
-OUT_AMBIGUOUS <- file.path(SNP, "ambiguous_substance_aliases.csv")
+OUT_INDEX     <- file.path(SNP, "2_substance_alias_index.csv")
+OUT_AMBIGUOUS <- file.path(SNP, "2_ambiguous_substance_aliases.csv")
 message(sprintf("ChEMBL mode: %s", chembl_mode))
 
 # ── Shared cleaning helpers ───────────────────────────────────────────────────
@@ -82,10 +82,10 @@ clean_substance <- function(x) {
     stringr::str_squish()
 }
 
-# ── Manual brand overrides (highest priority) ─────────────────────────────────
-manual_path <- file.path(SNP, "manual_brand_to_substance.csv")
-manual_brand <- if (file.exists(manual_path)) {
-  readr::read_csv(manual_path, show_col_types = FALSE) |>
+# ── LLM-curated brand overrides (highest priority) ────────────────────────────
+llm_brands_path <- file.path(SNP, "substance_llm_brands.csv")
+llm_brands <- if (file.exists(llm_brands_path)) {
+  readr::read_csv(llm_brands_path, show_col_types = FALSE) |>
     dplyr::mutate(
       alias_clean     = clean_alias(alias_clean),
       substance_clean = clean_substance(substance_clean)
@@ -100,10 +100,10 @@ manual_brand <- if (file.exists(manual_path)) {
     confidence_prior = numeric()
   )
 }
-message(sprintf("Manual brands: %d entries", nrow(manual_brand)))
+message(sprintf("LLM-curated brands: %d entries", nrow(llm_brands)))
 
 # ── Reviewed queue decisions (human-curated, confidence 1.00) ─────────────────
-# Populated by curate_substances.R --export. Mirrors sponsor_llm_reviewed.csv.
+# Populated by 4_curate_substances.R --export. Mirrors sponsor_llm_reviewed.csv.
 reviewed_path <- file.path(SNP, "substance_llm_reviewed.csv")
 llm_reviewed <- if (file.exists(reviewed_path) && file.size(reviewed_path) > 0) {
   readr::read_csv(reviewed_path, show_col_types = FALSE) |>
@@ -269,7 +269,7 @@ if (chembl_mode == "cache") {
 # ── Merge ─────────────────────────────────────────────────────────────────────
 # Row order encodes priority: manual > llm_reviewed > epar > chembl.
 # Ambiguous aliases (one alias → multiple substances) are flagged but NOT dropped.
-combined <- dplyr::bind_rows(manual_brand, llm_reviewed, epar, chembl) |>
+combined <- dplyr::bind_rows(llm_brands, llm_reviewed, epar, chembl) |>
   dplyr::filter(
     !is.na(alias_clean),
     !is.na(substance_clean),

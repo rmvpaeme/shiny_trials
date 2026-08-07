@@ -20,7 +20,7 @@ DOMAIN_SUBSTANCE <- "substance"
 FIELD_CHOICES <- list(
   sponsor_type = c("industry", "hospital", "academic", "cooperative_group",
                    "foundation", "public_body", "charity", "person", "unknown"),
-  alias_type   = c("manual_brand", "epar_brand", "combination_brand", "inn",
+  alias_type   = c("llm_brand", "epar_brand", "combination_brand", "inn",
                    "salt_hydrate_resolution", "chembl_conflict_resolved"),
   substance_type = c("inn", "salt")
 )
@@ -95,12 +95,12 @@ impact_table <- function(root, domain) {
 # inputs that use them must run with server = TRUE.
 canonical_pool <- function(root, domain) {
   if (identical(domain, DOMAIN_SPONSOR)) {
-    a <- read_csv_quiet(cfg_path(root, "sponsor_norm_pipeline", "manual_sponsor_aliases.csv"))
+    a <- read_csv_quiet(cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_aliases.csv"))
     b <- read_csv_quiet(cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv"))
     pool <- c(a$sponsor_clean, b$sponsor_clean)
   } else {
     a <- read_csv_quiet(cfg_path(root, "substance_norm_pipeline", "canonical_substances.csv"))
-    b <- read_csv_quiet(cfg_path(root, "substance_norm_pipeline", "substance_alias_index.csv"))
+    b <- read_csv_quiet(cfg_path(root, "substance_norm_pipeline", "2_substance_alias_index.csv"))
     pool <- c(a$substance_clean, b$substance_clean)
   }
   pool <- unique(pool[!is.na(pool) & nzchar(pool)])
@@ -110,7 +110,7 @@ canonical_pool <- function(root, domain) {
 # ── tier loaders ──────────────────────────────────────────────────────────────
 
 load_sponsor_queue <- function(root) {
-  p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_review_queue.csv")
+  p <- cfg_path(root, "sponsor_norm_pipeline", "3_sponsor_review_queue.csv")
   read_csv_quiet(p) |>
     dplyr::mutate(
       row_key  = raw_sponsor,
@@ -122,7 +122,7 @@ load_sponsor_queue <- function(root) {
 }
 
 load_substance_queue <- function(root) {
-  p <- cfg_path(root, "substance_norm_pipeline", "substance_review_queue.csv")
+  p <- cfg_path(root, "substance_norm_pipeline", "3_substance_review_queue.csv")
   read_csv_quiet(p) |>
     dplyr::mutate(
       row_key  = raw_substance,
@@ -136,7 +136,7 @@ load_substance_queue <- function(root) {
 # Aliases the LLM curation pass wrote. These claim confidence_prior 1 and rank
 # top of the priority order, but no human has ever checked them.
 load_sponsor_aliases <- function(root) {
-  p <- cfg_path(root, "sponsor_norm_pipeline", "manual_sponsor_aliases.csv")
+  p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_aliases.csv")
   read_csv_quiet(p) |>
     dplyr::filter(source == "llm_curated") |>
     dplyr::left_join(impact_table(root, DOMAIN_SPONSOR), by = "alias_clean") |>
@@ -150,7 +150,7 @@ load_sponsor_aliases <- function(root) {
 }
 
 load_substance_aliases <- function(root) {
-  p <- cfg_path(root, "substance_norm_pipeline", "manual_brand_to_substance.csv")
+  p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_brands.csv")
   read_csv_quiet(p) |>
     dplyr::filter(source == "llm_curated") |>
     dplyr::left_join(impact_table(root, DOMAIN_SUBSTANCE), by = "alias_clean") |>
@@ -177,13 +177,13 @@ load_substance_canonicals <- function(root) {
 }
 
 # Fuzzy matches the queue never shows: singletons dropped by the
-# n_occurrences >= 2 filter in build_substance_labels.R. All score 80-84 JW and
+# n_occurrences >= 2 filter in 3_build_substance_labels.R. All score 80-84 JW and
 # spot-checking suggests most are wrong, so they are worth a low-priority pass.
 load_fuzzy_singletons <- function(root) {
   log_p <- data_path(root, "substance_normalisation_log.csv")
   if (!file.exists(log_p)) return(empty_tier_rows())
   queued <- read_csv_quiet(
-    cfg_path(root, "substance_norm_pipeline", "substance_review_queue.csv")
+    cfg_path(root, "substance_norm_pipeline", "3_substance_review_queue.csv")
   )$raw_substance
   read_csv_quiet(log_p) |>
     dplyr::filter(grepl("^fuzzy", match_source), !raw_substance %in% queued) |>
@@ -324,7 +324,7 @@ load_sponsor_fragments <- function(root) {
 # curation appended its corrections instead of replacing the original rows, so
 # both the mistake and its fix are on file and the earlier one wins.
 load_substance_conflicts <- function(root) {
-  ov_p <- cfg_path(root, "substance_norm_pipeline", "manual_substance_overrides.csv")
+  ov_p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_overrides.csv")
   rv_p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_reviewed.csv")
   if (!file.exists(ov_p)) return(empty_tier_rows())
 
@@ -374,7 +374,7 @@ TIERS <- list(
   substance_conflicts = list(
     id = "substance_conflicts", label = "Substance conflicts", domain = DOMAIN_SUBSTANCE,
     loader = load_substance_conflicts,
-    source_file = "config/substance_norm_pipeline/manual_substance_overrides.csv",
+    source_file = "config/substance_norm_pipeline/substance_llm_overrides.csv",
     evidence = c("candidates", "chunks"),
     extra_fields = character(),
     impact_label = "occurrences",
@@ -405,7 +405,7 @@ TIERS <- list(
   sponsor_queue = list(
     id = "sponsor_queue", label = "Sponsor queue", domain = DOMAIN_SPONSOR,
     loader = load_sponsor_queue,
-    source_file = "config/sponsor_norm_pipeline/sponsor_review_queue.csv",
+    source_file = "config/sponsor_norm_pipeline/3_sponsor_review_queue.csv",
     evidence = c("match_status", "match_score", "match_source", "match_reason", "n_trials"),
     extra_fields = c("sponsor_type"),
     impact_label = "trials",
@@ -414,7 +414,7 @@ TIERS <- list(
   substance_queue = list(
     id = "substance_queue", label = "Substance queue", domain = DOMAIN_SUBSTANCE,
     loader = load_substance_queue,
-    source_file = "config/substance_norm_pipeline/substance_review_queue.csv",
+    source_file = "config/substance_norm_pipeline/3_substance_review_queue.csv",
     evidence = c("match_status", "match_score", "match_source", "match_reason", "n_occurrences"),
     extra_fields = character(),
     impact_label = "occurrences",
@@ -423,7 +423,7 @@ TIERS <- list(
   sponsor_aliases = list(
     id = "sponsor_aliases", label = "Sponsor LLM aliases", domain = DOMAIN_SPONSOR,
     loader = load_sponsor_aliases,
-    source_file = "config/sponsor_norm_pipeline/manual_sponsor_aliases.csv",
+    source_file = "config/sponsor_norm_pipeline/sponsor_llm_aliases.csv",
     evidence = c("source", "confidence_prior", "sponsor_parent", "sponsor_group"),
     extra_fields = c("sponsor_type", "sponsor_parent", "sponsor_group"),
     impact_label = "trials",
@@ -432,7 +432,7 @@ TIERS <- list(
   substance_aliases = list(
     id = "substance_aliases", label = "Substance LLM aliases", domain = DOMAIN_SUBSTANCE,
     loader = load_substance_aliases,
-    source_file = "config/substance_norm_pipeline/manual_brand_to_substance.csv",
+    source_file = "config/substance_norm_pipeline/substance_llm_brands.csv",
     evidence = c("source", "alias_type", "confidence_prior"),
     extra_fields = c("alias_type"),
     impact_label = "occurrences",
@@ -467,9 +467,9 @@ TIERS <- list(
 alias_index <- function(root, domain) {
   if (!is.null(.alias_index_cache[[domain]])) return(.alias_index_cache[[domain]])
   path <- if (identical(domain, DOMAIN_SPONSOR)) {
-    cfg_path(root, "sponsor_norm_pipeline", "sponsor_alias_index.csv")
+    cfg_path(root, "sponsor_norm_pipeline", "2_sponsor_alias_index.csv")
   } else {
-    cfg_path(root, "substance_norm_pipeline", "substance_alias_index.csv")
+    cfg_path(root, "substance_norm_pipeline", "2_substance_alias_index.csv")
   }
   col <- if (identical(domain, DOMAIN_SPONSOR)) "sponsor_clean" else "substance_clean"
   idx <- if (file.exists(path)) {
@@ -564,7 +564,7 @@ alias_home <- function(domain, source) {
     switch(source,
       llm_curated  = ,
       manual       = list(tier = "sponsor_aliases",
-                          file = "config/sponsor_norm_pipeline/manual_sponsor_aliases.csv"),
+                          file = "config/sponsor_norm_pipeline/sponsor_llm_aliases.csv"),
       llm_reviewed = list(tier = "sponsor_llm_reviewed",
                           file = "config/sponsor_norm_pipeline/sponsor_llm_reviewed.csv"),
       NULL)
@@ -572,7 +572,7 @@ alias_home <- function(domain, source) {
     switch(source,
       llm_curated    = ,
       manual         = list(tier = "substance_aliases",
-                            file = "config/substance_norm_pipeline/manual_brand_to_substance.csv"),
+                            file = "config/substance_norm_pipeline/substance_llm_brands.csv"),
       llm_reviewed   = ,
       reviewed_queue = list(tier = "substance_llm_reviewed",
                             file = "config/substance_norm_pipeline/substance_llm_reviewed.csv"),
