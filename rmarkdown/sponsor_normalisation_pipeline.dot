@@ -38,7 +38,7 @@ digraph sponsor_normalisation_pipeline {
     aliases [label = "sponsor_llm_aliases.csv", fillcolor = "#ECFDF5", color = "#059669"];
     overrides [label = "sponsor_llm_overrides.csv", fillcolor = "#ECFDF5", color = "#059669"];
     negatives [label = "sponsor_negative_aliases.csv", fillcolor = "#FEF2F2", color = "#DC2626"];
-    reviewed [label = "sponsor_review_decisions.csv\naccepted queue decisions", fillcolor = "#ECFDF5", color = "#059669"];
+    reviewed [label = "sponsor_llm_reviewed.csv\naccepted queue decisions", fillcolor = "#ECFDF5", color = "#059669"];
     final_map [label = "final_sponsor_canonical_map.csv\nlabel -> label", fillcolor = "#F5F3FF", color = "#7C3AED"];
     family_map [label = "final_sponsor_family_map.csv\nentity_key -> canonical sponsor", fillcolor = "#F5F3FF", color = "#7C3AED"];
   }
