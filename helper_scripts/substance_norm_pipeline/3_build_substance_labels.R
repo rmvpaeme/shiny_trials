@@ -7,12 +7,12 @@
 #   4. Aggregate per trial → substance_label (sorted, " / "-joined)
 #   5. Write data/trial_substance_labels.csv  (_id + substance_label)
 #   6. Write data/substance_normalisation_log.csv  (for preprocessing.Rmd)
-#   7. Optionally write substance_review_queue.csv  (--write-queue)
+#   7. Optionally write 3_substance_review_queue.csv  (--write-queue)
 #
 # Usage:
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
-#   Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue --keep-decided
+#   Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R
+#   Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue
+#   Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue --keep-decided
 #
 # By default a rebuilt queue drops rows that already carry a decision, so it
 # reads as a to-do list. --keep-decided carries the decisions forward instead,
@@ -56,7 +56,7 @@ config_dir <- Sys.getenv("CONFIG_DIR", unset = project_path("config", "substance
 raw_path    <- file.path(data_dir, "trial_substances_raw.csv")
 labels_path <- file.path(data_dir, "trial_substance_labels.csv")
 log_path    <- file.path(data_dir, "substance_normalisation_log.csv")
-queue_path  <- file.path(config_dir, "substance_review_queue.csv")
+queue_path  <- file.path(config_dir, "3_substance_review_queue.csv")
 
 # ── load normaliser ────────────────────────────────────────────────────────────
 
@@ -85,7 +85,7 @@ is_exploratory_substance <- function(x) {
 
 if (!file.exists(raw_path)) {
   stop("Input not found: ", raw_path,
-       "\nRun export_trial_substances.R first.")
+       "\nRun 1_export_trial_substances.R first.")
 }
 
 raw <- readr::read_csv(raw_path, show_col_types = FALSE,

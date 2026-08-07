@@ -88,13 +88,13 @@ load_substance_configs <- function(
       file.path(config_dir, "canonical_substances.csv")
     ),
     alias     = read_csv_safe(
-      file.path(config_dir, "substance_alias_index.csv")
+      file.path(config_dir, "2_substance_alias_index.csv")
     ),
     negatives = read_csv_safe(
       file.path(config_dir, "negative_aliases.csv")
     ),
     overrides = read_csv_safe(
-      file.path(config_dir, "manual_substance_overrides.csv")
+      file.path(config_dir, "substance_llm_overrides.csv")
     )
   )
 }
@@ -472,7 +472,7 @@ if (!interactive() && sys.nframe() == 0L) {
   message(sprintf("Wrote %d rows to %s", nrow(out), output_csv))
 
   if (write_queue) {
-    queue_path <- file.path(config_dir, "substance_review_queue.csv")
+    queue_path <- file.path(config_dir, "3_substance_review_queue.csv")
     out_q <- if ("n_trials" %in% names(out)) {
       out
     } else {

@@ -180,11 +180,11 @@ spon_labels  <- read_optional_csv(log_dir, "trial_sponsor_labels.csv")
 sub_labels   <- read_optional_csv(log_dir, "trial_substance_labels.csv")
 spon_raw     <- read_optional_csv(log_dir, "trial_sponsors_raw.csv")
 sub_raw      <- read_optional_csv(log_dir, "trial_substances_raw.csv")
-spon_queue   <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "sponsor_review_queue.csv")
-spon_final_review <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_canonical_review.csv")
+spon_queue   <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "3_sponsor_review_queue.csv")
+spon_final_review <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "2_final_sponsor_canonical_review.csv")
 spon_final_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_canonical_map.csv")
 spon_family_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_family_map.csv")
-sub_queue    <- read_optional_csv(project_root, "config", "substance_norm_pipeline", "substance_review_queue.csv")
+sub_queue    <- read_optional_csv(project_root, "config", "substance_norm_pipeline", "3_substance_review_queue.csv")
 
 normalise_sponsor_log <- function(x) {
   if (is.null(x)) return(NULL)
@@ -925,17 +925,17 @@ The sponsor audit follows the cache-build pipeline: exported trial-sponsor pairs
 
 Current curation loop:
 
-1. Review `config/sponsor_norm_pipeline/final_sponsor_canonical_review.csv`, prioritising unapplied `review` rows with high scores and no blocking reason.
+1. Review `config/sponsor_norm_pipeline/2_final_sponsor_canonical_review.csv`, prioritising unapplied `review` rows with high scores and no blocking reason.
 2. Copy accepted label-to-label decisions to `config/sponsor_norm_pipeline/final_sponsor_canonical_map.csv`.
 3. Copy accepted broader grouping decisions to `config/sponsor_norm_pipeline/final_sponsor_family_map.csv`.
 4. Rebuild with:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror --no-location
+Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue
 ```
 
-`build_sponsor_labels.R` is deterministic by default: exact aliases and high-confidence token containment can produce accepted labels. Fuzzy matching is opt-in with `--allow-fuzzy` and is intended for review suggestions.
+`3_build_sponsor_labels.R` is deterministic by default: exact aliases and high-confidence token containment can produce accepted labels. Fuzzy matching is opt-in with `--allow-fuzzy` and is intended for review suggestions.
 
 ```{r sponsor-audit-compute}
 spon_has_rich_log <- !is.null(spon_log_raw) && has_cols(

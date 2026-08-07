@@ -30,10 +30,10 @@ REVIEWER="rvp" Rscript -e 'shiny::runApp("curation_app")'
 | **Substance conflicts** | 42 | one raw string overridden to two different substances |
 | Sponsor LLM-reviewed | 2,344 of 11,899 | `sponsor_llm_reviewed.csv`, filtered to ≥3 trials |
 | Substance LLM-reviewed | 2,607 of 10,250 | `substance_llm_reviewed.csv`, filtered to ≥3 occurrences |
-| Sponsor queue | 102 | `config/sponsor_norm_pipeline/sponsor_review_queue.csv` |
-| Substance queue | 1,317 | `config/substance_norm_pipeline/substance_review_queue.csv` |
-| Sponsor LLM aliases | 1,383 | `manual_sponsor_aliases.csv` where `source == llm_curated` |
-| Substance LLM aliases | 1,380 | `manual_brand_to_substance.csv` where `source == llm_curated` |
+| Sponsor queue | 102 | `config/sponsor_norm_pipeline/3_sponsor_review_queue.csv` |
+| Substance queue | 1,317 | `config/substance_norm_pipeline/3_substance_review_queue.csv` |
+| Sponsor LLM aliases | 1,383 | `sponsor_llm_aliases.csv` where `source == llm_curated` |
+| Substance LLM aliases | 1,380 | `substance_llm_brands.csv` where `source == llm_curated` |
 | Substance canonicals | 370 | `canonical_substances.csv` where `source == llm_curated` |
 | Fuzzy singletons | 1,879 | fuzzy matches dropped from the queue by the `n_occurrences >= 2` filter |
 
@@ -128,21 +128,21 @@ run, so running it twice is a no-op the second time.
 | Tier | What applying does |
 |---|---|
 | alias tiers | accept → `source: manual`; edit → rewrite canonical and extra fields; reject → remove the row and add it to the negative-alias list |
-| **Sponsor fragments** | append the losing spellings to `final_sponsor_canonical_map.csv` as `from` rows, which `apply_explicit_final_map()` in `build_sponsor_index.R` already collapses on the next rebuild |
-| **Substance conflicts** | drop every competing target for that raw string from `manual_substance_overrides.csv` and `substance_llm_reviewed.csv`, keeping the chosen one |
+| **Sponsor fragments** | append the losing spellings to `final_sponsor_canonical_map.csv` as `from` rows, which `apply_explicit_final_map()` in `2_build_sponsor_index.R` already collapses on the next rebuild |
+| **Substance conflicts** | drop every competing target for that raw string from `substance_llm_overrides.csv` and `substance_llm_reviewed.csv`, keeping the chosen one |
 
 Queue tiers use the existing exporters instead:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
-Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --export
+Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
+Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --export
 ```
 
 Then rebuild the indexes so the decisions take effect:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror
-Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache
+Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror
+Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --use-chembl-cache
 ```
 
 `--no-ror` matches how the committed index was built. Dropping the flag enables

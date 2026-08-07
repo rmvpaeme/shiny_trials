@@ -6,8 +6,8 @@
 #
 # Scope: the alias tiers only. Queue-tier decisions are already written into
 # the queue CSVs by the app, and the existing exporters fan those out:
-#   Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
-#   Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --export
+#   Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
+#   Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --export
 #
 # Idempotent: the ledger is replayed from scratch every run and the latest
 # decision per (tier, row_key) wins, so running twice changes nothing the
@@ -26,7 +26,7 @@ suppressPackageStartupMessages({
 
 # A fragment decision collapses several canonical spellings into one. The
 # pipeline already has the mechanism: apply_explicit_final_map() in
-# build_sponsor_index.R rewrites sponsor_clean via final_sponsor_canonical_map,
+# 2_build_sponsor_index.R rewrites sponsor_clean via final_sponsor_canonical_map,
 # so this only has to append the losing spellings as `from` rows.
 apply_sponsor_fragments <- function(root, ledger, write) {
   dec <- ledger[ledger$tier == "sponsor_fragments" &
@@ -80,7 +80,7 @@ apply_substance_conflicts <- function(root, ledger, write) {
 
   targets <- list(
     list(path = file.path(root, "config", "substance_norm_pipeline",
-                          "manual_substance_overrides.csv"),
+                          "substance_llm_overrides.csv"),
          key = "raw_clean", val = "substance_clean", quote = "all"),
     list(path = file.path(root, "config", "substance_norm_pipeline",
                           "substance_llm_reviewed.csv"),
@@ -118,13 +118,13 @@ apply_main <- function(root, write = FALSE) {
 
   alias_tiers <- list(
     sponsor_aliases = list(
-      file      = file.path(root, "config", "sponsor_norm_pipeline", "manual_sponsor_aliases.csv"),
+      file      = file.path(root, "config", "sponsor_norm_pipeline", "sponsor_llm_aliases.csv"),
       key       = "alias_clean",
       canonical = "sponsor_clean",
       negatives = file.path(root, "config", "sponsor_norm_pipeline", "sponsor_negative_aliases.csv")
     ),
     substance_aliases = list(
-      file      = file.path(root, "config", "substance_norm_pipeline", "manual_brand_to_substance.csv"),
+      file      = file.path(root, "config", "substance_norm_pipeline", "substance_llm_brands.csv"),
       key       = "alias_clean",
       canonical = "substance_clean",
       negatives = file.path(root, "config", "substance_norm_pipeline", "negative_aliases.csv")
@@ -223,8 +223,8 @@ apply_main <- function(root, write = FALSE) {
     message("\nDry run — nothing written. Re-run with --write to apply.")
   } else {
     message("\nApplied. Rebuild the indexes to pick the changes up:")
-    message("  Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror")
-    message("  Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --use-chembl-cache")
+    message("  Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror")
+    message("  Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --use-chembl-cache")
   }
   invisible(NULL)
 }

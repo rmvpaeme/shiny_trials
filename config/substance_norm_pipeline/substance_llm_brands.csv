@@ -1,153 +1,153 @@
 alias_clean,substance_clean,alias_type,source,confidence_prior
-humira,adalimumab,manual_brand,llm_curated,1
-keytruda,pembrolizumab,manual_brand,llm_curated,1
-opdivo,nivolumab,manual_brand,llm_curated,1
-tecentriq,atezolizumab,manual_brand,llm_curated,1
-avastin,bevacizumab,manual_brand,llm_curated,1
-herceptin,trastuzumab,manual_brand,llm_curated,1
-rituxan,rituximab,manual_brand,llm_curated,1
-mabthera,rituximab,manual_brand,llm_curated,1
-imbruvica,ibrutinib,manual_brand,llm_curated,1
-tagrisso,osimertinib,manual_brand,llm_curated,1
-lynparza,olaparib,manual_brand,llm_curated,1
-perjeta,pertuzumab,manual_brand,llm_curated,1
-kadcyla,ado-trastuzumab emtansine,manual_brand,llm_curated,1
-enhertu,trastuzumab deruxtecan,manual_brand,llm_curated,1
-trodelvy,sacituzumab govitecan,manual_brand,llm_curated,1
-padcev,enfortumab vedotin,manual_brand,llm_curated,1
-calquence,acalabrutinib,manual_brand,llm_curated,1
-brukinsa,zanubrutinib,manual_brand,llm_curated,1
-zydelig,idelalisib,manual_brand,llm_curated,1
-aliqopa,copanlisib,manual_brand,llm_curated,1
-piqray,alpelisib,manual_brand,llm_curated,1
-zejula,niraparib,manual_brand,llm_curated,1
-rubraca,rucaparib,manual_brand,llm_curated,1
-talzenna,talazoparib,manual_brand,llm_curated,1
-ibrance,palbociclib,manual_brand,llm_curated,1
-kisqali,ribociclib,manual_brand,llm_curated,1
-verzenio,abemaciclib,manual_brand,llm_curated,1
-venclexta,venetoclax,manual_brand,llm_curated,1
-venclyxto,venetoclax,manual_brand,llm_curated,1
-gleevec,imatinib,manual_brand,llm_curated,1
-glivec,imatinib,manual_brand,llm_curated,1
-sprycel,dasatinib,manual_brand,llm_curated,1
-tasigna,nilotinib,manual_brand,llm_curated,1
-bosulif,bosutinib,manual_brand,llm_curated,1
-iclusig,ponatinib,manual_brand,llm_curated,1
-scemblix,asciminib,manual_brand,llm_curated,1
-xalkori,crizotinib,manual_brand,llm_curated,1
-alecensa,alectinib,manual_brand,llm_curated,1
-alunbrig,brigatinib,manual_brand,llm_curated,1
-lorbrena,lorlatinib,manual_brand,llm_curated,1
-zykadia,ceritinib,manual_brand,llm_curated,1
-cabometyx,cabozantinib,manual_brand,llm_curated,1
-cometriq,cabozantinib,manual_brand,llm_curated,1
-sutent,sunitinib,manual_brand,llm_curated,1
-nexavar,sorafenib,manual_brand,llm_curated,1
-stivarga,regorafenib,manual_brand,llm_curated,1
-lenvima,lenvatinib,manual_brand,llm_curated,1
-inlyta,axitinib,manual_brand,llm_curated,1
-votrient,pazopanib,manual_brand,llm_curated,1
-caprelsa,vandetanib,manual_brand,llm_curated,1
-erbitux,cetuximab,manual_brand,llm_curated,1
-vectibix,panitumumab,manual_brand,llm_curated,1
-cyramza,ramucirumab,manual_brand,llm_curated,1
-yervoy,ipilimumab,manual_brand,llm_curated,1
-libtayo,cemiplimab,manual_brand,llm_curated,1
-jemperli,dostarlimab,manual_brand,llm_curated,1
-bavencio,avelumab,manual_brand,llm_curated,1
-imfinzi,durvalumab,manual_brand,llm_curated,1
-prolia,denosumab,manual_brand,llm_curated,1
-xgeva,denosumab,manual_brand,llm_curated,1
-jakavi,ruxolitinib,manual_brand,llm_curated,1
-jakafi,ruxolitinib,manual_brand,llm_curated,1
-rydapt,midostaurin,manual_brand,llm_curated,1
-xospata,gilteritinib,manual_brand,llm_curated,1
-idhifa,enasidenib,manual_brand,llm_curated,1
-tibsovo,ivosidenib,manual_brand,llm_curated,1
-rezlidhia,olutasidenib,manual_brand,llm_curated,1
-daurismo,glasdegib,manual_brand,llm_curated,1
-erivedge,vismodegib,manual_brand,llm_curated,1
-odomzo,sonidegib,manual_brand,llm_curated,1
-velcade,bortezomib,manual_brand,llm_curated,1
-kyprolis,carfilzomib,manual_brand,llm_curated,1
-ninlaro,ixazomib,manual_brand,llm_curated,1
-revlimid,lenalidomide,manual_brand,llm_curated,1
-pomalyst,pomalidomide,manual_brand,llm_curated,1
-thalomid,thalidomide,manual_brand,llm_curated,1
-xeloda,capecitabine,manual_brand,llm_curated,1
-gemzar,gemcitabine,manual_brand,llm_curated,1
-taxol,paclitaxel,manual_brand,llm_curated,1
-taxotere,docetaxel,manual_brand,llm_curated,1
-jevtana,cabazitaxel,manual_brand,llm_curated,1
-abraxane,paclitaxel,manual_brand,llm_curated,1
-hycamtin,topotecan,manual_brand,llm_curated,1
-camptosar,irinotecan,manual_brand,llm_curated,1
-yondelis,trabectedin,manual_brand,llm_curated,1
-halaven,eribulin,manual_brand,llm_curated,1
-arimidex,anastrozole,manual_brand,llm_curated,1
-femara,letrozole,manual_brand,llm_curated,1
-aromasin,exemestane,manual_brand,llm_curated,1
-faslodex,fulvestrant,manual_brand,llm_curated,1
+humira,adalimumab,llm_brand,llm_curated,1
+keytruda,pembrolizumab,llm_brand,llm_curated,1
+opdivo,nivolumab,llm_brand,llm_curated,1
+tecentriq,atezolizumab,llm_brand,llm_curated,1
+avastin,bevacizumab,llm_brand,llm_curated,1
+herceptin,trastuzumab,llm_brand,llm_curated,1
+rituxan,rituximab,llm_brand,llm_curated,1
+mabthera,rituximab,llm_brand,llm_curated,1
+imbruvica,ibrutinib,llm_brand,llm_curated,1
+tagrisso,osimertinib,llm_brand,llm_curated,1
+lynparza,olaparib,llm_brand,llm_curated,1
+perjeta,pertuzumab,llm_brand,llm_curated,1
+kadcyla,ado-trastuzumab emtansine,llm_brand,llm_curated,1
+enhertu,trastuzumab deruxtecan,llm_brand,llm_curated,1
+trodelvy,sacituzumab govitecan,llm_brand,llm_curated,1
+padcev,enfortumab vedotin,llm_brand,llm_curated,1
+calquence,acalabrutinib,llm_brand,llm_curated,1
+brukinsa,zanubrutinib,llm_brand,llm_curated,1
+zydelig,idelalisib,llm_brand,llm_curated,1
+aliqopa,copanlisib,llm_brand,llm_curated,1
+piqray,alpelisib,llm_brand,llm_curated,1
+zejula,niraparib,llm_brand,llm_curated,1
+rubraca,rucaparib,llm_brand,llm_curated,1
+talzenna,talazoparib,llm_brand,llm_curated,1
+ibrance,palbociclib,llm_brand,llm_curated,1
+kisqali,ribociclib,llm_brand,llm_curated,1
+verzenio,abemaciclib,llm_brand,llm_curated,1
+venclexta,venetoclax,llm_brand,llm_curated,1
+venclyxto,venetoclax,llm_brand,llm_curated,1
+gleevec,imatinib,llm_brand,llm_curated,1
+glivec,imatinib,llm_brand,llm_curated,1
+sprycel,dasatinib,llm_brand,llm_curated,1
+tasigna,nilotinib,llm_brand,llm_curated,1
+bosulif,bosutinib,llm_brand,llm_curated,1
+iclusig,ponatinib,llm_brand,llm_curated,1
+scemblix,asciminib,llm_brand,llm_curated,1
+xalkori,crizotinib,llm_brand,llm_curated,1
+alecensa,alectinib,llm_brand,llm_curated,1
+alunbrig,brigatinib,llm_brand,llm_curated,1
+lorbrena,lorlatinib,llm_brand,llm_curated,1
+zykadia,ceritinib,llm_brand,llm_curated,1
+cabometyx,cabozantinib,llm_brand,llm_curated,1
+cometriq,cabozantinib,llm_brand,llm_curated,1
+sutent,sunitinib,llm_brand,llm_curated,1
+nexavar,sorafenib,llm_brand,llm_curated,1
+stivarga,regorafenib,llm_brand,llm_curated,1
+lenvima,lenvatinib,llm_brand,llm_curated,1
+inlyta,axitinib,llm_brand,llm_curated,1
+votrient,pazopanib,llm_brand,llm_curated,1
+caprelsa,vandetanib,llm_brand,llm_curated,1
+erbitux,cetuximab,llm_brand,llm_curated,1
+vectibix,panitumumab,llm_brand,llm_curated,1
+cyramza,ramucirumab,llm_brand,llm_curated,1
+yervoy,ipilimumab,llm_brand,llm_curated,1
+libtayo,cemiplimab,llm_brand,llm_curated,1
+jemperli,dostarlimab,llm_brand,llm_curated,1
+bavencio,avelumab,llm_brand,llm_curated,1
+imfinzi,durvalumab,llm_brand,llm_curated,1
+prolia,denosumab,llm_brand,llm_curated,1
+xgeva,denosumab,llm_brand,llm_curated,1
+jakavi,ruxolitinib,llm_brand,llm_curated,1
+jakafi,ruxolitinib,llm_brand,llm_curated,1
+rydapt,midostaurin,llm_brand,llm_curated,1
+xospata,gilteritinib,llm_brand,llm_curated,1
+idhifa,enasidenib,llm_brand,llm_curated,1
+tibsovo,ivosidenib,llm_brand,llm_curated,1
+rezlidhia,olutasidenib,llm_brand,llm_curated,1
+daurismo,glasdegib,llm_brand,llm_curated,1
+erivedge,vismodegib,llm_brand,llm_curated,1
+odomzo,sonidegib,llm_brand,llm_curated,1
+velcade,bortezomib,llm_brand,llm_curated,1
+kyprolis,carfilzomib,llm_brand,llm_curated,1
+ninlaro,ixazomib,llm_brand,llm_curated,1
+revlimid,lenalidomide,llm_brand,llm_curated,1
+pomalyst,pomalidomide,llm_brand,llm_curated,1
+thalomid,thalidomide,llm_brand,llm_curated,1
+xeloda,capecitabine,llm_brand,llm_curated,1
+gemzar,gemcitabine,llm_brand,llm_curated,1
+taxol,paclitaxel,llm_brand,llm_curated,1
+taxotere,docetaxel,llm_brand,llm_curated,1
+jevtana,cabazitaxel,llm_brand,llm_curated,1
+abraxane,paclitaxel,llm_brand,llm_curated,1
+hycamtin,topotecan,llm_brand,llm_curated,1
+camptosar,irinotecan,llm_brand,llm_curated,1
+yondelis,trabectedin,llm_brand,llm_curated,1
+halaven,eribulin,llm_brand,llm_curated,1
+arimidex,anastrozole,llm_brand,llm_curated,1
+femara,letrozole,llm_brand,llm_curated,1
+aromasin,exemestane,llm_brand,llm_curated,1
+faslodex,fulvestrant,llm_brand,llm_curated,1
 tamoxifen,tamoxifen,inn,llm_curated,1
-zoladex,goserelin,manual_brand,llm_curated,1
-lupron,leuprorelin,manual_brand,llm_curated,1
-eligard,leuprorelin,manual_brand,llm_curated,1
-zytiga,abiraterone acetate,manual_brand,llm_curated,1
-xtandi,enzalutamide,manual_brand,llm_curated,1
-erleada,apalutamide,manual_brand,llm_curated,1
-nubeqa,darolutamide,manual_brand,llm_curated,1
-platinol,cisplatin,manual_brand,llm_curated,1
-paraplatin,carboplatin,manual_brand,llm_curated,1
-eloxatin,oxaliplatin,manual_brand,llm_curated,1
-cytoxan,cyclophosphamide,manual_brand,llm_curated,1
-ifex,ifosfamide,manual_brand,llm_curated,1
-alkeran,melphalan,manual_brand,llm_curated,1
-leukeran,chlorambucil,manual_brand,llm_curated,1
-treanda,bendamustine,manual_brand,llm_curated,1
-temodar,temozolomide,manual_brand,llm_curated,1
-temodal,temozolomide,manual_brand,llm_curated,1
-adriamycin,doxorubicin,manual_brand,llm_curated,1
-caelyx,doxorubicin,manual_brand,llm_curated,1
-doxil,doxorubicin,manual_brand,llm_curated,1
-myocet,doxorubicin,manual_brand,llm_curated,1
-ellence,epirubicin,manual_brand,llm_curated,1
-cerubidine,daunorubicin,manual_brand,llm_curated,1
-idamycin,idarubicin,manual_brand,llm_curated,1
-blenoxane,bleomycin,manual_brand,llm_curated,1
-oncovin,vincristine,manual_brand,llm_curated,1
-navelbine,vinorelbine,manual_brand,llm_curated,1
-vepesid,etoposide,manual_brand,llm_curated,1
+zoladex,goserelin,llm_brand,llm_curated,1
+lupron,leuprorelin,llm_brand,llm_curated,1
+eligard,leuprorelin,llm_brand,llm_curated,1
+zytiga,abiraterone acetate,llm_brand,llm_curated,1
+xtandi,enzalutamide,llm_brand,llm_curated,1
+erleada,apalutamide,llm_brand,llm_curated,1
+nubeqa,darolutamide,llm_brand,llm_curated,1
+platinol,cisplatin,llm_brand,llm_curated,1
+paraplatin,carboplatin,llm_brand,llm_curated,1
+eloxatin,oxaliplatin,llm_brand,llm_curated,1
+cytoxan,cyclophosphamide,llm_brand,llm_curated,1
+ifex,ifosfamide,llm_brand,llm_curated,1
+alkeran,melphalan,llm_brand,llm_curated,1
+leukeran,chlorambucil,llm_brand,llm_curated,1
+treanda,bendamustine,llm_brand,llm_curated,1
+temodar,temozolomide,llm_brand,llm_curated,1
+temodal,temozolomide,llm_brand,llm_curated,1
+adriamycin,doxorubicin,llm_brand,llm_curated,1
+caelyx,doxorubicin,llm_brand,llm_curated,1
+doxil,doxorubicin,llm_brand,llm_curated,1
+myocet,doxorubicin,llm_brand,llm_curated,1
+ellence,epirubicin,llm_brand,llm_curated,1
+cerubidine,daunorubicin,llm_brand,llm_curated,1
+idamycin,idarubicin,llm_brand,llm_curated,1
+blenoxane,bleomycin,llm_brand,llm_curated,1
+oncovin,vincristine,llm_brand,llm_curated,1
+navelbine,vinorelbine,llm_brand,llm_curated,1
+vepesid,etoposide,llm_brand,llm_curated,1
 folfox,oxaliplatin|fluorouracil|leucovorin,combination_brand,llm_curated,0.95
 folfiri,irinotecan|fluorouracil|leucovorin,combination_brand,llm_curated,0.95
 biktarvy,bictegravir|emtricitabine|tenofovir alafenamide,combination_brand,llm_curated,1
 truvada,emtricitabine|tenofovir disoproxil,combination_brand,llm_curated,1
 lonsurf,tipiracil|trifluridine,combination_brand,llm_curated,1
 entresto,sacubitril|valsartan,combination_brand,llm_curated,1
-botox,botulinum toxin type a,manual_brand,llm_curated,1
-dysport,botulinum toxin type a,manual_brand,llm_curated,1
-xeomin,botulinum toxin type a,manual_brand,llm_curated,1
-zebinix,eslicarbazepine acetate,manual_brand,llm_curated,1
-pradaxa,dabigatran etexilate,manual_brand,llm_curated,1
-fintepla,fenfluramine,manual_brand,llm_curated,1
-xofluza,baloxavir marboxil,manual_brand,llm_curated,1
-tavalisse,fostamatinib,manual_brand,llm_curated,1
-onbrez,indacaterol,manual_brand,llm_curated,1
-doptelet,avatrombopag,manual_brand,llm_curated,1
-vanflyta,quizartinib,manual_brand,llm_curated,1
-tivdak,tisotumab vedotin,manual_brand,llm_curated,1
-zynlonta,loncastuximab tesirine,manual_brand,llm_curated,1
+botox,botulinum toxin type a,llm_brand,llm_curated,1
+dysport,botulinum toxin type a,llm_brand,llm_curated,1
+xeomin,botulinum toxin type a,llm_brand,llm_curated,1
+zebinix,eslicarbazepine acetate,llm_brand,llm_curated,1
+pradaxa,dabigatran etexilate,llm_brand,llm_curated,1
+fintepla,fenfluramine,llm_brand,llm_curated,1
+xofluza,baloxavir marboxil,llm_brand,llm_curated,1
+tavalisse,fostamatinib,llm_brand,llm_curated,1
+onbrez,indacaterol,llm_brand,llm_curated,1
+doptelet,avatrombopag,llm_brand,llm_curated,1
+vanflyta,quizartinib,llm_brand,llm_curated,1
+tivdak,tisotumab vedotin,llm_brand,llm_curated,1
+zynlonta,loncastuximab tesirine,llm_brand,llm_curated,1
 cenicriviroc,cenicriviroc,inn,llm_curated,1
-remodulin,treprostinil,manual_brand,llm_curated,1
+remodulin,treprostinil,llm_brand,llm_curated,1
 rytary,levodopa|carbidopa,combination_brand,llm_curated,1
-sandimmun,ciclosporin,manual_brand,llm_curated,1
-neoral,ciclosporin,manual_brand,llm_curated,1
-prograf,tacrolimus,manual_brand,llm_curated,1
-advagraf,tacrolimus,manual_brand,llm_curated,1
-certican,everolimus,manual_brand,llm_curated,1
-afinitor,everolimus,manual_brand,llm_curated,1
-cellcept,mycophenolate mofetil,manual_brand,llm_curated,1
-myfortic,mycophenolic acid,manual_brand,llm_curated,1
+sandimmun,ciclosporin,llm_brand,llm_curated,1
+neoral,ciclosporin,llm_brand,llm_curated,1
+prograf,tacrolimus,llm_brand,llm_curated,1
+advagraf,tacrolimus,llm_brand,llm_curated,1
+certican,everolimus,llm_brand,llm_curated,1
+afinitor,everolimus,llm_brand,llm_curated,1
+cellcept,mycophenolate mofetil,llm_brand,llm_curated,1
+myfortic,mycophenolic acid,llm_brand,llm_curated,1
 karxt,xanomeline|trospium,combination_brand,llm_curated,1
 5-aminolevulinic acid hydrochloride,aminolevulinic acid,salt_hydrate_resolution,llm_curated,1
 abacavir sulfate,abacavir,salt_hydrate_resolution,llm_curated,1

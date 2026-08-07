@@ -31,22 +31,22 @@ run_pipeline <- function(export_script, build_script, label, extra_args = charac
 }
 
 # ── Sponsor normalisation pipeline ────────────────────────────────────────────
-# Runs after the cache is on disk so export_trial_sponsors.R can read it.
+# Runs after the cache is on disk so 1_export_trial_sponsors.R can read it.
 message("=== Building sponsor labels ===")
 run_pipeline(
-  file.path("helper_scripts", "sponsor_norm_pipeline", "export_trial_sponsors.R"),
-  file.path("helper_scripts", "sponsor_norm_pipeline", "build_sponsor_labels.R"),
+  file.path("helper_scripts", "sponsor_norm_pipeline", "1_export_trial_sponsors.R"),
+  file.path("helper_scripts", "sponsor_norm_pipeline", "3_build_sponsor_labels.R"),
   "Sponsor normalisation",
   "--write-queue"
 )
 message("=== Sponsor labels build complete ===")
 
 # ── Substance normalisation pipeline ─────────────────────────────────────────
-# Runs after the cache is on disk so export_trial_substances.R can read it.
+# Runs after the cache is on disk so 1_export_trial_substances.R can read it.
 message("=== Building substance labels ===")
 run_pipeline(
-  file.path("helper_scripts", "substance_norm_pipeline", "export_trial_substances.R"),
-  file.path("helper_scripts", "substance_norm_pipeline", "build_substance_labels.R"),
+  file.path("helper_scripts", "substance_norm_pipeline", "1_export_trial_substances.R"),
+  file.path("helper_scripts", "substance_norm_pipeline", "3_build_substance_labels.R"),
   "Substance normalisation",
   "--write-queue"
 )

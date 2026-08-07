@@ -1,153 +1,153 @@
 alias_clean,substance_clean,alias_type,source,confidence_prior
-humira,adalimumab,manual_brand,llm_curated,1
-keytruda,pembrolizumab,manual_brand,llm_curated,1
-opdivo,nivolumab,manual_brand,llm_curated,1
-tecentriq,atezolizumab,manual_brand,llm_curated,1
-avastin,bevacizumab,manual_brand,llm_curated,1
-herceptin,trastuzumab,manual_brand,llm_curated,1
-rituxan,rituximab,manual_brand,llm_curated,1
-mabthera,rituximab,manual_brand,llm_curated,1
-imbruvica,ibrutinib,manual_brand,llm_curated,1
-tagrisso,osimertinib,manual_brand,llm_curated,1
-lynparza,olaparib,manual_brand,llm_curated,1
-perjeta,pertuzumab,manual_brand,llm_curated,1
-kadcyla,ado-trastuzumab emtansine,manual_brand,llm_curated,1
-enhertu,trastuzumab deruxtecan,manual_brand,llm_curated,1
-trodelvy,sacituzumab govitecan,manual_brand,llm_curated,1
-padcev,enfortumab vedotin,manual_brand,llm_curated,1
-calquence,acalabrutinib,manual_brand,llm_curated,1
-brukinsa,zanubrutinib,manual_brand,llm_curated,1
-zydelig,idelalisib,manual_brand,llm_curated,1
-aliqopa,copanlisib,manual_brand,llm_curated,1
-piqray,alpelisib,manual_brand,llm_curated,1
-zejula,niraparib,manual_brand,llm_curated,1
-rubraca,rucaparib,manual_brand,llm_curated,1
-talzenna,talazoparib,manual_brand,llm_curated,1
-ibrance,palbociclib,manual_brand,llm_curated,1
-kisqali,ribociclib,manual_brand,llm_curated,1
-verzenio,abemaciclib,manual_brand,llm_curated,1
-venclexta,venetoclax,manual_brand,llm_curated,1
-venclyxto,venetoclax,manual_brand,llm_curated,1
-gleevec,imatinib,manual_brand,llm_curated,1
-glivec,imatinib,manual_brand,llm_curated,1
-sprycel,dasatinib,manual_brand,llm_curated,1
-tasigna,nilotinib,manual_brand,llm_curated,1
-bosulif,bosutinib,manual_brand,llm_curated,1
-iclusig,ponatinib,manual_brand,llm_curated,1
-scemblix,asciminib,manual_brand,llm_curated,1
-xalkori,crizotinib,manual_brand,llm_curated,1
-alecensa,alectinib,manual_brand,llm_curated,1
-alunbrig,brigatinib,manual_brand,llm_curated,1
-lorbrena,lorlatinib,manual_brand,llm_curated,1
-zykadia,ceritinib,manual_brand,llm_curated,1
-cabometyx,cabozantinib,manual_brand,llm_curated,1
-cometriq,cabozantinib,manual_brand,llm_curated,1
-sutent,sunitinib,manual_brand,llm_curated,1
-nexavar,sorafenib,manual_brand,llm_curated,1
-stivarga,regorafenib,manual_brand,llm_curated,1
-lenvima,lenvatinib,manual_brand,llm_curated,1
-inlyta,axitinib,manual_brand,llm_curated,1
-votrient,pazopanib,manual_brand,llm_curated,1
-caprelsa,vandetanib,manual_brand,llm_curated,1
-erbitux,cetuximab,manual_brand,llm_curated,1
-vectibix,panitumumab,manual_brand,llm_curated,1
-cyramza,ramucirumab,manual_brand,llm_curated,1
-yervoy,ipilimumab,manual_brand,llm_curated,1
-libtayo,cemiplimab,manual_brand,llm_curated,1
-jemperli,dostarlimab,manual_brand,llm_curated,1
-bavencio,avelumab,manual_brand,llm_curated,1
-imfinzi,durvalumab,manual_brand,llm_curated,1
-prolia,denosumab,manual_brand,llm_curated,1
-xgeva,denosumab,manual_brand,llm_curated,1
-jakavi,ruxolitinib,manual_brand,llm_curated,1
-jakafi,ruxolitinib,manual_brand,llm_curated,1
-rydapt,midostaurin,manual_brand,llm_curated,1
-xospata,gilteritinib,manual_brand,llm_curated,1
-idhifa,enasidenib,manual_brand,llm_curated,1
-tibsovo,ivosidenib,manual_brand,llm_curated,1
-rezlidhia,olutasidenib,manual_brand,llm_curated,1
-daurismo,glasdegib,manual_brand,llm_curated,1
-erivedge,vismodegib,manual_brand,llm_curated,1
-odomzo,sonidegib,manual_brand,llm_curated,1
-velcade,bortezomib,manual_brand,llm_curated,1
-kyprolis,carfilzomib,manual_brand,llm_curated,1
-ninlaro,ixazomib,manual_brand,llm_curated,1
-revlimid,lenalidomide,manual_brand,llm_curated,1
-pomalyst,pomalidomide,manual_brand,llm_curated,1
-thalomid,thalidomide,manual_brand,llm_curated,1
-xeloda,capecitabine,manual_brand,llm_curated,1
-gemzar,gemcitabine,manual_brand,llm_curated,1
-taxol,paclitaxel,manual_brand,llm_curated,1
-taxotere,docetaxel,manual_brand,llm_curated,1
-jevtana,cabazitaxel,manual_brand,llm_curated,1
-abraxane,paclitaxel,manual_brand,llm_curated,1
-hycamtin,topotecan,manual_brand,llm_curated,1
-camptosar,irinotecan,manual_brand,llm_curated,1
-yondelis,trabectedin,manual_brand,llm_curated,1
-halaven,eribulin,manual_brand,llm_curated,1
-arimidex,anastrozole,manual_brand,llm_curated,1
-femara,letrozole,manual_brand,llm_curated,1
-aromasin,exemestane,manual_brand,llm_curated,1
-faslodex,fulvestrant,manual_brand,llm_curated,1
+humira,adalimumab,llm_brand,llm_curated,1
+keytruda,pembrolizumab,llm_brand,llm_curated,1
+opdivo,nivolumab,llm_brand,llm_curated,1
+tecentriq,atezolizumab,llm_brand,llm_curated,1
+avastin,bevacizumab,llm_brand,llm_curated,1
+herceptin,trastuzumab,llm_brand,llm_curated,1
+rituxan,rituximab,llm_brand,llm_curated,1
+mabthera,rituximab,llm_brand,llm_curated,1
+imbruvica,ibrutinib,llm_brand,llm_curated,1
+tagrisso,osimertinib,llm_brand,llm_curated,1
+lynparza,olaparib,llm_brand,llm_curated,1
+perjeta,pertuzumab,llm_brand,llm_curated,1
+kadcyla,ado-trastuzumab emtansine,llm_brand,llm_curated,1
+enhertu,trastuzumab deruxtecan,llm_brand,llm_curated,1
+trodelvy,sacituzumab govitecan,llm_brand,llm_curated,1
+padcev,enfortumab vedotin,llm_brand,llm_curated,1
+calquence,acalabrutinib,llm_brand,llm_curated,1
+brukinsa,zanubrutinib,llm_brand,llm_curated,1
+zydelig,idelalisib,llm_brand,llm_curated,1
+aliqopa,copanlisib,llm_brand,llm_curated,1
+piqray,alpelisib,llm_brand,llm_curated,1
+zejula,niraparib,llm_brand,llm_curated,1
+rubraca,rucaparib,llm_brand,llm_curated,1
+talzenna,talazoparib,llm_brand,llm_curated,1
+ibrance,palbociclib,llm_brand,llm_curated,1
+kisqali,ribociclib,llm_brand,llm_curated,1
+verzenio,abemaciclib,llm_brand,llm_curated,1
+venclexta,venetoclax,llm_brand,llm_curated,1
+venclyxto,venetoclax,llm_brand,llm_curated,1
+gleevec,imatinib,llm_brand,llm_curated,1
+glivec,imatinib,llm_brand,llm_curated,1
+sprycel,dasatinib,llm_brand,llm_curated,1
+tasigna,nilotinib,llm_brand,llm_curated,1
+bosulif,bosutinib,llm_brand,llm_curated,1
+iclusig,ponatinib,llm_brand,llm_curated,1
+scemblix,asciminib,llm_brand,llm_curated,1
+xalkori,crizotinib,llm_brand,llm_curated,1
+alecensa,alectinib,llm_brand,llm_curated,1
+alunbrig,brigatinib,llm_brand,llm_curated,1
+lorbrena,lorlatinib,llm_brand,llm_curated,1
+zykadia,ceritinib,llm_brand,llm_curated,1
+cabometyx,cabozantinib,llm_brand,llm_curated,1
+cometriq,cabozantinib,llm_brand,llm_curated,1
+sutent,sunitinib,llm_brand,llm_curated,1
+nexavar,sorafenib,llm_brand,llm_curated,1
+stivarga,regorafenib,llm_brand,llm_curated,1
+lenvima,lenvatinib,llm_brand,llm_curated,1
+inlyta,axitinib,llm_brand,llm_curated,1
+votrient,pazopanib,llm_brand,llm_curated,1
+caprelsa,vandetanib,llm_brand,llm_curated,1
+erbitux,cetuximab,llm_brand,llm_curated,1
+vectibix,panitumumab,llm_brand,llm_curated,1
+cyramza,ramucirumab,llm_brand,llm_curated,1
+yervoy,ipilimumab,llm_brand,llm_curated,1
+libtayo,cemiplimab,llm_brand,llm_curated,1
+jemperli,dostarlimab,llm_brand,llm_curated,1
+bavencio,avelumab,llm_brand,llm_curated,1
+imfinzi,durvalumab,llm_brand,llm_curated,1
+prolia,denosumab,llm_brand,llm_curated,1
+xgeva,denosumab,llm_brand,llm_curated,1
+jakavi,ruxolitinib,llm_brand,llm_curated,1
+jakafi,ruxolitinib,llm_brand,llm_curated,1
+rydapt,midostaurin,llm_brand,llm_curated,1
+xospata,gilteritinib,llm_brand,llm_curated,1
+idhifa,enasidenib,llm_brand,llm_curated,1
+tibsovo,ivosidenib,llm_brand,llm_curated,1
+rezlidhia,olutasidenib,llm_brand,llm_curated,1
+daurismo,glasdegib,llm_brand,llm_curated,1
+erivedge,vismodegib,llm_brand,llm_curated,1
+odomzo,sonidegib,llm_brand,llm_curated,1
+velcade,bortezomib,llm_brand,llm_curated,1
+kyprolis,carfilzomib,llm_brand,llm_curated,1
+ninlaro,ixazomib,llm_brand,llm_curated,1
+revlimid,lenalidomide,llm_brand,llm_curated,1
+pomalyst,pomalidomide,llm_brand,llm_curated,1
+thalomid,thalidomide,llm_brand,llm_curated,1
+xeloda,capecitabine,llm_brand,llm_curated,1
+gemzar,gemcitabine,llm_brand,llm_curated,1
+taxol,paclitaxel,llm_brand,llm_curated,1
+taxotere,docetaxel,llm_brand,llm_curated,1
+jevtana,cabazitaxel,llm_brand,llm_curated,1
+abraxane,paclitaxel,llm_brand,llm_curated,1
+hycamtin,topotecan,llm_brand,llm_curated,1
+camptosar,irinotecan,llm_brand,llm_curated,1
+yondelis,trabectedin,llm_brand,llm_curated,1
+halaven,eribulin,llm_brand,llm_curated,1
+arimidex,anastrozole,llm_brand,llm_curated,1
+femara,letrozole,llm_brand,llm_curated,1
+aromasin,exemestane,llm_brand,llm_curated,1
+faslodex,fulvestrant,llm_brand,llm_curated,1
 tamoxifen,tamoxifen,inn,llm_curated,1
-zoladex,goserelin,manual_brand,llm_curated,1
-lupron,leuprorelin,manual_brand,llm_curated,1
-eligard,leuprorelin,manual_brand,llm_curated,1
-zytiga,abiraterone acetate,manual_brand,llm_curated,1
-xtandi,enzalutamide,manual_brand,llm_curated,1
-erleada,apalutamide,manual_brand,llm_curated,1
-nubeqa,darolutamide,manual_brand,llm_curated,1
-platinol,cisplatin,manual_brand,llm_curated,1
-paraplatin,carboplatin,manual_brand,llm_curated,1
-eloxatin,oxaliplatin,manual_brand,llm_curated,1
-cytoxan,cyclophosphamide,manual_brand,llm_curated,1
-ifex,ifosfamide,manual_brand,llm_curated,1
-alkeran,melphalan,manual_brand,llm_curated,1
-leukeran,chlorambucil,manual_brand,llm_curated,1
-treanda,bendamustine,manual_brand,llm_curated,1
-temodar,temozolomide,manual_brand,llm_curated,1
-temodal,temozolomide,manual_brand,llm_curated,1
-adriamycin,doxorubicin,manual_brand,llm_curated,1
-caelyx,doxorubicin,manual_brand,llm_curated,1
-doxil,doxorubicin,manual_brand,llm_curated,1
-myocet,doxorubicin,manual_brand,llm_curated,1
-ellence,epirubicin,manual_brand,llm_curated,1
-cerubidine,daunorubicin,manual_brand,llm_curated,1
-idamycin,idarubicin,manual_brand,llm_curated,1
-blenoxane,bleomycin,manual_brand,llm_curated,1
-oncovin,vincristine,manual_brand,llm_curated,1
-navelbine,vinorelbine,manual_brand,llm_curated,1
-vepesid,etoposide,manual_brand,llm_curated,1
+zoladex,goserelin,llm_brand,llm_curated,1
+lupron,leuprorelin,llm_brand,llm_curated,1
+eligard,leuprorelin,llm_brand,llm_curated,1
+zytiga,abiraterone acetate,llm_brand,llm_curated,1
+xtandi,enzalutamide,llm_brand,llm_curated,1
+erleada,apalutamide,llm_brand,llm_curated,1
+nubeqa,darolutamide,llm_brand,llm_curated,1
+platinol,cisplatin,llm_brand,llm_curated,1
+paraplatin,carboplatin,llm_brand,llm_curated,1
+eloxatin,oxaliplatin,llm_brand,llm_curated,1
+cytoxan,cyclophosphamide,llm_brand,llm_curated,1
+ifex,ifosfamide,llm_brand,llm_curated,1
+alkeran,melphalan,llm_brand,llm_curated,1
+leukeran,chlorambucil,llm_brand,llm_curated,1
+treanda,bendamustine,llm_brand,llm_curated,1
+temodar,temozolomide,llm_brand,llm_curated,1
+temodal,temozolomide,llm_brand,llm_curated,1
+adriamycin,doxorubicin,llm_brand,llm_curated,1
+caelyx,doxorubicin,llm_brand,llm_curated,1
+doxil,doxorubicin,llm_brand,llm_curated,1
+myocet,doxorubicin,llm_brand,llm_curated,1
+ellence,epirubicin,llm_brand,llm_curated,1
+cerubidine,daunorubicin,llm_brand,llm_curated,1
+idamycin,idarubicin,llm_brand,llm_curated,1
+blenoxane,bleomycin,llm_brand,llm_curated,1
+oncovin,vincristine,llm_brand,llm_curated,1
+navelbine,vinorelbine,llm_brand,llm_curated,1
+vepesid,etoposide,llm_brand,llm_curated,1
 folfox,oxaliplatin|fluorouracil|leucovorin,combination_brand,llm_curated,0.95
 folfiri,irinotecan|fluorouracil|leucovorin,combination_brand,llm_curated,0.95
 biktarvy,bictegravir|emtricitabine|tenofovir alafenamide,combination_brand,llm_curated,1
 truvada,emtricitabine|tenofovir disoproxil,combination_brand,llm_curated,1
 lonsurf,tipiracil|trifluridine,combination_brand,llm_curated,1
 entresto,sacubitril|valsartan,combination_brand,llm_curated,1
-botox,botulinum toxin type a,manual_brand,llm_curated,1
-dysport,botulinum toxin type a,manual_brand,llm_curated,1
-xeomin,botulinum toxin type a,manual_brand,llm_curated,1
-zebinix,eslicarbazepine acetate,manual_brand,llm_curated,1
-pradaxa,dabigatran etexilate,manual_brand,llm_curated,1
-fintepla,fenfluramine,manual_brand,llm_curated,1
-xofluza,baloxavir marboxil,manual_brand,llm_curated,1
-tavalisse,fostamatinib,manual_brand,llm_curated,1
-onbrez,indacaterol,manual_brand,llm_curated,1
-doptelet,avatrombopag,manual_brand,llm_curated,1
-vanflyta,quizartinib,manual_brand,llm_curated,1
-tivdak,tisotumab vedotin,manual_brand,llm_curated,1
-zynlonta,loncastuximab tesirine,manual_brand,llm_curated,1
+botox,botulinum toxin type a,llm_brand,llm_curated,1
+dysport,botulinum toxin type a,llm_brand,llm_curated,1
+xeomin,botulinum toxin type a,llm_brand,llm_curated,1
+zebinix,eslicarbazepine acetate,llm_brand,llm_curated,1
+pradaxa,dabigatran etexilate,llm_brand,llm_curated,1
+fintepla,fenfluramine,llm_brand,llm_curated,1
+xofluza,baloxavir marboxil,llm_brand,llm_curated,1
+tavalisse,fostamatinib,llm_brand,llm_curated,1
+onbrez,indacaterol,llm_brand,llm_curated,1
+doptelet,avatrombopag,llm_brand,llm_curated,1
+vanflyta,quizartinib,llm_brand,llm_curated,1
+tivdak,tisotumab vedotin,llm_brand,llm_curated,1
+zynlonta,loncastuximab tesirine,llm_brand,llm_curated,1
 cenicriviroc,cenicriviroc,inn,llm_curated,1
-remodulin,treprostinil,manual_brand,llm_curated,1
+remodulin,treprostinil,llm_brand,llm_curated,1
 rytary,levodopa|carbidopa,combination_brand,llm_curated,1
-sandimmun,ciclosporin,manual_brand,llm_curated,1
-neoral,ciclosporin,manual_brand,llm_curated,1
-prograf,tacrolimus,manual_brand,llm_curated,1
-advagraf,tacrolimus,manual_brand,llm_curated,1
-certican,everolimus,manual_brand,llm_curated,1
-afinitor,everolimus,manual_brand,llm_curated,1
-cellcept,mycophenolate mofetil,manual_brand,llm_curated,1
-myfortic,mycophenolic acid,manual_brand,llm_curated,1
+sandimmun,ciclosporin,llm_brand,llm_curated,1
+neoral,ciclosporin,llm_brand,llm_curated,1
+prograf,tacrolimus,llm_brand,llm_curated,1
+advagraf,tacrolimus,llm_brand,llm_curated,1
+certican,everolimus,llm_brand,llm_curated,1
+afinitor,everolimus,llm_brand,llm_curated,1
+cellcept,mycophenolate mofetil,llm_brand,llm_curated,1
+myfortic,mycophenolic acid,llm_brand,llm_curated,1
 karxt,xanomeline|trospium,combination_brand,llm_curated,1
 5-aminolevulinic acid hydrochloride,aminolevulinic acid,salt_hydrate_resolution,llm_curated,1
 abacavir sulfate,abacavir,salt_hydrate_resolution,llm_curated,1
@@ -11607,6 +11607,27 @@ pred forte,prednisolone,reviewed_queue,llm_reviewed,1
 genoxal,cyclophosphamide,reviewed_queue,llm_reviewed,1
 daraxonrasib (rmc-6236),daraxonrasib,reviewed_queue,llm_reviewed,1
 daraxonrasib,daraxonrasib,reviewed_queue,llm_reviewed,1
+vumerity,diroximel fumarate (biib098),ema_product_name,epar,0.95
+hyftor,sirolimus,ema_product_name,epar,0.95
+tenkasi (previously orbactiv),oritavancin (diphosphate),ema_product_name,epar,0.95
+docetaxel kabi,docetaxel,ema_product_name,epar,0.95
+synjardy,empagliflozin|metformin,ema_product_name,epar,0.95
+zynlonta,loncastuximab tesirine,ema_product_name,epar,0.95
+thiotepa riemser,thiotepa,ema_product_name,epar,0.95
+neuraceq,florbetaben (18f),ema_product_name,epar,0.95
+cholib,fenofibrate|simvastatin,ema_product_name,epar,0.95
+mabthera,rituximab,ema_product_name,epar,0.95
+abrysvo,"respiratory syncytial virus vaccine (bivalent, recombinant)",ema_product_name,epar,0.95
+breyanzi,lisocabtagene maraleucel,ema_product_name,epar,0.95
+idacio,adalimumab,ema_product_name,epar,0.95
+firazyr,icatibant,ema_product_name,epar,0.95
+tepkinly,epcoritamab,ema_product_name,epar,0.95
+comirnaty,"single-stranded, 5'-capped messenger rna produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",ema_product_name,epar,0.95
+cibinqo,abrocitinib,ema_product_name,epar,0.95
+ozawade,pitolisant,ema_product_name,epar,0.95
+deqtynet,oxodotreotide,ema_product_name,epar,0.95
+spikevax (previously covid-19 vaccine moderna),"single-stranded, 5'-capped messenger rna (mrna) produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",ema_product_name,epar,0.95
+wakix,pitolisant,ema_product_name,epar,0.95
 degarelix accord,degarelix acetate,ema_product_name,epar,0.95
 ninlaro,ixazomib citrate,ema_product_name,epar,0.95
 nexpovio,selinexor,ema_product_name,epar,0.95
@@ -11686,8 +11707,6 @@ qezzaqar,catequentinib dihydrochloride,ema_product_name,epar,0.95
 susvimo,ranibizumab,ema_product_name,epar,0.95
 ubeslo,obicetrapib hemicalcium,ema_product_name,epar,0.95
 zokovea,ensitrelvir fumaric acid,ema_product_name,epar,0.95
-spikevax (previously covid-19 vaccine moderna),"single-stranded, 5'-capped messenger rna (mrna) produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",ema_product_name,epar,0.95
-comirnaty,"single-stranded, 5'-capped messenger rna produced using a cell-free in vitro transcription from the corresponding dna templates, encoding the viral spike (s) protein of sars-cov-2",ema_product_name,epar,0.95
 kigabeq,vigabatrin,ema_product_name,epar,0.95
 lumykras,sotorasib,ema_product_name,epar,0.95
 orkambi,lumacaftor|ivacaftor,ema_product_name,epar,0.95
@@ -11712,7 +11731,6 @@ lutathera,lutetium (177lu) oxodotreotide,ema_product_name,epar,0.95
 fetcroja,cefiderocol sulfate tosilate,ema_product_name,epar,0.95
 eltrombopag accord,eltrombopag olamine,ema_product_name,epar,0.95
 etcamah,camizestrant,ema_product_name,epar,0.95
-abrysvo,"respiratory syncytial virus vaccine (bivalent, recombinant)",ema_product_name,epar,0.95
 vfend,voriconazole,ema_product_name,epar,0.95
 tolucombi,telmisartan|hydrochlorothiazide,ema_product_name,epar,0.95
 fluenz,"influenza virus (live attenuated)|a|missouri|11|2025 (h1n1)pdm09 - like strain (a|switzerland|6849|2025, medi 400592)|a|darwin|1454|2025 (h3n2) - like strain (a|darwin|1369|2025, medi 406666)|b|tokyo|eis13-175|2025 - like strain (b|perth|115|2025, medi 407730)",ema_product_name,epar,0.95
@@ -11762,7 +11780,6 @@ zefylti,filgrastim,ema_product_name,epar,0.95
 acvybra,denosumab,ema_product_name,epar,0.95
 hetronifly,serplulimab,ema_product_name,epar,0.95
 libmyris,adalimumab,ema_product_name,epar,0.95
-idacio,adalimumab,ema_product_name,epar,0.95
 kostaive,covid-19 sa-mrna vaccine,ema_product_name,epar,0.95
 humalog,insulin lispro,ema_product_name,epar,0.95
 abasaglar (previously abasria),insulin glargine,ema_product_name,epar,0.95
@@ -11940,7 +11957,6 @@ slenyto,melatonin,ema_product_name,epar,0.95
 upstaza,eladocagene exuparvovec,ema_product_name,epar,0.95
 bysumlog,insulin lispro,ema_product_name,epar,0.95
 dovprela (previously pretomanid fgk),pretomanid,ema_product_name,epar,0.95
-tepkinly,epcoritamab,ema_product_name,epar,0.95
 scintimun,besilesomab,ema_product_name,epar,0.95
 kineret,anakinra,ema_product_name,epar,0.95
 orphacol,cholic acid,ema_product_name,epar,0.95
@@ -12020,7 +12036,6 @@ mekinist,trametinib,ema_product_name,epar,0.95
 sephience,sepiapterin,ema_product_name,epar,0.95
 jubereq,denosumab,ema_product_name,epar,0.95
 colchicine agepha pharma,colchicine,ema_product_name,epar,0.95
-deqtynet,oxodotreotide,ema_product_name,epar,0.95
 ablymico,liraglutide,ema_product_name,epar,0.95
 liraglutide stada,liraglutide,ema_product_name,epar,0.95
 veblocema,infliximab,ema_product_name,epar,0.95
@@ -12132,7 +12147,6 @@ rivastigmine sandoz,rivastigmine,ema_product_name,epar,0.95
 yeytuo,lenacapavir sodium,ema_product_name,epar,0.95
 mcombriax,"single-stranded, 5'-capped messenger rnas (mrnas) produced using a cell-free in vitro transcription from the corresponding dna template, encoding seasonal influenza haemagglutinin (ha) glycoproteins: a|h1n1, a|h3n2, b|victoria",ema_product_name,epar,0.95
 mresvia,single-stranded 5' capped mrna encoding the respiratory syncytial virus glycoprotein f stabilised in the prefusion conformation,ema_product_name,epar,0.95
-neuraceq,florbetaben (18f),ema_product_name,epar,0.95
 xromi,hydroxycarbamide,ema_product_name,epar,0.95
 siklos,hydroxycarbamide,ema_product_name,epar,0.95
 micardis,telmisartan,ema_product_name,epar,0.95
@@ -12211,7 +12225,6 @@ zokinvy,lonafarnib,ema_product_name,epar,0.95
 keppra,levetiracetam,ema_product_name,epar,0.95
 ilumira,lutetium (177lu) chloride,ema_product_name,epar,0.95
 roactemra,tocilizumab,ema_product_name,epar,0.95
-firazyr,icatibant,ema_product_name,epar,0.95
 eliquis,apixaban,ema_product_name,epar,0.95
 elfabrio,pegunigalsidase alfa,ema_product_name,epar,0.95
 topotecan hospira,topotecan,ema_product_name,epar,0.95
@@ -12225,7 +12238,6 @@ alyftrek,deutivacaftor|tezacaftor|vanzacaftor calcium dihydrate,ema_product_name
 glyxambi,empagliflozin|linagliptin,ema_product_name,epar,0.95
 increlex,mecasermin,ema_product_name,epar,0.95
 wegovy,semaglutide,ema_product_name,epar,0.95
-wakix,pitolisant,ema_product_name,epar,0.95
 atazanavir krka,atazanavir (as sulfate),ema_product_name,epar,0.95
 ziextenzo,pegfilgrastim,ema_product_name,epar,0.95
 vevzuo,denosumab,ema_product_name,epar,0.95
@@ -12386,7 +12398,6 @@ datroway,datopotamab deruxtecan,ema_product_name,epar,0.95
 azopt,brinzolamide,ema_product_name,epar,0.95
 xadago,safinamide methanesulfonate,ema_product_name,epar,0.95
 helicobacter test infai,urea (13c),ema_product_name,epar,0.95
-cibinqo,abrocitinib,ema_product_name,epar,0.95
 exforge hct,valsartan|hydrochlorothiazide|amlodipine besilate,ema_product_name,epar,0.95
 alymsys,bevacizumab,ema_product_name,epar,0.95
 dafiro hct,valsartan|hydrochlorothiazide|amlodipine besilate,ema_product_name,epar,0.95
@@ -12561,7 +12572,6 @@ absimky,ustekinumab,ema_product_name,epar,0.95
 cosentyx,secukinumab,ema_product_name,epar,0.95
 mepact,mifamurtide,ema_product_name,epar,0.95
 azacitidine kabi,azacitidine,ema_product_name,epar,0.95
-breyanzi,lisocabtagene maraleucel,ema_product_name,epar,0.95
 invokana,canagliflozin,ema_product_name,epar,0.95
 "adjupanrix (previously pandemic influenza vaccine (h5n1) (split virion, inactivated, adjuvanted) glaxosmithkline biologicals)","split influenza virus, inactivated, containing antigen: a|vietnam|1194|2004 (h5n1) like strain used (nibrg-14)",ema_product_name,epar,0.95
 rapiscan,regadenoson,ema_product_name,epar,0.95
@@ -12571,7 +12581,6 @@ seffalair spiromax,fluticasone propionate|salmeterol xinafoate,ema_product_name,
 omforro,midazolam hydrochloride,ema_product_name,epar,0.95
 ventavis,iloprost,ema_product_name,epar,0.95
 cyanokit,hydroxocobalamin,ema_product_name,epar,0.95
-cholib,fenofibrate|simvastatin,ema_product_name,epar,0.95
 libmeldy,atidarsagene autotemcel,ema_product_name,epar,0.95
 coagadex,human coagulation factor x,ema_product_name,epar,0.95
 remicade,infliximab,ema_product_name,epar,0.95
@@ -12649,7 +12658,6 @@ refixia,nonacog beta pegol,ema_product_name,epar,0.95
 vaxxitek hvt+ibd+h5,"turkey herpesvirus, strain rhvt-ibd-h5 (cell-associated), expressing the vp2 protein gene of infectious bursal disease virus and haemagglutinin gene of avian influenza virus subtype h5, live",ema_product_name,epar,0.95
 tukysa,tucatinib,ema_product_name,epar,0.95
 accofil,filgrastim,ema_product_name,epar,0.95
-zynlonta,loncastuximab tesirine,ema_product_name,epar,0.95
 pedea,ibuprofen,ema_product_name,epar,0.95
 brukinsa,zanubrutinib,ema_product_name,epar,0.95
 lupkynis,voclosporin,ema_product_name,epar,0.95
@@ -12670,7 +12678,6 @@ enerzair breezhaler,indacaterol|glycopyrronium bromide|mometasone,ema_product_na
 dafiro,amlodipine|valsartan,ema_product_name,epar,0.95
 copalia,valsartan|amlodipine (as amlodipine besilate),ema_product_name,epar,0.95
 exforge,valsartan|amlodipine (as amlodipine besilate),ema_product_name,epar,0.95
-synjardy,empagliflozin|metformin,ema_product_name,epar,0.95
 descovy,emtricitabine|tenofovir alafenamide,ema_product_name,epar,0.95
 viread,tenofovir disoproxil fumarate,ema_product_name,epar,0.95
 hirobriz breezhaler,indacaterol maleate,ema_product_name,epar,0.95
@@ -12678,7 +12685,6 @@ oslif breezhaler,indacaterol maleate,ema_product_name,epar,0.95
 onbrez breezhaler,indacaterol maleate,ema_product_name,epar,0.95
 prevenar 20 (previously apexxnar),pneumococcal polysaccharide serotype 1|pneumococcal polysaccharide serotype 3|pneumococcal polysaccharide serotype 4|pneumococcal polysaccharide serotype 5|pneumococcal polysaccharide serotype 6a|pneumococcal polysaccharide serotype 6b|pneumococcal polysaccharide serotype 7f|pneumococcal polysaccharide serotype 8|pneumococcal polysaccharide serotype 9v|pneumococcal polysaccharide serotype 10a|pneumococcal polysaccharide serotype 11a|pneumococcal polysaccharide serotype 12f|pneumococcal polysaccharide serotype 14|pneumococcal polysaccharide serotype 15b|pneumococcal polysaccharide serotype 18c|pneumococcal polysaccharide serotype 19a|pneumococcal polysaccharide serotype 19f|pneumococcal polysaccharide serotype 22f|pneumococcal polysaccharide serotype 23f|pneumococcal polysaccharide serotype 33f,ema_product_name,epar,0.95
 truvada,emtricitabine|tenofovir disoproxil fumarate,ema_product_name,epar,0.95
-ozawade,pitolisant,ema_product_name,epar,0.95
 ristfor,sitagliptin|metformin hydrochloride,ema_product_name,epar,0.95
 awiqli,insulin icodec,ema_product_name,epar,0.95
 isentress,raltegravir,ema_product_name,epar,0.95
@@ -12968,7 +12974,6 @@ cystadrops,mercaptamine hydrochloride,ema_product_name,epar,0.95
 zebinix,eslicarbazepine acetate,ema_product_name,epar,0.95
 riximyo,rituximab,ema_product_name,epar,0.95
 omnitrope,somatropin,ema_product_name,epar,0.95
-docetaxel kabi,docetaxel,ema_product_name,epar,0.95
 kalydeco,ivacaftor,ema_product_name,epar,0.95
 rezolsta,darunavir|cobicistat,ema_product_name,epar,0.95
 bexsero,outer membrane vesicles from neisseria meningitidis group b (strain nz 98|254)|recombinant neisseria meningitidis group b fhbp fusion protein|recombinant neisseria meningitidis group b nada protein|recombinant neisseria meningitidis group b nhba fusion protein,ema_product_name,epar,0.95
@@ -13019,7 +13024,6 @@ stronghold plus,selamectin|sarolaner,ema_product_name,epar,0.95
 nexgard combo,eprinomectin|esafoxolaner|praziquantel,ema_product_name,epar,0.95
 nobilis multriva ibm+nd+gm+reom+eds,"infectious bronchitis virus, type massachusetts, strain m41, inactivated|infectious bronchitis virus, type 793|b, strain 4|91, inactivated|newcastle disease virus, strain ulster, inactivated|infectious bursal disease virus, strain gb02, inactivated|infectious bursal disease virus, strain 89|03, inactivated|inactivated avian reovirus strain arv-1|inactivated avian reovirus strain arv-4|eggdrop syndrome-1976 virus, strain bc14, inactivated",ema_product_name,epar,0.95
 circadin,melatonin,ema_product_name,epar,0.95
-hyftor,sirolimus,ema_product_name,epar,0.95
 rilonacept fgk representative service gmbh,rilonacept,ema_product_name,epar,0.95
 orfadin,nitisinone,ema_product_name,epar,0.95
 neoatricon,dopamine hydrochloride|dopamine,ema_product_name,epar,0.95
@@ -13137,7 +13141,6 @@ rasagiline ratiopharm,rasagiline,ema_product_name,epar,0.95
 kentera (previously oxybutynin nicobrand),oxybutynin,ema_product_name,epar,0.95
 azilect,rasagiline,ema_product_name,epar,0.95
 ajovy,fremanezumab,ema_product_name,epar,0.95
-mabthera,rituximab,ema_product_name,epar,0.95
 litak,cladribine,ema_product_name,epar,0.95
 evista,raloxifene hydrochloride,ema_product_name,epar,0.95
 ontilyv,opicapone,ema_product_name,epar,0.95
@@ -13207,7 +13210,6 @@ skytrofa (previously lonapegsomatropin ascendis pharma),lonapegsomatropin,ema_pr
 pemetrexed fresenius kabi,pemetrexed,ema_product_name,epar,0.95
 repaglinide teva,repaglinide,ema_product_name,epar,0.95
 tolfenamic acid vmd,tolfenamic acid,ema_product_name,epar,0.95
-vumerity,diroximel fumarate (biib098),ema_product_name,epar,0.95
 penbraya,neisseria meningitidis group a polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group c polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group w polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group y polysaccharide conjugated to tetanus toxoid|neisseria meningitidis group b fhbp protein subfamily a|neisseria meningitidis group b fhbp protein subfamily b,ema_product_name,epar,0.95
 emtricitabine/tenofovir disoproxil krka d.d.,emtricitabine|tenofovir disoproxil succinate,ema_product_name,epar,0.95
 enyglid,repaglinide,ema_product_name,epar,0.95
@@ -13294,7 +13296,6 @@ kauliv,teriparatide,ema_product_name,epar,0.95
 pombiliti,cipaglucosidase alfa,ema_product_name,epar,0.95
 bydureon,exenatide,ema_product_name,epar,0.95
 fevaxyn pentofel,inactivated feline rhinotracheitis virus|inactivated feline calicivirus|inactivated feline chlamydophila felis|inactivated feline leukaemia virus|inactivated feline panleukopenia virus,ema_product_name,epar,0.95
-tenkasi (previously orbactiv),oritavancin (diphosphate),ema_product_name,epar,0.95
 nezglyal,leriglitazone hydrochloride,ema_product_name,epar,0.95
 ganfort,bimatoprost|timolol,ema_product_name,epar,0.95
 lumigan,bimatoprost,ema_product_name,epar,0.95
@@ -13552,7 +13553,6 @@ lutholaz,pegfilgrastim,ema_product_name,epar,0.95
 rebetol,ribavirin,ema_product_name,epar,0.95
 canileish,leishmania infantum excreted secreted proteins,ema_product_name,epar,0.95
 vivjoa,oteseconazole,ema_product_name,epar,0.95
-thiotepa riemser,thiotepa,ema_product_name,epar,0.95
 imatinib koanaa,imatinib mesilate,ema_product_name,epar,0.95
 plenadren,hydrocortisone,ema_product_name,epar,0.95
 pregabalin sandoz gmbh,pregabalin,ema_product_name,epar,0.95

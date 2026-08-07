@@ -205,50 +205,49 @@ The sponsor pipeline is deterministic and app-facing labels are read from `data/
 Recommended local rebuild:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/export_trial_sponsors.R
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_index.R --no-ror --no-location
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R
+Rscript helper_scripts/sponsor_norm_pipeline/1_export_trial_sponsors.R
+Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror --no-location
+Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R
 ```
 
 To emit an unresolved review queue:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/build_sponsor_labels.R --write-queue
+Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue
 ```
 
 Useful curation commands:
 
 ```bash
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R 100
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --include-skipped
-Rscript helper_scripts/sponsor_norm_pipeline/curate_sponsors.R --export
-python3 helper_scripts/sponsor_norm_pipeline/clean_llm_reviewed.py
+Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R 100
+Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --include-skipped
+Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
 ```
 
-After exporting decisions or cleaning reviewed rows, rerun `build_sponsor_index.R --no-ror --no-location` and `build_sponsor_labels.R`.
+After exporting decisions, rerun `2_build_sponsor_index.R --no-ror --no-location` and `3_build_sponsor_labels.R`.
 
 ### Rebuild Substance Labels
 
 The substance pipeline converts raw product/INN strings into pre-computed `substance_label` values. The full workflow is documented in [helper_scripts/substance_norm_pipeline/README.md](helper_scripts/substance_norm_pipeline/README.md).
 
 ```bash
-Rscript helper_scripts/substance_norm_pipeline/export_trial_substances.R
-Rscript helper_scripts/substance_norm_pipeline/build_substance_labels.R --write-queue
+Rscript helper_scripts/substance_norm_pipeline/1_export_trial_substances.R
+Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue
 ```
 
 Alias-index refresh:
 
 ```bash
-Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R
+Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R
 # or EPAR only:
-Rscript helper_scripts/substance_norm_pipeline/build_substance_index.R --no-chembl
+Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --no-chembl
 ```
 
-Manual queue review:
+Queue review:
 
 ```bash
-Rscript helper_scripts/substance_norm_pipeline/curate_substances.R
-Rscript helper_scripts/substance_norm_pipeline/curate_substances.R --export
+Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R
+Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --export
 ```
 
 ### Build A Smaller Local Test Database
@@ -322,19 +321,22 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 ├── docker-compose.yml
 ├── config/
 │   ├── pip_decisions.csv
-│   ├── sponsor_norm_pipeline/
-│   └── substance_norm_pipeline/
+│   ├── sponsor_norm_pipeline/    # + README.md — field reference for every CSV
+│   └── substance_norm_pipeline/  # + README.md — field reference for every CSV
+├── curation_app/                 # Reviewer app for normalisation decisions
 ├── data/                         # Local generated registry data and labels
 ├── helper_scripts/
 │   ├── update_pip_decisions.R
 │   ├── create_local_test_db.R
-│   ├── sponsor_norm_pipeline/
-│   └── substance_norm_pipeline/
+│   ├── clean_db.R
+│   ├── sponsor_norm_pipeline/    # 1_export → 2_index → 3_labels → 4_curate
+│   └── substance_norm_pipeline/  # 1_export → 2_index → 3_labels → 4_curate
 ├── rmarkdown/
 │   ├── report.Rmd
 │   ├── comparison_report.Rmd
 │   └── preprocessing.Rmd
 ├── nightly_update/
+├── PLANS/
 ├── tests/
 │   └── fixtures/
 └── www/
@@ -342,7 +344,11 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
     └── preprocessing.html
 ```
 
-`AGENTS/` contains local handover notes and is ignored by Git.
+Pipeline scripts are numbered by execution order; `normalise_*.R` is unnumbered
+because it is the engine the numbered steps call, not a step.
+
+`AGENTS/` contains local handover notes and `LEGACY/` holds retired scripts and
+completed handovers. Both are ignored by Git.
 
 ## Testing And Checks
 
