@@ -36,6 +36,59 @@ read_csv_quiet <- function(path, ...) {
   readr::read_csv(path, show_col_types = FALSE, progress = FALSE, ...)
 }
 
+# ── impact ────────────────────────────────────────────────────────────────────
+#
+# Joining a raw string to an alias_clean needs the pipeline's own cleaner, not
+# tolower(trimws(x)). clean_sponsor_alias() also transliterates to ASCII,
+# normalises quotes and dashes, expands "&", and turns punctuation into spaces —
+# so a naive join silently misses every sponsor with a comma, period or accent.
+# "Incyte Corp." (54 trials) and "Lilly S.A." (37) look like zero-impact rows
+# under the naive key, which would wrongly drop them below the review threshold.
+
+.normaliser_loaded <- new.env(parent = emptyenv())
+
+load_normaliser <- function(root, domain) {
+  if (isTRUE(.normaliser_loaded[[domain]])) return(invisible(TRUE))
+  f <- if (identical(domain, DOMAIN_SPONSOR)) {
+    file.path(root, "helper_scripts", "sponsor_norm_pipeline", "normalise_sponsors.R")
+  } else {
+    file.path(root, "helper_scripts", "substance_norm_pipeline", "normalise_substances.R")
+  }
+  if (file.exists(f)) {
+    suppressMessages(source(f, local = FALSE))
+    .normaliser_loaded[[domain]] <- TRUE
+  }
+  invisible(TRUE)
+}
+
+impact_key <- function(root, domain, x) {
+  load_normaliser(root, domain)
+  fn <- if (identical(domain, DOMAIN_SPONSOR)) "clean_sponsor_alias" else "clean_alias"
+  if (exists(fn, mode = "function")) {
+    get(fn, mode = "function")(x)
+  } else {
+    tolower(trimws(x))  # only if the normaliser is unavailable
+  }
+}
+
+# Trials (sponsor) or occurrences (substance) per cleaned alias.
+impact_table <- function(root, domain) {
+  if (identical(domain, DOMAIN_SPONSOR)) {
+    p <- data_path(root, "sponsor_normalisation_log.csv")
+    if (!file.exists(p)) return(tibble::tibble(alias_clean = character(), impact = numeric()))
+    read_csv_quiet(p) |>
+      dplyr::mutate(alias_clean = impact_key(root, domain, raw_sponsor)) |>
+      dplyr::group_by(alias_clean) |>
+      dplyr::summarise(impact = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
+  } else {
+    p <- data_path(root, "substance_normalisation_log.csv")
+    if (!file.exists(p)) return(tibble::tibble(alias_clean = character(), impact = numeric()))
+    read_csv_quiet(p) |>
+      dplyr::mutate(alias_clean = impact_key(root, domain, raw_substance)) |>
+      dplyr::count(alias_clean, name = "impact")
+  }
+}
+
 # ── canonical name pools (for the proposed-value dropdown) ────────────────────
 
 # Both pools are large (~8.3k sponsors, ~17.6k substances), so the selectize
@@ -83,19 +136,10 @@ load_substance_queue <- function(root) {
 # Aliases the LLM curation pass wrote. These claim confidence_prior 1 and rank
 # top of the priority order, but no human has ever checked them.
 load_sponsor_aliases <- function(root) {
-  p   <- cfg_path(root, "sponsor_norm_pipeline", "manual_sponsor_aliases.csv")
-  d   <- read_csv_quiet(p) |> dplyr::filter(source == "llm_curated")
-  log_p <- data_path(root, "sponsor_normalisation_log.csv")
-  impact <- if (file.exists(log_p)) {
-    read_csv_quiet(log_p) |>
-      dplyr::mutate(alias_clean = tolower(trimws(raw_sponsor))) |>
-      dplyr::group_by(alias_clean) |>
-      dplyr::summarise(impact = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
-  } else {
-    tibble::tibble(alias_clean = character(), impact = numeric())
-  }
-  d |>
-    dplyr::left_join(impact, by = "alias_clean") |>
+  p <- cfg_path(root, "sponsor_norm_pipeline", "manual_sponsor_aliases.csv")
+  read_csv_quiet(p) |>
+    dplyr::filter(source == "llm_curated") |>
+    dplyr::left_join(impact_table(root, DOMAIN_SPONSOR), by = "alias_clean") |>
     dplyr::mutate(
       row_key  = alias_clean,
       raw      = alias_clean,
@@ -107,17 +151,9 @@ load_sponsor_aliases <- function(root) {
 
 load_substance_aliases <- function(root) {
   p <- cfg_path(root, "substance_norm_pipeline", "manual_brand_to_substance.csv")
-  d <- read_csv_quiet(p) |> dplyr::filter(source == "llm_curated")
-  log_p <- data_path(root, "substance_normalisation_log.csv")
-  impact <- if (file.exists(log_p)) {
-    read_csv_quiet(log_p) |>
-      dplyr::mutate(alias_clean = tolower(trimws(raw_substance))) |>
-      dplyr::count(alias_clean, name = "impact")
-  } else {
-    tibble::tibble(alias_clean = character(), impact = numeric())
-  }
-  d |>
-    dplyr::left_join(impact, by = "alias_clean") |>
+  read_csv_quiet(p) |>
+    dplyr::filter(source == "llm_curated") |>
+    dplyr::left_join(impact_table(root, DOMAIN_SUBSTANCE), by = "alias_clean") |>
     dplyr::mutate(
       row_key  = alias_clean,
       raw      = alias_clean,
@@ -181,17 +217,8 @@ empty_tier_rows <- function() {
 load_sponsor_llm_reviewed <- function(root) {
   p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv")
   if (!file.exists(p)) return(empty_tier_rows())
-  log_p <- data_path(root, "sponsor_normalisation_log.csv")
-  imp <- if (file.exists(log_p)) {
-    read_csv_quiet(log_p) |>
-      dplyr::mutate(alias_clean = tolower(trimws(raw_sponsor))) |>
-      dplyr::group_by(alias_clean) |>
-      dplyr::summarise(impact = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
-  } else {
-    tibble::tibble(alias_clean = character(), impact = numeric())
-  }
   read_csv_quiet(p) |>
-    dplyr::left_join(imp, by = "alias_clean") |>
+    dplyr::left_join(impact_table(root, DOMAIN_SPONSOR), by = "alias_clean") |>
     dplyr::mutate(impact = dplyr::coalesce(impact, 0),
                   row_key = alias_clean, raw = alias_clean, proposed = sponsor_clean) |>
     dplyr::arrange(dplyr::desc(impact), raw)
@@ -200,16 +227,8 @@ load_sponsor_llm_reviewed <- function(root) {
 load_substance_llm_reviewed <- function(root) {
   p <- cfg_path(root, "substance_norm_pipeline", "substance_llm_reviewed.csv")
   if (!file.exists(p)) return(empty_tier_rows())
-  log_p <- data_path(root, "substance_normalisation_log.csv")
-  imp <- if (file.exists(log_p)) {
-    read_csv_quiet(log_p) |>
-      dplyr::mutate(alias_clean = tolower(trimws(raw_substance))) |>
-      dplyr::count(alias_clean, name = "impact")
-  } else {
-    tibble::tibble(alias_clean = character(), impact = integer())
-  }
   read_csv_quiet(p) |>
-    dplyr::left_join(imp, by = "alias_clean") |>
+    dplyr::left_join(impact_table(root, DOMAIN_SUBSTANCE), by = "alias_clean") |>
     dplyr::mutate(impact = dplyr::coalesce(impact, 0),
                   row_key = alias_clean, raw = alias_clean, proposed = substance_clean) |>
     dplyr::arrange(dplyr::desc(impact), raw)
@@ -272,17 +291,11 @@ fragment_key <- function(x) {
 # suffix — the same entity under several spellings, splitting its trial count.
 load_sponsor_fragments <- function(root) {
   rev_p <- cfg_path(root, "sponsor_norm_pipeline", "sponsor_llm_reviewed.csv")
-  log_p <- data_path(root, "sponsor_normalisation_log.csv")
-  if (!file.exists(rev_p) || !file.exists(log_p)) return(empty_tier_rows())
-
-  imp <- read_csv_quiet(log_p) |>
-    dplyr::mutate(alias_clean = tolower(trimws(raw_sponsor))) |>
-    dplyr::group_by(alias_clean) |>
-    dplyr::summarise(trials = sum(as.numeric(n_trials), na.rm = TRUE), .groups = "drop")
+  if (!file.exists(rev_p)) return(empty_tier_rows())
 
   cw <- read_csv_quiet(rev_p) |>
-    dplyr::left_join(imp, by = "alias_clean") |>
-    dplyr::mutate(trials = dplyr::coalesce(trials, 0)) |>
+    dplyr::left_join(impact_table(root, DOMAIN_SPONSOR), by = "alias_clean") |>
+    dplyr::mutate(trials = dplyr::coalesce(impact, 0)) |>
     dplyr::group_by(sponsor_clean) |>
     dplyr::summarise(trials = sum(trials), .groups = "drop") |>
     dplyr::filter(trials > 0) |>
@@ -326,14 +339,8 @@ load_substance_conflicts <- function(root) {
   }
   both <- dplyr::bind_rows(ov, rv) |> dplyr::distinct(alias, target, .keep_all = TRUE)
 
-  log_p <- data_path(root, "substance_normalisation_log.csv")
-  uses <- if (file.exists(log_p)) {
-    read_csv_quiet(log_p) |>
-      dplyr::mutate(alias = tolower(trimws(raw_substance))) |>
-      dplyr::count(alias, name = "impact")
-  } else {
-    tibble::tibble(alias = character(), impact = integer())
-  }
+  uses <- impact_table(root, DOMAIN_SUBSTANCE) |>
+    dplyr::rename(alias = alias_clean)
 
   both |>
     dplyr::group_by(alias) |>
