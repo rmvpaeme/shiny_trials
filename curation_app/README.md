@@ -26,10 +26,10 @@ REVIEWER="rvp" Rscript -e 'shiny::runApp("curation_app")'
 
 | Tier | Rows | Source |
 |---|---:|---|
-| **Sponsor fragments** | 130 | canonicals differing only by casing/punctuation/article — same entity, split trial counts |
+| **Sponsor fragments** | 194 | canonicals differing only by casing/punctuation/article — same entity, split trial counts |
 | **Substance conflicts** | 42 | one raw string overridden to two different substances |
-| Sponsor LLM-reviewed | 1,509 of 11,899 | `sponsor_llm_reviewed.csv`, filtered to ≥3 trials |
-| Substance LLM-reviewed | 2,623 of 10,250 | `substance_llm_reviewed.csv`, filtered to ≥3 occurrences |
+| Sponsor LLM-reviewed | 2,344 of 11,899 | `sponsor_llm_reviewed.csv`, filtered to ≥3 trials |
+| Substance LLM-reviewed | 2,607 of 10,250 | `substance_llm_reviewed.csv`, filtered to ≥3 occurrences |
 | Sponsor queue | 102 | `config/sponsor_norm_pipeline/sponsor_review_queue.csv` |
 | Substance queue | 1,317 | `config/substance_norm_pipeline/substance_review_queue.csv` |
 | Sponsor LLM aliases | 1,383 | `manual_sponsor_aliases.csv` where `source == llm_curated` |
@@ -44,10 +44,17 @@ match score (worst first).
 ## Scope: why the LLM-reviewed tiers are filtered
 
 Those two tiers hold 22,149 rows between them, which nobody is going to review.
-Most of it would be wasted effort anyway — 4,428 sponsor rows (37%) resolve
-**zero** trials, and another 4,866 resolve exactly one. Rows with ≥3 trials are
-1,509 of the sponsor tier but carry **61% of its impact**, so that is the
-default threshold. The slider moves it.
+Most of the tail is not worth reviewing either — 7,403 sponsor rows resolve
+exactly one trial and 447 resolve none at all. Rows with ≥3 trials are 2,344 of
+the sponsor tier but carry **60% of its impact**, so that is the default
+threshold. The slider moves it.
+
+Impact is joined using the pipeline's own `clean_sponsor_alias()` /
+`clean_alias()`, not `tolower(trimws(x))`. The cleaners also transliterate to
+ASCII, normalise quotes and dashes, expand `&`, and turn punctuation into
+spaces, so a naive key silently misses every sponsor with a comma, period or
+accent — `Incyte Corp.` (54 trials) and `Lilly S.A.` (37) look like zero-impact
+rows under it and fall below the threshold.
 
 The excluded tail is not abandoned, it is sampled. Switch **Scope** to *Audit
 sample of the tail* and the tier serves a fixed random sample of 200 rows drawn
