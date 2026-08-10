@@ -12,7 +12,7 @@ on the next rebuild, so an edit there is silently discarded.
 | `canonical_substances.csv` | 370 | curation | ✅ curated |
 | `substance_llm_brands.csv` | 1,380 | curation | ✅ curated |
 | `substance_llm_reviewed.csv` | 10,275 | `4_curate_substances.R --export`, reviewer app | ✅ curated |
-| `substance_llm_overrides.csv` | 9,650 | `4_curate_substances.R --export` | ✅ curated |
+| `substance_llm_overrides.csv` | 636 | `4_curate_substances.R --export`, reviewer app | ✅ curated |
 | `negative_aliases.csv` | 223 | curation | ✅ curated |
 | `2_substance_alias_index.csv` | 110,992 | `2_build_substance_index.R` | ❌ generated |
 | `2_chembl_cache.csv` | 120,416 | `2_build_substance_index.R --refresh-chembl` | ❌ generated (committed) |
@@ -104,6 +104,29 @@ build, so adding rows here needs no other change.
 Checked at step 2, before the negative list and before any alias lookup, so it
 overrides everything. Use it for strings a general alias should not fix, e.g.
 `gemcitabine100 mg`.
+
+**Keep it small.** Because this tier outranks every other, a row here silently
+shadows anything added below it. The file held 9,625 rows until 2026-08-10, of
+which 8,989 were redundant — the alias index had learned to reproduce them on
+its own, so they were doing nothing except sitting at the top of the priority
+order. `helper_scripts/substance_norm_pipeline/prune_substance_overrides.R`
+removed them, gated on `data/trial_substance_labels.csv` coming out
+byte-identical. Re-run it after a curation pass appends more.
+
+The 636 that remain are the rows that do work:
+
+| | Rows | Why it stays |
+|---|---:|---|
+| Sole source | 368 | Nothing else resolves the string at all |
+| Cross-string dependency | 104 | Its key is a *candidate* of some longer register string — `metformina`, `lidocain`, `valproate` — so removing it moves that string, not just its own |
+| Real correction | 62 | The index resolves the string differently, and this row is the correction |
+| Duplicate key | 102 | Feeds the reviewer's **Substance conflicts** tier; see below |
+
+The last group is deliberate. `check_override()` takes `slice(1)`, so only the
+first row per key is ever reachable — dropping a redundant first row would
+*promote* the shadowed second one. Those same rows are what
+`load_substance_conflicts()` (`curation_app/R/tiers.R`) surfaces for review, so
+the prune leaves every duplicated key untouched.
 
 ### `negative_aliases.csv` — never a substance
 

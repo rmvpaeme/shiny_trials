@@ -8,10 +8,13 @@ rules, and the ones that survived moved 0.05% of sponsor labels and 0.5% of
 substance labels. On that evidence the wiring was reverted and the effort
 redirected. See [Findings](#findings--what-the-measurements-showed).
 
-**What was kept:** the mined additions to `.legal_suffixes_rx` and the
+**§2 shipped separately and is done** — `substance_llm_overrides.csv` is down
+from 9,625 rows to 636, labels byte-identical. It never depended on the
+derivation layer.
+
+**What was kept:** §2, the mined additions to `.legal_suffixes_rx`, and the
 `tests/derivation/` harness. **What was reverted:** the calls from the two label
-builders into `derive_*_canonical()`, and the substance override prune (measured
-but never applied).
+builders into `derive_*_canonical()`.
 
 The measurements in *Context* below are the 2026-08-07 estimates the plan was
 written from, against `64013fd`. The Findings section carries the measured
@@ -87,7 +90,7 @@ some frozen decisions are wrong, and mining would faithfully reproduce those too
 | Decision | Choice | Outcome |
 |---|---|---|
 | Rule layer vs. replacing table rows | **Layer.** Tables stay the frozen record; rules run before the queue | Right call, but the layer earned too little to keep — see Findings |
-| Redundant substance overrides | **Prune**, gated on byte-identical labels | Measured at 94.6% redundant; prune not applied |
+| Redundant substance overrides | **Prune**, gated on byte-identical labels | **Done** — 9,625 → 636 rows, labels byte-identical |
 | The irreducible residue | Still open — see the last section | Now the whole problem |
 
 > **Everything from here to the Findings section is the plan as written on
@@ -306,24 +309,54 @@ The fix for the casing class is worth remembering if this is ever revisited:
 run the rules on the cleaned string, then map the result back onto the *original*
 string's tokens, rather than title-casing the cleaned output.
 
-## §2 — the override prune is still worth doing
+## §2 — the override prune: **done**
 
-Measured but not applied. `substance_llm_overrides.csv` re-matched with the
-override tier removed:
+Applied 2026-08-10. `substance_llm_overrides.csv` went from **9,625 rows to
+636**, an 8,989-row cut, with `data/trial_substance_labels.csv` and
+`3_substance_review_queue.csv` both byte-identical afterwards. The matcher's
+highest-priority tier is no longer a dumping ground that silently outranks
+everything below it.
 
-| | Rows | Share |
-|---|---:|---:|
-| Index already returns the same answer — redundant | 9,107 | 94.6% |
-| Not resolvable without the row — sole source | 456 | 4.7% |
-| Index answers differently — real override | 62 | 0.6% |
+What survives, and why:
 
-518 survivors of 9,625. Close to the 96.9% / ~302 estimate in §2. This is
-independent of the derivation layer and still has the value §2 claimed: the
-highest-priority tier of the matcher stops being 9,625 rows of frozen LLM output
-that silently outrank everything below them. The byte-identical-labels gate was
-never run, so the prune is unproven — `helper_scripts/substance_norm_pipeline/prune_substance_overrides.R`
-implemented the classification and a `--restore` path for rows the gate rejects,
-and was reverted with the rest.
+| | Rows |
+|---|---:|
+| Sole source — nothing else resolves the string | 368 |
+| Cross-string dependency — see below | 104 |
+| Real correction — the index answers differently | 62 |
+| Duplicate key — protected | 102 |
+
+**The cross-string group is the finding worth keeping.** The first attempt
+classified each override by re-matching *its own key* without the override tier,
+which gave 9,107 redundant. That test is not sufficient: `check_override()`
+matches `raw_clean %in% candidates`, and `candidates` is
+`generate_candidates(raw)`, so an override keyed `metformina` also fires for
+every longer register string whose `first_token` or dose-stripped form is
+`metformina`. Deleting it moves *those* strings, not its own.
+
+`prune_substance_overrides.R` therefore ends with a differential over the
+register itself: compute candidates for all 31,229 strings, keep the 12,929
+whose candidate set touches a pruned key, normalise them with and without the
+prune, and restore any key that moved something. It restored **104 keys on the
+first pass** and converged on the second. Without it, those 104 deletions would
+have shipped and quietly changed real labels.
+
+That gate is also strictly stronger than diffing the label file, because labels
+are aggregated per trial (`sort(unique(...))` joined with `" / "`), so two
+offsetting changes within one trial cancel out and pass unnoticed.
+
+Two constraints the prune had to respect, both invisible from the CSV alone:
+
+- **`check_override()` takes `slice(1)`** — only the first row per key is
+  reachable, so dropping a redundant *first* row promotes the shadowed second
+  one and changes the answer.
+- **The reviewer app feeds on the duplicates.** `load_substance_conflicts()`
+  (`curation_app/R/tiers.R`) builds its **Substance conflicts** tier from keys
+  mapped to more than one target — 42 aliases, 84 rows. Pruning them would empty
+  a known-wrong-rows queue before anyone worked it.
+
+Both are handled by excluding every duplicated key from the prune: 102 rows, and
+the tier still loads its 42 aliases unchanged.
 
 ## What was kept
 
