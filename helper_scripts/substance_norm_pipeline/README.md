@@ -75,6 +75,9 @@ helper_scripts/substance_norm_pipeline/
   3_build_substance_labels.R       normalises and writes trial_substance_labels.csv
   4_curate_substances.R            interactive CLI for queue review (save/resume)
   normalise_substances.R           core engine — source and call normalise_substances()
+  prune_substance_overrides.R      maintenance — drops override rows the alias
+                                     index already reproduces (unnumbered: not a
+                                     pipeline step)
 
 config/substance_norm_pipeline/
   2_substance_alias_index.csv        generated — run 2_build_substance_index.R to create
