@@ -1,9 +1,21 @@
 # Normalisation reproducibility — making raw → final derivable without an LLM
 
-**Status: proposed, not started.** Filed for a later session. Nothing in this
-document has been implemented; the measurements in *Context* were taken on
-2026-08-07 against the tree at `64013fd` and are reproducible from the committed
-config files.
+**Status: built, measured, and deliberately not wired in — 2026-08-10.**
+
+The derivation layer in §1 was implemented in full, gated by a replay harness,
+and run end-to-end against the real register. The harness rejected most of the
+rules, and the ones that survived moved 0.05% of sponsor labels and 0.5% of
+substance labels. On that evidence the wiring was reverted and the effort
+redirected. See [Findings](#findings--what-the-measurements-showed).
+
+**What was kept:** the mined additions to `.legal_suffixes_rx` and the
+`tests/derivation/` harness. **What was reverted:** the calls from the two label
+builders into `derive_*_canonical()`, and the substance override prune (measured
+but never applied).
+
+The measurements in *Context* below are the 2026-08-07 estimates the plan was
+written from, against `64013fd`. The Findings section carries the measured
+replacements, which differ in places.
 
 Related: [`normalisation-reviewer-multiuser.md`](normalisation-reviewer-multiuser.md)
 is where the irreducible residue described in the last section gets reviewed.
@@ -72,11 +84,16 @@ some frozen decisions are wrong, and mining would faithfully reproduce those too
 
 ## Decisions taken
 
-| Decision | Choice |
-|---|---|
-| Rule layer vs. replacing table rows | **Layer.** Tables stay the frozen record; rules run before the queue |
-| Redundant substance overrides | **Prune**, gated on byte-identical labels |
-| The irreducible residue | Still open — see the last section |
+| Decision | Choice | Outcome |
+|---|---|---|
+| Rule layer vs. replacing table rows | **Layer.** Tables stay the frozen record; rules run before the queue | Right call, but the layer earned too little to keep — see Findings |
+| Redundant substance overrides | **Prune**, gated on byte-identical labels | Measured at 94.6% redundant; prune not applied |
+| The irreducible residue | Still open — see the last section | Now the whole problem |
+
+> **Everything from here to the Findings section is the plan as written on
+> 2026-08-07.** It was implemented as specified. Read it for the design intent;
+> read [Findings](#findings--what-the-measurements-showed) for what the design
+> turned out to be worth.
 
 ---
 
@@ -185,10 +202,169 @@ loaders need no changes. Document the new `derived:*` provenance value in both
    90%, measure agreement on the held-out slice. Guards against rules that merely
    memorise the corpus.
 
-## Still open: the irreducible residue
+---
+
+## Findings — what the measurements showed
+
+Everything below was measured on 2026-08-10 against the real register
+(16,594 unique sponsors, 31,229 unique substances) and the committed config.
+
+## The corpus is less mineable than the estimate
+
+The estimates in §Context were computed over a different denominator. Measuring
+only the LLM-sourced pairs — the decisions the derivation layer is actually
+trying to replace, excluding registry rows from EMA, ROR and ChEMBL:
+
+| | Pairs | identical | removal | addition | substitution | **mineable** |
+|---|---:|---:|---:|---:|---:|---:|
+| Sponsors | 12,510 | 29.6% | 39.9% | 2.1% | 28.5% | **69.4%** |
+| Substances | 11,208 | 15.1% | 19.9% | 0.7% | 64.3% | **35.0%** |
+
+Close to §Context for sponsors (73% estimated, 69% measured), close for
+substances (39% vs 35%). The estimates held up. **The estimates were not the
+problem — the assumption that "mineable" implies "safely mineable" was.**
+
+## Four of six rules were rejected by their own acceptance test
+
+`tests/derivation/replay.R` replays each rule against every frozen pair. The
+gate that matters turned out not to be agree/conflict but **destructive** — a
+firing that removes a token the frozen answer still contains — because the rules
+compose, and a correct *partial* reduction scores as a "conflict" against the
+final answer while being exactly right.
+
+| Rule | Verdict | Evidence |
+|---|---|---|
+| `legal_suffix` | **shipped** | 4,340 fires, 3,407 agree, 3.8% destructive |
+| `case_punct` | **shipped**, sponsor + substance | terminal fallback; removes nothing |
+| `dose_form` | **shipped**, substance | 1,677 fires, 0.4% destructive |
+| `prefix_trim` | **shipped**, substance | 81 fires, 1.2% destructive; low value |
+| `department_tail` | rejected | 9 agree vs 59 conflict |
+| `country_tail` | rejected | 36.8% destructive (32 of 87 fires) |
+| `address_tail` | rejected | 30.6% destructive (19 of 62) |
+| `salt_form` | rejected | 25.3% destructive (231 of 913) |
+
+Why each failed is worth keeping, because each looks obviously correct up front:
+
+- **`department_tail`** — "department" is the most-removed token in the corpus
+  (169 rows), so stripping it looks like free coverage. But
+  `aalborg university hospital dept of rheumatology` → `Aalborg University
+  Hospital` works only because the parent happens to precede the department.
+  `academical medical center department of dermatology` → `Amsterdam UMC` needs
+  a fact that is not in the string, and `aalst dermatology group` →
+  `Aalst Dermatology Group` shows the keyword is often part of the name.
+- **`country_tail` / `address_tail`** — the country is not a suffix on a sponsor
+  name, it is part of it: `BIOTRONIK France`, `Cancer Research UK`,
+  `CHU de Fort-de-France`.
+- **`salt_form`** — contradicts a convention already in the data.
+  `canonical_substances.csv` gives a salt its own row with `parent_substance`
+  pointing at the free base, so `acalabrutinib maleate` *is* the label and
+  `acalabrutinib` is recorded beside it. Deriving the base as the label
+  disagrees with every salt row already there.
+
+### The generalisable lesson
+
+**A pattern that is safe for generating match candidates is not automatically
+safe for generating a label.** `.address_rx`, `.country_tail_rx` and
+`.department_rx` have all been correct for years inside
+`make_sponsor_candidates()`, where an over-stripped candidate simply matches
+nothing and costs nothing. Pointed at label *production*, the same regexes
+rename the organisation. Anyone reaching for these regexes again should read
+this line first.
+
+## The shipped rules moved almost nothing
+
+Rebuilt end-to-end and compared trial by trial against the pre-change labels:
+
+| | Labels moved | Unknowns resolved |
+|---|---|---|
+| Sponsors | **26 of 47,665 (0.05%)** | 20 of 240 |
+| Substances | **213 of 43,478 (0.49%)** | 590 of 4,960 |
+
+No trial lost a label. Gold fixtures were unchanged — 20 sponsor and 6 substance
+failures before and after, the *same* cases both times (the plan's "19" was
+slightly off; the true pre-existing baseline is 20/6, measured at `e364102`).
+
+The held-out check passed and was uninformative, as expected for rules that fit
+no parameters: sponsors 46.1% agree in-sample vs 46.5% held out, substances
+59.1% vs 57.3%.
+
+## The substance side needed four rounds of guards
+
+Each of these was found by the trial-by-trial label comparison, and none by the
+gold fixtures. They are recorded because they are what rule-based derivation
+costs, not because any one of them is interesting:
+
+| Symptom | Cause |
+|---|---|
+| `Suspension of autologous skeletal myoblasts` → `of autologous skeletal myoblasts` | removal from the front leaves a fragment |
+| `Enantone-Gyn Monats-Depot` → `enantone-gyn monats-` | removal strands punctuation, and the lowercase cleaned form leaked out |
+| `GRC 17536 potassium powder for inhalation` → `GRC 17536 potassium for` | removal from the middle strands a preposition |
+| `TarcevaTM 100mg` → `Tarcevatm` | sentence-casing a value that had kept the register's own casing |
+| `AMG 706` → `amg`, `Pneumo 23` → `pneumo` | a trailing number is a dose in `imatinib 100` and the identity in `amg 706`; not distinguishable by shape |
+
+The fix for the casing class is worth remembering if this is ever revisited:
+run the rules on the cleaned string, then map the result back onto the *original*
+string's tokens, rather than title-casing the cleaned output.
+
+## §2 — the override prune is still worth doing
+
+Measured but not applied. `substance_llm_overrides.csv` re-matched with the
+override tier removed:
+
+| | Rows | Share |
+|---|---:|---:|
+| Index already returns the same answer — redundant | 9,107 | 94.6% |
+| Not resolvable without the row — sole source | 456 | 4.7% |
+| Index answers differently — real override | 62 | 0.6% |
+
+518 survivors of 9,625. Close to the 96.9% / ~302 estimate in §2. This is
+independent of the derivation layer and still has the value §2 claimed: the
+highest-priority tier of the matcher stops being 9,625 rows of frozen LLM output
+that silently outrank everything below them. The byte-identical-labels gate was
+never run, so the prune is unproven — `helper_scripts/substance_norm_pipeline/prune_substance_overrides.R`
+implemented the classification and a `--restore` path for rows the gate rejects,
+and was reverted with the rest.
+
+## What was kept
+
+1. **The mined `.legal_suffixes_rx` additions** — the one durable win, and it
+   improves *matching* rather than derivation, so it helps every future import.
+   `clean_sponsor_alias()` turns `S.A.` into `s a` and `B.V.` into `b v` before
+   the regex runs, so the escaped `b\.v` and `s\.a` arms never fired in
+   practice. The spaced spellings now do: `s a` [153 rows of support], `b v`
+   [85], `s l` [77], `s p a` [47], `s r l` [39].
+
+   This corrected a genuinely wrong label: `Schering Plough S.p.A.` and
+   `Schering Plough, S.A` resolved to `Schering` (no parent, no group) and now
+   resolve to `Schering-Plough` / `Merck & Co.` / `MSD / Merck & Co.` — the
+   correct entity. **Rebuild both label files to pick this up.**
+
+2. **`tests/derivation/`** — the corpus loader, the transformation miner, and
+   the replay harness. Reads committed config only; no database, no network.
+   Whatever resolves the residue next will need to be measured against the same
+   frozen decisions, and this is the apparatus for that.
+
+## Verification method — the part to reuse
+
+The gold fixtures are 116 sponsor and 111 substance hand-picked cases. Every bug
+in the list above passed them. What caught the bugs was rebuilding both pipelines
+and diffing all ~91,000 labels against a saved baseline, categorised
+(unchanged / case-only / shortened / rewritten / gained / lost) with samples
+printed per category.
+
+**Any future normalisation change should be gated that way, not on the
+fixtures.** The tooling for it was written (`tests/compare_labels.R`,
+`--save-baseline` then `--baseline`) and reverted; it is a short script and
+worth writing again, or recovering from the stash.
+
+---
+
+## Still open: the irreducible residue — now the whole problem
 
 After §1, roughly 25% of new sponsors and 60% of new substances still need a
-decision that no rule can produce. Two options, and this was not settled:
+decision that no rule can produce. With the derivation layer measured at
+0.05%/0.5% of labels, that residue is not the remainder of the problem — it *is*
+the problem, and the recommendation below is where the next effort should go.
 
 - **Pin and cache the LLM step** — a committed `5_llm_resolve.R` with pinned
   model id, versioned prompt, temperature 0, and decisions cached by
@@ -198,6 +374,30 @@ decision that no rule can produce. Two options, and this was not settled:
 - **Route to the reviewer app** — reproducible by construction, human-paced.
 
 Recommendation: both, in that order — the LLM proposes, the reviewer app is where
-a human confirms and stamps `source: manual`. That is already the architecture
-`PLANS/normalisation-reviewer-multiuser.md` describes; the derivation layer just
-makes the backlog reaching it substantially smaller.
+a human confirms and stamps `source: manual`.
+
+### One design constraint, learned from this work
+
+**Constrain the model to choosing from the existing canonical lists, never to
+free generation.** Retrieve candidates with machinery the repo already has —
+`check_containment`, `check_fuzzy`, `entity_family_key` — show the model ten
+plausible options from `final_sponsor_canonical_map.csv` or
+`canonical_substances.csv`, and require it to pick one or abstain. That turns
+invention into classification, and any answer outside the list is rejectable
+mechanically, so the output cannot introduce new spellings or drift.
+
+The defect in the historical passes was never that an LLM made the decisions. It
+is that nobody recorded which model, which prompt, or on what date, so the
+decisions cannot be re-derived or audited — and 20 of them are demonstrably
+wrong, per the failing gold fixtures. Pinning the model id, versioning the
+prompt, and committing the cache (as `2_chembl_cache.csv` already is) fixes that
+specific defect.
+
+Two caveats for whoever picks this up:
+
+- **Exhaust the registries first on the substance side.** §Context measured 29%
+  of `substance_llm_reviewed.csv` as redundant with ChEMBL, which the pipeline
+  already queries. Some of the residue is payable without any API call.
+- **Network.** The agent sandbox allowlist covers CRAN, Bioconductor,
+  ClinicalTrials.gov and GitHub, but not `api.anthropic.com`. That run needs the
+  allowlist widened or to happen outside the sandbox.
