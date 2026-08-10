@@ -25,13 +25,29 @@ clean_sponsor_alias <- function(x) {
 
 # ── Candidate generator ───────────────────────────────────────────────────────
 
+# Trailing legal forms. The second block was mined from the (raw, final) pairs
+# frozen in the alias tables — see PLANS/normalisation-reproducibility.md and
+# tests/derivation/. clean_sponsor_alias() has already turned "S.p.A." into
+# "s p a" by the time this runs, so the spaced spellings are the ones that fire.
 .legal_suffixes_rx <- paste0(
   "\\s+\\b(",
   paste(c(
     "inc", "incorporated", "corp", "corporation", "company", "co",
     "ltd", "limited", "llc", "plc", "ag", "gmbh", "kg", "kgaa",
     "bv", "b\\.v", "nv", "n\\.v", "sa", "s\\.a", "sas", "srl",
-    "spa", "a/s", "ab", "oy", "pte", "kk", "a\\.?ö\\.?r"
+    "spa", "a/s", "ab", "oy", "pte", "kk", "a\\.?ö\\.?r",
+    # Mined additions, with their frozen-decision support in brackets. The
+    # spaced forms are the ones the cleaner actually produces: "S.A." → "s a",
+    # "B.V." → "b v", so the escaped "b\\.v" above never fires in practice.
+    "s a",                                        # [153]
+    "b v", "n v",                                 # [85, 8]
+    "s l", "sl", "s l u",                         # [77, 4, 10]
+    "s p a", "s pa",                              # [47, 2]
+    "s r l", "s r o",                             # [39, 3]
+    "as", "a s", "asa",                           # [35, 4, 12]
+    "aps",                                        # [29]
+    "s a s", "s a u", "sau",                      # [4, 3, 3]
+    "d o o", "sp z o o", "sarl", "mbh"            # [7, 2, 1, 1]
   ), collapse = "|"),
   ")$"
 )
