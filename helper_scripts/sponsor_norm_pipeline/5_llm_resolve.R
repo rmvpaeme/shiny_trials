@@ -465,7 +465,25 @@ work <- purrr::map_dfr(raws, function(raw) {
 
 skipped <- work |> dplyr::filter(skip)
 work    <- work |> dplyr::filter(!skip)
-todo    <- work |> dplyr::filter(!cache_key %in% cache$cache_key)
+
+# A cached row is only "done" if it carries a DECISION. Errors, refusals,
+# expiries and canceled batch entries are written to the cache too — with
+# abstained NA and the error in `reason` — so that a failure is visible rather
+# than silently missing. Treating those as resolved would make them permanent:
+# the key is present, so every later run would skip them and they could never be
+# retried. Abstentions (abstained TRUE) ARE decisions and are not retried; a
+# model that looked and declined should not be asked again for free.
+resolved <- cache |>
+  dplyr::filter(!is.na(abstained)) |>
+  dplyr::pull(cache_key)
+
+todo <- work |> dplyr::filter(!cache_key %in% resolved)
+
+retrying <- sum(unique(work$cache_key) %in% cache$cache_key &
+                  !unique(work$cache_key) %in% resolved)
+if (retrying > 0L) {
+  message(sprintf("  %d previously failed key(s) will be retried", retrying))
+}
 
 # Distinct raw strings can collapse to the same question. cache_key hashes
 # raw_clean, and clean_sponsor_alias() maps "Dainippon Sumitomo Pharma America,
@@ -617,7 +635,12 @@ if (do_sync) {
   )
 
   rows <- expand_to_raws(rows)
-  write_cache(dplyr::bind_rows(cache, rows))
+  write_cache(dplyr::bind_rows(
+    # Drop any prior rows for the keys just answered, so a retry REPLACES a
+    # failed row instead of appending a second one for the same raw string.
+    cache |> dplyr::filter(!cache_key %in% rows$cache_key),
+    rows
+  ))
   message(sprintf("Wrote %d rows to %s", nrow(rows), basename(CACHE)))
   quit(save = "no", status = 0L)
 }
@@ -733,7 +756,12 @@ rows <- purrr::map_dfr(lines, function(line) {
 })
 
 rows <- expand_to_raws(rows)
-write_cache(dplyr::bind_rows(cache, rows))
+write_cache(dplyr::bind_rows(
+    # Drop any prior rows for the keys just answered, so a retry REPLACES a
+    # failed row instead of appending a second one for the same raw string.
+    cache |> dplyr::filter(!cache_key %in% rows$cache_key),
+    rows
+  ))
 
 ok <- sum(!is.na(rows$abstained))
 message(sprintf(
