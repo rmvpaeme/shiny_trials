@@ -64,6 +64,16 @@ MAX_TOKENS     <- 8192L
 MAX_CANDIDATES <- 10L
 ABSTAIN        <- "NONE_OF_THESE"
 
+# Each request's output_config.format carries an enum of THAT row's candidates,
+# so every request is a distinct grammar and needs its own compilation. The org
+# limit is 20 compilations/minute, and a 222-request batch blew straight through
+# it: 190 of 222 came back "Grammar compilation rate limit exceeded" while the
+# ~30 that landed first succeeded. --sync therefore paces itself just under the
+# limit. The structural fix is a schema that does not vary per request — see the
+# note above build_body().
+COMPILATIONS_PER_MIN <- 18L
+MIN_REQUEST_INTERVAL <- 60 / COMPILATIONS_PER_MIN
+
 API_BASE       <- "https://api.anthropic.com"
 API_VERSION    <- "2023-06-01"
 # fallbacks: "default" re-serves a policy decline on Anthropic's recommended
@@ -281,6 +291,19 @@ candidate_block <- function(raw, cands) {
   )
 }
 
+# NOTE — this schema varies per request, and that is its one real flaw.
+# Constraining `chosen` to an enum of the supplied labels is what makes an
+# invented name impossible at the API level, but it also makes every request a
+# distinct grammar: 222 requests = 222 compilations against a 20/min org limit,
+# which is what sank the first batch run.
+#
+# The fix, before this is pointed at the 7,003 substances, is a schema that is
+# byte-identical across requests — `chosen_index` as a plain integer (0 = none
+# of these) instead of a label enum. That compiles once and is cached, and it is
+# arguably SAFER: the model emits a number, so it cannot produce a name at all,
+# invented or otherwise. Keep `chosen_label` alongside it purely as a checksum
+# for index confusion, with the index authoritative. Doing that changes the
+# prompt contract, so bump PROMPT_VERSION with it and expect a full re-resolve.
 output_schema <- function(cands) {
   list(
     type = "json_schema",
@@ -599,11 +622,25 @@ if (dry_run) {
 if (do_sync) {
   auth <- resolve_auth()
   betas <- unique(c(auth$betas, FALLBACK_BETA))
-  message(sprintf("Resolving %d question(s) synchronously...", nrow(questions)))
+  message(sprintf(
+    "Resolving %d question(s) synchronously at <=%d/min (grammar compilation limit)...",
+    nrow(questions), COMPILATIONS_PER_MIN
+  ))
+  message(sprintf(
+    "  estimated wall time: ~%.0f min", nrow(questions) * MIN_REQUEST_INTERVAL / 60
+  ))
+  last_request_at <- 0
 
   rows <- purrr::pmap_dfr(
     questions |> dplyr::select(raw_sponsor, candidates_sha256, cache_key, cands),
     function(raw_sponsor, candidates_sha256, cache_key, cands) {
+      # Pace on the START of each request so model latency counts toward the
+      # interval — sleeping a flat amount after every call would throttle far
+      # below the limit and turn a 15-minute run into an hour.
+      wait <- MIN_REQUEST_INTERVAL - (as.numeric(Sys.time()) - last_request_at)
+      if (wait > 0) Sys.sleep(wait)
+      last_request_at <<- as.numeric(Sys.time())
+
       body <- build_body(raw_sponsor, cands, for_batch = FALSE)
       resp <- httr2::request(paste0(API_BASE, "/v1/messages")) |>
         httr2::req_headers(!!!c(
