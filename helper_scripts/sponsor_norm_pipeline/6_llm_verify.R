@@ -65,6 +65,13 @@ project_path <- function(...) file.path(project_root, ...)
 MODEL_ID       <- "claude-opus-5"
 PROMPT_VERSION <- "sponsor-verify-v1"
 EFFORT         <- "low"
+
+# --model swaps the pinned model for an A/B. MODEL_ID is part of cache_key, so
+# two models' verdicts coexist in the cache rather than overwriting each other
+# and can be compared row by row. Effort is not universal: it errors on Haiku
+# 4.5, so drop it there rather than sending a parameter that 400s.
+MODELS_WITHOUT_EFFORT <- c("claude-haiku-4-5", "claude-sonnet-4-5")
+model_supports_effort <- function(m) !any(startsWith(m, MODELS_WITHOUT_EFFORT))
 MAX_TOKENS     <- 4096L
 MAX_SIBLINGS   <- 6L
 
@@ -102,6 +109,8 @@ if (!target %in% c("defects", "single-alias", "all")) {
 if (!dry_run && !do_sync && !do_batch && is.na(poll_batch)) {
   stop("Pick a mode: --dry-run, --sync, --batch, or --poll=<batch_id>", call. = FALSE)
 }
+model_arg <- arg_value("--model")
+if (!is.na(model_arg) && nzchar(model_arg)) MODEL_ID <- model_arg
 
 SNP   <- project_path("config", "sponsor_norm_pipeline")
 INDEX <- file.path(SNP, "2_sponsor_alias_index.csv")
@@ -356,7 +365,11 @@ build_body <- function(row, for_batch) {
       cache_control = list(type = "ephemeral")
     )),
     messages = list(list(role = "user", content = user_block(row))),
-    output_config = list(effort = EFFORT, format = OUTPUT_SCHEMA)
+    output_config = if (model_supports_effort(MODEL_ID)) {
+      list(effort = EFFORT, format = OUTPUT_SCHEMA)
+    } else {
+      list(format = OUTPUT_SCHEMA)
+    }
   )
   if (!for_batch) body$fallbacks <- "default"
   body
