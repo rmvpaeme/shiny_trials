@@ -124,24 +124,33 @@ load_sponsor_queue <- function(root) {
   # both are visible and their provenance stays distinct. The cache is a
   # proposal store, never a label: it becomes one only when a human accepts it
   # here, which is the one path that writes source "manual".
+  # An abstention is a DECISION, not a blank. "The model saw these ten
+  # candidates and says none of them is this organisation" is exactly what stops
+  # a reviewer re-deriving the same dead end by hand, so it surfaces too — with
+  # its reason, which is the field a human actually acts on. Only genuine
+  # failures (errored/expired/refused, `abstained` NA) are withheld: those are
+  # missing answers, and showing them as "none" would misreport a gap as a
+  # judgement.
   props <- cfg_path(root, "sponsor_norm_pipeline", "5_llm_proposals.csv")
   q <- if (file.exists(props)) {
     q |>
       dplyr::left_join(
         read_csv_quiet(props) |>
-          dplyr::filter(!is.na(chosen)) |>
+          dplyr::filter(!is.na(abstained)) |>
           dplyr::distinct(raw_sponsor, .keep_all = TRUE) |>
-          dplyr::select(
+          dplyr::transmute(
             raw_sponsor,
-            llm_proposal   = chosen,
-            llm_confidence = confidence
+            llm_proposal   = dplyr::coalesce(chosen, "(none of the candidates)"),
+            llm_confidence = confidence,
+            llm_reason     = reason
           ),
         by = "raw_sponsor"
       )
   } else {
     q |> dplyr::mutate(
       llm_proposal   = NA_character_,
-      llm_confidence = NA_character_
+      llm_confidence = NA_character_,
+      llm_reason     = NA_character_
     )
   }
 
@@ -435,7 +444,7 @@ TIERS <- list(
     source_file = "config/sponsor_norm_pipeline/3_sponsor_review_queue.csv",
     evidence = c(
       "match_status", "match_score", "match_source", "match_reason", "n_trials",
-      "llm_proposal", "llm_confidence"
+      "llm_proposal", "llm_confidence", "llm_reason"
     ),
     extra_fields = c("sponsor_type"),
     impact_label = "trials",
