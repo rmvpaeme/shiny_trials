@@ -111,14 +111,41 @@ canonical_pool <- function(root, domain) {
 
 load_sponsor_queue <- function(root) {
   p <- cfg_path(root, "sponsor_norm_pipeline", "3_sponsor_review_queue.csv")
-  read_csv_quiet(p) |>
+  q <- read_csv_quiet(p) |>
     dplyr::mutate(
       row_key  = raw_sponsor,
       raw      = raw_sponsor,
       proposed = candidate_sponsor,
       impact   = dplyr::coalesce(as.numeric(n_trials), 0)
-    ) |>
-    dplyr::arrange(dplyr::desc(impact))
+    )
+
+  # Step 5's decision cache, if it has been run. `proposed` deliberately stays
+  # the MATCHER's candidate — the LLM's pick rides alongside it as evidence, so
+  # both are visible and their provenance stays distinct. The cache is a
+  # proposal store, never a label: it becomes one only when a human accepts it
+  # here, which is the one path that writes source "manual".
+  props <- cfg_path(root, "sponsor_norm_pipeline", "5_llm_proposals.csv")
+  q <- if (file.exists(props)) {
+    q |>
+      dplyr::left_join(
+        read_csv_quiet(props) |>
+          dplyr::filter(!is.na(chosen)) |>
+          dplyr::distinct(raw_sponsor, .keep_all = TRUE) |>
+          dplyr::select(
+            raw_sponsor,
+            llm_proposal   = chosen,
+            llm_confidence = confidence
+          ),
+        by = "raw_sponsor"
+      )
+  } else {
+    q |> dplyr::mutate(
+      llm_proposal   = NA_character_,
+      llm_confidence = NA_character_
+    )
+  }
+
+  q |> dplyr::arrange(dplyr::desc(impact))
 }
 
 load_substance_queue <- function(root) {
@@ -406,7 +433,10 @@ TIERS <- list(
     id = "sponsor_queue", label = "Sponsor queue", domain = DOMAIN_SPONSOR,
     loader = load_sponsor_queue,
     source_file = "config/sponsor_norm_pipeline/3_sponsor_review_queue.csv",
-    evidence = c("match_status", "match_score", "match_source", "match_reason", "n_trials"),
+    evidence = c(
+      "match_status", "match_score", "match_source", "match_reason", "n_trials",
+      "llm_proposal", "llm_confidence"
+    ),
     extra_fields = c("sponsor_type"),
     impact_label = "trials",
     queue = list(key_col = "raw_sponsor", canonical_col = "canonical_sponsor")
