@@ -316,6 +316,61 @@ too — a resolver that abstains on everything passes every mechanical check abo
 
 ---
 
+### Step 6 — Re-review the frozen alias decisions
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/6_llm_verify.R --dry-run
+Rscript helper_scripts/sponsor_norm_pipeline/6_llm_verify.R --target=defects --batch
+Rscript helper_scripts/sponsor_norm_pipeline/6_llm_verify.R --batch --poll=<batch_id>
+```
+
+`sponsor_llm_reviewed.csv` holds ~11,900 alias → canonical decisions at
+`confidence_prior` 1 that **no human ever checked** (`source: llm_reviewed`).
+Some are wrong. The measured example:
+
+```text
+center for clinical metabolic research at herlev gentofte hospital
+  -> Herlev og Gentofte Hospital                    correct: department -> parent
+center for clinical metabolic research at herlev-gentofte hospital
+  -> Center for Clinical Metabolic Research at ...  wrong: department kept as canonical
+```
+
+Two aliases differing by one hyphen, disagreeing on the answer.
+`clean_sponsor_alias()` normalises dash *characters* but does not remove them, so
+these stay distinct keys and never trip the exact-collision check in
+`2_sponsor_ambiguous_aliases.csv`.
+
+**This asks a different question from step 5.** The resolver picks a canonical
+for an unresolved string; this judges an *existing* decision — correct /
+incorrect / unsure, with a `problem` category. It deliberately proposes **no
+replacement**: triage, not repair. That keeps the "never writes a name" property
+and, critically, keeps the schema constant.
+
+| `--target` | Rows | Batched cost | What it covers |
+|---|---:|---:|---|
+| `defects` (default) | 137 | ~$0.39 | Department-label canonicals + separator-variant aliases that disagree |
+| `single-alias` | 3,036 | ~$8.73 | Canonicals backed by exactly one alias — no corroboration |
+| `all` | 12,495 | ~$35.93 | Every `llm_reviewed` / `llm_curated` row |
+
+Start with `defects`. It is the concentrated defect population, so it measures
+the base error rate before you commit to a wider sweep: a high hit rate justifies
+it, a clean result says the known-bad examples were unlucky rather than typical.
+
+**Why this batches when step 5 could not.** Step 5's schema embeds an `enum` of
+that row's candidates, so every request is a distinct grammar — 222 requests hit
+the 20-compilations-per-minute org limit and 190 failed. Here all four fields are
+fixed and the enums never vary, so the grammar compiles **once** and is cached.
+`--dry-run` prints the schema hash to prove it. Do not add a per-row enum of
+suggested replacements; that would reintroduce the limit at 12,495 rows.
+
+Results land in `config/sponsor_norm_pipeline/6_llm_verifications.csv`, sorted by
+trials affected. **Nothing is changed** — a row flagged `incorrect` is a finding.
+Act on it by adding a label-to-label row to `final_sponsor_canonical_map.csv`
+(the department case is exactly what that file is for), then rebuild and re-run
+the gate.
+
+---
+
 ### Test the normaliser
 
 ```bash

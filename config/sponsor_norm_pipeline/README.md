@@ -24,6 +24,7 @@ on the next rebuild, so an edit there is silently discarded.
 | `2_self_alias_conflicts.csv` | ~250 | `audit_sponsor_canonicals.R` | ❌ generated (review queue) |
 | `3_sponsor_review_queue.csv` | 102 | `3_build_sponsor_labels.R --write-queue` | ⚠️ decision columns only |
 | `5_llm_proposals.csv` | — | `5_llm_resolve.R` | ❌ generated (frozen API fetch, committed) |
+| `6_llm_verifications.csv` | — | `6_llm_verify.R` | ❌ generated (frozen API fetch, committed) |
 
 ---
 
@@ -294,6 +295,35 @@ need no network and no credentials.
 **This file changes no labels.** It is a proposal store: a row becomes a label
 only when a human accepts it in the reviewer app, the one path that writes
 `source: manual`.
+
+### `6_llm_verifications.csv` — re-review of the frozen alias decisions
+
+`cache_key, alias_clean, sponsor_clean, model_id, prompt_version, verdict, problem, confidence, reason, n_trials, decided_at_utc, batch_id`
+
+Written by `6_llm_verify.R`. Also committed, same reasoning as
+`5_llm_proposals.csv`. Judges *existing* `alias_clean → sponsor_clean` decisions
+rather than picking a canonical for an unresolved string, because ~11,900 rows
+in `sponsor_llm_reviewed.csv` sit at `confidence_prior` 1 with `source:
+llm_reviewed` — which per the table above means **no human checked them**.
+
+| Column | Meaning |
+|---|---|
+| `cache_key` | `sha256(alias_clean, sponsor_clean, prompt_version, model_id)`. No candidate hash — there is no candidate set, so the key is stable across index rebuilds. |
+| `verdict` | `correct` / `incorrect` / `unsure`. `NA` when the call failed (`reason` carries the error), which keeps the row retry-eligible. |
+| `problem` | `none`, `department_should_resolve_to_parent`, `different_organisation`, `variant_of_another_canonical`, `too_generic_to_be_a_sponsor`, `other`. An unrecognised value degrades to `other` rather than discarding the verdict. |
+| `confidence` | The model's opinion, not evidence. |
+| `n_trials` | Trials the alias affects — the sort key, so the highest-impact wrong decisions surface first. |
+
+**No replacement is proposed, deliberately.** The verifier does triage, not
+repair: it never writes an organisation name. That preserves the same
+never-invent property as the resolver *and* keeps the JSON schema byte-identical
+across every request, so the grammar compiles once instead of once per row —
+which is what makes 12,495 rows affordable at all.
+
+A row flagged `incorrect` is a finding. Act on it by adding a label-to-label row
+to `final_sponsor_canonical_map.csv` — the `department_should_resolve_to_parent`
+case is exactly what that file exists for — then rebuild and re-run the label
+gate.
 
 ---
 
