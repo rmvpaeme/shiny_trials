@@ -283,8 +283,8 @@ need no network and no credentials.
 
 | Column | Meaning |
 |---|---|
-| `cache_key` | `sha256(raw_clean, prompt_version, model_id, candidates_sha256)`. Presence here is what makes a re-run free. |
-| `raw_sponsor` | The unresolved raw string. Join key for the reviewer app. |
+| `cache_key` | `sha256(raw_clean, prompt_version, model_id, candidates_sha256)`. Presence here is what makes a re-run free. **Not unique** — raw strings differing only in punctuation clean to the same value, so they share a key and one API call answers all of them. |
+| `raw_sponsor` | The unresolved raw string, and the file's real row key — one row per raw string, so the reviewer's join resolves every punctuation variant. |
 | `model_id` / `prompt_version` | Pinned provenance. Bumping either changes every `cache_key`, so a re-resolve is visible as a full-file diff rather than a silent change. |
 | `candidates_sha256` | Hash of the candidate list the model chose from. A canonical merged later changes this and correctly invalidates the row — which is why the vocabulary is settled first. |
 | `chosen` | An existing canonical, or `NA` when the model abstained or the call failed. Never a new name. |

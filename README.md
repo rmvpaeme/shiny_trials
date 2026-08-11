@@ -226,6 +226,40 @@ Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
 
 After exporting decisions, rerun `2_build_sponsor_index.R --no-ror --no-location` and `3_build_sponsor_labels.R`.
 
+Audit the canonical vocabulary (offline, no network):
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R
+Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R --fix-self-aliases
+```
+
+Reports collisions, legal-suffix near-duplicates, single-alias canonicals, missing
+self-aliases, and the unapplied merge queue. `--fix-self-aliases` emits the safe
+subset to `sponsor_llm_aliases.csv`; labels it declines to touch are triaged in
+`config/sponsor_norm_pipeline/2_self_alias_conflicts.csv`. **Always re-run
+`2_build_sponsor_index.R` and `3_build_sponsor_labels.R` afterwards and diff
+`data/trial_sponsor_labels.csv`** — `unknown → matched` is the only acceptable
+change; an already-matched trial changing label is a regression.
+
+Resolve what the matcher cannot (**needs an API key and network**):
+
+```bash
+export ANTHROPIC_API_KEY='sk-ant-...'
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --dry-run   # assemble + count tokens, no calls
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --batch     # ~$1, 50% cheaper than --sync
+```
+
+A few hundred raw strings survive as `unknown` because they are entity
+resolution, not string editing. Step 5 asks a pinned model (`claude-opus-5`) to
+**pick from a list** of existing canonicals assembled from the matcher's own
+indexes — constrained by a JSON-schema `enum` and a post-response off-list check,
+so it can never invent a name. Decisions land in the committed cache
+`config/sponsor_norm_pipeline/5_llm_proposals.csv` and surface in the reviewer
+app as evidence beside the matcher's own candidate. **Nothing auto-applies**: a
+proposal becomes a label only when a human accepts it. Run the vocabulary audit
+first — the cache key hashes the candidate set, so merging a canonical afterwards
+invalidates cached proposals.
+
 ### Rebuild Substance Labels
 
 The substance pipeline converts raw product/INN strings into pre-computed `substance_label` values. The full workflow is documented in [helper_scripts/substance_norm_pipeline/README.md](helper_scripts/substance_norm_pipeline/README.md).
@@ -329,7 +363,7 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 │   ├── update_pip_decisions.R
 │   ├── create_local_test_db.R
 │   ├── clean_db.R
-│   ├── sponsor_norm_pipeline/    # 1_export → 2_index → 3_labels → 4_curate
+│   ├── sponsor_norm_pipeline/    # 1_export → 2_index → 3_labels → 4_curate → 5_llm_resolve
 │   └── substance_norm_pipeline/  # 1_export → 2_index → 3_labels → 4_curate
 ├── rmarkdown/
 │   ├── report.Rmd
