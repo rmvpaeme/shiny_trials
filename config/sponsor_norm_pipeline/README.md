@@ -9,7 +9,7 @@ on the next rebuild, so an edit there is silently discarded.
 
 | File | Rows | Written by | Hand-edit? |
 |---|---:|---|---|
-| `sponsor_llm_aliases.csv` | 1,514 | curation | ✅ curated seed |
+| `sponsor_llm_aliases.csv` | 1,514 + self-aliases | curation + `audit_sponsor_canonicals.R --fix-self-aliases` | ✅ curated seed |
 | `sponsor_llm_reviewed.csv` | 11,899 | curation, **rewritten by `2_build_sponsor_index.R`** | ⚠️ curated content, regenerated file |
 | `sponsor_llm_overrides.csv` | 0 | `4_curate_sponsors.R --export` | ✅ curated |
 | `sponsor_negative_aliases.csv` | 264 | curation | ✅ curated |
@@ -21,7 +21,9 @@ on the next rebuild, so an edit there is silently discarded.
 | `2_new_sponsor_candidates.csv` | 340 | `2_build_sponsor_index.R` | ❌ generated (review queue) |
 | `2_ctis_org_candidates.csv` | 131 | `2_build_sponsor_index.R` | ❌ generated (review queue) |
 | `2_postcode_sponsor_candidates.csv` | 1,484 | `2_build_sponsor_index.R --no-location` off | ❌ generated (review queue) |
+| `2_self_alias_conflicts.csv` | ~250 | `audit_sponsor_canonicals.R` | ❌ generated (review queue) |
 | `3_sponsor_review_queue.csv` | 102 | `3_build_sponsor_labels.R --write-queue` | ⚠️ decision columns only |
+| `5_llm_proposals.csv` | — | `5_llm_resolve.R` | ❌ generated (frozen API fetch, committed) |
 
 ---
 
@@ -49,6 +51,7 @@ The distinction that matters most in this repo:
 |---|---|---|
 | `llm_curated` | an LLM curation pass | **No** |
 | `llm_reviewed` | an LLM decision on a review-queue row | **No** |
+| `self_alias` | `audit_sponsor_canonicals.R --fix-self-aliases` — a canonical's own cleaned label mapped to itself | n/a — derived |
 | `manual` | `curation_app/apply.R` only | **Yes** |
 | `ctis_businesskey` | EMA organisation registry (ground truth) | n/a — registry |
 | `epar_mah` | EMA EPAR marketing-authorisation-holder names | n/a — registry |
@@ -70,9 +73,29 @@ report is meaningless if `manual` stops meaning "a human checked this".
 
 `alias_clean, sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, source, confidence_prior, alias_type`
 
-The primary lookup table: 1,383 rows `llm_curated`, 131 `ctis_businesskey`.
-Highest priority in the index merge. Add a row here when an alias should apply
-everywhere, not just to one raw string.
+The primary lookup table: 1,383 rows `llm_curated`, 131 `ctis_businesskey`, plus
+`self_alias` rows. Highest priority in the index merge. Add a row here when an
+alias should apply everywhere, not just to one raw string.
+
+**Self-aliases, and why they are the weakest tier.** `check_alias()` matches
+`alias_clean %in% candidates`, so a canonical that never appears as an
+`alias_clean` cannot match on the alias tier even when a raw sponsor arrives
+spelled exactly like the label — it falls through to containment or fuzzy, or
+misses. `audit_sponsor_canonicals.R --fix-self-aliases` closes that gap, at
+`confidence_prior` **0.94, not 1.00**, because `check_alias()` ranks by
+`confidence_prior * 100 - candidate_rank`: at 1.00 a self-alias matching the full
+raw string (rank 1) outranks a curated alias that only matches a stripped
+candidate, silently overriding deliberate consolidations. At 0.94 a self-alias
+scores ~93 — still auto-accepted when it is the only match, but it loses to any
+curated confidence-1.0 alias and sits below the 0.95 floor for containment and
+fuzzy targets, so it adds no surface on those tiers.
+
+Confidence alone is not sufficient, though. `make_sponsor_candidates()` generates
+stripped forms of each raw string, so a **short** self-alias hijacks longer
+strings: the one-token label `medac` is the first-word candidate of
+`Medac Gesellschaft fuer klinische Spezialprapaerate mbH`. The audit therefore
+also refuses any self-alias whose key is a generated candidate of an
+already-matched raw string, and reports those in `2_self_alias_conflicts.csv`.
 
 ### `sponsor_llm_reviewed.csv` — accepted queue decisions
 
@@ -230,6 +253,47 @@ regenerated. `3_build_sponsor_labels.R --write-queue` drops decided rows by
 default so the file reads as a to-do list — pass `--keep-decided` to retain them.
 Because rebuilds drop rows, the queue is **not** a durable record of decisions;
 the reviewer ledger is.
+
+### `2_self_alias_conflicts.csv` — labels that already resolve elsewhere
+
+`alias_clean, sponsor_clean, resolves_to, resolves_source, resolves_status, triage, conflict`
+
+Canonicals that `--fix-self-aliases` deliberately did **not** emit. `triage`
+splits them into kinds that need opposite responses:
+
+| `triage` | What it means |
+|---|---|
+| `would hijack an already-matched raw string` | The key is a generated candidate of a raw string that already resolves elsewhere — emitting it would rewrite existing labels. |
+| `deliberate mapping — self-alias would override` | The label resolves via the alias/containment/family tiers, i.e. someone curated it that way. Leave alone unless the curation is wrong. |
+| `fuzzy false positive — self-alias would fix` | The label resolves via Jaro-Winkler to a *different* organisation — `Abalos Therapeutics` → `Alba Therapeutics`, `Adienne` → `Advicenne`. These are live matcher bugs. |
+| `alias key taken by another canonical` | Two labels clean to one key, e.g. `Fundació Sant Joan de Déu` vs `Hospital Sant Joan de Deu`. Genuine identity questions. |
+
+The fuzzy false positives are the interesting group: each is a canonical the
+matcher would mis-resolve today if a raw string arrived spelled exactly like it.
+Fixing one means adding the self-alias *and* accepting that already-matched
+trials change — a human decision, so they are reported rather than applied.
+
+### `5_llm_proposals.csv` — the resolver decision cache
+
+`cache_key, raw_sponsor, model_id, prompt_version, candidates_sha256, chosen, confidence, reason, abstained, decided_at_utc, batch_id`
+
+Written by `5_llm_resolve.R`. **Committed on purpose**, following the precedent
+`2_chembl_cache.csv` sets: a frozen API fetch in the repo means deployment and CI
+need no network and no credentials.
+
+| Column | Meaning |
+|---|---|
+| `cache_key` | `sha256(raw_clean, prompt_version, model_id, candidates_sha256)`. Presence here is what makes a re-run free. |
+| `raw_sponsor` | The unresolved raw string. Join key for the reviewer app. |
+| `model_id` / `prompt_version` | Pinned provenance. Bumping either changes every `cache_key`, so a re-resolve is visible as a full-file diff rather than a silent change. |
+| `candidates_sha256` | Hash of the candidate list the model chose from. A canonical merged later changes this and correctly invalidates the row — which is why the vocabulary is settled first. |
+| `chosen` | An existing canonical, or `NA` when the model abstained or the call failed. Never a new name. |
+| `confidence` | `high`/`medium`/`low` — the model's opinion, not evidence. |
+| `abstained` | `TRUE` when the model returned `NONE_OF_THESE`; `NA` when the call failed (`reason` carries the error). |
+
+**This file changes no labels.** It is a proposal store: a row becomes a label
+only when a human accepts it in the reviewer app, the one path that writes
+`source: manual`.
 
 ---
 

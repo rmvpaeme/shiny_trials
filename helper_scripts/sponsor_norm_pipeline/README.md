@@ -116,6 +116,57 @@ During index rebuild, the pipeline also derives related keys from the target
 sponsor's existing high-confidence aliases and labels. That keeps family logic
 generic: the code does not special-case individual organisations.
 
+**Sizing the queue before working it.** `2_final_sponsor_canonical_review.csv`
+has ~937 unapplied rows, but that count badly overstates the work. 861 are
+`blocked`, and **836 of those contain only one distinct label** — a "merge
+proposal" with nothing to merge, produced when a department-level alias key
+(`aalborg orthopedics hospital`) resolves to the single correct canonical.
+Unblocking them changes nothing. The genuine judgment calls are the **25 blocked
+clusters with more than one label** plus the **76 `review` rows** — around 100
+decisions, not 937. Filter before reading:
+
+```r
+b <- readr::read_csv("config/sponsor_norm_pipeline/2_final_sponsor_canonical_review.csv")
+b[!b$applied & lengths(strsplit(b$sponsor_labels, "|", fixed = TRUE)) > 1, ]
+```
+
+---
+
+### Step 2c — Audit the canonical vocabulary
+
+```bash
+# Report; writes 2_self_alias_conflicts.csv
+Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R
+
+# Append the safe self-alias subset to sponsor_llm_aliases.csv
+Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R --fix-self-aliases
+```
+
+Reports five checks over the canonical list: labels that collide under
+`clean_sponsor_alias()`, labels differing only by a trailing legal suffix,
+labels backed by a single alias, labels with **no self-alias**, and the unapplied
+merge queue. Run it before Step 5 — the resolver picks from the canonical list,
+and its cache key hashes the candidate set, so a canonical merged afterwards
+silently invalidates cached proposals.
+
+`--fix-self-aliases` closes the self-alias gap at `confidence_prior` **0.94**, so
+the emitted rows are the weakest tier rather than the strongest — see the
+`sponsor_llm_aliases.csv` section of the config README for why 1.00 is actively
+harmful here. Three guards keep it from rewriting existing labels: it skips a
+label that already resolves elsewhere, a key that is a generated candidate of an
+already-matched raw string, and the handful in `SELF_ALIAS_EXCLUDE` that only the
+trial-level gate can catch. All are reported in `2_self_alias_conflicts.csv`.
+
+**Always re-run the gate after `--fix-self-aliases`:**
+
+```bash
+cp data/trial_sponsor_labels.csv /tmp/labels_before.csv
+Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror --no-location
+Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R
+# Expect: unknown -> accepted only. Any already-matched trial that CHANGES
+# label is a regression, not an improvement.
+```
+
 Current seeded decisions:
 
 - `Fundacion Geltamo` → `GELTAMO`
@@ -185,6 +236,76 @@ Reviews `3_sponsor_review_queue.csv` sorted by `n_trials` descending.
 | `q` | Quit and save progress |
 
 `--export` writes curation decisions to config files. Accepted queue rows are exported to `sponsor_llm_reviewed.csv` by Step 2 and included in the next `2_sponsor_alias_index.csv`. After exporting or accepting queue rows, re-run Step 2, then Step 3.
+
+---
+
+### Step 5 — Resolve the residue with a pinned LLM
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --dry-run        # assemble + count tokens, no calls
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --sync --limit=5 # prompt iteration
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --batch          # full run (50% cheaper)
+Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --batch --poll=<batch_id>
+```
+
+A few hundred raw strings survive Steps 1–4 at `match_status: unknown`. They are
+entity resolution, not string editing — `1. Frauenklinik der LMU-Innenstadt` →
+`Klinikum Der Universitat Munchen AöR` shares no material with its input — so no
+rule derived from the frozen decisions closes them. This step asks a model.
+
+**Run Step 2c first.** The resolver picks from the canonical list and its cache
+key hashes the candidate set, so a canonical merged after proposals are cached
+invalidates them, paying twice and discarding the review work.
+
+What makes it safe to hand to a model:
+
+- **The model picks from a list; it never writes a name.** Candidates come from
+  the matcher's own indexes (entity-family, containment-token, Jaro-Winkler).
+  The answer is constrained twice — by `output_config.format` with an `enum` of
+  the supplied labels, and by a post-response check rejecting anything off-list.
+  A model that can only choose cannot introduce a spelling or invent an org.
+- **If retrieval yields nothing, the string is skipped.** There is nothing to
+  choose from, and asking anyway invites invention.
+- **Nothing auto-applies.** Decisions land in `config/sponsor_norm_pipeline/5_llm_proposals.csv`
+  and surface in the reviewer app as `llm_proposal` / `llm_confidence` evidence,
+  alongside — not replacing — the matcher's own `proposed` candidate. A proposal
+  becomes a label only when a human accepts it.
+- **Pinned and cached.** `model_id` and `prompt_version` are constants echoed
+  into every row; `cache_key` is
+  `sha256(raw_clean, prompt_version, model_id, candidates_sha256)`. A run
+  resolves only absent keys, so re-running costs nothing and only genuinely new
+  strings reach the API. Bumping either constant invalidates deliberately and
+  visibly, in the diff.
+
+Cost is roughly $1–2 for the sponsor residue, about half that batched. Verify
+with `--dry-run`, which reports real `count_tokens` figures and checks whether
+the cached system prefix clears Opus 5's 512-token minimum.
+
+**Credentials and network.** Uses `ANTHROPIC_API_KEY` if set, otherwise the
+OAuth profile from `ant auth login` (`ant auth status` to check). The agent
+sandbox allowlist does **not** include `api.anthropic.com`, so `--sync` and
+`--batch` need the allowlist widened or must run outside the sandbox. `--dry-run`
+and every gate below run offline.
+
+Verification gates:
+
+```bash
+# every non-abstained choice is an existing canonical
+Rscript -e '
+  p <- readr::read_csv("config/sponsor_norm_pipeline/5_llm_proposals.csv", show_col_types=FALSE)
+  idx <- readr::read_csv("config/sponsor_norm_pipeline/2_sponsor_alias_index.csv", show_col_types=FALSE)
+  bad <- setdiff(na.omit(p$chosen), idx$sponsor_clean)
+  stopifnot(length(bad) == 0); cat("all choices are existing canonicals\n")'
+
+# the resolver is inert — it writes proposals, not labels
+cp data/trial_sponsor_labels.csv /tmp/labels_before.csv
+Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R
+diff /tmp/labels_before.csv data/trial_sponsor_labels.csv && echo "labels unchanged"
+```
+
+Then **read the proposals**. At this size that is the real acceptance test, and
+the last point at which a bad prompt is cheap to fix. Spot-check the abstentions
+too — a resolver that abstains on everything passes every mechanical check above.
 
 ---
 

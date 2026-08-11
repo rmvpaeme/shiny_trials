@@ -1,8 +1,11 @@
 # Settle the canonical vocabulary, then resolve the residue with a pinned LLM
 
-**Status: proposed, not started.** Filed for a later session. The measurements in
-*What the vocabulary audit found* were taken on 2026-08-10 against the tree at
-`1eeb08c` and are reproducible from the committed config files.
+**Status: implemented 2026-08-11.** Phase 0a and Phase 1 are built; Phase 0b is
+sized but its decisions are left to a human, and Phase 0c is unscoped pending
+0b. Four of this plan's estimates did not survive contact — see *Measured
+corrections* at the end. The measurements in *What the vocabulary audit found*
+were taken on 2026-08-10 against the tree at `1eeb08c` and are reproducible from
+the committed config files.
 
 Related: [`normalisation-reproducibility.md`](normalisation-reproducibility.md)
 is where the residue this plan targets was measured and where §2's override
@@ -299,3 +302,82 @@ check above.
   20 frozen decisions that are wrong; this pipeline can produce more. The
   reviewer step is not a formality, and `confidence: high` is the model's
   opinion, not evidence.
+
+---
+
+## Measured corrections (2026-08-11)
+
+Four estimates in this plan were wrong. Recorded here so the next reader trusts
+the measurements over the prose.
+
+### 1. Self-alias emission is not safe by default — 0a needed three guards
+
+§0a assumed emitting `(clean_sponsor_alias(canonical), canonical)` was safe
+except for alias-key collisions ("Expect few; they are findings, not noise").
+Emitted that way, it **rewrote 66 already-matched trials** and failed the plan's
+own gate. Three separate mechanisms, each needing its own guard:
+
+| Mechanism | Example | Guard |
+|---|---|---|
+| A self-alias at `confidence_prior` 1.0 outranks a curated alias, because `check_alias()` scores `confidence_prior * 100 - candidate_rank` and the self-alias matches at rank 1 | `Millennium Pharmaceuticals` breaking away from `Takeda` | emit at **0.94**, which also drops it below the 0.95 floor for containment and fuzzy targets |
+| The label already resolves elsewhere | `Almirall Hermal` → `Almirall` | run each label through `normalise_one()` and skip if it lands on a different canonical |
+| The key is a **generated candidate** of a longer raw string — `make_sponsor_candidates()` emits first-word and stripped forms | one-token `medac` hijacking `Medac Gesellschaft fuer klinische Spezialprapaerate mbH` | build the candidate → current-canonical map over every matched raw string and refuse colliding keys |
+
+Confidence alone fixes nothing: at 1.00 and at 0.94 the gate failed *identically*
+(17 changed trials, same set), because the surviving regressions came from the
+third mechanism, which scoring does not touch.
+
+A fourth case only the trial-level gate can see: two keys whose raw strings were
+`unknown` at baseline (so they claimed nothing) sit on **multi-sponsor trials**
+where a co-sponsor supplied the label. Resolving them flipped the trial to the
+subsidiary. They are held in `SELF_ALIAS_EXCLUDE` with the measurement recorded.
+
+**Outcome.** 3,495 of the 3,840 missing self-aliases emitted; 345 held back and
+reported in `2_self_alias_conflicts.csv`. Gate: **0 already-matched trials
+changed**, 11 trials `unknown` → `accepted`, gold fixtures unchanged at 25
+failures, ambiguous aliases unchanged at 3.
+
+### 2. "No self-alias" is 3,840, not 4,461
+
+Neither raw equality (7,621) nor cleaned equality (3,840) reproduces the plan's
+4,461. **3,840** is the operationally correct count: `check_alias()` compares
+`alias_clean` against `make_sponsor_candidates()` output, and both sides are
+already cleaned, so cleaned equality is the definition that matches the matcher.
+
+### 3. The 861 blocked queue rows are mostly no-ops, not one decision
+
+§0b framed the blocked class as "one systematic exclusion rule, not 861
+individual judgments", with the risk that it might instead be 861 real
+decisions. It is neither: **836 of the 861 contain exactly one distinct label** —
+a merge proposal with nothing to merge, produced when a department-level alias
+key (`aalborg orthopedics hospital`) resolves to the single correct canonical
+(`Aalborg University Hospital`). Unblocking them changes nothing.
+
+The real work is the **25 blocked clusters with more than one label** plus the
+**76 `review` rows** — about 100 decisions, not 937. The 25 are mostly obvious
+duplicates (`Universität zu Köln` / `University of Cologne`, `Hospital Clínic
+Barcelona` / `Hospital Clinic de Barcelona`) with a few genuine non-merges that
+must stay blocked (`Liverpool Women's NHS Foundation Trust` vs `University of
+Liverpool`). The underlying `member_blocked` predicate is also two mechanisms
+sharing one reason string, not one: cross-entity combined labels (7 rows) and
+alias-only family evidence (854).
+
+### 4. `fallbacks` is rejected on the Batches API
+
+§1 specified `fallbacks: "default"` with beta `server-side-fallback-2026-07-01`
+for refusal handling, alongside batch submission. The parameter is **rejected on
+the Batches API**, so `5_llm_resolve.R` attaches it only to `--sync` requests.
+Batch results are instead branched across all four `result.type` values, and a
+refusal on either path is recorded as a failed row rather than a decision.
+
+### Bonus finding: 87 live fuzzy false positives
+
+The 0a audit surfaced 87 canonicals that the matcher currently mis-resolves via
+Jaro-Winkler when a raw string arrives spelled exactly like the label —
+`Abalos Therapeutics` → `Alba Therapeutics`, `Acetylon Pharmaceuticals` →
+`Actelion Pharmaceuticals`, `Adienne` → `Advicenne`, `Ark Therapeutics` →
+`ARYx Therapeutics`. These are real defects, not artefacts of this work. They are
+listed in `config/sponsor_norm_pipeline/2_self_alias_conflicts.csv` under triage
+`fuzzy false positive — self-alias would fix`. Fixing one means adding its
+self-alias *and* accepting that already-matched trials change, so they are
+reported rather than applied.
