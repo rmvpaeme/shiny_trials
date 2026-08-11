@@ -276,6 +276,13 @@ What makes it safe to hand to a model:
   resolves only absent keys, so re-running costs nothing and only genuinely new
   strings reach the API. Bumping either constant invalidates deliberately and
   visibly, in the diff.
+- **One call per question, not per string.** Because the key hashes
+  `raw_clean`, raw strings that differ only in punctuation collapse to the same
+  key — `Dainippon Sumitomo Pharma America, Inc` and `...America Inc.` are one
+  question. The run asks once per distinct key (227 strings → 222 questions at
+  last measurement) and writes the answer to a cache row for *each* raw string,
+  so the reviewer's join on `raw_sponsor` still resolves every variant. The
+  Batches API rejects duplicate `custom_id`s, so this is enforced, not optional.
 
 Cost is roughly $1–2 for the sponsor residue, about half that batched. Verify
 with `--dry-run`, which reports real `count_tokens` figures and checks whether

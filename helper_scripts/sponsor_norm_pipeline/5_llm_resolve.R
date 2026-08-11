@@ -467,25 +467,51 @@ skipped <- work |> dplyr::filter(skip)
 work    <- work |> dplyr::filter(!skip)
 todo    <- work |> dplyr::filter(!cache_key %in% cache$cache_key)
 
+# Distinct raw strings can collapse to the same question. cache_key hashes
+# raw_clean, and clean_sponsor_alias() maps "Dainippon Sumitomo Pharma America,
+# Inc" and "...America Inc." to one value — same candidates, same key. Sharing
+# the key is the point (one call answers both), but the Batches API rejects a
+# duplicate custom_id, so ask once per key and fan the answer back out to every
+# raw string that shares it. Each raw string still gets its own cache row, which
+# is what the reviewer app joins on.
+questions <- todo |> dplyr::distinct(cache_key, .keep_all = TRUE)
+
 message(sprintf(
   "  %d resolvable, %d skipped (no candidates), %d already cached, %d new",
   nrow(work), nrow(skipped), nrow(work) - nrow(todo), nrow(todo)
 ))
+if (nrow(questions) < nrow(todo)) {
+  message(sprintf(
+    "  %d distinct questions (%d raw strings share a cleaned form)",
+    nrow(questions), nrow(todo) - nrow(questions)
+  ))
+}
 
-if (!is.na(limit) && limit > 0L && nrow(todo) > limit) {
-  todo <- todo |> utils::head(limit)
+if (!is.na(limit) && limit > 0L && nrow(questions) > limit) {
+  questions <- questions |> utils::head(limit)
   message(sprintf("  --limit=%d applied", limit))
+}
+
+# One answered row per cache_key -> one cache row per raw string sharing it.
+expand_to_raws <- function(rows) {
+  if (nrow(rows) == 0L) return(rows)
+  rows |>
+    dplyr::select(-raw_sponsor) |>
+    dplyr::inner_join(
+      todo |> dplyr::select(cache_key, raw_sponsor),
+      by = "cache_key", relationship = "one-to-many"
+    )
 }
 
 # ── Dry run ───────────────────────────────────────────────────────────────────
 
 if (dry_run) {
-  if (nrow(todo) == 0L) {
+  if (nrow(questions) == 0L) {
     message("Nothing to resolve. Cache is complete.")
     quit(save = "no", status = 0L)
   }
   auth <- tryCatch(resolve_auth(), error = function(e) NULL)
-  sample_row <- todo |> dplyr::slice(1L)
+  sample_row <- questions |> dplyr::slice(1L)
   body <- build_body(sample_row$raw_sponsor, sample_row$cands[[1L]], for_batch = FALSE)
 
   cat("\n--- sample request (first row) ---\n")
@@ -494,7 +520,7 @@ if (dry_run) {
   cat(candidate_block(sample_row$raw_sponsor, sample_row$cands[[1L]]), "\n")
 
   cat("\n--- candidate count distribution ---\n")
-  print(summary(todo$n_candidates))
+  print(summary(questions$n_candidates))
 
   if (is.null(auth)) {
     message("\nNo credentials available — skipping count_tokens.")
@@ -555,10 +581,10 @@ if (dry_run) {
 if (do_sync) {
   auth <- resolve_auth()
   betas <- unique(c(auth$betas, FALLBACK_BETA))
-  message(sprintf("Resolving %d string(s) synchronously...", nrow(todo)))
+  message(sprintf("Resolving %d question(s) synchronously...", nrow(questions)))
 
   rows <- purrr::pmap_dfr(
-    todo |> dplyr::select(raw_sponsor, candidates_sha256, cache_key, cands),
+    questions |> dplyr::select(raw_sponsor, candidates_sha256, cache_key, cands),
     function(raw_sponsor, candidates_sha256, cache_key, cands) {
       body <- build_body(raw_sponsor, cands, for_batch = FALSE)
       resp <- httr2::request(paste0(API_BASE, "/v1/messages")) |>
@@ -590,6 +616,7 @@ if (do_sync) {
     }
   )
 
+  rows <- expand_to_raws(rows)
   write_cache(dplyr::bind_rows(cache, rows))
   message(sprintf("Wrote %d rows to %s", nrow(rows), basename(CACHE)))
   quit(save = "no", status = 0L)
@@ -616,12 +643,12 @@ req_headers <- function(r) {
 batch_id <- poll_batch
 
 if (is.na(batch_id)) {
-  if (nrow(todo) == 0L) {
+  if (nrow(questions) == 0L) {
     message("Nothing to resolve. Cache is complete.")
     quit(save = "no", status = 0L)
   }
   requests <- purrr::pmap(
-    todo |> dplyr::select(raw_sponsor, cache_key, cands),
+    questions |> dplyr::select(raw_sponsor, cache_key, cands),
     function(raw_sponsor, cache_key, cands) {
       list(
         custom_id = cache_key,
@@ -629,6 +656,16 @@ if (is.na(batch_id)) {
       )
     }
   )
+  # The API enforces this too, but failing here costs nothing and names the
+  # offending key instead of returning a wall of hashes after the upload.
+  ids <- purrr::map_chr(requests, "custom_id")
+  if (anyDuplicated(ids)) {
+    stop(
+      "duplicate custom_id in batch: ",
+      paste(unique(ids[duplicated(ids)]), collapse = ", "),
+      call. = FALSE
+    )
+  }
   message(sprintf("Submitting batch of %d requests...", length(requests)))
   resp <- httr2::request(paste0(API_BASE, "/v1/messages/batches")) |>
     req_headers() |>
@@ -673,7 +710,7 @@ if (httr2::resp_status(resp) >= 400L) {
 
 lines <- strsplit(httr2::resp_body_string(resp), "\n", fixed = TRUE)[[1L]]
 lines <- lines[nzchar(lines)]
-by_key <- todo |> dplyr::select(cache_key, raw_sponsor, candidates_sha256, cands)
+by_key <- questions |> dplyr::select(cache_key, raw_sponsor, candidates_sha256, cands)
 
 rows <- purrr::map_dfr(lines, function(line) {
   r <- jsonlite::fromJSON(line, simplifyVector = FALSE)
@@ -695,6 +732,7 @@ rows <- purrr::map_dfr(lines, function(line) {
   cache_row(hit$raw_sponsor, hit$candidates_sha256, key, res, batch_id)
 })
 
+rows <- expand_to_raws(rows)
 write_cache(dplyr::bind_rows(cache, rows))
 
 ok <- sum(!is.na(rows$abstained))
