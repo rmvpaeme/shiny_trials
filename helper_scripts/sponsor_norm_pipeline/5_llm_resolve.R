@@ -94,6 +94,15 @@ arg_value <- function(flag) {
 limit      <- suppressWarnings(as.integer(arg_value("--limit")))
 poll_batch <- arg_value("--poll")
 
+# --model swaps the pinned model for an A/B. MODEL_ID is part of cache_key, so
+# two models' decisions coexist in the cache rather than overwriting each other.
+# Effort errors on Haiku 4.5 / Sonnet 4.5, so drop it there rather than sending
+# a parameter that 400s.
+model_arg <- arg_value("--model")
+if (!is.na(model_arg) && nzchar(model_arg)) MODEL_ID <- model_arg
+MODELS_WITHOUT_EFFORT <- c("claude-haiku-4-5", "claude-sonnet-4-5")
+model_supports_effort <- function(m) !any(startsWith(m, MODELS_WITHOUT_EFFORT))
+
 if (!dry_run && !do_sync && !do_batch && is.na(poll_batch)) {
   stop("Pick a mode: --dry-run, --sync, --batch, or --poll=<batch_id>", call. = FALSE)
 }
@@ -340,10 +349,11 @@ build_body <- function(raw, cands, for_batch) {
       role = "user",
       content = candidate_block(raw, cands)
     )),
-    output_config = list(
-      effort = EFFORT,
-      format = output_schema(cands)
-    )
+    output_config = if (model_supports_effort(MODEL_ID)) {
+      list(effort = EFFORT, format = output_schema(cands))
+    } else {
+      list(format = output_schema(cands))
+    }
   )
   # Thinking is left at its default (on for Opus 5). MAX_TOKENS covers thinking
   # and the JSON together. No temperature/top_p/top_k — all 400 on this model.
