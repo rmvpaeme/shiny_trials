@@ -746,8 +746,20 @@ rows <- purrr::map_dfr(lines, function(line) {
   res <- switch(
     r$result$type,
     succeeded = parse_message(r$result$message, cands),
-    errored   = list(ok = FALSE, error = paste0(
-      "errored: ", r$result$error$type %||% "unknown")),
+    # The batch error is the standard API envelope: result.error.type is the
+    # literal "error", and the detail a human needs — rate_limit_error,
+    # invalid_request_error, and its message — sits one level deeper in
+    # result.error.error. Reading the envelope discards exactly the field that
+    # says what to do next, so unwrap it and keep the message.
+    errored   = list(ok = FALSE, error = {
+      env_err <- r$result$error
+      detail  <- env_err$error %||% env_err
+      msg     <- detail$message %||% ""
+      paste0(
+        "errored: ", detail$type %||% "unknown",
+        if (nzchar(msg)) paste0(": ", substr(msg, 1, 300)) else ""
+      )
+    }),
     canceled  = list(ok = FALSE, error = "canceled"),
     expired   = list(ok = FALSE, error = "expired"),
     list(ok = FALSE, error = paste0("unknown result type: ", r$result$type))
