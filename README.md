@@ -200,65 +200,74 @@ The script downloads EMA's official PIP decisions feed into `config/pip_decision
 
 ### Rebuild Sponsor Labels
 
-The sponsor pipeline is deterministic and app-facing labels are read from `data/trial_sponsor_labels.csv`. The full workflow is documented in [helper_scripts/sponsor_norm_pipeline/README.md](helper_scripts/sponsor_norm_pipeline/README.md).
+App-facing labels are read from `data/trial_sponsor_labels.csv`. That file is
+produced by the **v2 pipeline**, which replaced the deterministic matcher (~4,200
+lines of R plus 16,545 committed alias rows) with a model-built canonical
+registry. Full design notes and every measurement behind it:
+[PLANS/normalisation-v2-handover.md](PLANS/normalisation-v2-handover.md).
 
-Recommended local rebuild:
+Current state: **16,594 / 16,594** distinct raw sponsor strings assigned,
+**50,359 / 50,359** trial rows labelled, **6,954** canonical sponsors, zero
+regressions against the old pipeline, built for **$10.31**.
+
+#### The display label — human curation wins
+
+```text
+1. HUMAN CURATION   config/review_ledger/review_decisions.csv
+2. pipeline label   data/trial_sponsor_labels.csv (sponsor_clean)
+3. raw sponsor      sponsor_name
+```
+
+A reviewer's decision outranks everything the pipeline produces, and the ledger
+is read on **every** app load rather than baked into `trials_cache.rds` — so a
+curation decision is live on the next start without a cache rebuild. `app.R`
+exposes `sponsor_label_source` (`human` / `human_reject` / `pipeline` / `raw`)
+alongside the label. A `reject` clears the pipeline label rather than replacing
+it: the reviewer has said the proposal is wrong without supplying a better one,
+so the display falls back to the raw name.
+
+#### Rebuilding
+
+`rebuild_cache.R` runs the deterministic tail automatically — `1_export` then
+`E_emit` — so a normal cache rebuild re-derives labels from the registry already
+on disk and never calls the API. To rebuild labels by hand:
 
 ```bash
 Rscript helper_scripts/sponsor_norm_pipeline/1_export_trial_sponsors.R
-Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror --no-location
-Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R
+Rscript helper_scripts/sponsor_norm_pipeline/E_emit.R --diff-only   # gate: read before writing
+Rscript helper_scripts/sponsor_norm_pipeline/E_emit.R
 ```
 
-To emit an unresolved review queue:
+`--diff-only` classifies all 50,359 trial rows against the frozen baseline in
+`data/trial_sponsor_labels_baseline.csv` and writes nothing. **`accepted →
+unknown` must be zero**; that is the regression gate for the whole rewrite.
 
-```bash
-Rscript helper_scripts/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue
-```
-
-Useful curation commands:
-
-```bash
-Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R 100
-Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --include-skipped
-Rscript helper_scripts/sponsor_norm_pipeline/4_curate_sponsors.R --export
-```
-
-After exporting decisions, rerun `2_build_sponsor_index.R --no-ror --no-location` and `3_build_sponsor_labels.R`.
-
-Audit the canonical vocabulary (offline, no network):
-
-```bash
-Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R
-Rscript helper_scripts/sponsor_norm_pipeline/audit_sponsor_canonicals.R --fix-self-aliases
-```
-
-Reports collisions, legal-suffix near-duplicates, single-alias canonicals, missing
-self-aliases, and the unapplied merge queue. `--fix-self-aliases` emits the safe
-subset to `sponsor_llm_aliases.csv`; labels it declines to touch are triaged in
-`config/sponsor_norm_pipeline/2_self_alias_conflicts.csv`. **Always re-run
-`2_build_sponsor_index.R` and `3_build_sponsor_labels.R` afterwards and diff
-`data/trial_sponsor_labels.csv`** — `unknown → matched` is the only acceptable
-change; an already-matched trial changing label is a regression.
-
-Resolve what the matcher cannot (**needs an API key and network**):
+The passes that mint and merge the registry cost money and need an API key, so
+they are deliberately manual and are not part of any rebuild:
 
 ```bash
 export ANTHROPIC_API_KEY='sk-ant-...'
-Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --dry-run   # assemble + count tokens, no calls
-Rscript helper_scripts/sponsor_norm_pipeline/5_llm_resolve.R --batch     # ~$1, 50% cheaper than --sync
+Rscript helper_scripts/sponsor_norm_pipeline/A_block.R                       # offline blocking
+Rscript helper_scripts/sponsor_norm_pipeline/B_mint.R --batch                # name each cluster
+Rscript helper_scripts/sponsor_norm_pipeline/B_mint.R --batch --singletons   # and the 1-member blocks
+Rscript helper_scripts/sponsor_norm_pipeline/C_assign.R --batch              # assign the remainder
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --translate --batch
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --batch
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --apply
 ```
 
-A few hundred raw strings survive as `unknown` because they are entity
-resolution, not string editing. Step 5 asks a pinned model (`claude-opus-5`) to
-**pick from a list** of existing canonicals assembled from the matcher's own
-indexes — constrained by a JSON-schema `enum` and a post-response off-list check,
-so it can never invent a name. Decisions land in the committed cache
-`config/sponsor_norm_pipeline/5_llm_proposals.csv` and surface in the reviewer
-app as evidence beside the matcher's own candidate. **Nothing auto-applies**: a
-proposal becomes a label only when a human accepts it. Run the vocabulary audit
-first — the cache key hashes the candidate set, so merging a canonical afterwards
-invalidates cached proposals.
+**Always run `--sync --limit=N` before any `--batch`.** It costs pennies and has
+caught five faults that would each have wasted a full batch. Spend is capped at
+USD 60 in code (`llm_budget_guard()`) and recorded from returned usage in
+`config/sponsor_norm_v2/llm_spend.csv`.
+
+The superseded scripts (`2_build_sponsor_index.R`, `3_build_sponsor_labels.R`,
+`4_curate_sponsors.R`, `5_llm_resolve.R`, `6_llm_verify.R`,
+`audit_sponsor_canonicals.R`) live in `LEGACY/`, which is gitignored; they remain
+in git history. `1_export_trial_sponsors.R`, `normalise_sponsors.R` and
+`derive_sponsor_canonical.R` are **not** legacy — the first feeds the v2
+pipeline, the other two are still sourced by `curation_app/` and
+`tests/derivation/`.
 
 ### Rebuild Substance Labels
 
@@ -363,7 +372,8 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 │   ├── update_pip_decisions.R
 │   ├── create_local_test_db.R
 │   ├── clean_db.R
-│   ├── sponsor_norm_pipeline/    # 1_export → 2_index → 3_labels → 4_curate → 5_llm_resolve
+│   ├── llm_norm/                 # shared LLM client, retrieval, registry (v2)
+│   ├── sponsor_norm_pipeline/    # 1_export → A_block → B_mint → C_assign → D_consolidate → E_emit
 │   └── substance_norm_pipeline/  # 1_export → 2_index → 3_labels → 4_curate
 ├── rmarkdown/
 │   ├── report.Rmd
