@@ -1,0 +1,563 @@
+case_id,raw_sponsor,n_trials,registers,countries
+009d4a7d91e65ba2,"Aarhus University Hospital, Department of Endocrinology",2,EUCTR,DK
+00e5a7d28faab275,Oslo University Hospital Hf,8,CTIS+OTHER,
+00eed5848b9424ea,Epygenix Therapeutics Inc.,2,CTIS,
+0169b8fbb670b55a,OSPEDALE POLICLINICO S. MATTEO,43,EUCTR,IT
+0229c3ef6c6e7781,University Hospital Tbingen,14,EUCTR,"AT,DE"
+022c028ee9190c7e,NovaRx Corporation,1,EUCTR,DE
+026c11eed99f9e7a,Mitsubishi Tanabe Pharma Corporation MTPC,11,EUCTR,"BE,BG,CZ,DE"
+02f708d7470f38fb,Roche Farma S.A.U. que realiza el ensayo en Espaa y que acta como representante de F.Hoffmann-La Roche Ltd.,1,EUCTR,ES
+03135c973af6c365,"Medizinische Universitt Wien, Univ.Klinik f.Innere Medizin II, Abt.f.Angiologie",1,EUCTR,AT
+03241f17d7d1e012,Danderyd Hospital,1,EUCTR,SE
+03ad00b159908a2a,Alimentiv Inc.,3,CTIS+EUCTR,BE
+03c228ccad7f10c7,Centre Hospitalier Universitaire De Saint Etienne / Centre Hospitalier Universitaire De Saint Etienne,1,CTIS,
+045efa616493edfd,Juan Crdoba,1,EUCTR,ES
+046774d5d98a6ca5,Charit - Universittsmedizin Berlin,46,EUCTR,"AT,CZ,DE"
+04cf618edc321910,UZ Leuven / UZ Leuven,1,CTIS,
+051f5401adc2191e,"Medizinische Universitt Graz, Klinische Abteilung fr Endokrinologie und Nuklearmedizin",1,EUCTR,AT
+05bbfcff335a860f,"Merck  Co, Inc.",5,EUCTR,"CZ,DK"
+05da13c4cad4a90b,UCB Biopharma SRL,30,EUCTR,"BE,BG,CZ,DE,ES,GB"
+06066bf256389bdd,Novartis Farmaceutica SA,1,EUCTR,ES
+06b188ae535d7ceb,Department of Psychiatry,1,EUCTR,IE
+080e034556cb5a1b,CHU Angers,12,EUCTR,FR
+082df6c8df98a49e,Klaus Olkkola,5,EUCTR,FI
+0833b5cea399158e,"Dep. Nuclear medicine, Odense university hospital",1,EUCTR,DK
+08a6640114323b06,"Calibra Medical, Inc.",1,EUCTR,DE
+08b3fb2f3bbab85c,University of Oxford / Royal Wolverhampton Hospitals NHS Trust,1,EUCTR,GB
+0a38d1df1ef96ebd,Institut fr klinische Forschung und Entwicklung Berlin GmbH am St. Hedwig Krankenhaus,1,EUCTR,DE
+0b0da20892deb051,Martina Hansens Hospital AS,1,OTHER,
+0b480c72b31164f2,Region Midtjylland,52,CTIS+OTHER,
+0b6e1a36665a692f,Universitaet Des Saarlandes,4,CTIS,
+0c8a0e0d543a1486,Genzyme Corp.,5,CTIS,
+0d0431bfe745f1b2,University Hospital of Regensburg,3,EUCTR,"AT,DE"
+0d1d016611c4b865,Barts Health NHS Trust,15,EUCTR,GB
+0d3bbc870e69f9ac,Can-Fite Biopharma Ltd.,2,CTIS,
+0d54afd7febb415d,Stichting GGZ Drenthe,1,CTIS,
+0eab71d344e95af3,"Miravant Pharmaceuticals, Inc.",1,EUCTR,CZ
+0ebe070e25d9e350,"Academisch medisch centrum, department of psychiatry",1,EUCTR,NL
+0eebb1b43542419b,Grey Wolf Therapeutics Limited,2,CTIS,
+0f7ae8e775b8026b,University of Liverpool / Royal Liverpool and Broadgreen University Hospital NHS Trust,1,EUCTR,GB
+0f9775b3de0f7c2d,Erasmus MC - Department of Neurology,1,EUCTR,NL
+1000a45fddb6361d,"Royal Brompton and Harefiled NHS Foundation Trust, Royal Brompton Hospital",1,EUCTR,GB
+10c336b7262db0c4,Kings College London / Guys  St ThomasNHS Foundation Trust,1,EUCTR,GB
+11221c22d1e71993,"Cubist Pharmaceuticals, a wholly owned subsidiary of Merck  Co., LLC",1,EUCTR,BG
+113ad9b06f25be3e,XENOTHERA,1,EUCTR,BG
+11e29a580911c554,"Medizinische Universitt Graz, Universittsklinik fr Innere Medizin, Abteilung fr Endokrinologie / Medizinische Universitt Graz, Universittsklinik fr Innere Medizin, Abteilung fr Endokrinologie",1,EUCTR,AT
+129f0cdfe5aa983e,Kartos Therapeutics Inc.,5,CTIS+EUCTR,BE
+12f6dcdce82aa5b9,Atriva Therapeutics GmbH,1,EUCTR,DE
+131f00d920138a30,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co.",1,EUCTR,BE
+1345f0b56d7ce198,Hospital Universitario De Torrevieja,1,OTHER,
+13e18f2533526956,Aalborg Sygehus,1,EUCTR,DK
+142353dd8e840803,NV ROCHE SA,1,EUCTR,BE
+146f37a5e24a5daa,Karolinska Institutet Sdersjukhuset,1,EUCTR,SE
+147f2e0bc155a92d,Randers Regional Hospital,1,EUCTR,DK
+14a51e9d6914606e,Amsterdam UMC Stichting,70,CTIS+OTHER,
+14e03adc207bb157,"Teva Pharmaceutical Industries, Ltd",3,EUCTR,BE
+160c24e52551c54e,Argenx,33,CTIS,
+16662f63e7d6e148,Galderma Research  Development,2,EUCTR,BE
+16bb5c85b9676d84,Jess Rodrguez Requena / Jos Luis Prez Albiac,1,EUCTR,ES
+1768db7ff8812390,Vifor Int.,1,EUCTR,AT
+18ce7d2199b6701c,"Department of Neurology, Karolinska University Hospital / Dept. of Pediatric hematology and oncology, Astrid Lindgren Childrens Hosp,Karolinska Univ Hospital",1,EUCTR,SE
+198af9f516a2bab9,Præhospitalet,3,CTIS,
+1a6edd5447787f95,"Med. Univ. Wien, Klinik fr Ansthesie, Allgemeine Intensivmedizin und Schmerztherapie",1,EUCTR,AT
+1ab40706378e6d6c,"Merck Sharp  Dohme LLC, a subsidiary of Merck  Co., Inc.",7,EUCTR,"BG,DE"
+1b4293885fbb9eb9,"Department of Medicine, Kge University Hospital / Department of Medicine, Kge University Hospital",1,EUCTR,DK
+1b6b3f56f5f8a32f,Acadia Pharmaceuticals Inc.,10,CTIS+EUCTR,"BG,ES"
+1bcd1b520465993b,Denali Therapeutics Inc.,6,CTIS,
+1ca72675ca8e1499,Eupraxia Pharmaceuticals Inc.,2,CTIS+EUCTR,DK
+1ce421e819772267,NBCD A/S,1,OTHER,
+1de8e6d0ed55b29f,Lumos Pharma LLC,1,CTIS,
+1ff7d2894ea38eba,Department of OncologyHerlev University Hospital,1,EUCTR,DK
+21133ca5eb3a1ab6,"Poniard Pharmaceuticals, Inc.",1,EUCTR,BG
+226e74e0c4bfe120,Universitt Wuerzburg,1,EUCTR,AT
+22818b0b90c327f0,"Aarhus University Hospital, dept. of Diabetes and Hormonal diseases",1,EUCTR,DK
+22e314ea6a52b1da,GGZ Nijmegen,1,EUCTR,NL
+230a4ac46fe7a31d,Sermonix Pharmaceuticals,1,EUCTR,LT
+24d4eac1cc1ad31e,Hope Pharmaceuticals Ltd,1,EUCTR,GB
+2501bf231bb4c11a,Fundacion Pethema,3,CTIS,
+25a54bfe96a22a9d,"Moleculin Biotech, Inc.",1,EUCTR,PL
+25a865a1dcccd2a1,Fundacin Investigacin y Desarrollo en el rea Cardiovascular,1,EUCTR,ES
+26314dcfdf803fa5,Bristol-Myers Squibb SL,2,EUCTR,ES
+264ecfa80b77466f,Universittsklinikum Erlangen,24,EUCTR,"CZ,DE,ES"
+27216bfd42d30f0e,Heidelberg Pharma,1,EUCTR,DE
+278d6ed0587e2daa,University College Dublin,28,CTIS+EUCTR,"BE,DE,DK,ES,IE"
+2849e7a73463f084,Universitatsmedizin der Johannes Gutenberg-Universitat Mainz KöR,1,CTIS,
+2923015a37f61df7,Allergie-Centrum-Charit,2,EUCTR,DE
+29a68ff7c32c016a,SERVICIO DIGESTIVO,1,EUCTR,ES
+29b17792bd86f3a6,Janssen - Cilag International,107,CTIS+OTHER,
+29bc61178509c7b1,Venter Pharma S.L.,4,CTIS+EUCTR,ES
+2a385875dc7ebb52,MERCK SHARP  DOHME B.V.,1,EUCTR,NL
+2a5194f50f2cf937,Modus Therapeutics AB,2,CTIS+EUCTR,BE
+2abcbd8426c63905,Sanofi Pasteur MSD,7,EUCTR,"BE,DE,ES,FI,FR"
+2c7202779453458a,"Medical University of Vienna, Department of Surgery",1,EUCTR,AT
+2d35f07632fc837c,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co., Inc.",173,EUCTR,"AT,BE,BG,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,IT,LT,LV,PL,PT,RO,SE"
+2e0073009bd2aa93,Charite Universittsmedizin Berlin- Campus Virchow-Klinikum,1,EUCTR,DE
+2e580ebd297c148b,Immunovant Sciences GmbH,16,CTIS+EUCTR,"BG,DE"
+2eb5870139eb6ca1,Shanghai Yingli Pharmaceutical Co. Ltd. / Shanghai Yingli Pharmaceutical Co. Ltd.,1,CTIS,
+2ef80178faa8b8cb,DOMP FARMACEUTICI S.P.A.,9,EUCTR,IT
+2f01e3f44f6d3f38,Department of Endocrinology and Internal Medicine,1,EUCTR,DK
+2f8f0f2ddbf8637e,Departamento de Microbiologa. Hospital Clinico San Carlos,2,EUCTR,ES
+2fc766c8c3c5ab57,Gentofte Hospital / Gentofte Hospital,1,OTHER,
+300966e368d91b78,Consorzio Oncotech,5,CTIS+EUCTR,IT
+315b95bec8446f4d,IIT : University Hospital - Medical Clinic II Director: Prof. Dr. med. J. Floege - Sponsor,1,EUCTR,DE
+328e94080d18f61b,MERCK SHARP DOHME,6,EUCTR,IT
+3389e550dbae2b14,"Klinikum Grohadern, ENT-Department",1,EUCTR,DE
+33ad0aebaba34d96,University of Twente,1,EUCTR,NL
+34181616e223cafd,"Wyeth Pharmaceuticals, Global Medical Affairs Department",1,EUCTR,BE
+34bb0cf58aba5c9c,Eli Lilly & Co.,130,CTIS+OTHER,
+34e1b8624b038388,Merck Serono International,3,EUCTR,"BE,CZ,FI"
+350fdc8f5edfc3f5,Arbeitsgemeinschaft medikamentse Tumortherapie gemeinntzige GmbH,13,EUCTR,AT
+3518f8db048a4f95,Centre Hospitalier Universitaire de Bordeaux,1,EUCTR,FR
+359408af534d752d,BioCis Pharma Oy,3,EUCTR,FI
+36565133020dc357,Hpital Universitaire Des Enfants Reine Fabiola H.U.D.E.R.F.,4,EUCTR,BE
+3749db0dd70951aa,Lybar a.s.,3,EUCTR,CZ
+37634bb05a183bc1,"Medizinische Universitt Graz, Universittsklinik fr Innere Medizin, Abteilung fr Gastroenterologie und Hepatologie",1,EUCTR,AT
+3775f48e36767134,Alvotech Swiss AG,9,CTIS+EUCTR,"BG,IS,PL"
+37bf14f896669efa,Cabaletta Bio Inc.,2,OTHER,
+37c2ed95589c52a2,Biocryst Pharmaceuticals Inc.,3,CTIS,
+380eab8b9272aee4,Rhythm Pharmaceuticals Inc.,2,CTIS+EUCTR,DE
+38a6d3da2cc25651,GlaxoSmithKline Biologicals SA GSK,1,EUCTR,EE
+39315064c62b1327,Hpital Erasme,6,EUCTR,BE
+39936be1c0d25fa7,Verein zur Frderung der Wissenschaft und Forschung an der 1. Med. Abteilung der Klinik Landstrae,1,EUCTR,AT
+399b3577b1888ba3,"Department of Psychiatry and Psychotherapy, Charity University Medicine",1,EUCTR,DE
+3a4bff6d66dddce3,Heart of England NHS Foundation Trust / Warwick Medical School,1,EUCTR,GB
+3a93d5653e7042fc,"Schering Corporation, a Subsidiary of Merck  Co., Inc.",1,EUCTR,BE
+3c8d899a7ddfde53,Unither Pharmaceuticals,1,CTIS,
+3d4273bb03a4043c,sanofi-aventis Recherche  Dveloppement,14,EUCTR,"AT,BE,CZ,DE,NL,PL"
+3d72fb9d5bbc2285,Verisfield Single Member S.A.,4,CTIS,
+3da9ecef94bf9ff7,Alnylam Pharmaceuticals Inc,2,EUCTR,ES
+3de8be08c6525af1,GELA Group,2,EUCTR,BE
+3df9c991bf949e37,Roche Hungary Ltd.,5,EUCTR,"BG,HU,LV"
+3f0c4e248e4dc382,Universiteit Twente,1,OTHER,
+3f259bcd28ed32db,IMEA Institut de Mdecine et dEpidmiologie AppliqueFondation Lon MBa,1,EUCTR,FR
+3f28e35dc0269caa,AstraZeneca Pharmaceuticals,1,EUCTR,BE
+3fab87dd12c0ee6d,Laboratoires Merck Sharp  Dohme - Chibret,1,EUCTR,FR
+3fe764991afe7a44,"Inmunotek, S.L. / INMUNOTEK, S.L.",1,EUCTR,ES
+40c26af35f1995ff,Centre Francois Baclesse,7,CTIS+EUCTR+OTHER,FR
+40c683e5aa7b9cbc,Claus Anders Bertelsen,1,EUCTR,DK
+415b0c0402ab0b7d,"Radboud University Medical Centre, department of Psychiatry",1,EUCTR,NL
+41b6f592df2238c4,Steba Biotech S.A.,2,CTIS+EUCTR,FR
+41fbbda5dd2d2592,FLUIDDA nv,1,EUCTR,BE
+421756a45cc3c816,Humanitas Mirasole S.p.A.,6,CTIS,
+42698a031d5b2c2f,Region Skane / Region Skane,1,CTIS,
+42d7d1782043ff87,Universittsklinikum Tbingen,10,EUCTR,"AT,DE"
+42e08418ef295c76,"University of Pcs, Medical School, Department of Ophthalmology",1,EUCTR,HU
+434fc20276192cfc,INSTITUT DE RECHERCHES INTERNATIONALES SERVIER,5,EUCTR,IT
+447ed2174627d1d1,MAASTRO Clinic,3,EUCTR,NL
+45ad76df2d7ce661,Instituto De Investigacion En Oncología Radioterapica FEOR,1,CTIS,
+45cecb733a02ffcc,"University Medical Centre St. Radboud, Department of Dermatology",1,EUCTR,NL
+46638e335d530edf,Witten-Herdecke University,1,EUCTR,DE
+468c02f8c1ad4e04,Amgen Ltd,2,EUCTR,"AT,BE"
+4751351e073e7bb6,"Dept of Transplantation Surgery B 56, Karolinska University Hospital, Huddinge",1,EUCTR,SE
+481fa1b680283b99,Rigshospitalet-Glostrup,1,EUCTR,DK
+4918f5737439935c,AZIENDA SANITARIA OSPEDALIERA O.I.R.M. - S. ANNA,5,EUCTR,IT
+49ba9a6ba6e2a469,"Vtesse LLC, a Mallinckrodt Pharmaceutical Company",1,EUCTR,DE
+4a9f87d5ea0199bf,University Hospital Linkping,1,EUCTR,SE
+4ab15eb004a937c7,Centre Hospitalier De Tourcoing,1,OTHER,
+4b259c48c15961f1,Hospital for Sick Children,1,EUCTR,ES
+4bba3b418bc6c7f9,Merck Sharp and Dohme de Espaa,1,EUCTR,ES
+4bcaac484337fdd1,"Merck  Co,  Inc",1,EUCTR,BE
+4c3637fc7ef944d0,Presurgy S.L.,1,CTIS,
+4c457127b0707e6e,Cessation Therapeutics Inc.,1,CTIS,
+4c9b9c687c1d3100,"Hvidovre Hospital, Department of Gynecology",1,EUCTR,DK
+4cfa1db5ee95ca87,Centre Hospitalier Universitaire de Nice,1,EUCTR,FR
+4d2372d28e1003f8,"Department of Thoracic and Hyperbaric Surgery, University Medical School Graz",1,EUCTR,AT
+4d557de9057477c7,Merck Generics,2,EUCTR,CZ
+4d8535a556ef4d90,Amsterdam UMC Stichting / ZonMw,1,OTHER,
+4d85ee3b195f55dc,Erasmus MC,89,EUCTR,"AT,BE,ES,NL"
+4d91c54711b13849,Eli Lilly & Co. / Eli Lilly & Co.,1,CTIS,
+4da873c0ab8e678d,Gteborgs Universitet,3,EUCTR,SE
+4fbe764bdfc6f477,Profile Pharma Ltd,1,EUCTR,GB
+51c1cc15f226f0ac,UCB Pharma Belgium,1,EUCTR,BE
+51eb6f6a0344273a,"Medical University of Vienna, Department of Internal Medicine II",1,EUCTR,AT
+520e0fb79a68eeb5,Santen Incorporated,1,EUCTR,AT
+53438f010183e804,Servicio de Cardiologa. Hospital Universitario Vall dHebron,1,EUCTR,ES
+536ab9dcb2251ad3,"Department of Palliative Medicine, RWTH Aachen",1,EUCTR,DE
+53dceb9a432c412c,The Royal Marsden NHSF Trust,2,EUCTR,GB
+547a59df6770b591,Grupo Espanol De Oncologia Genitourinaria-Socug,2,CTIS+OTHER,
+548ae55e021c1ff4,"Regensburg University Medical Center, Department of Surgery",1,EUCTR,DE
+54ae9835bff9c5c0,Medizinische Universitt Graz,23,EUCTR,AT
+54cc845fd773e266,"Dept of Plastic Surgery, Breast Surgery  Burns",1,EUCTR,DK
+54f3f016ea1e0eb5,Dutch Childhood Oncology Group,3,EUCTR,"BE,NL"
+550a69461efc0c87,Hpital FOCH,2,EUCTR,FR
+56e624cc4b6df887,Exscientia AI Limited,3,CTIS+EUCTR,BE
+5700f6b0bb9f13b3,Charit - University Hospital of Berlin,5,EUCTR,"BE,DE"
+570b035cd225e20e,MediWound Ltd.,3,EUCTR,"BE,CZ"
+573c30dd06903354,Daiichi SankyoGmbH,1,EUCTR,BE
+58c83f22e119c716,Karolinska University Hospital Solna,3,EUCTR,SE
+5971019112adf107,"Birte Nygaard, Dept of Endocrinology, Herelv Hosptial, University og Copenhagen,",1,EUCTR,DK
+597b861c324b742a,"Medizinische Universitt Wien, Universittsklinik Innere Medizin I",1,EUCTR,AT
+5984e0ee96435734,NHS Lothian - University Hospitals Division,1,EUCTR,GB
+5a1f0aeb67cc3bee,Chemo Research S.L. / Inmunova S.A.,1,CTIS,
+5b41a05d4f0b57c5,PharOS Pharmaceutical Oriented Servises Ltd. / CCDRD Cooperative Clinical Drug Research and Development AG,1,CTIS,
+5b601a198f068bc1,"Odense University Hospital, afd.M",1,EUCTR,DK
+5b61063733d19d9b,Grupo Espanol De Tumores Neuroendocrinos,6,CTIS,
+5b9bf52ded67acda,"Charit Universittsmedizin Berlin, Medizinische Klinik m.S. Nephrologie",1,EUCTR,AT
+5c484e57c30383d9,Universitair Ziekenhuis Brussel,16,CTIS+EUCTR,BE
+5ca339fead9cc9b8,Goethe-University Frankfurt,1,EUCTR,DE
+5ca964e08e78c64a,Latigo Biotherapeutics Inc.,1,OTHER,
+5cf059ec1f6788b6,Laboratoire Aventis,1,EUCTR,HU
+5dac80af9e92044a,Univeritetssjukhuset rebro / Universitetssjukhuset rebro,1,EUCTR,SE
+5e3b7c9327267810,University Of Cologne,21,CTIS+OTHER,
+5e6198af7f47bd80,Martin-Luther-Universitt Halle-Wittenberg,12,EUCTR,DE
+5ede3dee522c7668,Enterome,4,CTIS+EUCTR,DE
+5f483941fd7598e8,UNIVERSITA DEGLI STUDI DI PARMA,4,EUCTR,IT
+5fa6c9c79fd7296b,Grupo Dermatologico Y Estetico Pedro Jaen S.A.,1,CTIS,
+5fa6de620beae43b,Technische Universitt Dresden,20,EUCTR,"BE,CZ,DE"
+60f0c8a93373fac1,OBCTCD-24 Ltd,1,EUCTR,GR
+611025508440b8a9,Ascendis Pharma A/S,2,EUCTR,"AT,BG"
+613d2cc0f028b1b8,"Radboud University Nijmegen Medical Centre, department of Rheumatic Diseases",1,EUCTR,BE
+61fa9abf16a859dc,"bluebird bio, Inc.",6,EUCTR,"DE,FR"
+626387cddccc4fb7,MERRIMACK PHARMACEUTICALS,3,EUCTR,"BE,DE"
+62639ae8e4a9a3e7,Intrabio Limited,2,CTIS,
+629cb83b9b64fd16,Daniel Podzamczer Palter,4,EUCTR,ES
+63499b568e6a9ec8,University of Aberdeen / NHS Grampian Health Board,1,EUCTR,GB
+63fcca767a4087be,Emiliano Hernndez Galilea,1,EUCTR,ES
+642aca7b4b84ed16,Kings College Hospital Trust RD,1,EUCTR,GB
+64726fabcb030186,Amphia Hospital,3,CTIS+EUCTR,NL
+647f9f9f941c87bb,University of Leeds,62,EUCTR,GB
+64a97acd0b41dd4b,Instytut Hematologii I Transfuzjologii,2,CTIS,
+64c611da09bbe96b,Bispebjerg Hospital / Gentofte Hospital,1,CTIS,
+64f248e4c99dd934,Wojciech Zbigniew Pawlak,1,EUCTR,DK
+65850236bb808d63,"Department of Ophthalmology, SEmmelweis University",1,EUCTR,HU
+65da3808fd661186,University Hospital of Heidelberg,6,EUCTR,DE
+6600fe3eb95c54f6,"Wyeth Research Division of Wyeth Pharmaceuticals Inc. Clinical research and Development / Wyeth Pharmaceuticals France, Wyeth Research Division",1,EUCTR,BE
+6656295dd081f9b9,Helperby Therapeutics,1,EUCTR,GB
+66fd157c55925df1,University Hospitals Leuven,45,EUCTR,BE
+67a7195b8c04f872,"University of Oulu, Department of Physical and Rehabilitation Medicine",1,EUCTR,FI
+685df3701ca069d7,University Medical Center utrecht,2,EUCTR,NL
+69298e82f9d875ab,Inventiva,2,CTIS,
+692d08bf96daadeb,"Pfizer Limited, Ramsgate Road, Sandwich, Kent, UK",3,EUCTR,"BE,BG,FI"
+6967982437833abd,Janssen Biologics B.V.,15,EUCTR,"AT,BE,NL"
+69d428b9db4ced22,Rheinische Friedrich Wilhelms Universität Bonn,1,CTIS,
+69fd8ba22b561090,"National Institute for Public Health and the Environment RIVM, the Netherlands",2,EUCTR,NL
+6a5f15de0c1ef714,TargED Biopharmaceuticals B.V.,3,CTIS,
+6aa2f676cb07d057,Imbria Pharmaceuticals Inc.,1,CTIS,
+6aa8af843a7b6c6d,"Cubist Pharmaceuticals, LLC, an idirect wholly owned subsidiary of Merck SharpDohme  Corp.",1,EUCTR,BG
+6ab3c397d5a539ca,Highlight Therapeutics,1,EUCTR,FR
+6ac6cf303c175416,CCDRD Cooperative Clinical Drug Research and Development AG / Sopharma AD,1,CTIS,
+6b94c58787fb02f6,Dean of the Medical Faculty of the Friedrich-Alexander University Erlangen-Nrnberg Prof. Dr. med. Markus F. Neurath,1,EUCTR,DE
+6bc5820e93022c04,Mabion SA,1,EUCTR,HR
+6bf25b5a718729bd,OptiNose UK Ltd.,1,EUCTR,CZ
+6c34ed06997f5498,Uniwersytet Medyczny Im. Karola Marcinkowskiego W Poznaniu,1,CTIS,
+6ce3d807fb963451,Klinikum Grosshadern,1,EUCTR,DE
+6d9144e6714b96f7,Maastriccht University,1,EUCTR,NL
+6e11cdca65925e6c,Tenax Therapeutics Inc.,1,CTIS,
+6e171014808c06c0,Varsinais-Suomen hyvinvointialue,9,CTIS,
+6fecbf149acc7cc4,Isotechnika Inc,1,EUCTR,DE
+7034403e63ac221a,Nuvectis Pharma Inc.,1,CTIS,
+709d5145575869ad,CHDI Foundation Inc.,1,OTHER,
+71adc6db0367a6ba,"Medizinische Universitt Graz, Klinische Abteilung fr allgemeine Pdiatrie",1,EUCTR,AT
+71dd19d5e6067e6a,Merck  Co Inc.,1,EUCTR,DE
+72ff3c8d09991a3e,"Klinik fr Physikalische Medizin und Rehabilitation, Medizinische Universitt Wien",1,EUCTR,AT
+730234880484b7f3,Centre Oscar Lambret,22,CTIS+EUCTR+OTHER,"AT,ES,FR"
+7318e26d86527512,Department of anesthesiology,2,EUCTR,DK
+7343c2f154eb8b41,Ribocure Pharmaceuticals AB,4,CTIS,
+73a32c7d1709e2e3,"Meiji Seika Kaisha, Ltd.",1,EUCTR,AT
+73e3af53eb44fd6a,Merck Sharp  Dohme Gesellschaft m.b.H.,1,EUCTR,AT
+745ec41c8027b256,Astria Therapeutics Inc.,4,CTIS+OTHER,
+7519c0bfb1fa5682,"Fujisawa Healthcare, Inc",1,EUCTR,BE
+753cf2a19812ba79,"Department of Infecitous Diseases, Aarhus University Hospital",1,EUCTR,DK
+75d9d015fc2a2445,ROXALL Medizin GmbH,18,CTIS+EUCTR,DE
+75e424517f454497,Grupo Espanol De Oncologia Genitourinaria-Socug / Grupo Espanol De Oncologia Genitourinaria-Socug / Grupo Espanol De Oncologia Genitourinaria-Socug,1,CTIS,
+763d06912db016c8,Universitaetsklinikum Erlangen-Nuernberg,1,EUCTR,DE
+768f1ce69328da40,Instituto de investigación en Oncología  radioterápica FEOR (Fundación Española de Oncología  RT),1,OTHER,
+76ed358ee1fb60eb,Lupin Europe GmbH,2,CTIS+EUCTR,FR
+775e65c9df39f162,"Merck Corporation, Inc.",2,EUCTR,CZ
+77e3407bc3870101,"Department of Asthma, Allergy and Respiratory Science, GKT School of Medicine, Kings College London",1,EUCTR,GB
+781c425ad14f2081,Associazione Italiana Per Lo Studio Del Pancreas,1,CTIS,
+78691981313b073e,"Academic Medical Center, Department of dermatology",1,EUCTR,NL
+78a86106dd472912,The Norwegian Radium Hospital,1,EUCTR,NO
+78d35225daaed544,ADC Therapeutics S.A.,4,CTIS,
+78dc56a1bf029e5f,Helse Fonna,3,EUCTR,NO
+7929059cb1baf2de,UCB S.A. / UCB  Inc.,1,EUCTR,FI
+7a4793502a51524a,Novartis Farmacutica S.A.,14,EUCTR,ES
+7a746b1b3758a25e,Universitaetsklinikum Schleswig-Holstein AöR,10,CTIS,
+7a7a5109b992025f,Delix Therapeutics Inc. / Delix Therapeutics Inc.,1,CTIS,
+7bfdfaeca87f0a8b,Childrens Hospital of Eastern Ontario,1,EUCTR,AT
+7c500c94d4dd9059,UCB Biopharma,33,CTIS,
+7db42074991dbecb,"Klinisk Forskningsenhed, Medicinsk Afdeling, Hmatologisk Afsnit, Sygehus Lilleblt, Vejle Sygehus",1,EUCTR,DK
+7ddaf40a915f2f3a,Bayer HealthCare Pharmaceuticals INC,1,EUCTR,AT
+7f1d15e0fcac5a33,Royal College of Surgeons in Irlenad,1,EUCTR,IE
+7f53e3b5e834eb17,Isala klinieken department Cardiology,1,EUCTR,NL
+7f87e4d48c66948e,Braeburn Pharmaceuticals,1,EUCTR,DK
+7f99f1fad1bff866,Bold Therapeutics Inc.,1,CTIS,
+80c788baa2e3d7ab,"Dept. of Oncology, Karolinska university hospital",1,EUCTR,SE
+80c801e8aa12f32f,Sun Pharma Global FZE,4,EUCTR,"BE,ES,GB"
+80c9a08d3fec7f65,"Department of dermatology, Odense University Hospital",1,EUCTR,DK
+815ed6a64cebae6f,AZIENDA OSPEDALIERA DI BOLOGNA POLICLINICO S. ORSOLA M. MALPIGHI,115,EUCTR,IT
+81f2f21c6cc19813,"The Norwegian Radium Hospital, Oslo University Hospital",1,EUCTR,NO
+82cfef13b47c8fe4,"Seattle Genetics, Inc.",14,EUCTR,"AT,BE,BG,CZ,ES,FR,GB"
+82fa761c909a9f95,LFB BIOTECHNOLOGIES,14,EUCTR,"BE,DE,ES,FR,PL"
+84bda450afec6ac5,Medical University Of Gdansk,15,CTIS,
+84cb9d3ae2be052c,Inmagene LLC,2,CTIS+OTHER,
+85cb1fa72fecd9e7,Merck Serono SA - Geneva,2,EUCTR,AT
+8624edbe422b9fdf,UNIVERSIT CATTOLICA DEL SACRO CUORE- POLICLINICO A. GEMELLI,5,EUCTR,IT
+86660560812cf191,"Department of Endocrinology, Hvidovre Hospital",1,EUCTR,DK
+8670b11df5088955,Charalampos Vlachopoulos,1,EUCTR,GR
+875ca8f33115f36e,Maija Kaukonen,1,EUCTR,FI
+87a54e57a88ae9c1,Ferraz Lynce Especialidades Farmaceuticas S.A.,1,OTHER,
+8815b7cd781f319a,Red De Apoyo A La Investigacion Clinica En Hematologia Y Hemoterapia S.L. / Vall D Hebron Institute Of Oncology,1,OTHER,
+88cc39dcb1320f4b,"Merck Sharp  Dohme Corp, a subsidiary of Merck  Co, Inc.",1,EUCTR,HU
+8922a4f211e31239,Frankfurter Institut fr Klinische Krebsforschung IKF GmbH am Krankenhaus Nordwest,3,EUCTR,DE
+893aebe50c3a568f,"MUW, Innere Med III, Abt.fr Endokrinologie  Stoffwechsel",1,EUCTR,AT
+89699d0611ea134f,Tetra Pharm Technologies ApS,1,CTIS,
+89efe66841e32e11,Hospital Clnic-Maternitat,1,EUCTR,ES
+89fb1ff8680429d9,Escient Pharmaceuticals Inc.,2,CTIS,
+8a0fbc3956efa7a7,Dermal Laboratories,4,EUCTR,GB
+8aeae6d563441054,Neurochem Inc,1,EUCTR,BE
+8b1c4df703288d52,"Medizinische Universitt Graz, Universittsklinik fr Innere Medizin, Klinische Abteilung fr Nephrologie",1,EUCTR,AT
+8b25d237fa2423b5,Heli Stil,1,EUCTR,FI
+8b3efb385e9540fe,Region Skane,29,CTIS+EUCTR+OTHER,SE
+8b5559dbef1e8ee0,Fundación para la Innovación en Biomedicina / Fundacion Para La Investigacion Biomedica Del Hospital Gregorio Maranon,1,CTIS,
+8b7f8c1edbb08313,ASSISTANCE PUBLIQUE - HOPITAUX DE PARIS AP-HP,248,EUCTR,"AT,BE,CZ,DE,ES,FR"
+8c5681a68b316425,"MediQuest Therapeutics, Inc.",1,EUCTR,GB
+8d037b65d61d4b47,Merck Sharp  Dohme de Espaa S.A,1,EUCTR,ES
+8d4da8ca8aac2bcd,Fondazione Telethon,1,EUCTR,IT
+8da84f3419fa307e,Insel Gruppe AG - Inselspital Universittsklinik fr Kardiologie,1,EUCTR,AT
+8de067d707b91a9c,"Ziekenhuis Oost-Limburg, Departement of Anesthesia",1,EUCTR,BE
+8def2ed91af8ec93,Universittsklinikum Essen,13,EUCTR,DE
+8e20d7eb5a4b8c2d,Medizinische Hochschule Hannover / Medizinische Hochschule Hannover,1,CTIS,
+8e23585ff7ce386b,"Department of Neuroscience, neurology",1,EUCTR,SE
+8f5e4c9304e93580,Merck Sharp and Dohme Ltd,1,EUCTR,GB
+8fe88894bd06e84c,Grupo Espaol de Tratamiento de Tumores Genitourinarios SOGUG-Spanish Genitourinary Oncologic Group,1,EUCTR,ES
+903456d7cb8e72ff,Mater Misercordiae Hospital - Department of Anaesthesia,1,EUCTR,IE
+90651ed1491f0b25,MERCK SHARP  DOHME CORP.,1,EUCTR,IT
+909be2602c63bb19,Biotechnology Institue I Mas D S.L.,3,CTIS+OTHER,
+90dee442bbba45bd,Institut de Recherches Internationales Servier / Institute for International Health / Institute for International Health,1,EUCTR,IE
+91be3f87bbfcb4d3,Liverpool Womens NHS Foundation Trust / Liverpoool Womens NHS Foundation Trust,1,EUCTR,GB
+920c97bbb51b91f6,Cellaïon SA,2,CTIS,
+927720b11f9dd8e4,Fondation A De Rothschild,5,CTIS+OTHER,
+92c2baa32be4a0db,Reade revalidatie & reumatologie centrum te Amsterdam,2,CTIS,
+92ca4fcf7605691a,"Nuon Therapeutics, Inc.",1,EUCTR,BG
+92f5a4af617d4d8f,Investigation Institute Bioaraba,1,EUCTR,ES
+9360b246e6f4051e,University of Dundee and NHS Tayside / NHS Tayside,2,EUCTR,GB
+937a6640f58ce014,The University of Liverpool / The Royal Liverpool and Broadgreen University Hospitals NHS Trust,1,EUCTR,GB
+9412defa7e38a5d9,Fundacion Oncosur,2,CTIS,
+94194875ebf0036b,Helse Bergen HF / St. Olavs Hospital HF,2,CTIS,
+941a6b7f12920342,MERCK SHARP  DOHME CORP. UNA SUSSIDIARIA DI MERCK  CO. INC.,2,EUCTR,IT
+9436fba54028a5cc,Hutchmed Ltd.,4,CTIS,
+94573c57806a5303,"LKH-Universittsklinikum Graz,Universitre Palliativmedizinische Einrichtung",1,EUCTR,AT
+945b39e5af2e1bed,Genaera Corporation,2,EUCTR,"ES,IE"
+94f341961ad6728d,Rocket Pharmaceuticals Inc.,6,CTIS,
+9540533a743978b0,Peloton Therapeutics Inc.,1,CTIS,
+96023fe7be6d50fa,Telios Pharma Inc.,1,CTIS,
+9622df1c9338986a,University Of Bari Aldo Moro,1,OTHER,
+967d3515e5223926,"Regional Dementia Research Centre, Dept of Neurology",1,EUCTR,DK
+9688ca424680ceb7,"Dept. Oncology, Aarhus University Hospital",1,EUCTR,DK
+976e2c2ecde85332,"Queens Medical Centre, Nottingham, University Hospital NHS Trust,",1,EUCTR,GB
+979766d1d113b8f9,Antares Pharma AG,1,EUCTR,DE
+981c0fc1926ae448,"Gerlinde Egerer MD Internal Medicine, Department V",1,EUCTR,DE
+983cc0bcf0165987,University of Geneva,1,EUCTR,DE
+99b1b6787ac0a5cd,"Department of Paediatrics, Herlev Hospital",1,EUCTR,DK
+99d80c7d571fcdf4,Gentofte Hospital / Frederiksberg Hospital,2,CTIS+OTHER,
+9a24ee2946c9554c,"Department of Neurology, Christian Doppler Medical Center, Paracelsus Medical University Salzburg",1,EUCTR,AT
+9a9dd8dc9b8dc61a,Laboratorio Farmaceutico S.I.T. - Specialita' Igienico Terapeutiche S.r.l.,1,CTIS,
+9af732a7b32eab2f,CytRx Corporation,4,EUCTR,"BG,ES,HU"
+9b0e90a2253585a2,"Med. Uni. Wien, Klinik fr Innere I",1,EUCTR,AT
+9b4a13069fac5953,Birmingham Womens Hospital,2,EUCTR,GB
+9ba1a61534a86629,CENTRO GINECOLOGICO GINFER,1,EUCTR,ES
+9bedd4d8547d4ed1,Chronic Obstructive Pulmonary Disease Trial Network COP:TRIN,3,EUCTR,DK
+9c0025b91227deba,LUMC,25,EUCTR,NL
+9c478bee7ea4c12b,"Department of infectious Diseases, Aarhus University Hospital",1,EUCTR,DK
+9d7269b7847894ee,Hospital Universitario Gregorio Maran,1,EUCTR,ES
+9e8b98dae5d2edeb,ASSISTANCE PUBLIQUE-HOPITAUX DE PARIS / ASSISTANCE PUBLIQUE-HOPITAUX DE PARIS / ASSISTANCE PUBLIQUE-HOPITAUX DE PARIS / ASSISTANCE PUBLIQUE-HOPITAUX DE PARIS,1,EUCTR,FR
+9f19c68a21d0963b,"Universittsklinik f. Innere Medizin III, Medizinische Universitt Wien",1,EUCTR,AT
+9f4ec35d5e3207d7,Bristol-Myers Squibb Services Unlimited Company / Bristol-Myers Squibb Services Unlimited Company,2,CTIS,
+9f6733022aab880c,Universitaetsklinikum Tuebingen AöR,26,CTIS+OTHER,
+9f7b30f64fcfd198,Region Sjaelland,10,CTIS+OTHER,
+9fa7f6bd0f210bc6,"Research and Development Department, Addenbrookes NHS Foundation Trust",1,EUCTR,GB
+9ff84f7b7bfd4cbd,Laboratoires Merck Sharp  Dhome-Chibret,1,EUCTR,FR
+a0501b5b74379382,"Universittsklinik fr Innere Medizin IV, Medizinische Universitt Innsbruck",1,EUCTR,AT
+a0a0e0e333ef1abe,The Netherlands Cancer Institute,4,EUCTR,"GB,NL"
+a0a440fc6f2585a2,Ethicon Inc,4,EUCTR,"BE,GB"
+a1484fe825974f1d,"MUW, Universittsklinik fr Innere Medizin III, Abteilung fr Nephrologie und Dialyse",1,EUCTR,AT
+a22966aa17cf57a3,Amar Agha,1,EUCTR,IE
+a25ef96ad5f9ff31,Universitaetsklinikum Wuerzburg AöR,4,CTIS,
+a33bf364f4790137,Celgene International Srl,4,EUCTR,"AT,BE,DE"
+a35bfcb637cb7287,Universitair Medisch Centrum Groningen,69,CTIS+EUCTR+OTHER,NL
+a3e95ff43444e8ca,"Merck Serono, an affiliate of E. Merck AB",1,EUCTR,NO
+a427d7c709972c32,Meilahti Vaccine Research Center - Helsinki University Hospital,1,EUCTR,FI
+a463d3230c30cf2e,"Department of Pharmaceutical Biosciences, Uppsala University",1,EUCTR,SE
+a486bf698744a225,Vivet Therapeutics,2,CTIS,
+a4c60b335f047a5a,Verein Zur Praevention Und Therapie Boesartiger Erkrankungen Austrian Breast And Colorectal Cancer Study Group / Institut Catala D'oncologia / ANZ Breast Cancer Trials Group Limited / University Of Manchester / Alliance Foundation Trials LLC / Shaare Zedek Medical Center,1,CTIS,
+a5a2fd5098230de9,Royal Cornwall Hospitals NHS Trust,2,EUCTR,GB
+a5f0e2e2905712a2,Juan Luis Bonilla Palomas,1,EUCTR,ES
+a632f3fda665d6b0,Neurocrine Biosciences Inc.,16,CTIS,
+a637d09afe07f750,"Therakos, Inc.",2,EUCTR,"AT,BE"
+a771dccea7a95ca1,Royal College of Surgeons in Ireland,7,EUCTR,IE
+a7b6d204bf1c808e,SLA Pharma UK Ltd / KD Swiss GmbH,1,EUCTR,GB
+a7fc395baf42cd7f,Pharmamel S.L.,1,EUCTR,ES
+a84b9c4742dec072,Norgine Limited,4,CTIS+EUCTR,"AT,BE,DE"
+a8daf1bd810c7819,The University of Dundee / NHS TAYSIDE,1,EUCTR,GB
+a921384ad2e1671b,Bristol-Myers Squibb Services Unlimited Company,81,CTIS+OTHER,
+a96d6a5d24a1377a,Abbott GmbH  Co. K.G.,2,EUCTR,BE
+aa862a64c245f621,Vivacell Biotechnology Espana S.L.,1,CTIS,
+aab16fcc0ce8f02b,"Oncoethix GmbH, a wholly owned subsidiary of Merck Sharp  Dohme Corp.",1,EUCTR,BE
+aadc0109770db0c3,Alnylam Pharmaceuticals Inc. / Alnylam Pharmaceuticals Inc. / Alnylam Pharmaceuticals Inc.,1,CTIS,
+abf82db74aac00e3,"Department of Dermatology, University of Kiel",1,EUCTR,DE
+abfd7a768aeaf750,Gentofte Hospital / GlaxoSmithKline Biologicals,1,CTIS,
+abff8b711ef24508,"Greater Glasgow Health Board, Research and Development Department / Senior Contracts Manager,Research and Enterprise,University of Glasgow",1,EUCTR,GB
+ac2b6fe6bbb8fd89,Institut Catal dOncologia,5,EUCTR,ES
+ac4fa1da64817d4b,"Merck Sharp  dohme Corp. a Subsidiary of Merck  Co., Inc.",1,EUCTR,CZ
+ae0410026ca5e5c2,Hamilton Health Sciences Corporation / Hamilton Health Sciences Corporation,1,CTIS,
+ae04eac0df8752c7,Malmö Universitet,1,OTHER,
+af2efa40e0d575e2,Abiogen Pharma S.p.A.,2,EUCTR,"AT,CZ"
+af6c0b6a780d61a4,Wake Forest University Health Sciences,1,CTIS,
+aff7752f5f97d950,Imbrium Therapeutics LP,1,CTIS,
+b0f4d6c6efe87dae,"Professor Hans Erik Johnsen, MD, DMSc, Department of Haematology, Aalborg Hospital",1,EUCTR,DK
+b10339ad31bc1aa9,University of Copenhagen / jens astrup,1,EUCTR,DK
+b15e6677dee70cd4,"Merck  Co., Inc.",56,EUCTR,"AT,BE,BG,CZ,DE,DK,EE,ES,FI,FR,GB,HU,LT,NO"
+b16db5127b982e9a,TOPIVERT Pharma Limited,1,EUCTR,BG
+b18fefbc13a9de9e,"Bispebjerg Hospital, Department of Dermatology and Venereology",1,EUCTR,DK
+b2175baec4d095a5,Calcilytix Therapeutics Inc.,1,CTIS,
+b374adc0396ab834,Royal Group Hospitals Trust,1,EUCTR,GB
+b3c70eaa2b2d958f,Merck Sharp  Dohme Sweden AB,1,EUCTR,SE
+b3ff6a9c5c985d80,Centre Leon Berard,24,CTIS,
+b443db0c4b9068d1,Universita Degli Studi Di Torino / Mario Negri Institute For Pharmacological Research IRCCS,1,CTIS,
+b4b1772651a9e7be,"Department of Ophthalmology, Medical University of Graz",1,EUCTR,AT
+b586fd32d98634e7,Novartis Farma S.p.A.,3,CTIS+EUCTR,"DE,IT"
+b59abfccf9a0364d,Medica Scientia Innovation Research S.L. / Medical University Of Vienna,1,CTIS,
+b5f223ece803fd56,Fundacion Para La Investigacion Biomedica Del Hospital Clinico San Carlos,3,CTIS,
+b613d25ff8ac2a53,"University Hospital Munich, Germany",1,EUCTR,DE
+b61b0a2ee39abc7c,Akela Pharma Inc,2,EUCTR,"BG,FI"
+b6b30cec026545e5,Gileas Science,1,EUCTR,ES
+b76997f3e58bffa8,Uppsala University,18,CTIS+EUCTR,SE
+b8aa1680ff77892a,Incyte Coorporation,1,EUCTR,AT
+b8ef71c316a7ecf3,RAFAEL GARCIA LOPEZ,1,EUCTR,ES
+b9bf3d991609b682,"Merck, S.L.",2,EUCTR,ES
+ba0ba6ce03730102,Merck Serono International S.A.,3,EUCTR,"AT,BE,DE"
+ba68295936ee0714,Boehringer Ingelheim Austia Gm.b.H,1,EUCTR,BG
+badf9f7448d7fc82,Niconovum AB,2,CTIS+EUCTR,SE
+bb868a66487651a7,Cosmo Technologies Limited,2,CTIS,
+bbe9c07653bc5e25,Yuhan Corp.,2,CTIS,
+bbff1e3f529c87cf,"Academic Medical Center, Department of Rheumatology",2,EUCTR,NL
+bd4627f4b4a3c37f,GWT-Tud GmbH,3,CTIS,
+be926599086abe0a,Puma Biotechnology Inc.,2,CTIS+EUCTR,ES
+bee082388727255f,Regulus Therapeutics Inc.,4,EUCTR,"ES,GB,GR"
+befdaa3e137931f1,sanofi-aventis recherche et developpment,1,EUCTR,BE
+bf28f77d3d1dcc40,G.O.N.O.  Gruppo Oncologico del Nord Ovest,1,EUCTR,IT
+bf53bfac99346065,Silence Therapeutics PLC,1,CTIS,
+bf647294e18dd7cd,"Department of Cardiology, Aarhus University Hospital, Skejby",1,EUCTR,DK
+bfc8d5ed01cc254a,VectivBio AG / VectivBio AG,1,CTIS,
+c0bab8067e84cf0b,CCDRD Cooperative Clinical Drug Research and Development AG / Invox Belgium,1,CTIS,
+c0dda9ba3233127d,FAZ - Floridsdorf Allergy Center,2,EUCTR,"AT,DE"
+c14c2f9616c01636,Roche Products Ltd,1,EUCTR,ES
+c166be5eda37bb64,Grnenthal GmbH / Laboratorios Andrmaco S.A. Co-sponsor Spanien,1,EUCTR,DE
+c17dd9e71b9b5eb2,Novartis Consumer Health S.A.,5,EUCTR,"DE,GB"
+c1938f815d88f356,Kings College London Institute of Pyschiatry,1,EUCTR,GB
+c19b46b79b3cce90,Leo Pharma A/S,6,CTIS,
+c31b12d9dd4ad5ac,Abeona Therapeutics Europe SL.,2,EUCTR,DE
+c4335195c7ece2e8,Universitaetsklinikum Tuebingen AöR / Universität Zürich - Klinik für Neonatologie,1,OTHER,
+c602b4462ee1da99,Pfizer Limited. Pfizer Global Research and Development,1,EUCTR,DK
+c66194afd8c418a2,"BGP Kranj / Katedra za biofarmacijo in farmakokinetiko,  Fakulteta za farmacijo",1,EUCTR,SI
+c661a649cd8dae94,Southampton University Hospitals NHS Trust,6,EUCTR,GB
+c6ce881e91c1b75a,"SK Life Science, Inc",1,EUCTR,PL
+c7948660e1a3bc52,MERCK ROMANIA SRL,1,EUCTR,RO
+c7cda2b1c9d261ed,GIE Groupe hospitalier Paris Saint-Joseph/Vinci,1,CTIS,
+c92c5f0086a4f70b,Calico Life Sciences LLC,2,CTIS,
+c932fca8f114a2c4,Milestone Pharmaceuticals Inc.,5,CTIS+EUCTR,"BE,NL"
+ca0add6fc592be47,Marinus Pharmaceuticals Inc.,1,CTIS,
+ca72a51cecf8ec85,"Alder BioPharmaceuticals, Inc.",2,EUCTR,"AT,BE"
+caf6ab7a4cec8e6e,Prinnovation GmbH,1,CTIS,
+cbed57659938f859,Genoscience Pharma,1,EUCTR,BG
+cc49b1f0ff419d53,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co., Inc. hereafter referred to as the SPONSOR or Merck",2,EUCTR,AT
+cc51ceb4f1229abb,Mads Werner,2,EUCTR,DK
+ccec6aa5f06ce4d2,Maasstad Ziekenhuis,3,EUCTR,NL
+cd5149a80ec53465,Juan Cordoba,1,EUCTR,ES
+cd7691672b62973a,Centre Hospitalier Universitaire De Nimes,14,CTIS+OTHER,
+ce88d5988071595d,BIOXELL SPA,3,EUCTR,IT
+ced18fa3e6a9bf8d,Merck Sharp  Dohm Corp.,1,EUCTR,BG
+cf003743588f8ada,Steiermrkische Gebietskrankenkasse,1,EUCTR,AT
+cf09da7d2cd61602,Addex Pharmaceuticals SA,1,EUCTR,GB
+cf21eaa878aa78e1,The Norwegian University of Science and Technology,1,EUCTR,NO
+cf5b28e0eda92e37,"Karuna Therapeutics, Inc.",1,EUCTR,BG
+cf67646e8111bcd8,Verein zur Frderung der Wissenschaft und Forschung an der 1.Med. Abteilung der Krankenanstalt Rudolfstiftung,1,EUCTR,AT
+cf97ef5f68a3d29b,GeNeuro Innovation SAS,2,EUCTR,SE
+cfd14940f8f129ba,University hospital of Montpellier,4,EUCTR,FR
+d0446d7b0c6fca56,Qed Therapeutics Inc.,4,CTIS,
+d1bc6f8ea620eb15,OMRIX biopharmaceuticals Ltd,2,EUCTR,"DE,GB"
+d1e6edbb4c45fae2,"Merck Serono S.A.-Geneva, an affiliate of Merck KGaA Darmstadt, Germany",1,EUCTR,BE
+d216b15037c00611,Universittsklinik Freiburg,1,EUCTR,AT
+d21ec5bfa690839f,"Pacira Pharmaceuticals, Inc.",3,EUCTR,"BE,BG"
+d239c4b9ecb8c330,Heidelberg University Hospital AöR,1,CTIS,
+d62bf7e3f0637f48,Qualix Pharma S.L.,1,CTIS,
+d65587948d40cac3,"Medizinische Universitt Wien, Universittsklinik fr Ansthesie, Allgemeine Intensivmedizin",1,EUCTR,AT
+d6ba5067306971cb,Translational Research In Oncology,2,CTIS+EUCTR,ES
+d7021924f8422eb6,University of Edinburgh / NHS Lothian,25,EUCTR,"BE,GB"
+d72a32ae59928926,Azienda Ospedaliera Universitaria Integrata Verona,11,CTIS+EUCTR,IT
+d7ab582dfccc8fd8,United Bristol Healthcare NHS Trust,1,EUCTR,GB
+d7efe9fc8d2c472c,Region Oerebro Laen / Gottsegen National Cardiovascular Center / Národny ustav srdcovych a cievnych chorob a.s. / University Of Pecs,1,CTIS,
+d831e04f2c4800ed,ISTITUTO NEUROLOGICO CARLO BESTA,17,EUCTR,IT
+d865265342b51ff2,MOLMED,12,EUCTR,"BE,DE,GB,IT"
+d89126525788abe2,Dendreon Corporation,1,EUCTR,AT
+d8aaecf32f0678bb,"NOVARTIS FARMACEUTICA, S.A",2,EUCTR,ES
+d9731c902181ecd1,"Klinikum der Ludwig-Maximilians-Universitt Mnchen, Klinikum Grohadern",1,EUCTR,DE
+db79e65145ff5232,Medizinische Universitt Wien / Medizinische Universitt Wien / Medizinische Universitt Wien,1,EUCTR,AT
+dba1207ddc0859d6,University Of Edinburgh / NHS Lothian,1,CTIS,
+dc29ff61da2cff9e,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co, Inc. / Merck Sharp  Dohme Corp., a subsidiary of Merck  Co, Inc.",1,EUCTR,BE
+dc454ad0a0c0c8d4,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,14,CTIS+OTHER,
+dc4c24c4e399e593,"AVEO Pharmaceuticals, Inc.",5,EUCTR,"BE,BG,DE,ES"
+dc8d90c0afa39ca6,Mesentech Inc.,1,CTIS,
+dccdfb3bf805d83d,Novartis Pharma S.A.S.,8,CTIS+EUCTR,FR
+dcd6f644ba2facb1,Sanofi Pasteur MSD SNC,2,EUCTR,"DE,FR"
+dce5f3660dbdef9c,Serentis Limited,1,EUCTR,BG
+dcff06b6735b14b4,Dyax Corp,1,EUCTR,BE
+dd119fd07b082696,"Medical university Graz, Department of Plastic Surgery",1,EUCTR,AT
+ddf66f3ed80d7d46,Azienda Ospedaliera Universitaria Senese,1,CTIS,
+ddf9d457cffd29a3,Universittsmedizin der Johannes-Gutenberg Universitt Mainz,1,EUCTR,DE
+de8b0dae03b00314,Hospital Clinic,1,EUCTR,ES
+de90ae628be46d2e,Teva Branded Pharmaceutical Products R&D LLC,9,CTIS,
+df3bf9482ba1011f,Universittsmedizin der Johannes Gutenberg-University Mainz,1,EUCTR,DE
+df5ae2216a54fae9,Medical University of Graz/Department of Internal Medicine/Division of Endocrinology and Diabetology,1,EUCTR,AT
+e08f8e89db7d0502,Semmelweis University / University Of Pecs,1,OTHER,
+e0c67c92e693364a,Oncusp Therapeutics Inc.,1,OTHER,
+e165fe940eaba7ce,"University Hospital Frankfurt, Goethe University",1,EUCTR,DE
+e2ee04efd315ee72,Charite Universitaetsmedizin Berlin,3,EUCTR,DE
+e2f67753553e0fdd,UCB Biosciences Inc.,8,CTIS+EUCTR,"AT,BE,DE,NL"
+e485ba8f52574772,Asociacion Instituto De Investigacion Sanitaria Biobizkaia,5,CTIS+OTHER,
+e4c7b9703769bc5b,Advanced Biodesign,1,CTIS,
+e530d2c1d166328c,"MUW, Klinik fr Innere Med. I, Onkologie",1,EUCTR,AT
+e5d8d8aa6aea40b1,F. Hoffmann-La Roche Ltd.,82,EUCTR,"AT,BE,BG,CZ,DE,EE,ES,FR,GB,GR,HR"
+e5da7d2feaceec0a,SPARKLE SRL,1,EUCTR,IT
+e657f2961d15c135,"Danishy Headache Center, KAS Glostrup, Dep. N01",1,EUCTR,DK
+e6bd5ebe2daf3d22,Fundacin de Investigacin Biomdica del Hospital Universitario Puerta de Hierro-Majadahonda FIBM-HUPHM,1,EUCTR,ES
+e76c3236becfce5b,Chimerix Inc. / Chimerix Inc.,1,CTIS,
+e88b75db154f0fc5,E. Merck AB,1,EUCTR,DK
+e8a2e0458614e16c,Region Hovedstaden / Region Hovedstaden,1,CTIS,
+e8ca52a42221e71b,Merck Sharp & Dohme LLC,274,CTIS+OTHER,
+e9f70addae070546,VU  University Medical Center,1,EUCTR,DE
+eadd339142795599,MSD,2,EUCTR,GB
+ebef256c77f77236,Jerini US Inc,1,EUCTR,HU
+ec4e0439322c306c,GERENCIA DE ATENCIN PRIMARIA,1,EUCTR,ES
+ecf2c2214e8b1248,Ospedale L. Sacco - Azienda Ospedaliera-Polo Universitario,1,EUCTR,IT
+eec904b76530d619,Copenhagen University Hospital,4,CTIS+EUCTR,DK
+f004dacf7d46e3df,ETOP IBCSG Partners Foundation,13,CTIS+EUCTR,"BE,DE"
+f03d43d661240a7d,Novo Nordisk,1,EUCTR,DE
+f22054b0433680a6,"Medical University of Vienna, Department of Pedatrics",1,EUCTR,AT
+f2c3f74d90b63307,Umea University,1,EUCTR,SE
+f3ac3f5db7844a0f,Bayer HealthCare Pharmaceuticals Inc.,1,EUCTR,BE
+f4c324f04fbc5921,Cambridge University Hospitals NHS Foundation Trust / University of Cambridge,1,EUCTR,GB
+f5a037d08888b752,Centre Hospitalier Rgional Universitaire Lille,1,EUCTR,FR
+f6563bc1034a4e41,Domain Therapeutics,1,CTIS,
+f75a66faed8a1a35,Dra. Nuria Gutierrez Dubón,1,OTHER,
+f781c69d4500d0d0,Leeds Teaching Hospital NHS Trust,3,EUCTR,GB
+f7c2f82eae6612bd,"Universittsklinikum Tbingen, STZ eyetrial am Department fr Augenheilkunde",1,EUCTR,DE
+f80a59dd736fd061,Azienda Ospedaliero Universitaria Delle Marche,1,OTHER,
+f8198318c1798edb,Department of Oncology University Hospital Uppsala,1,EUCTR,SE
+f85e9ef329af94a4,Profem GmbH,2,EUCTR,AT
+f8693483e5c3b368,Lipid Pharmaceuticals ehf / Lsi hf,1,EUCTR,IS
+f88b353e09769881,BOC Ltd.,1,EUCTR,GB
+f99909f164cf3bf0,APOTEX Inc.,2,EUCTR,"BG,HU"
+fabdad21b9a28a1e,AESCA Pharma GesmbH,2,EUCTR,AT
+fc5516e831a0532e,Hospital Universitario Rio Hortega,1,CTIS,
+fc578988562cfd0b,Numab Therapeutics AG,1,EUCTR,DE
+fc83c7c2f2e7050c,Alexion Pharma GmbH,2,EUCTR,"DE,GB"
+fcfb8372bbdb2fb9,Universitaetsklinikum Essen AöR,10,CTIS,
+fd94e35dbf4b62ec,MERCK SERONO SA,1,EUCTR,IT
+fdacd73250eed058,BODE Chemie GmbH,1,EUCTR,DE
+fe60a15eb8806b94,Newcastle Primary Care Trust,1,EUCTR,GB
+fe627951b04e8718,Rein Therapeutics Inc.,1,CTIS,
+fea7f8046333530e,Nelum Corp.,1,CTIS,
+ffa9d8c3ddefea11,"Charit-Universittsmedizin Berlin, Klinik fr Dermatologie, Venerologie und Allergologie, CRC",2,EUCTR,DE
+ffbb779a7a332199,Verein zur Frderung von Wissenschaft und Forschung an der 1. Med. Abteilung der Krankenanstalt Rudolfstiftung,1,EUCTR,AT

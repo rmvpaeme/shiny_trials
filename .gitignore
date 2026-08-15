@@ -64,3 +64,7 @@ curation_app/**/*.sqlite-*
 *_secrets*
 *.env
 .env.*
+
+# Superseded sponsor-normalisation scripts, kept on disk for reference.
+# Recoverable from git history if ever needed again.
+LEGACY/

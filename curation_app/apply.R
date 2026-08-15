@@ -223,7 +223,7 @@ apply_main <- function(root, write = FALSE) {
     message("\nDry run — nothing written. Re-run with --write to apply.")
   } else {
     message("\nApplied. Rebuild the indexes to pick the changes up:")
-    message("  Rscript helper_scripts/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror")
+    message("  Rscript LEGACY/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror")
     message("  Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --use-chembl-cache")
   }
   invisible(NULL)

@@ -30,14 +30,24 @@ run_pipeline <- function(export_script, build_script, label, extra_args = charac
   invisible(identical(status, 0L))
 }
 
-# ── Sponsor normalisation pipeline ────────────────────────────────────────────
+# ── Sponsor normalisation pipeline (v2) ───────────────────────────────────────
 # Runs after the cache is on disk so 1_export_trial_sponsors.R can read it.
+#
+# E_emit.R replaced 3_build_sponsor_labels.R. Both write
+# data/trial_sponsor_labels.csv, so leaving the old script here meant the next
+# production rebuild would silently overwrite the v2 labels with old-pipeline
+# output and undo the rewrite — with no error, because both "succeed".
+#
+# Only the deterministic tail runs here. A_block/B_mint/C_assign/D_consolidate
+# cost money and need an API key, so they stay manual; E_emit just re-derives
+# labels from the registry and assignments already on disk. New raw strings that
+# appear since the last mint therefore arrive unassigned and are labelled from
+# the raw name, which the diff reports rather than hides.
 message("=== Building sponsor labels ===")
 run_pipeline(
   file.path("helper_scripts", "sponsor_norm_pipeline", "1_export_trial_sponsors.R"),
-  file.path("helper_scripts", "sponsor_norm_pipeline", "3_build_sponsor_labels.R"),
-  "Sponsor normalisation",
-  "--write-queue"
+  file.path("helper_scripts", "sponsor_norm_pipeline", "E_emit.R"),
+  "Sponsor normalisation"
 )
 message("=== Sponsor labels build complete ===")
 

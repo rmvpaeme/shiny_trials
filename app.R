@@ -240,6 +240,12 @@ DB_PATH       <- Sys.getenv("DB_PATH", unset = "./data/trials.sqlite")
 DB_COLLECTION <- Sys.getenv("DB_COLLECTION", unset = "trials")
 CACHE_PATH    <- Sys.getenv("CACHE_PATH", unset = "trials_cache.rds")
 PIP_DECISIONS_PATH <- Sys.getenv("PIP_DECISIONS_PATH", unset = "config/pip_decisions.csv")
+# Human curation outranks everything the pipeline produces — see
+# attach_sponsor_labels(). Read fresh on every load, never cached.
+REVIEW_LEDGER_PATH <- Sys.getenv("REVIEW_LEDGER_PATH",
+                                 unset = "config/review_ledger/review_decisions.csv")
+SPONSOR_QUEUE_PATH <- Sys.getenv("SPONSOR_QUEUE_PATH",
+                                 unset = "config/sponsor_norm_v2/E_review_queue.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
 DATA_PROCESSING_VERSION <- "2026-05-v0.12.1-trial-duration-fields"
 
@@ -775,6 +781,113 @@ normalize_sponsor_name <- function(x) {
   x[x %in% c("NA", "", "NULL")] <- NA_character_
   x <- str_replace_all(x, "\\s{2,}", " ")
   x
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SPONSOR DISPLAY LABEL — precedence, highest first
+# ══════════════════════════════════════════════════════════════════════════════
+#
+#   1. HUMAN CURATION   config/review_ledger/review_decisions.csv
+#   2. pipeline label   data/trial_sponsor_labels.csv (sponsor_clean)
+#   3. raw sponsor      sponsor_name
+#
+# A reviewer's decision is the top of that list and nothing downstream may
+# override it. The ledger is read on EVERY load and never enters
+# trials_cache.rds, so a curation decision is live on the next app start without
+# a cache rebuild — which matters because curation happens continuously in
+# curation_app/, on its own schedule, long after the pipeline last ran.
+#
+# The ledger is append-only and a reviewer may change their mind, so the LATEST
+# row per raw sponsor wins (the same rule curation_app's latest_decisions()
+# applies). Join key is the RAW sponsor string: `row_key` in the ledger,
+# `raw_sponsor` in the labels file, `sponsor_name_raw` on the trial rows.
+#
+# A `reject` clears the pipeline label rather than replacing it — the reviewer
+# has said the proposal is wrong without supplying a better one, so the display
+# falls back to the raw name instead of continuing to show something a human
+# has explicitly refused.
+
+read_human_sponsor_decisions <- function(path = REVIEW_LEDGER_PATH) {
+  if (!file.exists(path)) return(NULL)
+  led <- tryCatch(
+    readr::read_csv(path, col_types = readr::cols(.default = readr::col_character()),
+                    progress = FALSE),
+    error = function(e) NULL)
+  if (is.null(led) || !nrow(led)) return(NULL)
+  needed <- c("row_key", "action")
+  if (!all(needed %in% names(led))) return(NULL)
+  if (!"domain" %in% names(led)) led$domain <- "sponsor"
+  if (!"final_value" %in% names(led)) led$final_value <- NA_character_
+  if (!"decided_at_utc" %in% names(led)) led$decided_at_utc <- ""
+
+  led |>
+    dplyr::filter(domain %in% "sponsor",
+                  action %in% c("accept", "edit", "reject"),
+                  !is.na(row_key), nzchar(row_key)) |>
+    dplyr::arrange(decided_at_utc) |>
+    dplyr::group_by(row_key) |>
+    dplyr::slice_tail(n = 1L) |>
+    dplyr::ungroup() |>
+    dplyr::transmute(
+      sponsor_name_raw = row_key,
+      human_label = dplyr::if_else(action %in% "reject", NA_character_,
+                                   dplyr::na_if(str_trim(final_value), "")),
+      human_action = action
+    )
+}
+
+attach_sponsor_labels <- function(d, data_dir) {
+  d <- dplyr::select(d, -dplyr::any_of(c("sponsor_clean", "sponsor_label",
+                                         "sponsor_parent", "sponsor_type",
+                                         "sponsor_label_source")))
+  labels_path <- file.path(data_dir, "trial_sponsor_labels.csv")
+  if (file.exists(labels_path)) {
+    tryCatch({
+      slabels <- readr::read_csv(
+        labels_path, show_col_types = FALSE,
+        col_types = readr::cols(.default = readr::col_character()))
+      keep <- intersect(c("_id", "sponsor_clean", "sponsor_parent", "sponsor_type"),
+                        names(slabels))
+      d <- dplyr::left_join(d, dplyr::select(slabels, dplyr::all_of(keep)), by = "_id")
+      message(sprintf("Attached sponsor labels: %d / %d trials matched",
+                      sum(!is.na(d$sponsor_clean)), nrow(d)))
+    }, error = function(e) message("Could not attach sponsor labels: ", e$message))
+  }
+  if (!"sponsor_clean" %in% names(d)) d$sponsor_clean <- NA_character_
+
+  human <- tryCatch(read_human_sponsor_decisions(), error = function(e) NULL)
+  d$human_label <- NA_character_
+  d$human_action <- NA_character_
+  if (!is.null(human) && nrow(human) && "sponsor_name_raw" %in% names(d)) {
+    d <- d |>
+      dplyr::select(-dplyr::any_of(c("human_label", "human_action"))) |>
+      dplyr::left_join(human, by = "sponsor_name_raw")
+    message(sprintf("Applied human curation: %d decision(s), %d trial row(s)",
+                    nrow(human), sum(!is.na(d$human_action))))
+  }
+
+  # Precedence lives in these two lines and nowhere else.
+  curated <- !is.na(d$human_action)
+  d$sponsor_label <- dplyr::coalesce(d$human_label,
+                                     dplyr::if_else(curated, NA_character_, d$sponsor_clean),
+                                     d$sponsor_name)
+  d$sponsor_label_source <- dplyr::case_when(
+    !is.na(d$human_label)            ~ "human",
+    curated                          ~ "human_reject",
+    !is.na(d$sponsor_clean)          ~ "pipeline",
+    TRUE                             ~ "raw"
+  )
+  d
+}
+
+# The v2 review queue, surfaced so the app can show what still needs a human.
+# Its rows are the pipeline's own low-confidence proposals — NOT decisions — so
+# nothing here affects a displayed label until a reviewer acts on it.
+load_sponsor_review_queue <- function(path = SPONSOR_QUEUE_PATH) {
+  if (!file.exists(path)) return(NULL)
+  tryCatch(
+    readr::read_csv(path, show_col_types = FALSE, progress = FALSE),
+    error = function(e) { message("Could not read sponsor review queue: ", e$message); NULL })
 }
 
 # ── LEGACY normalize_sponsor_name (commented out — superseded by pipeline) ─────
@@ -1916,22 +2029,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   result <- result %>% mutate(data_processing_version = DATA_PROCESSING_VERSION)
 
-  # ── Sponsor labels (from pipeline) ───────────────────────────────────────────
-  sponsor_labels_path <- file.path(dirname(db_path), "trial_sponsor_labels.csv")
-  if (file.exists(sponsor_labels_path)) {
-    tryCatch({
-      slabels <- readr::read_csv(sponsor_labels_path, show_col_types = FALSE,
-                                 col_types = readr::cols(
-                                   `_id`         = readr::col_character(),
-                                   sponsor_clean = readr::col_character()))
-      slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
-      result  <- dplyr::left_join(result, slabels, by = "_id")
-      result$sponsor_label <- dplyr::coalesce(result$sponsor_clean, result$sponsor_name)
-      message(sprintf("Attached sponsor labels: %d / %d trials matched",
-                      sum(!is.na(result$sponsor_clean)), nrow(result)))
-    }, error = function(e) message("Could not attach sponsor labels: ", e$message))
-  }
-  if (!"sponsor_label" %in% names(result)) result$sponsor_label <- result$sponsor_name
+  # ── Sponsor labels: human curation > pipeline > raw ──────────────────────────
+  result <- attach_sponsor_labels(result, dirname(db_path))
 
   result <- add_pip_analysis_cache(result)
 
@@ -1982,22 +2081,9 @@ load_trial_data <- function(force_rebuild = FALSE) {
     }
     if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
 
-    slabels_path <- file.path(dirname(DB_PATH), "trial_sponsor_labels.csv")
-    if (file.exists(slabels_path)) {
-      tryCatch({
-        d <- dplyr::select(d, -dplyr::any_of(c("sponsor_clean", "sponsor_label")))
-        slabels <- readr::read_csv(slabels_path, show_col_types = FALSE,
-                                   col_types = readr::cols(
-                                     `_id`         = readr::col_character(),
-                                     sponsor_clean = readr::col_character()))
-        slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
-        d <- dplyr::left_join(d, slabels, by = "_id")
-        d$sponsor_label <- dplyr::coalesce(d$sponsor_clean, d$sponsor_name)
-        message(sprintf("Attached sponsor labels: %d / %d trials matched",
-                        sum(!is.na(d$sponsor_clean)), nrow(d)))
-      }, error = function(e) message("Could not attach sponsor labels: ", e$message))
-    }
-    if (!"sponsor_label" %in% names(d)) d$sponsor_label <- d$sponsor_name
+    # Sponsor labels AND human curation are re-applied on every cache load, so a
+    # reviewer's decision goes live without rebuilding trials_cache.rds.
+    d <- attach_sponsor_labels(d, dirname(DB_PATH))
     return(d)
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }
@@ -2009,6 +2095,16 @@ load_trial_data <- function(force_rebuild = FALSE) {
 
 trials_data <- tryCatch(load_trial_data(),
                         error = function(e) { message("Data load error: ", e$message); NULL })
+
+# Sponsors the pipeline was not confident about. NULL when the queue is absent,
+# so every consumer must tolerate that. These are proposals awaiting a human,
+# not decisions: nothing here changes a displayed label until it is curated and
+# lands in the review ledger, at which point attach_sponsor_labels() picks it up.
+sponsor_review_queue <- load_sponsor_review_queue()
+if (!is.null(sponsor_review_queue)) {
+  message(sprintf("Sponsor review queue: %d row(s) awaiting curation",
+                  nrow(sponsor_review_queue)))
+}
 
 extract_choices <- function(x, sep = " / ") {
   v <- unlist(str_split(x[!is.na(x)], fixed(sep)))
