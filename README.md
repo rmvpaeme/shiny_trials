@@ -83,17 +83,21 @@ update_data.R
 rebuild_cache.R
   -> app.R data preparation
   -> trials_cache.rds
-  -> sponsor normalisation pipeline
+  -> sponsor labels   (1_export -> E_emit; the paid LLM passes are NOT run here)
   -> substance normalisation pipeline
   -> PIP helper columns
   -> www/preprocessing.html
 
 app.R startup
   -> load trials_cache.rds
-  -> join data/trial_sponsor_labels.csv
+  -> sponsor label = human curation > pipeline label > raw sponsor
   -> join data/trial_substance_labels.csv
   -> serve Shiny UI
 ```
+
+A cache rebuild only re-derives sponsor labels from the registry already on disk.
+Minting and merging cost money and need an API key, so they stay manual — see
+[Rebuild Sponsor Labels](#rebuild-sponsor-labels).
 
 Important generated files:
 
@@ -101,9 +105,14 @@ Important generated files:
 | --- | --- |
 | `data/trials.sqlite` | Local SQLite document store populated by `ctrdata` |
 | `trials_cache.rds` | Processed app cache |
-| `data/trial_sponsor_labels.csv` | App-facing normalised sponsor labels |
+| `data/trial_sponsor_labels.csv` | App-facing normalised sponsor labels (written only by `E_emit.R`) |
+| `data/trial_sponsor_labels_baseline.csv` | Frozen old-pipeline labels; the regression gate compares against this |
 | `data/trial_substance_labels.csv` | App-facing normalised substance labels |
-| `data/*_normalisation_log.csv` | Audit inputs for the preprocessing report |
+| `data/sponsor_normalisation_log_v2.csv` | Per-string sponsor audit log for the preprocessing report |
+| `data/*_normalisation_log.csv` | Substance audit inputs for the preprocessing report |
+| `config/sponsor_norm_v2/registry.csv` | The canonical sponsor registry — committed, not generated per run |
+| `config/sponsor_norm_v2/assignments.csv` | Raw string → registry entity, with the model's confidence |
+| `config/review_ledger/review_decisions.csv` | Human curation; outranks the pipeline everywhere |
 | `www/preprocessing.html` | Rendered preprocessing audit shown in the About tab |
 
 Most generated data artifacts are ignored by Git.
@@ -364,7 +373,9 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 ├── docker-compose.yml
 ├── config/
 │   ├── pip_decisions.csv
-│   ├── sponsor_norm_pipeline/    # + README.md — field reference for every CSV
+│   ├── review_ledger/            # Human curation decisions — priority 1 for display
+│   ├── sponsor_norm_v2/          # Canonical registry, assignments, caches, spend ledger
+│   ├── sponsor_norm_pipeline/    # Retired matcher config, kept as a frozen baseline
 │   └── substance_norm_pipeline/  # + README.md — field reference for every CSV
 ├── curation_app/                 # Reviewer app for normalisation decisions
 ├── data/                         # Local generated registry data and labels
@@ -378,21 +389,58 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 ├── rmarkdown/
 │   ├── report.Rmd
 │   ├── comparison_report.Rmd
-│   └── preprocessing.Rmd
+│   ├── preprocessing.Rmd
+│   └── sponsor_normalisation_pipeline.dot   # + .png, embedded in the report
 ├── nightly_update/
-├── PLANS/
+├── PLANS/                        # Design notes and handovers
 ├── tests/
-│   └── fixtures/
+│   ├── fixtures/
+│   └── gold/                     # Frozen stratified sponsor sample (unadjudicated)
 └── www/
     ├── favicon.svg
     └── preprocessing.html
 ```
 
-Pipeline scripts are numbered by execution order; `normalise_*.R` is unnumbered
-because it is the engine the numbered steps call, not a step.
+Sponsor pipeline steps are lettered by execution order (`A_block` → `E_emit`);
+`1_export_trial_sponsors.R` keeps its number because it is shared with the older
+numbering, and `normalise_sponsors.R` is unnumbered because it is an engine other
+code calls, not a step. Substance steps are still numbered `1`–`4`.
 
 `AGENTS/` contains local handover notes and `LEGACY/` holds retired scripts and
 completed handovers. Both are ignored by Git.
+
+## Preprocessing Audit Report
+
+`rmarkdown/preprocessing.Rmd` renders to `www/preprocessing.html` and is shown in
+the app's About tab. It audits deduplication, field normalisation, completeness
+and data-quality issues against the built cache.
+
+The sponsor section audits the **v2 registry**: how far 16,594 raw strings
+collapse, who the top sponsors are, how trial coverage concentrates by sponsor
+rank, assignment confidence weighted by trial rows, what is queued for human
+review, and what the build cost. It reads
+`data/sponsor_normalisation_log_v2.csv` and `config/sponsor_norm_v2/` — never the
+retired matcher's log, which still exists on disk and whose schema is close
+enough that a naive audit would render a plausible page describing the wrong
+pipeline.
+
+Render it by hand, or let `rebuild_cache.R` do it:
+
+```bash
+Rscript -e 'rmarkdown::render("rmarkdown/preprocessing.Rmd", output_file = "../www/preprocessing.html")'
+```
+
+The pipeline diagram embedded in that section is generated from Graphviz source.
+After editing the `.dot`, regenerate the `.png` — the report embeds the image,
+not the source:
+
+```bash
+dot -Tpng -Gdpi=110 rmarkdown/sponsor_normalisation_pipeline.dot \
+  -o rmarkdown/sponsor_normalisation_pipeline.png
+```
+
+Do not set `splines = ortho` in that file: Graphviz silently drops edge labels
+under orthogonal routing, and several edges carry the load-bearing detail.
 
 ## Testing And Checks
 

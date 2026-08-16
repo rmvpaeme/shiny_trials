@@ -174,38 +174,31 @@ log_organ    <- read_log("organ_class")
 log_phase    <- read_log("phase")
 log_status_c <- read_log("status_category")
 log_status_d <- read_log("status_display")
-spon_log_raw <- read_log("sponsor")
 sub_log      <- read_log("substance")
 spon_labels  <- read_optional_csv(log_dir, "trial_sponsor_labels.csv")
 sub_labels   <- read_optional_csv(log_dir, "trial_substance_labels.csv")
 spon_raw     <- read_optional_csv(log_dir, "trial_sponsors_raw.csv")
 sub_raw      <- read_optional_csv(log_dir, "trial_substances_raw.csv")
-spon_queue   <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "3_sponsor_review_queue.csv")
-spon_final_review <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "2_final_sponsor_canonical_review.csv")
-spon_final_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_canonical_map.csv")
-spon_family_map <- read_optional_csv(project_root, "config", "sponsor_norm_pipeline", "final_sponsor_family_map.csv")
 sub_queue    <- read_optional_csv(project_root, "config", "substance_norm_pipeline", "3_substance_review_queue.csv")
 
-normalise_sponsor_log <- function(x) {
-  if (is.null(x)) return(NULL)
-  out <- x
-  if (!"raw_sponsor" %in% names(out) && "raw" %in% names(out)) out$raw_sponsor <- out$raw
-  if (!"sponsor_clean" %in% names(out) && "normalised" %in% names(out)) out$sponsor_clean <- out$normalised
-  if (!"match_status" %in% names(out)) {
-    out$match_status <- dplyr::case_when(
-      "sponsor_clean" %in% names(out) & !is.na(out$sponsor_clean) & out$sponsor_clean != "" ~ "accepted",
-      TRUE ~ "unknown"
-    )
-  }
-  if (!"match_score" %in% names(out)) out$match_score <- NA_real_
-  if (!"match_source" %in% names(out)) {
-    out$match_source <- if ("changed" %in% names(out)) ifelse(out$changed, "normalised", "unchanged") else NA_character_
-  }
-  if (!"match_reason" %in% names(out)) out$match_reason <- NA_character_
-  if (!"n_trials" %in% names(out)) out$n_trials <- 1L
-  out
-}
-spon_log <- normalise_sponsor_log(spon_log_raw)
+# ── Sponsor normalisation v2 artefacts ────────────────────────────────────────
+# The deterministic matcher and its config (2_sponsor_alias_index.csv,
+# final_sponsor_canonical_map.csv, 3_sponsor_review_queue.csv, the match_score /
+# match_source / match_reason columns) were retired with the v2 rewrite; the
+# scripts now live in LEGACY/. Nothing below reads them.
+#
+# Reading the OLD data/sponsor_normalisation_log.csv here would be worse than
+# reading nothing: it still exists on disk, and its schema is close enough that
+# a naive audit renders a plausible-looking page describing a pipeline that no
+# longer produces the app's labels.
+v2_dir       <- file.path(project_root, "config", "sponsor_norm_v2")
+spon_log     <- read_optional_csv(log_dir, "sponsor_normalisation_log_v2.csv")
+spon_blocks  <- read_optional_csv(log_dir, "sponsor_blocks.csv")
+spon_registry <- read_optional_csv(v2_dir, "registry.csv")
+spon_assign  <- read_optional_csv(v2_dir, "assignments.csv")
+spon_queue   <- read_optional_csv(v2_dir, "E_review_queue.csv")
+spon_spend   <- read_optional_csv(v2_dir, "llm_spend.csv")
+spon_ledger  <- read_optional_csv(project_root, "config", "review_ledger", "review_decisions.csv")
 
 waterfall_plot <- function(wf, title, subtitle = NULL) {
   wf <- wf |>
@@ -921,299 +914,253 @@ if ("MEDDRA_organ_class" %in% names(df)) {
 
 ## Sponsor Names
 
-The sponsor audit follows the cache-build pipeline: exported trial-sponsor pairs, unique raw sponsor strings, normalised unique strings, accepted/review labels joined back to trials, and optional raw-alias review queue rows. Final app-facing sponsor labels are then canonicalised through explicit label decisions and broader entity-family decisions before the trial label cache is rebuilt.
+Sponsor labels come from a **model-built canonical registry** (v2), which replaced
+the deterministic matcher and its ~16,500 committed alias rows. Raw strings are
+blocked offline, each block is named once with every variant visible, leftover
+strings are assigned by picking from a candidate list, duplicate entries are
+merged, and one script emits the app-facing labels.
 
-Current curation loop:
+The label the app displays is resolved by an explicit precedence chain, and the
+top of it is not the pipeline:
 
-1. Review `config/sponsor_norm_pipeline/2_final_sponsor_canonical_review.csv`, prioritising unapplied `review` rows with high scores and no blocking reason.
-2. Copy accepted label-to-label decisions to `config/sponsor_norm_pipeline/final_sponsor_canonical_map.csv`.
-3. Copy accepted broader grouping decisions to `config/sponsor_norm_pipeline/final_sponsor_family_map.csv`.
-4. Rebuild with:
+| Rank | Source | Where |
+|---|---|---|
+| 1 | **Human curation** | `config/review_ledger/review_decisions.csv` |
+| 2 | Pipeline canonical | `data/trial_sponsor_labels.csv` |
+| 3 | Raw sponsor string | fallback when neither exists |
 
-```bash
-Rscript LEGACY/sponsor_norm_pipeline/2_build_sponsor_index.R --no-ror --no-location
-Rscript LEGACY/sponsor_norm_pipeline/3_build_sponsor_labels.R --write-queue
+The ledger is read on every app load and never enters `trials_cache.rds`, so a
+curator's decision is live on the next start without a cache rebuild.
+
+```{r sponsor-diagram, out.width="100%", fig.cap="Sponsor normalisation v2. Blue is deterministic and free, violet costs money, green is what the app reads."}
+# Regenerate after editing the .dot:
+#   dot -Tpng -Gdpi=110 rmarkdown/sponsor_normalisation_pipeline.dot \
+#     -o rmarkdown/sponsor_normalisation_pipeline.png
+spon_diagram <- first_existing(c(
+  "sponsor_normalisation_pipeline.png",
+  file.path(project_root, "rmarkdown", "sponsor_normalisation_pipeline.png")
+))
+if (!is.na(spon_diagram)) knitr::include_graphics(spon_diagram)
 ```
 
-`3_build_sponsor_labels.R` is deterministic by default: exact aliases and high-confidence token containment can produce accepted labels. Fuzzy matching is opt-in with `--allow-fuzzy` and is intended for review suggestions.
+```{r sponsor-compute}
+spon_has_v2 <- !is.null(spon_log) && has_cols(spon_log, c("raw_sponsor", "sponsor_clean", "n_trials"))
 
-```{r sponsor-audit-compute}
-spon_has_rich_log <- !is.null(spon_log_raw) && has_cols(
-  spon_log_raw,
-  c("raw_sponsor", "sponsor_clean", "match_status", "match_score", "match_source")
-)
+spon_live <- if (!is.null(spon_registry) && "canonical" %in% names(spon_registry)) {
+  if ("merged_into" %in% names(spon_registry)) {
+    spon_registry |> filter(is.na(merged_into) | merged_into == "")
+  } else spon_registry
+} else NULL
 
-spon_unique <- if (!is.null(spon_log) && "raw_sponsor" %in% names(spon_log)) {
+# Trial rows, not distinct strings: a canonical attached to one rare string and
+# one attached to 1,600 trials are not the same thing, and every chart below is
+# weighted by impact for that reason.
+spon_by_canon <- if (spon_has_v2) {
   spon_log |>
-    mutate(changed_for_audit = changed_flag(spon_log)) |>
-    group_by(raw_sponsor) |>
-    summarise(
-      sponsor_clean = first(na.omit(sponsor_clean)),
-      match_status = first(match_status),
-      match_score = suppressWarnings(max(as.numeric(match_score), na.rm = TRUE)),
-      match_source = first(na.omit(match_source)),
-      match_reason = first(na.omit(match_reason)),
-      n_trials = sum(n_trials, na.rm = TRUE),
-      changed = any(changed_for_audit, na.rm = TRUE),
-      .groups = "drop"
-    ) |>
-    mutate(match_score = ifelse(is.infinite(match_score), NA_real_, match_score))
-} else {
-  tibble()
-}
+    filter(!is.na(sponsor_clean), sponsor_clean != "") |>
+    group_by(sponsor_clean) |>
+    summarise(n_trials = sum(n_trials, na.rm = TRUE), .groups = "drop") |>
+    arrange(desc(n_trials))
+} else tibble()
 
-spon_raw_pairs <- if (!is.null(spon_raw) && has_cols(spon_raw, c("_id", "raw_sponsor"))) nrow(spon_raw) else NA_integer_
-spon_raw_trials <- if (!is.null(spon_raw) && "_id" %in% names(spon_raw)) n_distinct(spon_raw$`_id`) else NA_integer_
-spon_unique_raw <- if (nrow(spon_unique) > 0) n_distinct(spon_unique$raw_sponsor) else NA_integer_
-spon_accepted_strings <- if (nrow(spon_unique) > 0) sum(spon_unique$match_status %in% c("accepted", "review"), na.rm = TRUE) else NA_integer_
-spon_label_rows <- if (!is.null(spon_labels) && "_id" %in% names(spon_labels)) nrow(spon_labels) else NA_integer_
-spon_label_trials <- if (!is.null(spon_labels) && "_id" %in% names(spon_labels)) n_distinct(spon_labels$`_id`) else NA_integer_
-spon_queue_rows <- if (!is.null(spon_queue)) nrow(spon_queue) else NA_integer_
-spon_final_review_rows <- if (!is.null(spon_final_review)) nrow(spon_final_review) else NA_integer_
-spon_final_review_open <- if (!is.null(spon_final_review) && "applied" %in% names(spon_final_review)) {
-  applied_flag <- tolower(as.character(spon_final_review$applied)) %in% c("true", "1", "yes")
-  sum(!applied_flag, na.rm = TRUE)
-} else {
-  NA_integer_
-}
-spon_final_review_buckets <- if (!is.null(spon_final_review) && "confidence_bucket" %in% names(spon_final_review)) {
-  spon_final_review |>
-    mutate(confidence_bucket = coalesce(as.character(confidence_bucket), "not recorded")) |>
-    count(confidence_bucket, name = "n", sort = TRUE)
-} else {
-  tibble()
-}
-spon_final_maps <- tibble(
-  Map = c("Label canonical map", "Entity-family map"),
-  Rows = c(
-    if (!is.null(spon_final_map)) nrow(spon_final_map) else NA_integer_,
-    if (!is.null(spon_family_map)) nrow(spon_family_map) else NA_integer_
-  )
-)
+spon_n_strings   <- if (spon_has_v2) nrow(spon_log) else NA_integer_
+spon_n_trials    <- if (spon_has_v2) sum(spon_log$n_trials, na.rm = TRUE) else NA_integer_
+spon_n_canon     <- if (nrow(spon_by_canon)) nrow(spon_by_canon) else NA_integer_
+spon_n_live      <- if (!is.null(spon_live)) nrow(spon_live) else NA_integer_
+spon_n_merged    <- if (!is.null(spon_registry) && "merged_into" %in% names(spon_registry)) {
+  sum(!is.na(spon_registry$merged_into) & spon_registry$merged_into != "")
+} else NA_integer_
+spon_queue_rows  <- if (!is.null(spon_queue)) nrow(spon_queue) else NA_integer_
+spon_queue_trials <- if (!is.null(spon_queue) && "n_trials" %in% names(spon_queue)) {
+  sum(spon_queue$n_trials, na.rm = TRUE)
+} else NA_integer_
+spon_spend_total <- if (!is.null(spon_spend) && "cost_usd" %in% names(spon_spend)) {
+  sum(spon_spend$cost_usd, na.rm = TRUE)
+} else NA_real_
+spon_unlabelled  <- if (spon_has_v2) sum(is.na(spon_log$sponsor_clean) | spon_log$sponsor_clean == "") else NA_integer_
 
-spon_wf <- tibble(
-  step = c("Raw trial-sponsor pairs", "Unique raw strings", "Accepted/review strings", "Trial label rows", "Labelled trials"),
-  n = c(spon_raw_pairs, spon_unique_raw, spon_accepted_strings, spon_label_rows, spon_label_trials),
-  type = c("start", "step", "step", "step", "end")
-) |>
-  mutate(delta = lag(n) - n)
+# Human decisions are the top of the precedence chain, so their absence is a
+# finding in its own right, not an empty section.
+spon_human_n <- if (!is.null(spon_ledger) && "domain" %in% names(spon_ledger)) {
+  sum(spon_ledger$domain %in% "sponsor", na.rm = TRUE)
+} else 0L
 ```
 
 ```{r sponsor-kpis, results='asis'}
-if (nrow(spon_unique) > 0) {
+if (spon_has_v2) {
   cat(kpi_row(
-    kpi_box(fmt_n(spon_raw_pairs), "raw trial-sponsor pairs", BLUE),
-    kpi_box(fmt_n(spon_unique_raw), "unique raw strings", FROST),
-    kpi_box(fmt_n(spon_label_trials), "trials with sponsor label", GREEN),
-    kpi_box(fmt_n(spon_queue_rows), "review queue rows", ORANGE),
-    kpi_box(ifelse(spon_has_rich_log, "rich", "compact"), "log schema", PURPLE)
+    kpi_box(fmt_n(spon_n_strings), "distinct raw strings", BLUE),
+    kpi_box(fmt_n(spon_n_trials), "trial rows labelled", FROST),
+    kpi_box(fmt_n(spon_n_canon), "canonical sponsors", GREEN),
+    kpi_box(fmt_n(spon_queue_rows), "awaiting human review", ORANGE),
+    kpi_box(ifelse(is.na(spon_spend_total), "NA", sprintf("$%.2f", spon_spend_total)), "spend to build", PURPLE)
   ))
 } else {
-  cat(notice("Sponsor log unavailable", "No sponsor normalisation log was found for this render.", "warn"))
+  cat(notice(
+    "Sponsor v2 artefacts unavailable",
+    paste("No <code>data/sponsor_normalisation_log_v2.csv</code> was found.",
+          "Run <code>E_emit.R</code> to regenerate it."),
+    "warn"))
 }
 ```
 
-```{r sponsor-final-review-kpis, results='asis'}
-if (!is.null(spon_final_review)) {
-  cat(kpi_row(
-    kpi_box(fmt_n(spon_final_review_rows), "final review clusters", BLUE),
-    kpi_box(fmt_n(spon_final_review_open), "unapplied final clusters", ORANGE),
-    kpi_box(fmt_n(spon_final_maps$Rows[[1]]), "canonical-map rows", GREEN),
-    kpi_box(fmt_n(spon_final_maps$Rows[[2]]), "family-map rows", PURPLE)
-  ))
+```{r sponsor-coverage, results='asis'}
+if (spon_has_v2) {
+  collapse_ratio <- safe_div(spon_n_strings, spon_n_canon)
+  msg <- sprintf(
+    paste0("<strong>%s</strong> distinct raw strings collapse to <strong>%s</strong> canonical ",
+           "sponsors — a %.1fx reduction. %s string(s) carry no canonical."),
+    fmt_n(spon_n_strings), fmt_n(spon_n_canon), collapse_ratio, fmt_n(spon_unlabelled))
+  if (!is.na(spon_n_merged) && spon_n_merged > 0) {
+    msg <- paste0(msg, sprintf(" Consolidation merged a further <strong>%s</strong> duplicate entries away.",
+                               fmt_n(spon_n_merged)))
+  }
+  cat(notice("Collapse", msg, if (isTRUE(spon_unlabelled > 0)) "warn" else "note"))
 }
 ```
 
-```{r sponsor-waterfall, fig.height=4.3}
-if (nrow(spon_unique) > 0 && all(!is.na(spon_wf$n))) {
-  waterfall_plot(
-    spon_wf,
-    "Sponsor normalisation waterfall",
-    "Counts move from raw trial-sponsor pairs to unique strings and final per-trial labels."
-  )
-}
-```
+### Who sponsors these trials
 
-```{r sponsor-waterfall-table}
-if (nrow(spon_unique) > 0) {
-  spon_wf |>
-    transmute(Step = step, Count = fmt_n(n), `Removed / collapsed from previous step` = ifelse(is.na(delta), "NA", fmt_n(delta))) |>
-    nk(cap = "Sponsor normalisation stage counts")
-}
-```
-
-```{r sponsor-status-source-charts, fig.height=4.2}
-if (nrow(spon_unique) > 0) {
-  p_status <- spon_unique |>
-    count(match_status, wt = n_trials, name = "trial_weighted_n") |>
-    mutate(match_status = factor(match_status, levels = c("accepted", "review", "rejected", "unknown"))) |>
-    ggplot(aes(match_status, trial_weighted_n, fill = match_status)) +
-    geom_col(width = 0.62, show.legend = FALSE) +
-    geom_text(aes(label = fmt_n(trial_weighted_n)), vjust = -0.35, size = 3.1, color = DARK) +
-    scale_fill_manual(values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED), na.value = GRAY) +
-    scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
-    labs(title = "Sponsor outcomes weighted by trial count", x = NULL, y = "Trial occurrences") +
-    theme_pre()
-
-  print(p_status)
-}
-```
-
-```{r sponsor-source-chart, fig.height=3.8}
-if (nrow(spon_unique) > 0 && "match_source" %in% names(spon_unique)) {
-  spon_unique |>
-    mutate(match_source = coalesce(as.character(match_source), "not recorded")) |>
-    count(match_source, wt = n_trials, name = "trial_weighted_n", sort = TRUE) |>
-    slice_head(n = 12) |>
-    mutate(match_source = reorder(match_source, trial_weighted_n)) |>
-    ggplot(aes(trial_weighted_n, match_source)) +
-    geom_col(fill = BLUE, width = 0.62) +
-    geom_text(aes(label = fmt_n(trial_weighted_n)), hjust = -0.1, size = 3.1, color = GRAY) +
-    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
-    labs(title = "Sponsor normalisation source", x = "Trial occurrences", y = NULL) +
+```{r sponsor-top, fig.height=5.2}
+if (nrow(spon_by_canon) > 0) {
+  spon_by_canon |>
+    slice_head(n = 15) |>
+    mutate(sponsor_clean = reorder(sponsor_clean, n_trials)) |>
+    ggplot(aes(n_trials, sponsor_clean)) +
+    geom_col(fill = BLUE, width = 0.68) +
+    geom_text(aes(label = fmt_n(n_trials)), hjust = -0.12, size = 3.1, color = GRAY) +
+    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.14))) +
+    labs(
+      title = "Top 15 sponsors by trial rows",
+      subtitle = "One canonical per organisation — national subsidiaries and legal variants are folded into the brand.",
+      x = "Trial rows", y = NULL) +
     theme_pre()
 }
 ```
 
-```{r sponsor-score-chart, fig.height=3.6}
-if (nrow(spon_unique) > 0 && any(!is.na(spon_unique$match_score))) {
-  spon_unique |>
-    filter(!is.na(match_score)) |>
-    ggplot(aes(match_score, weight = n_trials, fill = match_status)) +
-    geom_histogram(binwidth = 5, boundary = 0, color = "white") +
-    scale_fill_manual(values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED), na.value = GRAY) +
-    scale_y_continuous(labels = comma) +
-    labs(title = "Sponsor match-score distribution", x = "Match score", y = "Trial occurrences") +
-    theme_pre()
-} else {
-  cat("Sponsor match scores are not available in the compact log schema.")
-}
-```
-
-```{r sponsor-final-review-buckets, fig.height=3.4}
-if (nrow(spon_final_review_buckets) > 0) {
-  spon_final_review_buckets |>
-    mutate(confidence_bucket = reorder(confidence_bucket, n)) |>
-    ggplot(aes(n, confidence_bucket, fill = confidence_bucket)) +
-    geom_col(width = 0.62, show.legend = FALSE) +
-    geom_text(aes(label = fmt_n(n)), hjust = -0.1, size = 3.1, color = GRAY) +
-    scale_fill_manual(values = c(auto = GREEN, review = YELLOW, blocked = RED, `not recorded` = GRAY), na.value = GRAY) +
-    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
-    labs(title = "Final sponsor canonical-review buckets", x = "Clusters", y = NULL) +
+```{r sponsor-concentration, fig.height=3.9}
+# The long tail is the point. A bar chart of the top N hides that most
+# canonicals are attached to a single trial, which is what actually determines
+# how much curation effort the registry will ever need.
+if (nrow(spon_by_canon) > 20) {
+  conc <- spon_by_canon |>
+    mutate(rank = row_number(), cum_share = cumsum(n_trials) / sum(n_trials))
+  marks <- conc |> filter(rank %in% c(10, 100, 1000))
+  ggplot(conc, aes(rank, cum_share)) +
+    geom_line(color = BLUE, linewidth = 0.9) +
+    geom_point(data = marks, color = ORANGE, size = 2.2) +
+    geom_text(data = marks, aes(label = sprintf("top %s: %s", fmt_n(rank), fmt_pct(100 * cum_share, 0))),
+              hjust = -0.08, vjust = 1.4, size = 3.1, color = GRAY) +
+    scale_x_log10(labels = comma) +
+    scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+    labs(
+      title = "Trial coverage by sponsor rank",
+      subtitle = sprintf("%s of %s canonicals carry exactly one trial row.",
+                         fmt_n(sum(spon_by_canon$n_trials == 1)), fmt_n(nrow(spon_by_canon))),
+      x = "Sponsor rank (log scale)", y = "Cumulative share of trial rows") +
     theme_pre()
 }
 ```
 
-```{r sponsor-final-map-table}
-if (!is.null(spon_final_map) || !is.null(spon_family_map)) {
-  spon_final_maps |>
-    mutate(Rows = fmt_n(Rows)) |>
-    nk(cap = "Curated sponsor canonical decision files")
-}
-```
-
-```{r sponsor-changes-table}
-if (nrow(spon_unique) > 0) {
-  spon_unique |>
-    filter(!is.na(sponsor_clean), raw_sponsor != sponsor_clean | changed %in% TRUE) |>
-    arrange(desc(n_trials)) |>
-    select(
-      `Raw sponsor` = raw_sponsor,
-      `Normalised sponsor` = sponsor_clean,
-      Status = match_status,
-      Source = match_source,
-      `N trials` = n_trials
-    ) |>
-    slice_head(n = 50) |>
-    dt_tbl(caption = "Largest sponsor-name changes by trial count", page = 25, filter = "top")
-}
-```
-
-```{r sponsor-top-chart, fig.height=5.5}
-if ("sponsor_label" %in% names(df)) {
-  df |>
-    filter(!is.na(sponsor_label), sponsor_label != "") |>
-    count(sponsor_label, register, name = "n_trials") |>
-    group_by(sponsor_label) |>
-    mutate(total = sum(n_trials)) |>
-    ungroup() |>
-    slice_max(total, n = 40, with_ties = FALSE) |>
-    mutate(sponsor_label = reorder(sponsor_label, total)) |>
-    ggplot(aes(n_trials, sponsor_label, fill = register)) +
-    geom_col() +
-    scale_fill_manual(values = REG_COLS) +
-    scale_x_continuous(labels = comma) +
-    labs(title = "Top sponsors by trial count", x = "Trials", y = NULL) +
+```{r sponsor-type, fig.height=3.6}
+if (spon_has_v2 && "sponsor_type" %in% names(spon_log)) {
+  spon_log |>
+    mutate(sponsor_type = coalesce(as.character(sponsor_type), "unknown")) |>
+    count(sponsor_type, wt = n_trials, name = "n") |>
+    filter(n > 0) |>
+    mutate(sponsor_type = reorder(sponsor_type, n)) |>
+    ggplot(aes(n, sponsor_type)) +
+    geom_col(fill = TEAL, width = 0.66) +
+    geom_text(aes(label = fmt_n(n)), hjust = -0.12, size = 3.1, color = GRAY) +
+    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+    labs(
+      title = "Trial rows by sponsor type",
+      subtitle = "Assigned during minting; the split between commercial and academic sponsorship is a property of the corpus, not of the pipeline.",
+      x = "Trial rows", y = NULL) +
     theme_pre()
 }
 ```
 
-```{r sponsor-label-detail}
-if (!is.null(spon_labels)) {
-  spon_labels |>
-    count(sponsor_clean, sponsor_parent, sponsor_group, sponsor_type, match_status, name = "label_rows", sort = TRUE) |>
-    slice_head(n = 100) |>
-    dt_tbl(caption = "Sponsor labels written to trial_sponsor_labels.csv", page = 25, filter = "top")
+### How confident is the registry
+
+```{r sponsor-confidence, fig.height=3.6}
+# Weighted by trial rows, because a shaky label on a 500-trial sponsor matters
+# and a shaky label on a one-off does not.
+if (spon_has_v2 && "confidence" %in% names(spon_log)) {
+  bands <- spon_log |>
+    mutate(band = cut(suppressWarnings(as.numeric(confidence)),
+                      breaks = c(0, 0.5, 0.7, 0.75, 0.9, 1),
+                      labels = c("<= 0.50", "0.50-0.70", "0.70-0.75", "0.75-0.90", "> 0.90"),
+                      include.lowest = TRUE)) |>
+    count(band, wt = n_trials, name = "n") |>
+    filter(!is.na(band))
+  if (nrow(bands) > 0) {
+    ggplot(bands, aes(band, n, fill = band)) +
+      geom_col(width = 0.62, show.legend = FALSE) +
+      geom_text(aes(label = fmt_n(n)), vjust = -0.35, size = 3.1, color = DARK) +
+      scale_fill_manual(values = c("<= 0.50" = RED, "0.50-0.70" = ORANGE, "0.70-0.75" = YELLOW,
+                                   "0.75-0.90" = FROST, "> 0.90" = GREEN)) +
+      scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+      labs(
+        title = "Trial rows by assignment confidence",
+        subtitle = "Rows below 0.75 are routed to the review queue; high-impact rows below 0.90 are too.",
+        x = "Model confidence", y = "Trial rows") +
+      theme_pre()
+  }
+}
+```
+
+### What still needs a human
+
+```{r sponsor-review-note, results='asis'}
+if (!is.null(spon_queue)) {
+  share <- safe_div(spon_queue_trials, spon_n_trials) * 100
+  cat(notice(
+    "Review queue",
+    sprintf(paste0("<strong>%s</strong> raw strings carrying <strong>%s</strong> trial rows (%s of all rows) ",
+                   "are queued for confirmation. These are proposals, not decisions — nothing here changes a ",
+                   "displayed label until a reviewer acts on it."),
+            fmt_n(spon_queue_rows), fmt_n(spon_queue_trials), fmt_pct(share)),
+    "note"))
+  cat(notice(
+    "Human decisions recorded",
+    if (spon_human_n > 0) {
+      sprintf("<strong>%s</strong> sponsor decision(s) in the review ledger. These override the pipeline wherever they exist.", fmt_n(spon_human_n))
+    } else {
+      paste("<strong>None yet.</strong> Every label on this page is model output.",
+            "The precedence chain is wired and tested, so the first curated decision takes effect",
+            "on the next app start — but nothing has been human-verified so far.")
+    },
+    if (spon_human_n > 0) "note" else "warn"))
 }
 ```
 
 ```{r sponsor-queue-table}
-if (!is.null(spon_queue)) {
+if (!is.null(spon_queue) && nrow(spon_queue) > 0) {
+  cols <- intersect(c("raw_sponsor", "proposed", "confidence", "n_trials", "review_reason"), names(spon_queue))
   spon_queue |>
-    arrange(desc(n_trials)) |>
-    select(any_of(c("raw_sponsor", "candidate_sponsor", "sponsor_type", "match_status", "match_score", "match_source", "match_reason", "n_trials", "decision", "canonical_sponsor", "comment"))) |>
-    dt_tbl(caption = "Sponsor review queue", page = 25, filter = "top")
-} else {
-  cat("Sponsor review queue not available.")
+    arrange(desc(.data[["n_trials"]])) |>
+    slice_head(n = 15) |>
+    select(all_of(cols)) |>
+    mutate(across(any_of("confidence"), ~ sprintf("%.2f", suppressWarnings(as.numeric(.x))))) |>
+    mutate(across(any_of("n_trials"), fmt_n)) |>
+    nk(cap = "Highest-impact rows awaiting review — curate these first")
 }
 ```
 
-```{r sponsor-final-review-table}
-if (!is.null(spon_final_review)) {
-  review_tbl <- spon_final_review |>
-    mutate(
-      applied_flag = if ("applied" %in% names(spon_final_review)) {
-        tolower(as.character(applied)) %in% c("true", "1", "yes")
-      } else {
-        FALSE
-      },
-      confidence_bucket = if ("confidence_bucket" %in% names(spon_final_review)) coalesce(as.character(confidence_bucket), "not recorded") else "not recorded",
-      blocked_reason = if ("blocked_reason" %in% names(spon_final_review)) coalesce(as.character(blocked_reason), "") else ""
-    ) |>
-    arrange(
-      applied_flag,
-      factor(confidence_bucket, levels = c("review", "blocked", "auto", "not recorded")),
-      desc(suppressWarnings(as.numeric(score)))
-    ) |>
-    select(any_of(c(
-      "cluster_key", "entity_key", "suggested_canonical", "sponsor_labels",
-      "aliases_sample", "sources", "sponsor_types", "score", "evidence",
-      "confidence_bucket", "blocked_reason", "review_bucket", "applied"
-    )))
+### Build cost
 
-  review_tbl |>
-    dt_tbl(caption = "Final sponsor canonical/entity-family review", page = 25, filter = "top")
-} else {
-  cat("Final sponsor canonical review file not available.")
-}
-```
-
-```{r sponsor-log-table}
-if (nrow(spon_unique) > 0) {
-  spon_unique |>
-    arrange(match_status, desc(n_trials)) |>
-    select(
-      `Raw sponsor` = raw_sponsor,
-      `Clean label` = sponsor_clean,
-      Status = match_status,
-      Score = match_score,
-      Source = match_source,
-      Reason = match_reason,
-      `N trials` = n_trials
-    ) |>
-    dt_tbl(caption = "Full sponsor normalisation log, collapsed to unique raw strings", page = 25, filter = "top")
-} else {
-  cat("Sponsor log not available.")
+```{r sponsor-spend}
+# A model-built registry has a bill, and an audit report is where it belongs.
+if (!is.null(spon_spend) && nrow(spon_spend) > 0 && has_cols(spon_spend, c("pass", "model_id", "cost_usd"))) {
+  spon_spend |>
+    group_by(Pass = pass, Model = model_id) |>
+    summarise(Requests = sum(as.numeric(n_requests), na.rm = TRUE),
+              `Cost (USD)` = sum(as.numeric(cost_usd), na.rm = TRUE), .groups = "drop") |>
+    arrange(desc(`Cost (USD)`)) |>
+    mutate(Requests = fmt_n(Requests), `Cost (USD)` = sprintf("$%.2f", `Cost (USD)`)) |>
+    nk(cap = sprintf("LLM spend by pass — $%.2f total, against a $60 cap enforced in code",
+                     spon_spend_total))
 }
 ```
 
