@@ -77,13 +77,24 @@ PROMPT_VERSION <- "sponsor-assign-v1"
 MAX_TOKENS     <- 2048L
 MAX_CANDIDATES <- 10L
 
-V2         <- pp("config", "sponsor_norm_v2")
+# SPONSOR_V2_DIR relocates the mutable registry state. Default unchanged, so
+# local and manual runs behave exactly as before. On the nightly server it points
+# outside the git work tree, because the deploy script runs
+# `git reset --hard origin/main` at the START of every run — anything the nightly
+# writes under config/ would be discarded before the next one, so the same
+# strings would be re-sent to the API every night and llm_spend.csv would reset,
+# leaving the budget cap permanently unreachable.
+V2         <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
 MINT_PATH  <- file.path(V2, "B_mint_clusters.csv")
 REG_PATH   <- file.path(V2, "registry.csv")
 ASG_PATH   <- file.path(V2, "assignments.csv")
 CACHE_PATH <- file.path(V2, "C_assign_decisions.csv")
 SPEND_PATH <- file.path(V2, "llm_spend.csv")
-BLOCKS_PATH <- pp("data", "sponsor_blocks.csv")
+# --blocks= lets the nightly hand in its own singleton work list without
+# touching data/sponsor_blocks.csv, which is B_mint's members_sha cache-key
+# input: re-blocking the frozen corpus would trigger paid re-mints of unrelated
+# blocks.
+BLOCKS_PATH <- arg_value("--blocks", pp("data", "sponsor_blocks.csv"))
 
 # ── Schema: ONE grammar for the whole pass ────────────────────────────────────
 
@@ -353,8 +364,15 @@ if (dry_run) {
 auth <- llm_auth()
 
 if (do_sync) {
+  # Sync bills at full rate and used to be entirely unmetered — guard before,
+  # record after, exactly as the batch path does.
+  est <- llm_dry_run(spec, work, label = paste("C_assign /", MODEL_ID),
+                     spend_path = SPEND_PATH)
+  llm_budget_guard(est$est_cost_sync %||% est$est_cost_batch, SPEND_PATH, "C_assign")
   rows <- llm_sync(spec, work, parse = function(o, it) parse_choice(o, it), auth = auth)
   save_rows(rows)
+  llm_spend_record_sync(SPEND_PATH, "C_assign", MODEL_ID, rows)
+  message(sprintf("recorded sync spend; total now $%.2f", llm_spend_total(SPEND_PATH)))
   cat("\nSCALE GATE: check for 'grammar compilation rate limit' above. There should\n")
   cat("be none — the schema is constant. If any appear, do NOT submit the batch.\n")
   quit(save = "no", status = 0L)

@@ -30,6 +30,19 @@ run_pipeline <- function(export_script, build_script, label, extra_args = charac
   invisible(identical(status, 0L))
 }
 
+# run_pipeline() swallows failures into warnings, which is right for the
+# substance pipeline but useless when the caller has to branch. run_step()
+# returns the status.
+run_step <- function(script, args = character(), label = basename(script)) {
+  if (!file.exists(script)) {
+    message("SKIP  ", label, " — not found at ", script)
+    return(127L)
+  }
+  status <- system2(rscript_bin(), c(script, args))
+  if (!identical(status, 0L)) message(sprintf("      %s exited %s", label, status))
+  invisible(status)
+}
+
 # ── Sponsor normalisation pipeline (v2) ───────────────────────────────────────
 # Runs after the cache is on disk so 1_export_trial_sponsors.R can read it.
 #
@@ -44,11 +57,37 @@ run_pipeline <- function(export_script, build_script, label, extra_args = charac
 # appear since the last mint therefore arrive unassigned and are labelled from
 # the raw name, which the diff reports rather than hides.
 message("=== Building sponsor labels ===")
-run_pipeline(
-  file.path("helper_scripts", "sponsor_norm_pipeline", "1_export_trial_sponsors.R"),
-  file.path("helper_scripts", "sponsor_norm_pipeline", "E_emit.R"),
-  "Sponsor normalisation"
-)
+sp <- function(f) file.path("helper_scripts", "sponsor_norm_pipeline", f)
+
+# Four steps, each branching on the previous one. The governing rule: a sponsor
+# hiccup must never cost the data refresh, but it must never look like success
+# either — so this block always leaves rebuild_cache.R exiting 0 and reports
+# failure through a sentinel file the deploy script tests for.
+st_export <- run_step(sp("1_export_trial_sponsors.R"), label = "1_export")
+
+if (!identical(st_export, 0L)) {
+  message("*** SPONSOR NIGHTLY FAILED — 1_export did not produce the raw corpus ***")
+} else {
+  # Resolves strings the registry has never seen. Exits 0 and makes no API call
+  # on a normal night; see its header for the exit codes.
+  st_new <- run_step(sp("N_nightly_resolve.R"), label = "N_nightly_resolve")
+  if (!identical(st_new, 0L)) {
+    message(sprintf(
+      "*** SPONSOR NIGHTLY FAILED (exit %s) — see N_nightly_runs.csv ***", st_new))
+  }
+
+  # Gate BEFORE writing. A regression here means last night's labels are better
+  # than tonight's, so keep them: unresolved strings degrade to their raw name,
+  # which is visible, rather than to a wrong canonical, which is not.
+  st_gate <- run_step(sp("E_emit.R"), c("--diff-only", "--assert-no-regressions"),
+                      label = "E_emit gate")
+  if (identical(st_gate, 0L)) {
+    run_step(sp("E_emit.R"), label = "E_emit")
+  } else {
+    message("*** SPONSOR LABELS NOT WRITTEN — regression gate failed; ",
+            "keeping the previous data/trial_sponsor_labels.csv ***")
+  }
+}
 message("=== Sponsor labels build complete ===")
 
 # ── Substance normalisation pipeline ─────────────────────────────────────────

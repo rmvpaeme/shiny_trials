@@ -97,7 +97,7 @@ TR_VERSION <- "sponsor-translate-v1"
 # the long tail below that is 1-2 trials each and not worth a request.
 TR_MIN_TRIALS <- suppressWarnings(as.integer(arg_value("--min-trials", "20")))
 
-V2         <- pp("config", "sponsor_norm_v2")
+V2         <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
 REG_PATH   <- file.path(V2, "registry.csv")
 ASG_PATH   <- file.path(V2, "assignments.csv")
 CACHE_PATH <- file.path(V2, "D_consolidate_merges.csv")
