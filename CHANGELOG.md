@@ -1,5 +1,129 @@
 # Changelog
 
+## v0.20.0 — 2026-08-16
+
+The sponsor normalisation engine is replaced, a human curation app is added, and
+the pipeline now resolves new sponsors automatically every night. This entry
+covers everything since v0.12.4; the intermediate work was never released
+separately.
+
+### Sponsor normalisation — rebuilt on a model-built registry
+
+The deterministic matcher (~4,200 lines of R plus 16,545 committed alias rows) is
+replaced by a five-pass pipeline that mints canonical names with an LLM and keeps
+every decision in a content-addressed cache.
+
+Two measurements motivated it. The old "curated" asset was never curated — zero
+`manual` rows, against 11,122 `llm_reviewed`, 1,373 `llm_curated` and 3,495
+mechanical `self_alias` — so the rule layer existed to protect what was itself
+older model output. And the corpus is small: whole-corpus resolution costs about
+$35 via the Batches API.
+
+- **A_block** — offline canopy blocking, seeded by trial impact.
+- **B_mint** — names each cluster once with every variant visible, so `UZ Gent`,
+  `Ghent University Hospital` and `Universitair Ziekenhuis Gent` cannot become
+  three canonicals. Opus 5 on the highest-impact blocks, Sonnet 5 on the tail.
+- **C_assign** — the model returns an integer index into a candidate list and R
+  bounds-checks it, so it can choose but never name.
+- **D_consolidate** — partitions each candidate group into organisations rather
+  than judging the group as a whole, and reaches cross-language duplicates by
+  asking for an English name and using it as a blocking key.
+- **E_emit** — writes the app-facing labels, the review queue, and the regression
+  diff that gates the whole rewrite.
+
+Results: **16,594 / 16,594** distinct raw strings assigned, **50,359 / 50,359**
+trial rows labelled with 0 unknown, **6,954** canonical sponsors, **zero**
+`accepted -> unknown` regressions against the old pipeline and 234 improvements,
+built for **$10.31** against a $60 cap enforced in code.
+
+`Novartis` is one canonical where an earlier entity-level cut produced 28.
+
+### Sponsor display — human curation outranks the pipeline
+
+`app.R` now resolves the label through an explicit chain: human curation, then
+the pipeline canonical, then the raw string. The review ledger is read on every
+app load and never enters `trials_cache.rds`, so a curator's decision is live on
+the next start without a cache rebuild. `sponsor_label_source` records which tier
+supplied each label.
+
+### New: nightly incremental resolution
+
+The A–E passes are a one-shot batch over a frozen corpus, but the database
+updates nightly. `N_nightly_resolve.R` now runs inside `rebuild_cache.R`: strings
+already assigned are ignored, genuinely new ones are offered to the existing
+registry first and minted only if that fails, and low-confidence results reach the
+review queue. On a normal night it exits in under a second having made no API call
+and without needing a key. Above a configurable ceiling or per-run cost cap it
+makes no calls at all, writes a backlog, and exits non-zero.
+
+### New: curation reviewer app
+
+`curation_app/` is a standalone Shiny app for confirming low-confidence
+normalisations. Each row shows raw versus proposed plus the evidence and every
+sibling alias resolving to the same canonical — context the CLI loop never
+showed. The proposed value is a server-side selectize over the existing canonical
+pool rather than free text; typing an unknown name warns and records
+`created_new_canonical`, because uncontrolled canonical creation is what produced
+the near-duplicate canonicals already in the data.
+
+The two `llm_reviewed` tiers hold 22,149 rows, which is not reviewable and mostly
+not worth reviewing: 4,428 sponsor rows resolve zero trials and 4,866 more resolve
+exactly one. Both tiers default to an impact threshold and expose a slider, and
+the excluded tail is sampled rather than ignored — a fixed 200-row sample seeded
+on the tier id, reported with a Wilson interval, because a sample that moves is
+not an audit.
+
+### Substance normalisation
+
+- Pruned `substance_llm_overrides.csv` from **9,625 rows to 636**. Overrides are
+  checked ahead of every other tier, so redundant ones shadowed tiers that already
+  agreed with them. Labels and the review queue are byte-identical after the
+  rebuild; gold fixtures unchanged at 105/111.
+- Added conflict review tiers and deduplicated the substance config.
+
+### Derivation layer
+
+`derive_sponsor_canonical()` and `derive_substance_canonical()` resolve the part
+of an unseen string that is genuine string reduction and decline the part that is
+entity resolution. The replay harness in `tests/derivation/` is the point: it
+replays each rule against every `(raw, final)` pair the committed config holds and
+**rejected three of the five rules originally drafted**, with the reasons
+recorded.
+
+### Provenance and naming
+
+- Corrected provenance: LLM curation had been labelled `manual`. `manual_*` files
+  are renamed `*_llm_*`; `source: manual` now means human-verified and is written
+  only by the reviewer app.
+- Pipeline scripts numbered/lettered by execution order; every config CSV
+  documented.
+- Six unused sponsor-curation CSVs and the superseded matcher scripts retired to
+  `LEGACY/`.
+
+### Fixes
+
+- Fixed URL filter-state restore for dynamic selectize inputs.
+- Fixed a `plot_phase_cols` crash caused by a nonexistent theme field.
+- Compare tabs: added a Trial Scope caption, removed Top Active Substances from
+  both comparisons, and switched percentage mode to stacked bars.
+- Added a testing-phase disclaimer banner to the header.
+- Retry failed resolver rows instead of caching the failure forever; keep the real
+  batch error message instead of the envelope type; fix a duplicate `custom_id` in
+  batch submission.
+
+### Two latent bugs found while building the nightly
+
+- **Re-materialising the registry resurrected merged-away entities.** Measured on
+  the real registry: **+284 entities and 527 re-pointed assignments per run**, so
+  any re-run of `C_assign` silently undid every consolidation. Fixed, and pinned by
+  `tests/sponsor_v2_idempotence.R`.
+- **The `--sync` path was unbudgeted and unmetered** — 373 real requests left no
+  row in the spend ledger, so the budget cap could never bind.
+
+### Cache
+
+`DATA_PROCESSING_VERSION` is bumped, so caches rebuild automatically.
+
 ## v0.12.4 — 2026-05-31
 
 ### Compare tabs — UX improvements

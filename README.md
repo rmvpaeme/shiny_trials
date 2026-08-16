@@ -556,11 +556,14 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ## Latest Release
 
-### v0.12.1 - 2026-05-20
+### v0.20.0 - 2026-08-16
 
-- Removed a redundant PIP substance-index rebuild from startup, restoring faster cache-load performance.
-- Corrected CTIS status-code mapping. Code `4` is now treated as ongoing/recruiting instead of terminated.
-- Updated status grouping so `Suspended` and `Halted` remain in the ongoing family, with expanded display recodes.
+- **Sponsor normalisation rebuilt on a model-built canonical registry**, replacing the deterministic matcher (~4,200 lines of R plus 16,545 committed alias rows). All 16,594 distinct raw strings are assigned and all 50,359 trial rows are labelled, across 6,954 canonical sponsors, with **zero regressions** against the old pipeline and 234 improvements. Built for $10.31 against a $60 cap enforced in code.
+- **Human curation now outranks the pipeline.** The display label resolves as human curation → pipeline canonical → raw string, and the review ledger is read on every app load rather than baked into the cache.
+- **New sponsors are resolved nightly.** Strings the registry has never seen are matched against it automatically, so newly registered trials no longer fall back to unnormalised names.
+- **New curation reviewer app** (`curation_app/`) for confirming low-confidence normalisations, with impact thresholds and a seeded tail audit reported with a Wilson interval.
+- Substance overrides pruned from 9,625 rows to 636 with byte-identical labels; a derivation layer whose replay harness rejected three of the five rules originally drafted.
+- Fixes: URL filter-state restore for dynamic selectize inputs, a `plot_phase_cols` crash, and several comparison-tab changes.
 - Invalidated the cache through a new `DATA_PROCESSING_VERSION`.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.

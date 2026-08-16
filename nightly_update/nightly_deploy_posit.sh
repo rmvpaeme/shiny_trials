@@ -13,9 +13,35 @@ SOURCE_BRANCH="${SOURCE_BRANCH:-main}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-deploy}"
 REMOTE="${REMOTE:-origin}"
 PUSH_TIMEOUT_SECONDS="${PUSH_TIMEOUT_SECONDS:-120}"
+# Reconciled 2026-08-16 with the copy actually running on the server
+# (nightly_deploy_posit_local.sh). The repo copy had drifted to two entries,
+# which would have silently stopped shipping the label CSVs.
+#
+# These are force-added below: data/*labels*, data/*log* and the raw exports are
+# gitignored so they never land on main, but the deploy branch is how they reach
+# Posit — the app reads data/trial_sponsor_labels.csv at startup.
+#
+# config/sponsor_norm_v2/ is deliberately NOT here. It is the mutable registry,
+# it lives outside the work tree via SPONSOR_V2_DIR on the server, and committing
+# it would both fight the `git reset --hard` below and add megabytes of churn per
+# night for what is a cache.
 GENERATED_FILES=(
     "trials_cache.rds"
     "www/preprocessing.html"
+    "config/substance_norm_pipeline/substance_review_queue.csv"
+    "data/country_normalisation_log.csv"
+    "data/meddra_term_normalisation_log.csv"
+    "data/organ_class_normalisation_log.csv"
+    "data/phase_normalisation_log.csv"
+    "data/sponsor_normalisation_log.csv"
+    "data/sponsor_normalisation_log_v2.csv"
+    "data/status_category_normalisation_log.csv"
+    "data/status_display_normalisation_log.csv"
+    "data/substance_normalisation_log.csv"
+    "data/trial_sponsor_labels.csv"
+    "data/trial_sponsors_raw.csv"
+    "data/trial_substance_labels.csv"
+    "data/trial_substances_raw.csv"
 )
 
 log() {
@@ -89,7 +115,10 @@ fi
 
 # 3. Commit generated files on deploy only and push to trigger Posit Cloud deploy.
 log "Step 3/4: Committing generated deploy artifacts..."
-git add "${GENERATED_FILES[@]}" >> "$LOG_FILE" 2>&1
+# -f is REQUIRED, not defensive: data/*labels*, data/*log* and the raw exports are
+# gitignored so they never reach main, and a plain `git add` skips them silently —
+# the deploy would push a cache with no label CSVs beside it and nothing would say so.
+git add -f "${GENERATED_FILES[@]}" >> "$LOG_FILE" 2>&1
 if git diff --cached --quiet; then
     log "No generated changes, skipping commit."
 else

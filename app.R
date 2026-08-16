@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.12.1 — startup performance fix)
+# app.R  (v0.20.0 — sponsor normalisation on a model-built registry)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -247,7 +247,7 @@ REVIEW_LEDGER_PATH <- Sys.getenv("REVIEW_LEDGER_PATH",
 SPONSOR_QUEUE_PATH <- Sys.getenv("SPONSOR_QUEUE_PATH",
                                  unset = "config/sponsor_norm_v2/E_review_queue.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
-DATA_PROCESSING_VERSION <- "2026-05-v0.12.1-trial-duration-fields"
+DATA_PROCESSING_VERSION <- "2026-08-v0.20.0-sponsor-registry-v2"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -2992,6 +2992,15 @@ ui <- tagList(
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+	                                        tags$li(tags$b("v0.20.0 (2026-08-16):"),
+		                                          tags$ul(
+		                                            tags$li("Sponsor names are now resolved through a model-built canonical registry, replacing the rule-based matcher. Every one of the 50,359 trial rows carries a canonical sponsor, and national subsidiaries and legal variants are folded into the parent brand — Novartis is one entry rather than 28."),
+		                                            tags$li("Human curation now outranks the pipeline: a reviewed sponsor decision takes effect on the next app start and is never overwritten by an automated re-run."),
+		                                            tags$li("New sponsors appearing in the nightly registry update are resolved automatically against the existing registry, so newly registered trials no longer show unnormalised sponsor names."),
+		                                            tags$li("A new curation app lets reviewers confirm low-confidence normalisations with the raw string, the proposal, and every related alias side by side."),
+		                                            tags$li("The preprocessing report now audits the new registry: sponsor concentration, assignment confidence weighted by trial impact, and what is still awaiting review."),
+		                                            tags$li("Substance overrides pruned from 9,625 rows to 636 with byte-identical labels, plus fixes to URL filter restore, phase colouring, and the comparison tabs.")
+		                                          )),
 	                                        tags$li(tags$b("v0.12.0 (2026-05-19):"),
 		                                          tags$ul(
 		                                            tags$li("Analysis navigation is reorganised with General Statistics first and a separate Compare Data section for country and sponsor comparisons."),
@@ -3017,7 +3026,7 @@ ui <- tagList(
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-	                                      p(em(paste0("v0.12.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+	                                      p(em(paste0("v0.20.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(

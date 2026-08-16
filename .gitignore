@@ -69,3 +69,16 @@ curation_app/**/*.sqlite-*
 # Recoverable from git history if ever needed again.
 LEGACY/
 rmarkdown/preprocessing.html
+
+# Nightly sponsor resolution runtime state.
+#
+# config/sponsor_norm_v2/ is otherwise TRACKED on purpose — the registry,
+# assignments and mint caches are paid LLM output and the seed state a fresh
+# checkout needs. But N_nightly_resolve.R writes its own working files into the
+# same directory, and those are per-environment runtime state: a work list, a
+# retry ledger, a run history, a crash snapshot. On the server they live in
+# $SPONSOR_V2_DIR outside the repo; locally they are test noise, and without
+# this a `git add -A` would commit one machine's run history as if it were data.
+config/sponsor_norm_v2/N_*.csv
+config/sponsor_norm_v2/.snapshot/
+data/.sponsor_nightly_failed
