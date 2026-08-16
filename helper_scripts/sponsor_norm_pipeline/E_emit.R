@@ -34,8 +34,12 @@ arg_value <- function(flag, default = NA_character_) {
   if (length(hit)) sub(paste0("^", flag, "="), "", hit[[1L]]) else default
 }
 diff_only <- "--diff-only" %in% args
+# --assert-no-regressions turns the gate into an exit code so a caller can branch
+# on it. Parsing stdout for "REGRESSION" would be the alternative and is exactly
+# the kind of check that rots silently when the wording changes.
+assert_clean <- "--assert-no-regressions" %in% args
 
-V2        <- pp("config", "sponsor_norm_v2")
+V2        <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
 REG_PATH  <- file.path(V2, "registry.csv")
 ASG_PATH  <- file.path(V2, "assignments.csv")
 QUEUE     <- file.path(V2, "E_review_queue.csv")
@@ -140,6 +144,13 @@ if (!is.null(baseline) && all(c("_id", "sponsor_clean") %in% names(baseline))) {
     cat(sprintf("\n%d REGRESSIONS — these must be zero before switching the app over:\n",
                 nrow(reg_rows)))
     print(as.data.frame(reg_rows |> select(`_id`, old_clean, raw_sponsor) |> head(15)))
+  }
+  # Assert ONLY on this class. `label changed` is 18,105 against the frozen v1
+  # baseline and grows as new strings resolve, so asserting on it would fail
+  # every night for the wrong reason.
+  if (assert_clean && nrow(reg_rows)) {
+    stop(sprintf("--assert-no-regressions: %d accepted -> unknown regression(s).",
+                 nrow(reg_rows)), call. = FALSE)
   }
 
   changed <- d |> filter(change == "label changed") |>

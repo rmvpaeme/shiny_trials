@@ -68,3 +68,4 @@ curation_app/**/*.sqlite-*
 # Superseded sponsor-normalisation scripts, kept on disk for reference.
 # Recoverable from git history if ever needed again.
 LEGACY/
+rmarkdown/preprocessing.html

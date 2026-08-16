@@ -270,6 +270,76 @@ caught five faults that would each have wasted a full batch. Spend is capped at
 USD 60 in code (`llm_budget_guard()`) and recorded from returned usage in
 `config/sponsor_norm_v2/llm_spend.csv`.
 
+#### Nightly sponsor resolution
+
+The A–E passes are a one-shot batch over a frozen corpus. The database updates
+every night, so a trial registered today can carry a sponsor string the registry
+has never seen — and without help it is displayed raw, slowly re-accumulating the
+unnormalised names this pipeline exists to remove.
+
+`rebuild_cache.R` therefore runs a fourth step, `N_nightly_resolve.R`:
+
+```text
+strings already assigned          ignored, no cost
+new + matches a known canonical   C_assign places it there (pick-from-list)
+new + matches nothing             B_mint gives it a new canonical
+low confidence                    E_review_queue.csv, for curation
+```
+
+Offering new strings to the existing registry **before** minting is what stops a
+new Novartis variant becoming a second Novartis.
+
+On a normal night there are no new strings, and the script exits in under a
+second having made **no API call and without needing a key** — the detection step
+deliberately runs before authentication. When there is work it uses `--sync`
+(never `--batch`: batch blocks for up to 24h and the nightly window is ~1h) at a
+measured **~$0.0013 per string**.
+
+It refuses rather than improvises. Above `SPONSOR_NIGHTLY_MAX_SYNC` new strings,
+or above the `SPONSOR_NIGHTLY_CAP_USD` per-run ceiling, it makes no calls at all,
+writes `N_backlog.csv` with the exact manual commands, and exits non-zero — a
+spike that large means something structural changed and wants a human.
+
+It never runs `A_block` (that would rewrite the blocking `B_mint` computes its
+cache keys from, forcing paid re-mints) and never runs `D_consolidate` (a wrong
+merge is the most expensive error available). New canonicals are queued in
+`N_new_entities.csv` for a periodic manual consolidation.
+
+Exit codes — `rebuild_cache.R` branches on these and the deploy script reports
+them, but **`rebuild_cache.R` itself always exits 0**, because a sponsor hiccup
+must never cost the nightly data refresh:
+
+| Code | Meaning |
+| --- | --- |
+| 0 | nothing to do, or resolved (abstentions are not failures) |
+| 10 | no `ANTHROPIC_API_KEY` |
+| 11 | per-run or project budget refused the run |
+| 12 | more new strings than the sync ceiling |
+| 13 | API failure, or most rows unparseable |
+| 14 | a safety assertion failed — state restored from snapshot |
+
+Failures surface through `data/.sponsor_nightly_failed`, which
+`nightly_deploy_posit.sh` tests for and reports by exiting 3 **after** pushing, so
+the app still ships. Every run, including quiet ones, appends to
+`N_nightly_runs.csv`.
+
+Before writing labels the sequence runs `E_emit.R --diff-only
+--assert-no-regressions`; if that fails, the previous labels are kept rather than
+replaced. Unresolved strings degrade to their raw name, which is visible, rather
+than to a wrong canonical, which is not.
+
+**Deployment note.** `docker exec` is called without `-e`, so
+`ANTHROPIC_API_KEY` must already exist inside the container — an `env_file:`, or
+the container user's `~/.Renviron` (**not** the project one: `rebuild_cache.R`
+`setwd()`s after R has started, so a project-directory `.Renviron` is never
+read). Set `LLM_REQUIRE_API_KEY=1` there too: without it a missing key falls back
+to the `ant` CLI, which can block and hold the deploy all day.
+
+`SPONSOR_V2_DIR` should point outside the git work tree on the server, because
+the deploy script runs `git reset --hard` at the start of every run — anything
+the nightly writes under `config/` would otherwise be discarded before the next
+one, re-sending the same strings to the API every night.
+
 The superseded scripts (`2_build_sponsor_index.R`, `3_build_sponsor_labels.R`,
 `4_curate_sponsors.R`, `5_llm_resolve.R`, `6_llm_verify.R`,
 `audit_sponsor_canonicals.R`) live in `LEGACY/`, which is gitignored; they remain
@@ -360,6 +430,12 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 | `FORCE_RESULTS` | `false` | Backwards-compatible alias for EUCTR results |
 | `SKIP_CTIS` | `false` | Skip CTIS refresh |
 | `RENDER_PREPROCESSING` | `auto` | Render preprocessing report after cache rebuild |
+| `ANTHROPIC_API_KEY` | *(unset)* | Required only for nightly sponsor resolution and the manual LLM passes |
+| `SPONSOR_V2_DIR` | `config/sponsor_norm_v2` | Where the mutable sponsor registry lives |
+| `SPONSOR_NIGHTLY_MAX_SYNC` | `150` | Refuse the nightly above this many new strings |
+| `SPONSOR_NIGHTLY_CAP_USD` | `1.00` | Per-run cost ceiling, separate from the $60 project cap |
+| `SPONSOR_NIGHTLY_MAX_TRIES` | `3` | Give up on a string after this many failed nights |
+| `LLM_REQUIRE_API_KEY` | *(unset)* | `1` forbids the `ant` CLI fallback — set it on anything unattended |
 
 ## Repository Map
 

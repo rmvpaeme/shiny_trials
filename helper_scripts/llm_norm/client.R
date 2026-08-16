@@ -112,9 +112,16 @@ llm_auth <- function() {
   if (nzchar(key)) {
     return(list(headers = c("x-api-key" = key), betas = character()))
   }
+  # LLM_REQUIRE_API_KEY=1 refuses the CLI fallback outright. Set it on anything
+  # unattended: a cron job that blocks on `ant` holds the deploy for the whole
+  # day, and the failure looks like a hung batch rather than a missing key.
+  if (identical(Sys.getenv("LLM_REQUIRE_API_KEY"), "1")) {
+    stop("ANTHROPIC_API_KEY is unset and LLM_REQUIRE_API_KEY=1 forbids the ",
+         "`ant` fallback.", call. = FALSE)
+  }
   token <- tryCatch(
     suppressWarnings(system2("ant", c("auth", "print-credentials", "--access-token"),
-                             stdout = TRUE, stderr = FALSE)),
+                             stdout = TRUE, stderr = FALSE, timeout = 10)),
     error = function(e) character()
   )
   token <- token[nzchar(token)]
@@ -438,6 +445,30 @@ llm_spend_record <- function(path, pass, batch_id, model_id,
   invisible(row)
 }
 
+# A PER-RUN ceiling, distinct from llm_budget_guard()'s cumulative project cap.
+#
+# The project cap answers "have we spent too much in total"; this answers "is
+# tonight's work list a normal size". They fail differently: a corpus reload that
+# dumps thousands of new strings is affordable against a $60 cap and still means
+# something structural broke, so it wants a human rather than an unattended bill.
+# Refuses the whole run — never truncates, because a silently truncated work list
+# becomes a permanent backlog nobody notices.
+llm_run_cap_guard <- function(estimate_usd, cap_usd, pass) {
+  if (is.na(estimate_usd)) {
+    stop("No cost estimate available — refusing to submit blind.", call. = FALSE)
+  }
+  cat(sprintf("run cap: $%.2f estimated for %s, ceiling $%.2f\n",
+              estimate_usd, pass, cap_usd))
+  if (estimate_usd > cap_usd) {
+    stop(sprintf(
+      paste0("Refusing: estimated $%.2f exceeds the $%.2f per-run ceiling.\n",
+             "  This is a size guard, not a budget guard. Raise it deliberately\n",
+             "  with SPONSOR_NIGHTLY_CAP_USD, or run the backlog by hand."),
+      estimate_usd, cap_usd), call. = FALSE)
+  }
+  invisible(TRUE)
+}
+
 # Call before every submission. `estimate` comes from llm_dry_run().
 llm_budget_guard <- function(estimate_usd, spend_path, pass,
                              cap = BUDGET_CAP_USD, allow_over = FALSE) {
@@ -497,8 +528,18 @@ llm_batch_usage <- function(batch_id, auth = llm_auth()) {
 # For prompt iteration and the scale gate, not for the full corpus. `parse` gets
 # (outcome, item_row) and returns a one-row tibble.
 
+# Usage is ACCUMULATED and returned on attr(rows, "usage"), so a caller can
+# record what a sync run actually cost.
+#
+# It used to be discarded. The consequence was invisible and total: the sync
+# branches of B_mint and C_assign call this, save their rows and quit, so no
+# llm_budget_guard() ran before and no llm_spend_record() ran after. 373 real
+# C_assign requests left NO row in llm_spend.csv — the pass looks free, and the
+# $60 cap it is supposed to enforce never sees the spend. Anything running
+# unattended has to be metered or the cap is decorative.
 llm_sync <- function(spec, items, parse, auth = llm_auth(), verbose = TRUE) {
-  purrr::map_dfr(seq_len(nrow(items)), function(i) {
+  usage <- list(input = 0, output = 0, cache_read = 0, n = 0L)
+  rows <- purrr::map_dfr(seq_len(nrow(items)), function(i) {
     item <- items[i, , drop = FALSE]
     betas <- if (model_supports_fallbacks(spec$model)) FALLBACK_BETA else character()
     resp <- llm_request("/v1/messages", auth, betas) |>
@@ -512,7 +553,15 @@ llm_sync <- function(spec, items, parse, auth = llm_auth(), verbose = TRUE) {
       if (verbose) message(sprintf("  [%d] %s", httr2::resp_status(resp), substr(body, 1L, 300L)))
       list(ok = FALSE, error = paste0("http ", httr2::resp_status(resp), ": ", substr(body, 1L, 200L)))
     } else {
-      llm_parse_message(httr2::resp_body_json(resp))
+      msg <- httr2::resp_body_json(resp)
+      u <- msg$usage
+      if (!is.null(u)) {
+        usage$input      <<- usage$input      + (u$input_tokens %||% 0)
+        usage$output     <<- usage$output     + (u$output_tokens %||% 0)
+        usage$cache_read <<- usage$cache_read + (u$cache_read_input_tokens %||% 0)
+        usage$n          <<- usage$n + 1L
+      }
+      llm_parse_message(msg)
     }
     if (verbose) {
       message(sprintf("  %-6s %s", if (outcome$ok) "ok" else "FAIL",
@@ -520,6 +569,22 @@ llm_sync <- function(spec, items, parse, auth = llm_auth(), verbose = TRUE) {
     }
     parse(outcome, item)
   })
+  attr(rows, "usage") <- usage
+  rows
+}
+
+# Record what a sync run cost. Separate from the batch path because sync bills at
+# full rate (batch = FALSE) and has no batch_id to be idempotent on — a synthetic
+# one keeps llm_spend_record's duplicate guard meaningful.
+llm_spend_record_sync <- function(spend_path, pass, model_id, rows) {
+  u <- attr(rows, "usage")
+  if (is.null(u) || !isTRUE(u$n > 0L)) return(invisible(NULL))
+  llm_spend_record(
+    spend_path, pass,
+    batch_id = sprintf("sync_%s_%s", pass, format(Sys.time(), "%Y%m%dT%H%M%OS3", tz = "UTC")),
+    model_id = model_id, input_tokens = u$input, output_tokens = u$output,
+    cache_read_tokens = u$cache_read, batch = FALSE, n_requests = u$n
+  )
 }
 
 # ── Batch ─────────────────────────────────────────────────────────────────────

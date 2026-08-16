@@ -105,9 +105,11 @@ TAIL_MODEL     <- "claude-sonnet-5"
 HEAD_BLOCKS    <- 500L    # by trial impact; ~63% of all trial rows
 MAX_TOKENS     <- 8192L   # covers thinking plus the JSON for a 40-member block
 
-BLOCKS_PATH   <- pp("data", "sponsor_blocks.csv")
-CACHE_PATH    <- pp("config", "sponsor_norm_v2", "B_mint_clusters.csv")
-SPEND_PATH    <- pp("config", "sponsor_norm_v2", "llm_spend.csv")
+# See C_assign.R for why SPONSOR_V2_DIR and --blocks exist. Defaults unchanged.
+V2_DIR        <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
+BLOCKS_PATH   <- arg_value("--blocks", pp("data", "sponsor_blocks.csv"))
+CACHE_PATH    <- file.path(V2_DIR, "B_mint_clusters.csv")
+SPEND_PATH    <- file.path(V2_DIR, "llm_spend.csv")
 
 if (!file.exists(BLOCKS_PATH)) stop("Run A_block.R first.", call. = FALSE)
 
@@ -434,12 +436,23 @@ if (dry_run) {
 }
 
 if (do_sync) {
+  # Guard and meter, as the batch path does. One spend row per model, because
+  # pricing differs between the Opus head and the Sonnet tail.
+  for (m in names(specs)) {
+    w <- work |> filter(model == m)
+    if (!nrow(w)) next
+    est <- llm_dry_run(specs[[m]], w, label = paste("B_mint /", m), spend_path = SPEND_PATH)
+    llm_budget_guard(est$est_cost_sync %||% est$est_cost_batch, SPEND_PATH, "B_mint")
+  }
   rows <- purrr::map_dfr(names(specs), function(m) {
     w <- work |> filter(model == m)
     if (!nrow(w)) return(tibble::tibble())
-    llm_sync(specs[[m]], w, parse = function(o, it) parse_clusters(o, it))
+    r <- llm_sync(specs[[m]], w, parse = function(o, it) parse_clusters(o, it))
+    llm_spend_record_sync(SPEND_PATH, "B_mint", m, r)
+    r
   })
   save_rows(rows)
+  message(sprintf("recorded sync spend; total now $%.2f", llm_spend_total(SPEND_PATH)))
   quit(save = "no", status = 0L)
 }
 

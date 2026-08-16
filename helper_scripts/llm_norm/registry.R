@@ -173,8 +173,30 @@ registry_from_clusters <- function(clusters, reg = registry_empty(),
       .groups        = "drop"
     )
 
-  live <- registry_live(reg)
-  known <- setNames(live$entity_id, live$canonical)
+  # Canonical -> TERMINAL entity, over EVERY registry row rather than only live
+  # ones, with live rows winning ties.
+  #
+  # Keying on live rows alone resurrects consolidation. A canonical whose entity
+  # was merged away is not "known", so it is minted again as a fresh live entity
+  # and its raw strings are re-pointed at the duplicate. Measured on the real
+  # 7,238-row registry, ONE re-materialisation added 284 entities — exactly the
+  # merged set — and re-pointed 527 assignments, undoing every
+  # `D_consolidate --apply`. Nothing errored, and nothing in the output looked
+  # wrong: the registry simply grew back.
+  #
+  # This matters far beyond the obvious case, because `C_assign.R` re-materialises
+  # the WHOLE mint cache on every invocation, so the damage lands on any re-run —
+  # by hand or unattended. Idempotent materialisation is the precondition for
+  # running this pipeline on a schedule. tests/sponsor_v2_idempotence.R pins it.
+  term <- tibble::tibble(
+    canonical = reg$canonical,
+    entity_id = resolve_entity(reg, reg$entity_id),
+    is_live   = is.na(reg$merged_into)
+  ) |>
+    dplyr::filter(!is.na(canonical), nzchar(canonical), !is.na(entity_id)) |>
+    dplyr::arrange(dplyr::desc(is_live)) |>
+    dplyr::distinct(canonical, .keep_all = TRUE)
+  known <- setNames(term$entity_id, term$canonical)
 
   fresh <- minted |> dplyr::filter(!canonical %in% names(known))
   # Distinct canonical, best confidence wins the attributes.
