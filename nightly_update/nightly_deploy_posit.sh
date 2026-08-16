@@ -28,7 +28,7 @@ PUSH_TIMEOUT_SECONDS="${PUSH_TIMEOUT_SECONDS:-120}"
 GENERATED_FILES=(
     "trials_cache.rds"
     "www/preprocessing.html"
-    "config/substance_norm_pipeline/substance_review_queue.csv"
+    "config/substance_norm_pipeline/3_substance_review_queue.csv"
     "data/country_normalisation_log.csv"
     "data/meddra_term_normalisation_log.csv"
     "data/organ_class_normalisation_log.csv"

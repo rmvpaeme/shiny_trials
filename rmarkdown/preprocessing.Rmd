@@ -940,7 +940,18 @@ spon_diagram <- first_existing(c(
   "sponsor_normalisation_pipeline.png",
   file.path(project_root, "rmarkdown", "sponsor_normalisation_pipeline.png")
 ))
-if (!is.na(spon_diagram)) knitr::include_graphics(spon_diagram)
+# An illustration must never take down the report. On the server this chunk
+# aborted the whole render with "Cannot find the file(s)" — knitr resolves
+# include_graphics against the render directory, which is not where the .png
+# lives when rebuild_cache.R renders to www/. Everything below this point is the
+# actual audit; losing it to a missing picture is a bad trade.
+if (!is.na(spon_diagram)) {
+  tryCatch(knitr::include_graphics(spon_diagram, rel_path = FALSE),
+           error = function(e) {
+             message("pipeline diagram skipped: ", conditionMessage(e))
+             invisible(NULL)
+           })
+}
 ```
 
 ```{r sponsor-compute}

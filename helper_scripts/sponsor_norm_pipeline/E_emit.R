@@ -38,6 +38,7 @@ diff_only <- "--diff-only" %in% args
 # on it. Parsing stdout for "REGRESSION" would be the alternative and is exactly
 # the kind of check that rots silently when the wording changes.
 assert_clean <- "--assert-no-regressions" %in% args
+freeze_baseline <- "--freeze-baseline" %in% args
 
 V2        <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
 REG_PATH  <- file.path(V2, "registry.csv")
@@ -63,12 +64,27 @@ reg <- registry_read(REG_PATH)
 asg <- assignments_read(ASG_PATH)
 raw <- read_csv(RAW_PATH, show_col_types = FALSE, progress = FALSE)
 
-# Freeze the snapshot once, from whatever the app is serving today. After this
-# the baseline never moves, so the diff always answers the same question: how
-# does the v2 pipeline compare with what shipped?
-if (!file.exists(BASE_PATH) && file.exists(OUT_PATH)) {
-  file.copy(OUT_PATH, BASE_PATH)
+# Freezing is EXPLICIT. It used to happen automatically from whatever labels
+# existed, which is a footgun with a long fuse.
+#
+# Observed on the server 2026-08-16: the deploy branch resets to origin/main
+# every night, and trial_sponsor_labels.csv is tracked on `deploy` but gitignored
+# on `main`, so the reset DELETED it. The auto-freeze then had nothing to copy,
+# the diff was skipped, and --assert-no-regressions passed vacuously. Worse, on
+# the following run the file would exist again — as v2 output — so the freeze
+# would have captured v2 as its own baseline and the gate would have compared v2
+# to v2 forever while reporting a healthy table.
+#
+# A baseline is only meaningful if you know what produced it, so it is now
+# created deliberately with --freeze-baseline, never inferred.
+if (freeze_baseline) {
+  if (!file.exists(OUT_PATH)) {
+    stop("--freeze-baseline: nothing at ", OUT_PATH, " to freeze.", call. = FALSE)
+  }
+  file.copy(OUT_PATH, BASE_PATH, overwrite = TRUE)
   message("froze regression baseline -> ", basename(BASE_PATH))
+  message("  from ", OUT_PATH)
+  message("  Make sure that file is the OLD pipeline's output, not v2's.")
 }
 
 baseline <- if (file.exists(BASELINE)) {
@@ -148,9 +164,13 @@ if (!is.null(baseline) && all(c("_id", "sponsor_clean") %in% names(baseline))) {
   # Assert ONLY on this class. `label changed` is 18,105 against the frozen v1
   # baseline and grows as new strings resolve, so asserting on it would fail
   # every night for the wrong reason.
+  # Exit 1 = measured a regression. Distinct from exit 2 below, which means the
+  # gate could not measure at all — the caller must be able to tell those apart,
+  # because one should block the write and the other should not.
   if (assert_clean && nrow(reg_rows)) {
-    stop(sprintf("--assert-no-regressions: %d accepted -> unknown regression(s).",
-                 nrow(reg_rows)), call. = FALSE)
+    message(sprintf("--assert-no-regressions: %d accepted -> unknown regression(s).",
+                    nrow(reg_rows)))
+    quit(save = "no", status = 1L)
   }
 
   changed <- d |> filter(change == "label changed") |>
@@ -162,6 +182,24 @@ if (!is.null(baseline) && all(c("_id", "sponsor_clean") %in% names(baseline))) {
   }
 } else {
   cat("\nNo comparable baseline found; skipping the regression diff.\n")
+  # Exit 2 = COULD NOT MEASURE. Distinct from exit 1 (measured a regression).
+  #
+  # Silence here is how a gate rots: it previously returned 0, so
+  # --assert-no-regressions reported success while comparing against nothing at
+  # all. A gate that cannot run must say so, or it is worse than no gate —
+  # it manufactures confidence.
+  #
+  # The caller decides what to do: rebuild_cache.R still writes labels on a 2
+  # (better to ship good labels than none while a one-off setup step is
+  # outstanding) but raises the sentinel, so the deploy exits non-zero and
+  # somebody fixes the baseline.
+  if (assert_clean) {
+    cat("--assert-no-regressions: cannot assert without a baseline.\n")
+    cat("  Create one from the OLD pipeline's output:\n")
+    cat("    Rscript LEGACY/sponsor_norm_pipeline/3_build_sponsor_labels.R\n")
+    cat("    Rscript .../E_emit.R --freeze-baseline\n")
+    quit(save = "no", status = 2L)
+  }
 }
 
 if (diff_only) { cat("\n--diff-only: nothing written.\n"); quit(save = "no", status = 0L) }
