@@ -1,127 +1,198 @@
-digraph sponsor_normalisation_pipeline {
+// Sponsor normalisation v2 — a model-built canonical registry.
+//
+// Read it as three bands, top to bottom:
+//   1. deterministic and free      (blue)   — re-runnable at any time
+//   2. paid LLM passes             (violet) — need an API key, capped at USD 60
+//   3. emit, gate, and display     (green)  — what the app actually reads
+//
+// The one thing worth carrying away: every paid pass writes a content-addressed
+// cache, so re-running resolves only absent keys and costs nothing. Regenerate
+// with:  dot -Tpng rmarkdown/sponsor_normalisation_pipeline.dot -o rmarkdown/sponsor_normalisation_pipeline.png
+
+digraph sponsor_normalisation_v2 {
   graph [
-    rankdir = TB,
-    bgcolor = "white",
-    pad = "0.35",
-    nodesep = "0.42",
-    ranksep = "0.55",
-    splines = ortho,
+    rankdir    = TB,
+    bgcolor    = "white",
+    pad        = "0.4",
+    nodesep    = "0.34",
+    ranksep    = "0.5",
+    // NOT ortho: graphviz silently drops edge labels under orthogonal
+    // routing, and several edges here carry the load-bearing detail.
+    splines    = polyline,
+    fontname   = "Helvetica",
     outputorder = edgesfirst
   ];
 
   node [
-    shape = box,
-    style = "rounded,filled",
-    fontname = "Helvetica",
-    fontsize = 11,
-    color = "#6B7280",
-    penwidth = 1.2,
+    shape     = box,
+    style     = "rounded,filled",
+    fontname  = "Helvetica",
+    fontsize  = 10,
+    color     = "#6B7280",
+    penwidth  = 1.2,
     fillcolor = "#F8FAFC",
-    margin = "0.12,0.08"
+    margin    = "0.13,0.09"
   ];
 
   edge [
-    fontname = "Helvetica",
-    fontsize = 9,
-    color = "#6B7280",
+    fontname  = "Helvetica",
+    fontsize  = 8.5,
+    color     = "#6B7280",
     arrowsize = 0.7
   ];
 
-  cache [label = "Trial cache\ntrials_cache.rds / DB", fillcolor = "#E0F2FE", color = "#0284C7"];
-  export [label = "1_export_trial_sponsors.R", fillcolor = "#DBEAFE", color = "#2563EB"];
-  raw [label = "data/trial_sponsors_raw.csv\n_id, raw_sponsor, is_commercial", fillcolor = "#EFF6FF", color = "#2563EB"];
+  // ── Source ─────────────────────────────────────────────────────────────────
+  cache [label = "Trial cache\ntrials_cache.rds / trials.sqlite",
+         fillcolor = "#E0F2FE", color = "#0284C7"];
+  export [label = "1_export_trial_sponsors.R",
+          fillcolor = "#DBEAFE", color = "#2563EB"];
+  raw [label = "data/trial_sponsors_raw.csv\n50,359 rows · 16,594 distinct strings",
+       fillcolor = "#EFF6FF", color = "#2563EB"];
 
-  subgraph cluster_config {
-    label = "Curated Source Config";
-    color = "#CBD5E1";
-    style = "rounded,dashed";
-    aliases [label = "sponsor_llm_aliases.csv", fillcolor = "#ECFDF5", color = "#059669"];
-    overrides [label = "sponsor_llm_overrides.csv", fillcolor = "#ECFDF5", color = "#059669"];
-    negatives [label = "sponsor_negative_aliases.csv", fillcolor = "#FEF2F2", color = "#DC2626"];
-    reviewed [label = "sponsor_llm_reviewed.csv\naccepted queue decisions", fillcolor = "#ECFDF5", color = "#059669"];
-    final_map [label = "final_sponsor_canonical_map.csv\nlabel -> label", fillcolor = "#F5F3FF", color = "#7C3AED"];
-    family_map [label = "final_sponsor_family_map.csv\nentity_key -> canonical sponsor", fillcolor = "#F5F3FF", color = "#7C3AED"];
+  // ── Band 1: deterministic ──────────────────────────────────────────────────
+  subgraph cluster_offline {
+    label     = "Deterministic · offline · free";
+    fontname  = "Helvetica-Bold";
+    fontsize  = 10;
+    color     = "#2563EB";
+    style     = "rounded,dashed";
+    bgcolor   = "#FBFDFF";
+
+    block [label = "A_block.R\ncanopy blocking, seeded by trial impact\ndual fold: raw + diacritics-deleted",
+           fillcolor = "#DBEAFE", color = "#2563EB"];
+    blocks [label = "data/sponsor_blocks.csv\n2,438 multi-member blocks + 3,877 singletons",
+            fillcolor = "#EFF6FF", color = "#2563EB"];
   }
 
-  subgraph cluster_external {
-    label = "External / Derived Sources";
-    color = "#CBD5E1";
-    style = "rounded,dashed";
-    epar [label = "EPAR MAH names", fillcolor = "#FFF7ED", color = "#EA580C"];
-    ctis [label = "CTIS businessKey groups", fillcolor = "#FFF7ED", color = "#EA580C"];
-    euctr [label = "EUCTR email-domain groups", fillcolor = "#FFF7ED", color = "#EA580C"];
-    postcode [label = "Postcode + country matches", fillcolor = "#FFF7ED", color = "#EA580C"];
-    ror [label = "Optional ROR", fillcolor = "#FFF7ED", color = "#EA580C"];
+  // ── Shared machinery ───────────────────────────────────────────────────────
+  subgraph cluster_shared {
+    label     = "helper_scripts/llm_norm/ — shared machinery, used by every pass above";
+    fontname  = "Helvetica-Bold";
+    fontsize  = 10;
+    color     = "#94A3B8";
+    style     = "rounded,dashed";
+    bgcolor   = "#FAFAFA";
+
+    client [label = "client.R\nONE constant schema per pass\nbudget guard · idempotent spend\nbatch results matched by custom_id",
+            fillcolor = "#F1F5F9", color = "#64748B"];
+    retrieve [label = "retrieve.R\nIDF token index · canopy · union-find",
+              fillcolor = "#F1F5F9", color = "#64748B"];
+    registry_mod [label = "registry.R\nmerge chains · human pinning\nexact-canonical collapse",
+                  fillcolor = "#F1F5F9", color = "#64748B"];
+    spend [label = "llm_spend.csv\n$10.31 of a $60 cap, from returned usage",
+           fillcolor = "#FEFCE8", color = "#CA8A04"];
   }
 
-  index [label = "2_build_sponsor_index.R", fillcolor = "#DBEAFE", color = "#2563EB"];
-  canonical [label = "Final canonicalisation pass\nexplicit map -> family map -> exact collapse\n-> stripped-token collapse -> high-JW review", fillcolor = "#F5F3FF", color = "#7C3AED"];
+  // ── Band 2: paid passes ────────────────────────────────────────────────────
+  subgraph cluster_llm {
+    label     = "Paid LLM passes · API key required · gate each with --sync --limit=N";
+    fontname  = "Helvetica-Bold";
+    fontsize  = 10;
+    color     = "#7C3AED";
+    style     = "rounded,dashed";
+    bgcolor   = "#FDFBFF";
 
-  alias_index [label = "2_sponsor_alias_index.csv\nalias_clean -> sponsor_clean", fillcolor = "#ECFDF5", color = "#059669"];
-  llm [label = "sponsor_llm_reviewed.csv", fillcolor = "#F8FAFC"];
-  ambiguous [label = "2_sponsor_ambiguous_aliases.csv", fillcolor = "#FEFCE8", color = "#CA8A04"];
-  candidates [label = "2_new_sponsor_candidates.csv", fillcolor = "#FEFCE8", color = "#CA8A04"];
-  final_review [label = "2_final_sponsor_canonical_review.csv\nauto / review / blocked clusters", fillcolor = "#FEFCE8", color = "#CA8A04"];
+    mint [label = "B_mint.R\nname each cluster ONCE, every variant visible\nOpus 5 head (500 blocks) / Sonnet 5 tail\n--singletons · --retry-failed",
+          fillcolor = "#F5F3FF", color = "#7C3AED"];
+    clusters [label = "B_mint_clusters.csv\ncanonical = the BRAND, not the legal entity",
+              fillcolor = "#FAF5FF", color = "#7C3AED"];
 
-  labels_script [label = "3_build_sponsor_labels.R\n(default deterministic; --allow-fuzzy opt-in)", fillcolor = "#DBEAFE", color = "#2563EB"];
-  normalise [label = "normalise_sponsors.R", fillcolor = "#DBEAFE", color = "#2563EB"];
+    assign [label = "C_assign.R\npick-from-list: model returns an INTEGER index,\nR bounds-checks it · 0 = abstain",
+            fillcolor = "#F5F3FF", color = "#7C3AED"];
 
-  clean [label = "Clean raw sponsor text", fillcolor = "#F8FAFC"];
-  candidates_step [label = "Generate candidates", fillcolor = "#F8FAFC"];
-  match [label = "Match sequence\n1 override\n2 negative alias\n3 exact alias\n4 high-confidence containment\n5 optional fuzzy review\n6 unknown / suggested_clean", fillcolor = "#F8FAFC"];
+    translate [label = "D_consolidate.R --translate\nEnglish name as a blocking key\n(Gent/Ghent, Wien/Vienna)",
+               fillcolor = "#F5F3FF", color = "#7C3AED"];
+    consolidate [label = "D_consolidate.R\nPARTITION each group: one index per member\nnot one verdict per group",
+                 fillcolor = "#F5F3FF", color = "#7C3AED"];
+    merges [label = "D_consolidate_merges.csv\nreview before --apply",
+            fillcolor = "#FAF5FF", color = "#7C3AED"];
+  }
 
-  trial_labels [label = "data/trial_sponsor_labels.csv\napp-facing sponsor_clean labels", fillcolor = "#DCFCE7", color = "#16A34A"];
-  norm_log [label = "data/sponsor_normalisation_log.csv\naudit log", fillcolor = "#DCFCE7", color = "#16A34A"];
-  queue [label = "3_sponsor_review_queue.csv\nraw aliases needing curation", fillcolor = "#FEFCE8", color = "#CA8A04"];
+  // ── The registry ───────────────────────────────────────────────────────────
+  registry [label = "config/sponsor_norm_v2/registry.csv\n6,954 live canonicals (7,238 rows, 284 merged away)",
+            fillcolor = "#ECFDF5", color = "#059669"];
+  assignments [label = "assignments.csv\n16,594 / 16,594 raw strings assigned",
+               fillcolor = "#ECFDF5", color = "#059669"];
+
+  // ── Band 3: emit and display ───────────────────────────────────────────────
+  subgraph cluster_emit {
+    label     = "Emit · gate · display";
+    fontname  = "Helvetica-Bold";
+    fontsize  = 10;
+    color     = "#16A34A";
+    style     = "rounded,dashed";
+    bgcolor   = "#FAFFFB";
+
+    emit [label = "E_emit.R\nthe only writer of the app-facing labels",
+          fillcolor = "#DCFCE7", color = "#16A34A"];
+    labels [label = "data/trial_sponsor_labels.csv\n50,359 / 50,359 trial rows · 0 unknown",
+            fillcolor = "#DCFCE7", color = "#16A34A"];
+    normlog [label = "data/sponsor_normalisation_log_v2.csv\nper-string audit log",
+             fillcolor = "#DCFCE7", color = "#16A34A"];
+    queue [label = "E_review_queue.csv\n2,130 low-confidence rows · 3,579 trial rows",
+           fillcolor = "#FEFCE8", color = "#CA8A04"];
+    gate [label = "E_emit.R --diff-only\nREGRESSION GATE\naccepted → unknown must be 0",
+          shape = box, fillcolor = "#FEF2F2", color = "#DC2626", penwidth = 1.8];
+    baseline [label = "trial_sponsor_labels_baseline.csv\nfrozen old-pipeline output",
+              fillcolor = "#FFF7ED", color = "#EA580C"];
+  }
+
+  // ── Human curation, which outranks everything ──────────────────────────────
+  subgraph cluster_human {
+    label     = "Human curation — priority 1";
+    fontname  = "Helvetica-Bold";
+    fontsize  = 10;
+    color     = "#DC2626";
+    style     = "rounded,dashed";
+    bgcolor   = "#FFFBFB";
+
+    curation [label = "curation_app/\nreview the queue",
+              fillcolor = "#FEE2E2", color = "#DC2626"];
+    ledger [label = "config/review_ledger/review_decisions.csv\nappend-only · latest per raw string wins",
+            fillcolor = "#FEE2E2", color = "#DC2626"];
+  }
 
   app [label = "app.R", fillcolor = "#E0F2FE", color = "#0284C7"];
-  selector [label = "Sponsor selector / filters\nsponsor_label = sponsor_clean", fillcolor = "#E0F2FE", color = "#0284C7"];
+  display [label = "sponsor_label\n1 human · 2 pipeline · 3 raw\nsponsor_label_source records which",
+           fillcolor = "#E0F2FE", color = "#0284C7", penwidth = 1.8];
 
-  curation [label = "Manual review loop\nqueue + candidates + final review", fillcolor = "#FEE2E2", color = "#DC2626"];
-
+  // ── Flow ───────────────────────────────────────────────────────────────────
   cache -> export -> raw;
+  raw -> block -> blocks;
 
-  aliases -> index;
-  overrides -> index;
-  negatives -> index;
-  reviewed -> index;
-  final_map -> index;
-  family_map -> index;
+  blocks -> mint [label = "  multi-member"];
+  blocks -> mint [label = "  singletons", style = dashed];
+  mint -> clusters;
 
-  epar -> index;
-  ctis -> index;
-  euctr -> index;
-  postcode -> index;
-  ror -> index;
+  clusters -> registry [label = "  materialise\n  (registry.R)"];
+  clusters -> assignments;
 
-  index -> canonical;
-  canonical -> alias_index;
-  index -> llm;
-  index -> ambiguous;
-  index -> candidates;
-  canonical -> final_review;
+  registry -> assign [label = "  candidates via retrieve.R"];
+  assign -> assignments [label = "  index → entity_id"];
 
-  raw -> labels_script;
-  alias_index -> labels_script;
-  overrides -> labels_script;
-  negatives -> labels_script;
+  registry -> translate;
+  translate -> consolidate [label = "  English-name edges"];
+  registry -> consolidate [label = "  token-overlap edges"];
+  consolidate -> merges;
+  merges -> registry [label = "  --apply\n  (guarded)", style = dashed];
 
-  labels_script -> normalise;
-  normalise -> clean -> candidates_step -> match;
-
-  match -> trial_labels;
-  match -> norm_log;
-  match -> queue;
-
-  trial_labels -> app -> selector;
+  registry -> emit;
+  assignments -> emit;
+  emit -> labels;
+  emit -> normlog;
+  emit -> queue;
+  labels -> gate [style = dashed];
+  baseline -> gate [style = dashed];
 
   queue -> curation;
-  candidates -> curation;
-  final_review -> curation;
+  curation -> ledger;
 
-  curation -> aliases;
-  curation -> overrides;
-  curation -> negatives;
-  curation -> final_map;
-  curation -> family_map;
+  labels -> app;
+  ledger -> app [label = "  read on EVERY load,\n  never cached", color = "#DC2626", penwidth = 1.6];
+  app -> display;
+
+  // Deliberately NO edges from cluster_shared. Every pass uses those modules,
+  // so drawing it produced six diagonals across the whole graph that said only
+  // "everything uses everything" — clutter in exchange for nothing. The cluster
+  // reads as a panel instead.
 }
