@@ -1,30 +1,33 @@
 #!/bin/bash
-# Nightly job: rebuild deploy branch from main, update DB/cache inside the
-# RStudio Docker container, commit generated artifacts, and push deploy to
-# GitHub (triggers Posit Cloud deploy).
+# Nightly job: update DB, rebuild cache, commit generated artifacts to `deploy`,
+# push to trigger the Posit Cloud deploy.
+#
+# THIS IS THE COPY THAT RUNS ON THE SERVER. It was maintained by hand there and
+# had drifted from the repo (the repo copy staged 2 files; this stages 16, and
+# uses `git add -f` because the label CSVs are gitignored). Committed here
+# 2026-08-16 so the two cannot drift again — edit this file, then copy it to the
+# server, rather than editing the server copy in place.
+#
+# Expects to live at the REPO ROOT on the server: every git path below is
+# relative to $SCRIPT_DIR.
 
 set -e
 
-INSTANCE_NAME="${INSTANCE_NAME:-rstudio-rstudio-1}"
+instanceName="rstudio-rstudio-1"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOG_FILE="$SCRIPT_DIR/nightly_deploy.log"
 SOURCE_BRANCH="${SOURCE_BRANCH:-main}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-deploy}"
 REMOTE="${REMOTE:-origin}"
 PUSH_TIMEOUT_SECONDS="${PUSH_TIMEOUT_SECONDS:-120}"
-# Reconciled 2026-08-16 with the copy actually running on the server
-# (nightly_deploy_posit_local.sh). The repo copy had drifted to two entries,
-# which would have silently stopped shipping the label CSVs.
+
+# Force-added below: data/*labels*, data/*log* and the raw exports are gitignored
+# so they never reach main, but the deploy branch is how they reach Posit — the
+# app reads data/trial_sponsor_labels.csv at startup.
 #
-# These are force-added below: data/*labels*, data/*log* and the raw exports are
-# gitignored so they never land on main, but the deploy branch is how they reach
-# Posit — the app reads data/trial_sponsor_labels.csv at startup.
-#
-# config/sponsor_norm_v2/ is deliberately NOT here. It is the mutable registry,
-# it lives outside the work tree via SPONSOR_V2_DIR on the server, and committing
-# it would both fight the `git reset --hard` below and add megabytes of churn per
-# night for what is a cache.
+# config/sponsor_norm_v2/ is deliberately absent. It is the mutable registry, it
+# lives outside the work tree via SPONSOR_V2_DIR, and committing it would both
+# fight the `git reset --hard` below and add megabytes of churn per night.
 GENERATED_FILES=(
     "trials_cache.rds"
     "www/preprocessing.html"
@@ -49,7 +52,7 @@ log() {
 }
 
 log "=== Nightly deploy started ==="
-cd "$PROJECT_DIR"
+cd "$SCRIPT_DIR"
 
 # 0. Rebuild deploy from the latest source branch.
 log "Step 0/4: Fetching latest from GitHub..."
@@ -57,16 +60,15 @@ git fetch "$REMOTE" >> "$LOG_FILE" 2>&1 || { log "ERROR: git fetch failed."; exi
 
 # Dirty check, SCOPED to files a human would have edited.
 #
-# Unscoped, this wedges the nightly permanently: the previous run rewrites
-# generated artefacts (trials_cache.rds, www/preprocessing.html, and tracked
-# files under data/ such as trial_sponsors_raw.csv), so if a run dies after
-# writing them but before committing, every subsequent night exits 1 here and
-# nothing updates until someone logs in. Those paths are regenerated from
-# scratch anyway, so local changes to them are not worth refusing over.
+# Unscoped, this wedges the nightly permanently: the run rewrites generated
+# artefacts, so a run that dies after writing them but before committing leaves
+# every subsequent night exiting 1 here until someone logs in. Those paths are
+# regenerated from scratch anyway.
 GENERATED_PATHSPEC=(
     ':(exclude)trials_cache.rds'
     ':(exclude)www/preprocessing.html'
     ':(exclude)data'
+    ':(exclude)config/substance_norm_pipeline/substance_review_queue.csv'
 )
 if ! git diff --quiet -- . "${GENERATED_PATHSPEC[@]}" ||
    ! git diff --cached --quiet -- . "${GENERATED_PATHSPEC[@]}"; then
@@ -91,33 +93,32 @@ git reset --hard "$REMOTE/$SOURCE_BRANCH" >> "$LOG_FILE" 2>&1 || {
 
 # 1. Update the SQLite database
 log "Step 1/4: Updating database..."
-docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/update_data.R >> "$LOG_FILE" 2>&1
+docker exec "$instanceName" Rscript /shiny_trials/shiny_trials/update_data.R >> "$LOG_FILE" 2>&1
 
-# 2. Rebuild the RDS cache from the updated database
+# 2. Rebuild the RDS cache from the updated database.
 #
 # Clear any sentinel from a previous night first, or a stale one reports a
 # failure that already happened. rebuild_cache.R deliberately exits 0 even when
 # sponsor resolution fails — `set -e` above would otherwise abort before
 # trials_cache.rds is committed, losing the whole data refresh over an LLM
 # hiccup. The sentinel is how that failure still gets reported.
-SPONSOR_SENTINEL="$PROJECT_DIR/data/.sponsor_nightly_failed"
+SPONSOR_SENTINEL="$SCRIPT_DIR/data/.sponsor_nightly_failed"
 rm -f "$SPONSOR_SENTINEL"
 
-log "Step 2/4: Rebuilding RDS cache and preprocessing report..."
-docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/rebuild_cache.R >> "$LOG_FILE" 2>&1
+log "Step 2/4: Rebuilding RDS cache..."
+docker exec "$instanceName" Rscript /shiny_trials/shiny_trials/rebuild_cache.R >> "$LOG_FILE" 2>&1
 
 SPONSOR_FAILED=0
 if [ -f "$SPONSOR_SENTINEL" ]; then
     SPONSOR_FAILED=1
     log "ERROR: sponsor nightly resolution failed — $(cat "$SPONSOR_SENTINEL")"
-    log "       see config/sponsor_norm_v2/N_nightly_runs.csv (or \$SPONSOR_V2_DIR)"
+    log "       see \$SPONSOR_V2_DIR/N_nightly_runs.csv for the full history"
 fi
 
 # 3. Commit generated files on deploy only and push to trigger Posit Cloud deploy.
 log "Step 3/4: Committing generated deploy artifacts..."
-# -f is REQUIRED, not defensive: data/*labels*, data/*log* and the raw exports are
-# gitignored so they never reach main, and a plain `git add` skips them silently —
-# the deploy would push a cache with no label CSVs beside it and nothing would say so.
+# -f is REQUIRED: the label CSVs and logs are gitignored, and a plain `git add`
+# skips them silently — the deploy would push a cache with no labels beside it.
 git add -f "${GENERATED_FILES[@]}" >> "$LOG_FILE" 2>&1
 if git diff --cached --quiet; then
     log "No generated changes, skipping commit."

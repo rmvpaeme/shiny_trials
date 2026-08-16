@@ -177,8 +177,30 @@ queue itself.
   landed. A push mid-fetch would otherwise give a snapshot that is half one
   commit and half another. Returns `list(dir, sha, fetched_at, degraded)`.
 
-Ref from `SNAPSHOT_REF`, defaulting to `normalisation-v2` — one env var to change
-when it merges to `main`. Repo from `SNAPSHOT_REPO`.
+### Which ref — and why it is not `normalisation-v2`
+
+[`nightly-sponsor-resolution-handover.md`](nightly-sponsor-resolution-handover.md)
+changes the answer. `N_nightly_resolve.R` resolves sponsor strings the registry
+has never seen, on every nightly run, and writes its state to `$SPONSOR_V2_DIR`
+— which §5.3 there requires to be **outside the git work tree**, because
+`nightly_deploy_posit.sh` runs `git reset --hard "$REMOTE/$SOURCE_BRANCH"` at the
+start of every run and would otherwise discard it.
+
+So `config/sponsor_norm_v2/E_review_queue.csv` on `normalisation-v2` is frozen at
+the last hand-made commit. Point the app at it and the backlog silently stops
+growing: every low-confidence string the nightly discovers is invisible to
+reviewers, which is precisely the re-accumulation that handover §1 exists to
+prevent.
+
+The nightly already publishes generated artifacts — `nightly_deploy_posit.sh`
+commits `GENERATED_FILES` to the **`deploy`** branch and pushes. Add the three
+state files to that array and `deploy` becomes the branch that always carries the
+current backlog. `SNAPSHOT_REF` therefore defaults to **`deploy`**, with
+`SNAPSHOT_REPO` alongside it.
+
+This also answers the first half of handover §6 gap 1 ("state promotion back into
+git is deliberately undesigned"): promotion is the commit that already happens,
+extended by three filenames.
 
 **Only data is fetched, never code.** The app runs the R it was deployed with;
 sourcing R from a branch at runtime is a code-execution path, not a refresh.
@@ -193,14 +215,29 @@ decision auditable when the branch moves under a long session.
 
 ## 3. Getting decisions into `rebuild_cache.R`
 
-`rebuild_cache.R:46-52` already runs `E_emit.R`, and `rebuild_cache.R:79-86`
-already joins `data/trial_sponsor_labels.csv` into the cache. So the only missing
-link is turning decisions into pins *before* that runs.
+`rebuild_cache.R` now runs a four-step sponsor sequence — `1_export` →
+`N_nightly_resolve` → `E_emit --diff-only --assert-no-regressions` (the gate) →
+`E_emit` (the write). Curation slots in as a fifth step **after
+`N_nightly_resolve` and before the gate**: the nightly assigns newly-seen strings
+first, then human pins overwrite whatever it decided, then the gate sees the
+final state.
 
 `curation_app/export.R` — a plain Rscript, so it can `source()`
 `helper_scripts/llm_norm/registry.R` directly and reuse `registry_add()`,
 `registry_write()`, `assignments_write()` and `resolve_entity()` rather than
-reimplementing them. Reads the latest decision per `raw_sponsor` from Postgres:
+reimplementing them.
+
+**It must honour `SPONSOR_V2_DIR`**, exactly as `B_mint`, `C_assign`,
+`D_consolidate`, `E_emit` and `N_nightly_resolve` already do
+(`Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))`).
+Writing to `config/sponsor_norm_v2/` unconditionally would put human decisions in
+a directory the nightly neither reads nor preserves — they would be discarded by
+the next `git reset --hard` and never reach a label. With the override honoured
+there is exactly **one live state directory** that both writers touch and
+`E_emit` reads, so nothing diverges. That is the second half of handover §6
+gap 1.
+
+Reads the latest decision per `raw_sponsor` from Postgres:
 
 | action | effect on `config/sponsor_norm_v2/` |
 | --- | --- |
@@ -213,25 +250,56 @@ reimplementing them. Reads the latest decision per `raw_sponsor` from Postgres:
 Canonical → `entity_id` is unambiguous: all 6,954 live canonicals are unique
 (verified).
 
-Then one line in `rebuild_cache.R`, immediately before the sponsor block:
+Then one `run_step()` in `rebuild_cache.R`, between `N_nightly_resolve` and the
+`E_emit` gate, reusing the helper that block already uses:
 
 ```r
-# Human curation outranks the model. Pins land in assignments.csv before
-# E_emit.R reads it; without a database connection this is a no-op.
-system2(rscript_bin(), c(file.path("curation_app", "export.R"), "--write"))
+# Human curation outranks the model. Pins land in assignments.csv before the
+# gate reads it. Exits 0 with a message when no connection string is set, so a
+# rebuild without database access behaves exactly as it does today.
+run_step(file.path("curation_app", "export.R"), "--write", label = "curation export")
 ```
 
-`export.R` exits 0 with a message when the connection string is unset, so a
-rebuild on a machine without database access behaves exactly as it does today.
+Note it must **not** be allowed to abort the sequence: the governing rule in that
+block is that a sponsor hiccup never costs the data refresh. Report through the
+same sentinel the nightly uses rather than a non-zero exit.
+
+### The regression gate must not treat a human reject as a regression
+
+**This would otherwise freeze sponsor labels indefinitely, silently.** A `reject`
+sets `entity_id = NA`, so `sponsor_clean` is NA and `match_status` becomes
+`"unknown"` (`E_emit.R:92-96`) — which `E_emit.R:128-133` classifies as
+`REGRESSION: -> unknown`, and `--assert-no-regressions` (`E_emit.R:152`) then
+stops. `rebuild_cache.R` branches on that by **keeping the previous labels and
+not writing new ones**. So one reviewer rejecting one string would stop sponsor
+labels updating on every subsequent night, reported as "regression gate failed",
+which reads as a pipeline fault rather than a curation decision.
+
+The fix is in the classifier, not the app: a row whose assignment is
+`decided_by = "human"` is not a regression when it goes to unknown — a human
+saying "this is not a sponsor" is the intended outcome. Add that guard to the
+`case_when` and report those rows on their own line (`human unassign`) so they
+stay visible rather than merging into `unchanged`.
+
+This is the same class of defect the v2 handover §3.0a records twice — a gate
+that stops measuring, and a run that writes zero rows while printing success.
+Worth fixing before the first reject exists, not after.
 
 Once pinned, `route_for_review()` drops those rows from the queue on the next
 `E_emit.R` (`registry.R:315`), so the backlog shrinks by construction and the
 GitHub refresh picks it up as soon as the regenerated queue is pushed.
 
-**Properties to hold:** `--write` is idempotent (a second run is a byte-identical
-no-op), and it backs both CSVs up to `config/sponsor_norm_v2/backups/<utc>/`
-first — they are the product of $10.31 of paid API calls and this is the first
-thing that has ever mutated them.
+**Properties to hold:** `--write` is idempotent — a second run is a
+byte-identical no-op. This is load-bearing, not hygiene: `export.R` now runs
+unattended every night, and handover §2.1 records a bug where re-running
+`C_assign` silently resurrected 284 merged-away entities and re-pointed 527
+assignments, undoing every `D_consolidate --apply` with no error. Extend
+`tests/sponsor_v2_idempotence.R` — which already exists as the fixture for
+exactly that failure — rather than writing a new test.
+
+It also backs both CSVs up to `<SPONSOR_V2_DIR>/backups/<utc>/` before writing:
+they are the product of $10.31 of paid API calls, and once state lives outside
+the work tree git is no longer an undo.
 
 ---
 
@@ -253,15 +321,21 @@ thing that has ever mutated them.
    `--write` is byte-identical.
 7. `Rscript rebuild_cache.R` — the labels reflect all four decisions and the
    regenerated queue is 2,126 rows.
-8. **`E_emit.R --diff-only` after a reject.** A human reject yields
-   `match_status = "unknown"` (`E_emit.R:92-96`), so it registers as
-   `REGRESSION: -> unknown` for every trial carrying that string. Confirm the
-   count equals exactly the rejected strings' `n_trials`. The gate now means
-   "zero regressions not attributable to a human reject" — worth recording in the
-   handover, because a gate whose meaning has silently shifted is the failure
-   mode that document keeps warning about.
-9. `git log -p` over the branch shows no connection string or hash; `grep -ri
-   substance curation_app/` returns nothing.
+8. **The reject case, end to end.** Reject a string, then run
+   `E_emit.R --diff-only --assert-no-regressions` — it must **exit 0**, with the
+   rejected string's trials reported as `human unassign` rather than
+   `REGRESSION: -> unknown`. Then a full `rebuild_cache.R` must actually write
+   `data/trial_sponsor_labels.csv` rather than logging "SPONSOR LABELS NOT
+   WRITTEN". Run this against a scratch `SPONSOR_V2_DIR`, the way the nightly
+   handover §4 recommends for its own first live run.
+9. **`SPONSOR_V2_DIR` is honoured.** With it pointed at a scratch copy,
+   `export.R --write` must leave the real `config/sponsor_norm_v2/` byte-identical
+   — the same check the nightly handover ran and recorded.
+10. **The published queue is the live one.** After a nightly run that resolves a
+    new string, confirm the queue on `deploy` contains it and the app shows it
+    after a Refresh, with no redeploy.
+11. `git log -p` over the branch shows no connection string or hash; `grep -ri
+    substance curation_app/` returns nothing.
 
 ## Sequencing
 
@@ -273,8 +347,12 @@ thing that has ever mutated them.
 4. `R/review.R` + `app.R` — the review screen against the snapshot, still
    unauthenticated. Reviewable end to end at this point.
 5. `shinymanager` login, then `R/admin.R`.
-6. `export.R`, then the one line in `rebuild_cache.R`. `README.md`.
-7. Verification 1-9.
+6. The `E_emit` classifier fix (human unassign). Independent of everything above
+   and worth landing early — the gate is live in `rebuild_cache.R` today, so this
+   is the one change that must precede the first reject.
+7. `export.R` with `SPONSOR_V2_DIR`, the `run_step()` call in `rebuild_cache.R`,
+   the three filenames in `GENERATED_FILES`. `README.md`.
+8. Verification 1-11.
 
 ## Out of scope
 
@@ -286,6 +364,16 @@ thing that has ever mutated them.
   labels** (§9a item 4). Neither is reachable from the queue, since both sit
   above the confidence threshold that routes rows into it. Worth a tier later;
   the queue screen generalises to them.
+- **`N_new_entities.csv` — flagged, not designed.** The nightly deliberately never
+  runs `D_consolidate` (a wrong merge is its most expensive error), so every new
+  canonical it mints is parked in that file "for a periodic human run"
+  (nightly handover §3). **Nothing else consumes it**, and the curation app is
+  the only plausible reader. It is a different question from the queue's — *is
+  this new canonical real, or a duplicate of an existing entity?* — so it wants
+  its own small screen rather than a column on this one. Left out to keep this
+  stage to the three bullets, but it should not stay unowned: without it, nightly
+  registry growth accumulates unreviewed, which is the same drift in canonical
+  form that motivated the v2 rewrite.
 - **`normalisation-reviewer-multiuser.md` needs a revision pass** once this
   lands: its §2 fetch list is entirely v1 and substance files, and its §6
   pipeline diagram assumes v1's ~15-minute index rebuild, which v2 does not have
