@@ -83,6 +83,16 @@ if (!identical(st_export, 0L)) {
                       label = "E_emit gate")
   if (identical(st_gate, 0L)) {
     run_step(sp("E_emit.R"), label = "E_emit")
+  } else if (identical(st_gate, 2L)) {
+    # 2 = the gate could not measure (no baseline). Still write: good labels are
+    # better than stale ones while a one-off setup step is outstanding. But raise
+    # the sentinel so the deploy exits non-zero and it actually gets fixed,
+    # rather than the gate quietly never running again.
+    message("*** SPONSOR REGRESSION GATE DID NOT RUN — no baseline. ",
+            "Labels written anyway; create a baseline (see E_emit output). ***")
+    run_step(sp("E_emit.R"), label = "E_emit")
+    sentinel <- file.path(dirname(DB_PATH), ".sponsor_nightly_failed")
+    writeLines(sprintf("%s gate=2 no regression baseline", Sys.time()), sentinel)
   } else {
     message("*** SPONSOR LABELS NOT WRITTEN — regression gate failed; ",
             "keeping the previous data/trial_sponsor_labels.csv ***")
