@@ -64,11 +64,22 @@ dry_run <- "--dry-run" %in% args
 MAX_SYNC     <- as.integer(Sys.getenv("SPONSOR_NIGHTLY_MAX_SYNC", "150"))
 RUN_CAP_USD  <- as.numeric(Sys.getenv("SPONSOR_NIGHTLY_CAP_USD", "1.00"))
 MAX_ATTEMPTS <- as.integer(Sys.getenv("SPONSOR_NIGHTLY_MAX_TRIES", "3"))
-# Measured: the 3,857-request singleton mint cost $2.498, i.e. $0.000648/request,
-# and a string costs at most one C request plus one B request. Estimating from
-# this rather than from llm_dry_run() keeps the size decision OFFLINE — a cron
-# job should not need a network round-trip to decide it is doing too much.
-USD_PER_STRING <- as.numeric(Sys.getenv("SPONSOR_NIGHTLY_USD_PER_STRING", "0.0013"))
+# MEASURED on the first live run: 132 strings cost $0.3358 (C_assign $0.2439 for
+# 89 requests, B_mint $0.0919 for 72), i.e. $0.00254/string.
+#
+# The first estimate here was $0.0013, derived from the batch singleton mint. It
+# was 2x low for two compounding reasons: sync bills at full rate where batch is
+# half, and C_assign's system prompt is 622 tokens — below the 1,024-token
+# minimum for Sonnet — so it does not cache and every request pays full input.
+# llm_dry_run() prints "TOO SHORT TO CACHE" for exactly this, which is worth
+# heeding if this pass ever gets expensive: padding that prompt past the minimum
+# would cut its input cost roughly tenfold on repeat runs.
+#
+# Estimating from a constant rather than llm_dry_run() keeps the size decision
+# OFFLINE — a cron job should not need a network round-trip to decide it is doing
+# too much. At the 150-string ceiling this predicts ~$0.38, well under the cap,
+# so the ceiling binds first and the cap is the backstop.
+USD_PER_STRING <- as.numeric(Sys.getenv("SPONSOR_NIGHTLY_USD_PER_STRING", "0.0026"))
 
 V2  <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
 REG <- file.path(V2, "registry.csv")
