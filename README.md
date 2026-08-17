@@ -340,6 +340,59 @@ the deploy script runs `git reset --hard` at the start of every run — anything
 the nightly writes under `config/` would otherwise be discarded before the next
 one, re-sending the same strings to the API every night.
 
+#### Consolidating new canonicals — the one recurring chore
+
+The nightly **never merges**, deliberately: a wrong merge silently relabels every
+trial of two organisations at once, it needs Opus, and on the first live batch
+**1 of 8 proposed merges was wrong** — including one where the model's own written
+reasoning said the entities were distinct while the index it emitted said
+otherwise. That is not something to run unattended.
+
+So new canonicals accumulate, and some are duplicates. Two ways that happens:
+
+- `C_assign` abstained because retrieval surfaced no candidate, and the string was
+  actually a variant of an existing entity. This is the `Gent`/`Ghent` class —
+  no shared tokens, so no lexical channel can reach it.
+- Two new strings for one new organisation minted separately. Exact canonical
+  matches collapse for free in `registry_from_clusters`; near-matches
+  (`Acme Corp` vs `Acme Corporation`) do not.
+
+**Do not put this on a schedule — measure it.** The dry run costs nothing and
+tells you whether there is anything to do:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --dry-run
+```
+
+Read the `N groups to ask (M cached)` line. Only groups whose membership changed
+since the last run need asking, so this is usually small. A handful of groups is
+noise; dozens is a signal. Rough expectation from the original build: **267 merges
+across 7,238 entities (~3.7%)**, so budget 2–3 real duplicates per ~70 new
+canonicals.
+
+When it is worth doing, use `--sync` for small batches — 20-odd requests is not
+worth blocking on a batch poll to save ten cents:
+
+```bash
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --sync
+# READ the merges before applying — this is the expensive-mistake pass
+Rscript helper_scripts/sponsor_norm_pipeline/D_consolidate.R --apply
+```
+
+`--apply` prints `HELD BACK n suspected mis-index(es)` for anything failing the
+two-signal guard (different entity type **and** dissimilar names). Look at those
+by hand rather than forcing them through.
+
+Afterwards, expect the next nightly's gate to report `label changed` rows instead
+of all-unchanged — merging changes which canonical a trial resolves to. That is
+not a regression; the gate only blocks on `accepted -> unknown`.
+
+If `--sync` proposes far more merges than the rate above, that is a signal in
+itself: `C_assign` is abstaining too readily and retrieval is worth investigating
+before the duplicates compound.
+
+#### Retired scripts
+
 The superseded scripts (`2_build_sponsor_index.R`, `3_build_sponsor_labels.R`,
 `4_curate_sponsors.R`, `5_llm_resolve.R`, `6_llm_verify.R`,
 `audit_sponsor_canonicals.R`) live in `LEGACY/`, which is gitignored; they remain
