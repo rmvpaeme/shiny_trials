@@ -303,6 +303,85 @@ the work tree git is no longer an undo.
 
 ---
 
+## 4. Merge review — the second screen
+
+Running the pipeline for a week established that a human reading a CSV and typing
+`--apply` is a workaround for this screen not existing, not a workflow. Three
+things force it:
+
+- **The nightly deliberately never merges.** A wrong merge relabels every trial of
+  two organisations at once and is invisible in any single record, so
+  `D_consolidate` stays manual by design. Its output therefore accumulates with
+  nobody looking at it.
+- **The model is wrong often enough to need eyes.** On the first live batch **1 of
+  8 proposed merges was wrong**, including `Centre Hospitalier Universitaire de
+  Lille` → `Sanofi Pasteur MSD` at 0.90 confidence — where the model's own
+  `reason` text said the Lille hospitals were distinct entities while the index it
+  emitted said otherwise. **Confidence does not separate good from bad here**: the
+  bad merge scored the same as the good ones.
+- **`N_new_entities.csv` has no reader.** Every canonical the nightly mints is
+  parked there "for a periodic human run" and nothing consumes it. Unreviewed
+  registry growth is the same drift in canonical form that motivated the v2
+  rewrite in the first place.
+
+### Same shape as the queue
+
+A merge is a proposal about a pair, so it fits the existing review contract with
+no new machinery:
+
+| field | source |
+|---|---|
+| `row_key` | `loser_id` — one decision per entity being folded away |
+| `raw` | `loser_canonical` |
+| `proposed` | `winner_canonical` |
+| `impact` | trial rows attached to the loser |
+
+`accept` merges, `reject` keeps them apart. There is no `edit`: choosing a
+different survivor is two decisions, not one, and pretending otherwise invites a
+half-applied merge.
+
+### What the reviewer must see
+
+Not the confidence — it doesn't discriminate. The two signals that *do*, which are
+the same pair the `--apply` guard ANDs together:
+
+- **both `entity_type`s**, side by side. Alone this is noisy (it would block
+  `Erasmus MC` ← `Erasmus Medical Center`), but as displayed evidence it is what
+  makes `industry` ← `hospital` jump out.
+- **name similarity** (accent-folded character bigrams). Alone it fires hardest on
+  the *best* merges — acronym expansions like `UZ Leuven` ← `Universitair
+  Ziekenhuis Leuven`. Together with a type mismatch it isolated exactly the one
+  bad merge out of 267.
+- **the model's `reason` text, verbatim, next to the pairing.** The Lille failure
+  was detectable only because the prose contradicted the index. A reviewer
+  skimming pairs would have missed it; a reviewer reading the sentence would not.
+- the trial-references panel, reused from the queue screen.
+
+Rows the `--apply` guard already held back should arrive **pre-flagged, not
+hidden** — they are the highest-yield rows on the screen.
+
+### The constraint that needs code, not UI
+
+**A rejection must survive the next run.** `--apply` today reads
+`D_consolidate_merges.csv` and applies everything at confidence ≥ 0.8. A human
+"no" is invisible to it, so the merge would be re-applied on the next pass and the
+reviewer's decision silently undone — the same class of bug as the self-erasing
+baseline.
+
+So `export.R` must filter proposals through `latest_decisions()` before
+`registry_apply_merges()`, and rejected pairs must stay rejected even though
+`D_consolidate`'s own cache will keep returning the same proposal for that group.
+`registry_apply_merges()` already refuses merges involving human-pinned entities
+(`registry.R`), which is the other half of the same guarantee.
+
+### Replacing "measure, don't schedule"
+
+The README currently tells a human to run `D_consolidate.R --dry-run` and read
+`N groups to ask` to decide whether the chore is due. That rule is correct but it
+depends on somebody remembering to ask. Once this screen exists it becomes a
+number on the admin panel — pending merge proposals, and unreviewed rows in
+`N_new_entities.csv` — and the README section reduces to a pointer.
+
 ## Verification
 
 1. Two browser sessions, two accounts, decide the same row — both rows land,
@@ -353,27 +432,22 @@ the work tree git is no longer an undo.
 7. `export.R` with `SPONSOR_V2_DIR`, the `run_step()` call in `rebuild_cache.R`,
    the three filenames in `GENERATED_FILES`. `README.md`.
 8. Verification 1-11.
+9. **§4 merge review.** Deliberately last: it reuses the review screen, the
+   ledger and `export.R` wholesale, so building it before those exist would mean
+   designing them twice. The one piece that is *not* reuse is the rejection
+   filter in `export.R` — without it a human "no" is silently re-applied on the
+   next pass, so that must land in the same commit as the screen, not after it.
 
 ## Out of scope
 
 - **Substances** — second stage. Only `curation_app`'s substance code goes; the
   substance config and pipeline are untouched, and git history holds the v1
   reviewer if a v2 substance version wants to start from it.
-- **Reviewing pass D's merges** (`D_consolidate_merges.csv`, 764 rows including
-  the one the mis-index guard held back, handover §3.7) and **the 18,105 changed
-  labels** (§9a item 4). Neither is reachable from the queue, since both sit
-  above the confidence threshold that routes rows into it. Worth a tier later;
-  the queue screen generalises to them.
-- **`N_new_entities.csv` — flagged, not designed.** The nightly deliberately never
-  runs `D_consolidate` (a wrong merge is its most expensive error), so every new
-  canonical it mints is parked in that file "for a periodic human run"
-  (nightly handover §3). **Nothing else consumes it**, and the curation app is
-  the only plausible reader. It is a different question from the queue's — *is
-  this new canonical real, or a duplicate of an existing entity?* — so it wants
-  its own small screen rather than a column on this one. Left out to keep this
-  stage to the three bullets, but it should not stay unowned: without it, nightly
-  registry growth accumulates unreviewed, which is the same drift in canonical
-  form that motivated the v2 rewrite.
+- **Merge review is no longer out of scope** — see §4 below. It was listed here as
+  "worth a tier later"; operating the pipeline for a week moved it to required.
+- **The 18,105 changed labels** (§9a item 4). Not reachable from the queue, since
+  they sit above the confidence threshold. Still a spot-check exercise rather than
+  a review surface.
 - **`normalisation-reviewer-multiuser.md` needs a revision pass** once this
   lands: its §2 fetch list is entirely v1 and substance files, and its §6
   pipeline diagram assumes v1's ~15-minute index rebuild, which v2 does not have
