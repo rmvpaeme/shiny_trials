@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.21.0 — 2026-08-22
+
+### Substance normalisation rebuilt on a chemistry registry
+
+Replaces the rule-based substance matcher and its 111,000-row alias index with a
+pipeline that consults ChEMBL and the EMA medicines report **before** any model
+is involved, and asks a model only about what those cannot identify.
+
+- **69% of trial-substance pairs resolve deterministically**, with no API call:
+  16,627 distinct strings matched exactly against ChEMBL `pref_name` or an EMA
+  product name. The model sees 14,205 strings rather than 33,529.
+- **91.9% of pairs now carry a substance** (89,688 of 97,620); 44 remain unknown.
+  The previous pipeline left 7,003 distinct strings unmatched and fell back to
+  showing raw text for 4,418 trials.
+- **Canonical names are the INN base.** Salts, esters, brands and pack labels
+  fold into one entry — 1,602 salt forms were rolled up deterministically
+  (`Fluticasone propionate` → `Fluticasone`), and the app shows one `Metoprolol`
+  rather than succinate and tartrate as separate substances.
+- **INN rather than USAN**, since this is an EU trial corpus: Paracetamol,
+  Adrenaline, Noradrenaline, Salbutamol, Ciclosporin, Colecalciferol, Glucose.
+- **Non-substances are recognised and excluded** rather than displayed. Dosage
+  language, registry placeholders and ATC drug-class names no longer reach the
+  substance filter; the previous pipeline showed them via a raw-string fallback.
+- **New substances are resolved nightly**, against the existing registry first so
+  a new spelling does not become a second entity.
+- Regression gate against the previous pipeline: **zero `accepted -> unknown`**
+  across 43,360 trials.
+
+### Preprocessing report
+
+- The substance audit reads the v2 artefacts and reports who resolved each
+  substance — registry, model or human — which is the clearest measure of how
+  much of the corpus needs a model at all.
+
 ## v0.20.0 — 2026-08-16
 
 The sponsor normalisation engine is replaced, a human curation app is added, and

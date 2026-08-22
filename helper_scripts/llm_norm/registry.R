@@ -27,36 +27,59 @@ suppressPackageStartupMessages({
 
 `%||%` <- function(a, b) if (!is.null(a)) a else b
 
+# `legal_entity` and `parent` model the sponsor hierarchy (brand vs legal entity
+# vs subsidiary). `salt_form` and `brand` are their substance counterparts:
+# canonical is the INN base, so "methotrexate sodium" resolves to Methotrexate
+# with salt_form = "sodium", and "Metoject" with brand = "Metoject".
+#
+# Both domains share one column set rather than each getting its own, because
+# write_table_atomic() back-fills any column a caller does not supply (see
+# below). Sponsors leave the substance columns NA and vice versa, and neither
+# pipeline needs to know the other's schema.
 REGISTRY_COLS <- c(
   "entity_id", "canonical", "legal_entity", "parent", "entity_type",
+  "salt_form", "brand",
   "confidence", "decided_by", "decided_at_utc",
   "model_id", "prompt_version", "merged_into", "note"
 )
 
-ASSIGNMENT_COLS <- c(
-  "raw_sponsor", "entity_id", "confidence", "channel", "reason",
-  "decided_by", "decided_at_utc", "model_id", "prompt_version"
-)
+# The raw-string column is the one genuinely domain-specific name in this file.
+# Every function that touches it takes `raw_col`, defaulting to the sponsor
+# name so existing callers are unaffected.
+assignment_cols <- function(raw_col = "raw_sponsor") {
+  c(raw_col, "entity_id", "confidence", "channel", "reason",
+    "decided_by", "decided_at_utc", "model_id", "prompt_version")
+}
+
+ASSIGNMENT_COLS <- assignment_cols()
 
 utc_now <- function() format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
 
 # ── Empty / IO ────────────────────────────────────────────────────────────────
 
+# Every column REGISTRY_COLS names is created here. An earlier version omitted
+# legal_entity, which round-tripped fine only because write_table_atomic()
+# back-fills it — leaving a fresh in-memory registry with a schema that
+# disagreed with its own column contract.
 registry_empty <- function() {
   tibble::tibble(
-    entity_id = character(), canonical = character(), parent = character(),
-    entity_type = character(), confidence = numeric(), decided_by = character(),
+    entity_id = character(), canonical = character(), legal_entity = character(),
+    parent = character(), entity_type = character(),
+    salt_form = character(), brand = character(),
+    confidence = numeric(), decided_by = character(),
     decided_at_utc = character(), model_id = character(),
     prompt_version = character(), merged_into = character(), note = character()
   )
 }
 
-assignments_empty <- function() {
-  tibble::tibble(
-    raw_sponsor = character(), entity_id = character(), confidence = numeric(),
+assignments_empty <- function(raw_col = "raw_sponsor") {
+  out <- tibble::tibble(
+    entity_id = character(), confidence = numeric(),
     channel = character(), reason = character(), decided_by = character(),
     decided_at_utc = character(), model_id = character(), prompt_version = character()
   )
+  out[[raw_col]] <- character()
+  out[, assignment_cols(raw_col)]
 }
 
 registry_read <- function(path) {
@@ -66,8 +89,8 @@ registry_read <- function(path) {
   ))
 }
 
-assignments_read <- function(path) {
-  if (!file.exists(path)) return(assignments_empty())
+assignments_read <- function(path, raw_col = "raw_sponsor") {
+  if (!file.exists(path)) return(assignments_empty(raw_col))
   readr::read_csv(path, show_col_types = FALSE, progress = FALSE, col_types = readr::cols(
     .default = readr::col_character(), confidence = readr::col_double()
   ))
@@ -88,7 +111,9 @@ write_table_atomic <- function(x, path, cols, sort_by) {
 }
 
 registry_write    <- function(x, path) write_table_atomic(x, path, REGISTRY_COLS, "entity_id")
-assignments_write <- function(x, path) write_table_atomic(x, path, ASSIGNMENT_COLS, "raw_sponsor")
+assignments_write <- function(x, path, raw_col = "raw_sponsor") {
+  write_table_atomic(x, path, assignment_cols(raw_col), raw_col)
+}
 
 # ── Minting ───────────────────────────────────────────────────────────────────
 # Sequential IDs, never reused. A content hash of the canonical was the
@@ -103,18 +128,27 @@ next_entity_id <- function(reg) {
 }
 
 registry_add <- function(reg, canonical, legal_entity = NA_character_, parent = NA_character_,
-                         entity_type = NA_character_, confidence = NA_real_,
+                         entity_type = NA_character_, salt_form = NA_character_,
+                         brand = NA_character_, confidence = NA_real_,
                          decided_by = "model", model_id = NA_character_,
                          prompt_version = NA_character_, note = NA_character_) {
-  ids <- character(length(canonical))
-  cur <- reg
-  for (i in seq_along(canonical)) {
-    ids[[i]] <- next_entity_id(cur)
-    cur <- dplyr::bind_rows(cur, tibble::tibble(entity_id = ids[[i]], canonical = canonical[[i]]))
+  # IDs are allocated in one shot. The obvious loop — call next_entity_id(),
+  # bind_rows the new entity, repeat — is O(n^2) in tibble allocations. It was
+  # fine while only B_mint called this, a few thousand entities in block-sized
+  # chunks, but A_resolve mints the whole 17,272-entry ChEMBL vocabulary in a
+  # single call and the loop did not finish in two minutes. Sequential numbering
+  # makes the batch form exactly equivalent.
+  start <- if (!nrow(reg)) {
+    0L
+  } else {
+    n <- suppressWarnings(max(as.integer(sub("^ent_", "", reg$entity_id)), na.rm = TRUE))
+    if (!is.finite(n)) 0L else n
   }
+  ids <- sprintf("ent_%06d", start + seq_along(canonical))
   new <- tibble::tibble(
     entity_id = ids, canonical = canonical, legal_entity = legal_entity,
     parent = parent, entity_type = entity_type,
+    salt_form = salt_form, brand = brand,
     confidence = confidence, decided_by = decided_by,
     decided_at_utc = utc_now(), model_id = model_id,
     prompt_version = prompt_version, merged_into = NA_character_, note = note
@@ -133,18 +167,19 @@ registry_add <- function(reg, canonical, legal_entity = NA_character_, parent = 
 # exact canonical match is safe; anything subtler is pass D's job.
 
 registry_from_clusters <- function(clusters, reg = registry_empty(),
-                                   assignments = assignments_empty()) {
+                                   assignments = assignments_empty(raw_col),
+                                   raw_col = "raw_sponsor") {
   # Tolerate a cache written by an earlier prompt version that lacks newer
   # columns. Bumping PROMPT_VERSION invalidates cache KEYS but the old CSV is
   # still read, and a missing column here would abort the run rather than
   # degrade — losing a batch that has already been paid for.
-  for (col in c("legal_entity", "parent", "entity_type", "reason",
-                "model_id", "prompt_version", "confidence")) {
+  for (col in c("legal_entity", "parent", "entity_type", "salt_form", "brand",
+                "reason", "model_id", "prompt_version", "confidence")) {
     if (!col %in% names(clusters)) clusters[[col]] <- NA
   }
 
   cl <- clusters |>
-    dplyr::filter(!is.na(canonical), nzchar(canonical), !is.na(raw_sponsor))
+    dplyr::filter(!is.na(canonical), nzchar(canonical), !is.na(.data[[raw_col]]))
   if (!nrow(cl)) return(list(registry = reg, assignments = assignments))
 
   # One row per (block, cluster, canonical). Grouping by (block, cluster) alone
@@ -167,6 +202,8 @@ registry_from_clusters <- function(clusters, reg = registry_empty(),
       legal_entity   = dplyr::first(legal_entity),
       parent         = dplyr::first(parent),
       entity_type    = dplyr::first(entity_type),
+      salt_form      = dplyr::first(salt_form),
+      brand          = dplyr::first(brand),
       confidence     = suppressWarnings(as.numeric(dplyr::first(confidence))),
       model_id       = dplyr::first(model_id),
       prompt_version = dplyr::first(prompt_version),
@@ -208,7 +245,8 @@ registry_from_clusters <- function(clusters, reg = registry_empty(),
     added <- registry_add(
       reg, canonical = fresh1$canonical, legal_entity = fresh1$legal_entity,
       parent = fresh1$parent,
-      entity_type = fresh1$entity_type, confidence = fresh1$confidence,
+      entity_type = fresh1$entity_type, salt_form = fresh1$salt_form,
+      brand = fresh1$brand, confidence = fresh1$confidence,
       decided_by = "model", model_id = fresh1$model_id,
       prompt_version = fresh1$prompt_version
     )
@@ -218,7 +256,7 @@ registry_from_clusters <- function(clusters, reg = registry_empty(),
 
   new_assign <- cl |>
     dplyr::transmute(
-      raw_sponsor,
+      !!raw_col      := .data[[raw_col]],
       entity_id      = unname(known[canonical]),
       confidence     = suppressWarnings(as.numeric(confidence)),
       channel        = "mint",
@@ -228,13 +266,13 @@ registry_from_clusters <- function(clusters, reg = registry_empty(),
       model_id, prompt_version
     ) |>
     dplyr::filter(!is.na(entity_id)) |>
-    dplyr::distinct(raw_sponsor, .keep_all = TRUE)
+    dplyr::distinct(.data[[raw_col]], .keep_all = TRUE)
 
   # Human assignments are never overwritten by a re-run.
   pinned <- assignments |> dplyr::filter(decided_by %in% "human")
   keep   <- assignments |> dplyr::filter(!decided_by %in% "human",
-                                         !raw_sponsor %in% new_assign$raw_sponsor)
-  new_assign <- new_assign |> dplyr::filter(!raw_sponsor %in% pinned$raw_sponsor)
+                                         !.data[[raw_col]] %in% new_assign[[raw_col]])
+  new_assign <- new_assign |> dplyr::filter(!.data[[raw_col]] %in% pinned[[raw_col]])
 
   list(registry = reg,
        assignments = dplyr::bind_rows(pinned, keep, new_assign))
@@ -305,12 +343,13 @@ registry_apply_merges <- function(reg, assignments, merges, model_id = NA_charac
 # variants is what lets "AKH Wien" pull in the entity someone already reached
 # through "Allgemeines Krankenhaus Wien".
 
-registry_surface_forms <- function(reg, assignments) {
+registry_surface_forms <- function(reg, assignments, raw_col = "raw_sponsor") {
   live <- registry_live(reg)
   from_canonical <- live |> dplyr::transmute(entity_id, label = canonical)
   from_assigned <- assignments |>
     dplyr::filter(!is.na(entity_id)) |>
-    dplyr::transmute(entity_id = resolve_entity(reg, entity_id), label = raw_sponsor) |>
+    dplyr::transmute(entity_id = resolve_entity(reg, entity_id),
+                     label = .data[[raw_col]]) |>
     dplyr::filter(entity_id %in% live$entity_id)
   dplyr::bind_rows(from_canonical, from_assigned) |>
     dplyr::filter(!is.na(label), nzchar(trimws(label))) |>
@@ -326,10 +365,11 @@ registry_surface_forms <- function(reg, assignments) {
 route_for_review <- function(assignments, impact = NULL,
                              min_confidence = 0.75,
                              high_impact_trials = 20L,
-                             high_impact_confidence = 0.90) {
+                             high_impact_confidence = 0.90,
+                             raw_col = "raw_sponsor") {
   a <- assignments
   if (!is.null(impact)) {
-    a <- dplyr::left_join(a, impact, by = "raw_sponsor")
+    a <- dplyr::left_join(a, impact, by = raw_col)
   } else {
     a$n_trials <- NA_integer_
   }
@@ -350,14 +390,22 @@ route_for_review <- function(assignments, impact = NULL,
 # ── Emit ──────────────────────────────────────────────────────────────────────
 # Resolves assignments through any merge chain and joins the canonical, which is
 # the shape data/trial_sponsor_labels.csv needs.
-
-registry_resolve_labels <- function(reg, assignments) {
+#
+# `cols` maps output name -> registry column, so each domain names its own
+# emitted columns. The default is the sponsor shape E_emit.R already expects;
+# substances pass c(substance_clean = "canonical", substance_salt = "salt_form",
+# substance_type = "entity_type").
+registry_resolve_labels <- function(reg, assignments,
+                                    cols = c(sponsor_clean  = "canonical",
+                                             sponsor_parent = "parent",
+                                             sponsor_type   = "entity_type")) {
   live <- registry_live(reg)
+  missing <- setdiff(unname(cols), names(live))
+  for (m in missing) live[[m]] <- NA_character_
   assignments |>
     dplyr::mutate(entity_id = resolve_entity(reg, entity_id)) |>
     dplyr::left_join(
-      live |> dplyr::select(entity_id, sponsor_clean = canonical,
-                            sponsor_parent = parent, sponsor_type = entity_type),
+      live |> dplyr::select(entity_id, dplyr::all_of(cols)),
       by = "entity_id"
     )
 }

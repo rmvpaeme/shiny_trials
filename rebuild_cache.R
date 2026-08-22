@@ -100,15 +100,61 @@ if (!identical(st_export, 0L)) {
 }
 message("=== Sponsor labels build complete ===")
 
-# ── Substance normalisation pipeline ─────────────────────────────────────────
+# ── Substance normalisation pipeline (v2) ────────────────────────────────────
 # Runs after the cache is on disk so 1_export_trial_substances.R can read it.
+#
+# E_emit.R replaced 3_build_substance_labels.R. Both write
+# data/trial_substance_labels.csv, so leaving the v1 script wired here would mean
+# the next production rebuild silently overwrites the v2 labels with old-pipeline
+# output and undoes the rewrite — with no error, because both "succeed". Exactly
+# the trap documented for sponsors above; substances sat in it until 2026-08-21.
+#
+# Only the deterministic tail runs here. A_resolve/B_assign/C_mint/D_consolidate
+# cost money and need an API key, so they stay manual; E_emit just re-derives
+# labels from the registry and assignments already on disk.
+#
+# NOTE: there is no substance equivalent of N_nightly_resolve.R yet. A raw string
+# that appears after the last mint arrives unassigned, and because v2 drops v1's
+# raw-string fallback it gets NO label rather than a junk one. The regression
+# gate below is what stops that going unnoticed.
 message("=== Building substance labels ===")
-run_pipeline(
-  file.path("helper_scripts", "substance_norm_pipeline", "1_export_trial_substances.R"),
-  file.path("helper_scripts", "substance_norm_pipeline", "3_build_substance_labels.R"),
-  "Substance normalisation",
-  "--write-queue"
-)
+sb <- function(f) file.path("helper_scripts", "substance_norm_pipeline_v2", f)
+
+st_sub_export <- run_step(sb("1_export_trial_substances.R"), label = "1_export (substance)")
+
+if (!identical(st_sub_export, 0L)) {
+  message("*** SUBSTANCE BUILD FAILED — 1_export did not produce the raw corpus ***")
+} else {
+  # Resolve strings the registry has never seen. Its own deterministic pass
+  # handles most of them free (measured: 44% of a nightly delta matched
+  # ChEMBL/EPAR outright); only the remainder reaches the API, under a per-run
+  # ceiling and budget. Exits 0 and makes no API call on a quiet night.
+  st_sub_new <- run_step(sb("N_nightly_resolve.R"), label = "N_nightly_resolve (substance)")
+  if (!identical(st_sub_new, 0L)) {
+    message(sprintf(
+      "*** SUBSTANCE NIGHTLY RESOLVE exited %s — see N_nightly_runs.csv ***", st_sub_new))
+  }
+
+  # Gate BEFORE writing, same rule as sponsors: a regression means last night's
+  # labels are better than tonight's, so keep them.
+  st_sub_gate <- run_step(sb("E_emit.R"), c("--diff-only", "--assert-no-regressions"),
+                          label = "E_emit gate (substance)")
+  if (identical(st_sub_gate, 0L)) {
+    run_step(sb("E_emit.R"), label = "E_emit (substance)")
+  } else if (identical(st_sub_gate, 2L)) {
+    # 2 = could not measure (no baseline). Write anyway, but raise the sentinel so
+    # the deploy exits non-zero and the baseline actually gets created, rather
+    # than the gate quietly never running again.
+    message("*** SUBSTANCE REGRESSION GATE DID NOT RUN — no baseline. ",
+            "Labels written anyway; create a baseline (see E_emit output). ***")
+    run_step(sb("E_emit.R"), label = "E_emit (substance)")
+    sentinel <- file.path(dirname(DB_PATH), ".substance_nightly_failed")
+    writeLines(sprintf("%s gate=2 no regression baseline", Sys.time()), sentinel)
+  } else {
+    message("*** SUBSTANCE LABELS NOT WRITTEN — regression gate failed; ",
+            "keeping the previous data/trial_substance_labels.csv ***")
+  }
+}
 message("=== Substance labels build complete ===")
 
 message("=== Refreshing cache with latest substance/sponsor labels and PIP helpers ===")
@@ -193,6 +239,14 @@ if (!render_preprocessing) {
         log_dir = "data"
       ),
       knit_root_dir = getwd(),
+      # Render in its OWN environment. render() defaults to parent.frame(), which
+      # dumps every object the Rmd creates — ~100 of them, including the helper
+      # `%||%` — into this script's environment. Something walking the globals at
+      # session end then hits parse(text = "%||%"), which is not a parseable
+      # expression, and Rscript exits non-zero AFTER the cache, the labels and the
+      # report have all been written successfully. The nightly reads that exit
+      # code, so a cosmetic leak became a reported deploy failure.
+      envir       = new.env(parent = globalenv()),
       quiet       = TRUE
     )
     message("=== Preprocessing report written to www/preprocessing.html ===")

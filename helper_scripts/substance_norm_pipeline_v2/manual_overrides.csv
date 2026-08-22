@@ -1,0 +1,30 @@
+raw_substance,canonical,reason
+modified cobratoxin,Cobratoxin,bio classifier refuses this string; mapped by hand
+Clostridium type A neurotoxin complex,Botulinum toxin type A,bio classifier refuses this string; mapped by hand
+Clostridium type A toxin -hemagglutinin complex,Botulinum toxin type A haemagglutinin complex,bio classifier refuses this string; mapped by hand
+Clostridium type A toxin - hemagglutinin complex,Botulinum toxin type A haemagglutinin complex,bio classifier refuses this string; mapped by hand
+Bovine -lactalbumin complex with oleic acidbLAC,Bovine alpha-lactalbumin-oleic acid complex,bio classifier refuses this string; mapped by hand
+protein complex derived from Clostridium botulinum,Botulinum toxin type A,bio classifier refuses this string; mapped by hand
+Protein complex derived from Clostridium botulinum,Botulinum toxin type A,bio classifier refuses this string; mapped by hand
+Botulinum Neurotoxin Type A,Botulinum toxin type A,bio classifier refuses this string; mapped by hand
+Botulinum Neurotoxin Serotype E BoNT,Botulinum toxin type E,bio classifier refuses this string; mapped by hand
+insulina,Insulin human,Italian/Spanish for insulin; abstained with no candidate
+DISODIO CLODRONATO TETRAIDRATO,Clodronic acid,Italian for clodronate disodium tetrahydrate
+disodio clodronato tetraidrato,Clodronic acid,Italian for clodronate disodium tetrahydrate
+recombinant chimeric monoclonal antibody ch14.18,Dinutuximab,ch14.18 is the development code for dinutuximab
+fully humanized anti-human IL-6 receptor IL-6R neutralizing monoclonal antibody,Tocilizumab,descriptive name for the anti-IL-6R mAb
+VIRIN FRACCIONADO INACTIVADO,Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
+CYTOMEGALOVIRUS-SPECIFIC T-CELLS,Cytomegalovirus-specific T cells,bio classifier refuses this string; mapped by hand
+Autologous peripheral blood differentiated adult dendritic cells,Autologous dendritic cells,cell therapy; abstained with no candidate
+Alogenic bone marrow stem adult mesenchymal cells expanded Infected with Icovir-5,Allogeneic mesenchymal stromal cells infected with Icovir-5,cell therapy; abstained with no candidate
+Fully human immunoglobulin G1 IgG1 monoclonal antibody,Human IgG1 monoclonal antibody,descriptive; no INN in the source record
+Cup a 1 purified an isolated protein,Cupressus arizonica Cup a 1 allergen,allergen extract; abstained with no candidate
+"Virin fraccionado, inactivado",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
+"Virirn fraccionado, inactivado",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
+"VIRIN FRACCIONADO, INACTIVADO",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
+Beta-blockers,,ATC drug class, not a substance
+Antiplatelet,,ATC drug class, not a substance
+ANTIVIRALS FOR SYSTEMIC USE,,ATC drug class, not a substance
+UROLOGICALS,,ATC drug class, not a substance
+Emollients and protectives,,ATC drug class, not a substance
+A complex,,not a substance name

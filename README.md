@@ -83,8 +83,8 @@ update_data.R
 rebuild_cache.R
   -> app.R data preparation
   -> trials_cache.rds
-  -> sponsor labels   (1_export -> E_emit; the paid LLM passes are NOT run here)
-  -> substance normalisation pipeline
+  -> sponsor labels     (1_export -> N_nightly_resolve -> gate -> E_emit)
+  -> substance labels   (1_export -> N_nightly_resolve -> gate -> E_emit)
   -> PIP helper columns
   -> www/preprocessing.html
 
@@ -95,9 +95,16 @@ app.R startup
   -> serve Shiny UI
 ```
 
-A cache rebuild only re-derives sponsor labels from the registry already on disk.
-Minting and merging cost money and need an API key, so they stay manual — see
-[Rebuild Sponsor Labels](#rebuild-sponsor-labels).
+A cache rebuild re-derives both label sets from the registries already on disk,
+and resolves any string the registry has never seen. The bulk minting and merging
+passes cost money and need an API key, so they stay manual — see
+[Rebuild Sponsor Labels](#rebuild-sponsor-labels) and
+[Rebuild Substance Labels](#rebuild-substance-labels).
+
+Both `E_emit` passes run a **regression gate before writing**: every trial is
+compared against a frozen snapshot of the previous pipeline's labels, and if any
+trial would go from labelled to unlabelled the new labels are not written and
+yesterday's are kept.
 
 Important generated files:
 
@@ -109,10 +116,15 @@ Important generated files:
 | `data/trial_sponsor_labels_baseline.csv` | Frozen old-pipeline labels; the regression gate compares against this |
 | `data/trial_substance_labels.csv` | App-facing normalised substance labels |
 | `data/sponsor_normalisation_log_v2.csv` | Per-string sponsor audit log for the preprocessing report |
-| `data/*_normalisation_log.csv` | Substance audit inputs for the preprocessing report |
+| `data/trial_substance_labels_baseline.csv` | Frozen old-pipeline substance labels for the regression gate |
+| `data/substance_normalisation_log_v2.csv` | Per-string substance audit log for the preprocessing report |
+| `data/substance_rejected.csv` | Strings judged not to name a substance — auditable, not silently dropped |
+| `data/*_normalisation_log.csv` | Country/MedDRA/phase/status audit inputs for the preprocessing report |
 | `config/sponsor_norm_v2/registry.csv` | The canonical sponsor registry — committed, not generated per run |
 | `config/sponsor_norm_v2/assignments.csv` | Raw string → registry entity, with the model's confidence |
-| `config/review_ledger/review_decisions.csv` | Human curation; outranks the pipeline everywhere |
+| `config/substance_norm_v2/registry.csv` | The canonical substance registry |
+| `config/substance_norm_v2/assignments.csv` | Raw substance string → registry entity |
+| `config/substance_norm_v2/chembl_cache.csv` | ChEMBL molecule synonyms — an INPUT, committed so the pipeline runs offline |
 | `www/preprocessing.html` | Rendered preprocessing audit shown in the About tab |
 
 Most generated data artifacts are ignored by Git.
@@ -396,34 +408,77 @@ before the duplicates compound.
 The superseded scripts (`2_build_sponsor_index.R`, `3_build_sponsor_labels.R`,
 `4_curate_sponsors.R`, `5_llm_resolve.R`, `6_llm_verify.R`,
 `audit_sponsor_canonicals.R`) live in `LEGACY/`, which is gitignored; they remain
-in git history. `1_export_trial_sponsors.R`, `normalise_sponsors.R` and
-`derive_sponsor_canonical.R` are **not** legacy — the first feeds the v2
-pipeline, the other two are still sourced by `curation_app/` and
-`tests/derivation/`.
+in git history. `1_export_trial_sponsors.R` is **not** legacy — it feeds the v2
+pipeline. `normalise_sponsors.R` and `derive_sponsor_canonical.R` are retained
+only for `tests/derivation/`.
 
 ### Rebuild Substance Labels
 
-The substance pipeline converts raw product/INN strings into pre-computed `substance_label` values. The full workflow is documented in [helper_scripts/substance_norm_pipeline/README.md](helper_scripts/substance_norm_pipeline/README.md).
+Substances are resolved against **ChEMBL and the EMA medicines report first**,
+and a model is asked only about what those cannot identify. That ordering is the
+point of the pipeline: roughly 69% of trial-substance pairs resolve with no API
+call at all.
 
-```bash
-Rscript helper_scripts/substance_norm_pipeline/1_export_trial_substances.R
-Rscript helper_scripts/substance_norm_pipeline/3_build_substance_labels.R --write-queue
+```text
+A_resolve.R      ChEMBL + EPAR exact match, placebo rule, junk filter   (no model)
+B_assign.R       pick-from-list over retrieved candidates                (Sonnet 5)
+C_mint.R         name what B could not place, cluster-at-a-time          (Opus 5 / Sonnet 5)
+D_consolidate.R  salt rollup (deterministic) + merge partition           (Opus 5)
+E_emit.R         per-trial labels, review queue, regression diff         (no model)
 ```
 
-Alias-index refresh:
+The canonical is the **INN base**: `Methotrexate` covers `methotrexate sodium`,
+`Metoject` and `Methotrexat 10mg Tabletten`, with the salt and brand kept in
+separate registry columns. Where ChEMBL states a USAN that differs from the INN,
+the INN is used — this is an EU trial corpus, so `Paracetamol` not
+`Acetaminophen`, `Salbutamol` not `Albuterol`.
+
+A cache rebuild runs only the free steps plus incremental resolution of new
+strings. The bulk passes are manual:
 
 ```bash
-Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R
-# or EPAR only:
-Rscript helper_scripts/substance_norm_pipeline/2_build_substance_index.R --no-chembl
+# free, offline, re-runnable — inspect before spending anything
+Rscript helper_scripts/substance_norm_pipeline_v2/A_resolve.R --incremental
+Rscript helper_scripts/substance_norm_pipeline_v2/B_assign.R --candidates-only
+Rscript helper_scripts/substance_norm_pipeline_v2/C_mint.R  --blocks-only
+Rscript helper_scripts/substance_norm_pipeline_v2/D_consolidate.R --rollup
+
+# paid passes: gate with --sync first, then --batch
+Rscript helper_scripts/substance_norm_pipeline_v2/B_assign.R --sync --limit=200
+Rscript helper_scripts/substance_norm_pipeline_v2/B_assign.R --batch
+Rscript helper_scripts/substance_norm_pipeline_v2/C_mint.R --batch
+Rscript helper_scripts/substance_norm_pipeline_v2/C_mint.R --batch --singletons
+Rscript helper_scripts/substance_norm_pipeline_v2/C_mint.R --materialise
+
+# consolidate: the salt rollup is deterministic and free, the merge pass is not
+Rscript helper_scripts/substance_norm_pipeline_v2/D_consolidate.R --rollup --apply
+Rscript helper_scripts/substance_norm_pipeline_v2/D_consolidate.R --sync --limit=5
+Rscript helper_scripts/substance_norm_pipeline_v2/D_consolidate.R --batch
+Rscript helper_scripts/substance_norm_pipeline_v2/D_consolidate.R --apply
+
+# emit, with the regression gate
+Rscript helper_scripts/substance_norm_pipeline_v2/E_emit.R --diff-only
+Rscript helper_scripts/substance_norm_pipeline_v2/E_emit.R
 ```
 
-Queue review:
+**`A_resolve.R` with no flags refuses** once the model passes have run: a full
+rebuild writes the registry from the reference tables alone and would discard
+every model-minted entity. Use `--incremental` to add new strings, or `--force`
+to rebuild deliberately.
 
-```bash
-Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R
-Rscript helper_scripts/substance_norm_pipeline/4_curate_substances.R --export
-```
+Two small hand-maintained files sit alongside the pipeline:
+`manual_overrides.csv` maps strings the model cannot process (the API's
+bio-safety classifier refuses some vaccine and toxin names) and ATC drug-class
+names that name no substance; `inn_names.csv` records the ChEMBL-USAN → INN
+renames. Both are deliberately short — if they grow past a few dozen rows, that
+is a signal that something systematic is missing, not that the lists should keep
+growing.
+
+The superseded v1 pipeline (`2_build_substance_index.R`,
+`3_build_substance_labels.R`, `4_curate_substances.R`, `normalise_substances.R`
+and its `config/substance_norm_pipeline/` alias index) lives in `LEGACY/`, which
+is gitignored; it remains in git history. It is kept because it is what
+regenerates the regression baseline.
 
 ### Build A Smaller Local Test Database
 
@@ -483,11 +538,14 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 | `FORCE_RESULTS` | `false` | Backwards-compatible alias for EUCTR results |
 | `SKIP_CTIS` | `false` | Skip CTIS refresh |
 | `RENDER_PREPROCESSING` | `auto` | Render preprocessing report after cache rebuild |
-| `ANTHROPIC_API_KEY` | *(unset)* | Required only for nightly sponsor resolution and the manual LLM passes |
+| `ANTHROPIC_API_KEY` | *(unset)* | Required only for nightly sponsor/substance resolution and the manual LLM passes |
 | `SPONSOR_V2_DIR` | `config/sponsor_norm_v2` | Where the mutable sponsor registry lives |
 | `SPONSOR_NIGHTLY_MAX_SYNC` | `150` | Refuse the nightly above this many new strings |
 | `SPONSOR_NIGHTLY_CAP_USD` | `1.00` | Per-run cost ceiling, separate from the $60 project cap |
 | `SPONSOR_NIGHTLY_MAX_TRIES` | `3` | Give up on a string after this many failed nights |
+| `SUBSTANCE_V2_DIR` | `config/substance_norm_v2` | Where the mutable substance registry lives |
+| `SUBSTANCE_NIGHTLY_MAX_SYNC` | `300` | Refuse the nightly above this many new strings |
+| `SUBSTANCE_NIGHTLY_CAP_USD` | `1.00` | Per-run cost ceiling for substance resolution |
 | `LLM_REQUIRE_API_KEY` | *(unset)* | `1` forbids the `ant` CLI fallback — set it on anything unattended |
 
 ## Repository Map
@@ -505,8 +563,7 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 │   ├── review_ledger/            # Human curation decisions — priority 1 for display
 │   ├── sponsor_norm_v2/          # Canonical registry, assignments, caches, spend ledger
 │   ├── sponsor_norm_pipeline/    # Retired matcher config, kept as a frozen baseline
-│   └── substance_norm_pipeline/  # + README.md — field reference for every CSV
-├── curation_app/                 # Reviewer app for normalisation decisions
+│   └── substance_norm_v2/        # Canonical registry, assignments, ChEMBL/EPAR caches
 ├── data/                         # Local generated registry data and labels
 ├── helper_scripts/
 │   ├── update_pip_decisions.R
@@ -514,7 +571,7 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 │   ├── clean_db.R
 │   ├── llm_norm/                 # shared LLM client, retrieval, registry (v2)
 │   ├── sponsor_norm_pipeline/    # 1_export → A_block → B_mint → C_assign → D_consolidate → E_emit
-│   └── substance_norm_pipeline/  # 1_export → 2_index → 3_labels → 4_curate
+│   └── substance_norm_pipeline_v2/ # 1_export → A_resolve → B_assign → C_mint → D_consolidate → E_emit
 ├── rmarkdown/
 │   ├── report.Rmd
 │   ├── comparison_report.Rmd
@@ -583,11 +640,19 @@ Rscript helper_scripts/sponsor_norm_pipeline/normalise_sponsors.R \
   --config-dir=config/sponsor_norm_pipeline \
   --no-fuzzy
 
-Rscript helper_scripts/substance_norm_pipeline/normalise_substances.R \
-  --input=tests/fixtures/substance_normalisation_gold.csv \
-  --output=/tmp/substance_norm_out.csv \
-  --config-dir=config/substance_norm_pipeline \
-  --no-fuzzy
+```
+
+The substance equivalent is `tests/substance_v2_idempotence.R`, which needs no
+fixtures: it checks that re-materialising the registry changes nothing, that the
+junk filter keeps real substances and drops dosage language, and that retrieval
+still puts the right substance in the model's candidate slate. That last check
+asserts on **membership, not rank** — `metotrexate` retrieves `ketotrexate` above
+`methotrexate`, and a test demanding rank 1 would be asserting the very
+behaviour that makes fuzzy matching wrong for drug names.
+
+```bash
+Rscript tests/substance_v2_idempotence.R
+Rscript tests/sponsor_v2_idempotence.R
 ```
 
 Operational smoke check:
@@ -606,8 +671,22 @@ Rscript -e "shiny::runApp(port = 3838)"
 - Multi-phase trials are preserved as slash-separated values such as `Phase I / Phase II`; downstream analysis of exported CSVs should split those fields when needed.
 - Cross-register deduplication uses trial identifiers first and normalised title fallbacks second. Very short or heavily changed titles can still cause missed or false merges.
 - Cache invalidation depends on SQLite/cache timestamps and `DATA_PROCESSING_VERSION`. Delete `trials_cache.rds` manually when testing data-prep changes without bumping the version.
+- The regression gates compare against a frozen snapshot of the previous pipeline's labels. That snapshot is only meaningful for the corpus vintage it was built from — a EudraCT trial has one record per country, and which one is retained depends on the database state, so re-freeze the baseline whenever the raw export is regenerated or the gate will report phantom regressions.
+- A small number of substance strings cannot be resolved by a model at all: the API's bio-safety classifier refuses some vaccine, toxin and poliovirus strain names outright. These are mapped by hand in `manual_overrides.csv`, which is why that file exists.
+- The reviewer app has been retired to `LEGACY/` pending a rewrite. Human curation decisions still outrank the pipeline wherever `config/review_ledger/review_decisions.csv` exists, but nothing currently writes to it.
 
 ## Latest Release
+
+### v0.21.0 - 2026-08-22
+
+Substance normalisation rebuilt on a chemistry registry. ChEMBL and the EMA
+medicines report are consulted before any model, resolving 69% of
+trial-substance pairs deterministically; 91.9% of pairs now carry a substance
+against 7,003 distinct names left unmatched previously. Canonical names are the
+INN base, so salts, esters and brands fold together, and European names are used
+where they differ from American ones. Dosage text, placeholders and drug-class
+names are recognised as non-substances and excluded from the filter rather than
+displayed. New substances are resolved during the nightly update.
 
 ### v0.20.0 - 2026-08-16
 

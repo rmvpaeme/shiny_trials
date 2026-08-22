@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.20.0 — sponsor normalisation on a model-built registry)
+# app.R  (v0.21.0 — substance normalisation on a chemistry-registry-first pipeline)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -247,7 +247,7 @@ REVIEW_LEDGER_PATH <- Sys.getenv("REVIEW_LEDGER_PATH",
 SPONSOR_QUEUE_PATH <- Sys.getenv("SPONSOR_QUEUE_PATH",
                                  unset = "config/sponsor_norm_v2/E_review_queue.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
-DATA_PROCESSING_VERSION <- "2026-08-v0.20.0-sponsor-registry-v2"
+DATA_PROCESSING_VERSION <- "2026-08-v0.21.0-substance-registry-v2"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
@@ -795,7 +795,8 @@ normalize_sponsor_name <- function(x) {
 # override it. The ledger is read on EVERY load and never enters
 # trials_cache.rds, so a curation decision is live on the next app start without
 # a cache rebuild — which matters because curation happens continuously in
-# curation_app/, on its own schedule, long after the pipeline last ran.
+# the reviewer app (retired to LEGACY/ pending a rewrite), on its own
+# schedule, long after the pipeline last ran.
 #
 # The ledger is append-only and a reviewer may change their mind, so the LATEST
 # row per raw sponsor wins (the same rule curation_app's latest_decisions()
@@ -2992,6 +2993,14 @@ ui <- tagList(
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
+	                                        tags$li(tags$b("v0.21.0 (2026-08-22):"),
+		                                          tags$ul(
+		                                            tags$li("Active substances are now resolved against ChEMBL and the EMA medicines report first, and only what those cannot identify is sent to a language model. 91.9% of trial-substance pairs are resolved, against a pipeline that previously left 7,003 distinct substance names unmatched."),
+		                                            tags$li("Substance names are shown as the INN base, so salts, esters, brand names and pack labels fold together: Methotrexate now covers methotrexate sodium, Metoject and Methotrexat 10mg Tabletten rather than appearing as separate entries."),
+		                                            tags$li("European names are used where they differ from the American ones — Paracetamol, Adrenaline, Salbutamol and Ciclosporin rather than Acetaminophen, Epinephrine, Albuterol and Cyclosporine."),
+		                                            tags$li("Dosage text, placeholders and drug-class names no longer appear in the substance filter. Strings such as \"mL concentrate for solution for infusion\", \"Not yet assigned\" and \"Beta-blockers\" are recognised as not naming a substance and are excluded rather than displayed."),
+		                                            tags$li("Substances on newly registered trials are resolved during the nightly update, so recently added trials no longer show raw text in the substance filter.")
+		                                          )),
 	                                        tags$li(tags$b("v0.20.0 (2026-08-16):"),
 		                                          tags$ul(
 		                                            tags$li("Sponsor names are now resolved through a model-built canonical registry, replacing the rule-based matcher. Every one of the 50,359 trial rows carries a canonical sponsor, and national subsidiaries and legal variants are folded into the parent brand — Novartis is one entry rather than 28."),
@@ -3026,7 +3035,7 @@ ui <- tagList(
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-	                                      p(em(paste0("v0.20.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+	                                      p(em(paste0("v0.21.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(

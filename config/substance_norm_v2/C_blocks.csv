@@ -1,0 +1,374 @@
+raw_substance,block_id,n_trials,block_size
+"ml neusspray, oplossing",sblk_00001,7,2
+Diluyente. Solucin salina Fenolada Glicerinada,sblk_00002,5,3
+"infuusioneste, liuos",sblk_00003,4,4
+ml Pricktestlösung,sblk_00004,4,2
+"0,4 ml solution injectable en seringue préremplie",sblk_00005,3,6
+"0,45 ml, solution injectable en seringue préremplie",sblk_00005,3,6
+1.1-70 × 106 cells,sblk_00006,3,3
+125 mg comprimidos recubiertos con película EFG,sblk_00007,3,5
+"2,5 ml, solution pour inhalation par nébuliseur",sblk_00008,3,3
+24 uur,sblk_00009,3,3
+Prick Test LETI Negativkontrolle Pricktestlösung,sblk_00004,3,2
+dose KwikPen solution for injection in pre-filled pen,sblk_00010,3,5
+"0,4 ml, solution injectable en seringue préremplie",sblk_00005,2,6
+"0,5 ml, solution injectable en seringue préremplie",sblk_00005,2,6
+125 mg Filmtabletten,sblk_00011,2,2
+2 ml soluție injectabilă,sblk_00012,2,2
+"2,5 mg cápsulas duras.",sblk_00013,2,4
+200 mg polvo para solución inyectable y para perfusión EFG,sblk_00007,2,5
+Diluyente. Solucin salina fenolada glicerinada,sblk_00002,2,3
+HAEMOPHILUS INFLUENZAE,sblk_00014,2,2
+Unavailable,sblk_00015,2,2
+infusie of rectale toediening,sblk_00016,2,2
+"ml 54 mg, Pulver und Lösungsmittel zur Herstellung einer Suspension",sblk_00017,2,2
+"ml infuusioneste, liuos",sblk_00003,2,4
+ml šķīdums injekcijām,sblk_00018,2,2
+"ml, sirop",sblk_00019,2,2
+"0,15 mg Filmtabletten",sblk_00011,1,2
+"0,25 g infuusiokuiva-aine, liuosta varten",sblk_00020,1,2
+"0,5 g infuusiokuiva-aine, liuosta varten",sblk_00020,1,2
+"0,5 g polvo para solución para perfusión EFG",sblk_00007,1,5
+"0,5 mg filmdragerade tabletter",sblk_00021,1,2
+"0,6 ml, solution injectable (S.C.) en seringue pré-remplie",sblk_00005,1,6
+"0,75 ml, solution injectable en seringue pré-remplie",sblk_00005,1,6
+"10 Solution.
+•	Pharmaceutical form: solution (oil)
+•	Route of administration: oral
+•	Storage: Store tightly closed below 25°C and protected from light like the verum form.
+•	Country of origin: Italy.",sblk_00022,1,3
+10 mg cápsulas duras,sblk_00013,1,4
+10 mg cápsulas duras de liberación modificada,sblk_00013,1,4
+10 mg cápsulas duras.,sblk_00013,1,4
+150 mg comprimidos recubiertos con película,sblk_00007,1,5
+"2,5 microgramos, solución para inhalación",sblk_00023,1,4
+"2,5 ml, solution pour inhalation par nébuliseur en récipient unidose",sblk_00008,1,3
+20 cm2,sblk_00024,1,2
+200 IU Chewable Tablet,sblk_00025,1,2
+24 timer depotplaster,sblk_00026,1,2
+"24 timer, depotplaster.",sblk_00026,1,2
+"24 uur, pleisters voor transdermaal gebruik 4 mg",sblk_00009,1,3
+"24 uur, pleisters voor transdermaal gebruik 8 mg",sblk_00009,1,3
+245 mg filmdragerade tabletter,sblk_00021,1,2
+"25
+mg FDC
+tablets",sblk_00027,1,2
+325mg suspensie voor oraal gebruik in sachet.,sblk_00028,1,2
+"4,5 microgramos",sblk_00023,1,4
+40 cm2,sblk_00024,1,2
+"400 mg per 4,3 ml suspensie voor oraal gebruik",sblk_00028,1,2
+"5 ml, sirop",sblk_00019,1,2
+500 mg FDC,sblk_00027,1,2
+500 mg polvo para solución para perfusión EFG,sblk_00007,1,5
+"500 mg, polvo para solución para perfusión",sblk_00023,1,4
+"6 microgrammes par dose, poudre pour inhalation.",sblk_00029,1,2
+"6 microgrammes par inhalation, poudre pour inhalation",sblk_00029,1,2
+6 microgramos por inhalación polvo para inhalación,sblk_00023,1,4
+800 IU chewable tablets,sblk_00025,1,2
+A complex,sblk_00030,1,4
+"ACE INHIBITORS, PLAIN",sblk_00031,1,2
+ACE inhibitors,sblk_00031,1,2
+ANTIVIRALS FOR SYSTEMIC USE,sblk_00032,1,2
+AUSTRIA,sblk_00033,1,2
+"Allogeneic, non-expanded, umbilical cord blood-derived, hematopoietic mature myeloid and lymphoid cells",sblk_00006,1,3
+Alpha blockers,sblk_00034,1,2
+Anti-Depressants,sblk_00035,1,2
+Anti-depressants,sblk_00035,1,2
+Austria,sblk_00033,1,2
+Beta Blockers,sblk_00036,1,2
+Beta-blockers,sblk_00036,1,2
+Clostridium type A toxin - hemagglutinin complex.,sblk_00030,1,4
+DARWIN,sblk_00037,1,2
+DIRECT ACTING ANTIVIRALS,sblk_00032,1,2
+Darwin,sblk_00037,1,2
+Diluyente.Solucin Salina Fenolada Glicerinada,sblk_00002,1,3
+First generation anti-psychotic drugs,sblk_00038,1,2
+H-116PI-DE.pdf,sblk_00039,1,2
+H-116PI-de.pdf,sblk_00039,1,2
+"Inert refined sunflower oil (998mg) provided in 1000mg fill-weight oblong 20 soft capsules. Other ingredients: 2 mg dl-alpha-tocopherol (antioxidant), red iron oxide (for colorisation), and liquid peach flavour (for aromatization).",sblk_00034,1,2
+IronIII-Hydrixide Polymaltose Complex 100mg and Folic acid 0.4mg,sblk_00030,1,4
+Isotonic electrolyte solution,sblk_00040,1,3
+Isotonic solutions,sblk_00040,1,3
+It is a NS3-4A protease inhibitor reduces the amount of hepatitis C virus,sblk_00041,1,3
+MK-3655,sblk_00042,1,2
+MK-6024_PBO_0.5mL,sblk_00042,1,2
+N 250 I.E. Pulver und Lösungsmittel zur Herstellung einer Injektionslösung,sblk_00017,1,2
+N-Acetyl-GED-0507-34-Levo corresponding vehicle,sblk_00043,1,2
+N-acetyl-ged-0507-34-levo corresponding vehicle,sblk_00043,1,2
+No proposed INN,sblk_00044,1,4
+No proposed INN available,sblk_00044,1,4
+No recommended International Nonproprietary Name INN,sblk_00044,1,4
+Normal Saline or Dextrose,sblk_00045,1,2
+Normal saline or dextrose,sblk_00045,1,2
+"Oral Solution. Each bottle contains 10 ml of solution with the following composition: Sorbitol liquid (70%), Methyl parahydorxybenzoate, Propyl parahydroxybenzoate, Saccharin Sodium, Sour black cherry flavouring, Purified water.",sblk_00046,1,3
+"Oral solution: Purified water, Methyl Parahydroxybenzoate (Nipagin), Propyl Parahydroxybenzoate(Nipasol).",sblk_00046,1,3
+PAR,sblk_00008,1,3
+PFIZER,sblk_00047,1,2
+POLIOVIRUS INACTIVADO TIPO 1 CEPA MAHONEY,sblk_00048,1,2
+POLIOVIRUS INACTIVADO TIPO 2 CEPA MEF-1,sblk_00048,1,2
+Pfizer,sblk_00047,1,2
+Polisaccaride dellHaemophilus influenzae di tipo b Poliribosilribitol Fosfato undicesima DS,sblk_00049,1,2
+Polisaccaride dellHaemophilus influenzae di tipo b coniugato alla proteina meningococcica adsorbito su alluminio idrossifosfato solfato amorfo dodic,sblk_00049,1,2
+Polisaccaride pneumococcico sierotipo 1,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 1 coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 14,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 18C coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 19A,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 19A coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 19F,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 19F coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 22F coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 23F,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 23F coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 3,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 3 coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 4,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 4 coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 6B,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 6B coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 7F,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 7F coniugato a CRM197,sblk_00050,1,20
+Polisaccaride pneumococcico sierotipo 9V,sblk_00050,1,20
+Powder and solvent for prolongedrelease suspension for injection in pre-filled pen,sblk_00010,1,5
+"Pre-filled pen containing 2.16mL solution, subcutaneous injection",sblk_00010,1,5
+Preserved water,sblk_00051,1,2
+Protease inhibitor,sblk_00041,1,3
+Protease inhibitors,sblk_00041,1,3
+Route of administration: Oral use,sblk_00022,1,3
+Second generation anti-psychotic drugs,sblk_00038,1,2
+VACCINO HAEMOPHILUS INFLUENZAE B CONIUGATO CON PROTEINA DIFTERICA CRM197,sblk_00014,1,2
+Vacuna-10,sblk_00052,1,4
+Vacuna-11,sblk_00052,1,4
+Vacuna-12,sblk_00052,1,4
+Vacuna-13,sblk_00052,1,4
+Verum 2,sblk_00022,1,3
+Viet Nam,sblk_00053,1,2
+Vietnam,sblk_00053,1,2
+"W, fenonip XB and purified water.",sblk_00046,1,3
+"Whole virion non-adjuvanted influenza virus, propagated in Vero cells, inactivated, containing antigen of A",sblk_00006,1,3
+actuation,sblk_00054,1,2
+"actuation Nasal Spray, Suspension",sblk_00054,1,2
+helicidine mucoglycoprotin complex  extracted from Helix Pomatia L. snail mucous,sblk_00030,1,4
+"infuusioneste, dispersio.",sblk_00003,1,4
+injectabila,sblk_00012,1,2
+mL KwikPen solution for injection in a pre-filled pen,sblk_00010,1,5
+ml + 1000 DPP,sblk_00055,1,3
+ml + 150 DPP,sblk_00055,1,3
+ml + 50 DPP,sblk_00055,1,3
+"ml DoubleStar, solution for injection in a pre-filled pen",sblk_00010,1,5
+ml infuusioneste,sblk_00003,1,4
+ml šķīdums injekcijām vai infūzijām,sblk_00018,1,2
+"ml, oplossing voor orale of rectale toediening",sblk_00016,1,2
+no recommended INN,sblk_00044,1,4
+non-nucleoside reverse transcriptase inhibitors,sblk_00056,1,2
+non-preserved sterile liquid formulation,sblk_00051,1,2
+nucleoside and nucleotide reverse transcriptase inhibitors,sblk_00056,1,2
+sterile isotonic solution,sblk_00040,1,3
+unavailable,sblk_00015,1,2
+"verstuiving, neusspray, suspensie",sblk_00001,1,2
+ml soluzione iniettabile,sblk_00057,18,1
+ml Lösung zur Injektion,sblk_00058,10,1
+ml soluzione per infusione,sblk_00059,10,1
+TBD,sblk_00060,9,1
+ml injeksjons-,sblk_00061,7,1
+2 ml soluzione iniettabile,sblk_00062,5,1
+0.9% w,sblk_00063,3,1
+1 ml soluzione iniettabile,sblk_00064,3,1
+"22 micrograms inhalation powder, pre-dispensed",sblk_00065,3,1
+25 mg oral lyophilisate,sblk_00066,3,1
+35 mg oral lyophilisate,sblk_00067,3,1
+50 mg oral lyophilisate,sblk_00068,3,1
+HNO,sblk_00069,3,1
+"Sprühstoß Nasenspray, Suspension",sblk_00070,3,1
+adjuvanted,sblk_00071,3,1
+"dose nesespray, oppløsning",sblk_00072,3,1
+"puff inhalationsspray, suspension",sblk_00073,3,1
+0.9% (w,sblk_00074,2,1
+1 ml Soluzione iniettabile”,sblk_00075,2,1
+100 ml Onco-Tain solution injectable,sblk_00076,2,1
+"200 mg ADULTES, poudre pour solution injectable",sblk_00077,2,1
+"3 mg tabletti, kalvopäällysteinen",sblk_00078,2,1
+50 ml soluzione per infusione,sblk_00079,2,1
+Belgium,sblk_00080,2,1
+USP,sblk_00081,2,1
+"g, gel oftálmico en envase unidosis",sblk_00082,2,1
+infundiranje,sblk_00083,2,1
+ml Lösung zur Modifikation einer Blutfraktion,sblk_00084,2,1
+"ml innrennslislyf, lausn",sblk_00085,2,1
+ml soluzione orale,sblk_00086,2,1
+ml spinaal,sblk_00087,2,1
+"ml, Soluzione per iniezione o infusione",sblk_00088,2,1
+ongoing,sblk_00089,2,1
+per infusione.,sblk_00090,2,1
+souche,sblk_00091,2,1
+-Biotin and CD19 Systems.,sblk_00092,1,1
+-anionen 153 mval,sblk_00093,1,1
+"0,03 mg omhulde tabletten",sblk_00094,1,1
+"0,035mg, Compresse",sblk_00095,1,1
+"0,30 ml, solution injectable en stylo prérempli",sblk_00096,1,1
+"0,5 g por oldatos infúzióhoz",sblk_00097,1,1
+"0,9% w",sblk_00098,1,1
+0.5 mg Sublingualtabletten,sblk_00099,1,1
+0.7% (w,sblk_00100,1,1
+0.9 % w,sblk_00101,1,1
+"1,25 mg, dispergerbara tabletter för dosdispenser",sblk_00102,1,1
+"100 ML, POUDRE ET SOLVANT POUR SOLUTION INJECTABLE",sblk_00103,1,1
+100 mg filmomhulde tabletten,sblk_00104,1,1
+100 mg granules in sachet,sblk_00105,1,1
+100 ml soluzione per infusione,sblk_00106,1,1
+"100000 IU, pessaries",sblk_00107,1,1
+"12 microgram per dosis, inhalatiepoeder",sblk_00108,1,1
+125 mg apvalkotās tabletes,sblk_00109,1,1
+"150 mg, comprimé enrobé",sblk_00110,1,1
+"16 h system transdermalny, plaster",sblk_00111,1,1
+2 mg comprimés sublinguaux,sblk_00112,1,1
+2 ml Soluzione iniettabile”,sblk_00113,1,1
+2 ml soluzione iniettabile”,sblk_00114,1,1
+"2,5 ml soluzione orale",sblk_00115,1,1
+20 ml soluzione per infusione,sblk_00116,1,1
+"200 mg i.v., poeder voor oplossing voor intraveneuze infusie",sblk_00117,1,1
+20mL Soluzione Iniettabile,sblk_00118,1,1
+24 timmar intrauterint inlägg,sblk_00119,1,1
+24-Stunden-Pflaster,sblk_00120,1,1
+24h,sblk_00121,1,1
+"3 g, gel vaginal",sblk_00122,1,1
+"30 Mikrogramm, überzogene Tabletten",sblk_00123,1,1
+300 mg comprimés pelliculés,sblk_00124,1,1
+300 mg oldatos infúzió,sblk_00125,1,1
+"325 mg, comprimé pelliculé",sblk_00126,1,1
+4 ml Soluzione iniettabile,sblk_00127,1,1
+400 mg kauwtabletten,sblk_00128,1,1
+400 mg par 10 ml suspension buvable,sblk_00129,1,1
+"5 micrograms pressurised inhalation, suspension",sblk_00130,1,1
+5 ml Soluzione orale,sblk_00131,1,1
+5 ml polvere per sospensione orale,sblk_00132,1,1
+5 ml soluzione per infusione,sblk_00133,1,1
+5 ml sospensione orale,sblk_00134,1,1
+"50 mg nourrissons et enfants, poudre pour solution injectable (I.V.)",sblk_00135,1,1
+5ml sospensione orale gusto arancia senza zucchero,sblk_00136,1,1
+7 ml soluzione orale,sblk_00137,1,1
+80 mg granules in sachet,sblk_00138,1,1
+80 mg tuggutöflur,sblk_00139,1,1
+"ANTIINFLAMMATORY AND ANTIRHEUMATIC PRODUCTS, NON-STEROIDS",sblk_00140,1,1
+ANTIMETABOLITES,sblk_00141,1,1
+"ARNi, and a MRA",sblk_00142,1,1
+ASSOCIAZIONI VARIE,sblk_00143,1,1
+Agujas,sblk_00144,1,1
+Antibacterial for systemic use,sblk_00145,1,1
+Antibacterials for systemic use,sblk_00146,1,1
+Apherese DRK Blutspendedienst,sblk_00147,1,1
+Barilla Pastasauce with basil,sblk_00148,1,1
+Basis voor SDD suspensie,sblk_00149,1,1
+C09AA,sblk_00150,1,1
+C09CA,sblk_00151,1,1
+CARDIOPLEGIA SOLUTIONS,sblk_00152,1,1
+Cadisco Tomatojuice,sblk_00153,1,1
+Cell Bandage,sblk_00154,1,1
+DC Bead,sblk_00155,1,1
+DISCI-Studie,sblk_00156,1,1
+Dosis Pulver zur Inhalation,sblk_00157,1,1
+"Dosis, einzeldosiertes Pulver zur Inhalation",sblk_00158,1,1
+ELAD,sblk_00159,1,1
+"Elektrolyt-Infusionslösung 153
+Gesamtkationen",sblk_00160,1,1
+Elpenhaler,sblk_00161,1,1
+Emollients and protectives,sblk_00162,1,1
+"Encapsulation of microcrystalline cellulose
+into HPMC capsules to match the CRD-4730 active capsules in appearance",sblk_00163,1,1
+"External):
+P5D21A04B | L018661
+Site of manufacturing (name and 
+site):
+Sharp Packaging Solutions, Allentown, US
+Date of bulk manufacture: 01-Nov-2021
+Shelf life: 60 months
+Storage conditions: Store below 30°C
+Sponsor name: Sahlgrenska University Hospital Östra Hospital
+Sponsor study reference: ESR-19-20262, (D9484C00005), (OPRA-HF) 
+EUDRACT number 2020-005176-3",sblk_00164,1,1
+FERTYPHARM TEST,sblk_00165,1,1
+Homeopathic remedies,sblk_00166,1,1
+L01XX,sblk_00167,1,1
+Linola Fett,sblk_00168,1,1
+ML SOLUZIONE INIETTABILE 5 FIALE  1 ML,sblk_00169,1,1
+MUGARD,sblk_00170,1,1
+Matches test film-coated tablets,sblk_00171,1,1
+Modified recombinant botulinum neurotoxin serotype A,sblk_00172,1,1
+NEUROFARMAGEN,sblk_00173,1,1
+NOTAVAILABLE,sblk_00174,1,1
+NotApplicable,sblk_00175,1,1
+ORAL CONTRACEPTIVE,sblk_00176,1,1
+PERITONEAL Dialytics,sblk_00177,1,1
+PLANT ALKALOIDS AND OTHER NATURAL PRODUCTS,sblk_00178,1,1
+Pasta Antibitica Tpica PAT,sblk_00179,1,1
+Patchinga Freestyle Libre 3 Patch,sblk_00180,1,1
+Peregrine System™ Kit,sblk_00181,1,1
+Ph. Eur.,sblk_00182,1,1
+Poliovirus Tipo 3 Inattivato decima DS,sblk_00183,1,1
+Posterisan corte Placebozpfchen,sblk_00184,1,1
+Protease Inhibitors all licenced PIs allowed per the protocol,sblk_00185,1,1
+Rectal bacteriotherapy instillation,sblk_00186,1,1
+Saliva Natura,sblk_00187,1,1
+Schweppes™,sblk_00188,1,1
+"Sirupus simplex 30mL followed by 15mL after two hours, at one study visit",sblk_00189,1,1
+Syrspend oraaliliuos,sblk_00190,1,1
+Tap water,sblk_00191,1,1
+ToothGuide,sblk_00192,1,1
+UROLOGICALS,sblk_00193,1,1
+"V, liquide pour inhalation par vapeur",sblk_00194,1,1
+Vasodilators,sblk_00195,1,1
+Vehicle (Isocyclosporin A 0 mg,sblk_00196,1,1
+Watchful waiting,sblk_00197,1,1
+Xience V,sblk_00198,1,1
+antibiotic whatever type the GP would usually use as first line for acute bronchitis,sblk_00199,1,1
+aucun mdicament exprimental,sblk_00200,1,1
+"batch number 
+(AstraZeneca",sblk_00201,1,1
+"different combinations of full optimal doses of betablockers, ACEi",sblk_00202,1,1
+dose spray sublinguale,sblk_00203,1,1
+"dosis, transdermale gel",sblk_00204,1,1
+entfllt,sblk_00205,1,1
+freeflex,sblk_00206,1,1
+g -geeli,sblk_00207,1,1
+g gel vaginal.,sblk_00208,1,1
+g hüvelykrém,sblk_00209,1,1
+g pomada,sblk_00210,1,1
+"g, Salbe",sblk_00211,1,1
+"g-gel, doseringspump",sblk_00212,1,1
+infusione,sblk_00213,1,1
+infusioonilahus,sblk_00214,1,1
+infusioonilahuse kontsentraat,sblk_00215,1,1
+išpurškime suslėgtoji įkvepiamoji suspensija,sblk_00216,1,1
+mL Emulsion zur Injektion,sblk_00217,1,1
+mL Penfill solution for injection in cartridge,sblk_00218,1,1
+mL cartridge,sblk_00219,1,1
+mL dispersione iniettabile,sblk_00220,1,1
+mL oral solution composed of a mixture of Phosal 50PG and Polysorbate 80.,sblk_00221,1,1
+mL soluzione iniettabile,sblk_00222,1,1
+"ml + 0,03 IE",sblk_00223,1,1
+ml - Stechampullen,sblk_00224,1,1
+"ml INTRAVEINEUX, solution injectable",sblk_00225,1,1
+ml Injektionslösung in einer Patrone,sblk_00226,1,1
+ml buffrad,sblk_00227,1,1
+"ml nenäsumute, liuos",sblk_00228,1,1
+ml oplossing voor subcutane injectie,sblk_00229,1,1
+ml parenterale Rntgenkontrastmittellsung,sblk_00230,1,1
+ml polvere per sospensione iniettabile,sblk_00231,1,1
+ml solucin inyectable,sblk_00232,1,1
+ml solución inyectable subcutánea,sblk_00233,1,1
+ml sospensione iniettabile,sblk_00234,1,1
+ml škidums infuzijam,sblk_00235,1,1
+"ml, oplossing voor huidpriktest",sblk_00236,1,1
+modifiziertes Schema,sblk_00237,1,1
+nein,sblk_00238,1,1
+nicht zutreffend,sblk_00239,1,1
+nothing (blank,sblk_00240,1,1
+per infusione,sblk_00241,1,1
+procedimiento IBGM PEI 10-134,sblk_00242,1,1
+"reconstitution solution containing: 5% dextrose, 2.5% sodium chloride, 1.6% sodium acetate in sterile water; pH: 6.0-6.5",sblk_00243,1,1
+sterilized lyophilized powder with no active,sblk_00244,1,1
+syringe,sblk_00245,1,1
+syringe.,sblk_00246,1,1
+various ptx used in study,sblk_00247,1,1
+w Aqueous Nasal Spray,sblk_00248,1,1
+w and 0.1% w,sblk_00249,1,1
