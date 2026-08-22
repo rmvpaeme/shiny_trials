@@ -1,0 +1,12 @@
+chembl_pref_name,inn,note
+Acetaminophen,Paracetamol,ChEMBL uses the USAN; paracetamol is the INN
+Aspirin,Acetylsalicylic acid,ChEMBL uses the trade-derived US name; acetylsalicylic acid is the INN
+Cholecalciferol,Colecalciferol,ChEMBL uses the USAN spelling; colecalciferol is the INN
+Mesalamine,Mesalazine,ChEMBL uses the USAN; mesalazine is the INN
+Cyclosporine,Ciclosporin,ChEMBL uses the USAN; ciclosporin is the INN
+Dextrose,Glucose,ChEMBL uses the USAN; glucose is the INN
+Epinephrine,Adrenaline,ChEMBL uses the USAN; adrenaline is the INN
+Norepinephrine,Noradrenaline,ChEMBL uses the USAN; noradrenaline is the INN
+Albuterol,Salbutamol,ChEMBL uses the USAN; salbutamol is the INN
+Sulfur hexafluoride,Sulphur hexafluoride,ChEMBL uses US spelling; EU labelling uses sulphur
+Acetylcysteine,N-acetylcysteine,EU labelling and EUCTR text use the N- prefix

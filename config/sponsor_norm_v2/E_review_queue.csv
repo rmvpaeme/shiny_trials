@@ -1,48 +1,46 @@
 raw_sponsor,proposed,confidence,n_trials,review_reason,reason,channel,model_id
 Karolinska University Hospital,Karolinska Universitetssjukhuset,0.88,98,"high impact, middling confidence",,mint,claude-opus-5
-Amsterdam UMC Stichting,Amsterdam UMC,0.88,70,"high impact, middling confidence",,mint,claude-opus-5
-Merck KGaA,Merck KGaA,0.85,69,"high impact, middling confidence",German Merck KGaA group entities,mint,claude-opus-5
-Academic Medical Center,Academic Medical Center,0.7,63,low confidence,Academic Medical Center (AMC) Amsterdam teaching hospital,mint,claude-sonnet-5
-Amsterdam UMC,Amsterdam UMC,0.88,60,"high impact, middling confidence",,mint,claude-opus-5
-University of Cologne,University of Cologne,0.85,53,"high impact, middling confidence",Variant spellings and department of University of Cologne,mint,claude-opus-5
+Amsterdam UMC Stichting,Amsterdam UMC,0.88,69,"high impact, middling confidence",,mint,claude-opus-5
+Merck KGaA,Merck KGaA,0.85,68,"high impact, middling confidence",German Merck KGaA group entities,mint,claude-opus-5
+Academic Medical Center,Academic Medical Center,0.7,66,low confidence,Academic Medical Center (AMC) Amsterdam teaching hospital,mint,claude-sonnet-5
+Amsterdam UMC,Amsterdam UMC,0.88,58,"high impact, middling confidence",,mint,claude-opus-5
+University of Cologne,University of Cologne,0.85,51,"high impact, middling confidence",Variant spellings and department of University of Cologne,mint,claude-opus-5
 University of Dundee,University of Dundee,0.86,47,"high impact, middling confidence","All variants, departments and joint sponsorship strings resolve to University of Dundee as the academic sponsor.",mint,claude-opus-5
-ISTITUTO NAZIONALE PER LA CURA TUMORI,Fondazione IRCCS Istituto Nazionale dei Tumori,0.82,44,"high impact, middling confidence",,mint,claude-opus-5
-Merck Healthcare KGaA,Merck KGaA,0.85,39,"high impact, middling confidence",German Merck KGaA group entities,mint,claude-opus-5
+ISTITUTO NAZIONALE PER LA CURA TUMORI,Fondazione IRCCS Istituto Nazionale dei Tumori,0.82,46,"high impact, middling confidence",,mint,claude-opus-5
+Merck Healthcare KGaA,Merck KGaA,0.85,38,"high impact, middling confidence",German Merck KGaA group entities,mint,claude-opus-5
 FONDAZIONE CENTRO S. RAFFAELE DEL MONTE TABOR,Fondazione Centro San Raffaele del Monte Tabor,0.75,33,"high impact, middling confidence",Distinct former legal foundation entity,mint,claude-opus-5
-Vaestra Goetalandsregionen,Västra Götalandsregionen,0.85,32,"high impact, middling confidence",Regional health authority; joint listings default to lead region,mint,claude-opus-5
-Region Skane,Region Skåne,0.85,29,"high impact, middling confidence",All variants refer to Region Skåne (including its university hospital and a collaboration string).,mint,claude-opus-5
-Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,0.88,28,"high impact, middling confidence","All variants of the Cambridge NHS trust (Addenbrooke's), including joint sponsorships with the university and departmental strings",mint,claude-opus-5
+Vaestra Goetalandsregionen,Västra Götalandsregionen,0.85,31,"high impact, middling confidence",Regional health authority; joint listings default to lead region,mint,claude-opus-5
+Cambridge University Hospitals NHS Foundation Trust,Cambridge University Hospitals NHS Foundation Trust,0.88,29,"high impact, middling confidence","All variants of the Cambridge NHS trust (Addenbrooke's), including joint sponsorships with the university and departmental strings",mint,claude-opus-5
+Region Skane,Region Skåne,0.85,28,"high impact, middling confidence",All variants refer to Region Skåne (including its university hospital and a collaboration string).,mint,claude-opus-5
 UMCG,Universitair Medisch Centrum Groningen,0.85,26,"high impact, middling confidence",All reference UMCG; department and collaboration strings resolve to parent institution.,mint,claude-opus-5
-Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,Institut d'Investigacions Biomèdiques August Pi i Sunyer,0.86,26,"high impact, middling confidence",IDIBAPS research institute variants incl. FRCB-IDIBAPS,mint,claude-opus-5
 Helse Bergen HF,Helse Bergen,0.85,25,"high impact, middling confidence",Haukeland University Hospital is part of Helse Bergen HF,mint,claude-opus-5
 University of Edinburgh / NHS Lothian,University of Edinburgh,0.85,25,"high impact, middling confidence","University of Edinburgh, often co-sponsored with NHS Lothian; ACCORD is its joint research office",mint,claude-opus-5
 FONDAZIONE IRCCS ISTITUTO NAZIONALE DEI TUMORI,Fondazione IRCCS Istituto Nazionale dei Tumori,0.82,24,"high impact, middling confidence",,mint,claude-opus-5
-Universittsklinikum Erlangen,Universitätsklinikum Erlangen,0.85,24,"high impact, middling confidence",University hospital Erlangen and its departments/clinics,mint,claude-opus-5
+Universittsklinikum Erlangen,Universitätsklinikum Erlangen,0.85,23,"high impact, middling confidence",University hospital Erlangen and its departments/clinics,mint,claude-opus-5
 HUS-Yhtymae,Helsingin ja Uudenmaan sairaanhoitopiiri (HUS),0.88,23,"high impact, middling confidence",All variants of HUS (Helsinki University Hospital group); index 4 is a joint sponsorship listing led by HUS.,mint,claude-opus-5
-Stichting Amsterdam UMC,Amsterdam UMC,0.88,23,"high impact, middling confidence",,mint,claude-opus-5
-Fondazione IRCCS Istituto Nazionale Dei Tumori,Fondazione IRCCS Istituto Nazionale dei Tumori,0.82,22,"high impact, middling confidence",,mint,claude-opus-5
 Steno Diabetes Center Copenhagen,Steno Diabetes Center Copenhagen,0.85,22,"high impact, middling confidence",Variants of Steno Diabetes Center (Copenhagen); person string clustered with institution,mint,claude-opus-5
+Stichting Amsterdam UMC,Amsterdam UMC,0.88,22,"high impact, middling confidence",,mint,claude-opus-5
 IFCT,Intergroupe Francophone de Cancérologie Thoracique,0.8,21,"high impact, middling confidence",IFCT is the French thoracic oncology cooperative group.,mint,claude-sonnet-5
 University Of Cologne,University of Cologne,0.85,21,"high impact, middling confidence",Variant spellings and department of University of Cologne,mint,claude-opus-5
-Kings College London / Guys and St Thomas NHS Foundation Trust,King's College London,0.88,21,"high impact, middling confidence",,mint,claude-opus-5
+Kings College London / Guys and St Thomas NHS Foundation Trust,King's College London,0.88,20,"high impact, middling confidence",,mint,claude-opus-5
 Organisation name was not entered,Organisation name was not entered,0.3,19,low confidence,Placeholder strings with no identifiable organisation,mint,claude-opus-5
 Centre Hospitalier Regional De Marseille,Assistance Publique - Hôpitaux de Marseille,0.62,15,low confidence,"Both strings refer to the public hospital group of Marseille (AP-HM), formerly known as Centre Hospitalier Régional de Marseille.",mint,claude-opus-5
 Centre Hospitalier Regional Universitaire,Centre Hospitalier Regional Universitaire,0.5,13,low confidence,Generic French regional university hospital name without city identifier,mint,claude-sonnet-5
 Academic Medical Centre,Academic Medical Centre,0.6,12,low confidence,,mint,claude-sonnet-5
 Groupe Oncologie Radiotherapie Tete Cou,Groupe Oncologie Radiotherapie Tete et Cou,0.7,12,low confidence,,mint,claude-sonnet-5
-AGO Research GmbH,AGO Research,0.7,9,low confidence,,mint,claude-sonnet-5
+AGO Research GmbH,AGO Research,0.7,8,low confidence,,mint,claude-sonnet-5
 OSPEDALE ONCOLOGICO DI BARI,Ospedale Oncologico di Bari,0.7,8,low confidence,,mint,claude-sonnet-5
+FIMABIS,FIMABIS,0.6,7,low confidence,FIMABIS is a Spanish biomedical research foundation associated with Hospital Regional Universitario de Malaga.,mint,claude-sonnet-5
 Department of Medical Research,Department of Medical Research,0.3,6,low confidence,Too vague to identify parent institution,mint,claude-sonnet-5
 Quralis Corp.,Quralis Corp.,0.6,6,low confidence,,mint,claude-sonnet-5
 Center for Cancer Immune Therapy,Center for Cancer Immune Therapy,0.7,6,low confidence,"Same organization, variants including national/CCIT-DK abbreviation",mint,claude-sonnet-5
+IDIBAPS,IDIBAPS,0.7,6,low confidence,,mint,claude-sonnet-5
 Summit Oxford Limited,Summit Therapeutics,0.7,6,low confidence,,mint,claude-opus-5
 University Hospital,University Hospital,0.3,5,low confidence,"Generic name, cannot identify specific institution",mint,claude-sonnet-5
 IMAS,IMAS,0.4,5,low confidence,Insufficient context to identify the organisation beyond the acronym IMAS,mint,claude-sonnet-5
 Nrodn onkologick stav,Národní onkologický ústav,0.6,5,low confidence,"Distinct institution name, accents stripped",mint,claude-sonnet-5
-IDIBAPS,IDIBAPS,0.7,5,low confidence,,mint,claude-sonnet-5
 ISTITUTO C. MONDINO,Fondazione Istituto Neurologico Nazionale C. Mondino,0.7,5,low confidence,,mint,claude-sonnet-5
 Pharmaplot P.C.,Pharmaplot,0.7,5,low confidence,,mint,claude-sonnet-5
-USWM Ct LLC,US WorldMeds,0.7,5,low confidence,,mint,claude-sonnet-5
 Dept of ped hem/onc,Unknown (Department of Pediatric Hematology/Oncology),0.3,4,low confidence,"Only a department name given, no parent institution identifiable",mint,claude-sonnet-5
 University Medical Center,University Medical Center,0.3,4,low confidence,"Generic name, cannot identify specific institution",mint,claude-sonnet-5
 Department of Anaesthesia,Department of Anaesthesia,0.4,4,low confidence,Too vague to identify parent institution,mint,claude-opus-5
@@ -51,12 +49,9 @@ FILO,FILO,0.5,4,low confidence,Single occurrence; likely French Innovative Leuke
 AMW GmbH,AMW GmbH,0.6,4,low confidence,,mint,claude-sonnet-5
 Asso De Recherche Cancers Gynecologiques,ARCAGY (Association de Recherche sur les Cancers Gynecologiques),0.6,4,low confidence,,mint,claude-sonnet-5
 Clinirx Tangent Research,ClinirX,0.6,4,low confidence,,mint,claude-sonnet-5
-FIMABIS,FIMABIS,0.6,4,low confidence,FIMABIS is a Spanish biomedical research foundation associated with Hospital Regional Universitario de Malaga.,mint,claude-sonnet-5
-Itb-Med AB,Itb-Med AB,0.6,4,low confidence,,mint,claude-sonnet-5
 PROMEFARM,Promefarm,0.6,4,low confidence,,mint,claude-sonnet-5
 Region Vaesterbotten / Umea University,Region Vasterbotten / Umea University,0.6,4,low confidence,"Joint sponsorship string combining two organizations, kept distinct from single-entity entry",mint,claude-sonnet-5
 Venter Pharma S.L.,Venter Pharma,0.6,4,low confidence,,mint,claude-sonnet-5
-Instituto De Investigacion Marques De Valdecilla,Instituto de Investigación Marqués de Valdecilla,0.65,4,low confidence,Research institute affiliated with Hospital Universitario Marqués de Valdecilla; entry 2 includes a named researcher tied to the same institution.,mint,claude-sonnet-5
 Clinical Trials and Research Governance,Clinical Trials and Research Governance,0.7,4,low confidence,,mint,claude-sonnet-5
 Copenhagen University Hospital,Copenhagen University Hospital,0.7,4,low confidence,Generic hospital designation,mint,claude-opus-5
 Dermatologikum Hamburg,Dermatologikum Hamburg,0.7,4,low confidence,,mint,claude-sonnet-5
@@ -82,26 +77,25 @@ BioCis Pharma Oy,BioCis Pharma,0.6,3,low confidence,,mint,claude-sonnet-5
 Biothera,Biothera,0.6,3,low confidence,"Different company (Biothera Pharmaceuticals), distinct from Bio-Thera Solutions",mint,claude-sonnet-5
 CAIBER,CAIBER,0.6,3,low confidence,Spanish clinical trial research platform (Plataforma de Apoyo a la Investigación Clínica),mint,claude-sonnet-5
 Cardoz AB,Cardoz,0.6,3,low confidence,,mint,claude-sonnet-5
-Clinical Trial Center Aachen,Clinical Trial Center Aachen,0.6,3,low confidence,,mint,claude-opus-5
 Corteria Pharmaceuticals,Corteria Pharmaceuticals,0.6,3,low confidence,,mint,claude-sonnet-5
 "DSC Services, s.r.o.",DSC Services,0.6,3,low confidence,,mint,claude-sonnet-5
 Danish Pain Research Center,Danish Pain Research Center,0.6,3,low confidence,,mint,claude-sonnet-5
 Department of Health,Department of Health,0.6,3,low confidence,Single generic government health department reference,mint,claude-sonnet-5
 Ethicare GmbH,Ethicare,0.6,3,low confidence,,mint,claude-sonnet-5
-Fundacion Epic,Fundacion Epic,0.6,3,low confidence,,mint,claude-sonnet-5
 Hungarian Ministry of Innovation and Technology - Representative: Hecrin Consortium,Hungarian Ministry of Innovation and Technology,0.6,3,low confidence,,mint,claude-sonnet-5
+Itb-Med AB,Itb-Med AB,0.6,3,low confidence,,mint,claude-sonnet-5
 Keele University,Keele University,0.6,3,low confidence,All entries include Keele University as joint or sole sponsor with varying NHS trust partners,mint,claude-sonnet-5
 Lybar a.s.,Lybar,0.6,3,low confidence,,mint,claude-sonnet-5
 Merete Hdersdal,Merete Hædersdal,0.6,3,low confidence,"Appears to be a personal name, not an organisation",mint,claude-sonnet-5
 Orexa B.V.,Orexa,0.6,3,low confidence,,mint,claude-sonnet-5
 Præhospitalet,Præhospitalet,0.6,3,low confidence,Single string referring to a Danish prehospital emergency medical services organisation.,mint,claude-sonnet-5
 Step Pharma,Step Pharma,0.6,3,low confidence,,mint,claude-sonnet-5
+ABScience,AB Science,0.7,3,low confidence,,mint,claude-sonnet-5
 Betagenon AB,Betagenon AB,0.7,3,low confidence,,mint,claude-sonnet-5
 Bond Avillion 2 Development LP,Bond Avillion 2 Development LP,0.7,3,low confidence,,mint,claude-sonnet-5
 Chronic Obstructive Pulmonary Disease Trial Network COP:TRIN,Chronic Obstructive Pulmonary Disease Trial Network (COP:TRIN),0.7,3,low confidence,Single sponsor string representing a clinical trial network with no further identifying details.,mint,claude-sonnet-5
 Colorado Prevention Center,Colorado Prevention Center,0.7,3,low confidence,,mint,claude-sonnet-5
 Diamyd Medical AB,Diamyd,0.7,3,low confidence,Diamyd Medical AB and Diamyd Therapeutics AB appear to be the same corporate group under the Diamyd brand.,mint,claude-sonnet-5
-Diamyd Therapeutics AB,Diamyd,0.7,3,low confidence,Diamyd Medical AB and Diamyd Therapeutics AB appear to be the same corporate group under the Diamyd brand.,mint,claude-sonnet-5
 Fondazione European Myeloma Network Italy O.N.L.U.S.,Fondazione European Myeloma Network Italy,0.7,3,low confidence,,mint,claude-opus-5
 Fundacin Teknon,Fundacion Teknon,0.7,3,low confidence,,mint,claude-sonnet-5
 Genetix Biotherapeutics Inc.,Genetix Biotherapeutics,0.7,3,low confidence,,mint,claude-sonnet-5
@@ -115,14 +109,13 @@ Medinova AG,Medinova,0.7,3,low confidence,,mint,claude-sonnet-5
 Merck Selbstmedikation GmbH,Merck,0.7,3,low confidence,"Merck Selbstmedikation GmbH is a German consumer healthcare subsidiary of Merck KGaA, Darmstadt.",mint,claude-sonnet-5
 National Institute of Oncology,National Institute of Oncology,0.7,3,low confidence,,mint,claude-opus-5
 Neosil Inc.,Neosil,0.7,3,low confidence,,mint,claude-sonnet-5
-Oncoscience AG,Oncoscience,0.7,3,low confidence,,mint,claude-sonnet-5
-Serono International SA,Serono,0.7,3,low confidence,Pre-acquisition Serono International entity,mint,claude-opus-5
 Stragen France,Stragen,0.7,3,low confidence,Both reference Stragen France; second also mentions co-sponsor ChemGenex but Stragen is primary entity,mint,claude-sonnet-5
 Studienzentrale AGO Austria,AGO Austria,0.7,3,low confidence,,mint,claude-sonnet-5
 Summit Therapeutics Inc.,Summit Therapeutics,0.7,3,low confidence,,mint,claude-sonnet-5
 "The Parker Institute, Bispebjerg and Frederiksberg Hospital, The Capital Region of Denmark",Parker Institute,0.7,3,low confidence,Named research institute with its own identity hosted at Bispebjerg and Frederiksberg Hospital,mint,claude-opus-5
 Thirty Respiratory Limited,Thirty Respiratory Limited,0.7,3,low confidence,,mint,claude-sonnet-5
 Turku PET Centre,Turku PET Centre,0.7,3,low confidence,,mint,claude-opus-5
+USWM Ct LLC,US WorldMeds,0.7,3,low confidence,,mint,claude-sonnet-5
 Valderm ApS,Valderm,0.7,3,low confidence,,mint,claude-sonnet-5
 None,Unknown,0.2,2,low confidence,No identifying information provided.,mint,claude-sonnet-5
 ARTIC,ARTIC,0.3,2,low confidence,Insufficient information to identify the organisation behind acronym ARTIC.,mint,claude-sonnet-5
@@ -163,6 +156,7 @@ Pharma Holdings AS,Pharma Holdings,0.5,2,low confidence,,mint,claude-sonnet-5
 "RED VFB, s.r.o.",RED VFB,0.5,2,low confidence,,mint,claude-sonnet-5
 SOCIET CAMPANA DI IMMUNOTERAPIA ONCOLOGICA,Societa Campana di Immunoterapia Oncologica,0.5,2,low confidence,,mint,claude-sonnet-5
 pharmaand GmbH,pharmaand,0.5,2,low confidence,,mint,claude-sonnet-5
+Landsptali Hsklasjkrahs,Landspitali,0.55,2,low confidence,"Garbled text likely refers to Landspitali, Iceland's national university hospital.",mint,claude-sonnet-5
 A.S.L. TO 2,A.S.L. TO 2,0.6,2,low confidence,Italian local health authority,mint,claude-sonnet-5
 ASSOCIAZIONE MALATTIE SANGUE,Associazione Malattie del Sangue,0.6,2,low confidence,,mint,claude-sonnet-5
 Aalst Dermatology Group,Aalst Dermatology Group,0.6,2,low confidence,,mint,claude-opus-5
@@ -175,6 +169,7 @@ BIODRUG s.r.o.,BIODRUG,0.6,2,low confidence,,mint,claude-sonnet-5
 CENTRO STUDI FADOI,Fondazione FADOI,0.6,2,low confidence,Both appear related to FADOI (Federazione Associazioni Dirigenti Ospedalieri Internisti); Centro Studi FADOI is likely its research center under the same foundation.,mint,claude-sonnet-5
 CHU AMBROISE PARE,CHU Ambroise Pare,0.6,2,low confidence,,mint,claude-sonnet-5
 COPSAC,COPSAC,0.6,2,low confidence,"Copenhagen Prospective Studies on Asthma in Childhood, a research entity",mint,claude-sonnet-5
+Clinical Trial Center Aachen,Clinical Trial Center Aachen,0.6,2,low confidence,,mint,claude-opus-5
 Dansk Multipel Sclerose Center,Dansk Multipel Sclerose Center,0.6,2,low confidence,,mint,claude-sonnet-5
 Daval International Limited,Daval International,0.6,2,low confidence,,mint,claude-sonnet-5
 Diabetology Ltd,Diabetology Ltd,0.6,2,low confidence,,mint,claude-sonnet-5
@@ -183,10 +178,12 @@ EctoPharma Limited,EctoPharma,0.6,2,low confidence,,mint,claude-sonnet-5
 Ernesto Prez Persona,Ernesto Perez Persona,0.6,2,low confidence,"Appears to be a personal name, not an organisation",mint,claude-sonnet-5
 Eurobloodnet Association,Eurobloodnet Association,0.6,2,low confidence,,mint,claude-sonnet-5
 FAZ - Floridsdorf Allergy Center,FAZ - Floridsdorf Allergy Center,0.6,2,low confidence,"Single occurrence, appears to be a clinical allergy center.",mint,claude-sonnet-5
-FONDAZIONE CHARTA,Fondazione Charta,0.6,2,low confidence,,mint,claude-sonnet-5
 FONDAZIONE FADOI,Fondazione FADOI,0.6,2,low confidence,Both appear related to FADOI (Federazione Associazioni Dirigenti Ospedalieri Internisti); Centro Studi FADOI is likely its research center under the same foundation.,mint,claude-sonnet-5
+FONDAZIONE SENDO,Southern Europe New Drug Organization SENDO,0.6,2,low confidence,,mint,claude-sonnet-5
 Fundacio Parc Tauli,Fundació Parc Taulí,0.6,2,low confidence,Foundation entity,mint,claude-sonnet-5
+Fundacion Epic,Fundacion Epic,0.6,2,low confidence,,mint,claude-sonnet-5
 "GB001, Inc.","GB001, Inc.",0.6,2,low confidence,,mint,claude-sonnet-5
+GEIS,Grupo Español de Investigación en Sarcomas (GEIS),0.6,2,low confidence,GEIS is a Spanish sarcoma research cooperative group acronym commonly used as trial sponsor,mint,claude-sonnet-5
 Galenica AB,Galenica AB,0.6,2,low confidence,Swedish AB entity,mint,claude-sonnet-5
 HYKS Naistensairaala,Helsinki University Hospital,0.6,2,low confidence,"HYKS Naistensairaala is the women's hospital department of Helsinki University Central Hospital (HYKS), and 'Hyks' alone likely refers to the same parent institution.",mint,claude-sonnet-5
 IKEM,Institut klinické a experimentální medicíny,0.6,2,low confidence,,mint,claude-sonnet-5
@@ -219,6 +216,7 @@ Regent Medical,Regent Medical,0.6,2,low confidence,,mint,claude-sonnet-5
 Regentree LLC,Regentree,0.6,2,low confidence,,mint,claude-sonnet-5
 Region Sjaelland / Reponex Pharmaceuticals A/S,Region Sjælland,0.6,2,low confidence,"joint sponsorship with Reponex, kept separate due to co-sponsor",mint,claude-sonnet-5
 Respiratory and Allergy Research Unit,Respiratory and Allergy Research Unit,0.6,2,low confidence,Same unit name with minor spelling/case variants,mint,claude-sonnet-5
+SENDO TECH,Sendo Tech,0.6,2,low confidence,,mint,claude-sonnet-5
 Salsarulo Pharma,Salsarulo Pharma,0.6,2,low confidence,,mint,claude-sonnet-5
 Seahorse Scientific Services Ltd.,Seahorse Scientific Services,0.6,2,low confidence,,mint,claude-sonnet-5
 Sttn zdravotn stav,Statni zdravotni ustav,0.6,2,low confidence,"Accented characters stripped; likely 'Statni zdravotni ustav' (State Health Institute), a Czech public body.",mint,claude-sonnet-5
@@ -240,9 +238,9 @@ gepepharm GmbH,gepepharm,0.6,2,low confidence,,mint,claude-sonnet-5
 "neopharma Japan Co., Ltd",neopharma Japan,0.6,2,low confidence,,mint,claude-sonnet-5
 stav hematologie a krevn transfuze,Ustav hematologie a krevni transfuze,0.6,2,low confidence,"Single sponsor string, likely Institute of Hematology and Blood Transfusion (Czech Republic), name partially stripped of accents.",mint,claude-sonnet-5
 "Dekan des Fachbereichs Medizin der Goethe Universitt, represented by the Coordinating Investigator",Goethe-Universität Frankfurt,0.65,2,low confidence,All refer to the Dean of the Medical Faculty of Goethe University Frankfurt; item 3 is generic but likely the same body.,mint,claude-sonnet-5
+Instituto De Investigacion Marques De Valdecilla,Instituto de Investigación Marqués de Valdecilla,0.65,2,low confidence,Research institute affiliated with Hospital Universitario Marqués de Valdecilla; entry 2 includes a named researcher tied to the same institution.,mint,claude-sonnet-5
 Michael Patrick,Michael Patrick Achiam,0.65,2,low confidence,"Likely same person, differing name completeness",mint,claude-sonnet-5
 A.C.O.M. Advanced Center Oncology Macerata S.r.l.,A.C.O.M. Advanced Center Oncology Macerata,0.7,2,low confidence,,mint,claude-sonnet-5
-ABScience,AB Science,0.7,2,low confidence,,mint,claude-sonnet-5
 AKH Wien,Allgemeines Krankenhaus der Stadt Wien,0.7,2,low confidence,,mint,claude-opus-5
 AZIENDA OSPEDALIERA S. MARIA DI TERNI,Azienda Ospedaliera Santa Maria di Terni,0.7,2,low confidence,Terni hospital; bare 'S. Maria' most likely Terni,mint,claude-opus-5
 "Academic Medical Center, Department of Rheumatology",Academic Medical Center,0.7,2,low confidence,"Same institution, different departments",mint,claude-sonnet-5
@@ -266,6 +264,8 @@ Clinique Mutualiste Chirurgicale,Clinique Mutualiste Chirurgicale,0.7,2,low conf
 Copenhagen Neuromuscular Center,Copenhagen Neuromuscular Center,0.7,2,low confidence,"Same neuromuscular research unit at Rigshospitalet, Copenhagen University Hospital",mint,claude-sonnet-5
 Cr2o B.V.,Cr2o,0.7,2,low confidence,,mint,claude-sonnet-5
 "DIPARTIMENTO DI SCIENZE BIOMEDICHE SPERIMENTALI E CLINICHE, UNIVERSIT DI FIRENZE",Universita di Firenze,0.7,2,low confidence,Departments resolve to parent university of Firenze,mint,claude-sonnet-5
+DRCI APHP,Assistance Publique - Hôpitaux de Paris,0.7,2,low confidence,,mint,claude-sonnet-5
+Diamyd Therapeutics AB,Diamyd,0.7,2,low confidence,Diamyd Medical AB and Diamyd Therapeutics AB appear to be the same corporate group under the Diamyd brand.,mint,claude-sonnet-5
 EBI Anti Sepsis B.V.,EBI Anti Sepsis,0.7,2,low confidence,,mint,claude-sonnet-5
 European Lung Cancer Working Party,European Lung Cancer Working Party,0.7,2,low confidence,,mint,claude-sonnet-5
 FUNDACION PARA LA INVESTIGACIN LA FE,Fundación para la Investigación La Fe,0.7,2,low confidence,Separate foundation entity name,mint,claude-opus-5
@@ -282,7 +282,7 @@ Green Cross Corporation,Green Cross Corporation,0.7,2,low confidence,,mint,claud
 HOSPITAL CLINIC,Hospital Clínic de Barcelona,0.7,2,low confidence,,mint,claude-sonnet-5
 HUS - Naistentautien ja synnytysten tulosyksikk,Helsingin ja Uudenmaan sairaanhoitopiiri (HUS),0.7,2,low confidence,Department of obstetrics and gynecology resolves to parent hospital district HUS.,mint,claude-sonnet-5
 IATEC B.V.,IATEC,0.7,2,low confidence,,mint,claude-sonnet-5
-INNOVIVE Pharmaceuticals,Innovive Pharmaceuticals,0.7,2,low confidence,,mint,claude-sonnet-5
+IUCPQ,Institut universitaire de cardiologie et de pneumologie de Québec,0.7,2,low confidence,,mint,claude-sonnet-5
 Immungenetics AG,Immungenetics,0.7,2,low confidence,,mint,claude-sonnet-5
 Institute of Psychophysiology and Rehabilitation IRP of the Kaunas University of Medicine,Kaunas University of Medicine,0.7,2,low confidence,,mint,claude-sonnet-5
 Instituto Cientifico y Tecnologico de Navarra,Instituto Científico y Tecnológico de Navarra,0.7,2,low confidence,,mint,claude-sonnet-5
@@ -297,13 +297,17 @@ National Cancer Institute,National Cancer Institute,0.7,2,low confidence,,mint,c
 Neuro-Consil GmbH,Neuro-Consil,0.7,2,low confidence,,mint,claude-sonnet-5
 OLVG,OLVG,0.7,2,low confidence,"OLVG is a hospital in Amsterdam, Netherlands.",mint,claude-sonnet-5
 OMEQUI,OMEQUI,0.7,2,low confidence,Same organization/coordinator entity,mint,claude-sonnet-5
+Oncoscience AG,Oncoscience,0.7,2,low confidence,,mint,claude-sonnet-5
+Our Ladys Hospital for Sick Children,Our Ladys Hospital for Sick Children,0.7,2,low confidence,"Dublin hospital, distinct entity",mint,claude-sonnet-5
 Pharmatrophix Inc,Pharmatrophix,0.7,2,low confidence,,mint,claude-sonnet-5
 Psykiatrisk Center Gentofte,Psykiatrisk Center Gentofte,0.7,2,low confidence,"Psychiatric centre, separate organisation from the somatic hospital",mint,claude-opus-5
 Region Vaestmanland,Region Vastmanland,0.7,2,low confidence,Swedish regional public body sponsoring trials,mint,claude-sonnet-5
 Renapharma AB,Renapharma,0.7,2,low confidence,,mint,claude-sonnet-5
 STRAGEN France / ChemGenex Pharmaceuticals Ltd.,Stragen,0.7,2,low confidence,Both reference Stragen France; second also mentions co-sponsor ChemGenex but Stragen is primary entity,mint,claude-sonnet-5
 Sairopa B.V.,Sairopa,0.7,2,low confidence,,mint,claude-sonnet-5
+Schering Nordiska AB,Schering,0.7,2,low confidence,,mint,claude-sonnet-5
 Serono GmbH,Serono,0.7,2,low confidence,Pre-acquisition Serono International entity,mint,claude-opus-5
+Serono International SA,Serono,0.7,2,low confidence,Pre-acquisition Serono International entity,mint,claude-opus-5
 Spanish Cooperative Group for Gastrointestinal Tomour therapy,Spanish Cooperative Group for Gastrointestinal Tumour Therapy,0.7,2,low confidence,,mint,claude-sonnet-5
 Sren Rittig,Søren Rittig,0.7,2,low confidence,"Single string representing a named individual, no institution given.",mint,claude-sonnet-5
 Stichting Pediatrisch Onderzoek Enschede,Stichting Pediatrisch Onderzoek Enschede,0.7,2,low confidence,,mint,claude-sonnet-5
@@ -436,7 +440,6 @@ Univ. Klinik fr Ansthesiologie,Unknown University Clinic for Anaesthesiology,0.3
 "Univ. hospital, Dpt. of anaesthesia","Unknown University Hospital, Department of Anaesthesia",0.3,1,low confidence,Only a generic department reference with no identifiable parent institution name given.,mint,claude-sonnet-5
 Univ.Clinic of Dermatology,University Clinic of Dermatology (unspecified),0.3,1,low confidence,Too vague,mint,claude-opus-5
 University Hospital Department of Cardiology,University Hospital Department of Cardiology,0.3,1,low confidence,,mint,claude-sonnet-5
-"University Hospital, Dept of Oncology, clinical trial unit",University Hospital,0.3,1,low confidence,Too vague to identify specific institution.,mint,claude-sonnet-5
 Unknown at this point Between jobs / Unknown at this point Between jobs,Unknown,0.3,1,low confidence,No identifiable organisation name given,mint,claude-sonnet-5
 acep,ACEP,0.3,1,low confidence,Insufficient information to identify organisation beyond acronym 'acep'.,mint,claude-sonnet-5
 dipartimento di neurologia e psichiatria,Dipartimento di Neurologia e Psichiatria,0.3,1,low confidence,Department name with no parent institution specified; cannot resolve to a specific university or hospital.,mint,claude-sonnet-5
@@ -531,7 +534,6 @@ University Eye Hospital,University Eye Hospital,0.4,1,low confidence,Too vague t
 Urologkliniken US,Urologkliniken US,0.4,1,low confidence,"Likely a urology clinic department at a university hospital (possibly Uppsala/Linkoping 'US'), too vague to identify parent institution precisely.",mint,claude-sonnet-5
 VVOG,VVOG,0.4,1,low confidence,Insufficient information to identify the organisation behind the acronym VVOG.,mint,claude-sonnet-5
 Vasa HVC,Vasa HVC,0.4,1,low confidence,"Single unverifiable sponsor string, insufficient context to identify parent organisation.",mint,claude-sonnet-5
-Vasculitis Clinical Trial Office,Vasculitis Clinical Trial Office,0.4,1,low confidence,,mint,claude-opus-5
 Wallenberg laboratory,Wallenberg laboratory,0.4,1,low confidence,"Only one string; likely a research lab, insufficient info to identify parent institution.",mint,claude-sonnet-5
 XiCoCo study group,XiCoCo study group,0.4,1,low confidence,Only string provided; appears to be a study group name of unclear parent organisation.,mint,claude-sonnet-5
 ZKES GmbH,ZKES GmbH,0.4,1,low confidence,,mint,claude-sonnet-5
@@ -595,7 +597,6 @@ Erasmus MC / Maasstad Hospital,Erasmus MC / Maasstad Hospital,0.5,1,low confiden
 Eurofins Optimed / Perha Pharmaceuticals,Perha Pharmaceuticals,0.5,1,low confidence,CRO Eurofins Optimed with sponsor Perha Pharmaceuticals,mint,claude-sonnet-5
 Eurofins Optimed / Synendos Therapeutics AG,Synendos Therapeutics,0.5,1,low confidence,CRO Eurofins Optimed with sponsor Synendos Therapeutics,mint,claude-sonnet-5
 F.Schreuder,F.Schreuder,0.5,1,low confidence,,mint,claude-sonnet-5
-FUNDACION DE INVESTIGACION EN RED EN ENFERMEDADES,Fundación de Investigación en Red en Enfermedades,0.5,1,low confidence,,mint,claude-opus-5
 Fertilitetsklinikken,Fertilitetsklinikken,0.5,1,low confidence,,mint,claude-sonnet-5
 Foot and Ankle Surgical center,Foot and Ankle Surgical Center,0.5,1,low confidence,,mint,claude-sonnet-5
 Foundation Clinic For Biomedical Research,Foundation Clinic For Biomedical Research,0.5,1,low confidence,,mint,claude-sonnet-5
@@ -735,12 +736,9 @@ DIPARTIMENTO DI SCIENZE CLINICHE E BIOLOGICHE UNITO,Universita di Torino,0.55,1,
 Farmak International Holding GmbH,Farmak,0.55,1,low confidence,"Both share 'Farmak' name, likely related entities of same pharmaceutical group though legal structure differs.",mint,claude-sonnet-5
 Farmak JSC,Farmak,0.55,1,low confidence,"Both share 'Farmak' name, likely related entities of same pharmaceutical group though legal structure differs.",mint,claude-sonnet-5
 IIT : University Hospital - Medical Clinic II Director: Prof. Dr. med. J. Floege - Sponsor,Universitätsklinikum Aachen,0.55,1,low confidence,"University Hospital Medical Clinic II under Prof. Floege, likely Aachen",mint,claude-sonnet-5
-Landsptali Hsklasjkrahs,Landspitali,0.55,1,low confidence,"Garbled text likely refers to Landspitali, Iceland's national university hospital.",mint,claude-sonnet-5
 A.I.E.O.P.,A.I.E.O.P.,0.6,1,low confidence,"Associazione Italiana Ematologia Oncologia Pediatrica, an Italian pediatric hemato-oncology cooperative group",mint,claude-sonnet-5
 ACADEMIC MEDICAL CENTER,Academic Medical Center,0.6,1,low confidence,,mint,claude-sonnet-5
 ACHG-K.U.Leuven,KU Leuven,0.6,1,low confidence,,mint,claude-sonnet-5
-ACS Biomarker,ACS Biomarker,0.6,1,low confidence,,mint,claude-sonnet-5
-AL-S Pharma AG,AL-S Pharma,0.6,1,low confidence,,mint,claude-sonnet-5
 ALIO MEDICA Sp. z o.o.,ALIO MEDICA,0.6,1,low confidence,,mint,claude-sonnet-5
 ALLEGRIA onlus,ALLEGRIA onlus,0.6,1,low confidence,"Single string, appears to be an Italian nonprofit organisation (onlus).",mint,claude-sonnet-5
 ANGELA PUENTE,Angela Puente,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -904,7 +902,6 @@ Dept. of Growth and Reproduction,Dept. of Growth and Reproduction,0.6,1,low conf
 Dept. of Rhematology UMAS,Universitetssjukhuset MAS,0.6,1,low confidence,"Department of Rheumatology at UMAS (Universitetssjukhuset MAS, Malmo University Hospital) resolves to its parent hospital.",mint,claude-sonnet-5
 Derby Hospitals NHS Foundation Trust / The University of Nottingham-Research innovation services,Derby Hospitals NHS Foundation Trust,0.6,1,low confidence,Joint sponsorship strings; assigned to Derby trust,mint,claude-opus-5
 DermaGen AB,DermaGen,0.6,1,low confidence,,mint,claude-sonnet-5
-Dermatology Specialities Limited Partnership DSLP,Dermatology Specialities Limited Partnership,0.6,1,low confidence,,mint,claude-sonnet-5
 Dextra fertility clinic / Annika Tulenheimo-Silfvast,Dextra fertility clinic,0.6,1,low confidence,"Fertility clinic named with a physician, clinic treated as institution",mint,claude-sonnet-5
 Diabetes-Centre Quakenbrueck,Diabetes-Centre Quakenbrueck,0.6,1,low confidence,"Single sponsor string, likely a diabetes clinic/center in Quakenbrück treated as its own institution.",mint,claude-sonnet-5
 Diagnostic Centre of Pcs,Diagnostic Centre of Pcs,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -940,12 +937,10 @@ Draig Therapeutics Limited,Draig Therapeutics,0.6,1,low confidence,,mint,claude-
 Dryox Health S.L. / Dryox Health S.L.,Dryox Health,0.6,1,low confidence,,mint,claude-sonnet-5
 DuPont Nutrition and Health Active Nutrition,DuPont Nutrition and Health Active Nutrition,0.6,1,low confidence,,mint,claude-sonnet-5
 EBMT - CLWP,European Society for Blood and Marrow Transplantation,0.6,1,low confidence,EBMT Chronic Leukaemia Working Party,mint,claude-sonnet-5
-EBMT / Gentium S.p.A.,Gentium,0.6,1,low confidence,Joint listing of EBMT (cooperative group) and Gentium S.p.A. (industry); Gentium taken as primary sponsor entity.,mint,claude-sonnet-5
 ECRI,ECRI,0.6,1,low confidence,"Same acronym, likely same organization with a study code suffix",mint,claude-sonnet-5
 ECRI-9,ECRI,0.6,1,low confidence,"Same acronym, likely same organization with a study code suffix",mint,claude-sonnet-5
 ECUPHARMA  S.R.L.,Ecupharma,0.6,1,low confidence,,mint,claude-sonnet-5
 EM-kliniken,EM-kliniken,0.6,1,low confidence,,mint,claude-sonnet-5
-EMET Pharmaceuticals LLC,EMET Pharmaceuticals,0.6,1,low confidence,,mint,claude-sonnet-5
 ERREKAPPA EUROTERAPICI,Errekappa Euroterapici,0.6,1,low confidence,,mint,claude-sonnet-5
 Eduardo Garca Daz,Eduardo García Díaz,0.6,1,low confidence,,mint,claude-sonnet-5
 Edvince AB,Edvince AB,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -969,7 +964,7 @@ FAST Consortium under EU 7. FWP,FAST Consortium,0.6,1,low confidence,,mint,claud
 FAST-consortium,FAST Consortium,0.6,1,low confidence,,mint,claude-sonnet-5
 FISM ONLUS,FISM ONLUS,0.6,1,low confidence,"Single unverified sponsor string, likely an Italian nonprofit (ONLUS) organisation.",mint,claude-sonnet-5
 FO.NE.SA.Onlus,FO.NE.SA.Onlus,0.6,1,low confidence,,mint,claude-sonnet-5
-FONDAZIONE SENDO,Southern Europe New Drug Organization SENDO,0.6,1,low confidence,,mint,claude-sonnet-5
+FONDAZIONE CHARTA,Fondazione Charta,0.6,1,low confidence,,mint,claude-sonnet-5
 FORIM GmbH,FORIM,0.6,1,low confidence,,mint,claude-sonnet-5
 FRED HUTCHINSON CANCER RESEARCH CENTER UNIVERSITY OF WASHINGTON SCHOOL OF MEDICINE SEATTLE CHILDREN,Fred Hutchinson Cancer Research Center,0.6,1,low confidence,Multi-institution string led by Fred Hutchinson,mint,claude-opus-5
 FUNDATION OF EXPERIMENTAL AND CLINICAL ONCOLOGY,Fundation of Experimental and Clinical Oncology,0.6,1,low confidence,,mint,claude-opus-5
@@ -992,7 +987,6 @@ Fundacin Retinaplus +,Fundacion Retinaplus+,0.6,1,low confidence,,mint,claude-so
 GALSOR S.R.L.,Galsor,0.6,1,low confidence,,mint,claude-sonnet-5
 GCS Ramsay Sante Enseignement Et Recherche,Groupement de Cooperation Sanitaire Ramsay Sante pour l'Enseignement et la Recherche,0.6,1,low confidence,,mint,claude-sonnet-5
 GEDII - Grupo de Estudo da Doena inflamatria Intestinal,GEDII - Grupo de Estudo da Doença Inflamatória Intestinal,0.6,1,low confidence,"Portuguese IBD study group, appears to be a medical research network",mint,claude-sonnet-5
-GEIS,Grupo Español de Investigación en Sarcomas (GEIS),0.6,1,low confidence,GEIS is a Spanish sarcoma research cooperative group acronym commonly used as trial sponsor,mint,claude-sonnet-5
 GERENCIA DE ATENCIN PRIMARIA,Gerencia de Atención Primaria de Mallorca,0.6,1,low confidence,"Both refer to a primary care management body; likely the same Mallorca entity, though string 1 is generic.",mint,claude-sonnet-5
 "GGZ inGeest, parner VUmc",GGZ inGeest,0.6,1,low confidence,Partner organization distinct from VUmc,mint,claude-sonnet-5
 GIDO Grup dinvestigaci i divulgaci en oncologia,Grup d'Investigació i Divulgació en Oncologia,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1048,7 +1042,6 @@ Hospital Clnic-Maternitat,Hospital Clínic de Barcelona,0.6,1,low confidence,,mi
 Hospital Errikos Dunant- Department of Hematology,Errikos Dynan Hospital,0.6,1,low confidence,Department resolves to parent hospital.,mint,claude-sonnet-5
 Hospital Plat,Hospital Plató,0.6,1,low confidence,"Single entry, likely Hospital Plató, Barcelona, name accents stripped.",mint,claude-sonnet-5
 Hospital Regional Universitario. IBIMA,Hospital Regional Universitario. IBIMA,0.6,1,low confidence,Single sponsor string referring to a regional university hospital associated with IBIMA research institute.,mint,claude-sonnet-5
-Hospital Universitario Tajo,Hospital Universitario de Getafe,0.6,1,low confidence,,mint,claude-sonnet-5
 Hospital for Sick Children,Hospital for Sick Children,0.6,1,low confidence,"Likely referring to Toronto's Hospital for Sick Children, distinct from Glasgow",mint,claude-sonnet-5
 Hyks,Helsinki University Hospital,0.6,1,low confidence,"HYKS Naistensairaala is the women's hospital department of Helsinki University Central Hospital (HYKS), and 'Hyks' alone likely refers to the same parent institution.",mint,claude-sonnet-5
 Hyks Silmtautien klinikka,HYKS Silmätautien klinikka,0.6,1,low confidence,"Eye clinic department of Helsinki University Hospital (HYKS), resolved to parent institution.",mint,claude-sonnet-5
@@ -1128,7 +1121,6 @@ Klaipeda hospital,Klaipeda hospital,0.6,1,low confidence,"Single hospital sponso
 Klinikum der Universitt,Klinikum der Universität München,0.6,1,low confidence,"Accent-stripped 'Klinikum der Universitt' likely refers to a university hospital, most plausibly Klinikum der Universität München; exact affiliation uncertain.",mint,claude-sonnet-5
 "Klinisk Farmakologisk Center og Med. Afd. M, rhus Sygehus, NBG",Aarhus Sygehus,0.6,1,low confidence,Department resolves to Aarhus Sygehus (Aarhus Hospital),mint,claude-sonnet-5
 Koagulationscentrum UMAS,Koagulationscentrum UMAS,0.6,1,low confidence,Coagulation center likely part of Malmo University Hospital (UMAS),mint,claude-sonnet-5
-Kompetenznetz TDM-KJP e.V.,Kompetenznetz TDM-KJP e.V.,0.6,1,low confidence,,mint,claude-sonnet-5
 Konvent Der Barmherzigen Brueder,Konvent der Barmherzigen Brueder,0.6,1,low confidence,,mint,claude-sonnet-5
 Kupando GmbH,Kupando,0.6,1,low confidence,,mint,claude-sonnet-5
 Kurort Forschungsverein Bad Steben e.V.,Kurort Forschungsverein Bad Steben e.V.,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1159,7 +1151,6 @@ M2rlab S.L.,M2rlab,0.6,1,low confidence,,mint,claude-sonnet-5
 "MAGGOT 2006 Egszsggyi, Kereskedelmi s Szolgltat Ltd.","MAGGOT 2006 Egeszsegugyi, Kereskedelmi es Szolgaltato Ltd.",0.6,1,low confidence,,mint,claude-sonnet-5
 MANUEL NGEL GMEZ ROS,Manuel Ángel Gómez Ríos,0.6,1,low confidence,,mint,claude-sonnet-5
 MAPREG,MAPREG,0.6,1,low confidence,"Single sponsor string, appears to be a company (MAPREG).",mint,claude-sonnet-5
-MARIANO ARTES CASELLES,Mariano Artes Caselles,0.6,1,low confidence,,mint,claude-sonnet-5
 "MDVI, LLC",MDVI,0.6,1,low confidence,,mint,claude-sonnet-5
 MEDESTEA RESEARCH  PRODUCTION,Medestea Research & Production,0.6,1,low confidence,,mint,claude-sonnet-5
 MEGAINPHARM GmbH,Megapharm,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1243,12 +1234,10 @@ PROMO INTERNATIONAL SRL,PROMO International,0.6,1,low confidence,,mint,claude-so
 Panin S.r.l.,Panin,0.6,1,low confidence,,mint,claude-sonnet-5
 Pannon Reprodukcis Intzet B.1.2,Pannon Reprodukciós Intézet,0.6,1,low confidence,,mint,claude-sonnet-5
 ParaTech A/S,ParaTech,0.6,1,low confidence,,mint,claude-sonnet-5
-Parc Tauli Hospital Universitari,Parc Tauli Hospital Universitari,0.6,1,low confidence,"Hospital entity, distinct legal entity from foundation",mint,claude-sonnet-5
 Parker Instituttet,Parker Institute,0.6,1,low confidence,,mint,claude-sonnet-5
 ParnassiaBavoGroup,ParnassiaBavoGroup,0.6,1,low confidence,"Single sponsor string, a Dutch mental healthcare group",mint,claude-sonnet-5
 Per Honore,Per Honore,0.6,1,low confidence,,mint,claude-sonnet-5
 Per Lgstrup Poulsen,Per Løgstrup Poulsen,0.6,1,low confidence,"Personal name, no institution given",mint,claude-sonnet-5
-Per Lindner,Per Lindner,0.6,1,low confidence,,mint,claude-sonnet-5
 PerioC Ltd,PerioC,0.6,1,low confidence,,mint,claude-sonnet-5
 Phafag AG,Phafag,0.6,1,low confidence,,mint,claude-sonnet-5
 Pharma 2100 ApS,Pharma 2100,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1312,8 +1301,6 @@ Rophibio Inc.,Rophibio,0.6,1,low confidence,,mint,claude-sonnet-5
 Rosario Garca de Vicua,Rosario García de Vicuña,0.6,1,low confidence,,mint,claude-sonnet-5
 Rose Pharma Inc.,Rose Pharma,0.6,1,low confidence,,mint,claude-sonnet-5
 Rune Rasmussen,Rune Rasmussen,0.6,1,low confidence,Appears to be a personal name with no institutional affiliation given.,mint,claude-sonnet-5
-SCIPHARM SRL,Scipharm,0.6,1,low confidence,,mint,claude-sonnet-5
-SENDO TECH,Sendo Tech,0.6,1,low confidence,,mint,claude-sonnet-5
 SIMIT sezione Regione Lombardia,SIMIT sezione Regione Lombardia,0.6,1,low confidence,,mint,claude-sonnet-5
 SPARKLE SRL,Sparkle,0.6,1,low confidence,,mint,claude-sonnet-5
 STELIC INSTITUTE  CO.,Stelic Institute & Co.,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1402,13 +1389,11 @@ University Hospital Consorziale Policlinico / University Of Bari Aldo Moro,Polic
 University Hospital Vienna,University Hospital Vienna,0.6,1,low confidence,,mint,claude-sonnet-5
 University Hospital of North Staffordshire / Keele University,Keele University,0.6,1,low confidence,All entries include Keele University as joint or sole sponsor with varying NHS trust partners,mint,claude-sonnet-5
 "University of Liverpool lead sponsor, the trial is cosponsored / Royal Liverpool and Broadgreen University Hospital NHS Trust",University of Liverpool,0.6,1,low confidence,Lead sponsor listed with cosponsor hospital,mint,claude-sonnet-5
-VAS VASCULAR INDEPENDENT RESEACH AND EDUCATION EUROPEAN ORGANIZATION. C/O UNIV MILANO. OSP. L. SACCO,VAS - Vascular Independent Research and Education European Organization,0.6,1,low confidence,,mint,claude-sonnet-5
 Valeant Research  Development,Valeant Research & Development,0.6,1,low confidence,,mint,claude-sonnet-5
 Valletta Health BV,Valletta Health,0.6,1,low confidence,,mint,claude-sonnet-5
 Vandria S.A.,Vandria,0.6,1,low confidence,,mint,claude-sonnet-5
 Var2 Pharmaceuticals ApS,Var2 Pharmaceuticals,0.6,1,low confidence,,mint,claude-sonnet-5
 Vastra Gotalandsregionen / University Of Gothenburg,Vastra Gotalandsregionen / University of Gothenburg,0.6,1,low confidence,"Joint sponsorship of region and university, distinct from region alone",mint,claude-sonnet-5
-Verein Zur Praevention Und Therapie Boesartiger Erkrankungen Austrian Breast And Colorectal Cancer Study Group / Institut Catala D'oncologia / ANZ Breast Cancer Trials Group Limited / University Of Manchester / Alliance Foundation Trials LLC / Shaare Zedek Medical Center,Austrian Breast & Colorectal Cancer Study Group,0.6,1,low confidence,Multi-party collaboration string; first-listed lead used as canonical,mint,claude-opus-5
 Verein zur Frderung der Wissenschaft und Forschung an der 1. Med. Abteilung der Klinik Landstrae,Verein zur Förderung der Wissenschaft und Forschung an der 1. Med. Abteilung der Klinik Landstraße,0.6,1,low confidence,,mint,claude-sonnet-5
 Vicente Soriano-Hospital Carlos III. Madrid,Vicente Soriano,0.6,1,low confidence,,mint,claude-sonnet-5
 Videja B.V.,Videja,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1418,7 +1403,6 @@ Voyager Pharmaceutical Corporation,Voyager Pharmaceutical Corporation,0.6,1,low 
 Vstra Gtalands Center fr utveckling av prehospital akutsjukvrd,Västra Götaland Center för utveckling av prehospital akutsjukvård,0.6,1,low confidence,"Single occurrence, appears to be a regional Swedish public body for prehospital emergency care development",mint,claude-sonnet-5
 Walter Fischer,Walter Fischer,0.6,1,low confidence,Appears to be a person's name with no institutional context,mint,claude-sonnet-5
 West Yorkshire Primary Care RD Unit,West Yorkshire Primary Care Research and Development Unit,0.6,1,low confidence,,mint,claude-sonnet-5
-Winicker-Norimed Medizinische Forschung GmbH / Klinikum Nuernberg,Winicker-Norimed Medizinische Forschung,0.6,1,low confidence,,mint,claude-sonnet-5
 XCell-Center GmbH,XCell-Center,0.6,1,low confidence,,mint,claude-sonnet-5
 Xavier Pint Sala,Xavier Pinto Sala,0.6,1,low confidence,"Appears to be a person's name (possibly Dr. Xavier Pinto Sala), not an organisation.",mint,claude-sonnet-5
 Xyra LLC,Xyra,0.6,1,low confidence,,mint,claude-sonnet-5
@@ -1442,7 +1426,6 @@ M Carmen Farias lvarez. Hospital Universitario Marques de Valdecilla,Instituto d
 Michael Patrick Achiam,Michael Patrick Achiam,0.65,1,low confidence,"Likely same person, differing name completeness",mint,claude-sonnet-5
 Oral and Maxillofacial Surgery Department of Vall dHebron Hospital,Hospital Universitari Vall d'Hebron,0.65,1,low confidence,,mint,claude-sonnet-5
 "Synthetic Biologics, Inc.",Theriva Biologics,0.65,1,low confidence,Synthetic Biologics renamed Theriva Biologics,mint,claude-opus-5
-Theriva Biologics S.L.,Theriva Biologics,0.65,1,low confidence,Synthetic Biologics renamed Theriva Biologics,mint,claude-opus-5
 "3.Med. Department, Academic Hospital Bogenhausen",Akademisches Krankenhaus Munchen-Bogenhausen,0.7,1,low confidence,Department resolves to parent hospital,mint,claude-sonnet-5
 A.S.L. 2 SAVONA,A.S.L. 2 Savona,0.7,1,low confidence,,mint,claude-sonnet-5
 A.T. Development Switzerland SARL,A.T. Development Switzerland,0.7,1,low confidence,,mint,claude-opus-5
@@ -1537,7 +1520,6 @@ Belgian Study Group for Pediatric Endocrinology,Belgian Study Group for Pediatri
 Bent Gymoese Jrgensen,Bent Gymoese Jorgensen,0.7,1,low confidence,"Single string represents a named individual, not an institution.",mint,claude-sonnet-5
 Bernhoven,Bernhoven,0.7,1,low confidence,,mint,claude-sonnet-5
 Bertek Pharmaceuticals International Limited,Bertek Pharmaceuticals,0.7,1,low confidence,,mint,claude-sonnet-5
-Biocon S.A.,Biocon,0.7,1,low confidence,,mint,claude-sonnet-5
 Biocon Sdn. Bhd.,Biocon,0.7,1,low confidence,,mint,claude-sonnet-5
 Bioforce GmbH,Bioforce,0.7,1,low confidence,,mint,claude-sonnet-5
 Biogencell Ltd.,Biogencell,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1585,7 +1567,6 @@ CimCure B.V.,CimCure,0.7,1,low confidence,,mint,claude-sonnet-5
 Clinica Palacios Madrid S.L.,Instituto Palacios,0.7,1,low confidence,,mint,claude-sonnet-5
 Clinical Trials and Research Governance CTRG,Clinical Trials and Research Governance,0.7,1,low confidence,,mint,claude-sonnet-5
 Codadose Inc.,Codadose,0.7,1,low confidence,,mint,claude-sonnet-5
-"Collaborative group for Adrenocortical Carcinoma Therapy COAT / University of Wrzburg, Internat. study-Coordinator",Julius-Maximilians-Universität Würzburg,0.7,1,low confidence,"University-affiliated, distinct from the hospital",mint,claude-sonnet-5
 Colotech A/S,Colotech,0.7,1,low confidence,,mint,claude-sonnet-5
 "Copenhagen Affective Disorder research Center CADIC,",Copenhagen Affective Disorder Research Center,0.7,1,low confidence,"Single research center string, no further disambiguation available",mint,claude-sonnet-5
 Cristina Peris Martnez,Cristina Peris Martinez,0.7,1,low confidence,"Single person name, no institution mentioned.",mint,claude-sonnet-5
@@ -1596,7 +1577,6 @@ D2 Derma Europe Ltd.,D2 Derma Europe,0.7,1,low confidence,,mint,claude-sonnet-5
 DAMIAN Pharma AG,Damian Pharma,0.7,1,low confidence,,mint,claude-sonnet-5
 DOMPE BIOTEC,Dompé Biotec,0.7,1,low confidence,,mint,claude-sonnet-5
 DR. ALEJANDRO SOUSA ESCANDN,Alejandro Sousa Escandón,0.7,1,low confidence,Single named individual sponsor,mint,claude-sonnet-5
-DRCI APHP,Assistance Publique - Hôpitaux de Paris,0.7,1,low confidence,,mint,claude-sonnet-5
 DRK-Blutspendedienst NSTOB,DRK-Blutspendedienst NSTOB,0.7,1,low confidence,"German Red Cross Blood Donation Service Lower Saxony-Saxony-Anhalt-Hamburg-Bremen (NSTOB), a charitable blood transfusion service.",mint,claude-sonnet-5
 Danish Breast Cancer Group BDCG,Danish Breast Cancer Group,0.7,1,low confidence,Danish breast cancer trial cooperative group,mint,claude-sonnet-5
 Danish University Antidepressant Group DUAG,Danish University Antidepressant Group,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1651,11 +1631,9 @@ Enobia Canada Limited Partnership,Enobia Canada Limited Partnership,0.7,1,low co
 Enrique Brez Hernandez,Enrique Perez Hernandez,0.7,1,low confidence,,mint,claude-sonnet-5
 EnteroTarget ApS,EnteroTarget,0.7,1,low confidence,,mint,claude-sonnet-5
 European Institute for Cystic Fibrosis Research IERFC,European Institute for Cystic Fibrosis Research,0.7,1,low confidence,,mint,claude-sonnet-5
-"European LeukemiaNet, Ruprecht-Karls-Universitt Heidelberg",European LeukemiaNet,0.7,1,low confidence,Research network,mint,claude-opus-5
 Everimmune,Everimmune,0.7,1,low confidence,,mint,claude-sonnet-5
 "Exxentia Grupo Fitoteraputico, S.A",Exxentia Grupo Fitoterapéutico,0.7,1,low confidence,,mint,claude-sonnet-5
 FERNADO PEREZ RUIZ,Fernando Perez Ruiz,0.7,1,low confidence,"Single person name, no institution given",mint,claude-sonnet-5
-FIB-HCSC / WHO World Health Organization,World Health Organization,0.7,1,low confidence,Both reference WHO; second string includes FIB-HCSC collaboration but WHO is the identifiable organization,mint,claude-sonnet-5
 FISABIO,FISABIO,0.7,1,low confidence,Both reference FISABIO foundation,mint,claude-sonnet-5
 "FONDAZIONE G. DANNUNZIO, CHIETI",Fondazione G. d'Annunzio,0.7,1,low confidence,,mint,claude-sonnet-5
 FRANCISCO J. BLANCO GARCA,Francisco J. Blanco Garcia,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1741,10 +1719,10 @@ Hospital of Goethe-Universitiy,Goethe-Universität Frankfurt,0.7,1,low confidenc
 Hvidore Hospital,Hvidovre Hospital,0.7,1,low confidence,,mint,claude-sonnet-5
 I.N.M. NEUROMED I.R.C.C.S. S.R.L. GIA SANATRIX,IRCCS Neuromed,0.7,1,low confidence,,mint,claude-sonnet-5
 IGI Therapeutics S.A.,IGI Therapeutics,0.7,1,low confidence,,mint,claude-sonnet-5
+INNOVIVE Pharmaceuticals,Innovive Pharmaceuticals,0.7,1,low confidence,,mint,claude-sonnet-5
 "INSTITUTO VALENCIANO DE INFERTILIDADE - CLNICA DE REPRODUO ASSISTIDA, LDA",Instituto Valenciano de Infertilidad,0.7,1,low confidence,,mint,claude-sonnet-5
 IPOLFG,Instituto Portugues de Oncologia de Lisboa Francisco Gentil,0.7,1,low confidence,,mint,claude-sonnet-5
 ITM Oncologics GmbH,ITM Oncologics,0.7,1,low confidence,,mint,claude-sonnet-5
-IUCPQ,Institut universitaire de cardiologie et de pneumologie de Québec,0.7,1,low confidence,,mint,claude-sonnet-5
 IVIRMA MADRID,IVIRMA Madrid,0.7,1,low confidence,,mint,claude-sonnet-5
 Ibermutuamur Mutua Colaboradora con la Seguridad Social n 274,Ibermutuamur,0.7,1,low confidence,,mint,claude-sonnet-5
 Iecure Inc.,iEcure,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1804,7 +1782,6 @@ LYOCENTRE,Lyocentre,0.7,1,low confidence,,mint,claude-sonnet-5
 Laboratoire BAILLY-CREAT,Laboratoire Bailly-Creat,0.7,1,low confidence,,mint,claude-sonnet-5
 Laboratoires BIORGA,Laboratoires BIORGA,0.7,1,low confidence,,mint,claude-sonnet-5
 Laboratoires Leurquin Mediolanum S.A.S.,Mediolanum Farmaceutici,0.7,1,low confidence,,mint,claude-sonnet-5
-Laboratorios Andrmaco S.A.,Laboratorios Andromaco,0.7,1,low confidence,,mint,claude-sonnet-5
 Laboratorios Novag S.A.,Novag,0.7,1,low confidence,"Both refer to Novag S.A., with the second indicating its association with Ferrer Grupo.",mint,claude-sonnet-5
 "Laboratorios Rubi, S.A.",Laboratorios Rubio,0.7,1,low confidence,,mint,claude-sonnet-5
 Lamina Therapeutics,Lamina Therapeutics,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1839,7 +1816,6 @@ Maria Nabal Vicua Paliative Care Supportive Team-Hospital Universitari Arnau de 
 Marvel Life Sciences Limited,Marvel Life Sciences,0.7,1,low confidence,,mint,claude-sonnet-5
 Mater Misercordiae Hospital - Department of Anaesthesia,Mater Misericordiae University Hospital,0.7,1,low confidence,Department of Anaesthesia resolves to parent hospital,mint,claude-sonnet-5
 Mater Research Institute University of Queensland,Mater Research Institute,0.7,1,low confidence,,mint,claude-sonnet-5
-Matter Misericoridiae University Hospital. Dubln,Mater Misericordiae University Hospital,0.7,1,low confidence,"Single sponsor string, likely misspelled 'Mater Misericordiae University Hospital, Dublin'",mint,claude-sonnet-5
 MedaPharma,Meda,0.7,1,low confidence,,mint,claude-sonnet-5
 Medical Institutions of the District Oberpfalz/Bayern MedBO GmbH,Medical Institutions of the District Oberpfalz/Bayern MedBO GmbH,0.7,1,low confidence,,mint,claude-sonnet-5
 "Medical Research Laboratory, Clinical institute of Medicine, Aarhus University Hospital",Aarhus Universitetshospital,0.7,1,low confidence,Department resolves to parent hospital,mint,claude-sonnet-5
@@ -1924,7 +1900,6 @@ Ortopdkirurgisk Afdeling rhus Universitetshospital,Aarhus Universitetshospital,0
 Ortopdkirurgisk afdeling Odense Universitetshospital,Odense Universitetshospital,0.7,1,low confidence,Department resolves to parent hospital,mint,claude-sonnet-5
 Orygen Research Centre,Orygen Research Centre,0.7,1,low confidence,,mint,claude-sonnet-5
 Oscient Pharmaceuticals,Oscient Pharmaceuticals,0.7,1,low confidence,,mint,claude-sonnet-5
-Our Ladys Hospital for Sick Children,Our Ladys Hospital for Sick Children,0.7,1,low confidence,"Dublin hospital, distinct entity",mint,claude-sonnet-5
 Ouro Medicines Limited,Ouro Medicines,0.7,1,low confidence,,mint,claude-sonnet-5
 P Pierre Dellamonica,Pierre Dellamonica,0.7,1,low confidence,"Named person, no institution given",mint,claude-sonnet-5
 PALUPA Medical Ltd,PALUPA Medical,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -1996,7 +1971,6 @@ Santeon,Santeon,0.7,1,low confidence,"Single string, Dutch hospital network",min
 Sara Rafael Fernndez,Sara Rafael Fernández,0.7,1,low confidence,,mint,claude-sonnet-5
 Saving Patients Lives Medical B.V.,Saving Patients Lives Medical,0.7,1,low confidence,,mint,claude-sonnet-5
 "Schering Corporation, a Subsidiary of Merck  Co., Inc.",Schering-Plough,0.7,1,low confidence,acquired entity trading under own name,mint,claude-opus-5
-Schering Nordiska AB,Schering,0.7,1,low confidence,,mint,claude-sonnet-5
 Schriners Hospitals for Children,Shriners Hospitals for Children,0.7,1,low confidence,Likely misspelling of Shriners Hospitals for Children,mint,claude-sonnet-5
 Sdertlje sjukhus AB,Södertälje sjukhus,0.7,1,low confidence,,mint,claude-sonnet-5
 Seksjon for odontologisk farmakologi og farmakoterapi. UiO,University of Oslo,0.7,1,low confidence,,mint,claude-sonnet-5
@@ -2011,7 +1985,6 @@ Socit Franaise de Cardiologie,Societe Francaise de Cardiologie,0.7,1,low confide
 Sofamor - Danek,Sofamor Danek,0.7,1,low confidence,Sofamor Danek was a spinal implant company later acquired by Medtronic.,mint,claude-sonnet-5
 Sophiahemmet,Sophiahemmet,0.7,1,low confidence,,mint,claude-sonnet-5
 Southend Hospital,Southend Hospital,0.7,1,low confidence,,mint,claude-sonnet-5
-Southern Europe New Drug Organization SENDO,Southern Europe New Drug Organization SENDO,0.7,1,low confidence,,mint,claude-sonnet-5
 Spanish Lung Cancer Group,Spanish Lung Cancer Group,0.7,1,low confidence,,mint,claude-sonnet-5
 Specialisttandvrdskliniken Vstmanlands sjukhus Vsters,Vastmanlands sjukhus Vasteras,0.7,1,low confidence,"Both strings reference departments/units of Vastmanlands hospital Vasteras, which resolves to the parent hospital.",mint,claude-sonnet-5
 Srlandet Hospital,Sørlandet Sykehus,0.7,1,low confidence,"Likely OCR/encoding-stripped 'Sørlandet Hospital', a Norwegian hospital trust.",mint,claude-sonnet-5
@@ -2111,7 +2084,6 @@ Wolfson Medical Center,Wolfson Medical Center,0.7,1,low confidence,,mint,claude-
 Xytis Pharmaceuticals Srl,Xytis Pharmaceuticals,0.7,1,low confidence,,mint,claude-sonnet-5
 ZIONEXA,Zionexa,0.7,1,low confidence,,mint,claude-sonnet-5
 Zentralklinikum St. Plten,Universitätsklinikum St. Pölten,0.7,1,low confidence,Zentralklinikum St. Pölten was renamed Universitätsklinikum St. Pölten; likely same institution.,mint,claude-sonnet-5
-Zevra Denmark A/S,Zevra Denmark,0.7,1,low confidence,,mint,claude-sonnet-5
 Ziekenhuisapotheek Meppel-Hoogeveen,Ziekenhuisapotheek Meppel-Hoogeveen,0.7,1,low confidence,,mint,claude-sonnet-5
 Zomagen Biosciences Limited,Zomagen Biosciences,0.7,1,low confidence,,mint,claude-sonnet-5
 department of experimental and clinical medicine F. Magrassi,Università degli Studi della Campania Luigi Vanvitelli,0.7,1,low confidence,Naples department,mint,claude-opus-5
@@ -2129,3 +2101,29 @@ selectION Therapeutics GmbH / selectION Therapeutics GmbH,selectION Therapeutics
 stfold Hospital Trust,Ostfold Hospital Trust,0.7,1,low confidence,"Single hospital trust entity, likely 'Østfold Hospital Trust' with accented character deleted.",mint,claude-sonnet-5
 "Privatrztliche urologische Partnerschaft GbR, EuromedClinic",Privatärztliche Urologische Partnerschaft,0.72,1,low confidence,Both refer to the same urological partnership practice,mint,claude-opus-5
 Urologische Partnerschaft,Privatärztliche Urologische Partnerschaft,0.72,1,low confidence,Both refer to the same urological partnership practice,mint,claude-opus-5
+"University Hospital, Dept of Oncology, clinical trial unit",University Hospital,0.3,,low confidence,Too vague to identify specific institution.,mint,claude-sonnet-5
+Vasculitis Clinical Trial Office,Vasculitis Clinical Trial Office,0.4,,low confidence,,mint,claude-opus-5
+FUNDACION DE INVESTIGACION EN RED EN ENFERMEDADES,Fundación de Investigación en Red en Enfermedades,0.5,,low confidence,,mint,claude-opus-5
+ACS Biomarker,ACS Biomarker,0.6,,low confidence,,mint,claude-sonnet-5
+AL-S Pharma AG,AL-S Pharma,0.6,,low confidence,,mint,claude-sonnet-5
+Dermatology Specialities Limited Partnership DSLP,Dermatology Specialities Limited Partnership,0.6,,low confidence,,mint,claude-sonnet-5
+EBMT / Gentium S.p.A.,Gentium,0.6,,low confidence,Joint listing of EBMT (cooperative group) and Gentium S.p.A. (industry); Gentium taken as primary sponsor entity.,mint,claude-sonnet-5
+EMET Pharmaceuticals LLC,EMET Pharmaceuticals,0.6,,low confidence,,mint,claude-sonnet-5
+Hospital Universitario Tajo,Hospital Universitario de Getafe,0.6,,low confidence,,mint,claude-sonnet-5
+Kompetenznetz TDM-KJP e.V.,Kompetenznetz TDM-KJP e.V.,0.6,,low confidence,,mint,claude-sonnet-5
+MARIANO ARTES CASELLES,Mariano Artes Caselles,0.6,,low confidence,,mint,claude-sonnet-5
+Parc Tauli Hospital Universitari,Parc Tauli Hospital Universitari,0.6,,low confidence,"Hospital entity, distinct legal entity from foundation",mint,claude-sonnet-5
+Per Lindner,Per Lindner,0.6,,low confidence,,mint,claude-sonnet-5
+SCIPHARM SRL,Scipharm,0.6,,low confidence,,mint,claude-sonnet-5
+VAS VASCULAR INDEPENDENT RESEACH AND EDUCATION EUROPEAN ORGANIZATION. C/O UNIV MILANO. OSP. L. SACCO,VAS - Vascular Independent Research and Education European Organization,0.6,,low confidence,,mint,claude-sonnet-5
+Verein Zur Praevention Und Therapie Boesartiger Erkrankungen Austrian Breast And Colorectal Cancer Study Group / Institut Catala D'oncologia / ANZ Breast Cancer Trials Group Limited / University Of Manchester / Alliance Foundation Trials LLC / Shaare Zedek Medical Center,Austrian Breast & Colorectal Cancer Study Group,0.6,,low confidence,Multi-party collaboration string; first-listed lead used as canonical,mint,claude-opus-5
+Winicker-Norimed Medizinische Forschung GmbH / Klinikum Nuernberg,Winicker-Norimed Medizinische Forschung,0.6,,low confidence,,mint,claude-sonnet-5
+Theriva Biologics S.L.,Theriva Biologics,0.65,,low confidence,Synthetic Biologics renamed Theriva Biologics,mint,claude-opus-5
+Biocon S.A.,Biocon,0.7,,low confidence,,mint,claude-sonnet-5
+"Collaborative group for Adrenocortical Carcinoma Therapy COAT / University of Wrzburg, Internat. study-Coordinator",Julius-Maximilians-Universität Würzburg,0.7,,low confidence,"University-affiliated, distinct from the hospital",mint,claude-sonnet-5
+"European LeukemiaNet, Ruprecht-Karls-Universitt Heidelberg",European LeukemiaNet,0.7,,low confidence,Research network,mint,claude-opus-5
+FIB-HCSC / WHO World Health Organization,World Health Organization,0.7,,low confidence,Both reference WHO; second string includes FIB-HCSC collaboration but WHO is the identifiable organization,mint,claude-sonnet-5
+Laboratorios Andrmaco S.A.,Laboratorios Andromaco,0.7,,low confidence,,mint,claude-sonnet-5
+Matter Misericoridiae University Hospital. Dubln,Mater Misericordiae University Hospital,0.7,,low confidence,"Single sponsor string, likely misspelled 'Mater Misericordiae University Hospital, Dublin'",mint,claude-sonnet-5
+Southern Europe New Drug Organization SENDO,Southern Europe New Drug Organization SENDO,0.7,,low confidence,,mint,claude-sonnet-5
+Zevra Denmark A/S,Zevra Denmark,0.7,,low confidence,,mint,claude-sonnet-5

@@ -453,7 +453,8 @@ llm_spend_record <- function(path, pass, batch_id, model_id,
 # something structural broke, so it wants a human rather than an unattended bill.
 # Refuses the whole run — never truncates, because a silently truncated work list
 # becomes a permanent backlog nobody notices.
-llm_run_cap_guard <- function(estimate_usd, cap_usd, pass) {
+llm_run_cap_guard <- function(estimate_usd, cap_usd, pass,
+                              cap_var = "SPONSOR_NIGHTLY_CAP_USD") {
   if (is.na(estimate_usd)) {
     stop("No cost estimate available — refusing to submit blind.", call. = FALSE)
   }
@@ -463,8 +464,8 @@ llm_run_cap_guard <- function(estimate_usd, cap_usd, pass) {
     stop(sprintf(
       paste0("Refusing: estimated $%.2f exceeds the $%.2f per-run ceiling.\n",
              "  This is a size guard, not a budget guard. Raise it deliberately\n",
-             "  with SPONSOR_NIGHTLY_CAP_USD, or run the backlog by hand."),
-      estimate_usd, cap_usd), call. = FALSE)
+             "  with %s, or run the backlog by hand."),
+      estimate_usd, cap_usd, cap_var), call. = FALSE)
   }
   invisible(TRUE)
 }

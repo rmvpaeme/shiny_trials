@@ -174,12 +174,24 @@ log_organ    <- read_log("organ_class")
 log_phase    <- read_log("phase")
 log_status_c <- read_log("status_category")
 log_status_d <- read_log("status_display")
-sub_log      <- read_log("substance")
+# Substance v2. The v1 matcher and its config (2_substance_alias_index.csv,
+# substance_llm_*.csv, 3_substance_review_queue.csv, the match_score /
+# match_source / match_reason columns) were retired with the rewrite.
+#
+# data/substance_normalisation_log.csv is deliberately NOT read: it still exists
+# on disk and its schema is close enough that a naive audit would render a
+# plausible page describing a pipeline that no longer produces the app's labels
+# — the same trap documented for sponsors above.
+sub_log      <- read_optional_csv(log_dir, "substance_normalisation_log_v2.csv")
 spon_labels  <- read_optional_csv(log_dir, "trial_sponsor_labels.csv")
 sub_labels   <- read_optional_csv(log_dir, "trial_substance_labels.csv")
 spon_raw     <- read_optional_csv(log_dir, "trial_sponsors_raw.csv")
 sub_raw      <- read_optional_csv(log_dir, "trial_substances_raw.csv")
-sub_queue    <- read_optional_csv(project_root, "config", "substance_norm_pipeline", "3_substance_review_queue.csv")
+sub_v2_dir   <- file.path(project_root, "config", "substance_norm_v2")
+sub_queue    <- read_optional_csv(sub_v2_dir, "E_review_queue.csv")
+sub_registry <- read_optional_csv(sub_v2_dir, "registry.csv")
+sub_assign   <- read_optional_csv(sub_v2_dir, "assignments.csv")
+sub_rejected <- read_optional_csv(log_dir, "substance_rejected.csv")
 
 # ── Sponsor normalisation v2 artefacts ────────────────────────────────────────
 # The deterministic matcher and its config (2_sponsor_alias_index.csv,
@@ -197,7 +209,6 @@ spon_blocks  <- read_optional_csv(log_dir, "sponsor_blocks.csv")
 spon_registry <- read_optional_csv(v2_dir, "registry.csv")
 spon_assign  <- read_optional_csv(v2_dir, "assignments.csv")
 spon_queue   <- read_optional_csv(v2_dir, "E_review_queue.csv")
-spon_spend   <- read_optional_csv(v2_dir, "llm_spend.csv")
 spon_ledger  <- read_optional_csv(project_root, "config", "review_ledger", "review_decisions.csv")
 
 waterfall_plot <- function(wf, title, subtitle = NULL) {
@@ -932,7 +943,7 @@ top of it is not the pipeline:
 The ledger is read on every app load and never enters `trials_cache.rds`, so a
 curator's decision is live on the next start without a cache rebuild.
 
-```{r sponsor-diagram, out.width="100%", fig.cap="Sponsor normalisation v2. Blue is deterministic and free, violet costs money, green is what the app reads."}
+```{r sponsor-diagram, out.width="100%", fig.cap="Sponsor normalisation v2. Blue is deterministic, violet is model-driven, green is what the app reads."}
 # Regenerate after editing the .dot:
 #   dot -Tpng -Gdpi=110 rmarkdown/sponsor_normalisation_pipeline.dot \
 #     -o rmarkdown/sponsor_normalisation_pipeline.png
@@ -985,9 +996,6 @@ spon_queue_rows  <- if (!is.null(spon_queue)) nrow(spon_queue) else NA_integer_
 spon_queue_trials <- if (!is.null(spon_queue) && "n_trials" %in% names(spon_queue)) {
   sum(spon_queue$n_trials, na.rm = TRUE)
 } else NA_integer_
-spon_spend_total <- if (!is.null(spon_spend) && "cost_usd" %in% names(spon_spend)) {
-  sum(spon_spend$cost_usd, na.rm = TRUE)
-} else NA_real_
 spon_unlabelled  <- if (spon_has_v2) sum(is.na(spon_log$sponsor_clean) | spon_log$sponsor_clean == "") else NA_integer_
 
 # Human decisions are the top of the precedence chain, so their absence is a
@@ -1003,8 +1011,7 @@ if (spon_has_v2) {
     kpi_box(fmt_n(spon_n_strings), "distinct raw strings", BLUE),
     kpi_box(fmt_n(spon_n_trials), "trial rows labelled", FROST),
     kpi_box(fmt_n(spon_n_canon), "canonical sponsors", GREEN),
-    kpi_box(fmt_n(spon_queue_rows), "awaiting human review", ORANGE),
-    kpi_box(ifelse(is.na(spon_spend_total), "NA", sprintf("$%.2f", spon_spend_total)), "spend to build", PURPLE)
+    kpi_box(fmt_n(spon_queue_rows), "awaiting human review", ORANGE)
   ))
 } else {
   cat(notice(
@@ -1159,64 +1166,67 @@ if (!is.null(spon_queue) && nrow(spon_queue) > 0) {
 }
 ```
 
-### Build cost
-
-```{r sponsor-spend}
-# A model-built registry has a bill, and an audit report is where it belongs.
-if (!is.null(spon_spend) && nrow(spon_spend) > 0 && has_cols(spon_spend, c("pass", "model_id", "cost_usd"))) {
-  spon_spend |>
-    group_by(Pass = pass, Model = model_id) |>
-    summarise(Requests = sum(as.numeric(n_requests), na.rm = TRUE),
-              `Cost (USD)` = sum(as.numeric(cost_usd), na.rm = TRUE), .groups = "drop") |>
-    arrange(desc(`Cost (USD)`)) |>
-    mutate(Requests = fmt_n(Requests), `Cost (USD)` = sprintf("$%.2f", `Cost (USD)`)) |>
-    nk(cap = sprintf("LLM spend by pass — $%.2f total, against a $60 cap enforced in code",
-                     spon_spend_total))
-}
-```
-
 ## Substance Names
 
-The substance audit follows the cache-build pipeline: exported trial-substance pairs, pre-filtered/normalised exploratory substances, accepted/review labels, per-trial `substance_label`, and optional review queue rows.
+Substance normalisation was rewritten as v2. The premise of the rewrite is that
+substances, unlike sponsors, already have a canonical vocabulary: ChEMBL's
+`pref_name` plus the EMA medicines report. That vocabulary is applied first and
+deterministically, and a model is asked only about what it could not place.
+
+| Pass | What it does | Model |
+|---|---|---|
+| `A_resolve` | exact match against ChEMBL + EPAR, placebo rule, junk filter | none |
+| `B_assign` | pick-from-list over retrieved candidates | Sonnet 5 |
+| `C_mint` | name what B could not place, cluster-at-a-time | Opus 5 / Sonnet 5 |
+| `D_consolidate` | salt rollup (deterministic) + merge partition | Opus 5 |
+| `E_emit` | per-trial labels, review queue, regression diff | none |
+
+The canonical is the **INN base**: `Methotrexate` absorbs `methotrexate sodium`,
+`Metoject` and `Methotrexat 10mg Tabletten`, with the salt and brand kept in
+separate registry columns. Where ChEMBL states a USAN that differs from the INN,
+the INN is used — this is an EU trial corpus.
 
 ```{r substance-audit-compute}
-sub_unique <- if (!is.null(sub_log) && has_cols(sub_log, c("raw_substance", "active_substance_clean", "match_status"))) {
-  sub_log |>
-    group_by(raw_substance) |>
-    summarise(
-      active_substance_clean = first(na.omit(active_substance_clean)),
-      match_status = first(match_status),
-      match_score = suppressWarnings(max(as.numeric(match_score), na.rm = TRUE)),
-      match_source = first(na.omit(match_source)),
-      match_reason = first(na.omit(match_reason)),
-      trial_occurrences = n_distinct(`_id`),
-      log_rows = n(),
-      .groups = "drop"
-    ) |>
-    mutate(match_score = ifelse(is.infinite(match_score), NA_real_, match_score))
-} else {
-  tibble()
-}
+sub_has_v2 <- !is.null(sub_log) &&
+  has_cols(sub_log, c("raw_substance", "substance_clean", "match_status", "n_trials"))
 
-sub_raw_pairs <- if (!is.null(sub_raw) && has_cols(sub_raw, c("_id", "raw_substance"))) nrow(sub_raw) else NA_integer_
+sub_raw_pairs  <- if (!is.null(sub_raw) && has_cols(sub_raw, c("_id", "raw_substance"))) nrow(sub_raw) else NA_integer_
 sub_raw_unique <- if (!is.null(sub_raw) && "raw_substance" %in% names(sub_raw)) n_distinct(sub_raw$raw_substance, na.rm = TRUE) else NA_integer_
-sub_log_rows <- if (!is.null(sub_log)) nrow(sub_log) else NA_integer_
-sub_unique_raw <- if (nrow(sub_unique) > 0) n_distinct(sub_unique$raw_substance) else NA_integer_
-sub_accepted_strings <- if (nrow(sub_unique) > 0) sum(sub_unique$match_status %in% c("accepted", "review"), na.rm = TRUE) else NA_integer_
 sub_label_trials <- if (!is.null(sub_labels) && "_id" %in% names(sub_labels)) n_distinct(sub_labels$`_id`) else NA_integer_
 sub_queue_rows <- if (!is.null(sub_queue)) nrow(sub_queue) else NA_integer_
 
+sub_pairs_accepted <- if (sub_has_v2) sum(sub_log$n_trials[sub_log$match_status == "accepted"], na.rm = TRUE) else NA_integer_
+sub_pairs_rejected <- if (sub_has_v2) sum(sub_log$n_trials[sub_log$match_status == "rejected"], na.rm = TRUE) else NA_integer_
+sub_pairs_unknown  <- if (sub_has_v2) sum(sub_log$n_trials[sub_log$match_status == "unknown"], na.rm = TRUE) else NA_integer_
+
+sub_n_canon <- if (!is.null(sub_registry) && has_cols(sub_registry, c("canonical", "merged_into"))) {
+  sum(is.na(sub_registry$merged_into) | sub_registry$merged_into == "")
+} else if (sub_has_v2) n_distinct(sub_log$substance_clean[sub_log$match_status == "accepted"]) else NA_integer_
+
+sub_n_displayed <- if (sub_has_v2) {
+  n_distinct(sub_log$substance_clean[sub_log$match_status == "accepted" & !is.na(sub_log$substance_clean)])
+} else NA_integer_
+
 sub_wf <- tibble(
-  step = c("Raw trial-substance pairs", "Unique raw strings", "Exploratory log rows", "Accepted/review strings", "Labelled trials"),
-  n = c(sub_raw_pairs, sub_raw_unique, sub_log_rows, sub_accepted_strings, sub_label_trials),
+  step = c("Raw trial-substance pairs", "Not a substance (filtered or judged)",
+           "Unresolved", "Accepted pairs", "Trials with a label"),
+  n = c(sub_raw_pairs, sub_pairs_rejected, sub_pairs_unknown,
+        sub_pairs_accepted, sub_label_trials),
   type = c("start", "step", "step", "step", "end")
 ) |>
   mutate(delta = lag(n) - n)
 
-active_by_trial <- if (!is.null(sub_log) && has_cols(sub_log, c("_id", "active_substance_clean", "match_status"))) {
-  sub_log |>
-    filter(match_status %in% c("accepted", "review"), !is.na(active_substance_clean), active_substance_clean != "") |>
-    distinct(`_id`, active_substance_clean) |>
+# Per-trial view. The v2 log is keyed on the raw STRING, not the trial, so the
+# trial dimension comes back through the raw export.
+active_by_trial <- if (sub_has_v2 && !is.null(sub_raw) && has_cols(sub_raw, c("_id", "raw_substance"))) {
+  sub_raw |>
+    inner_join(
+      sub_log |>
+        filter(match_status == "accepted", !is.na(substance_clean), substance_clean != "") |>
+        select(raw_substance, substance_clean),
+      by = "raw_substance"
+    ) |>
+    distinct(`_id`, substance_clean) |>
     left_join(df |> select(`_id`, register, year, age_group), by = "_id")
 } else {
   tibble()
@@ -1224,77 +1234,90 @@ active_by_trial <- if (!is.null(sub_log) && has_cols(sub_log, c("_id", "active_s
 ```
 
 ```{r substance-kpis, results='asis'}
-if (nrow(sub_unique) > 0) {
+if (sub_has_v2) {
   cat(kpi_row(
     kpi_box(fmt_n(sub_raw_pairs), "raw trial-substance pairs", BLUE),
-    kpi_box(fmt_n(sub_unique_raw), "unique logged raw strings", FROST),
-    kpi_box(fmt_n(sub_label_trials), "trials with substance label", GREEN),
-    kpi_box(fmt_n(sub_queue_rows), "review queue rows", ORANGE),
-    kpi_box(fmt_n(n_distinct(sub_log$`_id`)), "trials in substance log", PURPLE)
+    kpi_box(fmt_n(sub_raw_unique), "distinct raw strings", FROST),
+    kpi_box(fmt_n(sub_n_displayed), "substances displayed", GREEN),
+    kpi_box(fmt_n(sub_label_trials), "trials with a label", PURPLE),
+    kpi_box(fmt_n(sub_queue_rows), "awaiting human review", ORANGE)
   ))
 } else {
-  cat(notice("Substance log unavailable", "No substance normalisation log was found for this render.", "warn"))
+  cat(notice(
+    "Substance v2 artefacts unavailable",
+    paste("No <code>data/substance_normalisation_log_v2.csv</code> was found.",
+          "Run <code>E_emit.R</code> in helper_scripts/substance_norm_pipeline_v2/."),
+    "warn"))
 }
 ```
 
 ```{r substance-waterfall, fig.height=4.3}
-if (nrow(sub_unique) > 0 && all(!is.na(sub_wf$n))) {
+if (sub_has_v2 && all(!is.na(sub_wf$n))) {
   waterfall_plot(
     sub_wf,
     "Substance normalisation waterfall",
-    "Counts move from raw trial-substance pairs to exploratory normalised log rows and labelled trials."
+    "Pairs judged not-a-substance are removed deliberately, not lost."
   )
 }
 ```
 
 ```{r substance-waterfall-table}
-if (nrow(sub_unique) > 0) {
+if (sub_has_v2) {
   sub_wf |>
-    transmute(Step = step, Count = fmt_n(n), `Removed / collapsed from previous step` = ifelse(is.na(delta), "NA", fmt_n(delta))) |>
+    transmute(Step = step, Count = fmt_n(n),
+              `Change from previous step` = ifelse(is.na(delta), "NA", fmt_n(delta))) |>
     nk(cap = "Substance normalisation stage counts")
 }
 ```
 
 ```{r substance-status-chart, fig.height=3.5}
-if (nrow(sub_unique) > 0) {
-  sub_unique |>
-    count(match_status, wt = trial_occurrences, name = "trial_weighted_n") |>
-    mutate(match_status = factor(match_status, levels = c("accepted", "review", "rejected", "unknown"))) |>
+if (sub_has_v2) {
+  sub_log |>
+    count(match_status, wt = n_trials, name = "trial_weighted_n") |>
+    mutate(match_status = factor(match_status, levels = c("accepted", "rejected", "unknown"))) |>
     ggplot(aes(match_status, trial_weighted_n, fill = match_status)) +
     geom_col(width = 0.62, show.legend = FALSE) +
     geom_text(aes(label = fmt_n(trial_weighted_n)), vjust = -0.35, size = 3.1, color = DARK) +
-    scale_fill_manual(values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED), na.value = GRAY) +
+    scale_fill_manual(values = c(accepted = GREEN, rejected = ORANGE, unknown = RED), na.value = GRAY) +
     scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
-    labs(title = "Substance outcomes weighted by trial count", x = NULL, y = "Trial occurrences") +
+    labs(title = "Substance outcomes weighted by trial count",
+         subtitle = "'rejected' is a positive judgement that the string names no substance.",
+         x = NULL, y = "Trial occurrences") +
     theme_pre()
 }
 ```
 
-```{r substance-source-chart, fig.height=4}
-if (nrow(sub_unique) > 0) {
-  sub_unique |>
-    mutate(match_source = coalesce(as.character(match_source), "not recorded")) |>
-    count(match_source, wt = trial_occurrences, name = "trial_weighted_n", sort = TRUE) |>
-    slice_head(n = 14) |>
-    mutate(match_source = reorder(match_source, trial_weighted_n)) |>
-    ggplot(aes(trial_weighted_n, match_source)) +
-    geom_col(fill = BLUE, width = 0.62) +
+```{r substance-decided-by-chart, fig.height=3.2}
+# Who decided, and therefore how much of the corpus needed a model at all.
+if (sub_has_v2 && "decided_by" %in% names(sub_log)) {
+  sub_log |>
+    filter(match_status == "accepted") |>
+    mutate(decided_by = coalesce(as.character(decided_by), "not recorded")) |>
+    count(decided_by, wt = n_trials, name = "trial_weighted_n", sort = TRUE) |>
+    mutate(decided_by = reorder(decided_by, trial_weighted_n)) |>
+    ggplot(aes(trial_weighted_n, decided_by)) +
+    geom_col(fill = BLUE, width = 0.6) +
     geom_text(aes(label = fmt_n(trial_weighted_n)), hjust = -0.1, size = 3.1, color = GRAY) +
     scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
-    labs(title = "Substance normalisation source", x = "Trial occurrences", y = NULL) +
+    labs(title = "Who resolved each substance",
+         subtitle = "registry = exact ChEMBL/EPAR match, no model involved.",
+         x = "Trial occurrences", y = NULL) +
     theme_pre()
 }
 ```
 
-```{r substance-score-chart, fig.height=3.6}
-if (nrow(sub_unique) > 0 && any(!is.na(sub_unique$match_score))) {
-  sub_unique |>
-    filter(!is.na(match_score)) |>
-    ggplot(aes(match_score, weight = trial_occurrences, fill = match_status)) +
-    geom_histogram(binwidth = 5, boundary = 0, color = "white") +
-    scale_fill_manual(values = c(accepted = GREEN, review = YELLOW, rejected = ORANGE, unknown = RED), na.value = GRAY) +
-    scale_y_continuous(labels = comma) +
-    labs(title = "Substance match-score distribution", x = "Match score", y = "Trial occurrences") +
+```{r substance-type-chart, fig.height=4}
+if (sub_has_v2 && "substance_type" %in% names(sub_log)) {
+  sub_log |>
+    filter(match_status == "accepted", !is.na(substance_type), substance_type != "") |>
+    count(substance_type, wt = n_trials, name = "trial_weighted_n", sort = TRUE) |>
+    slice_head(n = 12) |>
+    mutate(substance_type = reorder(substance_type, trial_weighted_n)) |>
+    ggplot(aes(trial_weighted_n, substance_type)) +
+    geom_col(fill = FROST, width = 0.62) +
+    geom_text(aes(label = fmt_n(trial_weighted_n)), hjust = -0.1, size = 3.1, color = GRAY) +
+    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
+    labs(title = "Substance type", x = "Trial occurrences", y = NULL) +
     theme_pre()
 }
 ```
@@ -1302,17 +1325,19 @@ if (nrow(sub_unique) > 0 && any(!is.na(sub_unique$match_score))) {
 ```{r substance-top-chart, fig.height=5.5}
 if (nrow(active_by_trial) > 0) {
   active_by_trial |>
-    count(active_substance_clean, register, name = "n_trials") |>
-    group_by(active_substance_clean) |>
+    count(substance_clean, register, name = "n_trials") |>
+    group_by(substance_clean) |>
     mutate(total = sum(n_trials)) |>
     ungroup() |>
     slice_max(total, n = 40, with_ties = FALSE) |>
-    mutate(active_substance_clean = reorder(active_substance_clean, total)) |>
-    ggplot(aes(n_trials, active_substance_clean, fill = register)) +
+    mutate(substance_clean = reorder(substance_clean, total)) |>
+    ggplot(aes(n_trials, substance_clean, fill = register)) +
     geom_col() +
     scale_fill_manual(values = REG_COLS) +
     scale_x_continuous(labels = comma) +
-    labs(title = "Top active substances by trial count", subtitle = "Accepted/review substance matches only.", x = "Trials", y = NULL) +
+    labs(title = "Top active substances by trial count",
+         subtitle = "Canonical is the INN base; salts and brands are folded in.",
+         x = "Trials", y = NULL) +
     theme_pre()
 }
 ```
@@ -1320,19 +1345,19 @@ if (nrow(active_by_trial) > 0) {
 ```{r substance-register-age, fig.height=4.8}
 if (nrow(active_by_trial) > 0) {
   top_subs <- active_by_trial |>
-    count(active_substance_clean, name = "total") |>
+    count(substance_clean, name = "total") |>
     slice_max(total, n = 12, with_ties = FALSE) |>
-    pull(active_substance_clean)
+    pull(substance_clean)
 
   active_by_trial |>
-    filter(active_substance_clean %in% top_subs) |>
+    filter(substance_clean %in% top_subs) |>
     mutate(age_group = coalesce(age_group, "Unknown")) |>
-    count(active_substance_clean, age_group, name = "n_trials") |>
-    group_by(active_substance_clean) |>
+    count(substance_clean, age_group, name = "n_trials") |>
+    group_by(substance_clean) |>
     mutate(pct = n_trials / sum(n_trials)) |>
     ungroup() |>
-    mutate(active_substance_clean = factor(active_substance_clean, levels = rev(top_subs))) |>
-    ggplot(aes(pct, active_substance_clean, fill = age_group)) +
+    mutate(substance_clean = factor(substance_clean, levels = rev(top_subs))) |>
+    ggplot(aes(pct, substance_clean, fill = age_group)) +
     geom_col() +
     scale_x_continuous(labels = percent) +
     scale_fill_manual(values = c(Paediatric = BLUE, Adult = ORANGE, `Paediatric & Adult` = GREEN, Unknown = GRAY), na.value = GRAY) +
@@ -1341,31 +1366,38 @@ if (nrow(active_by_trial) > 0) {
 }
 ```
 
+```{r substance-rejected-table}
+# The filter's output is auditable on purpose. If a real substance appears here,
+# the judgement was wrong and nothing downstream would ever have asked about it.
+if (!is.null(sub_rejected) && nrow(sub_rejected) > 0) {
+  sub_rejected |>
+    arrange(desc(n_trials)) |>
+    select(any_of(c("raw_substance", "n_trials", "reason"))) |>
+    dt_tbl(caption = "Strings rejected as not naming a substance", page = 15, filter = "top")
+} else {
+  cat("No rejected-string audit file available.")
+}
+```
+
 ```{r substance-queue-table}
-if (!is.null(sub_queue)) {
+if (!is.null(sub_queue) && nrow(sub_queue) > 0) {
   sub_queue |>
-    arrange(desc(n_occurrences)) |>
-    select(any_of(c("raw_substance", "active_substance_clean", "match_status", "match_score", "match_source", "match_reason", "n_occurrences", "decision", "canonical_substance", "comment"))) |>
-    dt_tbl(caption = "Substance review queue", page = 25, filter = "top")
+    arrange(desc(n_trials)) |>
+    select(any_of(c("raw_substance", "proposed", "confidence", "n_trials",
+                    "review_reason", "reason", "channel", "model_id"))) |>
+    dt_tbl(caption = "Substance review queue — highest impact first", page = 25, filter = "top")
 } else {
   cat("Substance review queue not available.")
 }
 ```
 
 ```{r substance-log-table}
-if (!is.null(sub_log) && has_cols(sub_log, c("raw_substance", "active_substance_clean", "match_status"))) {
+if (sub_has_v2) {
   sub_log |>
-    arrange(match_status, desc(match_score)) |>
-    mutate(match_score = if ("match_score" %in% names(sub_log)) round(as.numeric(match_score), 2) else NA_real_) |>
-    select(
-      `Trial ID` = `_id`,
-      `Raw substance` = raw_substance,
-      `Clean label` = active_substance_clean,
-      Status = match_status,
-      Score = match_score,
-      Source = match_source,
-      Reason = match_reason
-    ) |>
+    arrange(match_status, desc(n_trials)) |>
+    select(any_of(c("raw_substance", "substance_clean", "substance_salt",
+                    "substance_type", "match_status", "confidence",
+                    "decided_by", "n_trials"))) |>
     dt_tbl(caption = "Full substance normalisation log", page = 25, filter = "top")
 } else {
   cat("Substance log not available.")

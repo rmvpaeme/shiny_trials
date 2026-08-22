@@ -1,0 +1,5 @@
+ran_at_utc,outcome,n_new_strings,n_sent_to_model,note
+2026-08-21T06:00:43Z,budget_refused,540,0,
+2026-08-21T06:55:42Z,resolved,9,9,assignments +1
+2026-08-21T07:02:36Z,resolved,7,7,assignments +3
+2026-08-21T07:05:46Z,resolved,7,7,assignments +0

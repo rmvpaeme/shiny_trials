@@ -14,11 +14,21 @@
 #   2 token_idf   IDF-weighted token overlap — the workhorse
 #   3 structured  shared businessKey / email domain / postcode — non-lexical
 #
-# Character n-gram and acronym channels were written, tested and then dropped:
-# IDF token overlap already does the grouping work, and they cost pair-graph
-# time for candidates the other two mostly already found. char_ngrams() and
-# acronym_of() are kept below because the index builder still uses them for
-# diagnostics and they are cheap to re-enable, but no channel calls them.
+# Character n-gram and acronym channels were written, tested and then dropped
+# FOR SPONSORS: IDF token overlap already does the grouping work there, and they
+# cost pair-graph time for candidates the other two mostly already found.
+#
+# They are NOT off for substances, and the reason is worth keeping. A drug name
+# is usually a single token, so token_idf has nothing to overlap: 12,610 of the
+# 17,272 ChEMBL canonicals are one word. Character n-grams carry that pass
+# instead, and measured on the substance vocabulary they work —
+# "metotrexate" retrieves "methotrexate", "SODIO ASCORBATO" retrieves
+# "ascorbato de sodio". Enable with retrieve(extra_channels = TRUE).
+#
+# One correction to an earlier note: PLANS/normalisation-v2-handover.md §3.8
+# records ch_ngram as returning NA scores. That was measured on the sponsor
+# corpus; over the substance index it returns 0 NA of 20 rows. The channel is
+# sound, it was simply not earning its cost for organisation names.
 #
 # THE DUAL FOLD. EUCTR ingestion DELETES non-ASCII rather than transliterating:
 # "Abteilung für Anästhesie" is stored as "Abteilung fr Ansthesie", and all
@@ -98,6 +108,113 @@ GENERIC_TOKENS <- unique(c(
   "klinikum", "kliniken", "spitalul", "szpitala"
 ))
 
+# ── Substance stoplist ────────────────────────────────────────────────────────
+# The sponsor list above is not merely useless for drugs, it is the wrong shape.
+# What ruins a substance slate is units and dosage forms, and the failure is not
+# hypothetical — with only the sponsor stoplist in place, three real corpus
+# strings all retrieved the same wrong molecule at score 1.00:
+#
+#   Etomedac 20 mg                    -> mg-s-2525 [1.00]
+#   Olopatadin Micro Labs 1 mg        -> mg-s-2525 [1.00]
+#   Natriumklorid Fresenius Kabi 9 mg -> mg-s-2525 [1.00]
+#
+# The token "mg" matched a ChEMBL molecule literally named "mg-s-2525", and it
+# outranked the correct "olopatadine".
+#
+# DELIBERATELY ABSENT: chemical words. "acid", "sodium", "chloride", "ethyl",
+# "ester" and their kin look generic and are not — they are parts of INNs
+# ("docosahexaenoic acid", "sodium ascorbate", "sodium chloride"). Stoplisting
+# them would delete the only discriminating token those names have. This list
+# holds units, dosage forms, routes, packaging and administration language only.
+.SUBSTANCE_GENERIC_BASE <- c(
+  # units and dose language
+  "mg", "ml", "mcg", "microgram", "micrograms", "mikrogramm", "gram", "grams",
+  "kg", "iu", "ui", "mbq", "gbq", "mmol", "nmol", "mol", "molar", "unit",
+  "units", "dose", "doses", "dosis", "dosage", "strength", "mgml", "mgkg",
+  "percent", "conc",
+
+  # dosage forms
+  "tablet", "tablets", "tabletten", "tableta", "tabletas", "comprime",
+  "comprimes", "comprimido", "comprimidos", "compressa", "compresse",
+  "capsule", "capsules", "kapsel", "kapseln", "capsula", "capsulas",
+  "solution", "solutions", "solucion", "solucao", "soluzione", "losung",
+  "losungen", "otopina", "roztwor", "solutie",
+  "suspension", "suspensie", "sospensione", "emulsion", "dispersion",
+  "concentrate", "concentrado", "concentrato", "konzentrat",
+  "powder", "powders", "pulver", "polvo", "polvere", "poudre", "proszek",
+  "granules", "granulat", "syrup", "sirup", "drops", "gouttes", "tropfen",
+  "cream", "ointment", "salbe", "gel", "lotion", "foam", "patch", "patches",
+  "pflaster", "implant", "depot", "spray", "aerosol", "inhaler", "inhalation",
+  "nebuliser", "nebulizer", "lyophilised", "lyophilized", "lyophilisate",
+  "freeze", "dried", "coated", "filmcoated", "film", "release", "modified",
+  "prolonged", "extended", "immediate", "gastro", "resistant", "effervescent",
+  "sterile", "injectable", "inyectable", "iniettabile",
+
+  # routes and administration
+  "injection", "injections", "injektion", "injektionslosung", "iniezione",
+  "inyeccion", "injectie", "injecties", "infusion", "infusionslosung", "infusione",
+  "infusie", "perfusion", "perfusao", "intravenous", "intravenoso", "iv",
+  # Dutch, Nordic and Finnish dosage language. Measured on real slates: without
+  # these, "ml oplossing voor injectie" retrieved Aldesleukin, Amoxicillin and
+  # Amphotericin B at score 1.00 — a full slate of unrelated drugs for a string
+  # that names no substance.
+  "oplossing", "oplossingen", "concentraat", "poeder", "voor", "verdunning",
+  "druppels", "zalf", "zetpil", "injectievloeistof", "suspensie",
+  "opplosning", "injektionsvatska", "injektionsvaetska", "injeksjonsvaeske",
+  "tabletter", "koncentrat", "ogondroppar", "ojendraber",
+  "liuos", "injektioneste", "jauhe", "tabletti",
+  "subcutaneous", "subcutane", "intramuscular", "intrathecal", "intravitreal",
+  "oral", "orale", "peroral", "topical", "transdermal", "ophthalmic",
+  "nasal", "rectal", "vaginal", "buccal", "sublingual", "administration",
+
+  # packaging and presentation
+  "vial", "vials", "ampoule", "ampule", "ampoules", "ampulle", "flacon",
+  "syringe", "syringes", "prefilled", "pen", "autoinjector", "cartridge",
+  "bag", "bottle", "sachet", "sobre", "blister", "pack", "container",
+
+  # connective and filler language that shows up inside these strings
+  "for", "and", "the", "of", "with", "in", "to", "per", "pour", "zur",
+  "herstellung", "einer", "een", "van", "de", "del", "della", "di", "da",
+  "use", "used", "usp", "ph", "eur", "bp", "type", "form", "product",
+  "medicinal", "medicine", "drug", "substance", "active", "ingredient",
+  "free", "base", "anhydrous", "hydrate",
+
+  # Manufacturer language. A substance string routinely carries the company that
+  # made it — "Olopatadin Micro Labs 1 mg", "Dexamethason 4 mg JENAPHARM",
+  # "Natriumklorid Fresenius Kabi 9 mg" — and a corporate suffix is not a
+  # molecule.
+  #
+  # HONEST NOTE ON WHAT THIS DID AND DID NOT DO: adding it changed nothing
+  # measurable on a 12-case retrieval probe (11/12 with and without). It is kept
+  # because the words are generic by inspection and dropping them shrinks the
+  # pair graph, not because it was shown to improve a slate. Do not cite it as
+  # the fix for "Olopatadin Micro Labs 1 mg" — that was a channel-ordering
+  # problem, fixed in retrieve() instead.
+  #
+  # Generic corporate words ONLY. Company NAMES stay in: "Fresenius" and
+  # "Jenapharm" are as discriminating as any other rare token, and stoplisting
+  # names would be an endless list that also swallows real substances.
+  "labs", "lab", "laboratories", "laboratoires", "laboratorios", "laboratorio",
+  "pharma", "pharms", "pharmaceuticals", "pharmaceutical", "pharmaceutica",
+  "pharmazeutika", "arzneimittel", "farma", "farmaceutica", "farmaceutici",
+  "healthcare", "health", "generics", "generic", "biotech", "biosciences",
+  "gmbh", "ltd", "limited", "inc", "plc", "llc", "bv", "nv", "ag", "sa",
+  "spa", "srl", "sas", "sl", "aps", "kgaa", "corp", "corporation", "company",
+  "international", "europe", "deutschland", "espana", "italia", "france"
+)
+
+# Same dual-fold treatment as the sponsor list, for the same reason: EUCTR
+# deletes accents, so "losung" and "lsung" are different tokens and both occur.
+SUBSTANCE_GENERIC_TOKENS <- unique(c(
+  .SUBSTANCE_GENERIC_BASE,
+  gsub("[^a-z0-9]", "", stringi::stri_trans_general(.SUBSTANCE_GENERIC_BASE, "Latin-ASCII")),
+  gsub("[^\\x01-\\x7F]", "", .SUBSTANCE_GENERIC_BASE, perl = TRUE),
+  # Mangled forms of accented generics, which cannot be derived from the ASCII
+  # base list because the deletion happened upstream to a spelling it never holds.
+  "lsung", "lsungen", "injektionslsung", "infusionslsung", "solucin", "solucao",
+  "inyeccin", "perfusin", "concentrado", "aplicacin"
+))
+
 # ── Folding ───────────────────────────────────────────────────────────────────
 
 .tidy <- function(x) {
@@ -131,10 +248,21 @@ fold_forms <- function(x) {
 # Concatenation happens AFTER the stoplist, so "novartis pharma" does not
 # produce "novartispharma" (pharma being generic) and the bigrams stay
 # discriminative.
-tokens_of <- function(folded, drop_generic = TRUE, concat_adjacent = TRUE) {
+#
+# `generic` is a parameter rather than a read of the global GENERIC_TOKENS
+# because a second entity type needs a different list entirely — see
+# SUBSTANCE_GENERIC_TOKENS. The default preserves sponsor behaviour exactly.
+#
+# `drop_numeric` removes pure-digit tokens. Off by default: for organisation
+# names a bare number is rare and harmless. On for substances, where a dose
+# number is both common and actively misleading — "Etomedac 20 mg" retrieved
+# "polifeprosan 20" on the shared token "20".
+tokens_of <- function(folded, drop_generic = TRUE, concat_adjacent = TRUE,
+                      generic = GENERIC_TOKENS, drop_numeric = FALSE) {
   t <- strsplit(folded, " ", fixed = TRUE)[[1L]]
   t <- t[nchar(t) >= 2L]
-  if (drop_generic) t <- t[!t %in% GENERIC_TOKENS]
+  if (drop_generic) t <- t[!t %in% generic]
+  if (drop_numeric) t <- t[!grepl("^[0-9]+$", t)]
   out <- t
   if (concat_adjacent && length(t) >= 2L) {
     out <- c(out, paste0(t[-length(t)], t[-1L]))
@@ -162,7 +290,14 @@ acronym_of <- function(folded) {
 # `labels` is the surface-form vocabulary: registry canonicals and every raw
 # string already assigned to one. Both folds of each label are indexed.
 
-build_index <- function(labels, ids = seq_along(labels), ngram_n = 4L) {
+#
+# `generic` and `drop_numeric` are stored on the returned index so the channels
+# and the pair-graph builder tokenise a query exactly the way the index was
+# built. Passing them per call instead was the first version and it is a silent
+# corruption waiting to happen: a query tokenised under a different stoplist
+# than the index simply fails to match, with no error.
+build_index <- function(labels, ids = seq_along(labels), ngram_n = 4L,
+                        generic = GENERIC_TOKENS, drop_numeric = FALSE) {
   stopifnot(length(labels) == length(ids))
 
   forms <- purrr::map(labels, fold_forms)
@@ -177,8 +312,10 @@ build_index <- function(labels, ids = seq_along(labels), ngram_n = 4L) {
   # but must not count toward a string's own IDF mass. Counting them inflates
   # the score denominator and penalises every pair that does not happen to share
   # one — measured, it pushed singletons from 3,980 to 4,836.
-  tl_uni <- purrr::map(df$form, tokens_of, concat_adjacent = FALSE)
-  tl_all <- purrr::map(df$form, tokens_of, concat_adjacent = TRUE)
+  tl_uni <- purrr::map(df$form, tokens_of, concat_adjacent = FALSE,
+                       generic = generic, drop_numeric = drop_numeric)
+  tl_all <- purrr::map(df$form, tokens_of, concat_adjacent = TRUE,
+                       generic = generic, drop_numeric = drop_numeric)
   tok <- dplyr::bind_rows(
     tibble::tibble(label_id = rep(df$label_id, lengths(tl_uni)),
                    token = unlist(tl_uni, use.names = FALSE), is_concat = FALSE),
@@ -197,6 +334,10 @@ build_index <- function(labels, ids = seq_along(labels), ngram_n = 4L) {
     label_id = rep(df$label_id, lengths(gl <- purrr::map(df$form, char_ngrams, n = ngram_n))),
     gram     = unlist(gl, use.names = FALSE)
   ) |>
+    # An empty gram is not a gram. It arises where a label folds to nothing
+    # (punctuation only) and would otherwise inflate that label's Jaccard
+    # denominator with a term no query can ever match.
+    dplyr::filter(!is.na(gram), nzchar(gram)) |>
     dplyr::distinct()
 
   acr <- tibble::tibble(
@@ -210,15 +351,68 @@ build_index <- function(labels, ids = seq_along(labels), ngram_n = 4L) {
     dplyr::transmute(label_id, acronym = gsub(" ", "", form))) |>
     dplyr::distinct()
 
+  tok_full <- dplyr::left_join(tok, idf, by = "token")
+
+  # Hashed postings, built once, so a per-query channel is a hash lookup instead
+  # of a dplyr filter over the whole index.
+  #
+  # This is a scale fix, not a tidy-up. The sponsor corpus is 16,594 strings and
+  # the filter-per-query cost was invisible there. The substance vocabulary is
+  # 124,000 surface forms producing a ~2M-row gram table, and ch_ngram is the
+  # PRIMARY channel for drugs, so B_assign issues 13,727 queries against it. At
+  # roughly 100ms per dplyr scan that is 20+ minutes of pure filtering before a
+  # single request is built. Same arithmetic, different data structure.
+  max_id <- if (nrow(df)) max(df$label_id) else 0L
+
   list(
-    forms    = df,
-    tokens   = dplyr::left_join(tok, idf, by = "token"),
-    idf      = idf,
-    grams    = gram,
-    acronyms = acr,
-    ngram_n  = ngram_n,
-    n_labels = n_labels
+    forms        = df,
+    tokens       = tok_full,
+    idf          = idf,
+    grams        = gram,
+    acronyms     = acr,
+    ngram_n      = ngram_n,
+    n_labels     = n_labels,
+    generic      = generic,
+    drop_numeric = drop_numeric,
+    max_id       = max_id,
+    gram_post    = .postings(gram$gram, gram$label_id),
+    gram_n       = .per_label_count(gram$label_id, max_id),
+    tok_post     = .postings(tok_full$token, tok_full$label_id),
+    tok_idf      = stats::setNames(idf$idf, idf$token)
   )
+}
+
+# key -> integer vector of label_ids, in an environment used as a hash map.
+#
+# Empty keys are dropped. char_ngrams() returns "" for a label whose folded form
+# is empty — a string of only punctuation, which this corpus does contain — and
+# an environment cannot hold a zero-length name, so list2env() errors out on it.
+# An empty key could never match a query anyway.
+.postings <- function(keys, ids) {
+  keep <- !is.na(keys) & nzchar(keys)
+  keys <- keys[keep]; ids <- ids[keep]
+  e <- new.env(hash = TRUE, parent = emptyenv(),
+               size = max(2L * length(unique(keys)), 29L))
+  if (!length(keys)) return(e)
+  list2env(split(as.integer(ids), keys), envir = e)
+  e
+}
+
+.per_label_count <- function(ids, max_id) {
+  if (!length(ids) || max_id < 1L) return(integer(0))
+  tabulate(as.integer(ids), nbins = max_id)
+}
+
+# Sum a per-key weight over that key's postings, returning a vector indexed by
+# label_id. `weights` may be NULL for a plain count.
+.accumulate <- function(keys, post, max_id, weights = NULL) {
+  acc <- numeric(max_id)
+  for (i in seq_along(keys)) {
+    ids <- post[[keys[[i]]]]
+    if (is.null(ids)) next
+    acc[ids] <- acc[ids] + if (is.null(weights)) 1 else weights[[i]]
+  }
+  acc
 }
 
 # ── Channels ──────────────────────────────────────────────────────────────────
@@ -238,20 +432,26 @@ ch_exact <- function(query, idx) {
 # ones. The old containment_neighbours counted raw token hits, which valued a
 # shared "hospital" as highly as a shared "erasmus".
 ch_token_idf <- function(query, idx, k = 10L, min_score = 0.15) {
-  qt <- unique(unlist(purrr::map(fold_forms(query), tokens_of), use.names = FALSE))
+  qt <- unique(unlist(purrr::map(fold_forms(query), tokens_of,
+                                 generic = idx$generic %||% GENERIC_TOKENS,
+                                 drop_numeric = idx$drop_numeric %||% FALSE),
+                      use.names = FALSE))
   if (!length(qt)) return(tibble::tibble())
-  qi <- idx$idf |> dplyr::filter(token %in% qt)
-  if (!nrow(qi)) return(tibble::tibble())
-  total <- sum(qi$idf)
+  qt <- qt[qt %in% names(idx$tok_idf)]
+  if (!length(qt)) return(tibble::tibble())
+  w <- unname(idx$tok_idf[qt])
+  total <- sum(w)
   if (total <= 0) return(tibble::tibble())
 
-  idx$tokens |>
-    dplyr::filter(token %in% qt) |>
-    dplyr::group_by(label_id) |>
-    dplyr::summarise(score = sum(idf) / total, .groups = "drop") |>
-    dplyr::filter(score >= min_score) |>
-    dplyr::slice_max(score, n = k, with_ties = FALSE) |>
-    dplyr::mutate(channel = "token_idf")
+  acc <- .accumulate(qt, idx$tok_post, idx$max_id, weights = w)
+  hit <- which(acc > 0)
+  if (!length(hit)) return(tibble::tibble())
+  score <- acc[hit] / total
+  keep <- score >= min_score
+  if (!any(keep)) return(tibble::tibble())
+  hit <- hit[keep]; score <- score[keep]
+  ord <- order(score, decreasing = TRUE)[seq_len(min(k, length(score)))]
+  tibble::tibble(label_id = hit[ord], score = score[ord], channel = "token_idf")
 }
 
 # Replaces JW. Jaccard over character 4-grams: symmetric, no prefix weighting,
@@ -261,15 +461,17 @@ ch_ngram <- function(query, idx, k = 10L, threshold = 0.45) {
   qg <- unique(unlist(purrr::map(fold_forms(query), char_ngrams, n = idx$ngram_n),
                       use.names = FALSE))
   if (!length(qg)) return(tibble::tibble())
-  sizes <- idx$grams |> dplyr::count(label_id, name = "n_target")
-  idx$grams |>
-    dplyr::filter(gram %in% qg) |>
-    dplyr::count(label_id, name = "shared") |>
-    dplyr::left_join(sizes, by = "label_id") |>
-    dplyr::mutate(score = shared / (length(qg) + n_target - shared)) |>
-    dplyr::filter(score >= threshold) |>
-    dplyr::slice_max(score, n = k, with_ties = FALSE) |>
-    dplyr::transmute(label_id, score, channel = "ngram")
+
+  shared <- .accumulate(qg, idx$gram_post, idx$max_id)
+  hit <- which(shared > 0)
+  if (!length(hit)) return(tibble::tibble())
+  # Jaccard: shared / (|query| + |target| - shared).
+  score <- shared[hit] / (length(qg) + idx$gram_n[hit] - shared[hit])
+  keep <- score >= threshold
+  if (!any(keep)) return(tibble::tibble())
+  hit <- hit[keep]; score <- score[keep]
+  ord <- order(score, decreasing = TRUE)[seq_len(min(k, length(score)))]
+  tibble::tibble(label_id = hit[ord], score = score[ord], channel = "ngram")
 }
 
 ch_acronym <- function(query, idx, k = 10L) {
@@ -313,23 +515,61 @@ ch_structured <- function(query, idx, evidence, k = 10L) {
 
 CHANNEL_RANK <- c(exact = 1L, structured = 2L, token_idf = 3L, ngram = 4L, acronym = 5L)
 
-retrieve <- function(query, idx, evidence = NULL, k = 10L, extra_channels = FALSE) {
+#
+# `interleave` changes how the slate is FILLED, not what qualifies for it.
+#
+# Strict rank ordering lets one channel take every slot. Measured on
+# "Olopatadin Micro Labs 1 mg": token_idf returned ten hits on the shared words,
+# all ranked above ngram, so the slate was tretinoin / fenofibrate / potassium
+# chloride and olopatadine — which ngram DID find — never appeared. Raising
+# token_idf's floor does not fix this (swept 0.15/0.25/0.35/0.45: 7/7/6/7 of 12,
+# i.e. no signal), because the problem is slot allocation, not qualification.
+#
+# Interleaving takes candidates round-robin across channels in rank order, so
+# every channel that found something contributes before any channel contributes
+# twice. OFF by default: the sponsor pass has already run, and candidate order
+# feeds cands_sha in its cache key, so changing it would invalidate paid work.
+#
+# `use_ngram` / `use_acronym` split what `extra_channels` used to switch on
+# together, mirroring build_pair_graph(). Substances need the n-gram channel and
+# must NOT have the acronym one: initials of the words in a product label are
+# meaningless for a molecule, and ch_acronym scores every hit 1.0, so under
+# interleaving it is guaranteed a slot. Measured — "Forxiga 10 mg film-coated
+# tablets" was offered "Perampanel [1.00 acronym]" at rank 3, and 839 strings
+# had an acronym hit as their TOP candidate.
+retrieve <- function(query, idx, evidence = NULL, k = 10L, extra_channels = FALSE,
+                     ngram_threshold = 0.45, interleave = FALSE,
+                     use_ngram = extra_channels, use_acronym = extra_channels) {
   hits <- dplyr::bind_rows(
     ch_exact(query, idx),
     ch_structured(query, idx, evidence),
     ch_token_idf(query, idx, k = k),
-    # Off by default. Kept behind a flag so the per-channel recall report can
-    # measure what dropping them actually cost rather than assuming nothing.
-    if (extra_channels) ch_ngram(query, idx, k = k),
-    if (extra_channels) ch_acronym(query, idx, k = k)
+    # Off by default for sponsors, ON for substances — a single-token drug name
+    # gives token_idf nothing to work with. ngram_threshold is 0.45 here and
+    # 0.30 for substances: measured, "SODIO ASCORBATO" reaches
+    # "sodium ascorbate" at only 0.35, so the sponsor default would drop it.
+    if (use_ngram) ch_ngram(query, idx, k = k, threshold = ngram_threshold),
+    if (use_acronym) ch_acronym(query, idx, k = k)
   )
   if (!nrow(hits)) return(tibble::tibble(label_id = integer(), label = character(),
                                          score = numeric(), channel = character()))
-  hits |>
+  hits <- hits |>
     dplyr::mutate(rank = CHANNEL_RANK[channel] %||% 9L) |>
     dplyr::arrange(rank, dplyr::desc(score)) |>
-    dplyr::distinct(label_id, .keep_all = TRUE) |>
-    utils::head(k) |>
+    dplyr::distinct(label_id, .keep_all = TRUE)
+
+  hits <- if (interleave) {
+    hits |>
+      dplyr::group_by(channel) |>
+      dplyr::mutate(slot = dplyr::row_number()) |>
+      dplyr::ungroup() |>
+      dplyr::arrange(slot, rank, dplyr::desc(score)) |>
+      utils::head(k)
+  } else {
+    utils::head(hits, k)
+  }
+
+  hits |>
     dplyr::left_join(idx$forms |> dplyr::distinct(label_id, label), by = "label_id") |>
     dplyr::select(label_id, label, score, channel)
 }
@@ -401,23 +641,45 @@ pairs_from_postings <- function(idx_tbl, key_col, label_col = "label_id",
     dplyr::distinct()
 }
 
+#
+# `use_ngram` / `use_acronym` split what `extra_channels` used to turn on
+# together. They default to it, so existing callers are unchanged. Substances
+# need the n-gram channel and must NOT have the acronym one: initials of the
+# words in a drug name carry no meaning, and on the substance corpus that
+# channel alone produced 14,328 pairs of pure noise.
+#
+# `ngram_max_postings` is exposed because the hardcoded 20 makes the channel
+# INERT at n = 3: almost every 3-gram occurs in more than 20 labels, so nearly
+# all of them are dropped and the channel contributes nothing. That is invisible
+# unless you count the pairs per channel, which is why A_block and C_mint both
+# print that table.
 build_pair_graph <- function(idx, evidence = NULL,
                              ngram_min_shared = 6L,
                              max_postings = MAX_POSTINGS,
-                             extra_channels = FALSE) {
+                             extra_channels = FALSE,
+                             use_ngram = extra_channels,
+                             use_acronym = extra_channels,
+                             ngram_max_postings = 20L) {
   token_pairs <- scored_token_pairs(idx, max_postings = max_postings)
 
-  # n-gram and acronym pairs are off by default: the n-gram index is an order of
-  # magnitude denser than the token index and dominates graph-build time, for
-  # pairs token overlap has almost always already produced. Enable to measure.
+  # n-gram and acronym pairs are off by default for sponsors: the n-gram index
+  # is an order of magnitude denser than the token index and dominates
+  # graph-build time, for pairs token overlap has almost always already found.
   empty_pairs <- tibble::tibble(a = integer(), b = integer(), score = numeric(),
                                 channel = character())
-  acr_pairs <- if (extra_channels) {
+  acr_pairs <- if (use_acronym) {
+    # An explicit score. Without one this channel emitted NA, which then
+    # poisoned quantile() in the callers' report and made every
+    # `score >= threshold` comparison NA in canopy_blocks(). Acronym is a
+    # presence channel, so it is scored like `structured`: the key either
+    # matched or it did not.
     pairs_from_postings(idx$acronyms, "acronym", max_postings = max_postings,
-                        channel = "acronym")
+                        channel = "acronym") |>
+      dplyr::mutate(score = 1)
   } else empty_pairs
-  gram_pairs <- if (extra_channels) {
-    pairs_from_postings(idx$grams, "gram", max_postings = 20L, channel = "ngram") |>
+  gram_pairs <- if (use_ngram) {
+    pairs_from_postings(idx$grams, "gram", max_postings = ngram_max_postings,
+                        channel = "ngram") |>
       dplyr::count(a, b, name = "shared") |>
       dplyr::filter(shared >= ngram_min_shared) |>
       dplyr::transmute(a, b, score = 0.7, channel = "ngram")

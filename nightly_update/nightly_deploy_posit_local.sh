@@ -25,13 +25,16 @@ PUSH_TIMEOUT_SECONDS="${PUSH_TIMEOUT_SECONDS:-120}"
 # so they never reach main, but the deploy branch is how they reach Posit — the
 # app reads data/trial_sponsor_labels.csv at startup.
 #
-# config/sponsor_norm_v2/ is deliberately absent. It is the mutable registry, it
-# lives outside the work tree via SPONSOR_V2_DIR, and committing it would both
+# config/sponsor_norm_v2/ and config/substance_norm_v2/ are deliberately absent
+# as directories. They are the mutable registries, they live outside the work
+# tree via SPONSOR_V2_DIR / SUBSTANCE_V2_DIR, and committing them would both
 # fight the `git reset --hard` below and add megabytes of churn per night.
+# E_review_queue.csv is the one exception: it is small, and the curation app
+# needs it on the deploy branch.
 GENERATED_FILES=(
     "trials_cache.rds"
     "www/preprocessing.html"
-    "config/substance_norm_pipeline/3_substance_review_queue.csv"
+    "config/substance_norm_v2/E_review_queue.csv"
     "data/country_normalisation_log.csv"
     "data/meddra_term_normalisation_log.csv"
     "data/organ_class_normalisation_log.csv"
@@ -40,7 +43,8 @@ GENERATED_FILES=(
     "data/sponsor_normalisation_log_v2.csv"
     "data/status_category_normalisation_log.csv"
     "data/status_display_normalisation_log.csv"
-    "data/substance_normalisation_log.csv"
+    "data/substance_normalisation_log_v2.csv"
+    "data/substance_rejected.csv"
     "data/trial_sponsor_labels.csv"
     "data/trial_sponsors_raw.csv"
     "data/trial_substance_labels.csv"
@@ -68,7 +72,7 @@ GENERATED_PATHSPEC=(
     ':(exclude)trials_cache.rds'
     ':(exclude)www/preprocessing.html'
     ':(exclude)data'
-    ':(exclude)config/substance_norm_pipeline/3_substance_review_queue.csv'
+    ':(exclude)config/substance_norm_v2/E_review_queue.csv'
 )
 if ! git diff --quiet -- . "${GENERATED_PATHSPEC[@]}" ||
    ! git diff --cached --quiet -- . "${GENERATED_PATHSPEC[@]}"; then
@@ -103,11 +107,18 @@ docker exec "$instanceName" Rscript /shiny_trials/shiny_trials/update_data.R >> 
 # trials_cache.rds is committed, losing the whole data refresh over an LLM
 # hiccup. The sentinel is how that failure still gets reported.
 SPONSOR_SENTINEL="$SCRIPT_DIR/data/.sponsor_nightly_failed"
-rm -f "$SPONSOR_SENTINEL"
+SUBSTANCE_SENTINEL="$SCRIPT_DIR/data/.substance_nightly_failed"
+rm -f "$SPONSOR_SENTINEL" "$SUBSTANCE_SENTINEL"
 
 log "Step 2/4: Rebuilding RDS cache..."
 docker exec "$instanceName" Rscript /shiny_trials/shiny_trials/rebuild_cache.R >> "$LOG_FILE" 2>&1
 
+NORM_FAILED=0
+if [ -f "$SUBSTANCE_SENTINEL" ]; then
+    NORM_FAILED=1
+    log "ERROR: substance nightly resolution failed — $(cat "$SUBSTANCE_SENTINEL")"
+    log "       see \$SUBSTANCE_V2_DIR/N_nightly_runs.csv for the full history"
+fi
 SPONSOR_FAILED=0
 if [ -f "$SPONSOR_SENTINEL" ]; then
     SPONSOR_FAILED=1
@@ -133,7 +144,7 @@ elif git rev-parse --verify --quiet "$REMOTE/$DEPLOY_BRANCH" >> "$LOG_FILE" 2>&1
      [ "$(git rev-parse "$DEPLOY_BRANCH")" = "$(git rev-parse "$REMOTE/$DEPLOY_BRANCH")" ]; then
     log "Remote $DEPLOY_BRANCH already matches local $DEPLOY_BRANCH; skipping push."
     log "=== Nightly deploy complete ==="
-    exit "$SPONSOR_FAILED"
+    exit $(( SPONSOR_FAILED || NORM_FAILED ))
 fi
 timeout "$PUSH_TIMEOUT_SECONDS" git push --force-with-lease "$REMOTE" "$DEPLOY_BRANCH" >> "$LOG_FILE" 2>&1 \
     && log "Push succeeded." \
@@ -143,7 +154,7 @@ log "=== Nightly deploy complete ==="
 
 # Report a sponsor failure only AFTER the push: the app must still ship. cron
 # mails on a non-zero exit, which is the only alerting this job has.
-if [ "$SPONSOR_FAILED" -ne 0 ]; then
+if [ "$SPONSOR_FAILED" -ne 0 ] || [ "$NORM_FAILED" -ne 0 ]; then
     log "Exiting non-zero: the deploy shipped, but sponsor resolution failed."
     exit 3
 fi
