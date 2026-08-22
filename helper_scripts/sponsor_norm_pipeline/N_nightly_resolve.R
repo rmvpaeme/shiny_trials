@@ -192,8 +192,18 @@ if (!file.exists(REG) || !file.exists(ASG)) {
 raw <- read_csv(RAW, show_col_types = FALSE, progress = FALSE)
 asg <- assignments_read(ASG)
 
+# EVERY column as character, then coerce what needs to be numeric.
+#
+# readr guesses, and it guessed <datetime> for the ISO timestamp this script had
+# itself written. On the SECOND run coalesce(first_seen_utc, RUN$started) then
+# refused to combine <datetime> with <character> and killed the whole sponsor
+# pass — "Can't combine `..1` <datetime<UTC>> and `..2` <character>". The first
+# run always works because the file does not exist yet, which is why this
+# survived until a server had run twice. Same failure as llm_cache_merge.
 deferred <- if (file.exists(NDEFER)) {
-  read_csv(NDEFER, show_col_types = FALSE, progress = FALSE)
+  read_csv(NDEFER, show_col_types = FALSE, progress = FALSE,
+           col_types = cols(.default = col_character())) |>
+    mutate(attempts = suppressWarnings(as.integer(attempts)))
 } else tibble(raw_sponsor = character(), attempts = integer(),
               first_seen_utc = character(), last_attempt_utc = character(),
               last_reason = character())
@@ -302,8 +312,10 @@ if (RUN$n_minted > 0L) {
     filter(!entity_id %in% reg_before$entity_id) |>
     transmute(entity_id, canonical, entity_type, confidence, first_seen_utc = RUN$started)
   prior <- if (file.exists(NNEWENT)) {
-    read_csv(NNEWENT, show_col_types = FALSE, progress = FALSE)
+    read_csv(NNEWENT, show_col_types = FALSE, progress = FALSE,
+             col_types = cols(.default = col_character()))
   } else NULL
+  if (!is.null(prior)) new_ent <- mutate(new_ent, across(everything(), as.character))
   write_csv(bind_rows(prior, new_ent), NNEWENT, na = "", eol = "\n")
   message(sprintf("%d new canonical(s) -> %s (run D_consolidate periodically)",
                   nrow(new_ent), basename(NNEWENT)))
