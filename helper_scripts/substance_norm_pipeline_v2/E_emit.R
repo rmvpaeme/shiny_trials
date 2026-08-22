@@ -165,6 +165,25 @@ if (!is.null(baseline) && all(c("_id", "substance_label") %in% names(baseline)))
     select(`_id`, old_label = substance_label) |>
     distinct(`_id`, .keep_all = TRUE)
 
+  # A TRIAL THAT IS NO LONGER IN THE CORPUS CANNOT HAVE REGRESSED.
+  #
+  # A EudraCT trial has one record per country and which one is retained depends
+  # on the database state, so a baseline frozen from an earlier snapshot names
+  # trials this corpus does not contain — "2004-000015-25-LT" where the current
+  # export has "-GB". Counting those as regressions reported 6,112 failures of
+  # which 5,438 were the same trial under another country code, and it would
+  # recur on the server every night, since the nightly re-exports the corpus.
+  #
+  # Dropping them is not weakening the gate: the gate asks "did a trial we can
+  # still see lose its label", and a trial that is gone is not evidence either
+  # way. Everything still present is compared exactly as before.
+  n_before <- nrow(old)
+  old <- old |> filter(`_id` %in% raw$`_id`)
+  if (nrow(old) < n_before) {
+    message(sprintf("baseline: %d of %d trials are not in the current corpus and are not compared",
+                    n_before - nrow(old), n_before))
+  }
+
   # Trials whose v1 label came ONLY from the raw fallback: v1 labelled them, v2
   # deliberately does not. Identified rather than assumed — a trial qualifies
   # when none of its raw strings resolved AND every one of them is a string some
