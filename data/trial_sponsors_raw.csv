@@ -18320,7 +18320,6 @@ _id,raw_sponsor,is_commercial
 2011-001006-10-DE,advanceCOR GmbH,TRUE
 2011-001007-12-CZ,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co., Inc.",TRUE
 2011-001010-34-AT,ABCSG Austrian Breast  Colorectal Cancer Study Group,FALSE
-2011-001012-56-AT,Eli Lilly and Company,TRUE
 2011-001015-32-DE,AGO Research GmbH,FALSE
 2011-001017-13-ES,CENTRO NACIONAL DE INVESTIGACIONES ONCOLOGICAS,FALSE
 2011-001019-30-CZ,Novartis Pharma GmBH,TRUE
@@ -29997,7 +29996,6 @@ _id,raw_sponsor,is_commercial
 2016-002453-38-BE,Nektar Therapeutics,TRUE
 2016-002454-20-FR,CHU de Rennes,FALSE
 2016-002459-38-AT,Childrens Hospital of Eastern Ontario,FALSE
-2016-002460-13-AT,Medical University of Graz,FALSE
 2016-002461-66-BE,Novartis Pharma AG,TRUE
 2016-002464-14-ES,Grupo Espaol de Investigacin en Sarcomas GEIS,FALSE
 2016-002467-34-DE,AIO-Studien-gGmbH,FALSE
@@ -31669,7 +31667,6 @@ _id,raw_sponsor,is_commercial
 2017-001655-31-GB,Advenchen Laboratories LLC,TRUE
 2017-001657-13-ES,Gan  Lee Pharmaceuticals USA Corporation,TRUE
 2017-001660-38-IT,FONDAZIONE TOSCANA GABRIELE MONASTERIO,FALSE
-2017-001664-37-IT,ISTITUTO NAZIONALE TUMORI - IRCCS FONDAZIONE PASCALE,FALSE
 2017-001665-25-NL,Erasmus MC,FALSE
 2017-001673-17-FI,Integrative Research Laboratories AB,TRUE
 2017-001677-16-DE,Galderma S.A.,TRUE
@@ -32862,7 +32859,6 @@ _id,raw_sponsor,is_commercial
 2017-004901-41-FI,Hospital District of Southwestern Finland,FALSE
 2017-004902-16-BE,Calliditas Therapeutics AB,TRUE
 2017-004903-33-GB,Orphazyme A/S,TRUE
-2017-004909-41-NO,Akershus University Hospital Trust HF,FALSE
 2017-004915-38-PL,"Merck Sharp  Dohme Corp., a subsidiary of Merck  Co., Inc.",TRUE
 2017-004919-39-DE,Nitto Denko Corporation,TRUE
 2017-004921-33-GB,"Regeneron Pharmaceuticals, Inc.",TRUE
@@ -33098,7 +33094,6 @@ _id,raw_sponsor,is_commercial
 2018-000342-19-DE,"Otto-von-Guericke-Universitt Magdeburg, Medizinische Fakultt",FALSE
 2018-000345-39-BE,Pfizer Inc.,TRUE
 2018-000346-19-FI,Herantis Pharma Plc,TRUE
-2018-000347-60-ES,Grupo de Tratamiento de los Tumores Digestivos TTD,FALSE
 2018-000348-24-DK,"Department of Otorhinolaryngology, Head and Neck Surgery",FALSE
 2018-000353-50-GB,CHIESI FARMACEUTICI S.p.A,TRUE
 2018-000356-18-NL,University Medical Center utrecht,FALSE
@@ -35380,7 +35375,6 @@ _id,raw_sponsor,is_commercial
 2019-002730-36-DK,"Department of Dermatology, Bispebjerg Hospital",FALSE
 2019-002733-10-ES,FUNDACI LLUITA CONTRA LA SIDA,FALSE
 2019-002738-36-DE,"Alkahest, Inc.",TRUE
-2019-002741-37-BE,Novartis Pharma AG,TRUE
 2019-002742-20-DE,Regeneron Pharmaceuticals Inc.,TRUE
 2019-002744-24-GB,Chiesi Farmaceutici S.p.A.,TRUE
 2019-002745-38-BE,"Galera Therapeutics, Inc.",TRUE
@@ -36111,7 +36105,6 @@ _id,raw_sponsor,is_commercial
 2020-000338-16-DK,Janssen-Cilag International NV,TRUE
 2020-000341-14-BE,Janssen-Cilag International NV,TRUE
 2020-000344-67-DE,"Dicerna Pharmaceuticals, Inc.",TRUE
-2020-000348-77-BE,"Exelixis, Inc.",TRUE
 2020-000349-14-BE,Novartis Pharma AG,TRUE
 2020-000354-10-DE,Celgene Corporation,TRUE
 2020-000362-42-DE,Oxurion NV,TRUE
@@ -36717,7 +36710,6 @@ _id,raw_sponsor,is_commercial
 2020-002130-33-BE,University Hospital Ghent,FALSE
 2020-002140-22-DK,Lars mller Pedersen,FALSE
 2020-002143-27-NL,Maasstad Ziekenhuis,FALSE
-2020-002144-23-ES,Asociacin Instituto Biodonostia,FALSE
 2020-002166-13-ES,Dr. Ramn Lleonart Bellfill / Dr. Xavier Corbella Virs,FALSE
 2020-002186-34-ES,Fundaci Hospital Universitari Vall dHebron - Institut de Recerca VHIR.,FALSE
 2020-002187-31-DK,"Department of Paediatrics, Herlev Hospital",FALSE
@@ -37394,7 +37386,6 @@ _id,raw_sponsor,is_commercial
 2020-005226-28-DE,AstraZeneca AB,TRUE
 2020-005227-37-NL,Olatec Therapeutics LLC,TRUE
 2020-005229-95-NL,"Passage Bio, Inc.",TRUE
-2020-005231-78-BE,F. Hoffmann-La Roche Ltd,TRUE
 2020-005232-30-BG,"Salix Pharmaceuticals, Inc.",TRUE
 2020-005241-16-DK,Center for Clinical Metabolic Research at Herlev-Gentofte Hospital,FALSE
 2020-005263-31-DE,NTC s.r.l.,TRUE
@@ -37741,7 +37732,6 @@ _id,raw_sponsor,is_commercial
 2021-000593-29-FR,CHU DE BORDEAUX,FALSE
 2021-000594-81-BE,University Hospitals Leuven UZ Leuven,FALSE
 2021-000598-95-ES,Camurus AB,TRUE
-2021-000602-17-AT,Novartis Pharma AG,TRUE
 2021-000605-24-ES,IDIAP Jordi Gol,FALSE
 2021-000610-42-NL,Amsterdam UMC - location VUmc,FALSE
 2021-000613-16-DE,Charit  Universittsmedizin Berlin,FALSE
@@ -38086,7 +38076,6 @@ _id,raw_sponsor,is_commercial
 2021-002534-16-ES,Fundaci Sant Joan de Du,FALSE
 2021-002535-39-BE,Osivax,TRUE
 2021-002549-13-BE,InDex Pharmaceuticals,TRUE
-2021-002555-10-BE,"Daiichi Sankyo, Inc.",TRUE
 2021-002557-29-PL,Synektik Spka Akcyjna,TRUE
 2021-002565-17-IT,FONDAZIONE POLICLINICO UNIVERSITARIO AGOSTINO GEMELLI IRCCS UNIVERSITA CATTOLICA DEL SACRO CUORE,FALSE
 2021-002569-16-ES,Lilly S.A.,TRUE
@@ -38169,7 +38158,6 @@ _id,raw_sponsor,is_commercial
 2021-003195-13-CZ,Fakultn nemocnice Ostrava,FALSE
 2021-003208-42-BE,Bristol-Myers Squibb International Corporation,TRUE
 2021-003209-22-DE,UNION therapeutics A/S,TRUE
-2021-003212-11-BE,Princess Mxima Center,FALSE
 2021-003214-40-DK,MinervaX Aps,TRUE
 2021-003218-38-DK,Aalborg University Hospital,FALSE
 2021-003221-30-BE,AstraZeneca AB,TRUE
@@ -38362,7 +38350,6 @@ _id,raw_sponsor,is_commercial
 2021-004579-16-HU,Adamed Pharma S.A.,TRUE
 2021-004597-65-DE,"Rhythm Pharmaceuticals, Inc.",TRUE
 2021-004600-17-IE,Royal College of Surgeons in Ireland,FALSE
-2021-004606-21-AT,AstraZeneca AB,TRUE
 2021-004608-17-BE,AZ Sint-Jan Brugge-Oostende AV,FALSE
 2021-004628-14-FI,Oulu University Hospital,FALSE
 2021-004727-33-BE,Cytokinetics Inc,TRUE
@@ -38441,7 +38428,6 @@ _id,raw_sponsor,is_commercial
 2021-005399-21-AT,Innovacell AG,TRUE
 2021-005401-28-FR,University Hospital of Clermont-Ferrand,FALSE
 2021-005426-18-BE,UZ Brussel,FALSE
-2021-005427-20-DE,Pfizer Inc.,TRUE
 2021-005429-26-NL,Centre for Human Drug Research,FALSE
 2021-005431-23-BE,MiNA Alpha Limited,TRUE
 2021-005441-32-SE,Linkping University,FALSE
@@ -38625,7 +38611,6 @@ _id,raw_sponsor,is_commercial
 2022-000176-19-FR,Immunophotonics Inc.,TRUE
 2022-000214-34-CZ,SYLENTIS S.A.U,TRUE
 2022-000215-31-BE,UZ Leuven,FALSE
-2022-000239-21-BG,Merck Healthcare KGaA,TRUE
 2022-000240-30-NL,"Center for Experimental and Molecular Medicine, G2  AMC",FALSE
 2022-000241-32-NL,Amsterdam UMC,FALSE
 2022-000245-33-PL,Medical University of Lublin,FALSE
@@ -38653,7 +38638,6 @@ _id,raw_sponsor,is_commercial
 2022-000459-35-DE,"Timber Pharmaceuticals, LLC",TRUE
 2022-000461-41-BG,Janssen-Cilag International NV,TRUE
 2022-000476-18-HU,"EnBiotix, Inc.",TRUE
-2022-000493-26-BE,AstraZeneca AB,TRUE
 2022-000498-15-AT,Redx Pharma Plc,TRUE
 2022-000520-38-CZ,Bayer AG,TRUE
 2022-000535-23-ES,Barcelona Institute for Global Health ISGlobal,FALSE
@@ -38688,7 +38672,6 @@ _id,raw_sponsor,is_commercial
 2022-000747-77-BE,Biogen Idec Research Limited,TRUE
 2022-000753-80-CZ,Ferring Pharmaceuticals A/S,TRUE
 2022-000763-45-BE,"AlloVir, Inc.",TRUE
-2022-000776-19-ES,AstraZeneca AB,TRUE
 2022-000785-18-ES,HIPRA SCIENTIFIC,TRUE
 2022-000788-30-PL,Uzdrowisko Kamie Pomorski S.A.,TRUE
 2022-000790-94-BG,Novo Nordisk A/S,TRUE
@@ -38814,7 +38797,6 @@ _id,raw_sponsor,is_commercial
 2022-002185-32-IT,NeuroSense Therapeutics Ltd,TRUE
 2022-002188-31-HU,"Shanghai Henlius Biotech, Inc.",TRUE
 2022-002189-34-BG,"Shanghai Henlius Biotech, Inc.",TRUE
-2022-002226-27-AT,"Shanghai Henlius Biotech, Inc.",TRUE
 2022-002234-14-ES,"OncoResponse, Inc.",TRUE
 2022-002235-60-BG,Novo Nordisk A/S,TRUE
 2022-002250-97-BE,CHU de Lige,FALSE
@@ -38980,7 +38962,7 @@ _id,raw_sponsor,is_commercial
 2022-500176-63-00,Amsterdam UMC,NA
 2022-500177-13-00,Gilead Sciences Inc.,NA
 2022-500185-94-01,Mikrobiomik Healthcare Company S.L.,NA
-2022-500186-27-00,Life Molecular Imaging GmbH,NA
+2022-500186-27-00,Lantheus Germany GmbH,NA
 2022-500197-34-01,Centre Hospitalier Universitaire Dijon Bourgogne,NA
 2022-500201-41-00,Bayer Consumer Care AG / Bayer AG,NA
 2022-500210-26-00,University Medical Center Groningen,NA
@@ -39025,7 +39007,7 @@ _id,raw_sponsor,is_commercial
 2022-500345-25-00,Arena Pharmaceuticals Inc.,NA
 2022-500347-20-00,Anacardio AB,NA
 2022-500350-42-01,Merck Sharp & Dohme Corp.,NA
-2022-500363-12-00,Oslo University Hospital Hf / Oslo University Hospital Hf,NA
+2022-500363-12-00,Oslo University Hospital Hf,NA
 2022-500366-10-00,Region Skane,NA
 2022-500367-12-00,Priovant Therapeutics Inc.,NA
 2022-500377-13-01,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Princesa,NA
@@ -39084,6 +39066,7 @@ _id,raw_sponsor,is_commercial
 2022-500599-79-00,Aarhus University Hospital,NA
 2022-500608-23-00,Abbvie Deutschland GmbH & Co. KG,NA
 2022-500609-42-00,Agios Pharmaceuticals Inc.,NA
+2022-500614-26-00,Zealand Pharma A/S,NA
 2022-500618-24-00,Turku University Central Hospital,NA
 2022-500628-31-00,Lytix Biopharma AS,NA
 2022-500630-29-00,Bristol-Myers Squibb Services Unlimited Company,NA
@@ -39102,7 +39085,7 @@ _id,raw_sponsor,is_commercial
 2022-500676-59-00,GPOH gGmbH,NA
 2022-500677-14-00,Fundación Para La Investigación Biomédica Del Hospital Universitario La Paz,NA
 2022-500678-33-00,Maastricht University,NA
-2022-500680-13-00,Institut Gustave Roussy / Institut Gustave Roussy,NA
+2022-500680-13-00,Institut Gustave Roussy,NA
 2022-500681-98-00,Litevax B.V.,NA
 2022-500685-10-00,Astrazeneca AB,NA
 2022-500687-35-00,BeOne Medicines AG,NA
@@ -39134,7 +39117,7 @@ _id,raw_sponsor,is_commercial
 2022-500775-31-00,Noucor Health S.A.,NA
 2022-500777-14-00,Leo Pharma A/S,NA
 2022-500779-29-00,Sydvestjysk Sygehus,NA
-2022-500782-27-00,Galapagos,NA
+2022-500782-27-00,Lakefront Biotherapeutics,NA
 2022-500783-35-00,GPOH gGmbH,NA
 2022-500785-10-00,Merck Sharp & Dohme LLC,NA
 2022-500790-14-00,Albireo AB / Albireo AB,NA
@@ -39143,13 +39126,14 @@ _id,raw_sponsor,is_commercial
 2022-500797-34-00,Merck Sharp & Dohme LLC,NA
 2022-500800-24-00,Regeneron Pharmaceuticals Inc.,NA
 2022-500801-41-00,K36 Therapeutics Inc.,NA
+2022-500802-16-00,Daiichi Sankyo Inc.,NA
 2022-500808-21-00,Karolinska University Hospital,NA
 2022-500811-37-00,Regeneron Pharmaceuticals Inc.,NA
 2022-500814-24-00,Oslo University Hospital Hf,NA
 2022-500816-21-00,Præhospitalet,NA
 2022-500820-31-00,Merck Sharp & Dohme LLC,NA
 2022-500821-34-00,Merck Sharp & Dohme LLC,NA
-2022-500823-61-00,Bristol-Myers Squibb International Corporation / Bristol-Myers Squibb International Corporation,NA
+2022-500823-61-00,Bristol-Myers Squibb International Corporation,NA
 2022-500828-30-00,Cyclo Therapeutics Inc.,NA
 2022-500838-28-00,Universitaetsklinikum Essen AöR,NA
 2022-500849-24-00,Tolremo Therapeutics AG,NA
@@ -39183,12 +39167,13 @@ _id,raw_sponsor,is_commercial
 2022-500954-40-00,Achieve Life Sciences Inc.,NA
 2022-500966-82-00,Karolinska University Hospital,NA
 2022-500967-11-00,Bristol-Myers Squibb Services Unlimited Company,NA
-2022-500974-33-00,Centre Hospitalier Universitaire De Saint Etienne / Centre Hospitalier Universitaire De Saint Etienne,NA
-2022-500988-12-00,Fondazione IRCCS Istituto Nazionale Dei Tumori / Fondazione IRCCS Istituto Nazionale Dei Tumori,NA
+2022-500974-33-00,Centre Hospitalier Universitaire De Saint Etienne,NA
+2022-500988-12-00,Fondazione IRCCS Istituto Nazionale Dei Tumori,NA
 2022-500990-16-00,Merck Sharp & Dohme LLC,NA
 2022-501004-10-00,Seelos Therapeutics Inc.,NA
 2022-501005-12-00,Zenas Biopharma (USA) LLC,NA
 2022-501006-34-01,Odense University Hospital / European Foundation For The Study Of Chronic Liver Failure,NA
+2022-501007-28-00,Eli Lilly & Co.,NA
 2022-501012-34-00,Actelion Pharmaceuticals Ltd.,NA
 2022-501017-31-00,Abbvie Deutschland GmbH & Co. KG,NA
 2022-501018-78-00,Abbvie Deutschland GmbH & Co. KG,NA
@@ -39267,7 +39252,7 @@ _id,raw_sponsor,is_commercial
 2022-501234-37-00,Regeneron Pharmaceuticals Inc.,NA
 2022-501238-52-00,Merck Sharp & Dohme LLC,NA
 2022-501243-33-00,Merck Sharp & Dohme LLC,NA
-2022-501246-30-00,Idorsia Pharmaceuticals Ltd. / Idorsia Pharmaceuticals Ltd.,NA
+2022-501246-30-00,Idorsia Pharmaceuticals Ltd.,NA
 2022-501250-12-01,Sparingvision,NA
 2022-501251-81-00,Merck Sharp & Dohme LLC,NA
 2022-501252-28-00,Merck Sharp & Dohme LLC,NA
@@ -39281,9 +39266,10 @@ _id,raw_sponsor,is_commercial
 2022-501263-41-00,Abbvie Deutschland GmbH & Co. KG,NA
 2022-501304-10-00,Aarhus University Hospital,NA
 2022-501306-35-00,University Of Cologne,NA
-2022-501308-90-00,Gruppo Oncologico Del Nord Ovest,NA
+2022-501308-90-00,Fondazione GONO G.I.,NA
 2022-501310-57-00,Organon LLC,NA
 2022-501312-34-01,Zealand University Hospital,NA
+2022-501315-13-00,Centre Leon Berard,NA
 2022-501316-34-00,Centre Leon Berard,NA
 2022-501317-31-00,Bristol-Myers Squibb International Corporation,NA
 2022-501322-38-00,Institut fuer Klinische Krebsforschung IKF GmbH,NA
@@ -39299,7 +39285,7 @@ _id,raw_sponsor,is_commercial
 2022-501349-64-00,Takeda Development Center Americas Inc.,NA
 2022-501350-11-00,Takeda Development Center Americas Inc.,NA
 2022-501351-82-00,Merck Healthcare KGaA,NA
-2022-501352-28-00,BIOTEST AG,NA
+2022-501352-28-00,Biotest GmbH & Co. KGaA,NA
 2022-501353-37-00,Astrazeneca AB / Astrazeneca AB,NA
 2022-501354-10-01,Alfasigma S.p.A.,NA
 2022-501360-18-00,Bristol-Myers Squibb International Corporation,NA
@@ -39341,7 +39327,7 @@ _id,raw_sponsor,is_commercial
 2022-501457-37-00,GPOH gGmbH,NA
 2022-501458-13-01,University Of Cologne,NA
 2022-501460-17-00,Cr2o B.V.,NA
-2022-501461-52-00,Merz Therapeutics GmbH / Merz Therapeutics GmbH,NA
+2022-501461-52-00,Merz Therapeutics GmbH,NA
 2022-501462-22-00,Palo Biofarma S.L.,NA
 2022-501463-40-01,Servier Affaires Medicales,NA
 2022-501464-18-00,Medibiofarma S.L. / Medibiofarma S.L.,NA
@@ -39351,6 +39337,7 @@ _id,raw_sponsor,is_commercial
 2022-501474-19-00,Deciphera Pharmaceuticals Inc.,NA
 2022-501476-25-00,Eli Lilly & Co.,NA
 2022-501477-40-00,Deciphera Pharmaceuticals Inc.,NA
+2022-501478-21-00,Eli Lilly & Co.,NA
 2022-501480-41-00,Sun Pharmaceutical Industries Limited,NA
 2022-501483-18-00,Regeneron Pharmaceuticals Inc.,NA
 2022-501485-22-00,Celgene Corp.,NA
@@ -39393,6 +39380,7 @@ _id,raw_sponsor,is_commercial
 2022-501576-25-00,Regeneron Pharmaceuticals Inc.,NA
 2022-501585-22-00,Amgen Inc.,NA
 2022-501586-50-00,Amgen Inc.,NA
+2022-501587-17-00,Amgen Inc.,NA
 2022-501590-39-00,Astellas Pharma Inc,NA
 2022-501594-39-00,Hospices Civils De Lyon,NA
 2022-501599-25-00,Abbvie Deutschland GmbH & Co. KG,NA
@@ -39431,7 +39419,7 @@ _id,raw_sponsor,is_commercial
 2022-501710-62-02,Lysarc,NA
 2022-501717-31-00,Sorlandet Sykehus HF,NA
 2022-501725-21-00,Universitaet Muenster,NA
-2022-501726-38-00,Oslo University Hospital Hf / Oslo University Hospital Hf,NA
+2022-501726-38-00,Oslo University Hospital Hf,NA
 2022-501744-15-00,Eli Lilly & Co.,NA
 2022-501752-29-00,Incyte Corp.,NA
 2022-501753-36-00,Incyte Corp.,NA
@@ -39468,6 +39456,7 @@ _id,raw_sponsor,is_commercial
 2022-501862-24-00,Laboratorios Normon S.A.,NA
 2022-501863-41-00,Amgen Inc.,NA
 2022-501866-22-00,Princess Maxima Center For Pediatric Oncology,NA
+2022-501867-42-01,Princess Maxima Center For Pediatric Oncology,NA
 2022-501869-41-00,Princess Maxima Center For Pediatric Oncology,NA
 2022-501874-21-00,Vastra Gotalandsregionen,NA
 2022-501876-24-00,F. Hoffmann-La Roche AG,NA
@@ -39534,14 +39523,14 @@ _id,raw_sponsor,is_commercial
 2022-502031-20-00,F. Hoffmann-La Roche AG,NA
 2022-502038-23-00,Gentofte Hospital,NA
 2022-502040-13-00,University of Leipzig,NA
-2022-502043-35-00,AstraZeneca AB,NA
+2022-502043-35-01,AstraZeneca AB,NA
 2022-502045-10-00,Bioprojet Pharma / Bioprojet Pharma,NA
 2022-502046-28-00,F. Hoffmann-La Roche AG,NA
 2022-502047-35-00,Sanofi Pasteur,NA
 2022-502048-10-00,Aurealis Oy,NA
 2022-502049-91-00,Eagle Pharmaceuticals Inc.,NA
 2022-502050-14-00,Abbvie Deutschland GmbH & Co. KG,NA
-2022-502051-56-00,Chimerix Inc. / Chimerix Inc.,NA
+2022-502051-56-00,Chimerix Inc.,NA
 2022-502052-30-00,F. Hoffmann-La Roche AG,NA
 2022-502053-34-00,Genentech Inc.,NA
 2022-502057-33-00,Sanofi-Aventis Recherche & Developpement,NA
@@ -39585,13 +39574,14 @@ _id,raw_sponsor,is_commercial
 2022-502125-17-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2022-502126-40-00,Merck Sharp & Dohme LLC,NA
 2022-502127-22-00,Merck Sharp & Dohme LLC,NA
-2022-502128-38-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2022-502128-38-00,Leo Pharma A/S,NA
 2022-502134-10-00,Novartis Pharma AG,NA
 2022-502135-19-00,Novartis Pharma AG,NA
 2022-502137-26-00,Regeneron Pharmaceuticals Inc.,NA
 2022-502139-20-00,Rigshospitalet,NA
 2022-502140-13-00,St Antonius Hospital,NA
 2022-502144-12-00,Assistance Publique Hopitaux De Paris,NA
+2022-502145-10-00,Celcuity Inc.,NA
 2022-502148-10-00,Novartis Pharma AG,NA
 2022-502151-54-00,Cannaxan GmbH / Apurano Pharmaceuticals GmbH,NA
 2022-502154-13-00,Grupo Espanol De Tumores Neuroendocrinos,NA
@@ -39630,7 +39620,7 @@ _id,raw_sponsor,is_commercial
 2022-502228-34-00,Pfizer Inc.,NA
 2022-502229-16-00,Hospices Civils De Lyon,NA
 2022-502231-19-00,Pfizer Inc.,NA
-2022-502233-25-00,Neurocrine Biosciences Inc. / Neurocrine Biosciences Inc.,NA
+2022-502233-25-00,Neurocrine Biosciences Inc.,NA
 2022-502234-70-00,F. Hoffmann-La Roche AG,NA
 2022-502238-22-00,Janssen - Cilag International,NA
 2022-502239-20-00,Bispebjerg Hospital,NA
@@ -39670,6 +39660,7 @@ _id,raw_sponsor,is_commercial
 2022-502313-28-00,Glaxosmithkline Research & Development Limited,NA
 2022-502314-93-00,Novartis Pharma AG,NA
 2022-502316-36-00,Myokardia Inc.,NA
+2022-502317-29-00,AstraZeneca AB,NA
 2022-502319-12-00,Bayer AG,NA
 2022-502322-41-00,F. Hoffmann-La Roche AG,NA
 2022-502324-48-00,Leiden University Medical Center,NA
@@ -39684,12 +39675,13 @@ _id,raw_sponsor,is_commercial
 2022-502348-11-00,Seagen Inc.,NA
 2022-502351-60-00,Unicancer,NA
 2022-502352-31-00,Amgen Inc.,NA
-2022-502354-14-00,Bristol Myers Squibb International Corporation,NA
+2022-502354-14-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2022-502357-34-00,Pharmacosmos A/S,NA
 2022-502359-75-00,UCB Biosciences Inc.,NA
 2022-502360-21-00,Institut Curie,NA
 2022-502361-15-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2022-502362-24-00,Centre Hospitalier Universitaire De Nice,NA
+2022-502365-26-00,Novartis Pharma AG,NA
 2022-502366-25-00,Novartis Pharma AG,NA
 2022-502367-37-00,Novartis Pharma AG,NA
 2022-502369-10-00,Unicancer,NA
@@ -39711,7 +39703,7 @@ _id,raw_sponsor,is_commercial
 2022-502404-73-00,Genentech Inc.,NA
 2022-502405-15-01,Klinikum Der Universitat Munchen AöR,NA
 2022-502408-57-00,Unicancer,NA
-2022-502409-14-00,University Of Porto / University Of Porto,NA
+2022-502409-14-00,University Of Porto,NA
 2022-502413-29-00,Asociacion Grupo Tratamiento De Tumores Digestivos,NA
 2022-502414-84-00,Sanofi-Aventis Research & Development,NA
 2022-502415-11-00,Ionis Pharmaceuticals Inc.,NA
@@ -39748,7 +39740,7 @@ _id,raw_sponsor,is_commercial
 2022-502498-40-00,Celgene Corp.,NA
 2022-502499-22-00,Celgene Corp.,NA
 2022-502500-75-00,Rigshospitalet,NA
-2022-502502-32-00,Slagelse Hospital / Slagelse Hospital,NA
+2022-502502-32-00,Slagelse Hospital,NA
 2022-502503-30-00,Princess Maxima Center For Pediatric Oncology,NA
 2022-502505-15-00,Vigil Neuroscience Inc.,NA
 2022-502512-36-00,Aarhus University,NA
@@ -39766,7 +39758,7 @@ _id,raw_sponsor,is_commercial
 2022-502534-23-00,Sanofi-Aventis Research & Development,NA
 2022-502538-14-00,H. Lundbeck A/S,NA
 2022-502539-21-00,Janssen - Cilag International,NA
-2022-502540-12-00,Marinus Pharmaceuticals Inc. / Marinus Pharmaceuticals Inc.,NA
+2022-502540-12-00,Marinus Pharmaceuticals Inc.,NA
 2022-502542-28-00,F. Hoffmann-La Roche AG,NA
 2022-502546-26-00,F. Hoffmann-La Roche AG,NA
 2022-502547-36-00,Amicus Therapeutics Inc.,NA
@@ -39787,10 +39779,12 @@ _id,raw_sponsor,is_commercial
 2022-502604-67-00,Oslo University Hospital Hf,NA
 2022-502605-15-00,Novo Nordisk A/S,NA
 2022-502606-33-00,AstraZeneca AB,NA
+2022-502609-14-00,F. Hoffmann-La Roche AG,NA
 2022-502611-10-00,F. Hoffmann-La Roche AG,NA
 2022-502614-82-00,Laboratorios Leon Farma S.A.,NA
 2022-502615-11-00,Genentech Inc.,NA
 2022-502616-37-00,F. Hoffmann-La Roche AG,NA
+2022-502618-95-00,F. Hoffmann-La Roche AG,NA
 2022-502619-13-00,F. Hoffmann-La Roche AG,NA
 2022-502620-49-00,Amgen Inc.,NA
 2022-502621-17-00,Aarhus University Hospital,NA
@@ -39815,7 +39809,7 @@ _id,raw_sponsor,is_commercial
 2022-502658-15-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2022-502659-73-01,Odense University Hospital,NA
 2022-502660-20-00,Regeneron Pharmaceuticals Inc.,NA
-2022-502661-23-00,Galapagos,NA
+2022-502661-23-00,Lakefront Biotherapeutics,NA
 2022-502664-21-00,Amsterdam UMC,NA
 2022-502665-15-00,Universitaetsklinikum Tuebingen,NA
 2022-502667-38-00,Bayer Consumer Care AG / Bayer AG,NA
@@ -39870,7 +39864,7 @@ _id,raw_sponsor,is_commercial
 2022-502776-22-00,Region Uppsala,NA
 2022-502777-42-01,Merck Sharp & Dohme LLC,NA
 2022-502778-18-00,Polpharma Biologics S.A.,NA
-2022-502779-40-00,Novartis Pharma AG,NA
+2022-502779-40-99,Novartis Pharma AG,NA
 2022-502781-24-01,Merck Sharp & Dohme LLC,NA
 2022-502782-14-00,Merck Sharp & Dohme LLC,NA
 2022-502783-21-00,Regeneron Pharmaceuticals Inc.,NA
@@ -39887,6 +39881,7 @@ _id,raw_sponsor,is_commercial
 2022-502802-34-00,Takeda Development Center Americas Inc.,NA
 2022-502807-31-00,Technische Universitat Dresden,NA
 2022-502808-72-00,Hemato-Oncologie voor Volwassenen Nederland (Hovon) Stichting,NA
+2022-502810-10-00,Horizon Therapeutics Ireland Designated Activity Company,NA
 2022-502811-12-00,Aresus Pharma GmbH,NA
 2022-502812-35-00,Sling Therapeutics Inc.,NA
 2022-502814-99-00,Janssen - Cilag International,NA
@@ -39964,13 +39959,13 @@ _id,raw_sponsor,is_commercial
 2022-502953-32-01,Astria Therapeutics Inc.,NA
 2022-502954-15-00,Syndax Pharmaceuticals Inc.,NA
 2022-502956-29-00,Novartis Pharma AG,NA
-2022-502959-54-00,Dizal (Jiangsu) Pharmaceutical Co. Ltd.,NA
+2022-502959-54-00,Dizal Pharmaceutical Co. Ltd.,NA
 2022-502962-26-00,Hellenic Institute For The Study Of Sepsis,NA
 2022-502963-39-00,Moderna Therapeutics Inc.,NA
 2022-502965-34-00,Novartis Pharma AG,NA
 2022-502966-26-01,Novartis Pharma AG,NA
 2022-502968-20-02,University Medical Center Utrecht,NA
-2022-502969-19-00,Janssen - Cilag International / Janssen - Cilag International,NA
+2022-502969-19-00,Janssen - Cilag International,NA
 2022-502972-22-00,Vedanta Biosciences Inc.,NA
 2022-502974-18-00,Centre Hospitalier Universitaire De Nice,NA
 2022-502975-45-00,Pharma Mar S.A.,NA
@@ -40038,8 +40033,8 @@ _id,raw_sponsor,is_commercial
 2022-503102-20-00,Zai Lab (Shanghai) Co. Ltd.,NA
 2022-503105-38-00,AstraZeneca AB,NA
 2022-503107-21-00,Genentech Inc.,NA
-2022-503108-26-00,Bristol-Myers Squibb Services Unlimited Company / Bristol-Myers Squibb Services Unlimited Company,NA
-2022-503110-23-00,Fundacion Seimc Gesida / Fundacion Seimc Gesida,NA
+2022-503108-26-00,Bristol-Myers Squibb Services Unlimited Company,NA
+2022-503110-23-00,Fundacion Seimc Gesida,NA
 2022-503112-17-00,Sarepta Therapeutics Inc.,NA
 2022-503113-31-01,Orexa B.V.,NA
 2022-503114-23-00,Stemline Therapeutics Inc.,NA
@@ -40094,6 +40089,7 @@ _id,raw_sponsor,is_commercial
 2023-503224-66-00,Anthos Therapeutics Inc.,NA
 2023-503226-39-00,Centre Hospitalier Universitaire De Nice,NA
 2023-503228-17-00,Zealand University Hospital,NA
+2023-503229-21-00,F. Hoffmann-La Roche AG,NA
 2023-503230-49-00,Vertex Pharmaceuticals Inc.,NA
 2023-503231-17-00,AstraZeneca AB,NA
 2023-503233-22-00,Tarchominskie Zaklady Farmaceutyczne Polfa S.A.,NA
@@ -40124,7 +40120,7 @@ _id,raw_sponsor,is_commercial
 2023-503291-24-00,Dragonfly Therapeutics Inc.,NA
 2023-503293-21-00,Amgen Inc.,NA
 2023-503294-37-00,Amgen Inc.,NA
-2023-503295-25-00,Gruppo Oncologico Del Nord Ovest,NA
+2023-503295-25-00,Fondazione GONO G.I.,NA
 2023-503297-20-00,Odense University Hospital,NA
 2023-503298-39-00,AstraZeneca AB,NA
 2023-503301-10-00,Centre Hospitalier Universitaire De Montpellier,NA
@@ -40152,8 +40148,8 @@ _id,raw_sponsor,is_commercial
 2023-503355-98-00,Ionis Pharmaceuticals Inc.,NA
 2023-503356-27-00,Inspirna Inc. / Inspirna Inc.,NA
 2023-503357-35-00,AstraZeneca AB,NA
-2023-503360-16-00,Merck Sharp & Dohme LLC / Merck Sharp & Dohme LLC,NA
-2023-503362-24-01,Rigshospitalet / Rigshospitalet,NA
+2023-503360-16-00,Merck Sharp & Dohme LLC,NA
+2023-503362-24-01,Rigshospitalet,NA
 2023-503368-18-00,Bayer AG,NA
 2023-503371-25-00,Region Hovedstaden,NA
 2023-503373-37-01,Solti Group,NA
@@ -40277,7 +40273,7 @@ _id,raw_sponsor,is_commercial
 2023-503600-83-00,Amgen Inc.,NA
 2023-503602-37-00,CHRU De Nancy,NA
 2023-503606-36-00,Institut Gustave Roussy,NA
-2023-503609-12-00,Teikoku Seiyaku Co. Ltd. / Teikoku Seiyaku Co. Ltd.,NA
+2023-503609-12-00,Teikoku Seiyaku Co. Ltd.,NA
 2023-503611-16-00,Novartis Pharma AG,NA
 2023-503613-29-00,University Clinic Of Navarra,NA
 2023-503614-80-00,GB002 Inc.,NA
@@ -40323,7 +40319,7 @@ _id,raw_sponsor,is_commercial
 2023-503684-42-00,Karolinska University Hospital,NA
 2023-503686-26-02,St Antonius Hospital,NA
 2023-503688-41-00,Bionorica SE,NA
-2023-503689-21-00,F. Hoffmann-La Roche AG / F. Hoffmann-La Roche AG,NA
+2023-503689-21-00,F. Hoffmann-La Roche AG,NA
 2023-503691-25-00,AstraZeneca AB,NA
 2023-503692-24-00,AstraZeneca AB,NA
 2023-503693-20-01,Areteia Therapeutics Inc.,NA
@@ -40335,7 +40331,7 @@ _id,raw_sponsor,is_commercial
 2023-503701-11-00,UZ Leuven,NA
 2023-503703-28-00,Berlin-Chemie AG,NA
 2023-503705-10-00,Deutsches Zentrum Fuer Neurodegenerative Erkrankungen e.V.,NA
-2023-503708-10-00,Sermonix Pharmaceuticals Inc.,NA
+2023-503708-10-00,Leonabio Inc.,NA
 2023-503709-12-00,Azienda Ospedaliero Universitaria Meyer IRCCS,NA
 2023-503710-69-00,Amsterdam UMC,NA
 2023-503711-15-00,H. Lundbeck A/S,NA
@@ -40343,7 +40339,7 @@ _id,raw_sponsor,is_commercial
 2023-503714-77-00,Mirati Therapeutics Inc.,NA
 2023-503715-14-00,Bristol Myers Squibb International Corporation,NA
 2023-503717-30-00,Medical University Of Vienna,NA
-2023-503718-66-00,Abnoba GmbH / Abnoba GmbH,NA
+2023-503718-66-00,Abnoba GmbH,NA
 2023-503719-13-00,Hyloris Developments,NA
 2023-503722-39-00,Ntc S.r.l.,NA
 2023-503723-26-00,Universitair Ziekenhuis Gent,NA
@@ -40364,7 +40360,7 @@ _id,raw_sponsor,is_commercial
 2023-503756-27-00,F. Hoffmann-La Roche AG,NA
 2023-503757-35-00,Shionogi B.V.,NA
 2023-503760-17-00,Steno Diabetes Center Copenhagen,NA
-2023-503763-42-00,Seqirus UK Limited / Seqirus UK Limited / Seqirus UK Limited,NA
+2023-503763-42-00,Seqirus UK Limited,NA
 2023-503765-37-00,CSL Behring LLC,NA
 2023-503766-24-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2023-503770-21-00,Spruce Biosciences Inc.,NA
@@ -40418,7 +40414,7 @@ _id,raw_sponsor,is_commercial
 2023-503892-83-00,Vivet Therapeutics,NA
 2023-503893-19-00,Viiv Healthcare UK Limited,NA
 2023-503894-39-00,Universitair Medisch Centrum Groningen / Universitair Medisch Centrum Groningen,NA
-2023-503895-25-00,Universita Degli Studi Di Torino / Mario Negri Institute For Pharmacological Research IRCCS,NA
+2023-503895-25-00,Universita Degli Studi Di Torino,NA
 2023-503898-38-00,Eli Lilly & Co.,NA
 2023-503903-27-00,Carrick Therapeutics Limited,NA
 2023-503904-10-00,Horizon Therapeutics Ireland Designated Activity Company,NA
@@ -40463,7 +40459,7 @@ _id,raw_sponsor,is_commercial
 2023-503974-19-00,Odense University Hospital,NA
 2023-503983-17-00,Region Hovedstaden,NA
 2023-503984-41-00,Mario Negri Institute For Pharmacological Research IRCCS,NA
-2023-503985-21-00,Meander Medical Center,NA
+2023-503985-21-00,Meander Medisch Centrum,NA
 2023-503987-18-00,H. Lundbeck A/S,NA
 2023-503990-39-00,AstraZeneca AB,NA
 2023-503992-88-00,Argenx,NA
@@ -40603,7 +40599,7 @@ _id,raw_sponsor,is_commercial
 2023-504309-35-00,Fir Huvh Fundacio Institut De Recerca Hospital Universitari Vall De Hebron,NA
 2023-504310-30-00,GE Healthcare Limited,NA
 2023-504311-32-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
-2023-504320-25-00,Bristol-Myers Squibb Services Unlimited Company,NA
+2023-504320-25-00,Beeline Medicines Corp.,NA
 2023-504322-19-00,Friedrich Schiller Universitaet Jena,NA
 2023-504323-25-01,Greenwich LifeSciences Inc.,NA
 2023-504324-26-00,Remab Therapeutics S.L.,NA
@@ -40656,10 +40652,10 @@ _id,raw_sponsor,is_commercial
 2023-504425-39-00,Pfizer Inc.,NA
 2023-504426-19-00,Gat Therapeutics S.L.,NA
 2023-504427-61-01,Stichting Alrijne Zorggroep,NA
-2023-504430-22-00,VectivBio AG / VectivBio AG,NA
+2023-504430-22-00,VectivBio AG,NA
 2023-504433-50-00,Oslo University Hospital HF,NA
 2023-504434-22-00,Summit Therapeutics Inc.,NA
-2023-504439-42-01,Hospital Universitario 12 De Octubre,NA
+2023-504439-42-03,Hospital Universitario 12 De Octubre,NA
 2023-504441-31-00,SOTIO Biotech a.s.,NA
 2023-504443-13-00,Medac Gesellschaft fuer klinische Spezialprapaerate mbH,NA
 2023-504445-31-00,Seagen Inc.,NA
@@ -40671,6 +40667,7 @@ _id,raw_sponsor,is_commercial
 2023-504458-36-02,Centre Hospitalier Universitaire Grenoble Alpes,NA
 2023-504460-41-00,Agomab Spain S.L.,NA
 2023-504461-23-00,Agomab Spain S.L.,NA
+2023-504466-28-00,Sensorion,NA
 2023-504468-41-00,Bluepharma Industria Farmaceutica S.A.,NA
 2023-504471-25-00,United Therapeutics Corp.,NA
 2023-504472-24-00,F. Hoffmann-La Roche AG,NA
@@ -40685,15 +40682,16 @@ _id,raw_sponsor,is_commercial
 2023-504491-15-00,Genentech Inc.,NA
 2023-504492-24-00,Parc De Salut Mar,NA
 2023-504504-28-00,Hamilton Health Sciences Corporation / Hamilton Health Sciences Corporation,NA
+2023-504506-11-00,Moderna Inc.,NA
 2023-504507-81-00,Centre Hospitalier Universitaire De Nice,NA
 2023-504508-26-00,F. Hoffmann-La Roche AG,NA
 2023-504509-36-00,Biocon Sdn. Bhd.,NA
-2023-504511-32-00,Assistance Publique Hopitaux De Paris / Assistance Publique Hopitaux De Paris,NA
+2023-504511-32-00,Assistance Publique Hopitaux De Paris,NA
 2023-504513-77-00,Assistance Publique Hopitaux De Paris,NA
 2023-504514-29-00,Astellas Pharma Global Development Inc.,NA
 2023-504515-33-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2023-504516-15-00,Bluepharma Industria Farmaceutica S.A.,NA
-2023-504518-31-00,Fondazione Santa Lucia IRCCS,NA
+2023-504518-31-01,Fondazione Santa Lucia IRCCS,NA
 2023-504519-34-01,Gentofte Hospital / Gentofte Hospital,NA
 2023-504520-26-00,Italfarmaco S.p.A.,NA
 2023-504522-19-00,Boehringer Ingelheim International GmbH,NA
@@ -40907,7 +40905,7 @@ _id,raw_sponsor,is_commercial
 2023-504946-70-00,Fundacion Para La Formacion E Investigacion Sanitaria De La Region De Murcia,NA
 2023-504949-31-00,AstraZeneca AB,NA
 2023-504951-29-00,AbbVie Deutschland GmbH & Co. KG,NA
-2023-504952-87-00,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA
+2023-504952-87-00,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La Ciencia,NA
 2023-504954-37-00,Merck Sharp & Dohme LLC,NA
 2023-504955-28-01,Bayer Consumer Care AG / Bayer AG,NA
 2023-504957-11-00,Merck Sharp & Dohme LLC,NA
@@ -41197,6 +41195,7 @@ _id,raw_sponsor,is_commercial
 2023-505571-78-00,Instituto de Investigacion Sanitaria Fundacion para la Investigacion del Hospital Clinico de Valencia-INCLIVA,NA
 2023-505572-30-00,Ferrer Internacional S.A.,NA
 2023-505573-32-00,Ostfold Hospital Trust,NA
+2023-505575-69-01,Institut Gustave Roussy,NA
 2023-505576-29-00,Centessa Pharmaceuticals UK Limited,NA
 2023-505579-53-00,Incyte Corp.,NA
 2023-505584-36-00,Janssen - Cilag International,NA
@@ -41342,7 +41341,7 @@ _id,raw_sponsor,is_commercial
 2023-505858-18-00,Seagen Inc.,NA
 2023-505859-45-00,AM-Pharma B.V.,NA
 2023-505860-12-00,Parc De Salut Mar,NA
-2023-505862-27-00,Dr. Falk Pharma GmbH / Dr. Falk Pharma GmbH,NA
+2023-505862-27-00,Dr. Falk Pharma GmbH,NA
 2023-505863-35-00,Janssen - Cilag International,NA
 2023-505865-94-00,F. Hoffmann-La Roche AG,NA
 2023-505866-27-00,Astrazeneca AB,NA
@@ -41364,7 +41363,7 @@ _id,raw_sponsor,is_commercial
 2023-505897-13-00,Dermapharm AG,NA
 2023-505898-32-00,Celcuity Inc.,NA
 2023-505900-53-00,AbbVie Deutschland GmbH & Co. KG,NA
-2023-505901-17-00,Fondazione Gimema Franco Mandelli Onlus / Fondazione Gimema Franco Mandelli Onlus,NA
+2023-505901-17-00,Fondazione Gimema Franco Mandelli Onlus,NA
 2023-505902-40-00,Eli Lilly & Co.,NA
 2023-505903-22-00,Novartis Pharma AG,NA
 2023-505904-41-00,Kalvista Pharmaceuticals Limited,NA
@@ -41410,8 +41409,10 @@ _id,raw_sponsor,is_commercial
 2023-505990-34-00,Karolinska University Hospital,NA
 2023-505991-31-00,Karolinska University Hospital,NA
 2023-505992-54-00,Astrazeneca AB,NA
+2023-505993-14-00,Astrazeneca AB,NA
 2023-505995-31-00,Hemab ApS,NA
 2023-506000-50-00,Astrazeneca AB,NA
+2023-506001-19-00,Assistance Publique Hopitaux De Paris,NA
 2023-506003-26-00,Celgene Corp.,NA
 2023-506004-93-00,Amgen Inc.,NA
 2023-506007-26-00,Boehringer Ingelheim International GmbH,NA
@@ -41522,6 +41523,7 @@ _id,raw_sponsor,is_commercial
 2023-506226-36-00,Rigshospitalet,NA
 2023-506227-29-00,AbbVie Deutschland GmbH & Co. KG,NA
 2023-506228-10-00,Ipsen Pharma,NA
+2023-506229-12-00,Ipsen Innovation,NA
 2023-506230-71-01,Region Skane Skanes Universitetssjukhus / Region Skane Skanes Universitetssjukhus,NA
 2023-506231-15-00,Edgewise Therapeutics Inc.,NA
 2023-506232-32-00,Hospices Civils De Lyon,NA
@@ -41563,6 +41565,7 @@ _id,raw_sponsor,is_commercial
 2023-506301-20-00,Grin Therapeutics Inc.,NA
 2023-506305-18-01,Pharvaris Netherlands B.V.,NA
 2023-506307-26-00,Autolus Limited,NA
+2023-506308-24-00,Exelixis Inc.,NA
 2023-506310-43-00,F. Hoffmann-La Roche AG,NA
 2023-506311-18-00,Genentech Inc.,NA
 2023-506312-41-00,Merck Sharp & Dohme LLC,NA
@@ -41576,7 +41579,7 @@ _id,raw_sponsor,is_commercial
 2023-506333-29-00,UCB Biopharma,NA
 2023-506334-75-00,GB002 Inc.,NA
 2023-506335-15-00,Neumora Therapeutics Inc.,NA
-2023-506345-34-00,Epiendo Pharmaceuticals ehf. / Epiendo Pharmaceuticals ehf.,NA
+2023-506345-34-00,Epiendo Pharmaceuticals ehf.,NA
 2023-506348-17-00,Miltenyi Biomedicine GmbH,NA
 2023-506350-21-00,Unicancer,NA
 2023-506352-24-00,Myokardia Inc.,NA
@@ -41588,11 +41591,12 @@ _id,raw_sponsor,is_commercial
 2023-506367-33-00,Boehringer Ingelheim International GmbH,NA
 2023-506368-14-00,UCB Biopharma,NA
 2023-506369-79-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A. / Boehringer Ingelheim RCV GmbH & Co. KG,NA
-2023-506370-13-00,Hospices Civils De Lyon / Hospices Civils De Lyon,NA
+2023-506370-13-00,Hospices Civils De Lyon,NA
 2023-506372-27-00,Ospedale San Raffaele S.r.l.,NA
 2023-506375-10-00,Boehringer Ingelheim International GmbH,NA
 2023-506380-33-00,F. Hoffmann-La Roche AG,NA
 2023-506381-32-00,Novo Nordisk A/S,NA
+2023-506384-34-00,Merck Sharp & Dohme LLC,NA
 2023-506385-30-00,Merck Sharp & Dohme LLC,NA
 2023-506387-14-00,Merck Sharp & Dohme LLC,NA
 2023-506390-35-00,Tesaro Inc.,NA
@@ -41611,6 +41615,7 @@ _id,raw_sponsor,is_commercial
 2023-506415-18-00,Takeda Development Center Americas Inc.,NA
 2023-506416-41-00,Tecnimede-Sociedade Tecnico-Medicinal S.A.,NA
 2023-506419-16-00,Takeda Development Center Americas Inc.,NA
+2023-506420-93-00,Assistance Publique Hopitaux De Paris,NA
 2023-506425-12-00,Mineralys Therapeutics Inc.,NA
 2023-506429-13-00,F. Hoffmann-La Roche AG,NA
 2023-506432-32-00,Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
@@ -41619,7 +41624,7 @@ _id,raw_sponsor,is_commercial
 2023-506436-33-00,Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
 2023-506437-29-00,Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
 2023-506440-16-00,Atamyo Therapeutics,NA
-2023-506442-24-00,Pfizer Inc. / Pfizer Inc.,NA
+2023-506442-24-00,Pfizer Inc.,NA
 2023-506449-40-00,GlaxoSmithKline Biologicals,NA
 2023-506450-20-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2023-506452-25-00,Medical University Of Lodz,NA
@@ -41711,7 +41716,7 @@ _id,raw_sponsor,is_commercial
 2023-506626-37-00,Wojskowy Instytut Medyczny Panstwowy Instytut Badawczy,NA
 2023-506628-98-00,Wojskowy Instytut Medyczny Panstwowy Instytut Badawczy,NA
 2023-506631-15-00,4 Wojskowy Szpital Kliniczny Z Polikliniką Samodzielny Publiczny Zaklad Opieki Zdrowotnej We Wroclawiu,NA
-2023-506632-32-00,Gruppo Oncologico Del Nord Ovest,NA
+2023-506632-32-00,Fondazione GONO G.I.,NA
 2023-506633-30-00,Pikralida Sp. z o.o.,NA
 2023-506634-70-00,Ziekenhuis Oost Limburg,NA
 2023-506637-30-00,Universitair Medisch Centrum Groningen,NA
@@ -41727,7 +41732,7 @@ _id,raw_sponsor,is_commercial
 2023-506657-38-00,Merck Sharp & Dohme LLC,NA
 2023-506660-13-00,Gilead Sciences Inc.,NA
 2023-506661-65-00,Bristol-Myers Squibb Services Unlimited Company,NA
-2023-506662-31-00,Gruppo Oncologico Del Nord Ovest,NA
+2023-506662-31-00,Fondazione GONO G.I.,NA
 2023-506663-33-00,Les Hopitaux Universitaires De Strasbourg,NA
 2023-506664-14-00,Dr Reddy's Laboratories Limited,NA
 2023-506668-15-00,AbbVie Deutschland GmbH & Co. KG,NA
@@ -41802,7 +41807,7 @@ _id,raw_sponsor,is_commercial
 2023-506813-23-00,Tartu University Hospital,NA
 2023-506814-31-01,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Princesa,NA
 2023-506817-23-01,European Organisation For Research And Treatment Of Cancer,NA
-2023-506818-45-00,Universiteit Maastricht,NA
+2023-506818-45-00,Convert Pharmaceuticals,NA
 2023-506820-10-00,Genentech Inc.,NA
 2023-506821-12-00,Genentech Inc.,NA
 2023-506823-28-00,Institut Bergonie / Institut Bergonie,NA
@@ -41853,13 +41858,14 @@ _id,raw_sponsor,is_commercial
 2023-506897-11-00,Bayer AG,NA
 2023-506899-27-00,F. Hoffmann-La Roche AG,NA
 2023-506906-38-00,AbbVie Deutschland GmbH & Co. KG,NA
-2023-506908-66-00,Ivi Valencia S.L. / Ivi Valencia S.L.,NA
+2023-506908-66-00,Ivi Valencia S.L.,NA
 2023-506911-16-00,F. Hoffmann-La Roche AG,NA
 2023-506912-41-00,Enlitisa (Shanghai) Pharmaceutical Co. Ltd.,NA
 2023-506913-23-00,Fundacion Publica Para La Investigacion Biosanitaria De Andalucia Oriental Alejandro Otero,NA
 2023-506914-32-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2023-506917-23-00,Cosmo Technologies Limited,NA
 2023-506918-45-00,Novo Nordisk A/S,NA
+2023-506919-18-00,Novo Nordisk A/S,NA
 2023-506921-12-00,Merck Sharp & Dohme LLC,NA
 2023-506922-35-00,Taiho Oncology Inc.,NA
 2023-506923-27-00,Novo Nordisk A/S,NA
@@ -41887,8 +41893,9 @@ _id,raw_sponsor,is_commercial
 2023-506961-74-00,Novo Nordisk A/S,NA
 2023-506962-30-00,Novo Nordisk A/S,NA
 2023-506963-32-00,Moderna Therapeutics Inc.,NA
+2023-506965-72-00,Modag GmbH,NA
 2023-506967-33-00,University College Dublin,NA
-2023-506971-89-00,Synektik S.A.,NA
+2023-506971-89-00,Syn2bio S.A.,NA
 2023-506974-11-00,Oslo University Hospital HF,NA
 2023-506975-83-00,Aprogen Inc.,NA
 2023-506976-28-00,Innate Pharma,NA
@@ -41963,7 +41970,7 @@ _id,raw_sponsor,is_commercial
 2023-507131-38-00,F. Hoffmann-La Roche AG,NA
 2023-507132-21-00,F. Hoffmann-La Roche AG,NA
 2023-507134-25-00,Pharming Technologies B.V.,NA
-2023-507137-24-00,Institute Of Tropical Medicine / Institute Of Tropical Medicine,NA
+2023-507137-24-00,Institute Of Tropical Medicine,NA
 2023-507140-37-00,Novartis Pharma AG,NA
 2023-507141-28-00,Sanofi-Aventis Recherche & Developpement,NA
 2023-507142-83-00,Janssen - Cilag International / Janssen Biologics B.V.,NA
@@ -41974,7 +41981,7 @@ _id,raw_sponsor,is_commercial
 2023-507149-27-00,Amgen Inc.,NA
 2023-507153-16-00,AbbVie Deutschland GmbH & Co. KG,NA
 2023-507154-32-00,AbbVie Deutschland GmbH & Co. KG,NA
-2023-507164-39-00,Vaestra Goetalandsregionen,NA
+2023-507164-39-00,Vaestra Goetalandsregionen / University Of Gothenburg,NA
 2023-507170-41-00,Advanced Accelerator Applications International S.A.,NA
 2023-507171-22-00,F. Hoffmann-La Roche AG,NA
 2023-507173-18-00,Viiv Healthcare UK Limited / Viiv Healthcare UK Limited,NA
@@ -42000,6 +42007,7 @@ _id,raw_sponsor,is_commercial
 2023-507207-66-00,Oculis Operations S.a.r.l.,NA
 2023-507208-30-00,Oculis Operations S.a.r.l.,NA
 2023-507213-97-00,Fundacio De Recerca Clinic Barcelona-Institut D’investigacions Biomediques August Pi I Sunyer,NA
+2023-507214-28-00,Stichting Radboud University Medical Center,NA
 2023-507215-35-00,Helsinki University Central Hospital,NA
 2023-507217-10-00,Viridian Therapeutics Inc.,NA
 2023-507220-23-00,Intellia Therapeutics Inc.,NA
@@ -42088,11 +42096,11 @@ _id,raw_sponsor,is_commercial
 2023-507385-11-00,Intellia Therapeutics Inc.,NA
 2023-507388-21-00,Universitaetsklinikum Tuebingen AöR,NA
 2023-507389-15-00,Genentech Inc.,NA
-2023-507393-40-00,selectION Therapeutics GmbH / selectION Therapeutics GmbH,NA
+2023-507393-40-00,selectION Therapeutics GmbH,NA
 2023-507396-21-00,Pharmacosmos A/S,NA
 2023-507399-27-00,Mggm LLC,NA
 2023-507402-13-00,Universitaetsklinikum Heidelberg AöR,NA
-2023-507404-31-03,Universite De Liege / CHU De Liege,NA
+2023-507404-31-03,Universite De Liege,NA
 2023-507405-34-00,Astrazeneca AB,NA
 2023-507407-59-00,Astrazeneca AB,NA
 2023-507409-32-00,Cybin IRL Limited,NA
@@ -42168,6 +42176,7 @@ _id,raw_sponsor,is_commercial
 2023-507547-11-00,Granite Bio AG,NA
 2023-507555-29-00,Seagen Inc.,NA
 2023-507556-68-00,Novartis Pharma AG,NA
+2023-507557-16-00,Novartis Pharma AG,NA
 2023-507559-30-00,Novartis Pharma AG,NA
 2023-507560-39-00,Octapharma AG,NA
 2023-507561-26-00,Dompe' Farmaceutici S.p.A.,NA
@@ -42216,7 +42225,7 @@ _id,raw_sponsor,is_commercial
 2023-507677-18-00,Terns Inc.,NA
 2023-507678-42-00,Eli Lilly & Co.,NA
 2023-507680-19-00,Horizon Therapeutics Ireland Designated Activity Company,NA
-2023-507682-25-00,Bayer AG / Bayer AG,NA
+2023-507682-25-00,Bayer AG,NA
 2023-507683-40-00,Assistance Publique Hopitaux De Marseille,NA
 2023-507684-19-00,Janssen Cilag International,NA
 2023-507685-10-00,Janssen Cilag International,NA
@@ -42296,7 +42305,7 @@ _id,raw_sponsor,is_commercial
 2023-507859-29-00,Ordensklinikum Linz GmbH,NA
 2023-507860-37-00,Institut Curie,NA
 2023-507865-24-00,H e x a l AG,NA
-2023-507867-20-00,Academisch Ziekenhuis Leiden / Academisch Ziekenhuis Leiden,NA
+2023-507867-20-00,Academisch Ziekenhuis Leiden,NA
 2023-507868-39-00,Academisch Ziekenhuis Leiden,NA
 2023-507871-23-00,Pfizer Inc.,NA
 2023-507873-16-00,Centre Hospitalier Regional Universitaire De Tours,NA
@@ -42331,6 +42340,7 @@ _id,raw_sponsor,is_commercial
 2023-507914-28-00,Daiichi Sankyo Inc.,NA
 2023-507925-41-00,INFECTOPHARM Arzneimittel und Consilium GmbH,NA
 2023-507926-18-00,Odense University Hospital,NA
+2023-507933-12-00,Daiichi Sankyo Inc.,NA
 2023-507936-20-00,Daiichi Sankyo Inc.,NA
 2023-507937-14-00,Daiichi Sankyo Inc.,NA
 2023-507938-24-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
@@ -42348,6 +42358,7 @@ _id,raw_sponsor,is_commercial
 2023-507972-35-01,Smarthealth Inc.,NA
 2023-507973-16-00,Novo Nordisk A/S,NA
 2023-507974-42-00,Abivax,NA
+2023-507975-23-01,St. Olavs Hospital HF,NA
 2023-507977-16-00,Alexion Pharmaceuticals Inc.,NA
 2023-507981-17-00,Region Hovedstaden,NA
 2023-507984-20-00,Merck Sharp & Dohme LLC,NA
@@ -42501,7 +42512,7 @@ _id,raw_sponsor,is_commercial
 2023-508276-11-00,AstraZeneca AB,NA
 2023-508278-26-01,UZ Brussel,NA
 2023-508279-36-00,Glaxosmithkline Research & Development Limited,NA
-2023-508280-69-00,Bristol Myers Squibb International Corporation / Bristol Myers Squibb International Corporation,NA
+2023-508280-69-00,Bristol Myers Squibb International Corporation,NA
 2023-508281-15-00,AbbVie Deutschland GmbH & Co. KG,NA
 2023-508284-77-00,Alexion Pharmaceuticals Inc.,NA
 2023-508287-30-00,UCB Biopharma,NA
@@ -42614,6 +42625,7 @@ _id,raw_sponsor,is_commercial
 2023-508489-14-00,F. Hoffmann-La Roche AG,NA
 2023-508496-37-00,Oncoinvent Solutions AS,NA
 2023-508497-28-00,Oncoinvent Solutions AS,NA
+2023-508498-97-00,Novartis Pharma AG,NA
 2023-508499-12-00,Novartis Pharma AG,NA
 2023-508500-38-00,Helse Bergen HF,NA
 2023-508502-18-00,Universitaetsmedizin Goettingen,NA
@@ -42639,6 +42651,7 @@ _id,raw_sponsor,is_commercial
 2023-508530-34-00,Novartis Pharma AG,NA
 2023-508531-30-00,Les Hopitaux Universitaires De Strasbourg,NA
 2023-508532-56-00,Hamilton Health Sciences Corporation,NA
+2023-508533-14-00,AstraZeneca AB,NA
 2023-508534-33-00,Alexion Pharmaceuticals Inc.,NA
 2023-508535-32-00,Assistance Publique Hopitaux De Paris,NA
 2023-508536-64-00,AstraZeneca AB,NA
@@ -42770,7 +42783,7 @@ _id,raw_sponsor,is_commercial
 2023-508777-91-00,Celgene International II S.a.r.l.,NA
 2023-508784-68-00,Replimune Inc.,NA
 2023-508785-16-00,Assistance Publique Hopitaux De Paris,NA
-2023-508787-29-00,WSG Westdeutsche Studiengruppe GmbH,NA
+2023-508787-29-00,WSG Women's Cancer Study Group GmbH,NA
 2023-508791-11-00,Akl Research & Development Limited,NA
 2023-508793-29-00,Leo Pharma A/S,NA
 2023-508794-83-00,Centre Hospitalier Universitaire De Nice,NA
@@ -42809,7 +42822,7 @@ _id,raw_sponsor,is_commercial
 2023-508852-21-00,AstraZeneca AB,NA
 2023-508853-13-00,European Organisation For Research And Treatment Of Cancer,NA
 2023-508859-39-00,Novartis Pharma AG,NA
-2023-508860-31-00,Grupo Gallego De Investigacion En Tumores Digestivos / Grupo Gallego De Investigacion En Tumores Digestivos,NA
+2023-508860-31-00,Grupo Gallego De Investigacion En Tumores Digestivos,NA
 2023-508861-34-00,Centre Hospitalier Regional Universitaire De Tours,NA
 2023-508863-59-01,University Health Network,NA
 2023-508864-31-00,Biomarin Pharmaceutical Inc.,NA
@@ -42908,6 +42921,7 @@ _id,raw_sponsor,is_commercial
 2023-509070-36-00,Janssen Cilag International,NA
 2023-509071-16-00,Azienda Unita Sanitaria Locale Di Bologna,NA
 2023-509073-23-00,Centre Hospitalier Intercommunal Toulon / La Seine-Sur-Mer / Groupe Français de Pneumo-Oncologie,NA
+2023-509074-31-00,Travere Therapeutics Switzerland GmbH / Travere Therapeutics Inc.,NA
 2023-509075-17-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
 2023-509076-42-00,Grupo Espanol Multidisciplinar De Melanoma,NA
 2023-509077-23-00,Quince Therapeutics S.p.A.,NA
@@ -42915,13 +42929,14 @@ _id,raw_sponsor,is_commercial
 2023-509079-18-00,Sudo Biosciences Limited,NA
 2023-509086-20-00,Armgo Pharma Inc.,NA
 2023-509087-20-00,Pfizer Inc.,NA
-2023-509088-26-00,Gruppo Oncologico Del Nord Ovest,NA
+2023-509088-26-00,Fondazione GONO G.I.,NA
 2023-509089-39-00,Pfizer Inc.,NA
 2023-509091-42-00,Lipigon Pharmaceuticals AB,NA
 2023-509092-16-00,Akershus University Hospital,NA
 2023-509094-23-00,Universitair Ziekenhuis Gent,NA
 2023-509095-42-00,Grupo Espanol Multidisciplinar En Cancer Digestivo,NA
 2023-509096-16-00,Alimentiv Inc.,NA
+2023-509105-72-00,Pfizer Inc.,NA
 2023-509109-57-01,Reinier Haga Groep Orthopedisch Centrum B.V.,NA
 2023-509111-89-00,Medical University Of Gdansk,NA
 2023-509114-11-00,Vaestra Goetalandsregionen,NA
@@ -42931,6 +42946,7 @@ _id,raw_sponsor,is_commercial
 2023-509120-17-00,Geron Corp.,NA
 2023-509121-51-00,Pfizer Inc.,NA
 2023-509124-18-00,Pfizer Inc.,NA
+2023-509125-41-00,Kinaset Therapeutics Inc.,NA
 2023-509130-18-00,Bellvitge University Hospital,NA
 2023-509131-12-01,Hellenic Society Of Hematology,NA
 2023-509132-26-00,Interius Biotherapeutics Inc.,NA
@@ -42981,7 +42997,7 @@ _id,raw_sponsor,is_commercial
 2023-509210-10-00,Universitair Medisch Centrum Utrecht,NA
 2023-509212-29-01,Centre Hospitalier Universitaire De Lille,NA
 2023-509215-81-00,Asoc Grupo Espanol De Investigacion En Sarcomas,NA
-2023-509216-28-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2023-509216-28-00,Leo Pharma A/S,NA
 2023-509217-37-00,Katholisches Klinikum Bochum gGmbH,NA
 2023-509219-97-00,Farmalider S.A.,NA
 2023-509220-17-00,Artios Pharma Limited,NA
@@ -42997,7 +43013,7 @@ _id,raw_sponsor,is_commercial
 2023-509238-20-00,Universitaet Muenster,NA
 2023-509239-19-00,Janssen Cilag International,NA
 2023-509241-12-00,Pfizer Inc.,NA
-2023-509242-35-00,WSG Westdeutsche Studiengruppe GmbH,NA
+2023-509242-35-00,WSG Women's Cancer Study Group GmbH,NA
 2023-509243-27-00,AstraZeneca AB,NA
 2023-509247-27-00,Centre Hospitalier Intercommunal Creteil,NA
 2023-509248-86-00,Bristol-Myers Squibb Services Unlimited Company,NA
@@ -43094,11 +43110,13 @@ _id,raw_sponsor,is_commercial
 2023-509422-21-00,Laboratorios Cinfa S.A.,NA
 2023-509425-53-00,Regeneron Pharmaceuticals Inc.,NA
 2023-509428-16-00,Gilead Sciences Inc.,NA
+2023-509429-37-00,AstraZeneca AB,NA
 2023-509431-29-00,Fundacion Para La Formacion E Investigacion Sanitaria De La Region De Murcia,NA
 2023-509432-25-00,Universitair Medisch Centrum Groningen,NA
 2023-509433-40-00,Zentralinstitut Fuer Seelische Gesundheit,NA
 2023-509434-19-00,Janssen Cilag International,NA
 2023-509435-11-00,Janssen Cilag International,NA
+2023-509436-26-00,AstraZeneca AB,NA
 2023-509440-97-00,Kite Pharma Inc.,NA
 2023-509441-13-00,Sanofi-Aventis Recherche & Developpement,NA
 2023-509444-10-00,Aviadobio Limited,NA
@@ -43261,9 +43279,9 @@ _id,raw_sponsor,is_commercial
 2023-509744-10-00,Radboud universitair medisch centrum Stichting,NA
 2023-509746-35-00,Horizon Therapeutics Ireland Designated Activity Company,NA
 2023-509747-27-00,Pfizer Inc.,NA
-2023-509748-89-00,Arrowhead Pharmaceuticals Inc.,NA
+2023-509748-89-00,Sarepta Therapeutics Inc.,NA
 2023-509749-11-00,Xentria Inc.,NA
-2023-509750-58-00,Protagonist Therapeutics Inc.,NA
+2023-509750-58-00,Takeda Development Center Americas Inc.,NA
 2023-509751-14-03,Chelsea And Westminster Hospital NHS Foundation Trust,NA
 2023-509752-34-00,CCDRD Cooperative Clinical Drug Research and Development AG / Hermes Pharma GmbH,NA
 2023-509755-13-00,Medical University Of Lodz,NA
@@ -43280,7 +43298,7 @@ _id,raw_sponsor,is_commercial
 2023-509774-40-00,Merck Sharp & Dohme LLC,NA
 2023-509775-16-00,Instytut Pomnik Centrum Zdrowia Dziecka,NA
 2023-509776-41-00,Instituto Oncologico Dr. Rosell S.L.,NA
-2023-509777-23-00,Phaxiam therapeutics,NA
+2023-509777-23-00,Phagenix,NA
 2023-509780-25-00,University College Cork,NA
 2023-509781-37-00,Bicycletx Limited,NA
 2023-509782-20-00,Horizon Therapeutics Ireland Designated Activity Company,NA
@@ -43290,6 +43308,7 @@ _id,raw_sponsor,is_commercial
 2023-509787-15-00,Unicancer,NA
 2023-509788-25-00,Centre Hospitalier Universitaire De Toulouse,NA
 2023-509793-38-00,Fondazione Gimema Franco Mandelli Onlus,NA
+2023-509795-42-00,Centre Hospitalier Universitaire De Toulouse,NA
 2023-509800-14-00,Celgene Corp. / Celgene Corp.,NA
 2023-509801-59-00,Pfizer Inc.,NA
 2023-509804-14-00,Pauls Stradins Clinical University Hospital,NA
@@ -43338,7 +43357,7 @@ _id,raw_sponsor,is_commercial
 2023-509879-16-00,Hospital General Universitario Dr. Balmis,NA
 2023-509881-39-00,Stichting Radboud University Medical Center,NA
 2023-509883-89-00,AstraZeneca AB,NA
-2023-509885-39-00,Stichting Radboud University Medical Center,NA
+2023-509885-39-00,IRCCS Ospedale Sacro Cuore Don Calabria,NA
 2023-509888-24-00,Hopital Erasme,NA
 2023-509889-38-00,Boehringer Ingelheim International GmbH,NA
 2023-509891-40-00,Assistance Publique Hopitaux De Paris,NA
@@ -43376,10 +43395,10 @@ _id,raw_sponsor,is_commercial
 2023-509981-39-00,Nektar Therapeutics,NA
 2023-509988-24-00,Sygehus Lillebaelt Vejle Sygehus,NA
 2023-509993-49-00,Koebenhavns Universitet,NA
-2023-509994-22-00,Uppsala University Hospital,NA
+2023-509994-22-00,Uppsala University Hospital / North Estonia Medical Centre Foundation / Vilniaus universiteto ligonine Santaros klinikos VšĮ / Rigas Austrumu kliniska universitates slimnica SIA / Universita Degli Studi Di Perugia,NA
 2023-509996-18-00,Nykode Therapeutics ASA,NA
 2023-509998-23-00,Vivet Therapeutics,NA
-2023-510000-45-00,University Hospital Of Montpellier,NA
+2023-510000-45-00,Centre Hospitalier Universitaire De Montpellier,NA
 2023-510004-49-00,Hospital Foch,NA
 2023-510006-40-00,Horizon Therapeutics Ireland Designated Activity Company,NA
 2023-510007-22-00,Horizon Therapeutics Ireland Designated Activity Company,NA
@@ -43423,6 +43442,7 @@ _id,raw_sponsor,is_commercial
 2023-510092-62-00,Oslo University Hospital HF,NA
 2023-510093-13-00,Oslo University Hospital HF,NA
 2023-510097-14-00,Arcagy Gineco,NA
+2023-510098-33-01,AstraZeneca AB,NA
 2023-510099-30-00,Centre Hospitalier De Versailles,NA
 2023-510107-22-00,Alexion Pharmaceuticals Inc.,NA
 2023-510109-16-00,Bioaegis Therapeutics Inc.,NA
@@ -43444,19 +43464,20 @@ _id,raw_sponsor,is_commercial
 2023-510153-42-00,Fondazione Oncotech Impresa Sociale,NA
 2023-510155-37-00,Institut De Recherches Internationales Servier IRIS,NA
 2023-510159-53-01,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
+2023-510160-12-00,Prinses Maxima Centrum voor Kinderoncologie B.V.,NA
 2023-510161-97-00,Janssen Cilag International,NA
 2023-510162-27-00,Rheacell GmbH & Co. KG,NA
 2023-510163-35-00,Asociacion Instituto De Investigacion Sanitaria Bioaraba,NA
 2023-510166-27-01,Helse Bergen HF,NA
 2023-510171-59-00,Chiesi Farmaceutici S.p.A.,NA
 2023-510172-31-00,Chiesi Farmaceutici S.p.A.,NA
-2023-510173-34-00,Galapagos,NA
+2023-510173-34-00,Lakefront Biotherapeutics,NA
 2023-510174-13-00,Chiesi Farmaceutici S.p.A.,NA
 2023-510175-60-00,Chiesi Farmaceutici S.p.A.,NA
 2023-510176-31-00,Hyloris Developments,NA
 2023-510178-15-00,Celgene Corp.,NA
 2023-510183-12-00,H. Lundbeck A/S,NA
-2023-510184-35-00,Diakonhjemmet Sykehus AS / Karolinska University Hospital / University Of Medicine And Pharmacy Carol Davila Bucharest / Medical University Of Vienna,NA
+2023-510184-35-00,Diakonhjemmet Sykehus AS / Medical University Of Vienna / Karolinska University Hospital / University Of Medicine And Pharmacy Carol Davila Bucharest / Humanitas Mirasole S.p.A.,NA
 2023-510185-27-00,Oslo University Hospital HF,NA
 2023-510186-98-00,Academisch Ziekenhuis Leiden,NA
 2023-510187-13-00,Region Midtjylland,NA
@@ -43532,8 +43553,8 @@ _id,raw_sponsor,is_commercial
 2023-510318-25-00,Boehringer Ingelheim International GmbH,NA
 2023-510319-20-00,Jazz Pharmaceuticals Ireland Limited,NA
 2023-510320-71-00,Unicancer,NA
-2023-510322-32-00,Merus B.V.,NA
-2023-510323-30-00,Merus B.V.,NA
+2023-510322-32-00,Genmab A/S,NA
+2023-510323-30-00,Genmab A/S,NA
 2023-510324-77-00,Sorriso Pharmaceuticals Inc.,NA
 2023-510333-28-00,European Organisation For Research And Treatment Of Cancer,NA
 2023-510335-11-00,EnteroTarget ApS,NA
@@ -43778,6 +43799,7 @@ _id,raw_sponsor,is_commercial
 2024-510790-19-00,Wojskowy Instytut Medyczny Panstwowy Instytut Badawczy,NA
 2024-510791-20-00,Laboratorios Normon S.A.,NA
 2024-510792-38-01,Region Midtjylland,NA
+2024-510793-24-00,Universitair Medisch Centrum Groningen,NA
 2024-510795-20-00,Laboratorios Normon S.A.,NA
 2024-510797-25-00,Immedica Pharma AB,NA
 2024-510798-84-00,Helse Bergen HF,NA
@@ -43807,11 +43829,12 @@ _id,raw_sponsor,is_commercial
 2024-510849-34-00,NI One Inc.,NA
 2024-510856-11-00,Bayer AG,NA
 2024-510863-50-00,Universitaetsmedizin Goettingen,NA
-2024-510865-41-00,Aarhus Universitetshospital,NA
+2024-510865-41-00,Region Midtjylland,NA
 2024-510866-18-00,University Of Antwerp,NA
 2024-510867-42-00,Fundacion Para El Fomento De La Investigacion Sanitaria Y Biomedica De La Comunitat Valenciana,NA
 2024-510869-42-00,Universitaetsmedizin Goettingen,NA
 2024-510870-26-00,Boehringer Ingelheim International GmbH,NA
+2024-510871-39-00,Merck Healthcare KGaA,NA
 2024-510872-18-00,Merck Healthcare KGaA,NA
 2024-510873-11-00,Apurano Pharmaceuticals GmbH,NA
 2024-510875-39-00,Biomarin Pharmaceutical Inc.,NA
@@ -43860,6 +43883,7 @@ _id,raw_sponsor,is_commercial
 2024-510964-21-00,TME Pharma AG,NA
 2024-510965-41-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-510966-18-00,Celgene Corp.,NA
+2024-510967-41-00,Asociacion Grupo Tratamiento De Tumores Digestivos,NA
 2024-510968-22-00,Ente Ospedaliero Cantonale (EOC) / Ente Ospedaliero Cantonale (EOC),NA
 2024-510969-42-00,Merck Sharp & Dohme LLC,NA
 2024-510970-26-00,Asociacion Grupo Tratamiento De Tumores Digestivos,NA
@@ -43894,7 +43918,7 @@ _id,raw_sponsor,is_commercial
 2024-511028-15-00,Ospedale San Raffaele S.r.l.,NA
 2024-511030-12-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2024-511032-27-00,Regeneron Pharmaceuticals Inc.,NA
-2024-511033-35-00,Centre Hospitalier Universitaire De Bordeaux / Centre Hospitalier Universitaire De Bordeaux,NA
+2024-511033-35-00,Centre Hospitalier Universitaire De Bordeaux,NA
 2024-511034-12-00,Centre hospitalier universitaire de Liege,NA
 2024-511035-10-00,UCB Biopharma,NA
 2024-511037-35-00,Universitaetsklinikum Heidelberg AöR,NA
@@ -44029,6 +44053,7 @@ _id,raw_sponsor,is_commercial
 2024-511292-15-00,Grupo Espanol De Tumores Neuroendocrinos,NA
 2024-511293-74-01,Fondazione Policlinico Universitario Agostino Gemelli IRCCS,NA
 2024-511295-33-00,Medica Scientia Innovation Research S.L.,NA
+2024-511296-15-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-511297-73-00,Merck Sharp & Dohme LLC,NA
 2024-511301-31-00,UCB Biopharma,NA
 2024-511304-16-00,Celgene Corp.,NA
@@ -44152,7 +44177,7 @@ _id,raw_sponsor,is_commercial
 2024-511535-97-00,Novo Nordisk A/S,NA
 2024-511536-27-00,Charite Universitaetsmedizin Berlin KöR,NA
 2024-511537-35-00,Blue Earth Therapeutics Limited,NA
-2024-511538-11-00,Institut Gustave Roussy / Institut Gustave Roussy,NA
+2024-511538-11-00,Institut Gustave Roussy,NA
 2024-511542-39-00,Laminar Pharmaceuticals S.A.,NA
 2024-511544-36-00,Apellis Pharmaceuticals Inc.,NA
 2024-511548-19-00,Revolution Medicines Inc.,NA
@@ -44256,7 +44281,7 @@ _id,raw_sponsor,is_commercial
 2024-511770-76-00,Immunobrain Checkpoint Ltd.,NA
 2024-511775-15-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-511780-28-00,AGO Research GmbH,NA
-2024-511781-37-00,European Myeloma Network B.V. / Ceska Myelomova Skupina z.s. / Emn Trial Office S.r.l. Impresa Sociale,NA
+2024-511781-37-00,European Myeloma Network B.V. / Emn Trial Office S.r.l. Impresa Sociale / Ceska Myelomova Skupina z.s.,NA
 2024-511788-27-01,CHRU De Nancy,NA
 2024-511789-35-00,Vaestra Goetalandsregionen / University Of Gothenburg,NA
 2024-511790-30-00,Assistance Publique Hopitaux De Paris,NA
@@ -44295,7 +44320,7 @@ _id,raw_sponsor,is_commercial
 2024-511849-19-00,Institut Jules Bordet,NA
 2024-511850-34-00,Institut Jules Bordet,NA
 2024-511851-16-00,Oncoinvent ASA,NA
-2024-511852-42-00,Biohaven Pharmaceuticals Inc. / Biohaven Pharmaceuticals Inc.,NA
+2024-511852-42-00,Biohaven Pharmaceuticals Inc.,NA
 2024-511853-23-00,Oncoinvent ASA,NA
 2024-511855-16-00,Assistance Publique Hopitaux De Paris,NA
 2024-511857-23-00,Assistance Publique Hopitaux De Paris,NA
@@ -44346,6 +44371,7 @@ _id,raw_sponsor,is_commercial
 2024-511934-11-00,Novartis Pharma AG,NA
 2024-511935-86-00,Universitaetsklinikum Heidelberg AöR,NA
 2024-511936-28-00,Onward Therapeutics France,NA
+2024-511937-37-01,Oslo University Hospital HF,NA
 2024-511940-20-00,Neuroderm Ltd.,NA
 2024-511944-18-01,Azienda Ospedaliero-Universitaria Maggiore Della Carita,NA
 2024-511945-20-00,G.O.I.R.C. Gruppo Oncologico Italiano Di Ricerca Clinica,NA
@@ -44417,22 +44443,24 @@ _id,raw_sponsor,is_commercial
 2024-512043-22-00,Hospices Civils De Lyon,NA
 2024-512045-16-00,Janssen Cilag International,NA
 2024-512049-17-00,Universita' Degli Studi Di Torino,NA
+2024-512050-13-00,Novartis Pharma AG,NA
 2024-512052-38-00,Cantargia AB,NA
 2024-512053-24-00,Fondazione GONO Plus,NA
 2024-512058-11-00,Daiichi Sankyo Inc.,NA
 2024-512059-19-00,UZ Leuven,NA
 2024-512060-58-00,Bayer AG,NA
 2024-512061-14-00,UZ Leuven,NA
-2024-512062-34-00,University College Dublin / University College Dublin,NA
+2024-512062-34-00,University College Dublin,NA
 2024-512064-61-00,University College Dublin,NA
 2024-512066-33-00,Swedish Orphan Biovitrum AB (publ),NA
 2024-512071-12-00,Amsterdam UMC Stichting,NA
 2024-512075-12-00,Pfizer Inc.,NA
 2024-512077-27-00,Hospital Universitari De Girona Doctor Josep Trueta,NA
-2024-512078-88-00,Iperboreal Pharma S.r.l. / Iperboreal Pharma S.r.l.,NA
+2024-512078-88-00,Iperboreal Pharma S.r.l.,NA
 2024-512079-11-00,Centre Hospitalier Universitaire De Toulouse,NA
 2024-512082-14-00,Institut Gustave Roussy,NA
 2024-512084-31-00,University Of Helsinki,NA
+2024-512086-14-00,Ipsen Pharma,NA
 2024-512089-32-00,ADC Therapeutics SA,NA
 2024-512091-35-01,Hamilton Health Sciences Corporation,NA
 2024-512095-35-00,Novartis Pharma AG,NA
@@ -44452,7 +44480,7 @@ _id,raw_sponsor,is_commercial
 2024-512120-11-00,Pfizer Inc.,NA
 2024-512123-37-00,Cerevel Therapeutics LLC,NA
 2024-512126-29-00,Vor Biopharma Inc.,NA
-2024-512127-36-00,Dizal (Jiangsu) Pharmaceutical Co. Ltd.,NA
+2024-512127-36-00,Dizal Pharmaceutical Co. Ltd.,NA
 2024-512128-12-01,Vaestra Goetalandsregionen,NA
 2024-512132-29-00,Swiss Group for Clinical Cancer Research,NA
 2024-512133-33-00,Universitair Medisch Centrum Utrecht,NA
@@ -44466,7 +44494,7 @@ _id,raw_sponsor,is_commercial
 2024-512148-50-00,Gilead Sciences Inc.,NA
 2024-512151-21-00,Rapport Therapeutics Inc.,NA
 2024-512152-38-00,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA
-2024-512154-24-00,Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre / Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre,NA
+2024-512154-24-00,Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre,NA
 2024-512158-12-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2024-512160-58-00,Hospices Civils De Lyon,NA
 2024-512161-14-00,AstraZeneca AB,NA
@@ -44584,6 +44612,7 @@ _id,raw_sponsor,is_commercial
 2024-512379-10-00,AstraZeneca AB,NA
 2024-512380-32-00,Prelude Therapeutics Inc.,NA
 2024-512382-13-00,Pfizer Inc.,NA
+2024-512383-65-00,F. Hoffmann-La Roche AG,NA
 2024-512385-34-00,Giannina Gaslini Institute For Scientific Hospitalization And Care,NA
 2024-512386-14-00,Fraunhofer Institute For Translational Medicine And Pharmacology ITMP,NA
 2024-512387-56-00,Oslo University Hospital HF,NA
@@ -44603,7 +44632,7 @@ _id,raw_sponsor,is_commercial
 2024-512417-41-00,Xentria Inc.,NA
 2024-512420-10-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim RCV GmbH & Co. KG,NA
 2024-512421-92-00,Salubris Biotherapeutics Inc.,NA
-2024-512423-36-00,Intensity Therapeutics Inc. / Intensity Therapeutics Inc.,NA
+2024-512423-36-00,Intensity Therapeutics Inc.,NA
 2024-512436-29-00,Fundacion Epic,NA
 2024-512438-14-00,Region Oerebro Laen,NA
 2024-512439-54-01,Vaestra Goetalandsregionen,NA
@@ -44686,13 +44715,13 @@ _id,raw_sponsor,is_commercial
 2024-512585-34-00,Blueprint Medicines Corp.,NA
 2024-512586-13-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-512589-32-00,Ionis Pharmaceuticals Inc.,NA
-2024-512590-27-00,Fundacion Grupo Espanol De Investigacion En Cancer De Mama / Fundacion Grupo Espanol De Investigacion En Cancer De Mama,NA
+2024-512590-27-00,Fundacion Grupo Espanol De Investigacion En Cancer De Mama,NA
 2024-512595-35-00,Centre Hospitalier Universitaire De Dijon,NA
 2024-512596-12-00,Laboratorios Alter S.A.,NA
 2024-512600-19-00,Ultragenyx Pharmaceutical Inc.,NA
 2024-512602-26-00,Amsterdam UMC Stichting,NA
 2024-512603-39-00,CSL Behring LLC,NA
-2024-512605-29-01,"Herlev and Gentofte Hospital, Copenhagen Prospective Studies on Asthma in Childhood (COPSAC)",NA
+2024-512605-29-01,Region Hovedstaden,NA
 2024-512606-25-00,Turning Point Therapeutics Inc.,NA
 2024-512611-53-00,Noema Pharma AG,NA
 2024-512612-22-00,Vaestra Goetalandsregionen / University Of Gothenburg,NA
@@ -44707,7 +44736,7 @@ _id,raw_sponsor,is_commercial
 2024-512626-28-00,Sarepta Therapeutics Inc.,NA
 2024-512628-12-00,Stichting Radboud universitair medisch centrum,NA
 2024-512629-97-00,Centre Leon Berard,NA
-2024-512631-77-00,Centre Leon Berard / Centre Leon Berard,NA
+2024-512631-77-00,Centre Leon Berard,NA
 2024-512632-30-00,Pierre Fabre Medicament / Fondation EspeRare,NA
 2024-512633-32-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-512634-15-00,LYSARC,NA
@@ -44790,6 +44819,7 @@ _id,raw_sponsor,is_commercial
 2024-512757-24-00,Assistance Publique Hopitaux De Paris,NA
 2024-512758-62-00,Assistance Publique Hopitaux De Paris,NA
 2024-512759-19-00,Assistance Publique Hopitaux De Paris,NA
+2024-512760-64-00,Pierre Fabre Medicament,NA
 2024-512761-13-00,Assistance Publique Hopitaux De Paris,NA
 2024-512763-32-00,Assistance Publique Hopitaux De Paris,NA
 2024-512766-34-00,Centre Hospitalier Universitaire De Bordeaux,NA
@@ -44883,7 +44913,7 @@ _id,raw_sponsor,is_commercial
 2024-512927-36-00,Eli Lilly & Co.,NA
 2024-512934-14-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
 2024-512937-34-00,Laboratorio Farmaceutico S.I.T. - Specialita' Igienico Terapeutiche S.r.l.,NA
-2024-512939-67-00,Mindstate Design Labs Inc. / Mindstate Design Labs Inc.,NA
+2024-512939-67-00,Mindstate Design Labs Inc.,NA
 2024-512940-51-00,Merck Healthcare KGaA,NA
 2024-512945-18-00,Apellis Pharmaceuticals Inc.,NA
 2024-512946-41-00,AbbVie Deutschland GmbH & Co. KG,NA
@@ -44924,6 +44954,7 @@ _id,raw_sponsor,is_commercial
 2024-513014-35-00,F. Hoffmann-La Roche AG,NA
 2024-513015-27-00,F. Hoffmann-La Roche AG,NA
 2024-513017-12-00,Oslo University Hospital HF,NA
+2024-513018-36-00,Glaxosmithkline Research & Development Limited / Glaxosmithkline Research & Development Limited,NA
 2024-513019-29-00,Mylan Inc.,NA
 2024-513022-29-00,Mylan Inc.,NA
 2024-513023-17-00,MaaT PHARMA,NA
@@ -44953,6 +44984,7 @@ _id,raw_sponsor,is_commercial
 2024-513070-21-00,Charite Universitaetsmedizin Berlin KöR,NA
 2024-513074-22-00,Universitaetsklinikum Essen AöR,NA
 2024-513075-40-00,European Myeloma Network B.V. / Emn Trial Office S.r.l. Impresa Sociale,NA
+2024-513077-48-00,Neurotrials LLC,NA
 2024-513078-23-00,Centre Oscar Lambret,NA
 2024-513079-42-00,Centre Oscar Lambret,NA
 2024-513081-19-00,Centre Oscar Lambret,NA
@@ -45044,7 +45076,7 @@ _id,raw_sponsor,is_commercial
 2024-513266-19-00,Novartis Pharma AG,NA
 2024-513269-37-00,Pfizer Inc.,NA
 2024-513270-21-00,Pfizer Inc.,NA
-2024-513271-41-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-513271-41-00,Fondazione GONO G.I.,NA
 2024-513276-17-00,OncoVerity Inc.,NA
 2024-513277-52-00,Deciphera Pharmaceuticals Inc.,NA
 2024-513279-41-00,Sun Pharmaceutical Industries Limited,NA
@@ -45059,8 +45091,8 @@ _id,raw_sponsor,is_commercial
 2024-513292-40-00,Centre Hospitalier Universitaire De Montpellier,NA
 2024-513294-41-00,Region Skane,NA
 2024-513295-18-00,Fondazione IRCCS Istituto Nazionale Dei Tumori,NA
-2024-513296-41-00,Gruppo Oncologico Del Nord Ovest,NA
-2024-513297-21-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-513296-41-00,Fondazione GONO G.I.,NA
+2024-513297-21-00,Fondazione GONO G.I.,NA
 2024-513298-29-00,Centre Hospitalier Universitaire De Nice,NA
 2024-513299-17-00,Region Skane,NA
 2024-513300-34-00,Bayer AG,NA
@@ -45081,7 +45113,7 @@ _id,raw_sponsor,is_commercial
 2024-513324-42-00,Assistance Publique Hopitaux De Paris,NA
 2024-513325-23-00,Assistance Publique Hopitaux De Paris,NA
 2024-513327-16-00,Assistance Publique Hopitaux De Paris,NA
-2024-513328-40-00,Assistance Publique Hopitaux De Paris / Assistance Publique Hopitaux De Paris,NA
+2024-513328-40-00,Assistance Publique Hopitaux De Paris,NA
 2024-513329-22-00,Kyverna Therapeutics Inc.,NA
 2024-513330-38-00,Assistance Publique Hopitaux De Paris,NA
 2024-513332-17-00,Institut De Recherches Internationales Servier IRIS,NA
@@ -45179,6 +45211,7 @@ _id,raw_sponsor,is_commercial
 2024-513490-45-00,Assistance Publique Hopitaux De Paris,NA
 2024-513492-41-00,Merck Healthcare KGaA,NA
 2024-513495-17-00,Sanofi-Aventis Recherche & Developpement,NA
+2024-513496-40-00,Universitaetsklinikum Tuebingen AöR,NA
 2024-513498-36-00,MoonLake Immunotherapeutics AG,NA
 2024-513499-16-00,Vaestra Goetalandsregionen,NA
 2024-513500-34-00,Sanofi-Aventis Recherche & Developpement,NA
@@ -45232,7 +45265,7 @@ _id,raw_sponsor,is_commercial
 2024-513576-18-00,Centre Hospitalier Universitaire De Toulouse,NA
 2024-513577-43-00,Italfarmaco S.p.A.,NA
 2024-513578-23-00,Fore Biotherapeutics Inc.,NA
-2024-513579-42-00,Arrowhead Pharmaceuticals Inc.,NA
+2024-513579-42-00,Sarepta Therapeutics Inc.,NA
 2024-513581-19-00,Universitair Medisch Centrum Utrecht,NA
 2024-513582-39-01,Hospital Central De La Defensa Gomez Ulla,NA
 2024-513584-77-00,Intercept Pharmaceuticals Inc.,NA
@@ -45277,7 +45310,7 @@ _id,raw_sponsor,is_commercial
 2024-513645-37-00,Assistance Publique Hopitaux De Paris,NA
 2024-513647-86-00,Assistance Publique Hopitaux De Paris,NA
 2024-513648-27-00,Assistance Publique Hopitaux De Paris,NA
-2024-513649-35-00,Assistance Publique Hopitaux De Paris / Assistance Publique Hopitaux De Paris,NA
+2024-513649-35-00,Assistance Publique Hopitaux De Paris,NA
 2024-513650-30-00,Assistance Publique Hopitaux De Paris,NA
 2024-513651-32-00,Assistance Publique Hopitaux De Paris,NA
 2024-513652-15-00,Assistance Publique Hopitaux De Paris,NA
@@ -45344,7 +45377,7 @@ _id,raw_sponsor,is_commercial
 2024-513774-21-00,Minoryx Therapeutics S.L.,NA
 2024-513778-23-00,Karolinska Institutet,NA
 2024-513779-42-02,Oslo University Hospital HF,NA
-2024-513792-41-00,Medizinische Hochschule Hannover / Medizinische Hochschule Hannover,NA
+2024-513792-41-00,Medizinische Hochschule Hannover,NA
 2024-513796-40-00,Hospices Civils De Lyon,NA
 2024-513797-22-00,Amsterdam UMC Stichting,NA
 2024-513799-16-00,Ziekenhuis Oost Limburg,NA
@@ -45412,6 +45445,7 @@ _id,raw_sponsor,is_commercial
 2024-513914-36-00,Goethe University Frankfurt,NA
 2024-513915-28-00,Toray Industries Inc.,NA
 2024-513916-84-00,Goethe University Frankfurt,NA
+2024-513917-11-01,Uniwersytet Medyczny W Lublinie,NA
 2024-513918-35-00,Janssen Cilag International,NA
 2024-513919-27-00,Alfasigma S.p.A.,NA
 2024-513920-40-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
@@ -45458,6 +45492,7 @@ _id,raw_sponsor,is_commercial
 2024-513983-24-00,Centre Hospitalier Universitaire De Dijon,NA
 2024-513984-22-00,Centre Leon Berard,NA
 2024-513986-38-00,Centre Leon Berard,NA
+2024-513987-24-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2024-513988-70-00,Alfasigma S.p.A.,NA
 2024-513991-16-00,Pulmovant Inc.,NA
 2024-513992-42-00,Anthos Therapeutics Inc.,NA
@@ -45545,7 +45580,7 @@ _id,raw_sponsor,is_commercial
 2024-514113-35-01,Fundacio Institut De Recerca De L Hospital De La Santa Creu I Sant Pau,NA
 2024-514117-35-00,Centre Hospitalier Departemental Vendee,NA
 2024-514122-23-00,Association International Extranodal Lymphoma Study Group (IELSG),NA
-2024-514127-42-00,Neurocrine Biosciences Inc.,NA
+2024-514127-42-00,Neurocrine Switzerland GmbH,NA
 2024-514129-43-00,Cancer Research UK,NA
 2024-514130-20-00,Apellis Pharmaceuticals Inc.,NA
 2024-514133-38-00,Argenx,NA
@@ -45575,6 +45610,7 @@ _id,raw_sponsor,is_commercial
 2024-514181-39-00,Stichting Radboud universitair medisch centrum,NA
 2024-514183-21-00,Alimentiv Inc.,NA
 2024-514186-18-00,Glaxosmithkline Research & Development Limited / Glaxosmithkline Research & Development Limited,NA
+2024-514190-21-00,Iecure Inc.,NA
 2024-514191-41-00,Cytoki Pharma ApS,NA
 2024-514195-40-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-514196-17-00,Ospedale Pediatrico Bambino Gesu,NA
@@ -45607,6 +45643,7 @@ _id,raw_sponsor,is_commercial
 2024-514246-37-00,Chiesi Farmaceutici S.p.A.,NA
 2024-514247-28-00,Chiesi Farmaceutici S.p.A.,NA
 2024-514248-95-00,Chiesi Farmaceutici S.p.A.,NA
+2024-514254-69-00,Eli Lilly & Co.,NA
 2024-514255-15-01,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2024-514261-19-00,Institut De Recherches Internationales Servier IRIS,NA
 2024-514264-42-00,Region Midtjylland,NA
@@ -45618,6 +45655,7 @@ _id,raw_sponsor,is_commercial
 2024-514274-46-00,Merck KGaA,NA
 2024-514275-18-00,Region Skane / University Hospitals Plymouth NHS Trust,NA
 2024-514277-21-00,INFECTOPHARM Arzneimittel und Consilium GmbH,NA
+2024-514281-39-00,AstraZeneca AB,NA
 2024-514282-19-00,Centre Hospitalier Universitaire Grenoble Alpes,NA
 2024-514283-40-00,Tectonic Therapeutic Inc.,NA
 2024-514285-39-00,Medical University Of Graz,NA
@@ -45625,7 +45663,7 @@ _id,raw_sponsor,is_commercial
 2024-514289-38-00,Laboratoires S.M.B.,NA
 2024-514291-41-00,Aalborg University Hospital,NA
 2024-514292-18-00,Dr. Falk Pharma GmbH,NA
-2024-514293-46-00,Grupo Espanol De Oncologia Genitourinaria-Socug / Grupo Espanol De Oncologia Genitourinaria-Socug / Grupo Espanol De Oncologia Genitourinaria-Socug,NA
+2024-514293-46-00,Grupo Espanol De Oncologia Genitourinaria-Socug,NA
 2024-514294-22-01,Lillebaelt Hospital,NA
 2024-514296-17-00,Boehringer Ingelheim International GmbH,NA
 2024-514298-23-00,Institut De Recherches Internationales Servier IRIS,NA
@@ -45633,7 +45671,7 @@ _id,raw_sponsor,is_commercial
 2024-514302-31-00,SocraTec R&D Concepts in Drug Research and Development GmbH,NA
 2024-514303-34-00,NovaGo Therapeutics AG,NA
 2024-514304-14-00,Amgen Inc.,NA
-2024-514306-31-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2024-514306-31-00,Leo Pharma A/S,NA
 2024-514307-34-01,Oslo University Hospital HF,NA
 2024-514309-73-00,Institut De Recherches Internationales Servier IRIS,NA
 2024-514311-10-00,Leids Universitair Medisch Centrum (LUMC),NA
@@ -45724,7 +45762,7 @@ _id,raw_sponsor,is_commercial
 2024-514454-75-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-514456-32-00,Zaklady Farmaceutyczne Polpharma S.A.,NA
 2024-514457-30-00,Klinikum der Universitaet Muenchen AöR,NA
-2024-514458-61-01,WSG Westdeutsche Studiengruppe GmbH,NA
+2024-514458-61-01,WSG Women's Cancer Study Group GmbH,NA
 2024-514459-14-00,Amgen Inc.,NA
 2024-514461-19-00,Merus B.V.,NA
 2024-514465-18-00,AbbVie Deutschland GmbH & Co. KG,NA
@@ -45761,7 +45799,7 @@ _id,raw_sponsor,is_commercial
 2024-514516-27-00,Takeda Development Center Americas Inc.,NA
 2024-514517-35-00,Istituto Romagnolo Per Lo Studio Dei Tumori Dino Amadori IRST S.r.l.,NA
 2024-514518-10-00,Clinica Universidad De Navarra,NA
-2024-514520-16-00,Liveome Inc.,NA
+2024-514520-16-00,Medytox Inc.,NA
 2024-514523-42-00,Medical University Of Lodz,NA
 2024-514524-16-00,Inmunotek S.L.,NA
 2024-514525-34-00,Inmunotek S.L.,NA
@@ -45781,6 +45819,7 @@ _id,raw_sponsor,is_commercial
 2024-514549-12-00,Fakultni Nemocnice Ostrava,NA
 2024-514550-73-00,Centre Hospitalier Universitaire De Montpellier,NA
 2024-514554-75-00,iOmx Therapeutics AG,NA
+2024-514556-32-00,Medical University Of Graz,NA
 2024-514559-13-00,Praxis Precision Medicines Inc.,NA
 2024-514560-10-00,Institut De Cancerologie De L Ouest,NA
 2024-514561-20-00,Abivax,NA
@@ -45790,7 +45829,7 @@ _id,raw_sponsor,is_commercial
 2024-514567-26-00,Assistance Publique Hopitaux De Paris,NA
 2024-514569-20-00,Ospedale San Raffaele S.r.l.,NA
 2024-514570-43-00,Aveo Pharmaceuticals Inc.,NA
-2024-514577-22-00,UZ Leuven / UZ Leuven,NA
+2024-514577-22-00,UZ Leuven,NA
 2024-514580-26-00,Ospedale San Raffaele S.r.l.,NA
 2024-514581-39-00,Ospedale San Raffaele S.r.l.,NA
 2024-514583-12-00,Ospedale San Raffaele S.r.l.,NA
@@ -45808,7 +45847,7 @@ _id,raw_sponsor,is_commercial
 2024-514596-18-00,Novartis Pharma AG,NA
 2024-514597-42-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2024-514598-23-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
-2024-514602-31-00,Uniwersytet Jagiellonski Collegium Medicum / Uniwersytet Jagiellonski Collegium Medicum,NA
+2024-514602-31-00,Uniwersytet Jagiellonski Collegium Medicum,NA
 2024-514603-34-00,Centre Francois Baclesse,NA
 2024-514604-14-00,Grupo Espanol De Oncologia Genitourinaria-Socug,NA
 2024-514605-61-00,CHRU De Nancy,NA
@@ -45850,6 +45889,7 @@ _id,raw_sponsor,is_commercial
 2024-514665-19-00,Univerzita Palackeho V Olomouci,NA
 2024-514666-39-00,Istituto Romagnolo Per Lo Studio Dei Tumori Dino Amadori IRST S.r.l.,NA
 2024-514672-41-00,Fakultni Nemocnice Hradec Kralove,NA
+2024-514674-47-00,Merck Sharp & Dohme LLC,NA
 2024-514676-40-00,Niconovum AB,NA
 2024-514677-22-00,Win Medica Pharmaceutical A.E.,NA
 2024-514678-35-00,Vipharm S.A.,NA
@@ -45947,7 +45987,7 @@ _id,raw_sponsor,is_commercial
 2024-514841-12-00,ABCSG GmbH / Alliance Foundation Trials LLC,NA
 2024-514843-27-00,Centre Hospitalier Universitaire De Nantes,NA
 2024-514844-10-00,Institut Curie,NA
-2024-514845-12-00,Verona Pharma PLC,NA
+2024-514845-12-00,Verona Pharma Inc.,NA
 2024-514846-35-00,Crinetics Pharmaceuticals Inc.,NA
 2024-514848-88-00,Assistance Publique Hopitaux De Paris,NA
 2024-514850-59-00,Stichting Amsterdam UMC / Spaarne Gasthuis Stichting,NA
@@ -45979,6 +46019,7 @@ _id,raw_sponsor,is_commercial
 2024-514890-24-00,Pharma Mar S.A.,NA
 2024-514891-41-00,Novartis Pharma AG,NA
 2024-514892-16-00,REPHA GmbH Biologische Arzneimittel,NA
+2024-514894-22-01,Universitaetsklinikum Tuebingen AöR,NA
 2024-514896-17-00,Centre D'Etude Des Cellules Souches,NA
 2024-514899-41-00,Institut Paoli Calmettes,NA
 2024-514900-16-00,Region Hovedstaden,NA
@@ -46019,8 +46060,8 @@ _id,raw_sponsor,is_commercial
 2024-514967-25-00,Karolinska University Hospital,NA
 2024-514969-18-00,Blueprint Medicines Corp.,NA
 2024-514970-27-00,Lupin Atlantis Holdings S.A.,NA
-2024-514972-42-00,Viridian Therapeutics S.à.r.l.,NA
-2024-514973-23-00,Viridian Therapeutics S.à.r.l.,NA
+2024-514972-42-00,Viridian Therapeutics Inc.,NA
+2024-514973-23-00,Viridian Therapeutics Inc.,NA
 2024-514974-39-00,Longboard Pharmaceuticals Inc.,NA
 2024-514975-16-00,Acelyrin Inc.,NA
 2024-514976-41-00,Universitair Medisch Centrum Groningen,NA
@@ -46061,6 +46102,7 @@ _id,raw_sponsor,is_commercial
 2024-515044-23-01,Universitaetsmedizin Goettingen,NA
 2024-515045-42-00,Martin-Luther-Universitaet Halle-Wittenberg,NA
 2024-515046-17-00,Universitaetsmedizin Goettingen,NA
+2024-515047-31-00,Shanghai Henlius Biotech Inc.,NA
 2024-515049-41-00,Universita' Degli Studi Di Torino,NA
 2024-515051-38-00,Regeneron Pharmaceuticals Inc.,NA
 2024-515052-20-00,Regeneron Pharmaceuticals Inc.,NA
@@ -46151,7 +46193,7 @@ _id,raw_sponsor,is_commercial
 2024-515201-26-00,Fundacion GECP,NA
 2024-515202-84-00,Agios Pharmaceuticals Inc.,NA
 2024-515204-39-00,Fondazione Melanoma Onlus,NA
-2024-515214-41-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-515214-41-00,Fondazione GONO G.I.,NA
 2024-515215-21-00,Springworks Therapeutics Inc.,NA
 2024-515216-46-00,Medical University Of Warsaw,NA
 2024-515218-42-00,GE Healthcare Limited,NA
@@ -46225,6 +46267,8 @@ _id,raw_sponsor,is_commercial
 2024-515316-44-00,Janssen Cilag International,NA
 2024-515317-18-00,Centre Hospitalier Universitaire Rouen,NA
 2024-515321-29-00,AstraZeneca AB,NA
+2024-515323-11-00,Akershus University Hospital,NA
+2024-515326-83-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
 2024-515328-35-00,Centre Hospitalier Universitaire De Saint Etienne,NA
 2024-515329-27-00,Centre Hospitalier Universitaire De Saint Etienne,NA
 2024-515331-30-00,Institut Curie,NA
@@ -46242,7 +46286,7 @@ _id,raw_sponsor,is_commercial
 2024-515349-41-00,Unicancer,NA
 2024-515350-25-01,St. Olavs Hospital HF,NA
 2024-515351-37-00,Regeneron Pharmaceuticals Inc.,NA
-2024-515352-20-00,Groupe Francophone Des Myelodysplasies / Groupe Francophone Des Myelodysplasies,NA
+2024-515352-20-00,Groupe Francophone Des Myelodysplasies,NA
 2024-515353-24-00,Groupe Francophone Des Myelodysplasies,NA
 2024-515354-24-00,Groupe Francophone Des Myelodysplasies,NA
 2024-515356-21-00,Groupe Francophone Des Myelodysplasies,NA
@@ -46312,7 +46356,7 @@ _id,raw_sponsor,is_commercial
 2024-515467-66-00,Fundacio Sant Joan De Deu,NA
 2024-515469-32-00,Ascendis Pharma Growth Disorders A/S,NA
 2024-515470-26-00,Fondazione Italiana Sclerosi Multipla Ente Del Terzo Settore/et S,NA
-2024-515472-13-00,Ospedale San Raffaele S.r.l. / Ospedale San Raffaele S.r.l.,NA
+2024-515472-13-00,Ospedale San Raffaele S.r.l.,NA
 2024-515475-35-00,Universitaetsmedizin Goettingen,NA
 2024-515478-29-00,Novadip Biosciences,NA
 2024-515479-36-00,Centre Hospitalier Universitaire De Poitiers,NA
@@ -46407,7 +46451,7 @@ _id,raw_sponsor,is_commercial
 2024-515624-36-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
 2024-515625-29-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2024-515626-92-00,Medical University Of Vienna,NA
-2024-515627-10-00,Toleranzia AB,NA
+2024-515627-10-00,Bonsai Biotherapeutics AB,NA
 2024-515630-33-00,Klinikum der Universitaet Muenchen AöR,NA
 2024-515633-15-00,Vertex Pharmaceuticals Inc.,NA
 2024-515634-32-00,Hellenic Society Of Hematology,NA
@@ -46477,8 +46521,9 @@ _id,raw_sponsor,is_commercial
 2024-515765-34-00,BioNTech SE,NA
 2024-515766-13-00,Fundacion Publica Andaluza Para La Investigacion De Malaga En Biomedicina Y Salud,NA
 2024-515768-30-01,Assistance Publique Hopitaux De Paris,NA
-2024-515769-32-00,WSG Westdeutsche Studiengruppe GmbH,NA
+2024-515769-32-00,WSG Women's Cancer Study Group GmbH,NA
 2024-515770-27-00,AbbVie Deutschland GmbH & Co. KG,NA
+2024-515772-12-00,Merck Sharp & Dohme LLC,NA
 2024-515773-99-00,Merck Sharp & Dohme LLC,NA
 2024-515774-27-00,Centre Hospitalier Universitaire De Bordeaux,NA
 2024-515776-12-00,Friedrich-Schiller-Universitaet Jena / Friedrich-Schiller-Universitaet Jena,NA
@@ -46606,7 +46651,7 @@ _id,raw_sponsor,is_commercial
 2024-515986-33-00,Prothya Biosolutions Netherlands B.V.,NA
 2024-515987-29-00,Rigshospitalet,NA
 2024-515988-55-00,Hellenic Society Of Hematology,NA
-2024-515989-14-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-515989-14-00,Fondazione GONO Plus,NA
 2024-515994-83-00,Centre Hospitalier Universitaire D'Angers,NA
 2024-515996-37-00,Hospices Civils De Lyon,NA
 2024-515997-28-00,Rigshospitalet,NA
@@ -46623,10 +46668,10 @@ _id,raw_sponsor,is_commercial
 2024-516008-41-00,Virometix AG,NA
 2024-516009-22-00,Takeda Development Center Americas Inc.,NA
 2024-516010-38-00,Vir Biotechnology Inc.,NA
-2024-516011-24-01,Grupo Español de Trasplantes Hematopoyéticos y Terapia Celular,NA
+2024-516011-24-01,Grupo Espanol De Trasplante Hematopoyetico Y Terapia Celular,NA
 2024-516015-24-00,Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
 2024-516016-17-00,Merck Sharp & Dohme LLC,NA
-2024-516018-39-00,Assistance Publique Hopitaux De Paris / Assistance Publique Hopitaux De Paris,NA
+2024-516018-39-00,Assistance Publique Hopitaux De Paris,NA
 2024-516019-26-00,Eir Biotherapies S.r.l.,NA
 2024-516020-33-00,Immunovant Sciences GmbH,NA
 2024-516021-32-00,Assistance Publique Hopitaux De Paris,NA
@@ -46637,8 +46682,10 @@ _id,raw_sponsor,is_commercial
 2024-516028-33-01,Inst Medecine Epidemiologie Appliquee,NA
 2024-516030-35-00,Glaxosmithkline Research & Development Limited,NA
 2024-516032-10-00,Winicker-Norimed Medizinische Forschung GmbH / Klinikum Nuernberg,NA
+2024-516033-12-00,Universitaetsspital Basel,NA
 2024-516034-35-00,Sun Pharmaceutical Industries Limited,NA
 2024-516035-27-00,Sun Pharmaceutical Industries Limited,NA
+2024-516036-94-00,Merck Sharp & Dohme LLC,NA
 2024-516039-28-00,Spanish Society Of Cardiology / Spanish Society Of Cardiology / Spanish Society Of Cardiology,NA
 2024-516042-18-00,Uniwersytet Jagiellonski Collegium Medicum,NA
 2024-516044-25-00,Centre Hospitalier Universitaire De Nice,NA
@@ -46653,7 +46700,7 @@ _id,raw_sponsor,is_commercial
 2024-516058-23-00,Assistance Publique Hopitaux De Paris,NA
 2024-516059-42-00,Gensight Biologics,NA
 2024-516060-28-00,Hellenic Society Of Hematology,NA
-2024-516061-36-00,Hellenic Society Of Hematology / Hellenic Society Of Hematology,NA
+2024-516061-36-00,Hellenic Society Of Hematology,NA
 2024-516063-89-00,Revolution Medicines Inc.,NA
 2024-516064-28-00,Equillium Inc.,NA
 2024-516066-11-00,AGO Research GmbH,NA
@@ -46771,6 +46818,7 @@ _id,raw_sponsor,is_commercial
 2024-516247-62-00,Pharvaris Netherlands B.V.,NA
 2024-516248-24-00,Pharvaris Netherlands B.V.,NA
 2024-516250-22-00,Ceska Myelomova Skupina z.s.,NA
+2024-516251-40-01,Milestone Pharmaceuticals Inc.,NA
 2024-516252-17-00,Centro Ricerche Cliniche Di Verona S.r.l.,NA
 2024-516253-49-01,Institut Jules Bordet,NA
 2024-516255-41-00,Centre Hospitalier Regional Et Universitaire De Brest,NA
@@ -46811,7 +46859,7 @@ _id,raw_sponsor,is_commercial
 2024-516312-25-00,Universitair Ziekenhuis Gent,NA
 2024-516313-20-00,Association Gercor,NA
 2024-516315-24-00,Ocumension (Hong Kong) Ltd.,NA
-2024-516316-13-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-516316-13-00,Fondazione GONO G.I.,NA
 2024-516317-21-00,UZ Leuven,NA
 2024-516318-40-02,Rigshospitalet / Frederiksberg Hospital,NA
 2024-516319-25-00,Centre Hospitalier Regional Et Universitaire De Brest,NA
@@ -46912,6 +46960,7 @@ _id,raw_sponsor,is_commercial
 2024-516478-31-00,Exelixis Inc.,NA
 2024-516479-34-00,Exelixis Inc.,NA
 2024-516480-90-00,Exelixis Inc.,NA
+2024-516481-11-00,Exelixis Inc.,NA
 2024-516483-29-00,Chiesi Farmaceutici S.p.A.,NA
 2024-516486-36-00,Stichting Amsterdam UMC,NA
 2024-516488-99-00,Leids Universitair Medisch Centrum (LUMC),NA
@@ -46948,7 +46997,7 @@ _id,raw_sponsor,is_commercial
 2024-516550-21-00,Medical University Of Vienna,NA
 2024-516551-41-00,Jazz Pharmaceuticals Ireland Limited,NA
 2024-516554-22-00,Institut Jules Bordet,NA
-2024-516555-40-00,Phaxiam Therapeutics,NA
+2024-516555-40-00,Phagenix,NA
 2024-516556-17-00,Medical University Of Bialystok,NA
 2024-516558-24-00,Centre Leon Berard,NA
 2024-516559-41-00,Stichting TRICALS Foundation,NA
@@ -46957,6 +47006,7 @@ _id,raw_sponsor,is_commercial
 2024-516565-36-00,Groupe Hospitalier Universitaire Paris Psychiatrie Et Neuroscience,NA
 2024-516566-11-00,Groupe Hospitalier Universitaire Paris Psychiatrie Et Neuroscience,NA
 2024-516569-35-00,Faes Farma S.A. / A. Menarini Industrie Farmaceutiche Riunite S.r.l.,NA
+2024-516570-30-00,Centre Hospitalier De Versailles,NA
 2024-516572-15-00,Unidade Local De Saude De Sao Jose E.P.E.,NA
 2024-516573-71-00,UZ Leuven,NA
 2024-516574-30-00,Phost'In Therapeutics,NA
@@ -46983,7 +47033,7 @@ _id,raw_sponsor,is_commercial
 2024-516600-42-00,Gentofte Hospital / Pfizer Inc.,NA
 2024-516601-23-00,Assistance Publique Hopitaux De Paris,NA
 2024-516602-28-00,Bristol-Myers Squibb Services Unlimited Company,NA
-2024-516604-41-00,Anheart Therapeutics Inc. / Nuvation Bio Inc.,NA
+2024-516604-41-00,Anheart Therapeutics Inc.,NA
 2024-516605-23-00,Secura Bio Limited,NA
 2024-516607-16-00,Medical University Of Warsaw,NA
 2024-516608-40-00,Universitaetsklinikum Essen AöR,NA
@@ -47071,6 +47121,7 @@ _id,raw_sponsor,is_commercial
 2024-516731-27-00,Azienda Unita Sanitaria Locale Di Bologna,NA
 2024-516732-97-00,Fundacion Para La Investigacion Biomedica Del Hospital Clinico San Carlos,NA
 2024-516733-12-00,Eli Lilly & Co.,NA
+2024-516734-35-00,WSG Westdeutsche Studiengruppe GmbH,NA
 2024-516735-27-00,Chiesi Farmaceutici S.p.A.,NA
 2024-516736-10-00,Universitair Medisch Centrum Groningen,NA
 2024-516737-12-00,Nerviano Medical Sciences S.r.l.,NA
@@ -47104,7 +47155,7 @@ _id,raw_sponsor,is_commercial
 2024-516781-10-00,Universitair Medisch Centrum Groningen,NA
 2024-516782-36-00,Asso De Recherche Cancers Gynecologiques,NA
 2024-516783-29-00,Cliniques Universitaires Saint-Luc,NA
-2024-516785-12-00,Sparrow Pharmaceuticals Inc. / Sparrow Pharmaceuticals Inc.,NA
+2024-516785-12-00,Sparrow Pharmaceuticals Inc.,NA
 2024-516786-37-00,Rigshospitalet,NA
 2024-516787-28-00,Medigene AG,NA
 2024-516788-96-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
@@ -47115,8 +47166,9 @@ _id,raw_sponsor,is_commercial
 2024-516793-30-00,Hopital NOVO,NA
 2024-516794-70-00,CatalYm GmbH,NA
 2024-516795-15-00,Universitair Medisch Centrum Groningen,NA
+2024-516796-33-00,Hospital Foch,NA
 2024-516797-29-00,Fondazione GONO Plus,NA
-2024-516798-54-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-516798-54-00,Fondazione GONO Plus,NA
 2024-516800-40-00,National Institute For Infectious Diseases Lazzaro Spallanzani,NA
 2024-516801-22-00,Cancer Trials Ireland,NA
 2024-516802-43-00,Isofol Medical AB (publ),NA
@@ -47158,7 +47210,7 @@ _id,raw_sponsor,is_commercial
 2024-516862-12-00,Fundacion Instituto De Investigacion Sanitaria De Santiago De Compostela,NA
 2024-516864-27-00,Istituto Di Ricerche Farmacologiche Mario Negri,NA
 2024-516865-35-01,Stichting Amsterdam UMC,NA
-2024-516868-28-00,Fondazione Gimema Franco Mandelli Onlus / Fondazione Gimema Franco Mandelli Onlus,NA
+2024-516868-28-00,Fondazione Gimema Franco Mandelli Onlus,NA
 2024-516869-36-00,Exscientia AI Limited,NA
 2024-516870-31-00,Merck Sharp & Dohme LLC,NA
 2024-516873-57-00,Centre Hospitalier Universitaire D'Angers,NA
@@ -47224,15 +47276,17 @@ _id,raw_sponsor,is_commercial
 2024-516986-35-00,Verastem Inc.,NA
 2024-516988-87-00,Celldex Therapeutics Inc.,NA
 2024-516992-33-02,Instytut Psychiatrii I Neurologii,NA
+2024-516993-31-00,Merck Sharp & Dohme LLC,NA
+2024-516994-59-00,Aspire Pharma Limited,NA
 2024-516996-34-00,Unicancer,NA
 2024-517000-11-00,Complutense University Of Madrid,NA
-2024-517002-28-01,Red De Apoyo A La Investigacion Clinica En Hematologia Y Hemoterapia S.L. / Vall D Hebron Institute Of Oncology,NA
+2024-517002-28-01,Vall D Hebron Institute Of Oncology,NA
 2024-517004-11-00,Centre Hospitalier Universitaire De Poitiers,NA
 2024-517005-85-00,Narodowy Instytut Geriatrii Reumatologii I Rehabilitacji Im Prof. Dr Hab. Med. Eleonory Reicher,NA
 2024-517006-28-00,Fundacion PETHEMA,NA
 2024-517008-12-00,Fundacion PETHEMA,NA
 2024-517009-99-00,Philipps-Universitaet Marburg,NA
-2024-517010-15-01,Karolinska University Hospital,NA
+2024-517010-15-01,Region Uppsala,NA
 2024-517011-74-01,Cellcolabs AB,NA
 2024-517014-15-00,ROXALL Medizin GmbH,NA
 2024-517015-73-00,Esbjerg Og Grindsted Sygehus,NA
@@ -47279,7 +47333,7 @@ _id,raw_sponsor,is_commercial
 2024-517101-87-00,Elgan Pharma Ltd.,NA
 2024-517102-29-00,Elgan Pharma Ltd.,NA
 2024-517104-11-00,Santen Inc.,NA
-2024-517105-85-00,Imbrium Therapeutics LP,NA
+2024-517105-85-00,Knoa Pharma LLC,NA
 2024-517106-28-00,Medical University Of Vienna,NA
 2024-517107-37-00,Faes Farma S.A.,NA
 2024-517110-15-00,Karolinska University Hospital,NA
@@ -47292,6 +47346,7 @@ _id,raw_sponsor,is_commercial
 2024-517123-39-00,Odense University Hospital,NA
 2024-517127-40-00,Leids Universitair Medisch Centrum (LUMC),NA
 2024-517128-21-02,Rigshospitalet,NA
+2024-517130-17-00,Centre Hospitalier Universitaire De Bordeaux,NA
 2024-517131-52-00,BeOne Medicines AG,NA
 2024-517132-22-00,Friedrich-Schiller-Universitaet Jena,NA
 2024-517133-40-00,GPOH gGmbH,NA
@@ -47299,7 +47354,7 @@ _id,raw_sponsor,is_commercial
 2024-517139-29-00,Delix Therapeutics Inc. / Delix Therapeutics Inc.,NA
 2024-517140-65-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-517141-13-00,Epizyme Inc.,NA
-2024-517143-31-00,AbbVie Deutschland GmbH & Co. KG,NA
+2024-517143-31-00,Calico Life Sciences LLC,NA
 2024-517147-31-00,Glaxosmithkline Research & Development Limited / Glaxosmithkline Research & Development Limited,NA
 2024-517149-15-00,HUS-Yhtymae,NA
 2024-517150-10-00,Ascendis Pharma Oncology Division A/S,NA
@@ -47308,7 +47363,7 @@ _id,raw_sponsor,is_commercial
 2024-517155-13-00,IRCCS Istituto Giannina Gaslini,NA
 2024-517165-17-00,Medical University Of Vienna,NA
 2024-517166-42-00,Universitaetsklinikum Muenster AöR,NA
-2024-517167-23-00,Bluejay Therapeutics Inc.,NA
+2024-517167-23-00,Mirum Pharmaceuticals Inc.,NA
 2024-517169-18-00,H. Lundbeck A/S,NA
 2024-517170-20-01,Aalborg University Hospital,NA
 2024-517171-20-00,Amsterdam UMC Stichting,NA
@@ -47318,6 +47373,7 @@ _id,raw_sponsor,is_commercial
 2024-517184-23-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-517185-42-00,Centre Hospitalier Regional De Marseille,NA
 2024-517187-36-01,Washington University School Of Medicine,NA
+2024-517189-40-00,Torl Biotherapeutics LLC,NA
 2024-517190-24-00,Torl Biotherapeutics LLC,NA
 2024-517196-20-00,El Hospital Universitario De Gran Canaria Dr. Negrin,NA
 2024-517198-26-00,Zentralinstitut Fuer Seelische Gesundheit,NA
@@ -47380,6 +47436,7 @@ _id,raw_sponsor,is_commercial
 2024-517307-37-00,Rigshospitalet,NA
 2024-517308-13-00,Tan Tock Seng Hospital Pte. Ltd.,NA
 2024-517309-95-00,Les Hopitaux Universitaires De Strasbourg,NA
+2024-517310-15-00,Mission Therapeutics Limited,NA
 2024-517312-30-00,UZ Brussel,NA
 2024-517314-15-00,Centre Hospitalier Universitaire Amiens Picardie,NA
 2024-517315-69-00,Uppsala University,NA
@@ -47533,7 +47590,7 @@ _id,raw_sponsor,is_commercial
 2024-517595-38-00,Centre Hospitalier Regional Universitaire De Tours,NA
 2024-517598-26-00,Linkopings Universitet,NA
 2024-517599-39-00,Hospital General Universitario Gregorio Maranon,NA
-2024-517600-11-01,University Hospital Zurich,NA
+2024-517600-11-01,Universitaetsspital Basel,NA
 2024-517601-82-00,Miltenyi Biomedicine GmbH,NA
 2024-517602-28-00,Ziekenhuis Oost Limburg,NA
 2024-517605-91-00,AstraZeneca AB,NA
@@ -47649,6 +47706,7 @@ _id,raw_sponsor,is_commercial
 2024-517796-21-00,Fondazione Arianna Anticoagulazione,NA
 2024-517797-14-00,Pfizer Inc.,NA
 2024-517798-25-00,Medical Center - University Of Freiburg,NA
+2024-517799-40-00,G.O.I.R.C. Gruppo Oncologico Italiano Di Ricerca Clinica,NA
 2024-517804-12-00,Slaskie Centrum Chorob Serca W Zabrzu,NA
 2024-517805-10-01,Amsterdam UMC Stichting,NA
 2024-517807-35-00,Farmalider S.A.,NA
@@ -47681,6 +47739,7 @@ _id,raw_sponsor,is_commercial
 2024-517863-22-00,Azienda USL IRCCS Di Reggio Emilia,NA
 2024-517864-49-01,University Of Bari Aldo Moro,NA
 2024-517865-17-01,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2024-517866-40-00,Pfizer Inc.,NA
 2024-517868-33-00,Bicycletx Limited,NA
 2024-517873-25-00,Medical University Of Vienna,NA
 2024-517875-19-00,Medical University Of Vienna,NA
@@ -47691,6 +47750,7 @@ _id,raw_sponsor,is_commercial
 2024-517883-49-00,Novo Nordisk A/S / Steno Diabetes Center Copenhagen,NA
 2024-517885-40-00,Universitaetsklinikum Erlangen AöR,NA
 2024-517886-18-00,Fakultni Nemocnice V Motole,NA
+2024-517888-23-00,University Medical Center Hamburg-Eppendorf,NA
 2024-517890-26-00,Estetra,NA
 2024-517893-73-00,Universite Libre de Bruxelles,NA
 2024-517895-39-00,Boehringer Ingelheim International GmbH,NA
@@ -47739,7 +47799,7 @@ _id,raw_sponsor,is_commercial
 2024-517980-22-00,F. Hoffmann-La Roche AG,NA
 2024-517981-40-00,Oslo University Hospital HF,NA
 2024-517983-47-00,Vertex Pharmaceuticals Inc.,NA
-2024-517984-21-00,Daiichi Sankyo Co. Ltd. / Daiichi Sankyo Co. Ltd.,NA
+2024-517984-21-00,Daiichi Sankyo Co. Ltd.,NA
 2024-517987-46-00,Bioprojet Pharma,NA
 2024-517988-23-00,Pfizer Inc.,NA
 2024-517991-39-00,Teva Branded Pharmaceutical Products R&D LLC,NA
@@ -47748,7 +47808,7 @@ _id,raw_sponsor,is_commercial
 2024-517996-19-00,Bioprojet Pharma,NA
 2024-518001-18-00,Region Midtjylland / Region Midtjylland,NA
 2024-518002-41-00,Unicancer,NA
-2024-518003-22-00,Allecra Therapeutics,NA
+2024-518003-22-00,Orchid Pharma Europe GmbH,NA
 2024-518004-49-00,UZ Leuven,NA
 2024-518006-40-00,F. Hoffmann-La Roche AG,NA
 2024-518007-22-00,The Public Health Agency Of Sweden,NA
@@ -47757,6 +47817,7 @@ _id,raw_sponsor,is_commercial
 2024-518012-39-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-518013-25-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-518015-19-00,AbbVie Deutschland GmbH & Co. KG,NA
+2024-518016-39-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-518017-26-00,Fondazione Policlinico Universitario Agostino Gemelli IRCCS,NA
 2024-518018-22-00,Centre Hospitalier Universitaire De Nantes,NA
 2024-518019-20-00,CHRU De Nancy,NA
@@ -47764,6 +47825,7 @@ _id,raw_sponsor,is_commercial
 2024-518021-16-00,Dr. Bernardino Clavo Varas,NA
 2024-518022-33-00,University Of Cologne,NA
 2024-518026-32-00,Fondazione Michelangelo,NA
+2024-518027-30-00,CHU De Martinique,NA
 2024-518028-63-00,Rigshospitalet,NA
 2024-518030-83-00,Eyepoint Inc.,NA
 2024-518033-28-00,Universitaetsklinikum Regensburg AöR,NA
@@ -47774,6 +47836,7 @@ _id,raw_sponsor,is_commercial
 2024-518040-21-00,Camurus AB,NA
 2024-518041-16-00,Leids Universitair Medisch Centrum (LUMC),NA
 2024-518042-24-00,Medizinische Universitaet Innsbruck,NA
+2024-518043-38-00,Assistance Publique Hopitaux De Paris,NA
 2024-518044-20-00,Assistance Publique Hopitaux De Paris,NA
 2024-518046-25-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
 2024-518047-37-01,Universitair Medisch Centrum Groningen,NA
@@ -47853,6 +47916,7 @@ _id,raw_sponsor,is_commercial
 2024-518210-81-00,AstraZeneca AB,NA
 2024-518211-20-00,Sun Pharmaceutical Industries Limited,NA
 2024-518212-40-00,Medical University Of Vienna,NA
+2024-518213-25-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-518214-11-01,Medical University Of Vienna,NA
 2024-518215-18-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2024-518216-39-00,Region Sjaelland,NA
@@ -48003,6 +48067,7 @@ _id,raw_sponsor,is_commercial
 2024-518508-31-00,Hamilton Health Sciences Corporation / PHRI Population Health Research Institute International,NA
 2024-518509-17-00,Medical University Of Gdansk,NA
 2024-518510-87-00,Rigshospitalet,NA
+2024-518511-19-00,Viiv Healthcare UK Limited,NA
 2024-518516-39-00,Centre Hospitalier Universitaire De Toulouse,NA
 2024-518517-26-00,Region Sjaelland,NA
 2024-518519-20-01,Diater Laboratorio De Diagnostico Y Aplicaciones Terapeuticas S.A.,NA
@@ -48044,6 +48109,7 @@ _id,raw_sponsor,is_commercial
 2024-518581-27-00,DeuterOncology,NA
 2024-518583-13-00,Azienda Ospedaliero Universitaria Di Modena,NA
 2024-518586-10-00,AbbVie Deutschland GmbH & Co. KG,NA
+2024-518587-12-00,Pfizer Inc.,NA
 2024-518588-36-00,Celltrion Inc.,NA
 2024-518589-29-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2024-518591-31-00,Medical University Of Vienna,NA
@@ -48087,7 +48153,7 @@ _id,raw_sponsor,is_commercial
 2024-518675-55-00,Hospital Universitari De Girona Doctor Josep Trueta,NA
 2024-518677-34-00,Fundacio Parc Tauli,NA
 2024-518678-16-00,Region Sjaelland,NA
-2024-518680-36-00,Institut Mutualiste Montsouris / Institut Mutualiste Montsouris,NA
+2024-518680-36-00,Institut Mutualiste Montsouris,NA
 2024-518682-95-00,Steno Diabetes Center Copenhagen,NA
 2024-518683-13-00,Institut Universitari D Investigacio En Atencion Primaria Jordi Gol,NA
 2024-518684-35-00,Universitair Medisch Centrum Utrecht,NA
@@ -48103,6 +48169,7 @@ _id,raw_sponsor,is_commercial
 2024-518702-40-00,Medical University Of Vienna,NA
 2024-518704-41-00,Medical University Of Vienna,NA
 2024-518705-18-00,Fundacion Epic,NA
+2024-518706-41-01,Vaestra Goetalandsregionen,NA
 2024-518708-29-00,Unidade Local De Saude De Tras-Os-Montes E Alto Douro E.P.E.,NA
 2024-518710-11-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
 2024-518714-31-00,Cinclus Pharma Holding AB (publ),NA
@@ -48176,7 +48243,7 @@ _id,raw_sponsor,is_commercial
 2024-518839-11-00,Merck Sharp & Dohme LLC,NA
 2024-518840-18-00,GlaxoSmithKline Biologicals,NA
 2024-518841-12-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
-2024-518842-26-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-518842-26-00,Fondazione GONO G.I.,NA
 2024-518843-39-00,Vaderis Therapeutics AG,NA
 2024-518844-20-00,Olatec Therapeutics LLC,NA
 2024-518846-25-00,Eb Haus Austria Gemeinnuetzige Salzburger Landeskliniken Betriebsgesellschaft mbH,NA
@@ -48188,11 +48255,13 @@ _id,raw_sponsor,is_commercial
 2024-518857-41-00,Region Stockholm,NA
 2024-518858-17-00,AstraZeneca AB,NA
 2024-518859-27-00,Azienda Ospedaliera Universitaria Integrata Verona,NA
+2024-518861-90-00,HUS-Yhtymae,NA
 2024-518862-28-00,Antibiotice S.A.,NA
 2024-518863-36-00,Merck Sharp & Dohme LLC,NA
 2024-518865-85-00,Universitair Medisch Centrum Groningen,NA
 2024-518869-99-00,Istituto Biochimico Italiano Giovanni Lorenzini S.p.A.,NA
 2024-518870-15-00,Fundacion PETHEMA,NA
+2024-518871-74-00,AbbVie Deutschland GmbH & Co. KG,NA
 2024-518873-32-00,Region Midtjylland,NA
 2024-518875-73-00,IIS La Fe,NA
 2024-518877-33-00,Scandion Oncology A/S,NA
@@ -48281,7 +48350,7 @@ _id,raw_sponsor,is_commercial
 2024-519058-35-00,Semmelweis University,NA
 2024-519059-28-00,Pharmacosmos A/S,NA
 2024-519060-40-00,Karolinska University Hospital,NA
-2024-519063-18-00,Bluejay Therapeutics Inc.,NA
+2024-519063-18-00,Mirum Pharmaceuticals Inc.,NA
 2024-519066-49-01,Region Hovedstaden,NA
 2024-519067-17-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
 2024-519068-42-00,Merck Sharp & Dohme LLC,NA
@@ -48307,6 +48376,8 @@ _id,raw_sponsor,is_commercial
 2024-519113-59-00,Centre Hospitalier Universitaire De Montpellier,NA
 2024-519114-31-00,Cullinan Therapeutics Inc.,NA
 2024-519116-14-00,AstraZeneca AB,NA
+2024-519121-38-01,Mipsalus ApS,NA
+2024-519123-14-00,Tridem Bioscience FlexCo,NA
 2024-519126-20-00,Hospital Foch,NA
 2024-519128-26-00,Galimedix Therapeutics Inc.,NA
 2024-519129-38-00,Istituti Clinici Scientifici Maugeri In Forma Abbreviata Istituti Clinici Scientifici Maugeri O Anche Ics Maugeri O Maugeri S.p.A. Sb,NA
@@ -48358,6 +48429,7 @@ _id,raw_sponsor,is_commercial
 2024-519235-42-00,Comenius University Bratislava,NA
 2024-519237-34-00,Syneurx International (Taiwan) Corp.,NA
 2024-519239-40-01,Otto Von Guericke Universitaet Magdeburg,NA
+2024-519246-75-01,AstraZeneca AB,NA
 2024-519248-34-00,Ipsen Innovation,NA
 2024-519250-37-00,Institut De Recherches Internationales Servier IRIS,NA
 2024-519258-35-00,Fondation Franc.Cancerologie Digestive,NA
@@ -48366,6 +48438,7 @@ _id,raw_sponsor,is_commercial
 2024-519262-42-00,Fondazione Ricerca Traslazionale,NA
 2024-519263-18-00,University Of Oulu,NA
 2024-519265-22-00,Medical University Of Vienna,NA
+2024-519268-41-00,Odense University Hospital,NA
 2024-519269-23-00,Medical University Of Warsaw,NA
 2024-519270-40-00,Cybin IRL Limited,NA
 2024-519272-96-00,Fundacion Fls De Lucha Contra El Sida Las Enfermedades Infecciosas Y La Promocion De La Salud Y La C,NA
@@ -48380,6 +48453,7 @@ _id,raw_sponsor,is_commercial
 2024-519292-26-00,Av7 Limited,NA
 2024-519296-25-00,F. Hoffmann-La Roche AG,NA
 2024-519298-21-00,Regeneron Pharmaceuticals Inc.,NA
+2024-519299-16-00,Regeneron Pharmaceuticals Inc.,NA
 2024-519301-36-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2024-519304-28-00,Sanofi-Aventis Recherche & Developpement,NA
 2024-519310-31-00,Associazione Qol-One,NA
@@ -48403,6 +48477,7 @@ _id,raw_sponsor,is_commercial
 2024-519346-75-00,Istituto Romagnolo Per Lo Studio Dei Tumori Dino Amadori IRST S.r.l.,NA
 2024-519347-15-00,Istituto Romagnolo Per Lo Studio Dei Tumori Dino Amadori IRST S.r.l.,NA
 2024-519348-34-00,Medical University Of Vienna,NA
+2024-519349-31-00,Asociacion Instituto Biogipuzkoa,NA
 2024-519350-37-00,Institut fuer Frauengesundheit GmbH,NA
 2024-519351-28-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
 2024-519353-11-00,Landspitali,NA
@@ -48455,10 +48530,11 @@ _id,raw_sponsor,is_commercial
 2024-519470-39-00,Institut De Recherches Internationales Servier IRIS,NA
 2024-519472-69-00,Heidelberg University,NA
 2024-519478-38-00,Novo Nordisk A/S,NA
-2024-519479-24-00,Gruppo Oncologico Del Nord Ovest,NA
+2024-519479-24-00,Fondazione GONO G.I.,NA
 2024-519481-44-00,Gruppo Oncologico Dell'Italia Meridionale,NA
 2024-519482-22-00,Innovative Molecules GmbH,NA
 2024-519485-50-00,University Of Pecs,NA
+2024-519491-60-00,Universitaetsklinikum Tuebingen AöR,NA
 2024-519492-25-01,Region Midtjylland,NA
 2024-519493-39-00,Janssen Cilag International,NA
 2024-519494-19-00,Sanofi-Aventis Recherche & Developpement,NA
@@ -48467,6 +48543,7 @@ _id,raw_sponsor,is_commercial
 2024-519497-39-00,Arctic Therapeutics ehf.,NA
 2024-519498-20-00,Cellcentric Limited,NA
 2024-519499-22-00,Alnylam Pharmaceuticals Inc.,NA
+2024-519502-12-00,Samchundang Pharm. Co. Ltd.,NA
 2024-519503-10-00,Medical University Of Vienna,NA
 2024-519504-27-00,Regeneron Pharmaceuticals Inc.,NA
 2024-519505-35-00,Centre Hospitalier Universitaire De Nantes,NA
@@ -48510,6 +48587,7 @@ _id,raw_sponsor,is_commercial
 2024-519587-40-00,Prevail Therapeutics Inc.,NA
 2024-519590-19-00,Ono Pharmaceutical Co. Ltd.,NA
 2024-519591-39-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
+2024-519592-26-00,Universitaetsklinikum Heidelberg AöR,NA
 2024-519593-39-00,Karolinska University Hospital,NA
 2024-519594-19-00,Vaestra Goetalandsregionen,NA
 2024-519595-87-00,AbbVie Deutschland GmbH & Co. KG,NA
@@ -48532,6 +48610,7 @@ _id,raw_sponsor,is_commercial
 2024-519631-42-00,Instituto De Investigacion En Ciencias De La Salud Germans Trias I Pujol,NA
 2024-519633-35-00,La Fundacion Para La Gestion De La Investigacion Biomedica De Cadiz,NA
 2024-519637-32-00,University Hospital Of Clermont-Ferrand,NA
+2024-519638-22-00,Novartis Pharma AG,NA
 2024-519639-40-00,One-carbon Therapeutics AB,NA
 2024-519640-32-00,Institut De Recherches Internationales Servier IRIS,NA
 2024-519641-30-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
@@ -48556,6 +48635,8 @@ _id,raw_sponsor,is_commercial
 2024-519672-12-00,Azienda Ospedaliero Universitaria Pisana,NA
 2024-519673-18-00,Vall D Hebron Institute Of Oncology,NA
 2024-519674-40-00,Alexion Pharmaceuticals Inc.,NA
+2024-519684-17-00,Eli Lilly & Co.,NA
+2024-519685-51-00,Eli Lilly & Co.,NA
 2024-519687-40-00,Institute For Clinical And Experimental Medicine,NA
 2024-519688-16-00,Sirius Therapeutics Inc.,NA
 2024-519691-10-00,Pontificia Universidad Catolica de Chile,NA
@@ -48602,6 +48683,7 @@ _id,raw_sponsor,is_commercial
 2024-519782-21-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
 2024-519783-41-00,Centre Hospitalier Universitaire De Saint Etienne,NA
 2024-519786-22-01,AstraZeneca AB,NA
+2024-519787-40-00,AstraZeneca AB,NA
 2024-519788-16-00,Institut Gustave Roussy,NA
 2024-519789-37-00,Medical University Of Graz,NA
 2024-519790-19-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
@@ -48671,6 +48753,7 @@ _id,raw_sponsor,is_commercial
 2024-519922-19-00,Hospices Civils De Lyon,NA
 2024-519928-24-00,Glaxosmithkline Research & Development Limited,NA
 2024-519929-38-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
+2024-519930-22-00,F. Hoffmann-La Roche AG,NA
 2024-519932-17-00,Pileje,NA
 2024-519933-53-00,Oslo University Hospital HF,NA
 2024-519935-41-00,Universitair Ziekenhuis Antwerpen,NA
@@ -48694,6 +48777,7 @@ _id,raw_sponsor,is_commercial
 2024-519979-26-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
 2024-519980-16-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
 2024-519983-42-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2024-519985-35-00,Assistance Publique Hopitaux De Paris,NA
 2024-519986-23-00,Assistance Publique Hopitaux De Paris,NA
 2024-519991-18-00,Les Hopitaux Universitaires De Strasbourg,NA
 2024-519993-38-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
@@ -48709,7 +48793,7 @@ _id,raw_sponsor,is_commercial
 2024-520020-28-00,Instituto De Investigacion Marques De Valdecilla,NA
 2024-520025-36-00,Fundacio Assistencial De Mutua De Terrassa Fpc,NA
 2024-520026-11-00,AstraZeneca AB,NA
-2024-520027-88-00,Medica Scientia Innovation Research S.L. / Medica Scientia Innovation Research S.L.,NA
+2024-520027-88-00,Medica Scientia Innovation Research S.L.,NA
 2024-520029-35-01,Centre Hospitalier Regional Universitaire,NA
 2024-520030-30-00,Oslo University Hospital HF,NA
 2024-520031-33-00,Blueprint Medicines Corp.,NA
@@ -48723,7 +48807,7 @@ _id,raw_sponsor,is_commercial
 2024-520052-19-04,Amsterdam UMC Stichting,NA
 2024-520054-38-00,Cebiotex S.L.,NA
 2024-520057-20-00,Bausch Health Americas Inc.,NA
-2024-520058-39-00,Bausch Health Americas Inc. / Bausch Health Americas Inc.,NA
+2024-520058-39-00,Bausch Health Americas Inc.,NA
 2024-520062-54-00,Vir Biotechnology Inc.,NA
 2024-520067-13-00,National University Of Singapore,NA
 2024-520068-32-00,Novo Nordisk A/S,NA
@@ -48770,6 +48854,7 @@ _id,raw_sponsor,is_commercial
 2024-520142-32-00,Nodthera Limited,NA
 2024-520146-33-00,Region Vaesterbotten,NA
 2024-520148-40-00,VeriGraft AB,NA
+2024-520149-22-00,Centre Hospitalier Universitaire De Toulouse,NA
 2024-520153-21-00,Sun Pharmaceutical Industries Limited,NA
 2024-520154-38-00,Janssen Cilag International,NA
 2024-520155-24-00,Novartis Pharma AG,NA
@@ -48837,6 +48922,7 @@ _id,raw_sponsor,is_commercial
 2024-520308-24-00,Assistance Publique Hopitaux De Paris,NA
 2024-520315-40-00,Eli Lilly & Co.,NA
 2024-520317-49-02,Region Sjaelland / Reponex Pharmaceuticals A/S,NA
+2024-520319-42-01,Ostfold Hospital Trust,NA
 2024-520320-28-00,Centre Hospitalier Universitaire De Bordeaux,NA
 2024-520322-11-00,F. Hoffmann-La Roche AG,NA
 2024-520324-29-00,Steno Diabetes Center Copenhagen,NA
@@ -48845,6 +48931,7 @@ _id,raw_sponsor,is_commercial
 2024-520333-68-00,Vanda Pharmaceuticals Netherlands B.V.,NA
 2024-520336-14-00,Fundacion Para La Investigacion Y La Innovacion Biosanitaria Del Principado De Asturias,NA
 2024-520337-80-00,UCB Biopharma,NA
+2024-520342-28-00,Medizinische Universitaet Innsbruck,NA
 2024-520345-23-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
 2024-520346-39-00,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Paz,NA
 2024-520348-40-00,Giuliani S.p.A.,NA
@@ -48865,14 +48952,14 @@ _id,raw_sponsor,is_commercial
 2024-520384-14-00,Boehringer Ingelheim International GmbH,NA
 2024-520385-57-01,Climb Bio Inc.,NA
 2024-520386-31-00,Johnson & Johnson Enterprise Innovation Inc.,NA
-2024-520387-34-00,Fondazione IRCCS Policlinico San Matteo,NA
+2024-520387-34-01,Fondazione IRCCS Policlinico San Matteo,NA
 2024-520388-15-00,Fondazione Penta Ets,NA
 2024-520391-10-01,Centre Hospitalier Regional Et Universitaire De Brest,NA
 2024-520392-27-00,Radboud universitair medisch centrum Stichting,NA
 2024-520395-99-00,Eikon Therapeutics Inc.,NA
 2024-520399-84-00,Azienda Unita' Sanitaria Locale Toscana Sud Est,NA
 2024-520407-27-00,Disc Medicine Inc.,NA
-2024-520409-38-00,Anaptysbio Inc.,NA
+2024-520409-38-00,First Tracks Biotherapeutics Inc.,NA
 2024-520413-53-00,Assistance Publique Hopitaux De Paris,NA
 2024-520414-21-00,Assistance Publique Hopitaux De Paris,NA
 2024-520417-41-00,Glaxosmithkline Research & Development Limited,NA
@@ -48886,10 +48973,13 @@ _id,raw_sponsor,is_commercial
 2024-520433-76-00,European Myeloma Network B.V. / Emn Trial Office S.r.l. Impresa Sociale,NA
 2024-520435-33-00,Karolinska University Hospital,NA
 2024-520436-15-00,Ospedale Pediatrico Bambino Gesu,NA
+2024-520440-42-00,Novo Nordisk A/S,NA
+2024-520441-23-00,Novo Nordisk A/S,NA
 2024-520442-36-00,Novo Nordisk A/S,NA
 2024-520443-16-00,Novo Nordisk A/S,NA
 2024-520444-42-00,Novo Nordisk A/S,NA
 2024-520445-23-00,Novo Nordisk A/S,NA
+2024-520446-31-00,Novo Nordisk A/S,NA
 2024-520449-21-00,Azienda Socio Sanitaria Territoriale Degli Spedali Civili Di Brescia,NA
 2025-520452-28-00,Goethe University Frankfurt,NA
 2025-520454-11-00,Remynd,NA
@@ -48940,6 +49030,7 @@ _id,raw_sponsor,is_commercial
 2025-520560-18-00,Universitair Medisch Centrum Groningen,NA
 2025-520563-41-00,Hemerion Therapeutics,NA
 2025-520564-17-00,MoonLake Immunotherapeutics AG,NA
+2025-520565-51-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-520566-22-00,Pfizer Inc.,NA
 2025-520571-66-00,Region Vaesterbotten,NA
 2025-520572-25-00,CCDRD Cooperative Clinical Drug Research and Development AG / Sopharma AD,NA
@@ -48961,9 +49052,11 @@ _id,raw_sponsor,is_commercial
 2025-520622-38-00,Istituto Di Ricovero E Cura A Carattere Scientifico Materno Infantile Burlo Garofolo,NA
 2025-520623-24-00,Bayer AG,NA
 2025-520624-25-00,Electra Therapeutics Inc.,NA
+2025-520626-37-00,AstraZeneca AB,NA
 2025-520627-25-00,Region Uppsala,NA
 2025-520628-11-00,Universitaetsklinikum Erlangen AöR,NA
 2025-520629-19-00,Viiv Healthcare UK Limited,NA
+2025-520631-17-00,F. Hoffmann-La Roche AG,NA
 2025-520632-42-00,Centre Hospitalier Universitaire Rouen,NA
 2025-520637-24-00,Centre Hospitalier Universitaire De Toulouse,NA
 2025-520638-53-00,Centre Hospitalier Universitaire De Nantes,NA
@@ -48980,6 +49073,7 @@ _id,raw_sponsor,is_commercial
 2025-520660-18-00,Policlinico San Donato S.p.A.,NA
 2025-520663-41-00,Reckitt Benckiser Healthcare (UK) Limited,NA
 2025-520665-47-00,Sparingvision,NA
+2025-520666-22-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-520671-38-00,Hospital Universitario La Paz,NA
 2025-520672-26-00,Glaxosmithkline Research & Development Limited,NA
 2025-520673-39-00,Radboud universitair medisch centrum Stichting,NA
@@ -49035,6 +49129,7 @@ _id,raw_sponsor,is_commercial
 2025-520778-20-00,Azienda Ospedaliera Universitaria Senese,NA
 2025-520780-40-00,Alexion Pharmaceuticals Inc.,NA
 2025-520782-48-00,Consorci Mar Parc De Salut De Barcelona,NA
+2025-520783-17-01,Assistance Publique Hopitaux De Paris,NA
 2025-520786-44-00,AstraZeneca AB,NA
 2025-520788-42-00,Universita Degli Studi Di Milano Bicocca,NA
 2025-520790-39-00,Universitaetsklinikum Heidelberg AöR,NA
@@ -49078,6 +49173,8 @@ _id,raw_sponsor,is_commercial
 2025-520897-21-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-520899-25-00,Azienda Socio Sanitaria Territoriale Di Lodi,NA
 2025-520902-37-00,Merck Sharp & Dohme LLC,NA
+2025-520906-36-00,Universiteit Maastricht,NA
+2025-520910-67-01,Oslo University Hospital HF,NA
 2025-520913-29-00,Leids Universitair Medisch Centrum (LUMC),NA
 2025-520915-14-00,Falck clinic,NA
 2025-520916-32-00,Ospedale Pediatrico Bambino Gesu,NA
@@ -49123,6 +49220,7 @@ _id,raw_sponsor,is_commercial
 2025-521026-15-00,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Princesa,NA
 2025-521029-34-00,Versantis AG,NA
 2025-521030-29-00,Region Midtjylland,NA
+2025-521032-11-00,Merck Sharp & Dohme LLC,NA
 2025-521034-28-00,F. Hoffmann-La Roche AG,NA
 2025-521035-37-00,Sanofi-Aventis Recherche & Developpement,NA
 2025-521036-11-00,Sanofi-Aventis Recherche & Developpement,NA
@@ -49163,6 +49261,7 @@ _id,raw_sponsor,is_commercial
 2025-521117-88-00,Amgen Inc.,NA
 2025-521124-29-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-521125-33-00,Compugen Ltd. / Compugen Ltd.,NA
+2025-521126-15-00,Grupo Espanol De Leucemia Mieloide Cronica (GELMC),NA
 2025-521127-73-00,Tg Therapeutics Inc.,NA
 2025-521128-31-00,Genentech Inc.,NA
 2025-521130-28-00,Janssen Cilag International,NA
@@ -49186,6 +49285,7 @@ _id,raw_sponsor,is_commercial
 2025-521169-28-00,AstriVax,NA
 2025-521170-33-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
 2025-521172-64-00,Luye Pharma Switzerland AG,NA
+2025-521173-13-00,Daiichi Sankyo Inc.,NA
 2025-521175-31-00,Tern Therapeutics LLC,NA
 2025-521177-14-00,Vianex S.A.,NA
 2025-521178-33-00,Aligos Therapeutics Inc.,NA
@@ -49197,10 +49297,11 @@ _id,raw_sponsor,is_commercial
 2025-521199-80-00,French Innovative Leukemia Organization,NA
 2025-521205-41-00,Aalborg University Hospital,NA
 2025-521206-18-00,GCS Ramsay Sante Enseignement Et Recherche,NA
-2025-521209-42-00,Gruppo Oncologico Del Nord Ovest,NA
+2025-521209-42-00,Fondazione GONO G.I.,NA
 2025-521215-39-00,Neurocrine Biosciences Inc.,NA
 2025-521216-19-00,Neurocrine Biosciences Inc.,NA
 2025-521217-46-00,Centre Hospitalier Universitaire De Saint Etienne,NA
+2025-521221-32-00,Immunitybio Inc.,NA
 2025-521223-78-00,Immunitybio Inc.,NA
 2025-521224-29-00,Sun Pharmaceutical Industries Limited,NA
 2025-521227-70-00,CuraCell Holding AB,NA
@@ -49248,14 +49349,17 @@ _id,raw_sponsor,is_commercial
 2025-521317-50-00,Centre Hospitalier Universitaire De Montpellier,NA
 2025-521319-38-00,Gruppo Oncologico Dell'Italia Meridionale,NA
 2025-521322-14-00,French Innovative Leukemia Organization,NA
+2025-521324-29-00,Odense University Hospital,NA
 2025-521325-33-00,Xylocor Therapeutics Inc.,NA
 2025-521327-67-00,F. Hoffmann-La Roche AG,NA
 2025-521329-34-00,Novo Nordisk A/S,NA
 2025-521330-29-00,Ostfold Hospital Trust,NA
+2025-521331-36-00,Assistance Publique Hopitaux De Paris,NA
 2025-521340-37-00,Astrazeneca Farmaceutica Spain S.A.,NA
 2025-521349-25-00,4d Molecular Therapeutics Inc.,NA
 2025-521350-41-01,Foundation For The Study Of Nanoneuroscience And Neuroregeneration,NA
 2025-521352-38-00,Adarx Pharmaceuticals Inc.,NA
+2025-521353-16-00,Adarx Pharmaceuticals Inc.,NA
 2025-521354-42-00,Oslo University Hospital HF,NA
 2025-521357-17-00,Teitur Trophics ApS,NA
 2025-521358-41-00,UZ Leuven,NA
@@ -49272,6 +49376,7 @@ _id,raw_sponsor,is_commercial
 2025-521382-27-00,Janssen Cilag International,NA
 2025-521384-12-00,Novo Nordisk A/S,NA
 2025-521385-10-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2025-521388-11-00,Fundacion Para La Gestion De La Investigacion En Salud De Sevilla,NA
 2025-521390-14-00,Pediatric Research International GmbH,NA
 2025-521391-58-00,Windward Bio AG,NA
 2025-521393-34-00,Novo Nordisk A/S,NA
@@ -49295,7 +49400,7 @@ _id,raw_sponsor,is_commercial
 2025-521438-27-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-521441-24-00,Alentis Therapeutics AG,NA
 2025-521443-20-00,Region Midtjylland,NA
-2025-521446-20-00,Kamari Pharma Ltd.,NA
+2025-521446-20-00,Orvida Pharma Ltd.,NA
 2025-521451-23-00,Ntc S.r.l.,NA
 2025-521452-30-01,Region Midtjylland,NA
 2025-521454-42-00,Hospital Clinico San Carlos,NA
@@ -49313,13 +49418,16 @@ _id,raw_sponsor,is_commercial
 2025-521480-12-00,Atavistik Bio Inc.,NA
 2025-521481-10-00,Azienda Ospedaliero-Universitaria Maggiore Della Carita,NA
 2025-521487-36-00,Merck Sharp & Dohme LLC,NA
+2025-521488-11-00,ARQ National Psychotrauma Centrum,NA
 2025-521489-80-00,Medica Scientia Innovation Research S.L.,NA
 2025-521490-13-00,Humanitas Mirasole S.p.A.,NA
+2025-521493-33-00,Centre Hospitalier Intercommunal Creteil,NA
 2025-521495-54-00,Merck Sharp & Dohme LLC,NA
 2025-521497-34-00,Universitaet Muenster,NA
 2025-521502-18-00,Otsuka Pharmaceutical Development & Commercialization Inc.,NA
 2025-521503-43-00,Novartis Pharma AG,NA
 2025-521504-22-00,Centre Hospitalier Universitaire De Nice,NA
+2025-521506-17-01,Universitair Medisch Centrum Utrecht,NA
 2025-521508-23-00,Minoryx Therapeutics S.L.,NA
 2025-521510-25-00,Arctic Therapeutics hf.,NA
 2025-521511-40-00,Bristol-Myers Squibb Services Unlimited Company,NA
@@ -49347,10 +49455,12 @@ _id,raw_sponsor,is_commercial
 2025-521559-22-00,UZ Brussel,NA
 2025-521560-36-00,Sab Biotherapeutics Inc.,NA
 2025-521562-95-00,Mabxience Research S.L.,NA
+2025-521563-13-01,Laboratoires Thea,NA
 2025-521564-35-00,Medical University Of Graz,NA
 2025-521565-27-00,Sandoz Private Limited,NA
 2025-521567-12-00,Laboratoires Thea,NA
 2025-521569-29-00,Wroclaw Medical University,NA
+2025-521570-34-00,Wroclaw Medical University,NA
 2025-521571-30-00,Assistance Publique Hopitaux De Paris,NA
 2025-521572-56-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
 2025-521573-14-00,Robert Bosch Gesellschaft fuer medizinische Forschung mbH,NA
@@ -49360,6 +49470,9 @@ _id,raw_sponsor,is_commercial
 2025-521582-27-00,NovImmune S.A.,NA
 2025-521583-35-00,Universita' Vita-salute S. Raffaele,NA
 2025-521587-35-00,Summit Therapeutics Inc.,NA
+2025-521589-83-00,Oslo University Hospital HF,NA
+2025-521590-13-00,Janssen Cilag International,NA
+2025-521591-64-00,Assistance Publique Hopitaux De Paris,NA
 2025-521593-33-00,Novo Nordisk A/S,NA
 2025-521595-55-00,Novo Nordisk A/S,NA
 2025-521598-16-00,Sun Pharmaceutical Industries Limited,NA
@@ -49368,6 +49481,7 @@ _id,raw_sponsor,is_commercial
 2025-521603-46-00,T-Knife GmbH,NA
 2025-521605-40-00,Centre for Human Drug Research,NA
 2025-521606-18-00,AbbVie Deutschland GmbH & Co. KG,NA
+2025-521608-23-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
 2025-521611-39-00,Agiana Pharmaceuticals AS,NA
 2025-521614-26-00,AstraZeneca AB,NA
 2025-521615-39-00,Rhoshan Pharmaceuticals Inc.,NA
@@ -49378,6 +49492,7 @@ _id,raw_sponsor,is_commercial
 2025-521624-30-00,Bluefin Biomedicine Inc.,NA
 2025-521627-78-00,Glaxosmithkline Research & Development Limited,NA
 2025-521628-31-00,Larimar Therapeutics Inc.,NA
+2025-521632-12-00,VarmX B.V.,NA
 2025-521634-29-00,Institut Gustave Roussy,NA
 2025-521636-10-00,F. Hoffmann-La Roche AG,NA
 2025-521639-34-00,AstraZeneca AB,NA
@@ -49403,10 +49518,14 @@ _id,raw_sponsor,is_commercial
 2025-521683-35-00,UZ Leuven,NA
 2025-521684-12-00,Citryll B.V.,NA
 2025-521686-27-01,Region Uppsala,NA
+2025-521689-86-00,Sinfatin S.L.,NA
+2025-521690-14-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
 2025-521692-31-00,Takeda Development Center Americas Inc.,NA
+2025-521693-33-00,Sinfatin S.L.,NA
 2025-521694-14-00,Consorci Mar Parc De Salut De Barcelona,NA
 2025-521696-31-00,Centre Hospitalier Universitaire De Poitiers,NA
 2025-521697-34-00,Dbv Technologies,NA
+2025-521699-71-01,Medical University Of Vienna,NA
 2025-521701-41-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
 2025-521702-18-00,Novartis Pharma AG,NA
 2025-521705-40-00,Agomab Spain S.L.U.,NA
@@ -49415,6 +49534,7 @@ _id,raw_sponsor,is_commercial
 2025-521709-42-00,LETI Pharma S.L.U.,NA
 2025-521710-25-00,Acadia Pharmaceuticals Inc.,NA
 2025-521711-39-00,Acadia Pharmaceuticals Inc.,NA
+2025-521712-19-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-521713-57-00,Regeneron Pharmaceuticals Inc.,NA
 2025-521717-67-00,Avencell Therapeutics Inc.,NA
 2025-521718-24-00,Tarchominskie Zaklady Farmaceutyczne Polfa S.A.,NA
@@ -49426,6 +49546,7 @@ _id,raw_sponsor,is_commercial
 2025-521736-10-00,LETI Pharma S.L.U.,NA
 2025-521737-91-00,Merck Sharp & Dohme LLC,NA
 2025-521738-27-00,Charite Universitaetsmedizin Berlin KöR,NA
+2025-521740-38-00,Sanofi Pasteur Inc.,NA
 2025-521742-15-00,Biogen Idec Research Limited,NA
 2025-521744-37-00,Dr. Willmar Schwabe GmbH & Co. KG,NA
 2025-521745-25-00,Merck Sharp & Dohme LLC,NA
@@ -49434,10 +49555,12 @@ _id,raw_sponsor,is_commercial
 2025-521754-41-00,Immunic AG,NA
 2025-521755-23-00,Centre Hospitalier Annecy Genevois,NA
 2025-521756-39-00,Pfizer Inc.,NA
+2025-521757-16-00,Maplight Therapeutics Inc.,NA
 2025-521758-40-00,Regeneron Pharmaceuticals Inc.,NA
 2025-521762-99-00,University Medical Center Hamburg-Eppendorf,NA
 2025-521764-35-01,MEDICE Arzneimittel Puetter GmbH & Co. KG,NA
 2025-521768-36-00,BioNTech SE,NA
+2025-521769-29-00,Insmed Inc.,NA
 2025-521770-34-00,Radboud universitair medisch centrum Stichting,NA
 2025-521771-31-00,Universitair Medisch Centrum Groningen,NA
 2025-521772-57-00,Zambon Biotech S.A.,NA
@@ -49451,15 +49574,18 @@ _id,raw_sponsor,is_commercial
 2025-521792-31-01,Arrowhead Pharmaceuticals Inc.,NA
 2025-521795-58-00,Region Skane,NA
 2025-521797-34-00,Eli Lilly & Co.,NA
+2025-521798-15-00,Istituto Di Ricerche Farmacologiche Mario Negri,NA
 2025-521800-22-00,Oslo University Hospital HF,NA
 2025-521801-42-00,Rijksinstituut voor Volksgezondheid en Milieu (RIVM),NA
 2025-521802-17-00,Farmalider S.A.,NA
 2025-521805-41-00,Solti Group,NA
+2025-521806-16-00,Mesoestetic Pharma Group S.L.,NA
 2025-521808-22-01,Institute Of Oncology Ljubljana,NA
 2025-521809-40-00,Medibiofarma S.L.,NA
 2025-521810-24-00,Fundacion Ribera Salud,NA
 2025-521811-38-01,Centre Hospitalier Universitaire Grenoble Alpes,NA
 2025-521814-25-01,Consorci Mar Parc De Salut De Barcelona,NA
+2025-521816-20-00,Aimmune Nestle Health Science US R&D LLC,NA
 2025-521819-39-00,Amsterdam UMC Stichting,NA
 2025-521827-61-00,Fondazione Gimema Franco Mandelli Onlus,NA
 2025-521828-30-00,Pyxis Oncology Inc.,NA
@@ -49493,8 +49619,10 @@ _id,raw_sponsor,is_commercial
 2025-521880-10-00,Novartis Pharma AG,NA
 2025-521884-12-00,BioNTech SE,NA
 2025-521886-28-00,Daiichi Sankyo Inc.,NA
+2025-521887-37-00,Eli Lilly & Co.,NA
 2025-521888-13-00,Genentech Inc.,NA
 2025-521889-95-00,Groupe D'etude Therapeutique Des Affections Inflammatoires Du Tube Digestif,NA
+2025-521891-78-00,Assistance Publique Hopitaux De Paris,NA
 2025-521892-30-00,Dolnoslaskie Centrum Chorob Serca Im. Prof. Zbigniewa Religi Medinet Sp. z o.o.,NA
 2025-521902-17-00,Idp Discovery Pharma S.L.,NA
 2025-521903-28-00,Symbio Pharmaceuticals Ltd.,NA
@@ -49515,6 +49643,7 @@ _id,raw_sponsor,is_commercial
 2025-521923-58-00,Centre Hospitalier Universitaire De Toulouse,NA
 2025-521924-31-00,Pfizer Inc.,NA
 2025-521926-13-00,Centre Hospitalier Universitaire Rouen,NA
+2025-521929-32-01,University Of Oxford,NA
 2025-521930-27-00,Ars Pharmaceuticals IRL Limited,NA
 2025-521936-12-00,NewAmsterdam Pharma B.V.,NA
 2025-521939-36-00,Merck Sharp & Dohme LLC,NA
@@ -49522,13 +49651,17 @@ _id,raw_sponsor,is_commercial
 2025-521941-25-00,Odense University Hospital,NA
 2025-521946-82-00,Centre Hospitalier Universitaire De Caen Normandie,NA
 2025-521947-19-00,Eli Lilly & Co.,NA
+2025-521950-41-00,Generate Biomedicines Inc.,NA
 2025-521962-83-00,Karolinska Institutet,NA
 2025-521966-91-00,Delcath Systems Inc.,NA
 2025-521967-11-00,Assistance Publique Hopitaux De Paris,NA
 2025-521970-33-00,Merck Sharp & Dohme LLC,NA
+2025-521971-29-00,Nuvation Bio Inc.,NA
 2025-521973-16-00,Biocryst Pharmaceuticals Inc.,NA
 2025-521975-30-00,Janssen Cilag International,NA
+2025-521976-80-00,Janssen Cilag International,NA
 2025-521981-90-00,Xencor Inc.,NA
+2025-521982-29-00,Unicancer,NA
 2025-521983-36-00,Blue Earth Diagnostics Ireland Limited,NA
 2025-521985-82-00,Woerwag Pharma GmbH & Co. KG,NA
 2025-521987-37-00,AstraZeneca AB,NA
@@ -49540,8 +49673,10 @@ _id,raw_sponsor,is_commercial
 2025-522002-20-00,AstraZeneca AB,NA
 2025-522004-24-00,Pharmanutra S.p.A.,NA
 2025-522005-38-00,Centre Hospitalier Universitaire Rouen,NA
+2025-522006-21-00,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Princesa,NA
+2025-522007-18-00,Janssen Cilag International,NA
 2025-522012-16-00,Alx Oncology Holdings Inc.,NA
-2025-522015-42-00,Bluejay Therapeutics Inc.,NA
+2025-522015-42-00,Mirum Pharmaceuticals Inc.,NA
 2025-522019-40-00,Novartis Pharma AG,NA
 2025-522023-10-00,Institut Jules Bordet,NA
 2025-522026-13-00,Bioprojet Pharma,NA
@@ -49549,10 +49684,12 @@ _id,raw_sponsor,is_commercial
 2025-522029-37-00,AstraZeneca AB,NA
 2025-522033-64-00,Ajax Therapeutics Inc.,NA
 2025-522034-31-00,Takeda Development Center Americas Inc.,NA
+2025-522038-29-00,Merck Sharp & Dohme LLC,NA
 2025-522039-33-00,Leal Therapeutics Inc.,NA
 2025-522040-40-01,Universitair Ziekenhuis Antwerpen / Hospital Germans Trias I Pujol,NA
 2025-522045-21-00,Boehringer Ingelheim International GmbH,NA
 2025-522046-42-00,Norgine Limited,NA
+2025-522049-23-00,Assistance Publique Hopitaux De Paris,NA
 2025-522051-26-00,Pharvaris Netherlands B.V.,NA
 2025-522052-13-00,Ospedale Pediatrico Bambino Gesu,NA
 2025-522053-18-00,University Of Antwerp,NA
@@ -49574,13 +49711,14 @@ _id,raw_sponsor,is_commercial
 2025-522099-10-00,University Of Cologne,NA
 2025-522100-25-00,Merck Sharp & Dohme LLC,NA
 2025-522101-37-00,F. Hoffmann-La Roche AG,NA
-2025-522105-38-00,Bluejay Therapeutics Inc.,NA
+2025-522105-38-00,Mirum Pharmaceuticals Inc.,NA
 2025-522106-20-00,Sun Pharmaceutical Industries Limited,NA
 2025-522107-18-00,Genmab A/S,NA
 2025-522108-26-00,Fondation Franc.Cancerologie Digestive,NA
 2025-522109-39-00,Centre Hospitalier Universitaire De Lille,NA
 2025-522111-42-02,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2025-522113-35-00,Triveni Bio Inc.,NA
+2025-522114-23-00,Odense University Hospital,NA
 2025-522116-16-00,University Of Antwerp,NA
 2025-522118-21-00,Care Arthritis Ltd.,NA
 2025-522119-41-00,Centre Hospitalier Universitaire De Nice,NA
@@ -49593,8 +49731,10 @@ _id,raw_sponsor,is_commercial
 2025-522133-66-00,Karolinska University Hospital,NA
 2025-522135-34-00,UZ Leuven,NA
 2025-522136-14-00,TAYS Sydaenkeskus Oy,NA
+2025-522138-29-00,Novartis Pharma AG,NA
 2025-522139-33-00,Ipsen Pharma,NA
 2025-522140-40-00,Oslo University Hospital HF,NA
+2025-522144-41-00,Universitaetsklinikum Tuebingen AöR,NA
 2025-522145-21-00,University College London,NA
 2025-522146-40-00,Shionogi B.V.,NA
 2025-522147-18-00,Merck Sharp & Dohme LLC,NA
@@ -49602,23 +49742,29 @@ _id,raw_sponsor,is_commercial
 2025-522151-26-00,Arrivent Biopharma Inc.,NA
 2025-522160-32-00,Fondazione Telethon Ets / San Raffaele Hospital,NA
 2025-522162-75-00,Academisch Ziekenhuis Maastricht,NA
+2025-522165-30-00,Grifols Therapeutics LLC,NA
+2025-522167-15-00,Genmab A/S,NA
 2025-522168-34-00,University Hospital Of Clermont-Ferrand,NA
 2025-522169-31-00,Unicancer,NA
 2025-522170-36-00,Eli Lilly & Co.,NA
+2025-522176-86-01,Kardigan Inc.,NA
 2025-522181-71-00,F. Hoffmann-La Roche AG,NA
 2025-522184-15-00,Ipsen Pharma,NA
 2025-522187-32-01,Amsterdam UMC Stichting,NA
 2025-522189-60-00,Citryll B.V.,NA
+2025-522190-11-01,Universitaetsklinikum Schleswig-Holstein AöR,NA
 2025-522191-86-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-522193-37-00,Assistance Publique Hopitaux De Paris,NA
 2025-522194-11-00,Fondazione Penta Ets,NA
 2025-522203-23-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-522204-24-00,Eli Lilly & Co.,NA
 2025-522207-15-01,Aavantgarde Bio S.r.l.,NA
+2025-522209-40-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-522215-42-00,Copenhagen University Hospital,NA
 2025-522216-17-00,Sitryx Therapeutics Limited,NA
 2025-522217-27-00,Sitryx Therapeutics Limited,NA
 2025-522225-35-00,Laboratorios Alter S.A.,NA
+2025-522227-99-00,Novartis Pharma AG,NA
 2025-522231-34-00,Alvotech Swiss AG,NA
 2025-522232-13-00,AstraZeneca AB,NA
 2025-522233-62-00,Ona Therapeutics S.L.,NA
@@ -49631,12 +49777,16 @@ _id,raw_sponsor,is_commercial
 2025-522252-74-00,PharOS Pharmaceutical Oriented Servises Ltd. / CCDRD Cooperative Clinical Drug Research and Development AG,NA
 2025-522253-19-00,Merck Sharp & Dohme LLC,NA
 2025-522254-39-00,Laboratorios Cinfa S.A.,NA
+2025-522255-25-00,Eli Lilly & Co.,NA
 2025-522257-19-00,Tg Therapeutics Inc.,NA
 2025-522259-24-00,Bluepharma Industria Farmaceutica S.A.,NA
 2025-522261-30-00,Centre Hospitalier Universitaire De Lille,NA
+2025-522263-14-00,Skyhawk Therapeutics Inc.,NA
+2025-522267-15-00,Merck Sharp & Dohme LLC,NA
 2025-522269-30-00,Odense University Hospital,NA
 2025-522273-10-00,AstraZeneca AB,NA
 2025-522274-37-00,Glaxosmithkline Research & Development Limited,NA
+2025-522275-28-00,Orchard Therapeutics (Europe) Limited,NA
 2025-522278-35-00,GlaxoSmithKline Biologicals,NA
 2025-522279-27-00,Syndax Pharmaceuticals Inc.,NA
 2025-522281-68-00,Newleos Therapeutics Inc.,NA
@@ -49645,29 +49795,38 @@ _id,raw_sponsor,is_commercial
 2025-522290-11-00,Karolinska University Hospital,NA
 2025-522291-83-00,Dompe' Farmaceutici S.p.A.,NA
 2025-522293-37-00,Teikyo University,NA
+2025-522294-11-00,Galderma S.A.,NA
 2025-522295-91-00,Hemato-Oncologie voor Volwassenen Nederland (Hovon) Stichting,NA
 2025-522297-36-00,Noucor Health S.A.,NA
+2025-522301-37-00,Novartis Pharma AG,NA
 2025-522305-38-00,University Of Pecs,NA
 2025-522306-21-00,Universita Degli Studi Di Milano Bicocca,NA
 2025-522307-14-00,Intas Pharmaceuticals Limited,NA
+2025-522308-25-00,Eli Lilly & Co.,NA
 2025-522309-40-00,Takeda Development Center Americas Inc.,NA
+2025-522310-24-00,Eli Lilly & Co.,NA
 2025-522311-41-00,Boehringer Ingelheim International GmbH,NA
+2025-522312-16-00,Eli Lilly & Co.,NA
 2025-522313-38-00,Eli Lilly & Co.,NA
 2025-522318-21-00,Glaxosmithkline Research & Development Limited,NA
 2025-522319-41-00,Centre Hospitalier Universitaire De Nice,NA
 2025-522320-27-00,Viatris Innovation GmbH,NA
 2025-522323-10-00,Region Midtjylland,NA
 2025-522325-35-00,Boehringer Ingelheim International GmbH,NA
+2025-522326-13-00,Region Hovedstaden,NA
 2025-522331-34-00,Pfizer Inc.,NA
 2025-522333-61-00,Sanofi-Aventis Recherche & Developpement,NA
 2025-522335-34-00,Bayer AG,NA
 2025-522336-14-00,Bayer AG,NA
 2025-522338-30-00,Eli Lilly & Co.,NA
+2025-522339-32-00,Merck Sharp & Dohme LLC,NA
 2025-522340-40-00,Eli Lilly & Co.,NA
 2025-522343-18-00,Rycarma Therapeutics Inc.,NA
 2025-522345-21-00,Chong Kun Dang Pharmaceutical Corp.,NA
 2025-522346-46-00,Medicure International Inc.,NA
 2025-522347-18-00,Seaport Therapeutics Inc.,NA
+2025-522348-42-00,Amsterdam UMC Stichting,NA
+2025-522349-23-00,Amsterdam UMC Stichting,NA
 2025-522358-38-02,Turku University Hospital,NA
 2025-522361-30-00,Khondrion B.V.,NA
 2025-522362-78-00,Eli Lilly & Co.,NA
@@ -49676,6 +49835,7 @@ _id,raw_sponsor,is_commercial
 2025-522370-36-00,Kymera Therapeutics Inc.,NA
 2025-522371-29-00,AstraZeneca AB,NA
 2025-522372-93-00,AstraZeneca AB,NA
+2025-522373-10-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-522376-82-00,University Of Foggia,NA
 2025-522377-12-00,Charite Universitaetsmedizin Berlin KöR,NA
 2025-522378-36-00,Alesta Therapeutics B.V.,NA
@@ -49695,32 +49855,41 @@ _id,raw_sponsor,is_commercial
 2025-522404-24-01,Amsterdam UMC Stichting,NA
 2025-522406-20-00,Immunabs Inc.,NA
 2025-522407-23-00,AstraZeneca AB,NA
+2025-522409-39-00,Medizinische Hochschule Hannover,NA
 2025-522410-23-00,Hospital Universitario La Paz,NA
 2025-522412-16-00,Laboratorios Liconsa S.A.,NA
 2025-522421-36-00,Instituto De Investigacion Sanitaria Fundacion Para La Investigacion Del Hospital Clinico De Valencia-INCLIVA,NA
 2025-522422-13-00,Fresenius Kabi SwissBioSim GmbH,NA
 2025-522423-95-00,Bionorica SE,NA
 2025-522427-10-00,Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
+2025-522431-34-00,Region Hovedstaden,NA
 2025-522432-14-00,Boehringer Ingelheim International GmbH,NA
+2025-522434-32-00,F. Hoffmann-La Roche AG,NA
+2025-522435-33-00,F. Hoffmann-La Roche AG,NA
 2025-522437-65-00,AIO-Studien gGmbH,NA
 2025-522440-41-00,Bluefin Biomedicine Inc.,NA
-2025-522441-21-00,Askbio Inc. / AskBio France,NA
+2025-522441-21-00,Askbio Inc.,NA
 2025-522444-40-00,Pharming Technologies B.V.,NA
 2025-522446-51-00,Bacoba AG,NA
 2025-522448-41-00,Oslo University Hospital HF,NA
+2025-522449-23-00,Instituto De Investigacion Sanitaria Fundacion Jimenez Diaz,NA
 2025-522451-25-00,Azienda Socio Sanitaria Territoriale Ovest Milanese,NA
 2025-522452-16-00,Gesynta Pharma AB,NA
+2025-522453-20-00,Oslo University Hospital HF,NA
 2025-522455-26-00,TargED Biopharmaceuticals B.V.,NA
 2025-522460-33-00,Belite Bio Inc.,NA
 2025-522462-73-00,Centre Hospitalier Universitaire De Rennes,NA
 2025-522464-32-00,Athenstaedt GmbH & Co. KG,NA
 2025-522468-34-00,Bioresearch Pharma S.A.,NA
+2025-522469-31-00,Inmunotek S.L.,NA
 2025-522471-28-00,MoonLake Immunotherapeutics AG,NA
 2025-522472-85-00,Humanitas Mirasole S.p.A.,NA
 2025-522475-28-00,Tenax Therapeutics Inc.,NA
 2025-522482-30-00,Vidac Pharma Ltd.,NA
 2025-522484-15-00,WSG Westdeutsche Studiengruppe GmbH,NA
 2025-522486-29-01,Casa Di Cura Accreditata Istituto Chirurgico Ortopedico Traumatologico Marco Pasquali,NA
+2025-522488-14-00,Novo Nordisk A/S,NA
+2025-522490-11-00,Radboud universitair medisch centrum Stichting,NA
 2025-522491-89-00,Universitaetsklinikum Erlangen AöR,NA
 2025-522492-28-00,Argenx,NA
 2025-522495-84-00,Merck Sharp & Dohme LLC,NA
@@ -49743,6 +49912,7 @@ _id,raw_sponsor,is_commercial
 2025-522529-36-00,Region Vaesternorrland / Umea University,NA
 2025-522530-31-01,Universita' Degli Studi Di Verona,NA
 2025-522531-34-00,Amplio Pharma B.V.,NA
+2025-522532-14-00,Pfizer Inc.,NA
 2025-522533-54-00,Institut Gustave Roussy,NA
 2025-522534-31-00,Polpharma Biologics S.A.,NA
 2025-522535-33-00,Fundacion De Investigacion Biomedica De Salamanca,NA
@@ -49756,14 +49926,16 @@ _id,raw_sponsor,is_commercial
 2025-522551-25-00,AstraZeneca AB,NA
 2025-522552-20-00,Epygenix Therapeutics Inc.,NA
 2025-522553-19-00,Kardigan Inc.,NA
+2025-522555-26-00,Alexion Pharmaceuticals Inc.,NA
 2025-522556-10-01,TOXILYON,NA
 2025-522558-37-00,Region Hovedstaden,NA
 2025-522559-25-00,Rigshospitalet,NA
 2025-522560-32-01,Ziekenhuis Oost Limburg,NA
 2025-522562-70-00,Tarchominskie Zaklady Farmaceutyczne Polfa S.A.,NA
+2025-522563-15-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-522565-30-00,Mylan Pharmaceuticals Inc.,NA
 2025-522567-15-00,Takeda Development Center Americas Inc.,NA
-2025-522571-28-00,ONCO3R Therapeutics,NA
+2025-522571-28-00,Coultreon Biopharma,NA
 2025-522573-11-00,Varsinais-Suomen hyvinvointialue,NA
 2025-522574-36-00,Pfizer Inc.,NA
 2025-522575-29-00,Consorci Mar Parc De Salut De Barcelona,NA
@@ -49772,6 +49944,8 @@ _id,raw_sponsor,is_commercial
 2025-522582-30-00,Alnylam Pharmaceuticals Inc.,NA
 2025-522583-32-00,Celldex Therapeutics Inc.,NA
 2025-522585-72-00,Universitaetsklinikum Schleswig-Holstein AöR,NA
+2025-522586-30-00,Takeda Development Center Americas Inc.,NA
+2025-522587-33-00,Takeda Development Center Americas Inc.,NA
 2025-522592-29-00,Ospedale Galeazzi S.p.A.,NA
 2025-522593-36-00,Helse Bergen HF,NA
 2025-522595-87-00,Daiichi Sankyo Inc.,NA
@@ -49784,6 +49958,7 @@ _id,raw_sponsor,is_commercial
 2025-522611-42-00,Dr. Douglas D. Fraser,NA
 2025-522613-26-00,BioNTech SE,NA
 2025-522617-39-00,Verve Therapeutics Inc.,NA
+2025-522618-22-00,Ipsen Innovation,NA
 2025-522624-27-00,Laboratorios Cinfa S.A.,NA
 2025-522626-12-00,Laboratorios Cinfa S.A.,NA
 2025-522627-10-00,Laboratorios Cinfa S.A.,NA
@@ -49794,6 +49969,7 @@ _id,raw_sponsor,is_commercial
 2025-522635-34-00,Triveni Bio Inc.,NA
 2025-522640-41-00,Eli Lilly & Co.,NA
 2025-522642-44-00,Pfizer Inc.,NA
+2025-522643-18-00,Merck Sharp & Dohme LLC,NA
 2025-522647-17-00,Hmg Biologics S.r.l.,NA
 2025-522652-58-01,H. Lundbeck A/S,NA
 2025-522653-19-00,Askbio Inc.,NA
@@ -49801,13 +49977,17 @@ _id,raw_sponsor,is_commercial
 2025-522656-68-00,Oncopole Claudius Regaud,NA
 2025-522659-24-00,Leids Universitair Medisch Centrum (LUMC),NA
 2025-522662-67-00,Gan & Lee Pharmaceuticals USA Corp.,NA
-2025-522669-32-00,Dizal (Jiangsu) Pharmaceutical Co. Ltd.,NA
+2025-522664-32-00,Annexon Inc.,NA
+2025-522669-32-00,Dizal Pharmaceutical Co. Ltd.,NA
 2025-522673-11-00,Clinica Universidad De Navarra,NA
+2025-522674-36-00,Eli Lilly & Co.,NA
 2025-522680-14-00,Qurient Co. Ltd.,NA
 2025-522683-32-00,F. Hoffmann-La Roche AG,NA
+2025-522686-29-00,Dr. Falk Pharma GmbH,NA
 2025-522687-33-00,Centre Hospitalier Universitaire De Lille,NA
 2025-522692-29-00,Dompe' Farmaceutici S.p.A.,NA
 2025-522694-11-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2025-522695-83-00,Sanofi-Aventis Recherche & Developpement,NA
 2025-522697-37-00,VectorY Therapeutics B.V.,NA
 2025-522698-13-00,Region Stockholm – SLSO,NA
 2025-522700-24-00,Asociacion Instituto De Investigacion Sanitaria Biobizkaia,NA
@@ -49819,13 +49999,16 @@ _id,raw_sponsor,is_commercial
 2025-522713-29-00,Janssen Cilag International,NA
 2025-522718-22-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
 2025-522719-40-00,Fundacija CTNNB1 Ustanova Za Raziskave Na Podrocju Genske Terapije,NA
+2025-522723-98-00,Krystal Biotech Inc.,NA
 2025-522726-12-00,Chemo Research S.L.,NA
 2025-522729-36-00,Gilead Sciences Inc.,NA
 2025-522730-31-00,Asac Pharmaceutical Inmunology S.A.,NA
 2025-522731-34-00,AstraZeneca AB,NA
+2025-522734-31-00,Takeda Development Center Americas Inc.,NA
 2025-522741-21-00,Region Midtjylland,NA
 2025-522742-46-00,Universitair Medisch Centrum Groningen,NA
 2025-522743-18-00,Centre Hospitalier Universitaire De Nantes,NA
+2025-522744-40-00,Novo Nordisk A/S,NA
 2025-522748-42-00,Incyte Corp.,NA
 2025-522750-39-00,Cinclus Pharma Holding AB (publ),NA
 2025-522752-45-00,MB PHARMA s.r.o.,NA
@@ -49833,13 +50016,18 @@ _id,raw_sponsor,is_commercial
 2025-522754-39-00,Medical University Of Graz,NA
 2025-522755-26-01,Latigo Biotherapeutics Inc.,NA
 2025-522756-97-00,Region Vaesterbotten / Umea University,NA
+2025-522757-19-00,Cancer Research UK,NA
 2025-522766-78-00,F. Hoffmann-La Roche AG,NA
 2025-522767-15-00,Hemato-Oncologie voor Volwassenen Nederland (Hovon) Stichting,NA
 2025-522768-33-00,Centre Hospitalier Universitaire De Toulouse,NA
+2025-522771-28-00,Inmunotek S.L.,NA
+2025-522773-12-00,Inmunotek S.L.,NA
 2025-522774-36-00,Nimbus Wadjet Inc.,NA
 2025-522775-29-00,Xenon Pharmaceuticals Inc.,NA
 2025-522776-93-00,Regeneron Pharmaceuticals Inc.,NA
+2025-522777-10-00,Merck Sharp & Dohme LLC,NA
 2025-522778-34-00,Universitair Ziekenhuis Antwerpen,NA
+2025-522781-77-01,Helse Bergen HF,NA
 2025-522782-30-00,UCB Biopharma,NA
 2025-522784-15-00,Draig Therapeutics Limited,NA
 2025-522786-29-00,Dompe' Farmaceutici S.p.A.,NA
@@ -49848,10 +50036,15 @@ _id,raw_sponsor,is_commercial
 2025-522792-29-00,Grifols Therapeutics LLC,NA
 2025-522796-28-00,Genesis Pharma S.A.,NA
 2025-522798-13-00,Karolinska University Hospital,NA
+2025-522801-39-00,Intergroupe Francophone De Cancerologie Thoracique,NA
+2025-522803-60-00,Glaxosmithkline Research & Development Limited,NA
 2025-522805-39-00,F. Hoffmann-La Roche AG,NA
 2025-522809-38-00,Pirkanmaan hyvinvointialue,NA
 2025-522812-18-00,Hospital Clinico San Carlos,NA
 2025-522817-50-00,CHU De Martinique,NA
+2025-522818-23-00,Zai Lab (US) LLC,NA
+2025-522819-42-01,Centre Hospitalier Universitaire De Rennes,NA
+2025-522824-29-00,Novartis Pharma AG,NA
 2025-522826-11-00,ZRO Imaging AB,NA
 2025-522831-33-00,Takeda Development Center Americas Inc.,NA
 2025-522832-16-00,Centre Hospitalier Universitaire Grenoble Alpes,NA
@@ -49859,21 +50052,26 @@ _id,raw_sponsor,is_commercial
 2025-522835-32-00,Elion Therapeutics Inc.,NA
 2025-522839-33-00,Henry Dunant Hospital Center,NA
 2025-522841-23-00,Assistance Publique Hopitaux De Paris,NA
+2025-522845-23-00,Rigshospitalet,NA
 2025-522848-40-00,Fundacion Grupo Espanol De Investigacion En Cancer De Mama,NA
 2025-522853-21-01,Fraunhofer Institute For Translational Medicine And Pharmacology ITMP,NA
+2025-522854-37-00,Octapharma Pharmazeutika Produktionsgesellschaft mbH,NA
 2025-522855-25-00,Eli Lilly & Co.,NA
 2025-522857-20-00,Fraunhofer Institute For Translational Medicine And Pharmacology ITMP,NA
 2025-522860-34-00,BeOne Medicines AG,NA
 2025-522862-58-00,BeOne Medicines AG,NA
 2025-522864-34-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
-2025-522867-13-00,Merus N.V.,NA
+2025-522867-13-00,Merus B.V.,NA
 2025-522868-32-00,Semmelweis University,NA
 2025-522870-35-00,Centre Hospitalier Universitaire De Nice,NA
 2025-522872-10-00,Xenon Pharmaceuticals Inc.,NA
 2025-522873-12-00,Olema Pharmaceuticals Inc.,NA
 2025-522878-36-00,Celldex Therapeutics Inc.,NA
+2025-522883-34-00,Universitair Medisch Centrum Groningen,NA
+2025-522888-15-00,Amgen Inc.,NA
 2025-522892-27-00,GSK PLC,NA
 2025-522896-27-00,Sanofi-Aventis Recherche & Developpement,NA
+2025-522900-26-00,Amsterdam UMC Stichting,NA
 2025-522904-26-00,Genentech Inc.,NA
 2025-522913-45-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-522914-22-00,Janssen Cilag International,NA
@@ -49888,15 +50086,20 @@ _id,raw_sponsor,is_commercial
 2025-522932-15-00,Glaxosmithkline Research & Development Limited,NA
 2025-522935-32-00,Dompe' Farmaceutici S.p.A.,NA
 2025-522936-14-00,Ziekenhuis Oost Limburg,NA
+2025-522939-33-00,Argenx,NA
 2025-522944-41-00,Pathios Therapeutics Limited,NA
 2025-522946-37-00,Biodexa Limited / Rapamycin Holdings Inc.,NA
+2025-522949-22-00,Solid Biosciences Inc.,NA
+2025-522951-24-00,Angitia Inc. Ltd.,NA
 2025-522953-21-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-522955-25-00,Vaestra Goetalandsregionen,NA
+2025-522956-25-00,Odense University Hospital,NA
 2025-522957-20-00,Dyne Therapeutics Inc.,NA
 2025-522960-34-00,Alnylam Pharmaceuticals Inc.,NA
-2025-522961-31-00,Kobenhavns Universitet / Koebenhavns Universitet,NA
+2025-522961-31-01,Kobenhavns Universitet / Koebenhavns Universitet,NA
 2025-522962-58-00,Leids Universitair Medisch Centrum (LUMC),NA
-2025-522963-14-00,Phosprint P.C.,NA
+2025-522963-14-00,Phosprint S.A.,NA
+2025-522964-33-00,CSL Behring LLC,NA
 2025-522965-31-00,Pfizer Inc.,NA
 2025-522966-61-00,OPTERION Health AG,NA
 2025-522967-13-00,Fundacion Para La Investigacion Biomedica Del Hospital Universitario La Paz,NA
@@ -49908,8 +50111,10 @@ _id,raw_sponsor,is_commercial
 2025-522976-10-00,Adamed Pharma S.A.,NA
 2025-522979-29-00,Fundacion PETHEMA,NA
 2025-522981-61-00,IRCCS Istituto Nazionale Tumori Fondazione Pascale,NA
+2025-522983-33-00,Sanofi-Aventis Recherche & Developpement,NA
 2025-522987-34-00,Centessa Pharmaceuticals UK Limited,NA
 2025-522996-27-00,Groupe Oncologie Radiotherapie Tete Cou,NA
+2025-523005-15-00,Merck Sharp & Dohme LLC,NA
 2025-523009-14-00,AstraZeneca AB,NA
 2025-523010-89-00,35Pharma Inc.,NA
 2025-523013-28-00,F. Hoffmann-La Roche AG,NA
@@ -49927,6 +50132,7 @@ _id,raw_sponsor,is_commercial
 2025-523060-20-00,European Group for Research in Schizophrenia Stichting,NA
 2025-523061-22-00,Universitaet Leipzig,NA
 2025-523065-16-00,Azienda Unita Sanitaria Locale Di Bologna,NA
+2025-523067-38-01,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523071-34-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
 2025-523075-32-00,Universitair Medisch Centrum Groningen,NA
 2025-523076-23-00,CCDRD Cooperative Clinical Drug Research and Development AG / Nadezhda Reproductive Science OOD,NA
@@ -49934,20 +50140,31 @@ _id,raw_sponsor,is_commercial
 2025-523083-21-00,Relay Therapeutics Inc.,NA
 2025-523085-24-00,AstraZeneca AB,NA
 2025-523086-22-00,Treeline Biosciences Inc.,NA
+2025-523087-20-00,Avidity Biosciences Inc.,NA
 2025-523088-39-00,Zymeworks Bc Inc.,NA
 2025-523091-23-00,Azienda Ospedaliera di Padova,NA
+2025-523092-33-00,Spanish Society Of Cardiology,NA
 2025-523094-42-00,Assistance Publique Hopitaux De Marseille,NA
 2025-523096-34-00,Prinses Maxima Centrum voor Kinderoncologie B.V.,NA
 2025-523100-77-00,Pfizer Inc.,NA
 2025-523101-15-00,Genmab A/S,NA
+2025-523104-71-00,F. Hoffmann-La Roche AG,NA
+2025-523106-32-00,F. Hoffmann-La Roche AG,NA
+2025-523107-30-01,Centre Hospitalier Universitaire De Toulouse,NA
 2025-523108-59-00,Basilea Pharmaceutica International AG Allschwil,NA
+2025-523109-14-00,Chiesi Farmaceutici S.p.A.,NA
+2025-523111-11-00,Trace Neuroscience Inc.,NA
 2025-523115-11-00,Chong Kun Dang Pharmaceutical Corp.,NA
 2025-523117-28-00,Glaxosmithkline Research & Development Limited,NA
 2025-523119-12-00,ROXALL Medizin GmbH,NA
 2025-523120-53-00,Bellvitge University Hospital / Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
 2025-523121-17-00,Fundacion Para La Formacion E Investigacion Sanitaria De La Region De Murcia,NA
 2025-523123-22-00,Eli Lilly & Co.,NA
+2025-523127-21-00,AbbVie Deutschland GmbH & Co. KG,NA
+2025-523130-11-00,Incyte Corp.,NA
+2025-523131-19-00,Johannes Kepler University Linz,NA
 2025-523133-26-00,Medical University Of Vienna,NA
+2025-523134-28-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2025-523135-19-00,Boehringer Ingelheim International GmbH,NA
 2025-523137-25-00,MEDITOP Gyogyszeripari Kft.,NA
 2025-523139-21-00,Fundacion Instituto De Investigacion Sanitaria De Navarra,NA
@@ -49972,6 +50189,7 @@ _id,raw_sponsor,is_commercial
 2025-523207-29-00,Centre Hospitalier Universitaire Amiens Picardie,NA
 2025-523213-29-00,Astellas Gene Therapies Inc.,NA
 2025-523214-83-00,Amsterdam UMC Stichting,NA
+2025-523222-40-00,Medical University Of Vienna,NA
 2025-523224-45-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523227-22-00,OmniVision GmbH,NA
 2025-523229-16-00,Philogen S.p.A.,NA
@@ -49981,7 +50199,10 @@ _id,raw_sponsor,is_commercial
 2025-523234-66-00,Kiniksa Pharmaceuticals GmbH,NA
 2025-523238-17-00,Fundacion PETHEMA,NA
 2025-523239-21-00,Alfasigma S.p.A.,NA
+2025-523252-31-00,Regeneron Pharmaceuticals Inc.,NA
 2025-523254-14-00,Vertero Therapeutics Inc.,NA
+2025-523258-15-00,Eli Lilly & Co.,NA
+2025-523259-72-00,Novartis Pharma AG,NA
 2025-523260-20-00,Novo Nordisk A/S,NA
 2025-523261-25-00,UZ Leuven,NA
 2025-523262-25-00,Boehringer Ingelheim International GmbH,NA
@@ -49989,25 +50210,34 @@ _id,raw_sponsor,is_commercial
 2025-523264-21-00,Institut National De La Sante Et De La Recherche Medicale,NA
 2025-523265-15-00,Candid Therapeutics Inc.,NA
 2025-523266-24-00,I.F.O. Istituti Fisioterapici Ospitalieri,NA
+2025-523267-38-00,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesco A.C.R.A.F. S.p.A. Enunciabile Anche Angelini Pharma Italia S.p.A. Angelini Pharma S.p.A. A.C.R.A.F. S.p.A. Acraf S.p.A. Angelini S.p.A. aziende Chimiche Riunite Angelini Francesco A.C.R.A.F. S.p.A.,NA
 2025-523269-31-00,Laboratorios Farmaceuticos Rovi S.A.,NA
 2025-523273-41-00,T.O.A.D. Oncology S.A.,NA
 2025-523275-27-00,Disc Medicine Inc.,NA
+2025-523276-23-00,Novartis Pharma AG,NA
 2025-523278-18-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2025-523280-38-00,Amgen Inc.,NA
 2025-523283-21-00,Eli Lilly & Co.,NA
 2025-523284-37-00,Barcelonabeta Brain Research Center,NA
 2025-523285-25-00,AstraZeneca AB,NA
 2025-523286-23-00,Centre Henri Becquerel,NA
+2025-523288-39-00,Mediar Therapeutics Inc.,NA
+2025-523293-17-00,Leids Universitair Medisch Centrum (LUMC),NA
 2025-523297-16-00,Janssen Cilag International,NA
 2025-523300-77-00,Laboratorios Leon Farma S.A.,NA
 2025-523301-15-00,Bayer AG,NA
 2025-523304-68-00,Novo Nordisk A/S,NA
+2025-523305-15-00,Assistance Publique Hopitaux De Paris,NA
 2025-523306-33-00,Istituto Di Ricerche Farmacologiche Mario Negri,NA
+2025-523307-29-00,AstraZeneca AB,NA
 2025-523325-18-00,Adamed Pharma S.A.,NA
 2025-523327-21-00,Centre Hospitalier Universitaire Amiens Picardie,NA
 2025-523328-31-00,Almirall S.A.,NA
+2025-523333-26-00,Argenx,NA
 2025-523339-20-00,Gensight Biologics,NA
 2025-523340-12-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2025-523342-27-00,Almirall S.A.,NA
+2025-523346-27-00,Universita' Degli Studi G. D'Annunzio Di Chieti,NA
 2025-523347-35-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-523349-86-00,Assistance Publique Hopitaux De Paris,NA
 2025-523350-13-02,Amsterdam UMC Stichting,NA
@@ -50017,78 +50247,140 @@ _id,raw_sponsor,is_commercial
 2025-523359-71-00,Pohjois-Pohjanmaan hyvinvointialue / University Of Oulu,NA
 2025-523367-38-00,Medivis S.r.l.,NA
 2025-523368-19-00,Xentria Inc.,NA
+2025-523369-32-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-523370-16-00,Arvinas Operations Inc.,NA
 2025-523372-24-00,Region Midtjylland,NA
-2025-523374-17-01,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2025-523374-17-03,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
 2025-523375-29-00,Humanitas Mirasole S.p.A.,NA
 2025-523384-37-00,Laboratorios Normon S.A.,NA
+2025-523389-26-00,Deciphera Pharmaceuticals Inc.,NA
+2025-523390-42-00,Alnylam Pharmaceuticals Inc.,NA
 2025-523391-22-01,Semmelweis University,NA
 2025-523396-38-00,Aop Orphan Pharmaceuticals GmbH,NA
+2025-523397-16-00,Les Hopitaux Universitaires De Strasbourg,NA
+2025-523399-22-00,Regeneron Pharmaceuticals Inc.,NA
+2025-523400-72-00,Vertex Pharmaceuticals Inc.,NA
+2025-523403-29-00,Sanofi-Aventis Recherche & Developpement,NA
+2025-523404-74-00,Innocare Pharma Inc.,NA
 2025-523409-13-00,Lifordi Immunotherapeutics Inc.,NA
+2025-523410-84-00,Sun Pharmaceutical Industries Limited,NA
+2025-523411-11-00,Sun Pharmaceutical Industries Limited,NA
 2025-523412-36-00,Merck Sharp & Dohme LLC,NA
 2025-523419-12-00,Laboratorios Leon Farma S.A.,NA
+2025-523425-17-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2025-523426-40-00,Inmunotek S.L.,NA
 2025-523428-39-00,Fondazione Italiana Linfomi Ets,NA
 2025-523430-14-00,Janssen Cilag International,NA
 2025-523431-19-00,Avalyn Pharma Inc.,NA
+2025-523432-39-01,Verastem Inc.,NA
+2025-523435-18-00,Hamilton Health Sciences Corporation / PHRI Population Health Research Institute International,NA
+2025-523438-24-00,Ideaya Biosciences Inc.,NA
+2025-523443-35-00,Dompe' Farmaceutici S.p.A.,NA
+2025-523444-12-00,AstraZeneca AB,NA
+2025-523447-35-02,Pfizer Inc.,NA
 2025-523448-10-00,Azienda Socio Sanitaria Territoriale Degli Spedali Civili Di Brescia,NA
 2025-523460-21-00,Centro Di Riferimento Oncologico Di Aviano,NA
 2025-523461-17-01,Pfizer Inc.,NA
+2025-523464-20-00,Janssen Cilag International,NA
 2025-523465-21-00,Region Stockholm – SLSO,NA
 2025-523469-79-00,Arvinas Operations Inc.,NA
+2025-523472-23-01,Region Midtjylland,NA
 2025-523474-16-00,Institut De Recherches Internationales Servier IRIS,NA
 2025-523475-33-00,Masarykova Univerzita,NA
 2025-523476-23-00,Region Stockholm – SLSO,NA
 2025-523478-17-00,Medical University Of Graz,NA
+2025-523479-49-00,Merck Sharp & Dohme LLC,NA
 2025-523481-24-00,Novartis Pharma AG,NA
+2025-523482-23-00,Hospices Civils De Lyon,NA
+2025-523486-17-00,Kailera Therapeutics Inc.,NA
 2025-523487-21-00,Sun Pharmaceutical Industries Limited,NA
+2025-523488-39-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2025-523491-23-00,Friedrich-Schiller-Universitaet Jena,NA
 2025-523495-23-00,Revolution Medicines Inc.,NA
+2025-523497-16-00,Tessera Therapeutics Inc.,NA
 2025-523499-22-00,Ionis Pharmaceuticals Inc.,NA
+2025-523500-72-00,Amgen Inc.,NA
 2025-523501-15-00,Pauls Stradins Clinical University Hospital,NA
+2025-523503-30-00,Eisai Limited,NA
 2025-523509-13-00,Qed Therapeutics Inc.,NA
+2025-523510-87-00,Kailera Therapeutics Inc.,NA
 2025-523511-11-00,Kailera Therapeutics Inc.,NA
 2025-523515-11-00,Denali Therapeutics Inc.,NA
 2025-523521-18-00,Pfizer Inc.,NA
 2025-523522-41-00,Pfizer Inc.,NA
+2025-523523-21-00,Pfizer Inc.,NA
 2025-523524-53-00,Pfizer Inc.,NA
 2025-523525-17-00,Pfizer Inc.,NA
 2025-523526-40-00,Pfizer Inc.,NA
 2025-523530-30-00,Softox Defense Solutions AS,NA
 2025-523533-25-00,CatalYm GmbH,NA
 2025-523534-11-00,Hospital San Pedro,NA
+2025-523537-26-00,Novartis Pharma AG,NA
+2025-523539-20-00,Tyra Biosciences Inc.,NA
 2025-523543-36-00,Rheinische Friedrich-Wilhelms-Universitaet Bonn,NA
 2025-523544-12-00,Takeda Development Center Americas Inc.,NA
 2025-523547-35-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523549-92-00,Region Hovedstaden,NA
 2025-523551-54-00,Azienda Sanitaria Universitaria Friuli Centrale,NA
+2025-523552-31-00,Janssen Cilag International,NA
 2025-523553-34-00,BeOne Medicines I GmbH,NA
+2025-523555-66-00,Novartis Pharma AG,NA
 2025-523557-33-00,Navigator Medicines Inc.,NA
 2025-523558-14-00,Airna Corp.,NA
+2025-523562-24-00,Regeneron Pharmaceuticals Inc.,NA
+2025-523567-38-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2025-523570-17-00,Helse Bergen HF,NA
 2025-523575-36-00,Cliniques Universitaires Saint-Luc,NA
+2025-523576-23-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523577-42-00,Teikoku Seiyaku Co. Ltd.,NA
+2025-523579-47-00,F. Hoffmann-La Roche AG,NA
+2025-523586-18-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523587-20-00,Gruenenthal GmbH,NA
 2025-523589-26-00,Region Midtjylland,NA
+2025-523590-42-00,Crescent Biopharma Inc.,NA
+2025-523593-16-00,Institut Gustave Roussy,NA
 2025-523597-17-00,Deutsche Diabetes Forschungsgesellschaft e.V.,NA
+2025-523599-21-00,AstraZeneca AB,NA
 2025-523600-68-00,Curis Inc.,NA
 2025-523602-33-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-523612-37-00,Integrative Research Laboratories Sweden AB,NA
+2025-523616-36-00,Centre Hospitalier Universitaire De Nantes,NA
+2025-523617-29-01,Amsterdam UMC Stichting,NA
+2025-523618-10-00,Xenon Pharmaceuticals Inc.,NA
 2025-523619-12-00,Nchroma Bio Inc.,NA
 2025-523620-44-02,Semmelweis University,NA
 2025-523630-59-00,HepaRegeniX GmbH,NA
+2025-523632-39-00,Institut Paoli Calmettes,NA
+2025-523633-25-00,Fondazione GONO Plus,NA
 2025-523635-19-00,Gentofte Hospital,NA
+2025-523641-10-00,Zealand Pharma A/S,NA
 2025-523646-27-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2025-523648-11-00,Bayer Consumer Care AG,NA
+2025-523650-14-00,Centre Jean Perrin,NA
+2025-523653-34-00,Klinikum der Technischen Universitaet Muenchen (TUM Klinikum),NA
+2025-523654-13-00,Medizinische Hochschule Hannover,NA
 2025-523657-34-00,Eli Lilly & Co.,NA
 2025-523658-15-00,Eli Lilly & Co.,NA
 2025-523659-73-00,Eli Lilly & Co.,NA
 2025-523660-21-00,Pfizer Inc.,NA
+2025-523662-24-00,Arrowhead Pharmaceuticals Inc.,NA
+2025-523665-24-00,Novartis Pharma AG,NA
+2025-523670-17-00,AstraZeneca AB,NA
+2025-523672-23-00,UroTrials GmbH / AIO-Studien gGmbH,NA
+2025-523674-16-00,Glaxosmithkline Research & Development Limited,NA
+2025-523675-39-00,Glaxosmithkline Research & Development Limited,NA
 2025-523676-23-00,Medical University Of Vienna,NA
 2025-523677-41-00,Bayer AG,NA
 2025-523678-17-00,SciRhom GmbH,NA
+2025-523682-24-00,Centre Hospitalier Universitaire De Nantes,NA
 2025-523683-20-00,Unicancer,NA
+2025-523684-38-00,Astellas Pharma Global Development Inc.,NA
 2025-523686-15-00,Olema Pharmaceuticals Inc.,NA
 2025-523690-41-00,AstraZeneca AB,NA
 2025-523692-39-00,Catharina Ziekenhuis Stichting,NA
 2025-523695-23-00,Neurotherapia Inc.,NA
 2025-523699-21-00,Cell to Cure ApS,NA
+2025-523704-77-00,Novartis Pharma AG,NA
 2025-523705-14-00,Laboratorios Normon S.A.,NA
 2025-523706-32-00,ReproNovo ApS,NA
 2025-523709-13-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
@@ -50096,6 +50388,10 @@ _id,raw_sponsor,is_commercial
 2025-523712-37-00,Rokote Laboratories Finland Oy,NA
 2025-523714-92-00,Centrum Medyczne Ksztalcenia Podyplomowego,NA
 2025-523717-29-00,Novo Nordisk A/S,NA
+2025-523724-47-00,AbbVie Deutschland GmbH & Co. KG,NA
+2025-523725-17-00,Region Midtjylland,NA
+2025-523726-40-00,F. Hoffmann-La Roche AG,NA
+2025-523735-19-00,Incyte Corp.,NA
 2025-523736-39-00,Laboratorios Leon Farma S.A.,NA
 2025-523737-26-00,Centrexion Therapeutics Corp.,NA
 2025-523738-21-00,Mirum Pharmaceuticals Inc.,NA
@@ -50114,48 +50410,85 @@ _id,raw_sponsor,is_commercial
 2025-523769-11-00,Eli Lilly & Co.,NA
 2025-523774-16-00,Pharma Mar S.A.,NA
 2025-523777-41-01,CHU Saint Pierre,NA
+2025-523778-17-00,Dr. Falk Pharma GmbH,NA
 2025-523781-25-00,CimCure B.V.,NA
 2025-523791-24-00,Immunic AG,NA
 2025-523793-16-00,CSL Behring LLC,NA
+2025-523797-17-00,Oruka Therapeutics Inc.,NA
 2025-523802-34-00,TargED Biopharmaceuticals B.V.,NA
 2025-523803-31-00,Shanghai Henlius Biotech Inc.,NA
 2025-523804-62-00,Novo Nordisk A/S,NA
 2025-523806-34-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
+2025-523807-31-00,Bayer AG,NA
 2025-523808-75-00,Laboratorios Alter S.A.,NA
+2025-523811-12-00,Biomarin Pharmaceutical Inc.,NA
+2025-523815-12-00,Janssen Cilag International,NA
 2025-523817-27-00,HUS-yhtymae,NA
+2025-523819-11-00,AbbVie Deutschland GmbH & Co. KG,NA
 2025-523820-26-00,Lumos Pharma LLC,NA
+2025-523823-23-00,Merida Biosciences Inc.,NA
 2025-523826-41-00,Sanofi-Aventis Recherche & Developpement,NA
 2025-523828-51-00,Intrabio Limited / IntraBio Inc,NA
+2025-523829-17-00,Centre Hospitalier Universitaire De Lille,NA
+2025-523832-38-00,Schneider Children's Medical Center Of Israel,NA
+2025-523835-20-00,Ionis Pharmaceuticals Inc.,NA
+2025-523837-25-00,Stealth Biotherapeutics Inc.,NA
 2025-523838-13-00,Sun Pharmaceutical Industries Limited,NA
 2025-523839-18-00,Sun Pharmaceutical Industries Limited,NA
+2025-523840-11-00,Centre Leon Berard,NA
 2025-523841-82-00,Gentofte Hospital / Moderna Inc.,NA
 2025-523845-90-00,CRISPR Therapeutics AG,NA
 2025-523846-29-00,BioNTech SE,NA
 2025-523847-36-00,Eli Lilly & Co.,NA
+2025-523850-15-00,Instituto Valenciano De Infertilidade Clinica De Reproducao Assistida Lda.,NA
+2025-523858-13-01,Oslo Universitetssykehus HF,NA
 2025-523860-19-00,Xyra LLC,NA
 2025-523861-58-00,Merck Sharp & Dohme LLC,NA
 2025-523863-39-00,Medical University Of Graz,NA
 2025-523864-19-00,Oryzon Genomics S.A.,NA
 2025-523866-26-00,Asac Pharmaceutical Inmunology S.A.,NA
 2025-523868-20-00,Monteresearch S.r.l.,NA
+2025-523869-22-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2025-523871-44-00,Merck Healthcare KGaA,NA
 2025-523872-22-00,Nrg Therapeutics Limited,NA
+2025-523873-41-00,Eli Lilly & Co.,NA
+2025-523874-17-00,Glaxosmithkline Research & Development Limited,NA
 2025-523875-48-00,Softox Solutions AS,NA
 2025-523877-40-00,University College Dublin,NA
 2025-523879-34-00,Swedish Match North Europe AB,NA
 2025-523880-39-02,UZ Leuven,NA
 2025-523881-26-00,Fakultni Nemocnice V Motole,NA
+2025-523884-39-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
 2025-523885-25-00,AC Immune S.A.,NA
+2025-523892-50-00,Region Stockholm – SLSO,NA
+2025-523895-22-00,Dualitybio Inc.,NA
+2025-523896-44-00,GWT-Tud GmbH,NA
 2025-523898-42-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2025-523899-23-00,Boehringer Ingelheim International GmbH,NA
+2025-523908-75-00,AstraZeneca AB,NA
+2025-523911-13-00,Alkermes Inc.,NA
+2025-523912-35-00,Alkermes Inc.,NA
+2025-523913-27-00,Unicancer,NA
 2025-523914-10-00,Universitaet Muenster,NA
+2025-523921-17-00,Centre Hospitalier Regional Et Universitaire De Brest,NA
 2025-523922-42-00,Consorci Mar Parc De Salut De Barcelona,NA
+2025-523923-22-00,Elevar Therapeutics Inc.,NA
 2025-523928-52-00,Ascendis Pharma Bone Diseases A/S,NA
 2025-523930-14-00,Region Midtjylland,NA
 2025-523931-21-00,Genmab A/S,NA
-2025-523937-25-00,Eyepoint Pharmaceuticals Inc.,NA
+2025-523933-24-00,AstraZeneca AB,NA
+2025-523935-20-00,AstraZeneca AB,NA
+2025-523937-25-00,Eyepoint Inc.,NA
 2025-523938-10-00,Eyepoint Inc.,NA
+2025-523939-18-00,Nura Bio Inc.,NA
+2025-523940-12-00,AstraZeneca AB,NA
+2025-523941-81-00,AstraZeneca AB,NA
+2025-523947-36-00,AstraZeneca AB,NA
 2025-523948-12-00,Hennig Arzneimittel GmbH & Co. KG,NA
+2025-523949-10-00,Boehringer Ingelheim International GmbH,NA
+2025-523950-15-01,Vertex Pharmaceuticals Inc.,NA
 2025-523959-65-00,Adcytherix,NA
+2025-523960-19-00,BeOne Medicines I GmbH,NA
 2025-523965-97-00,Turku University Hospital,NA
 2025-523971-46-00,Quell Therapeutics Limited,NA
 2025-523972-21-00,Fortvita Biologics (USA) Inc.,NA
@@ -50163,198 +50496,651 @@ _id,raw_sponsor,is_commercial
 2025-523975-48-00,Metsera Inc.,NA
 2025-523977-40-00,Azienda Ospedaliero-Universitaria Maggiore Della Carita,NA
 2025-523978-16-00,Novo Nordisk A/S,NA
+2025-523984-39-00,Gilead Sciences Inc.,NA
+2025-523990-40-00,Universitaetsklinikum Heidelberg AöR,NA
+2025-523994-41-00,AstraZeneca AB,NA
 2025-523995-21-00,AstraZeneca AB,NA
 2025-523996-45-00,Steno Diabetes Center Copenhagen,NA
+2025-523997-18-00,Glaxosmithkline Research & Development Limited,NA
+2025-524001-33-00,Immunovant Sciences GmbH,NA
 2025-524002-16-00,Ferrer Internacional S.A. / Prilenia Therapeutics B.V.,NA
+2025-524003-68-00,Assistance Publique Hopitaux De Paris,NA
+2025-524005-32-00,Elevara Medicines Limited,NA
 2025-524006-14-00,Yuhan Corp.,NA
 2025-524008-32-00,Tarian Pharma,NA
 2025-524010-28-00,Repertoire Immune Medicines Inc.,NA
+2025-524019-35-00,Axonis Therapeutics Inc.,NA
 2025-524021-41-00,Hipra Scientific S.L.,NA
 2025-524022-18-00,Vaestra Goetalandsregionen,NA
+2025-524027-49-00,Universitaetsklinikum Aachen AöR,NA
+2025-524028-23-00,F. Hoffmann-La Roche AG,NA
 2025-524029-41-00,Fundacio Sant Joan De Deu,NA
 2025-524031-39-00,Instytut Pomnik Centrum Zdrowia Dziecka,NA
 2025-524035-39-00,Laboratorios Cinfa S.A.,NA
 2025-524038-24-00,Praxis Precision Medicines Inc.,NA
+2025-524040-35-00,Generate Biomedicines Inc.,NA
 2025-524043-12-00,Bayer AG,NA
 2025-524044-35-00,Landspitali,NA
 2025-524045-27-00,Leids Universitair Medisch Centrum (LUMC),NA
+2025-524046-10-00,Radboud universitair medisch centrum Stichting,NA
+2025-524048-36-00,Fondazione GONO G.I.,NA
+2025-524050-34-01,Voxel S.A.,NA
+2025-524052-58-00,F. Hoffmann-La Roche AG,NA
 2025-524053-14-00,Lycia Therapeutics Inc.,NA
+2025-524054-34-00,Biogen Idec Research Limited,NA
 2025-524056-63-00,Amgen Inc.,NA
 2025-524057-13-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
 2025-524058-32-00,Novartis Pharma AG,NA
+2025-524060-38-00,F. Hoffmann-La Roche AG,NA
 2025-524061-24-01,Faes Farma S.A.,NA
+2025-524062-16-00,Bristol-Myers Squibb Services Unlimited Company,NA
+2025-524069-26-00,Vaestra Goetalandsregionen,NA
+2025-524077-16-00,G.O.I.R.C. Gruppo Oncologico Italiano Di Ricerca Clinica,NA
+2025-524078-40-00,Novartis Pharma AG,NA
+2025-524080-20-00,Novartis Pharma AG,NA
+2025-524082-25-00,Denali Therapeutics Inc.,NA
 2025-524086-24-00,Akershus University Hospital,NA
+2025-524090-16-00,Bristol-Myers Squibb Services Unlimited Company,NA
+2025-524092-23-00,Bioversys S.A.S.,NA
+2025-524093-41-00,Centre Hospitalier Le Mans,NA
+2025-524095-27-00,Gilead Sciences Inc.,NA
 2025-524100-29-00,Ouro Medicines Limited,NA
 2025-524102-15-00,Laboratorios Liconsa S.A.,NA
 2025-524103-69-00,VeriGraft AB,NA
 2025-524106-14-00,Boehringer Ingelheim International GmbH,NA
 2025-524109-33-00,Medica Scientia Innovation Research S.L.,NA
+2025-524110-28-00,Region Hovedstaden,NA
 2025-524111-37-00,Ottimo Pharma Limited,NA
+2025-524112-11-00,Eli Lilly & Co.,NA
 2025-524122-18-00,Hospices Civils De Lyon,NA
 2025-524123-45-00,Institute Of Oncology Ljubljana,NA
+2025-524125-40-01,Humanitas Mirasole S.p.A. / Fondazione Humanitas Per La Ricerca Ets,NA
 2025-524129-42-00,Amsterdam UMC Stichting,NA
+2025-524131-39-00,Charite Universitaetsmedizin Berlin KöR,NA
 2025-524133-33-00,Cessation Therapeutics Inc.,NA
 2025-524134-26-00,Neurocrine Biosciences Inc.,NA
 2025-524135-39-00,Boehringer Ingelheim International GmbH,NA
 2025-524136-19-00,BeOne Medicines AG,NA
+2025-524139-38-00,AstraZeneca AB,NA
+2025-524140-35-00,Fundacio Sant Joan De Deu,NA
+2025-524148-36-00,Institut National De La Sante Et De La Recherche Medicale,NA
+2025-524150-34-00,Pfizer Inc.,NA
 2025-524157-13-00,Precision Biosciences Inc.,NA
 2025-524160-38-00,Merck Sharp & Dohme LLC,NA
 2025-524163-21-00,Region Hovedstaden,NA
+2025-524164-37-00,F. Hoffmann-La Roche AG,NA
+2025-524165-25-00,Glaxosmithkline Research & Development Limited,NA
 2025-524168-39-00,Stemline Therapeutics Inc.,NA
+2025-524169-26-00,Goethe University Frankfurt,NA
+2025-524171-22-00,AstraZeneca AB,NA
 2025-524172-29-00,Novartis Pharma AG,NA
 2025-524175-23-00,Region Midtjylland,NA
 2025-524176-36-00,Bayer AG,NA
 2025-524177-16-00,Institute Of Tropical Medicine,NA
 2025-524178-40-00,Bayer AG,NA
+2025-524181-26-00,C4 Therapeutics Inc.,NA
 2025-524182-25-00,Karolinska University Hospital,NA
 2025-524191-38-00,Spaarne Gasthuis Stichting,NA
+2025-524192-24-00,Samsung Bioepis Co. Ltd.,NA
 2025-524194-17-00,University Hospital Son Espases,NA
 2025-524195-29-00,Amsterdam UMC Stichting,NA
 2025-524199-40-00,Hospices Civils De Lyon,NA
+2025-524200-29-00,Omnix Medical Ltd.,NA
 2025-524205-32-00,Regeneron Pharmaceuticals Inc.,NA
 2025-524206-15-00,Novo Nordisk A/S,NA
+2025-524208-31-00,Azienda Ospedaliera Universitaria Policlinico Paolo Giaccone,NA
 2025-524209-34-00,Jiangsu Hengrui Pharmaceuticals Co. Ltd.,NA
 2025-524210-28-00,F. Hoffmann-La Roche AG,NA
 2025-524212-11-00,Lallemand Pharma Europe filial af Lallemand Pharma AG Schweiz,NA
+2025-524213-84-00,Unicancer,NA
+2025-524214-28-00,LIB Therapeutics Inc.,NA
 2025-524217-89-00,Vianex S.A.,NA
 2025-524218-27-00,Vianex S.A.,NA
+2025-524219-35-00,Vianex S.A.,NA
 2025-524229-41-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
+2025-524232-20-00,Asso De Recherche Cancers Gynecologiques,NA
+2025-524233-45-00,Sun Pharmaceutical Industries Limited,NA
+2025-524240-35-00,Centre Hospitalier Universitaire De Rennes,NA
+2025-524241-27-00,Innocare Pharma Inc.,NA
+2025-524249-29-00,Novo Nordisk A/S,NA
 2025-524255-32-00,Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
 2025-524256-64-00,CHU Saint Pierre,NA
 2025-524258-32-00,Tenvie Therapeutics Inc.,NA
 2025-524259-30-00,Pohjois-Savon hyvinvointialue,NA
+2025-524264-38-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2025-524265-24-00,A. Menarini International Licensing S.A.,NA
 2025-524267-20-00,Sun Pharmaceutical Industries Limited,NA
 2025-524274-41-00,Farmalider S.A.,NA
 2025-524277-16-00,ARMR Sciences Inc.,NA
 2025-524278-40-00,Universitair Ziekenhuis Gent,NA
 2025-524279-22-00,Sinfatin S.L.,NA
+2025-524282-24-00,Neurocrine Biosciences Inc.,NA
+2025-524283-38-00,Hemato-Oncologie voor Volwassenen Nederland (Hovon) Stichting,NA
+2025-524285-18-00,Bristol-Myers Squibb Services Unlimited Company,NA
+2025-524289-56-00,Chiesi Farmaceutici S.p.A.,NA
 2025-524296-23-01,Navamedic AB,NA
 2025-524297-42-00,Fondation Hopital Saint Joseph,NA
 2025-524298-18-00,Ospedale San Raffaele S.r.l.,NA
+2025-524299-44-00,Ygion Biomedical GmbH,NA
 2025-524302-15-00,MaaT PHARMA,NA
+2025-524305-32-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
+2025-524308-31-00,Istituto Romagnolo Per Lo Studio Dei Tumori Dino Amadori IRST S.r.l. / IIS La Fe,NA
 2025-524310-28-00,Quralis Corp.,NA
 2025-524311-37-00,Sun Pharmaceutical Industries Limited,NA
+2025-524312-11-00,Medizinische Hochschule Hannover,NA
 2025-524313-86-00,UZ Leuven,NA
+2025-524316-11-00,Zenas Biopharma (USA) LLC,NA
+2025-524317-88-00,Alterity Therapeutics Limited,NA
+2025-524318-27-00,Assistance Publique Hopitaux De Paris,NA
 2025-524320-21-00,Rigshospitalet,NA
+2025-524322-18-00,Zenas Biopharma (USA) LLC,NA
+2025-524324-22-00,Zambon S.p.A.,NA
 2025-524327-53-00,Region Midtjylland,NA
 2025-524328-24-00,Granite Bio AG,NA
 2025-524330-25-00,Chemo Research S.L.,NA
 2025-524334-26-01,Bristol-Myers Squibb Services Unlimited Company,NA
+2025-524335-39-00,Gilead Sciences Inc.,NA
+2025-524336-19-00,Gilead Sciences Inc.,NA
+2025-524337-11-00,Celgene Corp.,NA
 2025-524342-96-00,UZ Leuven,NA
 2025-524343-13-00,Centre Hospitalier Universitaire D'Angers,NA
+2025-524344-35-00,Centre Hospitalier Universitaire De Montpellier,NA
 2025-524358-32-00,Centre Hospitalier Universitaire De Nimes,NA
+2025-524359-30-00,Vall D Hebron Institute Of Oncology,NA
 2025-524362-20-00,Freya Biosciences ApS,NA
+2025-524363-20-01,Instituto De Salud Carlos III,NA
 2025-524366-21-00,BeOne Medicines I GmbH,NA
+2025-524367-20-00,Pharming Technologies B.V.,NA
 2025-524368-39-00,Ziekenhuis Oost Limburg,NA
+2025-524371-23-00,ML Bio Solutions Inc.,NA
 2025-524373-17-00,Amsterdam UMC Stichting,NA
+2025-524374-42-00,Hospices Civils De Lyon,NA
 2025-524375-23-00,Region Hovedstaden,NA
+2025-524376-36-00,Orion Corporation,NA
+2025-524377-16-00,Inmunotek S.L.,NA
+2025-524378-40-00,Institut Gustave Roussy,NA
 2025-524385-18-00,Inventiva,NA
 2025-524386-24-00,OncoZenge AB,NA
+2025-524392-23-00,Regeneron Pharmaceuticals Inc.,NA
+2025-524395-30-00,Centre Hospitalier Universitaire De Toulouse,NA
+2025-524397-42-00,Renaissance Pharma Limited,NA
+2025-524403-80-00,Kite Pharma Inc.,NA
+2025-524404-29-00,Eli Lilly & Co.,NA
+2025-524408-30-01,Alianza Multidisciplinar Para La Investigacion De Los Tumores Genitourinarios Guard,NA
+2025-524418-27-00,Triana Biomedicines Inc.,NA
+2025-524423-50-00,Somagenetix AG,NA
 2025-524431-39-00,Aft Pharmaceuticals Limited,NA
 2025-524434-25-00,Centre Hospitalier Universitaire De Bordeaux,NA
+2025-524435-39-00,Charite Universitaetsmedizin Berlin KöR,NA
 2025-524438-24-00,Fractyl Health Inc.,NA
 2025-524440-35-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
+2025-524442-10-00,Goethe University Frankfurt,NA
 2025-524443-12-00,Goethe University Frankfurt,NA
+2025-524445-27-00,BioNTech SE,NA
 2025-524446-10-00,Mestag Therapeutics Limited,NA
+2025-524448-36-00,Apellis Pharmaceuticals Inc.,NA
+2025-524449-28-00,Immunocore Limited,NA
+2025-524454-34-00,Fundacio Institut De Recerca De L'Hospital De La Santa Creu I Sant Pau,NA
+2025-524456-58-00,GlaxoSmithKline Biologicals,NA
+2025-524463-20-00,Glaxosmithkline Research & Development Limited,NA
 2025-524468-40-00,Universitaetsklinikum Erlangen AöR,NA
+2025-524470-41-00,Universitair Medisch Centrum Groningen,NA
+2025-524475-23-00,Assistance Publique Hopitaux De Paris,NA
 2025-524477-17-00,Rigshospitalet,NA
 2025-524480-21-00,Molefy Pharma S.L.,NA
+2025-524481-15-00,Rigshospitalet / Elpida Therapeutics SPC,NA
 2025-524484-20-00,UZ Leuven,NA
+2025-524487-37-00,Swedish Orphan Biovitrum AB (publ),NA
+2025-524488-18-00,Astellas Pharma Global Development Inc.,NA
 2025-524495-39-00,Medical University Of Vienna,NA
 2025-524498-17-00,F. Hoffmann-La Roche AG,NA
 2025-524501-32-02,Semmelweis University / University Of Pecs,NA
 2025-524511-36-00,Hospices Civils De Lyon,NA
 2025-524514-28-00,Corxel Pharmaceuticals Inc.,NA
 2025-524527-46-00,Dompe' Farmaceutici S.p.A.,NA
+2025-524541-27-00,Prinses Maxima Centrum voor Kinderoncologie B.V.,NA
 2025-524542-10-00,Acrivon Therapeutics Inc.,NA
 2025-524543-12-00,Pirkanmaan hyvinvointialue,NA
 2025-524553-13-00,Fakultni Nemocnice Ostrava,NA
+2025-524564-38-00,Bristol-Myers Squibb Services Unlimited Company,NA
 2025-524570-41-00,Merck Sharp & Dohme LLC,NA
 2025-524573-16-00,i-GETAID,NA
+2025-524575-22-00,Eyebiotech Limited,NA
+2025-524576-28-00,Elpida Therapeutics SPC,NA
+2025-524580-21-00,Inmunotek S.L.,NA
+2025-524581-14-00,Sanofi-Aventis Recherche & Developpement,NA
+2025-524584-20-00,Assistance Publique Hopitaux De Paris,NA
 2025-524587-37-00,Mendus B.V.,NA
+2025-524591-30-00,Akeso Biopharma Co. Ltd.,NA
 2025-524594-16-00,Philogen S.p.A.,NA
 2025-524598-17-00,GlaxoSmithKline Biologicals,NA
+2025-524599-52-03,Karolinska Institutet,NA
 2025-524602-15-00,Hospices Civils De Lyon,NA
+2025-524612-11-00,University Of Tartu,NA
+2025-524613-89-00,Medica Scientia Innovation Research S.L.,NA
 2025-524614-28-00,Medical University Of Vienna,NA
 2025-524617-84-00,Sanofi-Aventis Recherche & Developpement,NA
+2025-524620-22-00,Orion Corporation,NA
+2025-524623-50-00,Revolution Medicines Inc.,NA
 2025-524624-21-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
+2025-524625-41-00,Daiichi Sankyo Europe GmbH,NA
+2025-524626-18-00,Novo Nordisk A/S,NA
 2025-524629-42-00,Fundacion Publica Andaluza Para La Investigacion De Malaga En Biomedicina Y Salud,NA
+2025-524635-39-00,Fondazione Telethon Ets / San Raffaele Hospital,NA
+2025-524638-24-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
+2025-524640-35-00,Spyre Therapeutics Inc.,NA
+2025-524646-94-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2025-524648-37-00,Merck Healthcare KGaA,NA
+2025-524652-63-00,Sumitomo Pharma America Inc.,NA
+2025-524663-20-00,Haleon CH SARL,NA
 2025-524668-39-00,Enlivex Therapeutics Ltd.,NA
 2025-524673-16-00,Masarykova Univerzita,NA
 2025-524674-42-00,Gen Ilac Ve Saglik Urunleri Sanayi Ve Ticaret A.S.,NA
 2025-524675-23-00,Grupo Espanol De Trabajo En Enfermedad De Crohn y Colitis Ulcerosa,NA
+2025-524676-32-00,ROXALL Medizin GmbH,NA
 2025-524679-22-00,Steno Diabetes Center Copenhagen,NA
 2025-524680-21-00,Radboud universitair medisch centrum Stichting,NA
+2025-524682-24-00,Microbial Resource Management Health,NA
+2025-524686-24-00,Pfizer Inc.,NA
+2025-524687-38-00,Rondo Therapeutics Inc.,NA
+2025-524688-19-00,AstraZeneca AB,NA
+2025-524690-16-00,Theras Inc.,NA
 2025-524691-33-00,Tubulis GmbH,NA
 2025-524693-42-00,F. Hoffmann-La Roche AG,NA
+2025-524697-42-00,Centre Hospitalier Universitaire Amiens Picardie,NA
+2025-524703-76-00,UZ Brussel,NA
+2025-524707-71-00,Agios Pharmaceuticals Inc.,NA
 2025-524709-34-00,Centre Hospitalier Universitaire De Nice,NA
+2025-524710-29-00,Region Skane,NA
+2025-524711-36-00,Alkermes Inc.,NA
+2025-524713-88-00,Verastem Inc.,NA
+2025-524717-86-00,Pfizer Inc.,NA
 2025-524719-35-00,Mage Biologics Inc.,NA
+2025-524720-22-00,Fakultni Nemocnice Kralovske Vinohrady,NA
+2025-524722-17-00,Region Skane,NA
 2025-524723-52-00,Pirkanmaan hyvinvointialue,NA
 2025-524725-41-00,Centre Hospitalier Universitaire De Nantes,NA
+2025-524726-18-00,Eli Lilly & Co.,NA
+2025-524727-41-00,Eli Lilly & Co.,NA
+2025-524728-22-01,Assistance Publique Hopitaux De Paris,NA
+2025-524730-26-00,Incyte Corp.,NA
 2025-524733-11-00,Smartwise Sweden AB,NA
 2025-524738-24-00,Radboud universitair medisch centrum Stichting,NA
+2025-524741-28-00,Amsterdam UMC Stichting,NA
+2025-524744-36-00,Centre Hospitalier Universitaire De Caen Normandie,NA
+2025-524746-96-00,Jade Biosciences Inc.,NA
+2025-524747-13-00,Policlinico San Donato S.p.A.,NA
 2025-524751-32-00,Fundacion Epic,NA
+2025-524755-31-00,Leids Universitair Medisch Centrum (LUMC),NA
+2025-524756-54-00,UCB Biopharma,NA
 2025-524759-29-00,Centre Leon Berard,NA
+2025-524761-25-00,Santiago Dexeus Font Fundacio Privada,NA
 2025-524764-38-00,Haleon CH SARL,NA
+2025-524765-24-00,Institute Of Tropical Medicine,NA
 2025-524768-39-00,Oxytone Bioscience B.V.,NA
+2025-524769-26-00,HUS-yhtymae,NA
+2025-524773-16-00,Boehringer Ingelheim International GmbH,NA
 2025-524774-42-00,Herlev Hospital,NA
+2025-524775-23-00,CCDRD Cooperative Clinical Drug Research and Development AG / Ioulia And Irene Tseti Pharmaceutical Laboratories S.A.,NA
 2025-524778-41-00,Fondazione Santa Lucia,NA
+2025-524783-38-00,UZ Leuven,NA
 2025-524784-20-00,Zomagen Biosciences Limited,NA
+2025-524786-25-00,Fundacio Hospital Universitari Vall D’Hebron Institut De Recerca,NA
+2025-524791-30-00,Radboud universitair medisch centrum Stichting,NA
+2025-524794-16-00,Fundacio Institut D'Investigacio Biomedica De Bellvitge IDIBELL,NA
+2025-524795-35-00,Uniwersytet Medyczny W Lublinie,NA
+2025-524805-34-00,Exelixis Inc.,NA
+2025-524810-28-00,Quetzal Therapeutics LLC,NA
 2025-524814-27-00,Fundacion Para La Investigacion Biomédica Del Hospital Universitario 12 De Octubre,NA
+2025-524816-13-00,Janssen Cilag International,NA
 2025-524819-37-00,Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre,NA
+2025-524821-42-00,ASST Fatebenefratelli Sacco,NA
 2025-524822-16-00,Rigshospitalet,NA
 2025-524823-34-00,Institute Of Tropical Medicine,NA
 2025-524832-20-00,Oryzon Genomics S.A.,NA
 2025-524834-24-00,Centre Hospitalier Universitaire De Nantes,NA
 2025-524841-28-00,Region Skane,NA
+2025-524842-89-00,Hemato-Oncologie voor Volwassenen Nederland (Hovon) Stichting,NA
+2025-524843-11-00,AstraZeneca AB,NA
+2025-524845-28-00,Centre Hospitalier Universitaire Vaudois,NA
 2025-524852-74-00,Merck Sharp & Dohme LLC,NA
+2025-524855-30-00,Merck Healthcare KGaA,NA
 2025-524856-73-00,F. Hoffmann-La Roche AG,NA
 2025-524857-15-00,BeOne Medicines I GmbH,NA
+2025-524858-34-00,Eli Lilly & Co.,NA
+2025-524859-31-00,Karolinska Institutet,NA
 2025-524862-12-00,Universite Libre de Bruxelles,NA
+2025-524868-38-00,K-Group Beta Inc.,NA
+2025-524871-22-00,Pevisal Group Farmaceutici S.r.l.,NA
 2025-524872-51-00,Vaestra Goetalandsregionen,NA
+2025-524873-17-00,Leo Pharma A/S,NA
 2025-524876-43-00,Universitair Medisch Centrum Groningen,NA
 2025-524877-18-00,Gemeinnutzige Salzburger Landes kliniken Betriebsgesellschaft mbH,NA
+2025-524879-23-00,Universitaetsklinikum Ulm AöR,NA
 2025-524883-39-00,Cereno Scientific AB,NA
+2025-524884-18-01,Les Hopitaux Universitaires De Strasbourg,NA
+2025-524885-12-00,Radboud universitair medisch centrum Stichting,NA
+2025-524889-25-00,University Hospital Of Clermont-Ferrand,NA
+2025-524894-17-00,Eyebiotech Limited,NA
+2025-524896-22-00,ReproNovo ApS,NA
 2025-524899-40-00,Mironid Limited,NA
 2025-524901-33-00,Fundacion De La Comunitat Valenciana Para La Gestion Del Instituto De Investigacion Sanitaria Y Biomedica De Alicante,NA
 2025-524910-28-00,Vianex S.A.,NA
+2025-524911-34-00,Electra Therapeutics Inc.,NA
+2025-524914-26-00,AstraZeneca AB,NA
+2025-524915-36-00,Glaxosmithkline Research & Development Limited,NA
+2025-524918-28-00,Sironax USA Inc.,NA
+2025-524921-42-00,Gubra A/S,NA
+2025-524929-41-00,Myricx Pharma Limited,NA
+2025-524935-38-00,Sun Pharmaceutical Industries Limited,NA
+2025-524936-20-00,Celon Pharma S.A.,NA
 2025-524937-19-00,Rigshospitalet,NA
+2025-524939-39-02,Slagelse Hospital,NA
+2025-524942-87-00,Centre De Lutte Contre Le Cancer Eugene Marquis,NA
 2025-524944-37-00,Gentofte Hospital / GlaxoSmithKline Biologicals,NA
+2025-524951-30-00,Uniwersytet Jagiellonski Collegium Medicum,NA
 2025-524953-15-00,Region Hovedstaden,NA
+2025-524955-30-01,Copenhagen University Hospital / Region Hovedstaden,NA
+2025-524967-19-00,Alnylam Pharmaceuticals Inc.,NA
+2025-524973-17-00,Eli Lilly & Co.,NA
+2025-524974-41-00,Eli Lilly & Co.,NA
+2025-524976-40-00,Centre Hospital Region Metz Thionville,NA
+2025-524977-18-00,Fondazione Tettamanti / Fondazione IRCCS San Gerardo Dei Tintori,NA
+2025-524978-42-00,Centre Hospitalier Universitaire De Bordeaux,NA
 2025-524987-39-00,Aclaris Therapeutics Inc.,NA
+2025-524993-41-00,Celgene Corp.,NA
+2025-524995-53-00,UZ Brussel,NA
+2025-524999-37-00,MIDAS Pharma GmbH,NA
+2025-525001-21-00,Centre Hospitalier Regional Universitaire De Tours,NA
+2025-525005-20-00,Martin-Luther-Universitaet Halle-Wittenberg,NA
 2025-525006-37-00,Elliniko Institouto Meletis Tis Sipsis,NA
+2025-525008-12-00,PulseSight Therapeutics,NA
+2025-525009-18-00,Incyte Corp.,NA
+2025-525013-23-00,Eikon Therapeutics Inc.,NA
+2025-525016-41-00,AstraZeneca AB,NA
+2025-525020-99-00,University Hospital Of Clermont-Ferrand,NA
 2025-525025-12-00,Pharmacosmos A/S,NA
+2025-525033-31-00,Cardurion Pharmaceuticals Inc.,NA
+2025-525036-34-00,Terremoto Biosciences Inc.,NA
 2025-525039-15-01,Sea4us Biotecnologia E Recursos Marinhos S.A.,NA
+2025-525040-18-00,Institut Paoli Calmettes,NA
 2025-525041-43-00,Pfizer Inc.,NA
+2025-525042-22-00,Genentech Inc.,NA
 2025-525053-39-00,EBI Anti Sepsis B.V.,NA
+2025-525058-20-00,Elliniko Institouto Meletis Tis Sipsis,NA
 2025-525059-23-00,Varsinais-Suomen hyvinvointialue,NA
 2025-525068-13-00,Universitair Medisch Centrum Groningen,NA
+2025-525069-65-00,Centre Hospitalier Universitaire De Nimes,NA
+2025-525073-37-00,Glaxosmithkline Research & Development Limited,NA
 2025-525076-29-00,Nucleus Medical GmbH,NA
+2025-525078-12-00,Antibiotice S.A.,NA
+2025-525083-14-00,Odense University Hospital,NA
+2025-525085-29-00,Rode Kruis-Vlaanderen,NA
+2025-525088-34-00,Revolution Medicines Inc.,NA
+2025-525091-29-00,Medical University Of Vienna,NA
+2025-525096-83-00,Polish Myeloma Consortium,NA
+2025-525097-11-00,Polish Myeloma Consortium,NA
+2025-525102-38-00,Merck Sharp & Dohme LLC,NA
+2025-525105-20-00,AbbVie Deutschland GmbH & Co. KG,NA
+2025-525106-37-00,Centre Hospitalier Universitaire De Toulouse,NA
+2025-525110-29-01,Narodowe Centrum Badan Jadrowych,NA
+2025-525111-17-00,Institut De Recherches Internationales Servier IRIS,NA
+2025-525113-22-00,Neurocrine Biosciences Inc.,NA
+2025-525121-13-00,UZ Leuven,NA
+2025-525123-27-00,Azienda Ospedaliero Universitaria Careggi / University Of Florence,NA
+2025-525124-10-00,Entrada Therapeutics Inc.,NA
 2025-525125-12-00,Pfizer Inc.,NA
+2025-525127-27-00,Aurinia Pharmaceuticals Inc.,NA
+2025-525144-18-00,Medica Scientia Innovation Research S.L.,NA
+2025-525150-19-01,Instituto De Investigacion Marques De Valdecilla,NA
+2025-525153-39-00,Fondation Hopital Saint Joseph,NA
+2025-525157-39-00,Silexion Therapeutics Ltd.,NA
+2025-525158-20-00,Biocon Biologics UK PLC,NA
+2025-525159-20-00,Montreal Heart Institute,NA
+2026-525161-40-00,PannTheraPi,NA
+2026-525162-21-00,PannTheraPi,NA
+2026-525163-41-00,Radboud universitair medisch centrum Stichting,NA
 2026-525165-52-00,Pfizer Inc.,NA
 2026-525176-26-00,Eradivir Inc.,NA
+2026-525179-26-00,Novo Nordisk A/S,NA
+2026-525181-22-00,Centre Hospitalier Universitaire De Toulouse,NA
+2026-525185-21-00,Frankfurter Institut Fuer Klinische Krebsforschung IKF GmbH,NA
+2026-525191-26-00,Universitaetsklinikum Schleswig-Holstein AöR,NA
+2026-525200-99-00,Dianosic,NA
 2026-525208-90-00,Immunic AG,NA
 2026-525211-14-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2026-525213-31-00,Merck Sharp & Dohme LLC,NA
+2026-525214-62-00,Region Sjaelland,NA
+2026-525217-31-00,Incyte Corp.,NA
+2026-525220-15-00,Zealand Pharma A/S,NA
+2026-525221-21-01,Aalborg University Hospital / Aalborg University Hospital,NA
 2026-525223-24-00,Instytut Matki I Dziecka,NA
 2026-525230-27-00,Laboratorios Alter S.A.,NA
+2026-525234-39-00,Janssen Cilag International,NA
+2026-525242-29-00,Ipsen Bioscience Inc.,NA
+2026-525248-13-00,Eikon Therapeutics Inc.,NA
 2026-525256-29-00,ZAKLADY FARMACEUTYCZNE POLPHARMA S.A.,NA
+2026-525260-18-00,Amsterdam UMC Stichting,NA
+2026-525263-41-00,Polska Grupa Badawcza Chloniakow,NA
+2026-525267-40-00,Centro Di Riferimento Oncologico Di Aviano,NA
+2026-525269-34-00,CCDRD Cooperative Clinical Drug Research and Development AG / Corium Innovations Inc.,NA
+2026-525271-57-00,Novo Nordisk A/S,NA
+2026-525272-25-00,UZ Leuven,NA
 2026-525278-20-00,Laboratorios Normon S.A.,NA
+2026-525282-50-00,Recursion Pharmaceuticals Inc.,NA
+2026-525291-26-00,Verisfield Single Member S.A.,NA
+2026-525296-60-00,Alkeus Pharmaceuticals Inc.,NA
 2026-525309-11-00,Antaros Medical AB,NA
+2026-525316-33-00,Sint Maartenskliniek Stichting,NA
+2026-525317-31-00,Centre Hospitalier Universitaire De Nantes,NA
+2026-525324-26-00,Region Oerebro Laen,NA
+2026-525328-10-00,Medica Scientia Innovation Research S.L.,NA
+2026-525333-22-00,Sanofi-Aventis Recherche & Developpement,NA
+2026-525336-41-00,Assistance Publique Hopitaux De Paris,NA
 2026-525342-29-00,Pfizer Inc.,NA
 2026-525343-33-00,Synact Pharma ApS,NA
 2026-525349-65-00,Annexin Pharmaceuticals AB (publ),NA
+2026-525350-11-00,Sanofi-Aventis Recherche & Developpement,NA
+2026-525353-37-00,Leids Universitair Medisch Centrum (LUMC),NA
+2026-525355-93-00,Fundacion Para La Investigacion Biomedica Hospital Infantil Universitario Nino Jesus,NA
+2026-525360-18-00,Incyte Corp.,NA
+2026-525382-47-00,Puma Biotechnology Inc.,NA
+2026-525394-39-00,Groupe Hospitalier Universitaire Paris Psychiatrie Et Neuroscience,NA
+2026-525397-19-00,Heinrich-Heine-Universitaet Duesseldorf,NA
+2026-525417-31-00,Ribocure Pharmaceuticals AB,NA
+2026-525419-16-00,Eudemus Pharmaceuticals Limited,NA
+2026-525420-22-00,Sun Pharmaceutical Industries Limited,NA
+2026-525421-20-00,Sun Pharmaceutical Industries Limited,NA
 2026-525434-33-00,Tarchominskie Zaklady Farmaceutyczne Polfa S.A.,NA
+2026-525442-30-00,Odense University Hospital,NA
+2026-525448-14-00,Orion Corporation,NA
 2026-525449-57-00,Orion Corporation,NA
+2026-525450-11-00,Orion Corporation,NA
+2026-525454-11-00,Amgen Inc.,NA
+2026-525463-40-00,Les Hopitaux Universitaires De Strasbourg,NA
+2026-525464-18-00,Regeneron Pharmaceuticals Inc.,NA
+2026-525475-96-00,UZ Leuven,NA
+2026-525478-21-00,Angelini Pharma Italia Aziende Chimiche Riunite Angelini Francesco A.C.R.A.F. S.p.A. Enunciabile Anche Angelini Pharma Italia S.p.A. Angelini Pharma S.p.A. A.C.R.A.F. S.p.A. Acraf S.p.A. Angelini S.p.A. aziende Chimiche Riunite Angelini Francesco A.C.R.A.F. S.p.A.,NA
+2026-525484-40-00,Prelude Therapeutics Inc.,NA
+2026-525500-10-00,Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre,NA
+2026-525513-31-00,Norges Teknisk-Naturvitenskapelige Universitet NTNU,NA
+2026-525517-31-00,InflaRx GmbH,NA
+2026-525518-70-00,Venter Pharma S.L.,NA
 2026-525521-20-00,Syddansk Universitet (University of Southern Denmark),NA
+2026-525531-16-00,Hamlet BioPharma AB,NA
+2026-525539-18-00,Merry Life Biomedical Co. Ltd.,NA
+2026-525540-15-00,Institut De Recerca Biomedica De Lleida Fundacio Dr. Pifarre,NA
+2026-525543-32-00,Oncopeptides AB,NA
+2026-525547-32-01,Region Hovedstaden,NA
+2026-525549-60-00,Boehringer Ingelheim International GmbH,NA
+2026-525550-11-00,Alianza Multidisciplinar Para La Investigacion De Los Tumores Genitourinarios Guard,NA
+2026-525554-11-00,Astrocyte Pharmaceuticals Inc.,NA
+2026-525566-21-00,Theriva Biologics S.L.,NA
+2026-525568-17-00,Het Nederlands Kanker Instituut-Antoni van Leeuwenhoek Ziekenhuis Stichting,NA
+2026-525569-30-00,Bayer AG,NA
 2026-525575-22-00,Klear Bio Inc.,NA
+2026-525590-40-00,Viiv Healthcare UK Limited,NA
+2026-525594-39-00,Ntc S.r.l.,NA
+2026-525604-99-00,Scarcell Therapeutics,NA
+2026-525608-85-00,Region Hovedstaden,NA
+2026-525610-62-00,Genmab A/S,NA
+2026-525611-13-00,Oslo Universitetssykehus HF,NA
+2026-525613-31-00,Centre Hospitalier Universitaire De Montpellier,NA
 2026-525619-15-00,Centauri Therapeutics Limited,NA
+2026-525620-23-00,Vall D Hebron Institute Of Oncology,NA
+2026-525621-20-00,Oblenio Bio Inc.,NA
 2026-525625-21-00,Merck Sharp & Dohme LLC,NA
+2026-525627-24-00,Merck Sharp & Dohme LLC,NA
+2026-525628-13-00,Probelte Pharma S.L.,NA
+2026-525629-20-00,Larkspur Biosciences Inc.,NA
+2026-525632-41-00,Fraunhofer Institute For Translational Medicine And Pharmacology ITMP,NA
+2026-525640-14-00,University Of Cologne,NA
+2026-525643-32-00,Centre Hospitalier Regional De Marseille,NA
+2026-525658-13-00,Region Hovedstaden,NA
+2026-525669-33-00,Aalborg University Hospital,NA
+2026-525682-45-00,Region Hovedstaden,NA
+2026-525696-77-00,Boehringer Ingelheim International GmbH,NA
+2026-525700-10-00,Syremis Therapeutics Ltd.,NA
+2026-525701-12-00,Universidad Rey Juan Carlos,NA
+2026-525704-98-00,Boehringer Ingelheim International GmbH,NA
 2026-525706-35-00,Galapagos,NA
+2026-525707-27-00,Sanofi-Aventis Recherche & Developpement,NA
+2026-525727-24-00,Chemo Research S.L.,NA
 2026-525728-18-00,Region Hovedstaden,NA
+2026-525733-24-00,Azienda Socio Sanitaria Territoriale Degli Spedali Civili Di Brescia,NA
+2026-525736-42-00,F. Hoffmann-La Roche AG,NA
+2026-525740-15-00,Fondazione Per Il Tuo Cuore Onlus Denominabile Anche Fondazione Italiana Per La Lotta Alle Malattie Cardiovascolari Onlus Ed Anche Heart Care Foundation Hcf Onlus,NA
+2026-525747-33-00,Universitair Medisch Centrum Utrecht,NA
+2026-525748-14-00,Merck Sharp & Dohme LLC,NA
+2026-525752-29-00,Farco-Pharma GmbH,NA
+2026-525766-21-01,Hospital Universitario Rio Hortega,NA
+2026-525770-19-00,Fakultni Nemocnice Brno,NA
+2026-525776-26-00,Narodowy Instytut Onkologii Im. Marii Sklodowskiej-Curie Panstwowy Instytut Badawczy,NA
+2026-525780-41-00,Laboratorios Cinfa S.A.,NA
+2026-525783-18-00,Fundacion Biomedica Galicia Sur,NA
+2026-525785-22-00,Boehringer Ingelheim International GmbH / Boehringer Ingelheim Espana S.A.,NA
+2026-525788-42-00,Galapagos,NA
+2026-525790-39-00,Glaxosmithkline Research & Development Limited,NA
+2026-525808-94-00,Region Hovedstaden,NA
+2026-525809-13-00,Region Hovedstaden,NA
+2026-525810-80-00,Tectonic Operating Company Inc.,NA
+2026-525813-30-00,Boehringer Ingelheim International GmbH,NA
+2026-525817-29-00,Sundance Biosciences Inc.,NA
+2026-525821-19-00,Boehringer Ingelheim International GmbH,NA
 2026-525823-26-00,Institut De Recherches Internationales Servier IRIS,NA
+2026-525825-19-00,Boehringer Ingelheim International GmbH,NA
+2026-525826-39-00,Centre Hospitalier Regional Universitaire De Tours,NA
+2026-525830-49-00,Allinky Biopharma S.L.,NA
+2026-525834-45-00,Medical University Of Vienna,NA
+2026-525836-41-00,Laboratorios Cinfa S.A.,NA
+2026-525838-32-00,Region Skane,NA
+2026-525844-14-00,Regeneron Pharmaceuticals Inc.,NA
+2026-525862-23-00,Centre Hospitalier Universitaire De Toulouse,NA
+2026-525864-17-00,Orion Corporation,NA
+2026-525869-42-00,Pila Pharma AB,NA
+2026-525871-24-00,Amsterdam UMC Stichting,NA
+2026-525876-24-00,Hospital Universitario La Paz,NA
+2026-525895-25-00,Region Hovedstaden,NA
+2026-525897-20-00,Laboratorio Reig Jofre S.A.,NA
+2026-525898-39-00,Azienda Sanitaria Locale Napoli 1 Centro,NA
+2026-525901-10-00,Ribocure Pharmaceuticals AB,NA
+2026-525906-37-00,Karolinska University Hospital,NA
+2026-525909-13-00,Radboud universitair medisch centrum Stichting,NA
+2026-525917-29-00,Medical University Of Graz,NA
+2026-525922-39-00,Janssen Cilag International,NA
+2026-525923-26-00,Janssen Cilag International,NA
+2026-525925-19-00,Minerva Neurosciences Inc.,NA
 2026-525930-47-00,Farmalider S.A.,NA
+2026-525933-22-00,Instituto De Investigacion Sanitaria Fundacion Jimenez Diaz,NA
 2026-525944-14-00,Laboratorios Normon S.A.,NA
+2026-525953-35-00,Oryzon Genomics S.A.,NA
+2026-525966-22-00,Latigo Biotherapeutics Inc.,NA
+2026-525972-25-00,Assistance Publique Hopitaux De Paris,NA
+2026-525974-21-00,Novartis Pharma AG,NA
+2026-525978-19-00,Zealand Pharma A/S,NA
+2026-525987-16-00,Syddansk Universitet (University of Southern Denmark),NA
+2026-526014-87-00,Sanofi-Aventis Recherche & Developpement,NA
+2026-526016-36-00,UZ Leuven,NA
+2026-526022-41-00,Auxesis Pharma Holding AB (publ),NA
+2026-526036-38-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2026-526038-26-00,Pfizer Inc.,NA
 2026-526040-13-00,Institut De Recherches Internationales Servier IRIS,NA
 2026-526044-12-00,Institute For Clinical And Experimental Medicine,NA
+2026-526068-19-00,Eidos Therapeutics Inc.,NA
+2026-526078-18-00,Medical University Of Graz,NA
+2026-526084-38-00,Radboud universitair medisch centrum Stichting,NA
+2026-526090-42-00,Boehringer Ingelheim International GmbH,NA
+2026-526096-31-00,Corteria Pharmaceuticals,NA
 2026-526102-33-00,Laboratorios Cinfa S.A.,NA
+2026-526105-15-00,Probelte Pharma S.L.,NA
+2026-526109-13-00,Universita' Degli Studi Di Torino,NA
+2026-526113-28-00,Ceinge Biotecnologie Avanzate Franco Salvatore S.c.a.r.l.,NA
+2026-526116-36-00,Pliant Therapeutics Inc.,NA
+2026-526122-41-00,Uppsala University Hospital,NA
 2026-526135-18-00,Vicore Pharma AB,NA
+2026-526142-27-01,HUS-yhtymae,NA
+2026-526149-91-00,Friedrich-Schiller-Universitaet Jena,NA
+2026-526153-34-00,Citryll B.V.,NA
+2026-526160-21-00,Rigshospitalet,NA
+2026-526167-38-00,Amsterdam UMC Stichting,NA
+2026-526168-19-00,LimmaTech Biologics AG,NA
+2026-526179-49-00,Medical Center - University Of Freiburg,NA
+2026-526200-69-00,Klinikum der Technischen Universitaet Muenchen (TUM Klinikum),NA
+2026-526209-13-00,Erasmus Universitair Medisch Centrum Rotterdam (Erasmus MC),NA
+2026-526212-37-00,Institut De Recherches Internationales Servier IRIS,NA
+2026-526224-48-02,Pharma Patent Kft.,NA
+2026-526225-18-00,Universitaetsklinikum Regensburg AöR,NA
+2026-526237-26-00,Atea Pharmaceuticals Inc.,NA
+2026-526258-15-00,AstraZeneca AB,NA
+2026-526263-38-00,Janssen Cilag International,NA
+2026-526270-17-00,University Of Cologne,NA
+2026-526279-52-00,Arcus Biosciences Inc.,NA
+2026-526289-25-00,Amsterdam UMC Stichting,NA
+2026-526292-37-01,Instituto De Investigacion Sanitaria Fundacion Para La Investigacion Del Hospital Clinico De Valencia-INCLIVA,NA
+2026-526294-42-00,Tridem Bioscience FlexCo,NA
+2026-526304-79-00,AstraZeneca AB,NA
+2026-526307-30-00,Boehringer Ingelheim International GmbH,NA
+2026-526311-11-00,Vaderis Therapeutics AG,NA
+2026-526314-90-00,Region Hovedstaden,NA
+2026-526324-48-00,Centr Georges Francois Leclerc,NA
+2026-526334-67-00,Pfizer Inc.,NA
+2026-526343-35-00,Pharmability AB,NA
+2026-526368-18-00,Azienda Ospedaliera Universitaria Gaetano Martino Messina,NA
+2026-526383-20-00,Region Skane,NA
+2026-526388-39-00,Region Sjaelland,NA
+2026-526395-23-00,Fundacio De Recerca Clinic Barcelona-Institut D’Investigacions Biomediques August Pi I Sunyer,NA
+2026-526397-17-00,Vianex S.A.,NA
+2026-526403-30-00,Merck Healthcare KGaA,NA
+2026-526411-11-00,Antabio,NA
+2026-526434-21-00,Fysioline Oy,NA
+2026-526442-28-00,Oslo Universitetssykehus HF,NA
+2026-526444-13-01,Pohjois-Pohjanmaan hyvinvointialue,NA
+2026-526460-20-00,Azienda Ospedaliero Universitaria Di Modena,NA
+2026-526465-18-00,Region Hovedstaden,NA
+2026-526477-42-00,Laboratorios Leon Farma S.A.,NA
+2026-526494-42-00,Varsinais-Suomen hyvinvointialue,NA
+2026-526526-41-01,Medical University Of Vienna,NA
+2026-526531-18-00,UZ Leuven,NA
+2026-526556-31-00,Adamed Pharma S.A.,NA
+2026-526581-24-01,Sante et Prevoyance,NA
+2026-526674-17-00,Merck Sharp & Dohme LLC,NA
+2026-526708-56-00,CRISPR Therapeutics AG,NA
+2026-526720-49-00,Gentofte Hospital / Moderna Inc.,NA
+2026-526775-27-00,Laboratoires Kol,NA
+2026-526777-42-00,Janux Therapeutics Inc.,NA
+2026-526804-59-00,Fundacion Para El Fomento De La Investigacion Sanitaria Y Biomedica De La Comunitat Valenciana,NA
+2026-526821-16-00,Karolinska University Hospital,NA
+2026-526828-41-00,Azienda Ospedaliera Universitaria Integrata Verona,NA
+2026-526840-10-00,Vipharm S.A.,NA
+2026-526859-54-00,Immunic AG,NA
+2026-526867-39-00,Niroda Therapeutics Inc.,NA
+2026-526916-35-00,Debiopharm International S.A.,NA
+2026-526961-76-00,Karolinska University Hospital,NA
+2026-527022-13-00,Merck Sharp & Dohme LLC,NA
+2026-527032-14-00,Region Hovedstaden,NA
+2026-527080-15-00,Universidad Autonoma De Madrid,NA
+2026-527110-23-00,Region Uppsala,NA
+2026-527114-23-00,Ovid Therapeutics Inc.,NA
+2026-527162-72-00,Laboratorios Alter S.A.,NA
+2026-527164-32-00,Laboratorios Alter S.A.,NA
+2026-527382-30-00,ZAKLADY FARMACEUTYCZNE POLPHARMA S.A.,NA
