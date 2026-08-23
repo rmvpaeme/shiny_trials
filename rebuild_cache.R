@@ -113,10 +113,10 @@ message("=== Sponsor labels build complete ===")
 # cost money and need an API key, so they stay manual; E_emit just re-derives
 # labels from the registry and assignments already on disk.
 #
-# NOTE: there is no substance equivalent of N_nightly_resolve.R yet. A raw string
-# that appears after the last mint arrives unassigned, and because v2 drops v1's
-# raw-string fallback it gets NO label rather than a junk one. The regression
-# gate below is what stops that going unnoticed.
+# N_nightly_resolve.R below handles strings that appear after the last mint.
+# Because v2 drops v1's raw-string fallback, anything it leaves unresolved gets
+# NO label rather than a junk one, and the regression gate is what stops that
+# going unnoticed.
 message("=== Building substance labels ===")
 sb <- function(f) file.path("helper_scripts", "substance_norm_pipeline_v2", f)
 
@@ -151,8 +151,25 @@ if (!identical(st_sub_export, 0L)) {
     sentinel <- file.path(dirname(DB_PATH), ".substance_nightly_failed")
     writeLines(sprintf("%s gate=2 no regression baseline", Sys.time()), sentinel)
   } else {
-    message("*** SUBSTANCE LABELS NOT WRITTEN — regression gate failed; ",
-            "keeping the previous data/trial_substance_labels.csv ***")
+    # "Keep last night's labels" is only a safe hold if last night's labels are
+    # actually on disk. On the first server rebuild after the v2 switch they are
+    # not: the gate has blocked every run, so the file has never been written.
+    # The app then falls back to raw DIMP_inn_name strings (app.R:1826) and the
+    # substance search aliases go dark, because both read files E_emit did not
+    # write. That is a degraded deploy wearing the message of a safe one.
+    labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
+    if (file.exists(labels_path)) {
+      message("*** SUBSTANCE LABELS NOT WRITTEN — regression gate failed; ",
+              "keeping the previous data/trial_substance_labels.csv ***")
+    } else {
+      message("*** SUBSTANCE LABELS NOT WRITTEN — regression gate failed AND there ",
+              "is no previous data/trial_substance_labels.csv to keep. The app will ",
+              "fall back to raw register strings; clear the backlog with ",
+              "N_nightly_resolve.R. ***")
+      sentinel <- file.path(dirname(DB_PATH), ".substance_nightly_failed")
+      writeLines(sprintf("%s gate=%s and no labels on disk", Sys.time(), st_sub_gate),
+                 sentinel)
+    }
   }
 }
 message("=== Substance labels build complete ===")
