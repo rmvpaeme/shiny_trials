@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.21.0 — substance normalisation on a chemistry-registry-first pipeline)
+# app.R  (v0.21.1 — substance and sponsor filters match the raw register strings)
 # ============================================================================
 
 suppressPackageStartupMessages({
@@ -247,6 +247,9 @@ REVIEW_LEDGER_PATH <- Sys.getenv("REVIEW_LEDGER_PATH",
 SPONSOR_QUEUE_PATH <- Sys.getenv("SPONSOR_QUEUE_PATH",
                                  unset = "config/sponsor_norm_v2/E_review_queue.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
+# Cache-invalidation key, NOT the app version: bump it only when the data that
+# lands in trials_cache.rds changes shape or meaning. A release that touches the
+# UI alone leaves it alone, or every deployment pays for a full rebuild.
 DATA_PROCESSING_VERSION <- "2026-08-v0.21.0-substance-registry-v2"
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2120,6 +2123,117 @@ matches_substance_label <- function(substance_label, selected, sep = " / ") {
   }, logical(1))
 }
 
+# ══════════════════════════════════════════════════════════════════════════════
+# HIDDEN SEARCH ALIASES — type the raw string, find the normalised entry
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# The substance and sponsor filters offer normalised labels ("Paclitaxel",
+# "GlaxoSmithKline"), but people search with the string the register actually
+# printed ("PACLITAXEL", "GlaxoSmithKline AB"). Every raw string the
+# normalisation pipeline folded into a label is carried beside that label in an
+# `alias` column, and the two filters name that column in selectize's
+# `searchField`. Selectize renders `labelField` only, so aliases are matched but
+# never displayed: the dropdown, the chips and the stored filter values all stay
+# normalised, and nothing downstream of the filter can tell the difference.
+#
+# Two properties this depends on:
+#   * choices must reach updateSelectizeInput() as a DATA FRAME that always has
+#     an `alias` column. Server-side search greps data[["alias"]]; if the column
+#     is absent that grep yields a zero-length result which silently wipes the
+#     whole match vector — the box returns NOTHING rather than falling back to
+#     matching on the label. Hence choices_with_aliases() at every call site.
+#   * `value` stays the normalised label, so filt(), the comparison tabs and the
+#     saved-filter state are untouched.
+
+ALIAS_SEP <- " | "
+MAX_ALIASES_PER_LABEL <- 200L   # "Placebo" alone folds in 1,747 raw strings
+
+build_alias_lookup <- function(labels, raws, weight = NULL) {
+  empty <- dplyr::tibble(label = character(), alias = character())
+  if (is.null(labels) || is.null(raws) || length(labels) == 0) return(empty)
+  df <- dplyr::tibble(
+    label  = str_trim(as.character(labels)),
+    raw    = str_trim(as.character(raws)),
+    weight = if (is.null(weight)) 1 else suppressWarnings(as.numeric(weight))
+  )
+  df$weight[is.na(df$weight)] <- 1
+  out <- df %>%
+    filter(!is.na(label), label != "", !is.na(raw), raw != "") %>%
+    mutate(raw_key = tolower(raw)) %>%
+    filter(raw_key != tolower(label)) %>%   # the label itself is already searched
+    group_by(label, raw_key) %>%
+    summarise(raw = dplyr::first(raw), weight = sum(weight), .groups = "drop_last") %>%
+    # Keep the raw strings the most trials actually use; a handful of labels
+    # have hundreds of variants and the whole blob would ship to the browser.
+    arrange(desc(weight), raw, .by_group = TRUE) %>%
+    slice_head(n = MAX_ALIASES_PER_LABEL) %>%
+    summarise(alias = paste(raw, collapse = ALIAS_SEP), .groups = "drop")
+  if (nrow(out) == 0) empty else out
+}
+
+# Substances: from the normalisation log, not the trial rows. A trial with three
+# substances carries three raw strings and one combined label, so the trial rows
+# cannot say which raw became which label; the log is the pipeline's own
+# raw → clean decision, one row per raw string.
+build_substance_alias_lookup <- function(data_dir = dirname(DB_PATH)) {
+  path <- file.path(data_dir, "substance_normalisation_log_v2.csv")
+  if (!file.exists(path)) {
+    message("Substance raw-string search disabled: ", path, " not found.")
+    return(build_alias_lookup(NULL, NULL))
+  }
+  log <- tryCatch(
+    readr::read_csv(path, show_col_types = FALSE, progress = FALSE,
+                    col_types = readr::cols(.default = readr::col_character())),
+    error = function(e) { message("Could not read substance log: ", e$message); NULL })
+  if (is.null(log) || !all(c("raw_substance", "substance_clean") %in% names(log)))
+    return(build_alias_lookup(NULL, NULL))
+  build_alias_lookup(log$substance_clean, log$raw_substance,
+                     weight = if ("n_trials" %in% names(log)) log$n_trials else NULL)
+}
+
+# Sponsors: from the trial rows, where the raw string sits beside the label the
+# app will actually display — including labels that came from human curation or
+# fell back to the raw name, neither of which the pipeline log knows about.
+build_sponsor_alias_lookup <- function(d) {
+  if (is.null(d) || !all(c("sponsor_label", "sponsor_name_raw") %in% names(d)))
+    return(build_alias_lookup(NULL, NULL))
+  build_alias_lookup(d$sponsor_label, d$sponsor_name_raw)
+}
+
+SUBSTANCE_ALIASES <- tryCatch(build_substance_alias_lookup(),
+                              error = function(e) {
+                                message("Substance alias build failed: ", e$message)
+                                build_alias_lookup(NULL, NULL)
+                              })
+SPONSOR_ALIASES <- tryCatch(build_sponsor_alias_lookup(trials_data),
+                            error = function(e) {
+                              message("Sponsor alias build failed: ", e$message)
+                              build_alias_lookup(NULL, NULL)
+                            })
+message(sprintf("Search aliases: %d substance label(s), %d sponsor label(s)",
+                nrow(SUBSTANCE_ALIASES), nrow(SPONSOR_ALIASES)))
+
+# Choices in the shape server-side selectize wants: label and value are the
+# normalised string, alias is the hidden haystack (empty string, never NULL,
+# when a label has no known variants).
+choices_with_aliases <- function(labels, lookup) {
+  labels <- str_trim(as.character(labels))
+  labels <- sort(unique(labels[!is.na(labels) & labels != ""]))
+  out <- data.frame(label = labels, value = labels,
+                    alias = rep("", length(labels)), stringsAsFactors = FALSE)
+  if (!is.null(lookup) && nrow(lookup)) {
+    i <- match(out$label, lookup$label)
+    out$alias <- ifelse(is.na(i), "", lookup$alias[i])
+  }
+  out
+}
+
+sponsor_filter_choices <- function(d, lookup = SPONSOR_ALIASES)
+  choices_with_aliases(d$sponsor_label, lookup)
+
+substance_filter_choices <- function(d, lookup = SUBSTANCE_ALIASES)
+  choices_with_aliases(extract_choices(d$substance_label), lookup)
+
 CHART_DIMENSION_LABELS <- c(
   "analysis_year"                  = "Year of Submission",
   "status"                         = "Status",
@@ -2475,9 +2589,13 @@ ui <- tagList(
                                                dateRangeInput("date_range","Submission Date Range:",
                                                               start="2004-01-01",end=Sys.Date(),format="yyyy-mm-dd"),
                                                textInput("text_search","Free-text search:",placeholder="e.g. neuroblastoma\u2026"),
+                                               # searchField also covers the hidden `alias` column, so a raw
+                                               # register string finds the normalised entry — see
+                                               # choices_with_aliases().
                                                selectizeInput("product_search","Product / Substance:",
                                                               choices=NULL,multiple=TRUE,
-                                                              options=list(placeholder="All products / substances"))
+                                                              options=list(placeholder="All products / substances",
+                                                                           searchField=c("label","alias")))
                                              ),
                                              tags$details(open=NA,
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
@@ -2486,7 +2604,9 @@ ui <- tagList(
                                                               choices=NULL,multiple=TRUE,options=list(placeholder="All countries")),
                                                uiOutput("mononational_btn_ui"),
                                                selectizeInput("sponsor_filter","Sponsor / Company:",
-                                                              choices=NULL,multiple=TRUE,options=list(placeholder="All sponsors"))
+                                                              choices=NULL,multiple=TRUE,
+                                                              options=list(placeholder="All sponsors",
+                                                                           searchField=c("label","alias")))
                                              ),
                                              tags$details(
                                                tags$summary(style="display:flex;justify-content:space-between;align-items:center;",
@@ -2993,49 +3113,16 @@ ui <- tagList(
                                                icon("file-alt"), " Open Preprocessing Report")),
                                       h4(icon("history")," Changelog"),
                                       tags$ul(
-	                                        tags$li(tags$b("v0.21.0 (2026-08-22):"),
+	                                        tags$li(tags$b("v0.21.1 (2026-08-23):"),
 		                                          tags$ul(
-		                                            tags$li("Active substances are now resolved against ChEMBL and the EMA medicines report first, and only what those cannot identify is sent to a language model. 91.9% of trial-substance pairs are resolved, against a pipeline that previously left 7,003 distinct substance names unmatched."),
-		                                            tags$li("Substance names are shown as the INN base, so salts, esters, brand names and pack labels fold together: Methotrexate now covers methotrexate sodium, Metoject and Methotrexat 10mg Tabletten rather than appearing as separate entries."),
-		                                            tags$li("European names are used where they differ from the American ones — Paracetamol, Adrenaline, Salbutamol and Ciclosporin rather than Acetaminophen, Epinephrine, Albuterol and Cyclosporine."),
-		                                            tags$li("Dosage text, placeholders and drug-class names no longer appear in the substance filter. Strings such as \"mL concentrate for solution for infusion\", \"Not yet assigned\" and \"Beta-blockers\" are recognised as not naming a substance and are excluded rather than displayed."),
-		                                            tags$li("Substances on newly registered trials are resolved during the nightly update, so recently added trials no longer show raw text in the substance filter.")
-		                                          )),
-	                                        tags$li(tags$b("v0.20.0 (2026-08-16):"),
-		                                          tags$ul(
-		                                            tags$li("Sponsor names are now resolved through a model-built canonical registry, replacing the rule-based matcher. Every one of the 50,359 trial rows carries a canonical sponsor, and national subsidiaries and legal variants are folded into the parent brand — Novartis is one entry rather than 28."),
-		                                            tags$li("Human curation now outranks the pipeline: a reviewed sponsor decision takes effect on the next app start and is never overwritten by an automated re-run."),
-		                                            tags$li("New sponsors appearing in the nightly registry update are resolved automatically against the existing registry, so newly registered trials no longer show unnormalised sponsor names."),
-		                                            tags$li("A new curation app lets reviewers confirm low-confidence normalisations with the raw string, the proposal, and every related alias side by side."),
-		                                            tags$li("The preprocessing report now audits the new registry: sponsor concentration, assignment confidence weighted by trial impact, and what is still awaiting review."),
-		                                            tags$li("Substance overrides pruned from 9,625 rows to 636 with byte-identical labels, plus fixes to URL filter restore, phase colouring, and the comparison tabs.")
-		                                          )),
-	                                        tags$li(tags$b("v0.12.0 (2026-05-19):"),
-		                                          tags$ul(
-		                                            tags$li("Analysis navigation is reorganised with General Statistics first and a separate Compare Data section for country and sponsor comparisons."),
-		                                            tags$li("General Statistics adds filtered trials by year, completion by sponsor type, and participant-count distribution with participant-scale axis labels."),
-		                                            tags$li("Active Substances is streamlined to top substances and their evolution over time."),
-		                                            tags$li("Sponsor Portfolio keeps the readable swimlane and therapeutic-bubble views while removing event strip and cumulative growth."),
-		                                            tags$li("Phase Analytics removes the funnel view and keeps phase/status/sponsor and completion analytics."),
-		                                            tags$li("Result Reporting percentages now use sponsor-type denominators for Academic and Industry no-results KPIs."),
-		                                            tags$li("Map copy and drill-down table now explicitly reflect the active sidebar filters."),
-		                                            tags$li("Cache rebuilds have a defensive fallback when registry identifier deduplication fails.")
-		                                          )),
-	                                        tags$li(tags$b("v0.11.0 (2026-05-06):"),
-		                                          tags$ul(
-		                                            tags$li("EUCTR A.8 EMA PIP decision numbers are now extracted and normalised alongside CTIS PIP procedure numbers."),
-		                                            tags$li("A local EMA PIP decisions lookup joins official EMA bulk data by PIP procedure number or decision number."),
-		                                            tags$li("The Trial filter panel adds a PIP Waiver filter, and Data Explorer exports now include PIP decision, procedure, waiver, deferral, and EMA URL fields."),
-		                                            tags$li("PIP Analysis highlights waiver evidence strength, ambiguous compound matches, waiver status over time, and deferral status."),
-		                                            tags$li("Geography remains a separate Analysis subsection for country-level trial distribution."),
-		                                            tags$li("Active Substances now focuses on top substances and their evolution over time."),
-		                                            tags$li("Cache validation now requires the new PIP enrichment columns so stale caches rebuild automatically.")
+		                                            tags$li("The Product / Substance and Sponsor / Company filters now also match the raw text as the registers record it, while still showing and applying the normalised name. Typing \"KEYTRUDA 25 mg\" finds Pembrolizumab and \"GlaxoSmithKline AB\" finds GlaxoSmithKline."),
+		                                            tags$li("Substance variants come from the normalisation registry and sponsor variants from the trial records, so brand names, salt forms, dosage spellings and national subsidiaries all lead back to the one normalised entry.")
 		                                          ))
                                       ),
                                       p(tags$a(href="https://github.com/rmvpaeme/shiny_trials/blob/main/CHANGELOG.md",
                                                target="_blank", icon("external-link-alt"), " Full changelog on GitHub")),
                                       hr(),
-	                                      p(em(paste0("v0.21.0 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
+	                                      p(em(paste0("v0.21.1 — ",Sys.Date()," · Ruben Van Paemel, Levi Hoste")),style="opacity:0.5;")
                                   ),
                                 ),
                                 fluidRow(
@@ -3263,10 +3350,10 @@ server <- function(input, output, session) {
                          choices=extract_choices(rv$data$phase),
                          selected=pr_sel("phase_filter"),server=TRUE)
     updateSelectizeInput(session,"sponsor_filter",
-                         choices=sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),
+                         choices=sponsor_filter_choices(rv$data),
                          selected=pr_sel("sponsor_filter"),server=TRUE)
     updateSelectizeInput(session, "product_search",
-                         choices = extract_choices(rv$data$substance_label),
+                         choices = substance_filter_choices(rv$data),
                          selected=pr_sel("product_search"),
                          server = TRUE)
     if (!is.null(pr)) pending_restore(NULL)
@@ -3729,7 +3816,7 @@ server <- function(input, output, session) {
     } else if (p == "novartis_compare") {
       req(rv$data)
       updateSelectizeInput(session, "sponsor_filter",
-                           choices  = sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)])),
+                           choices  = sponsor_filter_choices(rv$data),
                            selected = "Novartis",
                            server   = TRUE)
     } else if (p == "belgium_croatia_compare") {
@@ -3737,7 +3824,7 @@ server <- function(input, output, session) {
       updateTabItems(session, "tabs", "country_compare")
     } else if (p == "gsk_novartis_compare") {
       req(rv$data)
-      all_sponsors <- sort(unique(rv$data$sponsor_label[!is.na(rv$data$sponsor_label)]))
+      all_sponsors <- sponsor_filter_choices(rv$data)
       updateSelectizeInput(session, "sponsor_filter",
                            choices  = all_sponsors,
                            selected = c("GSK", "Novartis", "Roche"),
