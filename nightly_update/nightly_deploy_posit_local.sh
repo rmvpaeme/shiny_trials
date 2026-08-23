@@ -20,21 +20,32 @@ SOURCE_BRANCH="${SOURCE_BRANCH:-main}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-deploy}"
 REMOTE="${REMOTE:-origin}"
 PUSH_TIMEOUT_SECONDS="${PUSH_TIMEOUT_SECONDS:-120}"
-
 # Force-added below: data/*labels*, data/*log* and the raw exports are gitignored
 # so they never reach main, but the deploy branch is how they reach Posit — the
 # app reads data/trial_sponsor_labels.csv at startup.
 #
-# config/sponsor_norm_v2/ and config/substance_norm_v2/ are deliberately absent
-# as directories. They are the mutable registries, they live outside the work
-# tree via SPONSOR_V2_DIR / SUBSTANCE_V2_DIR, and committing them would both
-# fight the `git reset --hard` below and add megabytes of churn per night.
-# E_review_queue.csv is the one exception: it is small, and the curation app
-# needs it on the deploy branch.
+# The four config/ entries are the curation app's inputs. It runs on Posit with
+# a read-only filesystem and no database, so it fetches everything it displays
+# from the public repo — which means the queue and registry have to BE there,
+# and be current. See the publish step below for why listing them is not enough.
+#
+# assignments.csv is deliberately NOT here: 7.4 MB rewritten nightly, and the
+# app does not need it (siblings on a canonical are derivable from the cache,
+# which carries both sponsor_name_raw and sponsor_clean). registry.csv is 916 KB
+# + 2.4 MB and only changes when the nightly mints, so the earlier blanket
+# "megabytes of churn per night" objection is true of assignments and not of
+# these — measured at roughly +0.35 MB/night steady state.
+#
+# Safe only because `deploy` is FORCE-PUSHED and reset to origin/main every
+# night. If it ever becomes an ordinary branch these files conflict every run.
 GENERATED_FILES=(
     "trials_cache.rds"
     "www/preprocessing.html"
+    "config/sponsor_norm_v2/E_review_queue.csv"
+    "config/sponsor_norm_v2/registry.csv"
     "config/substance_norm_v2/E_review_queue.csv"
+    "config/substance_norm_v2/registry.csv"
+    "data/trial_overrides.csv"
     "data/country_normalisation_log.csv"
     "data/meddra_term_normalisation_log.csv"
     "data/organ_class_normalisation_log.csv"
@@ -72,7 +83,8 @@ GENERATED_PATHSPEC=(
     ':(exclude)trials_cache.rds'
     ':(exclude)www/preprocessing.html'
     ':(exclude)data'
-    ':(exclude)config/substance_norm_v2/E_review_queue.csv'
+    ':(exclude)config/sponsor_norm_v2'
+    ':(exclude)config/substance_norm_v2'
 )
 if ! git diff --quiet -- . "${GENERATED_PATHSPEC[@]}" ||
    ! git diff --cached --quiet -- . "${GENERATED_PATHSPEC[@]}"; then
@@ -125,6 +137,43 @@ if [ -f "$SPONSOR_SENTINEL" ]; then
     log "ERROR: sponsor nightly resolution failed — $(cat "$SPONSOR_SENTINEL")"
     log "       see \$SPONSOR_V2_DIR/N_nightly_runs.csv for the full history"
 fi
+
+# ── Publish the LIVE registries and queues into the work tree ────────────────
+#
+# `git add -f <path>` stages the WORK TREE copy. After the `git reset --hard
+# origin/main` above that is main's frozen version — NOT the live file, which
+# lives outside the work tree in $SPONSOR_V2_DIR / $SUBSTANCE_V2_DIR precisely
+# so the reset cannot revert it (see AGENTS/DEPLOY.md).
+#
+# So listing a queue in GENERATED_FILES is not enough, and this is not
+# hypothetical: config/substance_norm_v2/E_review_queue.csv has been listed
+# since 2026-08-22 and has published main's frozen copy every night since,
+# silently. The curation app reads its backlog from the deploy branch, so
+# without this it would show a queue that never changes and nothing would say
+# why.
+#
+# NOTE THE PATHS ARE HOST PATHS. SPONSOR_V2_DIR is the CONTAINER path
+# (/shiny_trials/sponsor_norm_v2); this script runs on the host, where the same
+# directory is a sibling of the repo checkout under the existing
+# /home/ruben/shiny_trials:/shiny_trials bind mount.
+SPONSOR_V2_DIR_HOST="${SPONSOR_V2_DIR_HOST:-$(dirname "$SCRIPT_DIR")/sponsor_norm_v2}"
+SUBSTANCE_V2_DIR_HOST="${SUBSTANCE_V2_DIR_HOST:-$(dirname "$SCRIPT_DIR")/substance_norm_v2}"
+
+publish_live() {   # $1 = live source dir, $2 = work-tree dir, $3 = filename
+    if [ -f "$1/$3" ]; then
+        cp -f "$1/$3" "$2/$3"
+    else
+        # Loud on purpose. A silent skip here republishes main's stale copy and
+        # looks exactly like success, which is the failure this whole block
+        # exists to end.
+        log "WARNING: $1/$3 not found — publishing main's frozen $2/$3 instead."
+    fi
+}
+
+for _f in E_review_queue.csv registry.csv; do
+    publish_live "$SPONSOR_V2_DIR_HOST"   "config/sponsor_norm_v2"   "$_f"
+    publish_live "$SUBSTANCE_V2_DIR_HOST" "config/substance_norm_v2" "$_f"
+done
 
 # 3. Commit generated files on deploy only and push to trigger Posit Cloud deploy.
 log "Step 3/4: Committing generated deploy artifacts..."
