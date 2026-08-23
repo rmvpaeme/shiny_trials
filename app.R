@@ -244,6 +244,12 @@ PIP_DECISIONS_PATH <- Sys.getenv("PIP_DECISIONS_PATH", unset = "config/pip_decis
 # attach_sponsor_labels(). Read fresh on every load, never cached.
 REVIEW_LEDGER_PATH <- Sys.getenv("REVIEW_LEDGER_PATH",
                                  unset = "config/review_ledger/review_decisions.csv")
+# Per-trial corrections from the curation app. In data/ and not config/ because
+# the nightly does `git reset --hard origin/main`, which reverts config/ every
+# night — the trap AGENTS/DEPLOY.md documents for SPONSOR_V2_DIR. It reaches
+# Posit the same way the label CSVs do, force-added onto the deploy branch.
+TRIAL_OVERRIDES_PATH <- Sys.getenv("TRIAL_OVERRIDES_PATH",
+                                   unset = "data/trial_overrides.csv")
 SPONSOR_QUEUE_PATH <- Sys.getenv("SPONSOR_QUEUE_PATH",
                                  unset = "config/sponsor_norm_v2/E_review_queue.csv")
 STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative")
@@ -960,6 +966,135 @@ attach_sponsor_labels <- function(d, data_dir) {
     !is.na(d$sponsor_clean)          ~ "pipeline",
     TRUE                             ~ "raw"
   )
+  d
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PER-TRIAL OVERRIDES — one reviewer's correction to one cell
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Sponsor and substance corrections do NOT come through here. They are written
+# into the v2 registries as decided_by = "human", so the fix applies to every
+# trial carrying that raw string. This file is for the fields that have no
+# registry to generalise through — phase, status, MedDRA, country, age group,
+# dates — where the only sensible scope is the single trial.
+#
+# Read on EVERY cache load and never written into trials_cache.rds, so a
+# correction goes live on the next app start without a rebuild. Same contract
+# read_human_sponsor_decisions() already has.
+#
+# Schema:
+#   _id, field_id, column, value, value_type, reviewer, decided_at_utc,
+#   decision_id, comment
+#
+# `column` is stored explicitly rather than re-derived from field_id, so that
+# renaming a field in curation_app/R/field_spec.R cannot silently re-point an
+# old override at a different cell. `value_type` is stored because the cache is
+# typed — participants_n is numeric, has_results logical, start_date a Date —
+# and casting from a bare string with no declared type is how "12" ends up in a
+# numeric column.
+#
+# THE DENY LIST IS THE LOAD-BEARING PART.
+#
+# Nothing here may touch sponsor_*, substance_label or any _raw column. The
+# field spec already routes those elsewhere, but a spec is a convention and this
+# file is hand-editable. Without the deny list a stray row punches a per-trial
+# sponsor label through and there are two sources of truth for the same value —
+# at which point the routing split is no longer enforced anywhere.
+trial_override_deny <- function(d) {
+  c("_id", "register", "data_processing_version",
+    "sponsor_label", "sponsor_clean", "sponsor_parent", "sponsor_type",
+    "sponsor_name", "sponsor_name_raw", "sponsor_label_source",
+    "human_label", "human_action", "substance_label",
+    grep("_raw$", names(d), value = TRUE))
+}
+
+attach_trial_overrides <- function(d, path = TRIAL_OVERRIDES_PATH) {
+  # Always present, so downstream code can rely on the column existing.
+  d$override_fields <- NA_character_
+  if (is.null(d) || !nrow(d) || !file.exists(path)) return(d)
+
+  ov <- tryCatch(
+    readr::read_csv(path, col_types = readr::cols(.default = readr::col_character()),
+                    progress = FALSE),
+    error = function(e) { message("Could not read trial overrides: ", e$message); NULL })
+  if (is.null(ov) || !nrow(ov)) return(d)
+  if (!all(c("_id", "column", "value") %in% names(ov))) {
+    message("Trial overrides: missing required columns — ignoring the file.")
+    return(d)
+  }
+  if (!"value_type"     %in% names(ov)) ov$value_type     <- NA_character_
+  if (!"decided_at_utc" %in% names(ov)) ov$decided_at_utc <- ""
+  if (!"decision_id"    %in% names(ov)) ov$decision_id    <- ""
+
+  deny <- trial_override_deny(d)
+  n_in <- nrow(ov)
+  refused <- ov |> dplyr::filter(column %in% deny)
+  if (nrow(refused)) {
+    message(sprintf("Trial overrides: REFUSED %d row(s) targeting %s — these route through the registries, not here.",
+                    nrow(refused),
+                    paste(sort(unique(refused$column)), collapse = ", ")))
+  }
+
+  ov <- ov |>
+    dplyr::filter(!is.na(`_id`), nzchar(`_id`), !is.na(column),
+                  column %in% names(d), !column %in% deny) |>
+    # Defensive latest-wins. export.R already emits one row per (_id, column),
+    # but this file is hand-editable and a duplicate must resolve the same way
+    # the decision store resolves it rather than by row order.
+    dplyr::arrange(decided_at_utc, decision_id) |>
+    dplyr::distinct(`_id`, column, .keep_all = TRUE)
+  if (!nrow(ov)) return(d)
+
+  cast <- function(v, type, target) {
+    if (identical(type, "numeric") || is.numeric(target))   return(suppressWarnings(as.numeric(v)))
+    if (identical(type, "integer") || is.integer(target))   return(suppressWarnings(as.integer(v)))
+    if (identical(type, "logical") || is.logical(target))   return(v %in% c("TRUE", "true", "T", "1", "yes", "Yes"))
+    if (identical(type, "date")    || inherits(target, "Date")) return(suppressWarnings(as.Date(v)))
+    as.character(v)
+  }
+
+  applied <- 0L
+  for (cn in unique(ov$column)) {
+    rows <- ov[ov$column == cn, ]
+    idx  <- match(rows$`_id`, d$`_id`)
+    keep <- !is.na(idx)
+    if (!any(keep)) next
+    idx <- idx[keep]; rows <- rows[keep, ]
+    # An empty value means "set this to NA" — a reviewer saying the register's
+    # value is wrong and there is no right one. Distinct from clearing the
+    # override, which removes the row entirely and is export.R's job.
+    val <- rows$value
+    val[!is.na(val) & !nzchar(val)] <- NA
+    d[[cn]][idx] <- cast(val, rows$value_type[[1]], d[[cn]])
+    d$override_fields[idx] <- ifelse(is.na(d$override_fields[idx]), cn,
+                                     paste(d$override_fields[idx], cn, sep = " / "))
+    applied <- applied + length(idx)
+  }
+
+  # Two derived columns are cheap to recompute and actively misleading if not:
+  # a three-country list beside "# Countries: 5" reads as a bug in the override,
+  # not in the derivation. Everything else derived stays non-editable in the
+  # field spec precisely so this list does not grow.
+  touched <- unique(ov$column)
+  if ("Member_state" %in% touched && "n_countries" %in% names(d)) {
+    hit <- !is.na(d$override_fields) & grepl("Member_state", d$override_fields, fixed = TRUE)
+    d$n_countries[hit] <- vapply(
+      str_split(d$Member_state[hit], fixed(" / ")),
+      function(x) length(unique(str_trim(x[nzchar(str_trim(x))]))), integer(1))
+  }
+  if (any(c("start_date", "trial_duration_end_date") %in% touched) &&
+      "trial_duration_days" %in% names(d)) {
+    hit <- !is.na(d$override_fields) &
+      grepl("start_date|trial_duration_end_date", d$override_fields)
+    dur <- as.numeric(d$trial_duration_end_date[hit] - d$start_date[hit])
+    dur[is.na(dur) | dur < 0 | dur >= 3650] <- NA_real_
+    d$trial_duration_days[hit] <- dur
+  }
+
+  message(sprintf("Applied %d trial override(s) across %d field(s)%s",
+                  applied, length(touched),
+                  if (nrow(refused)) sprintf(" (%d refused of %d)", nrow(refused), n_in) else ""))
   d
 }
 
@@ -2154,6 +2289,7 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
 
   # ── Sponsor labels: human curation > pipeline > raw ──────────────────────────
   result <- attach_sponsor_labels(result, dirname(db_path))
+  result <- attach_trial_overrides(result)
 
   result <- add_pip_analysis_cache(result)
 
@@ -2199,7 +2335,12 @@ load_trial_data <- function(force_rebuild = FALSE) {
       }, error = function(e) message("Could not attach substance labels: ", e$message))
     }
     if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
-    attach_sponsor_labels(d, dirname(DB_PATH))
+    d <- attach_sponsor_labels(d, dirname(DB_PATH))
+    # AFTER the sponsor labels, always. The deny list means ordering cannot
+    # actually matter — nothing here may touch a sponsor column — but the two
+    # are stated in this order so that stays true by construction rather than
+    # by luck if the deny list is ever loosened.
+    attach_trial_overrides(d)
   }
 
   if (!force_rebuild && cache_is_valid()) {

@@ -94,3 +94,8 @@ data/.sponsor_nightly_failed
 # decided. The residue file is diagnostics and has no reader at all.
 data/substance_rejected.csv
 data/substance_residue.csv
+
+# Per-trial curation overrides, written by curation_app/export.R and force-added
+# onto the deploy branch like the label CSVs. Never tracked on main: it is
+# reviewer output, not seed state, and config/ would be reverted nightly anyway.
+data/trial_overrides.csv
