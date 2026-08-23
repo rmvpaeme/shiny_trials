@@ -252,6 +252,85 @@ STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Admi
 # UI alone leaves it alone, or every deployment pays for a full rebuild.
 DATA_PROCESSING_VERSION <- "2026-08-v0.21.0-substance-registry-v2"
 
+# The recoded-field catalogue, SHARED with curation_app/. It lives there because
+# a Posit bundle is rooted at a directory and cannot reference paths above it, so
+# the curation app cannot reach up into the repo root — but this app can reach
+# down. manifest.json carries the path explicitly; if it is dropped from the
+# bundle this source() is what says so.
+#
+# Sourced HARD, not guarded with file.exists(). A missing spec would otherwise
+# render a trial-detail modal with no rows in it and nothing anywhere would
+# report that — the same silent-success failure the regression gate is built to
+# avoid.
+FIELD_SPEC_PATH <- Sys.getenv("FIELD_SPEC_PATH",
+                              unset = "curation_app/R/field_spec.R")
+source(FIELD_SPEC_PATH)
+
+# ── The trial-detail modal ────────────────────────────────────────────────────
+#
+# ONE definition, at file scope, called by both the Data Explorer table and the
+# Overview tab's recent-trials table. Those two carried byte-identical 122-line
+# copies of this until 2026-08-23, differing only in which reactive they read
+# from — so every field added to one had to be remembered for the other, and the
+# curation app would have been a third copy.
+#
+# The field list itself now lives in curation_app/R/field_spec.R, because the
+# curation app renders the SAME catalogue as an editable form. Everything below
+# is presentation only.
+trial_detail_ct <- function(row) {
+  ct <- trial_ct_number(row)
+  tags$p(style = "margin-bottom:12px;",
+    tags$b("CT Number: "),
+    tags$a(ct, href = trial_link(row), target = "_blank"),
+    if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
+      tagList(tags$br(), tags$b("Transition EudraCT Number: "),
+              show_val(row$transition_eudract_number))
+  )
+}
+
+# Raw beside normalised, for the fields where the register has its own words.
+trial_value_table <- function(rows) {
+  tags$table(class = "table table-condensed table-bordered",
+    style = "font-size:12px;margin-bottom:14px;",
+    tags$thead(tags$tr(
+      tags$th(style = "width:24%;", "Field"),
+      tags$th(style = "width:38%;", "Registry raw / source value"),
+      tags$th(style = "width:38%;", "Normalised dashboard value")
+    )),
+    tags$tbody(lapply(rows, function(r) {
+      tags$tr(
+        tags$th(r$label),
+        tags$td(show_val(r$raw)),
+        tags$td(show_val(r$norm))
+      )
+    }))
+  )
+}
+
+trial_status_table <- function(rows) {
+  tags$table(class = "table table-condensed table-bordered",
+    style = "font-size:12px;margin-bottom:0;",
+    tags$tbody(lapply(rows, function(r) {
+      tags$tr(tags$th(style = "width:34%;", r$label), tags$td(show_val(r$norm)))
+    }))
+  )
+}
+
+trial_detail_modal <- function(row) {
+  modalDialog(
+    title = tagList(icon("flask"), " Trial Detail"),
+    size  = "l",
+    easyClose = TRUE,
+    footer = modalButton("Close"),
+    tags$h4(show_val(row$Full_title)),
+    trial_detail_ct(row),
+    tags$h4("Registry Raw Values vs Normalised Values"),
+    trial_value_table(field_rows(row, group = "entities")),
+    tags$h4("Dates, Status, and Results"),
+    trial_status_table(field_rows(row, group = "status"))
+  )
+}
+
 # ══════════════════════════════════════════════════════════════════════════════
 # 2. THEMES
 # ══════════════════════════════════════════════════════════════════════════════
@@ -3859,125 +3938,7 @@ server <- function(input, output, session) {
   observeEvent(input$recent_trials_table_rows_selected, {
     idx <- input$recent_trials_table_rows_selected
     req(length(idx) == 1)
-    row <- recent_trials_src()[idx, ]
-    row_val <- function(name) {
-      if (!name %in% names(row)) return(NA_character_)
-      val <- row[[name]][[1]]
-      if (length(val) == 0 || is.null(val)) NA_character_ else as.character(val)
-    }
-    show_val <- function(x) {
-      x <- as.character(x)
-      if (length(x) == 0 || is.na(x) || !nzchar(str_trim(x)) || identical(x, "NA")) "—" else x
-    }
-    bool_label <- function(x) {
-      if (isTRUE(x)) "Yes" else if (identical(x, FALSE)) "No" else "Unknown"
-    }
-    result_source_note <- function() {
-      raw <- row_val("results_source_raw")
-      if (!is.na(raw) && nzchar(str_trim(raw))) return(raw)
-      if (identical(row_val("register"), "CTIS")) {
-        "Derived from CTIS resultsFirstReceived; raw value not retained in this cache."
-      } else if (identical(row_val("register"), "EUCTR")) {
-        "Derived from EUCTR endPoints.endPoint.readyForValues; raw value not retained in this cache."
-      } else {
-        "Raw result source not retained in this cache."
-      }
-    }
-    duration_note <- function() {
-      days <- suppressWarnings(as.numeric(row_val("trial_duration_days")))
-      if (is.na(days) || !is.finite(days)) return("—")
-      sprintf("%.1f months (%s days)", days / 30.4375,
-              format(round(days), big.mark = ",", scientific = FALSE))
-    }
-    value_table <- function(rows) {
-      tags$table(class = "table table-condensed table-bordered",
-        style = "font-size:12px;margin-bottom:14px;",
-        tags$thead(tags$tr(
-          tags$th(style = "width:24%;", "Field"),
-          tags$th(style = "width:38%;", "Registry raw / source value"),
-          tags$th(style = "width:38%;", "Normalised dashboard value")
-        )),
-        tags$tbody(lapply(rows, function(r) {
-          tags$tr(
-            tags$th(r[[1]]),
-            tags$td(show_val(r[[2]])),
-            tags$td(show_val(r[[3]]))
-          )
-        }))
-      )
-    }
-    status_table <- function(rows) {
-      tags$table(class = "table table-condensed table-bordered",
-        style = "font-size:12px;margin-bottom:0;",
-        tags$tbody(lapply(rows, function(r) {
-          tags$tr(tags$th(style = "width:34%;", r[[1]]), tags$td(show_val(r[[2]])))
-        }))
-      )
-    }
-    ct_raw  <- row$CT_number
-    reg     <- row$register
-    link <- if (reg == "EUCTR") {
-      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-      cc  <- str_extract(row$`_id`, "[A-Z]{2,3}$")
-      paste0("https://www.clinicaltrialsregister.eu/ctr-search/trial/", ct1, "/", cc)
-    } else {
-      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-      paste0("https://euclinicaltrials.eu/ctis-public/view/", ct1)
-    }
-    ct_display <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-    showModal(modalDialog(
-      title = tagList(icon("flask"), " Trial Detail"),
-      size  = "l",
-      easyClose = TRUE,
-      footer = modalButton("Close"),
-      tags$h4(show_val(row$Full_title)),
-      tags$p(style = "margin-bottom:12px;",
-        tags$b("CT Number: "),
-        tags$a(ct_display, href = link, target = "_blank"),
-        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
-          tagList(tags$br(), tags$b("Transition EudraCT Number: "),
-                  show_val(row$transition_eudract_number))
-      ),
-      tags$h4("Registry Raw Values vs Normalised Values"),
-      value_table(list(
-        list("Sponsor", coalesce(row_val("sponsor_name_raw"),
-                                 row_val("b1_sponsor.b11_name_of_sponsor"),
-                                 row_val("authorizedApplication.authorizedPartI.sponsors.organisation.name")),
-             paste(show_val(row_val("sponsor_name")),
-                   paste0("(final label: ", show_val(row_val("sponsor_label")), ")"))),
-        list("Sponsor type", coalesce(row_val("b1_sponsor.b31_and_b32_status_of_the_sponsor"),
-                                      row_val("authorizedApplication.authorizedPartI.sponsors.commercial")),
-             row_val("sponsor_type")),
-        list("Product", coalesce(row_val("DIMP_product_name_raw"), row_val("DIMP_product_name")),
-             row_val("DIMP_product_name")),
-        list("INN / Generic name", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_inn_name")),
-             row_val("DIMP_inn_name")),
-        list("Active substance", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_product_name_raw"),
-                                          row_val("DIMP_inn_name"), row_val("DIMP_product_name")),
-             row_val("substance_label")),
-        list("MedDRA organ class", coalesce(row_val("MEDDRA_organ_class_raw"), row_val("MEDDRA_organ_class")),
-             row_val("MEDDRA_organ_class")),
-        list("MedDRA term", coalesce(row_val("MEDDRA_term_raw"), row_val("MEDDRA_term")),
-             row_val("MEDDRA_term"))
-      )),
-      tags$h4("Dates, Status, and Results"),
-      status_table(list(
-        list("Register", reg),
-        list("Status", paste(show_val(row_val("status_raw")),
-                              paste0("(category: ", show_val(row_val("status")), ")"))),
-        list("Phase", row_val("phase")),
-        list("Participants", ifelse(is.na(row$participants_n), "—",
-                                    format(row$participants_n, big.mark = ",", scientific = FALSE))),
-        list("Countries", row_val("Member_state")),
-        list("Submitted", as.character(coalesce(row$submission_date_parsed, NA))),
-        list("Start Date", as.character(coalesce(row$start_date, NA))),
-        list("Decision Date", as.character(coalesce(row$decision_date, NA))),
-        list("Trial End Date", as.character(coalesce(row$trial_duration_end_date, NA))),
-        list("Trial duration", duration_note()),
-        list("Results reported", if ("has_results" %in% names(row)) bool_label(row$has_results[[1]]) else "Unknown"),
-        list("Result source", result_source_note())
-      ))
-    ))
+    showModal(trial_detail_modal(recent_trials_src()[idx, ]))
   })
 
   output$plot_cumulative <- renderPlotly({
@@ -4167,125 +4128,7 @@ server <- function(input, output, session) {
   observeEvent(input$trials_table_rows_selected, {
     idx <- input$trials_table_rows_selected
     req(length(idx) == 1)
-    row <- filt()[idx, ]
-    row_val <- function(name) {
-      if (!name %in% names(row)) return(NA_character_)
-      val <- row[[name]][[1]]
-      if (length(val) == 0 || is.null(val)) NA_character_ else as.character(val)
-    }
-    show_val <- function(x) {
-      x <- as.character(x)
-      if (length(x) == 0 || is.na(x) || !nzchar(str_trim(x)) || identical(x, "NA")) "—" else x
-    }
-    bool_label <- function(x) {
-      if (isTRUE(x)) "Yes" else if (identical(x, FALSE)) "No" else "Unknown"
-    }
-    result_source_note <- function() {
-      raw <- row_val("results_source_raw")
-      if (!is.na(raw) && nzchar(str_trim(raw))) return(raw)
-      if (identical(row_val("register"), "CTIS")) {
-        "Derived from CTIS resultsFirstReceived; raw value not retained in this cache."
-      } else if (identical(row_val("register"), "EUCTR")) {
-        "Derived from EUCTR endPoints.endPoint.readyForValues; raw value not retained in this cache."
-      } else {
-        "Raw result source not retained in this cache."
-      }
-    }
-    duration_note <- function() {
-      days <- suppressWarnings(as.numeric(row_val("trial_duration_days")))
-      if (is.na(days) || !is.finite(days)) return("—")
-      sprintf("%.1f months (%s days)", days / 30.4375,
-              format(round(days), big.mark = ",", scientific = FALSE))
-    }
-    value_table <- function(rows) {
-      tags$table(class = "table table-condensed table-bordered",
-        style = "font-size:12px;margin-bottom:14px;",
-        tags$thead(tags$tr(
-          tags$th(style = "width:24%;", "Field"),
-          tags$th(style = "width:38%;", "Registry raw / source value"),
-          tags$th(style = "width:38%;", "Normalised dashboard value")
-        )),
-        tags$tbody(lapply(rows, function(r) {
-          tags$tr(
-            tags$th(r[[1]]),
-            tags$td(show_val(r[[2]])),
-            tags$td(show_val(r[[3]]))
-          )
-        }))
-      )
-    }
-    status_table <- function(rows) {
-      tags$table(class = "table table-condensed table-bordered",
-        style = "font-size:12px;margin-bottom:0;",
-        tags$tbody(lapply(rows, function(r) {
-          tags$tr(tags$th(style = "width:34%;", r[[1]]), tags$td(show_val(r[[2]])))
-        }))
-      )
-    }
-    ct_raw  <- row$CT_number
-    reg     <- row$register
-    link <- if (reg == "EUCTR") {
-      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-      cc  <- str_extract(row$`_id`, "[A-Z]{2,3}$")
-      paste0("https://www.clinicaltrialsregister.eu/ctr-search/trial/", ct1, "/", cc)
-    } else {
-      ct1 <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-      paste0("https://euclinicaltrials.eu/ctis-public/view/", ct1)
-    }
-    ct_display <- str_trim(str_split_fixed(ct_raw, " / ", 2)[, 1])
-    showModal(modalDialog(
-      title = tagList(icon("flask"), " Trial Detail"),
-      size  = "l",
-      easyClose = TRUE,
-      footer = modalButton("Close"),
-      tags$h4(show_val(row$Full_title)),
-      tags$p(style = "margin-bottom:12px;",
-        tags$b("CT Number: "),
-        tags$a(ct_display, href = link, target = "_blank"),
-        if (!is.null(row$transition_eudract_number) && !is.na(row$transition_eudract_number))
-          tagList(tags$br(), tags$b("Transition EudraCT Number: "),
-                  show_val(row$transition_eudract_number))
-      ),
-      tags$h4("Registry Raw Values vs Normalised Values"),
-      value_table(list(
-        list("Sponsor", coalesce(row_val("sponsor_name_raw"),
-                                 row_val("b1_sponsor.b11_name_of_sponsor"),
-                                 row_val("authorizedApplication.authorizedPartI.sponsors.organisation.name")),
-             paste(show_val(row_val("sponsor_name")),
-                   paste0("(final label: ", show_val(row_val("sponsor_label")), ")"))),
-        list("Sponsor type", coalesce(row_val("b1_sponsor.b31_and_b32_status_of_the_sponsor"),
-                                      row_val("authorizedApplication.authorizedPartI.sponsors.commercial")),
-             row_val("sponsor_type")),
-        list("Product", coalesce(row_val("DIMP_product_name_raw"), row_val("DIMP_product_name")),
-             row_val("DIMP_product_name")),
-        list("INN / Generic name", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_inn_name")),
-             row_val("DIMP_inn_name")),
-        list("Active substance", coalesce(row_val("DIMP_inn_name_raw"), row_val("DIMP_product_name_raw"),
-                                          row_val("DIMP_inn_name"), row_val("DIMP_product_name")),
-             row_val("substance_label")),
-        list("MedDRA organ class", coalesce(row_val("MEDDRA_organ_class_raw"), row_val("MEDDRA_organ_class")),
-             row_val("MEDDRA_organ_class")),
-        list("MedDRA term", coalesce(row_val("MEDDRA_term_raw"), row_val("MEDDRA_term")),
-             row_val("MEDDRA_term"))
-      )),
-      tags$h4("Dates, Status, and Results"),
-      status_table(list(
-        list("Register", reg),
-        list("Status", paste(show_val(row_val("status_raw")),
-                              paste0("(category: ", show_val(row_val("status")), ")"))),
-        list("Phase", row_val("phase")),
-        list("Participants", ifelse(is.na(row$participants_n), "—",
-                                    format(row$participants_n, big.mark = ",", scientific = FALSE))),
-        list("Countries", row_val("Member_state")),
-        list("Submitted", as.character(coalesce(row$submission_date_parsed, NA))),
-        list("Start Date", as.character(coalesce(row$start_date, NA))),
-        list("Decision Date", as.character(coalesce(row$decision_date, NA))),
-        list("Trial End Date", as.character(coalesce(row$trial_duration_end_date, NA))),
-        list("Trial duration", duration_note()),
-        list("Results reported", if ("has_results" %in% names(row)) bool_label(row$has_results[[1]]) else "Unknown"),
-        list("Result source", result_source_note())
-      ))
-    ))
+    showModal(trial_detail_modal(filt()[idx, ]))
   })
 
   output$dl_filters<-downloadHandler(
