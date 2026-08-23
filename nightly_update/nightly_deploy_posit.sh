@@ -125,7 +125,20 @@ log "Step 3/4: Committing generated deploy artifacts..."
 # -f is REQUIRED, not defensive: data/*labels*, data/*log* and the raw exports are
 # gitignored so they never reach main, and a plain `git add` skips them silently —
 # the deploy would push a cache with no label CSVs beside it and nothing would say so.
-git add -f "${GENERATED_FILES[@]}" >> "$LOG_FILE" 2>&1
+# Only stage what exists. A `git add -f` on a missing pathspec is FATAL, and
+# under `set -e` that aborts the deploy before it pushes — so a blocked
+# regression gate, which is a SUCCESSFUL outcome (yesterday's labels are kept on
+# purpose), would take the whole deploy down with it. E_emit does not write its
+# log when the gate blocks, which is exactly when this fires.
+STAGE_FILES=()
+for _f in "${GENERATED_FILES[@]}"; do
+    [ -e "$_f" ] && STAGE_FILES+=("$_f")
+done
+if [ ${#STAGE_FILES[@]} -eq 0 ]; then
+    log "WARNING: none of the generated files exist — nothing to commit."
+else
+    git add -f "${STAGE_FILES[@]}" >> "$LOG_FILE" 2>&1
+fi
 if git diff --cached --quiet; then
     log "No generated changes, skipping commit."
 else
