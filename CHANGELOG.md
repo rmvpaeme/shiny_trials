@@ -1,5 +1,48 @@
 # Changelog
 
+## v0.21.1 — 2026-08-23
+
+### The substance and sponsor filters search the raw register strings
+
+Normalisation gave the filters one entry per substance and per sponsor, but it
+also took away the strings people actually search with. Someone looking for the
+Keytruda trials typed `KEYTRUDA` and found nothing, because the entry is
+`Pembrolizumab`. Both filters now match on every raw string the pipeline folded
+into a label, while continuing to display and apply the normalised name only.
+
+- **Hidden alias matching.** Each choice carries an `alias` field holding the raw
+  variants behind its label, and the filters name that field in selectize's
+  `searchField`. Selectize renders `labelField` only, so the aliases are matched
+  but never shown: the dropdown, the filter chips and the URL filter state stay
+  normalised, and `value` is still the label every downstream filter joins on.
+- **What now resolves.** `KEYTRUDA 25 mg` → Pembrolizumab, `OPDIVO 10 mg` →
+  Nivolumab, `CALCIUM FOLINATE` → Leucovorin, `DOXORUBICIN HYDROCHLORIDE` →
+  Doxorubicin; `GlaxoSmithKline AB` → GlaxoSmithKline, `Wyeth Consumer
+  Healthcare` → Wyeth, `Biogen Idec Ltd.` → Biogen. Searching the normalised
+  name behaves exactly as before.
+- **5,649 substance labels and 5,168 sponsor labels carry aliases**, about 1 MB
+  of strings held in memory and built once at app start (0.07s), not per session.
+- **Two sources, for a reason.** Substance aliases come from
+  `data/substance_normalisation_log_v2.csv`, the pipeline's own raw → clean
+  decision, one row per raw string. The trial rows cannot supply them: a trial
+  with three substances carries three raw strings and a single combined label,
+  so nothing there says which raw became which label. Sponsor aliases come from
+  the trial rows instead (`sponsor_name_raw` beside `sponsor_label`), because
+  that is the only place a human-curated or raw-fallback label appears at all —
+  the pipeline log does not know about either.
+- **Capped at 200 variants per label**, ordered by trial count. `Placebo` alone
+  folds in 1,747 raw strings and the whole blob would otherwise ship to the
+  browser.
+- Choices for these two inputs must now go through `sponsor_filter_choices()` /
+  `substance_filter_choices()`. Shiny's server-side search greps
+  `data[["alias"]]`; when the column is missing that grep returns a zero-length
+  result that wipes the match vector, so the box would return **nothing** rather
+  than falling back to the label. All three call sites, including the two
+  comparison presets, were updated.
+
+`DATA_PROCESSING_VERSION` is deliberately unchanged: this release adds no column
+and alters no cached value, so it must not invalidate `trials_cache.rds`.
+
 ## v0.21.0 — 2026-08-22
 
 ### Substance normalisation rebuilt on a chemistry registry

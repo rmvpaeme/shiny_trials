@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.12.1** | R Shiny | EUCTR + CTIS | 16,209 deduplicated trials in the current local cache | MIT
+**v0.21.1** | R Shiny | EUCTR + CTIS | 50,487 deduplicated trials in the current local cache | MIT
 
 Authors: Ruben Van Paemel and Levi Hoste
 
@@ -70,6 +70,8 @@ Most charts and tables respond to the same sidebar filters:
 - MedDRA organ class and condition term.
 - Product / substance, backed by pre-computed substance labels.
 
+The Product / Substance and Sponsor / Company filters offer normalised names, but they also match the raw strings the registers carry: `KEYTRUDA 25 mg` finds `Pembrolizumab`, `GlaxoSmithKline AB` finds `GlaxoSmithKline`. The raw variants are matched but never displayed, and the value applied to the data is always the normalised label.
+
 Filter state is encoded in the URL as a base64 JSON `?f=` query parameter, so filtered views can be bookmarked and shared.
 
 ## How The Data Pipeline Works
@@ -92,6 +94,7 @@ app.R startup
   -> load trials_cache.rds
   -> sponsor label = human curation > pipeline label > raw sponsor
   -> join data/trial_substance_labels.csv
+  -> build hidden filter search aliases (substance log + trial sponsor raws)
   -> serve Shiny UI
 ```
 
@@ -117,7 +120,7 @@ Important generated files:
 | `data/trial_substance_labels.csv` | App-facing normalised substance labels |
 | `data/sponsor_normalisation_log_v2.csv` | Per-string sponsor audit log for the preprocessing report |
 | `data/trial_substance_labels_baseline.csv` | Frozen old-pipeline substance labels for the regression gate |
-| `data/substance_normalisation_log_v2.csv` | Per-string substance audit log for the preprocessing report |
+| `data/substance_normalisation_log_v2.csv` | Per-string substance audit log for the preprocessing report; also read at app startup for the substance filter's raw-string search |
 | `data/substance_rejected.csv` | Strings judged not to name a substance — auditable, not silently dropped |
 | `data/*_normalisation_log.csv` | Country/MedDRA/phase/status audit inputs for the preprocessing report |
 | `config/sponsor_norm_v2/registry.csv` | The canonical sponsor registry — committed, not generated per run |
@@ -677,26 +680,20 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ## Latest Release
 
-### v0.21.0 - 2026-08-22
+### v0.21.1 - 2026-08-23
 
-Substance normalisation rebuilt on a chemistry registry. ChEMBL and the EMA
-medicines report are consulted before any model, resolving 69% of
-trial-substance pairs deterministically; 91.9% of pairs now carry a substance
-against 7,003 distinct names left unmatched previously. Canonical names are the
-INN base, so salts, esters and brands fold together, and European names are used
-where they differ from American ones. Dosage text, placeholders and drug-class
-names are recognised as non-substances and excluded from the filter rather than
-displayed. New substances are resolved during the nightly update.
-
-### v0.20.0 - 2026-08-16
-
-- **Sponsor normalisation rebuilt on a model-built canonical registry**, replacing the deterministic matcher (~4,200 lines of R plus 16,545 committed alias rows). All 16,594 distinct raw strings are assigned and all 50,359 trial rows are labelled, across 6,954 canonical sponsors, with **zero regressions** against the old pipeline and 234 improvements. Built for $10.31 against a $60 cap enforced in code.
-- **Human curation now outranks the pipeline.** The display label resolves as human curation → pipeline canonical → raw string, and the review ledger is read on every app load rather than baked into the cache.
-- **New sponsors are resolved nightly.** Strings the registry has never seen are matched against it automatically, so newly registered trials no longer fall back to unnormalised names.
-- **New curation reviewer app** (`curation_app/`) for confirming low-confidence normalisations, with impact thresholds and a seeded tail audit reported with a Wilson interval.
-- Substance overrides pruned from 9,625 rows to 636 with byte-identical labels; a derivation layer whose replay harness rejected three of the five rules originally drafted.
-- Fixes: URL filter-state restore for dynamic selectize inputs, a `plot_phase_cols` crash, and several comparison-tab changes.
-- Invalidated the cache through a new `DATA_PROCESSING_VERSION`.
+The Product / Substance and Sponsor / Company filters now match the raw strings
+the registers carry, not only the normalised label. `KEYTRUDA 25 mg` finds
+`Pembrolizumab`, `CALCIUM FOLINATE` finds `Leucovorin`, `GlaxoSmithKline AB`
+finds `GlaxoSmithKline`. Every raw variant the pipeline folded into a label is
+carried beside it in a hidden `alias` field named in selectize's `searchField`,
+so the variants are matched but never rendered: the dropdown, the filter chips
+and the URL filter state stay normalised, and the value applied to the data is
+still the label. Substance variants come from the normalisation log, sponsor
+variants from the trial rows — the only place a human-curated or raw-fallback
+label appears. 5,649 substance labels and 5,168 sponsor labels carry aliases,
+capped at 200 variants each and built once at app start.
+`DATA_PROCESSING_VERSION` is unchanged, so no cache rebuild is required.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
