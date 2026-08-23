@@ -25,7 +25,35 @@ if (!file.exists(cache_path)) {
 
 source(spec_path)
 
-cols <- names(readRDS(cache_path))
+cached <- readRDS(cache_path)
+cols   <- names(cached)
+
+# A cache older than the spec cannot judge it.
+#
+# The spec is allowed to run ahead of the cache: adding a column to
+# prepare_trial_data() and naming it here is one commit, but the cache is only
+# rebuilt by the nightly (or by a slow local run). Reporting that as a spec
+# error would fail this test for a reason the developer cannot fix in the moment,
+# which is how a test stops being read.
+#
+# Exit 2 = could not measure, following the convention E_emit.R already
+# establishes: 1 means a problem was measured, 2 means the check did not run.
+# The caller has to be able to tell those apart.
+app_version <- local({
+  ln <- grep("^DATA_PROCESSING_VERSION <-", readLines("app.R", warn = FALSE), value = TRUE)
+  if (length(ln)) sub('.*"(.*)".*', "\\1", ln[[1]]) else NA_character_
+})
+cache_version <- unique(cached$data_processing_version)
+
+if (!is.na(app_version) && !identical(cache_version, app_version)) {
+  message("COULD NOT MEASURE: ", cache_path, " predates the current spec.")
+  message("  cache built by : ", paste(cache_version, collapse = ", "))
+  message("  app.R expects  : ", app_version)
+  message("  Rebuild it, or point CACHE_PATH at a current one:")
+  message("    Rscript rebuild_cache.R")
+  message("  Skipping rather than failing — the spec may well be correct.")
+  quit(save = "no", status = 2L)
+}
 failures <- character()
 note <- function(msg) failures <<- c(failures, msg)
 

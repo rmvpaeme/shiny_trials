@@ -173,21 +173,27 @@ TRIAL_FIELD_SPEC <- list(
        raw_cols = c("MEDDRA_term_raw", "MEDDRA_term"),
        norm_col = "MEDDRA_term", render = NULL),
 
+  list(id = "age_group", label = "Age group", group = "entities",
+       raw_cols = "age_group_raw", norm_col = "age_group", render = NULL),
+
+  list(id = "is_orphan", label = "Orphan designation", group = "entities",
+       raw_cols = "is_orphan_raw", norm_col = "is_orphan", render = NULL),
+
   list(id = "register", label = "Register", group = "status",
        raw_cols = character(), norm_col = "register", render = NULL),
 
   list(id = "status", label = "Status", group = "status",
        raw_cols = "status_raw", norm_col = "status", render = fmt_status),
 
-  list(id = "phase", label = "Phase", group = "status",
-       raw_cols = character(), norm_col = "phase", render = NULL),
+  list(id = "phase", label = "Phase", group = "entities",
+       raw_cols = "phase_raw", norm_col = "phase", render = NULL),
 
-  list(id = "participants", label = "Participants", group = "status",
-       raw_cols = character(), norm_col = "participants_n",
+  list(id = "participants", label = "Participants", group = "entities",
+       raw_cols = "participants_n_raw", norm_col = "participants_n",
        render = fmt_participants),
 
-  list(id = "countries", label = "Countries", group = "status",
-       raw_cols = character(), norm_col = "Member_state", render = NULL),
+  list(id = "countries", label = "Countries", group = "entities",
+       raw_cols = "Member_state_raw", norm_col = "Member_state", render = NULL),
 
   list(id = "submitted", label = "Submitted", group = "status",
        raw_cols = "submission_date", norm_col = "submission_date_parsed",
