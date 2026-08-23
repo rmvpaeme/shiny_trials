@@ -188,17 +188,15 @@ tryCatch({
                                     substance_label = readr::col_character()))
     d <- dplyr::left_join(d, sub_labels, by = "_id")
   }
-  sponsor_labels_path <- file.path(dirname(DB_PATH), "trial_sponsor_labels.csv")
-  if (file.exists(sponsor_labels_path)) {
-    d <- dplyr::select(d, -dplyr::any_of(c("sponsor_clean", "sponsor_label")))
-    slabels <- readr::read_csv(sponsor_labels_path, show_col_types = FALSE,
-                               col_types = readr::cols(
-                                 `_id`         = readr::col_character(),
-                                 sponsor_clean = readr::col_character()))
-    slabels <- dplyr::select(slabels, `_id`, sponsor_clean)
-    d <- dplyr::left_join(d, slabels, by = "_id")
-    d$sponsor_label <- dplyr::coalesce(d$sponsor_clean, d$sponsor_name)
-  }
+  # Use app.R's own precedence rather than a second copy of it.
+  #
+  # This block used to re-derive sponsor_label as coalesce(sponsor_clean,
+  # sponsor_name), which is attach_sponsor_labels() minus the human-curation
+  # layer. load_trial_data() re-applies the real rule at app start, so the app
+  # was right — but rmarkdown/preprocessing.Rmd reads this saved cache directly
+  # and therefore audited labels the app never shows. One rule, one place.
+  d <- attach_sponsor_labels(d, dirname(DB_PATH))
+  d <- attach_trial_overrides(d)
   d <- add_pip_analysis_cache(d)
   saveRDS(d, CACHE_PATH)
   message("=== Cache PIP helper refresh complete ===")
