@@ -250,7 +250,7 @@ STATUS_CHOICES <- c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Admi
 # Cache-invalidation key, NOT the app version: bump it only when the data that
 # lands in trials_cache.rds changes shape or meaning. A release that touches the
 # UI alone leaves it alone, or every deployment pays for a full rebuild.
-DATA_PROCESSING_VERSION <- "2026-08-v0.21.0-substance-registry-v2"
+DATA_PROCESSING_VERSION <- "2026-08-v0.22.0-curation-raw-retention"
 
 # The recoded-field catalogue, SHARED with curation_app/. It lives there because
 # a Posit bundle is rooted at a directory and cannot reference paths above it, so
@@ -1242,6 +1242,13 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
           na.rm = TRUE, remove = TRUE) %>%
     pull(Member_state)
 
+  # Keep the register's own words. The reviewer app shows raw beside normalised
+  # and has no database to fall back on — data/*.sqlite is gitignored and never
+  # reaches Posit — so anything not carried in the cache cannot be reviewed.
+  # This is the vector the country log already uses; assigning it here is safe
+  # because the unite() above ran on a SELECT and left `result` alone.
+  result$Member_state_raw <- raw_country_for_log
+
   # Clean countries
   message("Cleaning countries...")
   result <- result %>% mutate(
@@ -1827,6 +1834,15 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       suppressWarnings(as.integer(substr(transition_eudract_number, 1, 4))),
       year
     ),
+    # The three source columns are dropped below, so this is the only record of
+    # what the register reported before parse_participant_count() took the max
+    # of a " / " list.
+    participants_n_raw = case_when(
+      register == "EUCTR" ~ as.character(f422_in_the_whole_clinical_trial),
+      register == "CTIS"  ~ coalesce(
+        as.character(totalNumberEnrolled),
+        as.character(`authorizedApplication.authorizedPartI.rowSubjectCount`)),
+      TRUE ~ NA_character_),
     participants_n = {
       euctr_n <- vapply(
         as.character(f422_in_the_whole_clinical_trial),
@@ -1867,6 +1883,23 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       tt <- str_replace_all(tt, "[^a-z0-9 ]", " ")
       tt <- str_squish(tt)
       substr(tt, 1, 80)
+    },
+    # EUCTR states age eligibility as three separate booleans, so "the raw value"
+    # has to be reassembled from whichever are true — there is no single column
+    # to keep. CTIS sends one string and it is kept verbatim.
+    age_group_raw = {
+      flag <- function(v, name) ifelse(
+        str_detect(tolower(coalesce(as.character(v), "")), "yes|true"), name, NA_character_)
+      bits <- cbind(flag(f11_trial_has_subjects_under_18, "under 18"),
+                    flag(f12_adults_1864_years,           "adults 18-64"),
+                    flag(f13_elderly_65_years,            "elderly 65+"))
+      euctr_raw <- apply(bits, 1, function(r) {
+        r <- r[!is.na(r)]
+        if (length(r) == 0) NA_character_ else paste(r, collapse = " / ")
+      })
+      case_when(register == "CTIS"  ~ as.character(ageGroup),
+                register == "EUCTR" ~ euctr_raw,
+                TRUE                ~ NA_character_)
     },
     # Age group: derived from EUCTR boolean flags or CTIS ageGroup string.
     # "Paediatric & Adult" means the trial enrolls subjects across the under-18 and 18+ boundary.
@@ -2066,6 +2099,11 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
       if_else(register == "CTIS"  & !is.na(ctis_phases),  ctis_phases,  NA_character_))
   })
 
+  # Same reasoning as Member_state_raw: the EUCTR phase flags and the CTIS
+  # trialPhase string are both dropped below, so this vector is the only
+  # surviving record of what the register actually said.
+  result$phase_raw <- raw_phase_for_log
+
   write_norm_log(raw_phase_for_log, result$phase, result$register, "phase", dirname(db_path))
 
   # ── Results posted ──────────────────────────────────────────────────────────
@@ -2092,6 +2130,8 @@ prepare_trial_data <- function(db_path = DB_PATH, collection = DB_COLLECTION) {
   ctis_orphan_raw  <- as.character(
     result[["authorizedApplication.authorizedPartI.products.orphanDrugDesigNumber"]])
   result <- result %>% mutate(
+    # Retained before the source columns are dropped below.
+    is_orphan_raw = coalesce(euctr_orphan_raw, ctis_orphan_raw),
     is_orphan = case_when(
       register == "EUCTR" & str_detect(tolower(coalesce(euctr_orphan_raw, "")), "\\byes\\b") ~ "Yes",
       register == "EUCTR" & !is.na(euctr_orphan_raw)                                        ~ "No",
@@ -2134,6 +2174,7 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
                      "member_state_status_raw", "pip_active_substances",
                      "pip_substance_tokens", "trial_duration_days",
                      "participants_n",
+                     "phase_raw", "Member_state_raw",
                      "data_processing_version")
   !is.null(d) &&
     all(required_cols %in% names(d)) &&
@@ -2141,14 +2182,9 @@ cache_is_valid <- function(cp = CACHE_PATH, dp = DB_PATH) {
 }
 
 load_trial_data <- function(force_rebuild = FALSE) {
-  if (!force_rebuild && cache_is_valid()) {
-    message("Loading cache..."); t0 <- Sys.time()
-    d <- readRDS(CACHE_PATH)
-    message(sprintf("Cached: %s trials in %.1fs",
-                    format(nrow(d), big.mark=","),
-                    as.numeric(Sys.time()-t0, units="secs")))
-    # Always re-attach fresh labels from CSV so pipeline updates are reflected
-    # without a full cache rebuild.
+  # Labels are re-read from CSV on EVERY cache load, so a pipeline run or a
+  # curation decision goes live without rebuilding trials_cache.rds.
+  attach_live_labels <- function(d) {
     substance_labels_path <- file.path(dirname(DB_PATH), "trial_substance_labels.csv")
     if (file.exists(substance_labels_path)) {
       tryCatch({
@@ -2163,11 +2199,40 @@ load_trial_data <- function(force_rebuild = FALSE) {
       }, error = function(e) message("Could not attach substance labels: ", e$message))
     }
     if (!"substance_label" %in% names(d)) d$substance_label <- NA_character_
+    attach_sponsor_labels(d, dirname(DB_PATH))
+  }
 
-    # Sponsor labels AND human curation are re-applied on every cache load, so a
-    # reviewer's decision goes live without rebuilding trials_cache.rds.
-    d <- attach_sponsor_labels(d, dirname(DB_PATH))
-    return(d)
+  if (!force_rebuild && cache_is_valid()) {
+    message("Loading cache..."); t0 <- Sys.time()
+    d <- readRDS(CACHE_PATH)
+    message(sprintf("Cached: %s trials in %.1fs",
+                    format(nrow(d), big.mark=","),
+                    as.numeric(Sys.time()-t0, units="secs")))
+    return(attach_live_labels(d))
+  }
+
+  # A STALE CACHE BEATS NO DASHBOARD.
+  #
+  # cache_is_valid() also fails when the cache merely predates the current
+  # DATA_PROCESSING_VERSION, and the deployed app has no database to rebuild
+  # from — data/*.sqlite is gitignored and never reaches Posit. Returning NULL
+  # there serves an empty dashboard over what is usually a cosmetic mismatch:
+  # a version bump that added display-only columns costs two em-dashes in the
+  # trial-detail modal and nothing else.
+  #
+  # The nightly normally makes this unreachable, because it rebuilds the cache
+  # on the server and commits app.R and trials_cache.rds to `deploy` together.
+  # This is the path for when that pairing breaks.
+  if (!file.exists(DB_PATH) && file.exists(CACHE_PATH)) {
+    d <- tryCatch(readRDS(CACHE_PATH), error = function(e) NULL)
+    if (!is.null(d)) {
+      message("*** STALE CACHE, NO DATABASE — serving it anyway. ***")
+      message("    cache version : ", paste(unique(d$data_processing_version), collapse = ", "))
+      message("    app expects   : ", DATA_PROCESSING_VERSION)
+      message("    Fields added since that build render as em-dashes until the")
+      message("    nightly rebuilds. Everything else is current.")
+      return(attach_live_labels(d))
+    }
   }
   if (!file.exists(DB_PATH)) { message("No database."); return(NULL) }
   message("Rebuilding..."); t0 <- Sys.time()
