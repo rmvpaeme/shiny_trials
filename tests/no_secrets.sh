@@ -62,7 +62,7 @@ echo
 echo "3. no tracked file contains a credential"
 # Excludes the chemistry caches: drug synonyms like gsk-1120212 trip naive
 # key-shaped patterns, and those files are 5.7 MB of known-safe reference data.
-PATTERNS='\$argon2|\$2[aby]\$[0-9]{2}\$|postgres(ql)?://[^ "]*:[^ "@]{4,}@|mysql://[^ ]*:[^@]*@|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{25,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-ant-[A-Za-z0-9_-]{20,}'
+PATTERNS='\$argon2|\$7\$[A-Za-z0-9./]{16,}|\$2[aby]\$[0-9]{2}\$|postgres(ql)?://[^ "]*:[^ "@]{4,}@|mysql://[^ ]*:[^@]*@|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{25,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-ant-[A-Za-z0-9_-]{20,}'
 # *.example files hold placeholder-SHAPED values on purpose — the admin seed
 # template shows an argon2 prefix so the operator knows what to paste. They are
 # not skipped, they are checked properly by section 4 instead of by a pattern
@@ -80,8 +80,9 @@ echo "4. the tracked seed template holds a placeholder, not a real hash"
 TPL="curation_app/sql/seed_admin.sql.example"
 if [ -f "$TPL" ]; then
     # A real argon2 hash ends in base64; the template must not.
-    if grep -qE '\$argon2[a-z]*\$v=[0-9]+\$m=[0-9]+,t=[0-9]+,p=[0-9]+\$[A-Za-z0-9+/]{16,}' "$TPL"; then
-        bad "$TPL contains what looks like a REAL argon2 hash"
+    # sodium emits scrypt ("$7$..."). Match a real one, not the placeholder.
+    if grep -qE '\$7\$[A-Za-z0-9./]{16,}' "$TPL"; then
+        bad "$TPL contains what looks like a REAL password hash"
     else ok "$TPL hash field is a placeholder"; fi
     if grep -qE "^\s*INSERT.*VALUES\s*\('(?!CHANGEME)" "$TPL" 2>/dev/null; then
         bad "$TPL has a real username filled in"

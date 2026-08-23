@@ -24,8 +24,15 @@ CREATE TABLE IF NOT EXISTS reviewers (
   username       TEXT PRIMARY KEY,
   display_name   TEXT NOT NULL,
   email          TEXT,
-  -- argon2 via sodium::password_store(). Never a plaintext password, never a
-  -- reversible encoding, and never logged.
+  -- scrypt via sodium::password_store(), which emits a "$7$..." string
+  -- (crypto_pwhash_scryptsalsa208sha256). Memory-hard and salted per call, so
+  -- two reviewers with the same password get different hashes.
+  --
+  -- NOT argon2 and NOT bcrypt, whatever the planning notes said: sodium does
+  -- not implement either. Verified by inspecting what password_store() returns
+  -- rather than trusting the docs. If this ever moves to argon2 the column is
+  -- unchanged, but password_verify() must move with it.
+  -- Never a plaintext password, never a reversible encoding, never logged.
   password_hash  TEXT NOT NULL,
   role           TEXT NOT NULL DEFAULT 'reviewer'
                    CHECK (role IN ('reviewer','admin')),

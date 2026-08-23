@@ -6,10 +6,13 @@
 -- of known reviewers an account-creation screen is a privileged write path to
 -- secure for no benefit. Password resets are a deliberate UPDATE.
 --
--- Generate the hash with argon2 — never store or paste a plaintext password:
+-- Generate the hash with sodium (scrypt) — never store or paste a plaintext
+-- password. password_store() takes a STRING, not raw bytes:
 --
---   Rscript -e 'cat(sodium::password_store(charToRaw(readline("password: "))), "\n")'
+--   Rscript -e 'cat(sodium::password_store(readline("password: ")), "\n")'
+--
+-- Then clear it from your shell and R history: the value you typed is in both.
 --
 INSERT INTO reviewers (username, display_name, email, password_hash, role, must_change_pw)
-VALUES ('CHANGEME', 'Full Name', 'name@example.org', '$argon2i$v=19$m=...', 'admin', TRUE)
+VALUES ('CHANGEME', 'Full Name', 'name@example.org', '$7$REPLACE_WITH_THE_HASH', 'admin', TRUE)
 ON CONFLICT (username) DO NOTHING;
