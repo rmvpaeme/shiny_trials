@@ -1,0 +1,15 @@
+-- Seed the first admin. COPY THIS FILE, fill it in, run it, DELETE THE COPY.
+-- The filled-in version is gitignored (curation_app/**/*secret*, *.env), but do
+-- not rely on that — it holds a password hash.
+--
+-- Accounts are seeded by SQL rather than through a UI on purpose: with a handful
+-- of known reviewers an account-creation screen is a privileged write path to
+-- secure for no benefit. Password resets are a deliberate UPDATE.
+--
+-- Generate the hash with argon2 — never store or paste a plaintext password:
+--
+--   Rscript -e 'cat(sodium::password_store(charToRaw(readline("password: "))), "\n")'
+--
+INSERT INTO reviewers (username, display_name, email, password_hash, role, must_change_pw)
+VALUES ('CHANGEME', 'Full Name', 'name@example.org', '$argon2i$v=19$m=...', 'admin', TRUE)
+ON CONFLICT (username) DO NOTHING;
