@@ -127,9 +127,14 @@ per_pair <- raw |>
                                substance_salt, substance_type, confidence, decided_by),
             by = "raw_substance") |>
   mutate(
+    # "human_unassigned" is a reviewer saying the proposal was wrong without
+    # supplying a better one. It joins "rejected" as a SECOND intended way for a
+    # pair to end up with no label — see the regression diff, which already has
+    # to distinguish an intended drop from a fault and now has two of them.
     match_status = case_when(
       !is.na(substance_clean)            ~ "accepted",
       raw_substance %in% not_substance   ~ "rejected",
+      decided_by %in% "human"            ~ "human_unassigned",
       TRUE                               ~ "unknown"
     ),
     # Display casing matches v1 exactly, so the diff measures resolution changes
@@ -141,6 +146,7 @@ per_pair <- raw |>
 cat(sprintf("\ntrial-substance pairs : %d\n", nrow(per_pair)))
 cat(sprintf("  accepted            : %d\n", sum(per_pair$match_status == "accepted")))
 cat(sprintf("  rejected (not a drug): %d\n", sum(per_pair$match_status == "rejected")))
+cat(sprintf("  human unassign      : %d\n", sum(per_pair$match_status == "human_unassigned")))
 cat(sprintf("  unknown             : %d\n", sum(per_pair$match_status == "unknown")))
 cat(sprintf("distinct substances   : %d\n",
             dplyr::n_distinct(per_pair$substance_clean[per_pair$match_status == "accepted"])))
@@ -188,13 +194,22 @@ if (!is.null(baseline) && all(c("_id", "substance_label") %in% names(baseline)))
   # deliberately does not. Identified rather than assumed — a trial qualifies
   # when none of its raw strings resolved AND every one of them is a string some
   # pass positively judged not to be a substance.
-  fallback_ids <- per_pair |>
+  #
+  # A reviewer unassigning a string is the SECOND intended way to lose a label,
+  # and it is classified the same way: by what every one of the trial's raw
+  # strings ended up as, not by assumption. A trial qualifies when none of them
+  # resolved, all of them are intended drops, and at least one is a human's.
+  # Mixed cases (one string human-unassigned, another genuinely unresolved) fall
+  # through to REGRESSION on purpose — a real fault is still present.
+  drop_class <- per_pair |>
     group_by(`_id`) |>
     summarise(none_accepted = !any(match_status == "accepted"),
               all_rejected  = all(match_status == "rejected"),
-              .groups = "drop") |>
-    filter(none_accepted, all_rejected) |>
-    pull(`_id`)
+              all_intended  = all(match_status %in% c("rejected", "human_unassigned")),
+              any_human     = any(match_status == "human_unassigned"),
+              .groups = "drop")
+  fallback_ids <- drop_class |> filter(none_accepted, all_rejected) |> pull(`_id`)
+  human_ids    <- drop_class |> filter(none_accepted, all_intended, any_human) |> pull(`_id`)
 
   d <- old |>
     left_join(per_trial, by = "_id") |>
@@ -204,6 +219,7 @@ if (!is.null(baseline) && all(c("_id", "substance_label") %in% names(baseline)))
         !is.na(new_label) & !is.na(old_label) & old_label == new_label ~ "unchanged",
         is.na(old_label) & !is.na(new_label)          ~ "unknown -> accepted",
         is.na(new_label) & `_id` %in% fallback_ids    ~ "dropped: v1 raw fallback (intended)",
+        is.na(new_label) & `_id` %in% human_ids       ~ "human unassign (intended)",
         is.na(new_label)                              ~ "REGRESSION: -> unknown",
         TRUE                                          ~ "label changed"
       ))
@@ -227,6 +243,16 @@ if (!is.null(baseline) && all(c("_id", "substance_label") %in% names(baseline)))
                 nrow(fb)))
     cat("substance name appears here, the not-a-substance judgement was wrong:\n")
     print(as.data.frame(fb |> select(`_id`, old_label) |> head(15)))
+  }
+
+  # Same reasoning as the block above, for the human class. Not asserted on, so
+  # this print is the only place a mistaken reject becomes visible.
+  hu <- d |> filter(change == "human unassign (intended)")
+  if (nrow(hu)) {
+    cat(sprintf("\n%d trial(s) lost a label because a reviewer unassigned a string.\n",
+                nrow(hu)))
+    cat("READ THIS — a mistaken reject is visible here and in no other output:\n")
+    print(as.data.frame(hu |> select(`_id`, old_label) |> head(15)))
   }
 
   if (assert_clean && nrow(reg_rows)) {

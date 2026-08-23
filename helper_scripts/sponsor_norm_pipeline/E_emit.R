@@ -41,12 +41,18 @@ assert_clean <- "--assert-no-regressions" %in% args
 freeze_baseline <- "--freeze-baseline" %in% args
 
 V2        <- Sys.getenv("SPONSOR_V2_DIR", unset = pp("config", "sponsor_norm_v2"))
+# DATA_DIR is honoured for the same reason SPONSOR_V2_DIR is: without it every
+# path below is hardcoded to the real data/, so a scratch-directory test of this
+# script overwrites the production labels it is supposed to be leaving alone.
+# The substance twin has always had this (substance_norm_pipeline_v2/E_emit.R);
+# this file did not, which made the regression gate untestable.
+DATA_DIR  <- Sys.getenv("DATA_DIR", unset = pp("data"))
 REG_PATH  <- file.path(V2, "registry.csv")
 ASG_PATH  <- file.path(V2, "assignments.csv")
 QUEUE     <- file.path(V2, "E_review_queue.csv")
-RAW_PATH  <- pp("data", "trial_sponsors_raw.csv")
-OUT_PATH  <- pp("data", "trial_sponsor_labels.csv")
-LOG_PATH  <- pp("data", "sponsor_normalisation_log_v2.csv")
+RAW_PATH  <- file.path(DATA_DIR, "trial_sponsors_raw.csv")
+OUT_PATH  <- file.path(DATA_DIR, "trial_sponsor_labels.csv")
+LOG_PATH  <- file.path(DATA_DIR, "sponsor_normalisation_log_v2.csv")
 # The regression baseline is a FROZEN SNAPSHOT, not the live output file.
 #
 # It used to default to OUT_PATH — the file this script writes. That is
@@ -55,7 +61,7 @@ LOG_PATH  <- pp("data", "sponsor_normalisation_log_v2.csv")
 # NEW labels. It still prints a healthy-looking table (50,208 unchanged, 0
 # regressions) while no longer measuring anything, which is the worst way for a
 # gate to fail. Observed 2026-08-15, after E_emit had been run for real.
-BASE_PATH <- pp("data", "trial_sponsor_labels_baseline.csv")
+BASE_PATH <- file.path(DATA_DIR, "trial_sponsor_labels_baseline.csv")
 BASELINE  <- arg_value("--baseline", BASE_PATH)
 
 if (!file.exists(REG_PATH)) stop("No registry — run B_mint.R and C_assign.R first.", call. = FALSE)
@@ -109,10 +115,16 @@ per_trial <- raw |>
                                sponsor_type, confidence, decided_by),
             by = "raw_sponsor") |>
   mutate(
+    # THREE outcomes, not two. "unknown" means nothing resolved the string;
+    # "human_unassigned" means a reviewer looked at it and said the proposal was
+    # wrong without supplying a better one. Both end up with no label, but only
+    # the first is a fault — see the regression diff below, which is where the
+    # distinction actually does work. The two branches this replaces both
+    # produced "accepted" and so tested nothing.
     match_status = case_when(
-      !is.na(sponsor_clean) & decided_by %in% "human" ~ "accepted",
-      !is.na(sponsor_clean)                            ~ "accepted",
-      TRUE                                             ~ "unknown"
+      !is.na(sponsor_clean)   ~ "accepted",
+      decided_by %in% "human" ~ "human_unassigned",
+      TRUE                    ~ "unknown"
     ),
     # An unresolved string still has to show something in the app, so it falls
     # back to itself rather than a blank cell.
@@ -128,6 +140,7 @@ per_trial <- raw |>
 
 cat(sprintf("\ntrial rows      : %d\n", nrow(per_trial)))
 cat(sprintf("  accepted      : %d\n", sum(per_trial$match_status == "accepted")))
+cat(sprintf("  human unassign: %d\n", sum(per_trial$match_status == "human_unassigned")))
 cat(sprintf("  unknown       : %d\n", sum(per_trial$match_status == "unknown")))
 cat(sprintf("distinct labels : %d\n", dplyr::n_distinct(per_trial$sponsor_clean)))
 
@@ -145,9 +158,17 @@ if (!is.null(baseline) && all(c("_id", "sponsor_clean") %in% names(baseline))) {
   d <- per_trial |>
     distinct(`_id`, .keep_all = TRUE) |>
     inner_join(old, by = "_id") |>
+    # ORDER MATTERS: human_unassigned must be tested BEFORE the unknown branch.
+    # A reviewer rejecting a proposal sets entity_id = NA, which lands here with
+    # no label — indistinguishable from a pipeline failure unless the reviewer's
+    # own decision is what separates them. Classified as a regression it exits 1
+    # under --assert-no-regressions, and rebuild_cache.R then keeps yesterday's
+    # labels FOREVER, reported as a pipeline fault. One reviewer rejecting one
+    # string would freeze sponsor labels permanently.
     mutate(change = case_when(
       old_clean == sponsor_clean                              ~ "unchanged",
       old_status %in% "unknown" & match_status == "accepted"  ~ "unknown -> accepted",
+      match_status == "human_unassigned"                      ~ "human unassign (intended)",
       match_status == "unknown"                               ~ "REGRESSION: -> unknown",
       TRUE                                                    ~ "label changed"
     ))
@@ -160,6 +181,19 @@ if (!is.null(baseline) && all(c("_id", "sponsor_clean") %in% names(baseline))) {
     cat(sprintf("\n%d REGRESSIONS — these must be zero before switching the app over:\n",
                 nrow(reg_rows)))
     print(as.data.frame(reg_rows |> select(`_id`, old_clean, raw_sponsor) |> head(15)))
+  }
+
+  # Print these, do not merely count them. The class above is deliberately NOT
+  # asserted on, so a mistaken reject of a 400-trial sponsor would otherwise pass
+  # in total silence — the same "gate stops measuring" failure documented at the
+  # baseline comment above. A reviewer's error shows up here and nowhere else.
+  hu_rows <- d |> filter(change == "human unassign (intended)")
+  if (nrow(hu_rows)) {
+    cat(sprintf("\n%d trial(s) lost a label because a reviewer unassigned the string.\n",
+                nrow(hu_rows)))
+    cat("READ THIS — a mistaken reject is visible here and in no other output:\n")
+    print(as.data.frame(hu_rows |> count(raw_sponsor, old_clean, name = "trials") |>
+                          arrange(desc(trials)) |> head(15)))
   }
   # Assert ONLY on this class. `label changed` is 18,105 against the frozen v1
   # baseline and grows as new strings resolve, so asserting on it would fail
