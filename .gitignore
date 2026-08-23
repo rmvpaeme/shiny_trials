@@ -99,3 +99,44 @@ data/substance_residue.csv
 # onto the deploy branch like the label CSVs. Never tracked on main: it is
 # reviewer output, not seed state, and config/ would be reverted nightly anyway.
 data/trial_overrides.csv
+
+# ── Curation app credentials ─────────────────────────────────────────────────
+#
+# THIS REPO IS PUBLIC. Everything below can carry a credential for the curation
+# database or the deploy target, and none of it may ever be committed.
+#
+# The block above already covers curation_app/{auth,secrets}/, credentials*,
+# users.*, sessions and *.sqlite. These are the paths that block missed.
+
+# The FILLED-IN admin seed holds an argon2 password hash. Only the .example
+# template, which contains a placeholder, is tracked.
+curation_app/sql/seed_admin.sql
+curation_app/sql/*_dump.sql
+curation_app/sql/reviewers*.sql
+!curation_app/sql/*.example
+
+# R session state. .Rhistory captures whatever was typed — and the documented
+# way to create an admin hash involves typing a password at the console, so this
+# is a realistic leak path, not a theoretical one. .RData serialises live
+# objects, which during development includes an open connection string.
+.Rhistory
+.RData
+.Rproj.user/
+
+# rsconnect writes deployment records containing the account token for the
+# Posit/shinyapps target. A classic public-repo leak.
+rsconnect/
+**/rsconnect/
+
+# Catch-alls for anything named after what it holds.
+*password*
+*passwd*
+*_token*
+*.token
+
+# Test scripts are never secrets, whatever they are named. tests/no_secrets.sh
+# matched the *_secrets* rule above and was silently skipped by `git add` —
+# the security test excluded itself from the repo, and only the "paths that
+# must stay tracked" check caught it.
+!tests/*.sh
+!tests/*.R
