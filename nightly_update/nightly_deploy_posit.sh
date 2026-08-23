@@ -68,6 +68,7 @@ GENERATED_PATHSPEC=(
     ':(exclude)trials_cache.rds'
     ':(exclude)www/preprocessing.html'
     ':(exclude)data'
+    ':(exclude)config/substance_norm_v2/E_review_queue.csv'
 )
 if ! git diff --quiet -- . "${GENERATED_PATHSPEC[@]}" ||
    ! git diff --cached --quiet -- . "${GENERATED_PATHSPEC[@]}"; then
@@ -102,9 +103,10 @@ docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/update_data.R >>
 # trials_cache.rds is committed, losing the whole data refresh over an LLM
 # hiccup. The sentinel is how that failure still gets reported.
 SPONSOR_SENTINEL="$PROJECT_DIR/data/.sponsor_nightly_failed"
-rm -f "$SPONSOR_SENTINEL"
+SUBSTANCE_SENTINEL="$PROJECT_DIR/data/.substance_nightly_failed"
+rm -f "$SPONSOR_SENTINEL" "$SUBSTANCE_SENTINEL"
 
-log "Step 2/4: Rebuilding RDS cache and preprocessing report..."
+log "Step 2/4: Rebuilding RDS cache..."
 docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/rebuild_cache.R >> "$LOG_FILE" 2>&1
 
 NORM_FAILED=0
@@ -117,7 +119,7 @@ SPONSOR_FAILED=0
 if [ -f "$SPONSOR_SENTINEL" ]; then
     SPONSOR_FAILED=1
     log "ERROR: sponsor nightly resolution failed — $(cat "$SPONSOR_SENTINEL")"
-    log "       see config/sponsor_norm_v2/N_nightly_runs.csv (or \$SPONSOR_V2_DIR)"
+    log "       see \$SPONSOR_V2_DIR/N_nightly_runs.csv for the full history"
 fi
 
 # 3. Commit generated files on deploy only and push to trigger Posit Cloud deploy.
