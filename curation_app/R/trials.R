@@ -178,7 +178,14 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
             has_pending <- !is.null(p) && nrow(p) && identical(p$action[[1]], "override")
             shiny::tags$tr(
               shiny::tags$th(x$label),
-              shiny::tags$td(show_val(x$raw)),
+              shiny::tags$td(
+                # "not in this snapshot" is not the same fact as "the register
+                # sent nothing", and a reviewer acts differently on each.
+                if (identical(x$raw_status, "absent"))
+                  shiny::tags$span(class = "text-muted fst-italic",
+                    title = "This cache predates the column; rebuild to see it.",
+                    "not retained in this snapshot")
+                else show_val(x$raw)),
               shiny::tags$td(
                 if (has_pending)
                   shiny::tagList(
