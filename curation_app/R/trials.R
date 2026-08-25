@@ -84,9 +84,24 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     assigned <- shiny::reactive({
       reviewed_tick()
+      # Polled, because a sample drawn in the ADMIN tab must appear here. This
+      # reactive otherwise only invalidates when the reviewer signs a trial off,
+      # so a draw made after the page loaded left tab 1 showing the empty
+      # assignment it computed at load — "works after a reload", which is the
+      # worst kind of working.
+      shiny::invalidateLater(20000, session)
       u <- session_user()
       if (is.null(u) || is.null(db)) return(NULL)
-      tryCatch(sample_for_reviewer(db, u$username), error = function(e) NULL)
+      # Errors are SURFACED, not swallowed. The previous version returned NULL
+      # on any failure, so a permissions problem and "no sample drawn yet"
+      # produced an identical empty table — the same blindness that made the
+      # login failure take an afternoon.
+      tryCatch(sample_for_reviewer(db, u$username),
+               error = function(e) {
+                 message("trial validation: could not read the assignment for ",
+                         u$username, ": ", conditionMessage(e))
+                 structure(data.frame(), class = c("assignment_error", "data.frame"))
+               })
     })
 
     output$assignment_progress <- shiny::renderUI({
@@ -132,10 +147,16 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     output$table <- DT::renderDT({
       d <- filtered()
+      # An empty table has several causes and they need different actions.
       shiny::validate(shiny::need(!is.null(d) && nrow(d),
-        if (identical(input$scope %||% "mine", "mine"))
-          "No trials assigned to you yet — an admin draws the review sample."
-        else "No trials match."))
+        if (!identical(input$scope %||% "mine", "mine")) "No trials match."
+        else if (inherits(assigned(), "assignment_error"))
+          "Could not read your assignment from the database — see the app log."
+        else if (is.null(assigned()) || !nrow(assigned()))
+          paste("No trials are assigned to you. An admin draws the review sample",
+                "in Admin -> Review sample. This list refreshes within 20 seconds",
+                "of a draw.")
+        else "Your assigned trials are not in this snapshot — refresh it in Admin."))
       d$title_short <- substr(d$Full_title %||% "", 1, 70)
       # No filter = "top": a row of per-column boxes above five columns is more
       # chrome than the table itself, and the search box above already covers

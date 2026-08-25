@@ -69,6 +69,18 @@ admin_ui <- function(id) {
           "double-assigned share is what makes inter-rater agreement ",
           "measurable — with none, no two reviewers ever see the same trial."),
         shiny::hr(),
+        shiny::h6("Draws"),
+        DT::DTOutput(ns("smp_draws")),
+        shiny::div(class = "d-flex gap-2 align-items-end mt-2",
+          shiny::selectInput(ns("smp_del_id"), "Undo a draw", choices = NULL, width = "280px"),
+          shiny::actionButton(ns("smp_delete"), "Delete", class = "btn-danger btn-sm"),
+          shiny::checkboxInput(ns("smp_force"), "Force (orphans reviews)", value = FALSE)),
+        shiny::div(class = "form-text",
+          "A draw nobody has reviewed can be removed freely. Once trials have ",
+          "been signed off, deleting the assignment orphans that work and the ",
+          "agreement figures lose the overlap they are computed from \u2014 draw a ",
+          "new sample instead."),
+        shiny::hr(),
         shiny::h6("Progress"), DT::DTOutput(ns("smp_progress")),
         shiny::h6("How closely the draw mirrors the corpus", class = "mt-3"),
         DT::DTOutput(ns("smp_rep"))),
@@ -233,6 +245,40 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
         sample_tick(sample_tick() + 1)
         shiny::showNotification("Sample drawn and assigned.", type = "message")
       }
+    })
+
+    output$smp_draws <- DT::renderDT({
+      sample_tick()
+      d <- admin_q(sample_ids_with_work)
+      shiny::validate(shiny::need(!is.null(d) && nrow(d), "No sample drawn yet."))
+      DT::datatable(d, rownames = FALSE, options = list(dom = "t", pageLength = 10))
+    })
+
+    shiny::observe({
+      sample_tick()
+      d <- admin_q(sample_ids_with_work)
+      shiny::updateSelectInput(session, "smp_del_id",
+        choices = if (is.null(d) || !nrow(d)) character() else d$sample_id)
+    })
+
+    shiny::observeEvent(input$smp_delete, {
+      u <- auth_user(session)
+      if (is.null(u) || !identical(u$role, "admin") || is.null(db)) return()
+      sid <- input$smp_del_id
+      if (is.null(sid) || !nzchar(sid)) return()
+      res <- tryCatch(sample_delete(db, sid, force = isTRUE(input$smp_force)),
+                      error = function(e) e)
+      if (inherits(res, "error")) {
+        shiny::showNotification(conditionMessage(res), type = "error", duration = 10)
+        note("delete_sample_refused", sid, list(reason = conditionMessage(res)))
+        return()
+      }
+      note("delete_sample", sid,
+           list(rows = res$deleted, forced = isTRUE(input$smp_force),
+                reviews_orphaned = res$reviews_orphaned))
+      sample_tick(sample_tick() + 1)
+      shiny::showNotification(sprintf("Deleted %d assignment(s) from %s.",
+                                      res$deleted, sid), type = "message")
     })
 
     output$smp_progress <- DT::renderDT({
