@@ -22,9 +22,15 @@ Cup a 1 purified an isolated protein,Cupressus arizonica Cup a 1 allergen,allerg
 "Virin fraccionado, inactivado",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
 "Virirn fraccionado, inactivado",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
 "VIRIN FRACCIONADO, INACTIVADO",Influenza virus vaccine,Spanish for split inactivated virion influenza vaccine
-Beta-blockers,,ATC drug class, not a substance
-Antiplatelet,,ATC drug class, not a substance
-ANTIVIRALS FOR SYSTEMIC USE,,ATC drug class, not a substance
-UROLOGICALS,,ATC drug class, not a substance
-Emollients and protectives,,ATC drug class, not a substance
+apiretal 500 mg comprimidos bucodispersables,Paracetamol,Apiretal is the Spanish paediatric brand of paracetamol; in neither ChEMBL nor EPAR
+S68587 - 0.6 megaCells,S68587,cell-therapy code name with the dose attached; no INN exists so the code stands
+S68587 - 6 megaCells,S68587,cell-therapy code name with the dose attached; no INN exists so the code stands
+S68587 - 15 megaCells,S68587,cell-therapy code name with the dose attached; no INN exists so the code stands
+S68587 - 20 megaCells,S68587,cell-therapy code name with the dose attached; no INN exists so the code stands
+Beta-blockers,,"ATC drug class, not a substance"
+Antiplatelet,,"ATC drug class, not a substance"
+ANTIVIRALS FOR SYSTEMIC USE,,"ATC drug class, not a substance"
+UROLOGICALS,,"ATC drug class, not a substance"
+Emollients and protectives,,"ATC drug class, not a substance"
 A complex,,not a substance name
+"Microcrystalline cellulose, Lactose Monohydrate, Magnesium Stearate (non-bovine)",,excipient list; the model judged the lowercase spelling of this same string -1

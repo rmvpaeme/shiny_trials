@@ -231,10 +231,27 @@ if (!is.null(baseline) && all(c("_id", "substance_label") %in% names(baseline)))
   if (nrow(reg_rows)) {
     cat(sprintf("\n%d REGRESSIONS — these must be zero before switching the app over:\n",
                 nrow(reg_rows)))
+    # Print EVERY unresolved string for the trial, not the first raw one.
+    #
+    # distinct(`_id`) showed whichever pair happened to come first, which need
+    # not be one of the unresolved ones at all — and the only way to clear a
+    # regression is to judge the UNRESOLVED strings, by hand in
+    # manual_overrides.csv when the model keeps refusing them. Printing one
+    # arbitrary string per trial meant the operator had to go and find them,
+    # so the report named the problem without naming the fix.
+    unresolved <- per_pair |>
+      filter(match_status == "unknown", `_id` %in% reg_rows$`_id`) |>
+      group_by(`_id`) |>
+      summarise(unresolved = paste(sort(unique(raw_substance)), collapse = " | "),
+                .groups = "drop")
     ex <- reg_rows |>
-      left_join(raw |> distinct(`_id`, .keep_all = TRUE), by = "_id") |>
-      select(`_id`, old_label, raw_substance)
+      left_join(unresolved, by = "_id") |>
+      select(`_id`, old_label, unresolved)
     print(as.data.frame(head(ex, 20)))
+    cat("\nEach string above needs a judgement. If the model keeps refusing them\n")
+    cat("(look for 'refusal' in the B_assign / C_mint output), add them to\n")
+    cat("helper_scripts/substance_norm_pipeline_v2/manual_overrides.csv — an empty\n")
+    cat("canonical means 'not a substance' — then re-run A_resolve.R --apply-overrides.\n")
   }
 
   fb <- d |> filter(change == "dropped: v1 raw fallback (intended)")

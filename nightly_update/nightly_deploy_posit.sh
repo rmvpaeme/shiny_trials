@@ -210,9 +210,17 @@ timeout "$PUSH_TIMEOUT_SECONDS" git push --force-with-lease "$REMOTE" "$DEPLOY_B
 
 log "=== Nightly deploy complete ==="
 
-# Report a sponsor failure only AFTER the push: the app must still ship. cron
+# Report a resolution failure only AFTER the push: the app must still ship. cron
 # mails on a non-zero exit, which is the only alerting this job has.
+#
+# Name the pass that actually failed ($NORM_FAILED is the substance one). This
+# said "sponsor" unconditionally, so on the night the SUBSTANCE gate blocked,
+# the last line of the log — the line cron mails, and the only one most people
+# read — pointed at the pass that had succeeded.
 if [ "$SPONSOR_FAILED" -ne 0 ] || [ "$NORM_FAILED" -ne 0 ]; then
-    log "Exiting non-zero: the deploy shipped, but sponsor resolution failed."
+    _failed=""
+    if [ "$NORM_FAILED" -ne 0 ]; then _failed="substance"; fi
+    if [ "$SPONSOR_FAILED" -ne 0 ]; then _failed="${_failed:+$_failed and }sponsor"; fi
+    log "Exiting non-zero: the deploy shipped, but $_failed resolution failed."
     exit 3
 fi
