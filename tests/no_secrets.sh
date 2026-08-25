@@ -98,22 +98,43 @@ else bad "a database URL appears in R source:"; echo "$RHITS"; fi
 echo
 echo "6. the Posit deploy bundle carries no credentials"
 # git is not the only way a secret escapes. rsconnect::deployApp() bundles the
-# app DIRECTORY including dotfiles: verified that a bare call would upload
-# curation_app/.Renviron, putting the database password inside the Posit Cloud
-# bundle. deploy.R uses an allowlist so a new file is not uploaded until named.
+# app DIRECTORY including dotfiles — verified with listBundleFiles() that a bare
+# call would upload curation_app/.Renviron, putting the database password on
+# Posit as an app file.
+#
+# Bundling it is ALLOWED: some targets (shinyapps.io) have no way to set an
+# environment variable on a deployed app, and refusing there would just mean the
+# app cannot connect. What must never happen is bundling it by ACCIDENT.
 DEPLOY="curation_app/deploy.R"
 if [ ! -f "$DEPLOY" ]; then
     bad "$DEPLOY is missing — a bare deployApp() would ship .Renviron"
 else
+    # Read the allowlist into a variable. NOT `grep <(sed ...)`: process
+    # substitution needs /dev/fd, which is unreadable in some sandboxes, and
+    # there grep fails, prints nothing, and the check passes without running.
+    # That exact false pass shipped in this file once already.
+    ALLOWLIST="$(sed -n '/^APP_FILES <- c(/,/^)/p' "$DEPLOY")"
+    if [ -z "$ALLOWLIST" ]; then
+        bad "could not read APP_FILES from $DEPLOY — the check did not run"
+    else
+        ok "read the deploy allowlist ($(printf '%s' "$ALLOWLIST" | wc -l | tr -d ' ') lines)"
+        case "$ALLOWLIST" in
+            *Renviron*) bad ".Renviron is in the DEFAULT allowlist — it must be opt-in only" ;;
+            *)          ok ".Renviron is not in the default allowlist" ;;
+        esac
+    fi
     if grep -q "appFiles *= *APP_FILES" "$DEPLOY"; then
-        ok "the deploy names an explicit file allowlist"
+        ok "deployApp() is given an explicit allowlist, not the directory"
     else bad "the deploy does not pass an allowlist to deployApp()"; fi
-    if grep -qE "^\s*\"\.Renviron\"|Renviron" <(sed -n '/^APP_FILES <- c(/,/^)/p' "$DEPLOY"); then
-        bad "the deploy allowlist contains .Renviron"
-    else ok ".Renviron is not in the allowlist"; fi
+    if grep -q -- '--include-env' "$DEPLOY"; then
+        ok "bundling the env file requires an explicit --include-env"
+    else bad "no explicit opt-in flag for bundling credentials"; fi
+    if grep -q "app_role.sql" "$DEPLOY"; then
+        ok "the opt-in points at the least-privilege role"
+    else bad "the opt-in does not mention a least-privilege role"; fi
     if grep -q "REFUSING TO DEPLOY" "$DEPLOY"; then
-        ok "the deploy refuses outright on a credential-shaped filename"
-    else bad "the deploy has no refusal for credential-shaped files"; fi
+        ok "a credential-shaped filename is still refused outright"
+    else bad "no refusal for credential-shaped files"; fi
 fi
 
 echo
