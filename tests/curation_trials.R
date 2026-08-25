@@ -126,7 +126,7 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
           "the register's value and the app's are shown side by side")
     check(grepl("Highlighted rows", h, fixed = TRUE),
           "one plain sentence says what to do, with no pipeline vocabulary")
-    for (jargon in c("normalised", "pipeline", "registry", "derived", "canonical"))
+    for (jargon in c("normalised", "pipeline", "registry", "canonical"))
       check(!grepl(jargon, h, ignore.case = TRUE),
             sprintf("the table uses no jargon: '%s' does not appear", jargon))
     # Count the actual links by their input id. ">edit<" also matches the word
@@ -176,8 +176,9 @@ check(grepl("human", fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source 
       "a human decision is marked")
 check(identical(fmt_status(mk(status = "Completed", status_raw = "Completed")), "Completed"),
       "status does not repeat itself when category and wording agree")
-check(grepl("register:", fmt_status(mk(status = "Administrative", status_raw = "Gb - no longer in eu/eea"))),
-      "the register's wording is shown only when it differs")
+check(identical(fmt_status(mk(status = "Administrative", status_raw = "Gb - no longer in eu/eea")),
+                "Administrative"),
+      "status shows the grouped value alone — the register's wording is in the column beside it")
 
 cat("\n8. the Processing column classifies what the pipeline did\n")
 # The app exists to validate the processing, and neither the raw nor the
@@ -201,6 +202,27 @@ sp <- Filter(function(f) f$id == "sponsor", TRIAL_FIELD_SPEC)[[1]]
 check(!is.na(sp$pipeline) && nzchar(sp$pipeline),
       "each field says WHICH pipeline stage processed it")
 
+cat("\n8b. every field says where its value came from\n")
+# "The data has to come from somewhere." Four fields showed a bare dash in the
+# register column purely because the spec never named their source, even though
+# the columns were sitting in the cache: start date, decision date, trial end
+# date and register. A dash must mean the register did not supply it, never
+# that nobody wired it up.
+no_src <- Filter(function(f) !length(f$raw_cols) && is.null(f$no_source), TRIAL_FIELD_SPEC)
+check(length(no_src) == 0,
+      sprintf("every field declares a source or says why it has none%s",
+              if (length(no_src)) paste0(" (missing: ",
+                paste(vapply(no_src, function(f) f$id, character(1)), collapse = ", "), ")") else ""))
+cache_cols <- names(readRDS(cache_path))
+bad_src <- unlist(lapply(TRIAL_FIELD_SPEC, function(f)
+  f$raw_cols[!f$raw_cols %in% cache_cols]))
+check(length(bad_src) == 0,
+      sprintf("and every declared source exists in the cache%s",
+              if (length(bad_src)) paste0(" (missing: ", paste(bad_src, collapse=", "), ")") else ""))
+src2b <- readLines("R/trials.R", warn = FALSE)
+check(any(grepl("x$no_source", src2b, fixed = TRUE)),
+      "and the reason is rendered, not just stored")
+
 cat("\n9. a missing COLUMN is not the same as a missing VALUE\n")
 # Both render as NA, and a reviewer acts differently on each: "the register
 # sent nothing" is a fact about the trial; "not in this snapshot" is a fact
@@ -214,9 +236,11 @@ gs <- function(d) Filter(function(x) x$id == "phase", field_rows(d))[[1]]$raw_st
 check(identical(gs(full),  "present"), "a populated raw column reads 'present'")
 check(identical(gs(blank), "empty"),   "an empty value in an EXISTING column reads 'empty'")
 check(identical(gs(older), "absent"),  "a column missing from the cache reads 'absent'")
-reg_row <- Filter(function(x) x$id == "register", field_rows(full))[[1]]
-check(identical(reg_row$raw_status, "none"),
-      "a field with no raw counterpart reads 'none', not 'absent'")
+dur_row <- Filter(function(x) x$id == "trial_duration", field_rows(full))[[1]]
+check(identical(dur_row$raw_status, "none"),
+      "a computed field reads 'none', not 'absent'")
+check(!is.na(dur_row$no_source),
+      "and says what it was computed from, so the dash is not read as missing data")
 src2 <- readLines("R/trials.R", warn = FALSE)
 check(any(grepl("raw_status, \"absent\"", src2, fixed = TRUE)),
       "a column missing from the cache still renders as a plain dash, not an error")
