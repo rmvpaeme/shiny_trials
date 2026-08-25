@@ -385,16 +385,22 @@ field_rows <- function(row, group = NULL, spec = TRIAL_FIELD_SPEC) {
     # a value with no raw beside it looks like missing data rather than
     # something derived from three other columns.
     #
-    #   derived    no single raw counterpart — computed from other fields
-    #   unchanged  the pipeline ran and produced the register's own value
-    #   changed    the pipeline produced something different: CHECK THIS
-    #   no raw     the column is absent from this snapshot, so it cannot be judged
-    #   empty      the register sent nothing and nothing was derived
+    #   derived      no single raw counterpart — computed from other fields
+    #   unchanged    the pipeline ran and produced the register's own value
+    #   changed      the pipeline produced something different: CHECK THIS
+    #   old snapshot the raw column is absent from THIS CACHE, not from the
+    #                register. prepare_trial_data() drops the bulky source
+    #                columns and keeps compact _raw copies instead; a cache
+    #                built before those were added has neither. It is a fact
+    #                about the cache's vintage and resolves on the next
+    #                rebuild — NOT a field that has no source. Measured: five
+    #                fields on the v0.21.0 cache, none on v0.22.0.
+    #   empty        the register sent nothing and nothing was derived
     cmp <- function(a, b) {
       identical(tolower(trimws(a %||% "")), tolower(trimws(b %||% "")))
     }
     change <- if (identical(status, "none")) "derived"
-              else if (identical(status, "absent")) "no raw"
+              else if (identical(status, "absent")) "old snapshot"
               else if (is.na(norm) || !nzchar(trimws(norm))) {
                 if (identical(status, "empty")) "empty" else "dropped"
               } else if (identical(status, "empty")) "derived"

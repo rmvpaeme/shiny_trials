@@ -238,8 +238,8 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
                 # sent nothing", and a reviewer acts differently on each.
                 if (identical(x$raw_status, "absent"))
                   shiny::tags$span(class = "text-muted fst-italic",
-                    title = "This cache predates the column; rebuild to see it.",
-                    "not retained in this snapshot")
+                    title = "The register sent a value; this cache predates the column that keeps it.",
+                    "not in this snapshot")
                 else show_val(x$raw)),
               shiny::tags$td(
                 if (has_pending)
@@ -258,12 +258,16 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
                     unchanged = list("unchanged", "bg-light text-muted border"),
                     derived   = list("derived",   "bg-info text-dark"),
                     dropped   = list("dropped",   "bg-danger"),
-                    `no raw`  = list("no raw",    "bg-light text-muted border"),
+                    `old snapshot` = list("old snapshot", "bg-secondary"),
                     empty     = list("—",         "bg-light text-muted border"),
                     list(x$change, "bg-light text-muted border"))
                   shiny::tagList(
                     shiny::tags$span(class = paste("badge", badge[[2]]), badge[[1]]),
-                    if (!is.na(x$pipeline) && !x$change %in% c("empty", "no raw"))
+                    if (identical(x$change, "old snapshot"))
+                      shiny::div(class = "text-muted", style = "font-size:10px;line-height:1.25;",
+                                 "the register's value exists but this cache predates the column; ",
+                                 "it appears after the next nightly rebuild")
+                    else if (!is.na(x$pipeline) && !identical(x$change, "empty"))
                       shiny::div(class = "text-muted", style = "font-size:10px;line-height:1.25;",
                                  x$pipeline))
                 }),
@@ -287,7 +291,9 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           shiny::tags$span(class = "badge bg-info text-dark", "derived"),
           " computed from other fields. ",
           shiny::tags$span(class = "badge bg-light text-muted border", "unchanged"),
-          " the pipeline ran and agreed with the register."),
+          " the pipeline ran and agreed with the register. ",
+          shiny::tags$span(class = "badge bg-secondary", "old snapshot"),
+          " this cache predates the column — the register's value exists and appears after the next rebuild."),
         render_group(r, "entities", "Trial details"),
         render_group(r, "status", "Dates, status and results"))
     })
