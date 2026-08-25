@@ -67,11 +67,27 @@ PATTERNS='\$argon2|\$7\$[A-Za-z0-9./]{16,}|\$2[aby]\$[0-9]{2}\$|postgres(ql)?://
 # template shows an argon2 prefix so the operator knows what to paste. They are
 # not skipped, they are checked properly by section 4 instead of by a pattern
 # that cannot tell a placeholder from a hash.
-HITS="$(git grep -nIE "$PATTERNS" -- . \
+HITS_RAW="$(git grep -nIE "$PATTERNS" -- . \
         ':(exclude)config/substance_norm_v2/chembl_cache.csv' \
         ':(exclude)config/substance_norm_v2/registry_aliases.csv' \
         ':(exclude)*.example' \
         ':(exclude)tests/no_secrets.sh' 2>/dev/null || true)"
+
+# Documentation has to show the SHAPE of a connection string, and a test has to
+# supply one that cannot connect. Neither is a credential, and muting the whole
+# file would be worse than the false positive — a real leak in a README is
+# exactly as public as one in source.
+#
+# Dropped only when the match is self-evidently not a secret:
+#   <angle brackets>   a placeholder, never a password
+#   loopback/example   a host that resolves to nothing real
+# Anything else still fails, including a real string sitting in a .md.
+HITS="$(printf '%s\n' "$HITS_RAW" \
+        | grep -v '[<>]' \
+        | grep -vE '@(127\.0\.0\.1|localhost|::1|example\.(com|org|net)|nowhere)' \
+        | grep -v '^$' || true)"
+DROPPED=$(( $(printf '%s' "$HITS_RAW" | grep -c . || true) - $(printf '%s' "$HITS" | grep -c . || true) ))
+[ "$DROPPED" -gt 0 ] && ok "ignored $DROPPED placeholder/loopback match(es)"
 if [ -z "$HITS" ]; then ok "no credential patterns in tracked files"
 else bad "credential pattern found in a TRACKED file:"; echo "$HITS" | head -10; fi
 
@@ -91,7 +107,10 @@ fi
 
 echo
 echo "5. no R source hardcodes a connection string"
-RHITS="$(git grep -nIE "(postgres(ql)?|mysql)://" -- '*.R' 2>/dev/null || true)"
+RHITS="$(git grep -nIE "(postgres(ql)?|mysql)://" -- '*.R' 2>/dev/null \
+         | grep -v '[<>]' \
+         | grep -vE '@(127\.0\.0\.1|localhost|::1|example\.(com|org|net)|nowhere)' \
+         || true)"
 if [ -z "$RHITS" ]; then ok "no database URL literal in any .R file"
 else bad "a database URL appears in R source:"; echo "$RHITS"; fi
 
