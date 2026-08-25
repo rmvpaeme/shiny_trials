@@ -55,21 +55,37 @@ snapshot_refresh()
 
 # The pool is opened once and shared. Several concurrent sessions each opening
 # their own connection is how a free-tier database runs out of them.
-DB_POOL <- tryCatch(curation_pool(), error = function(e) {
+# minSize = 0 means the pool opens NO connection when it is created, so bad
+# credentials produce a clean-looking startup and the first failure appears at
+# the login screen as "check your username and password". That cost an
+# afternoon. One trivial query at startup turns a silent misconfiguration into
+# a message in the deploy log, where it belongs.
+validate_pool <- function(p) {
+  DBI::dbGetQuery(p, "SELECT 1 AS ok")
+  n <- DBI::dbGetQuery(p, "SELECT count(*) AS n FROM reviewers")$n
+  message(sprintf("Database: %s — %s reviewer account(s) visible",
+                  curation_db_label(), format(n)))
+  p
+}
+
+DB_POOL <- tryCatch(validate_pool(curation_pool()), error = function(e) {
   # R reads .Renviron from the STARTUP working directory, and this app starts in
   # curation_app/ — so a .Renviron at the REPO ROOT is invisible here and the
   # database silently does not connect. Same shape as the trap AGENTS/DEPLOY.md
   # records for rebuild_cache.R, where a setwd() after startup defeats a project
   # .Renviron. Hence the path in the message: the fix is never obvious from
   # "connection failed".
-  message("No database pool: ", conditionMessage(e))
-  message("  Reviewers cannot sign in and no decision can be recorded.")
+  message("*** NO DATABASE — reviewers cannot sign in. ***")
+  message("  ", conditionMessage(e))
+  # The failure people actually hit, named, because the message Postgres
+  # returns for it says nothing about project refs.
+  message("  If the host is a Supabase POOLER, the username must carry the")
+  message("  project ref: curation_app.<ref>, not curation_app.")
   message("  Locally: put CURATION_DB_URL in curation_app/.Renviron")
   message("           (the repo-root one is NOT read — this app starts in curation_app/)")
   message("  On Posit: set it as an environment variable on the deployed app.")
   NULL
 })
-if (!is.null(DB_POOL)) message("Database: ", curation_db_label())
 
 # Loaded once per process. Used for the sibling panel and, later, tab 1.
 TRIALS_CACHE <- local({
