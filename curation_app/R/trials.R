@@ -240,14 +240,7 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
               shiny::tags$th(x$label),
               shiny::tags$td(
                 if (identical(x$raw_status, "absent"))
-                  # NOT a bare dash. The register did supply this; the data file
-                  # the app is reading was built before it started keeping the
-                  # register's wording for this field. A dash here is
-                  # indistinguishable from "the register said nothing", which is
-                  # a different fact and a different action.
-                  shiny::tags$span(class = "text-muted fst-italic",
-                                   title = "The next nightly rebuild adds it.",
-                                   "not in this data yet")
+                  shiny::tags$span(class = "text-muted", "\u2014")
                 # A bare dash on a field the register never reports reads as
                 # missing data. Where the reason is known, say it.
                 else if ((is.na(x$raw) || !nzchar(trimws(x$raw))) && !is.na(x$no_source))
@@ -267,6 +260,20 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           }))))
     }
 
+    # Which fields cannot show the register's value with THIS data file.
+    #
+    # The app reads the cache published on the deploy branch, which is built
+    # from main. Between adding a field's raw column and that reaching main,
+    # the published cache has the normalised value and not the register's. That
+    # is one fact about the data file — worth saying once, not on five rows of
+    # every trial, and it disappears on its own.
+    missing_sources <- shiny::reactive({
+      if (is.null(cache)) return(character())
+      vapply(Filter(function(f) length(f$raw_cols) &&
+                                !any(f$raw_cols %in% names(cache)), TRIAL_FIELD_SPEC),
+             function(f) f$label, character(1))
+    })
+
     output$detail <- shiny::renderUI({
       require_role(session)
       r <- row()
@@ -281,6 +288,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           "Check those first. Click ", shiny::tags$em("edit"), " on any row that looks wrong. ",
           shiny::tags$span(class = "text-muted",
             "A dash means the register did not supply that field.")),
+        if (length(missing_sources()))
+          shiny::div(class = "alert alert-warning py-2 small mb-2",
+            shiny::strong("This data file cannot show the register's own wording for: "),
+            paste(missing_sources(), collapse = ", "), ". ",
+            shiny::span(class = "text-muted",
+              "Their values are correct; only the comparison is unavailable. ",
+              "Resolved by the next nightly rebuild.")),
         render_group(r, "entities", "Trial details"),
         render_group(r, "status", "Dates, status and results"))
     })

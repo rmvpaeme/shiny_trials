@@ -242,8 +242,8 @@ check(identical(dur_row$raw_status, "none"),
 check(!is.na(dur_row$no_source),
       "and says what it was computed from, so the dash is not read as missing data")
 src2 <- readLines("R/trials.R", warn = FALSE)
-check(any(grepl("raw_status, \"absent\"", src2, fixed = TRUE)),
-      "a column missing from the cache still renders as a plain dash, not an error")
+check(any(grepl("missing_sources", src2, fixed = TRUE)),
+      "a data file older than the spec is reported ONCE, not on every affected row")
 
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
