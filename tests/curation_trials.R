@@ -186,8 +186,9 @@ check(identical(cl(phase = "Phase II", phase_raw = NA_character_), "derived"),
       "a value with no raw counterpart reads 'derived', not 'missing data'")
 check(identical(cl(phase = NA_character_, phase_raw = "Phase II"), "dropped"),
       "a raw value the pipeline discarded reads 'dropped'")
-check(identical(cl(phase = "Phase II"), "no raw"),
-      "a column absent from the cache reads 'no raw' — it cannot be judged")
+check(identical(cl(phase = "Phase II"), "old snapshot"),
+      "a column absent from the CACHE reads 'old snapshot', not 'no raw' — the
+      register sent a value and this build simply predates the column")
 # Case and whitespace must not read as a change; they are not one.
 check(identical(cl(phase = "Phase II", phase_raw = " phase ii "), "unchanged"),
       "case and padding alone do not count as a change")
@@ -212,8 +213,10 @@ reg_row <- Filter(function(x) x$id == "register", field_rows(full))[[1]]
 check(identical(reg_row$raw_status, "none"),
       "a field with no raw counterpart reads 'none', not 'absent'")
 src2 <- readLines("R/trials.R", warn = FALSE)
-check(any(grepl("not retained in this snapshot", src2, fixed = TRUE)),
-      "the renderer says which of the two it is")
+check(any(grepl("not in this snapshot", src2, fixed = TRUE)),
+      "the renderer distinguishes 'absent from the cache' from 'the register sent nothing'")
+check(any(grepl("this cache predates the column", src2, fixed = TRUE)),
+      "and says the register's value exists, so it does not read as missing data")
 
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
