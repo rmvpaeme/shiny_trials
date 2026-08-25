@@ -69,14 +69,27 @@ r <- reviewer_verify(con, U1, "correct-horse")
 check(is.null(r$password_hash), "the hash never leaves reviewer_verify()")
 check(identical(r$role, "reviewer"), "the role comes back")
 
-# Timing: an unknown user must not be measurably faster than a wrong password,
-# or the uniform error message is undone by the clock.
-t_unknown <- system.time(for (i in 1:5) reviewer_verify(con, "__test__nobody", "x"))[["elapsed"]]
-t_wrong   <- system.time(for (i in 1:5) reviewer_verify(con, U1, "wrong"))[["elapsed"]]
-# The failure mode is unknown-user being FASTER, which leaks that the username
-# does not exist. Allow generous jitter but not a 2x gap.
-check(t_unknown > t_wrong * 0.6,
-      sprintf("unknown-user timing does not leak (%.2fs unknown vs %.2fs wrong)", t_unknown, t_wrong))
+  # An unknown user must not be measurably faster than a wrong password, or the
+  # uniform error message is undone by the clock.
+  #
+  # Tested at the MECHANISM rather than end to end. A wall-clock comparison of two
+  # network round trips is inherently noisy — it passed alone and failed in a
+  # full-suite run — and a security check that fails intermittently is one that
+  # gets ignored. What matters is that the unknown-user path does the key
+  # derivation instead of bailing out on a malformed hash, and that is
+  # deterministic.
+  check(isFALSE(sodium::password_verify(dummy_hash(), "anything")),
+        "the dummy hash is a VALID scrypt hash (verify returns FALSE, not an error)")
+  t_dummy <- system.time(for (i in 1:3) sodium::password_verify(dummy_hash(), "x"))[["elapsed"]]
+  check(t_dummy > 0.005,
+        sprintf("verifying against the dummy does real work (%.3fs for 3)", t_dummy))
+
+  # Loose end-to-end sanity: catches a gross regression such as the dummy being
+  # removed entirely, without asserting on jitter.
+  t_unknown <- system.time(for (i in 1:5) reviewer_verify(con, "__test__nobody", "x"))[["elapsed"]]
+  t_wrong   <- system.time(for (i in 1:5) reviewer_verify(con, U1, "wrong"))[["elapsed"]]
+  check(t_unknown > t_wrong * 0.25,
+        sprintf("unknown-user is not grossly faster (%.2fs vs %.2fs)", t_unknown, t_wrong))
 
 # ── norm decisions and latest-wins ───────────────────────────────────────────
 id1 <- append_norm_decision(con, "sponsor", RV, "accept", U1, SHA,
