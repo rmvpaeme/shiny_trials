@@ -47,7 +47,7 @@ trial_era <- function(year) {
 # Pure: a data frame in, an assignment table out. No database, no Shiny, so the
 # representativeness can be tested directly.
 draw_review_sample <- function(trials, reviewers, n = 300L, overlap = 0.10,
-                               sample_id = NULL, seed = NULL) {
+                               sample_id = NULL, seed = NULL, label = NULL) {
   stopifnot(length(reviewers) >= 1, n >= 1, overlap >= 0, overlap <= 1)
   if (is.null(sample_id)) sample_id <- format(Sys.time(), "sample-%Y%m%d-%H%M%S", tz = "UTC")
   if (is.null(seed)) seed <- sum(utf8ToInt(sample_id))
@@ -90,6 +90,7 @@ draw_review_sample <- function(trials, reviewers, n = 300L, overlap = 0.10,
   picked$reviewer <- rep(reviewers, length.out = nrow(picked))
   picked$is_overlap <- FALSE
   picked$sample_id <- sample_id
+  picked$label <- label %||% sample_id
 
   n_over <- floor(nrow(picked) * overlap)
   if (n_over > 0 && length(reviewers) > 1) {
@@ -103,7 +104,7 @@ draw_review_sample <- function(trials, reviewers, n = 300L, overlap = 0.10,
     picked <- rbind(picked, extra)
   }
   rownames(picked) <- NULL
-  picked[, c("sample_id", "trial_id", "reviewer", "stratum", "is_overlap")]
+  picked[, c("sample_id", "label", "trial_id", "reviewer", "stratum", "is_overlap")]
 }
 
 # How closely the draw mirrors the corpus. Printed when a sample is drawn, so
@@ -132,7 +133,20 @@ sample_store <- function(con, picked) {
   invisible(nrow(picked))
 }
 
+# Every draw this reviewer has rows in, newest first. They choose which round
+# they are working on — a validation can be redone, and the old one has to stay
+# readable while the new one runs.
+sample_choices_for_reviewer <- function(con, username) {
+  DBI::dbGetQuery(con, "
+    SELECT sample_id, COALESCE(max(label), sample_id) AS label,
+           min(drawn_at_utc) AS drawn, count(*) AS assigned
+    FROM review_sample
+    WHERE reviewer = $1 AND retired_at_utc IS NULL
+    GROUP BY sample_id ORDER BY drawn DESC", params = list(username))
+}
+
 sample_for_reviewer <- function(con, username, sample_id = NULL) {
+  if (!is.null(sample_id) && !nzchar(sample_id)) sample_id <- NULL
   if (is.null(sample_id)) {
     DBI::dbGetQuery(con, "
       SELECT s.* FROM review_sample s
@@ -180,9 +194,10 @@ sample_delete <- function(con, sample_id, force = FALSE, by = NA_character_) {
 sample_ids_with_work <- function(con) {
   DBI::dbGetQuery(con, "
     SELECT s.sample_id,
-           min(s.drawn_at_utc)      AS drawn,
-           count(*)                 AS assignments,
-           count(DISTINCT s.trial_id) AS trials,
+           COALESCE(max(s.label), s.sample_id) AS label,
+           min(s.drawn_at_utc)                 AS drawn,
+           count(*)                            AS assignments,
+           count(DISTINCT s.trial_id)          AS trials,
            (SELECT count(*) FROM trial_reviews r
              WHERE EXISTS (SELECT 1 FROM review_sample x
                            WHERE x.sample_id = s.sample_id AND x.trial_id = r.trial_id
