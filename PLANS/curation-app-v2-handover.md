@@ -118,6 +118,31 @@ Do not "fix" these.
 
 ---
 
+## 4b. What the review screen is for, and what it must not become
+
+It answers one question: **is this value right?** Two columns — what the
+register said, what the app shows — and the differing rows are highlighted.
+That is the whole design.
+
+It grew a taxonomy once (five badge states, a "Processing" column naming
+pipeline stages, a four-badge legend, cells reading "Derived from EUCTR
+endPoints.endPoint.readyForValues") and had to be stripped back. The reviewers
+have no knowledge of the pipeline and should need none. There is a test that
+greps the rendered table for "normalised", "pipeline", "registry" and
+"canonical" and fails if any appears — it caught jargon sitting in a *data
+value*, which reviewing the markup alone would not have.
+
+Two rules that keep it honest:
+
+* **A dash always means the same thing** — the register did not supply this.
+  Anything else needing explanation is said ONCE, above the table, never
+  repeated per row. The "this data file is older than the app" banner is the
+  only such case and it removes itself when the cache catches up.
+* **Every field declares where its value comes from.** Four fields showed a
+  bare dash for months of development purely because `raw_cols` was left empty
+  while the source column sat in the cache. `tests/curation_trials.R` now
+  fails if a field has neither a source nor a stated reason for having none.
+
 ## 5. State of play
 
 **Working and verified against the live database and repo:** snapshot fetch,
@@ -135,7 +160,8 @@ end including the reject case, and the nightly wiring.
   `docker exec` is what the nightly uses.
 - `sql/app_role.sql` is written but **not applied**; the app still uses the
   `postgres` superuser.
-- No sample has been drawn, so tab 1 is empty for every reviewer.
+- Review rounds are NAMED and a reviewer switches between them; a round with
+  sign-offs behind it cannot be retired.
 - Root `README.md` / `CHANGELOG.md` not yet updated for v0.22.0.
 
 **Live accounts:** `laurevm`, `levih` (reviewers), `rubenvp` (admin). Their
