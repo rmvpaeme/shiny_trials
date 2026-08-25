@@ -96,5 +96,26 @@ if [ -z "$RHITS" ]; then ok "no database URL literal in any .R file"
 else bad "a database URL appears in R source:"; echo "$RHITS"; fi
 
 echo
+echo "6. the Posit deploy bundle carries no credentials"
+# git is not the only way a secret escapes. rsconnect::deployApp() bundles the
+# app DIRECTORY including dotfiles: verified that a bare call would upload
+# curation_app/.Renviron, putting the database password inside the Posit Cloud
+# bundle. deploy.R uses an allowlist so a new file is not uploaded until named.
+DEPLOY="curation_app/deploy.R"
+if [ ! -f "$DEPLOY" ]; then
+    bad "$DEPLOY is missing — a bare deployApp() would ship .Renviron"
+else
+    if grep -q "appFiles *= *APP_FILES" "$DEPLOY"; then
+        ok "the deploy names an explicit file allowlist"
+    else bad "the deploy does not pass an allowlist to deployApp()"; fi
+    if grep -qE "^\s*\"\.Renviron\"|Renviron" <(sed -n '/^APP_FILES <- c(/,/^)/p' "$DEPLOY"); then
+        bad "the deploy allowlist contains .Renviron"
+    else ok ".Renviron is not in the allowlist"; fi
+    if grep -q "REFUSING TO DEPLOY" "$DEPLOY"; then
+        ok "the deploy refuses outright on a credential-shaped filename"
+    else bad "the deploy has no refusal for credential-shaped files"; fi
+fi
+
+echo
 if [ "$fails" -ne 0 ]; then echo "$fails check(s) failed — DO NOT PUSH"; exit 1; fi
 echo "all checks passed — safe to push"
