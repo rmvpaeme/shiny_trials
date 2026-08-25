@@ -154,6 +154,31 @@ else
     if grep -q "REFUSING TO DEPLOY" "$DEPLOY"; then
         ok "a credential-shaped filename is still refused outright"
     else bad "no refusal for credential-shaped files"; fi
+
+    # The allowlist fails CLOSED, which is safe but means a file app.R sources
+    # and the list omits is simply missing at runtime — the app dies on startup
+    # with "cannot open file". R/sample.R shipped in exactly that state.
+    SOURCED="$(sed -n '/^for (f in c(/,/)) {/p' curation_app/app.R \
+               | grep -oE '"[A-Za-z_]+\.R"' | tr -d '"' | sort -u)"
+    if [ -z "$SOURCED" ]; then
+        bad "could not read the source list from curation_app/app.R"
+    else
+        # Compare against the QUOTED FILENAMES only, never the raw block. The
+        # block includes comments, and the comment explaining this very check
+        # mentions "sample.R" — so a substring match against the block passed
+        # while sample.R was genuinely missing from the list. The test was
+        # green because of its own prose.
+        ALLOW_FILES="$(printf '%s' "$ALLOWLIST" | grep -oE '"[A-Za-z_]+\.R"' | tr -d '"' | sort -u)"
+        MISSING=""
+        for f in $SOURCED; do
+            echo "$ALLOW_FILES" | grep -qx "$f" || MISSING="$MISSING $f"
+        done
+        if [ -n "$MISSING" ]; then
+            bad "app.R sources these but the deploy allowlist omits them:$MISSING"
+        else
+            ok "every file app.R sources is in the deploy allowlist"
+        fi
+    fi
 fi
 
 echo

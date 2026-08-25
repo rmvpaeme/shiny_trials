@@ -127,10 +127,30 @@ screen and looks exactly like bad credentials; the app now says otherwise.
 To **Posit Cloud, by hand** — not through the nightly like the dashboard. Its
 data changes nightly; its code does not.
 
+Target is **Connect Cloud**, because it has a Vars pane: `CURATION_DB_URL` is
+set on the deployed app and never enters the bundle.
+
 ```bash
-Rscript curation_app/deploy.R            # dry run: shows exactly what uploads
+Rscript curation_app/deploy.R                      # dry run: shows what uploads
 Rscript curation_app/deploy.R --deploy
 ```
+
+First time only, authorise the account:
+
+```r
+# connect.posit.cloud -> avatar -> API Keys -> New key
+rsconnect::connectApiUser(account = "<username>",
+                          server  = "connect.posit.cloud",
+                          apiKey  = "<key>")
+```
+
+After deploying, set the variable — the app cannot sign anyone in without it:
+
+> Connect Cloud → the app → **Vars** → `CURATION_DB_URL` = the session pooler URL
+
+To use shinyapps.io instead: `--server=shinyapps.io --deploy --include-env`.
+It has no Vars pane, so the string must be bundled; apply `sql/app_role.sql`
+first so what ships is the least-privilege role.
 
 `deploy.R` uses an **allowlist**, not an exclusion list. A bare
 `rsconnect::deployApp()` bundles the directory including dotfiles — verified
