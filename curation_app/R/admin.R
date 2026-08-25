@@ -52,6 +52,26 @@ admin_ui <- function(id) {
             shiny::div(class = "form-text ms-2",
               "Accounts are never deleted — decisions reference them.")))
       ),
+      bslib::nav_panel("Review sample",
+        shiny::div(class = "mt-3"),
+        shiny::p(class = "small text-muted",
+          "51,311 trials will never all be validated. A stratified sample is ",
+          "drawn once and split across the reviewers; the error rate measured ",
+          "on it is what generalises to the corpus."),
+        shiny::div(class = "d-flex gap-3 align-items-end",
+          shiny::numericInput(ns("smp_n"), "Trials in the sample", value = 300,
+                              min = 10, max = 5000, step = 10, width = "180px"),
+          shiny::numericInput(ns("smp_overlap"), "Double-assigned %", value = 10,
+                              min = 0, max = 100, step = 5, width = "160px"),
+          shiny::actionButton(ns("smp_draw"), "Draw sample", class = "btn-primary btn-sm")),
+        shiny::div(class = "form-text",
+          "Stratified by register and era, allocated proportionally. The ",
+          "double-assigned share is what makes inter-rater agreement ",
+          "measurable — with none, no two reviewers ever see the same trial."),
+        shiny::hr(),
+        shiny::h6("Progress"), DT::DTOutput(ns("smp_progress")),
+        shiny::h6("How closely the draw mirrors the corpus", class = "mt-3"),
+        DT::DTOutput(ns("smp_rep"))),
       bslib::nav_panel("Snapshot",
         shiny::div(class = "mt-3"),
         shiny::uiOutput(ns("snapshot_info")),
@@ -79,9 +99,11 @@ admin_ui <- function(id) {
 }
 
 admin_server <- function(id, db, session_user, snapshot = snapshot_current,
-                         refresh = snapshot_refresh) {
+                         refresh = snapshot_refresh, cache = NULL) {
   shiny::moduleServer(id, function(input, output, session) {
     tick <- shiny::reactiveVal(0)
+    sample_tick <- shiny::reactiveVal(0)
+    last_rep <- shiny::reactiveVal(NULL)
 
     # One helper so no output can accidentally be written without the guard.
     admin_q <- function(f, ...) {
@@ -185,6 +207,47 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
     }
     shiny::observeEvent(input$act_off, set_active(FALSE))
     shiny::observeEvent(input$act_on,  set_active(TRUE))
+
+    shiny::observeEvent(input$smp_draw, {
+      u <- auth_user(session)
+      if (is.null(u) || !identical(u$role, "admin") || is.null(db)) return()
+      if (is.null(cache)) {
+        shiny::showNotification("No trials cache loaded.", type = "error"); return() }
+      a <- accounts()
+      revs <- a$username[a$active]
+      if (!length(revs)) { shiny::showNotification("No active reviewers.", type = "error"); return() }
+      sid <- format(Sys.time(), "sample-%Y%m%d-%H%M%S", tz = "UTC")
+      ok <- tryCatch({
+        picked <- draw_review_sample(cache, revs, n = as.integer(input$smp_n),
+                                     overlap = (input$smp_overlap %||% 10) / 100,
+                                     sample_id = sid)
+        sample_store(db, picked)
+        last_rep(sample_representativeness(cache, picked))
+        TRUE
+      }, error = function(e) {
+        shiny::showNotification(conditionMessage(e), type = "error")
+        note("draw_sample_failed", sid, list(reason = conditionMessage(e))); FALSE })
+      if (ok) {
+        note("draw_sample", sid, list(n = input$smp_n, overlap_pct = input$smp_overlap,
+                                      reviewers = length(revs)))
+        sample_tick(sample_tick() + 1)
+        shiny::showNotification("Sample drawn and assigned.", type = "message")
+      }
+    })
+
+    output$smp_progress <- DT::renderDT({
+      sample_tick()
+      p <- admin_q(sample_progress)
+      shiny::validate(shiny::need(!is.null(p) && nrow(p), "No sample drawn yet."))
+      DT::datatable(p, rownames = FALSE, options = list(dom = "t"))
+    })
+
+    output$smp_rep <- DT::renderDT({
+      require_role(session, "admin")
+      r <- last_rep()
+      shiny::validate(shiny::need(!is.null(r), "Draw a sample to see this."))
+      DT::datatable(r, rownames = FALSE, options = list(dom = "t"))
+    })
 
     output$snapshot_info <- shiny::renderUI({
       require_role(session, "admin")

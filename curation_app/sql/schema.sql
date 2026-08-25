@@ -218,3 +218,59 @@ FROM trial_decisions
 GROUP BY trial_id, field_id
 HAVING count(DISTINCT reviewer) > 1
    AND count(DISTINCT COALESCE(final_value, '<none>')) > 1;
+
+-- ── The review sample ───────────────────────────────────────────────────────
+--
+-- 51,311 trials will never all be validated. A representative sample is drawn
+-- and split across the reviewers, and the error rate measured on it is what
+-- generalises to the corpus — which is only true if the sample mirrors the
+-- corpus, hence the stratum recorded on every row.
+--
+-- A trial may appear TWICE with different reviewers. That is deliberate: with a
+-- fully disjoint split no two people ever see the same trial, so inter-rater
+-- agreement is structurally unmeasurable and the disagreement report can never
+-- populate. About 10% is double-assigned.
+CREATE TABLE IF NOT EXISTS review_sample (
+  sample_row_id BIGSERIAL PRIMARY KEY,
+  sample_id     TEXT NOT NULL,          -- one draw; several may coexist
+  trial_id      TEXT NOT NULL,
+  reviewer      TEXT NOT NULL REFERENCES reviewers(username),
+  stratum       TEXT NOT NULL,          -- register × era, for the weighting
+  is_overlap    BOOLEAN NOT NULL DEFAULT FALSE,
+  drawn_at_utc  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (sample_id, trial_id, reviewer)
+);
+CREATE INDEX IF NOT EXISTS review_sample_reviewer_idx
+  ON review_sample (reviewer, sample_id);
+CREATE INDEX IF NOT EXISTS review_sample_trial_idx
+  ON review_sample (trial_id);
+
+-- Progress against the sample, which is the number that actually matters:
+-- "N of your M done", not "N of 51,311".
+CREATE OR REPLACE VIEW review_sample_progress AS
+SELECT s.sample_id, s.reviewer,
+       count(*)                                             AS assigned,
+       count(r.trial_id)                                    AS reviewed,
+       count(*) FILTER (WHERE s.is_overlap)                 AS overlap_assigned
+FROM review_sample s
+LEFT JOIN (SELECT DISTINCT trial_id, reviewer FROM trial_reviews) r
+       ON r.trial_id = s.trial_id AND r.reviewer = s.reviewer
+GROUP BY s.sample_id, s.reviewer;
+
+-- Where two reviewers were given the same trial, did they agree? Only the
+-- overlap can answer this, which is why the overlap exists.
+CREATE OR REPLACE VIEW review_sample_agreement AS
+WITH pairs AS (
+  SELECT s.sample_id, s.trial_id, count(DISTINCT s.reviewer) AS n_assigned
+  FROM review_sample s GROUP BY s.sample_id, s.trial_id HAVING count(DISTINCT s.reviewer) > 1
+)
+SELECT p.sample_id, p.trial_id,
+       count(DISTINCT t.reviewer)                                  AS n_reviewed_by,
+       count(DISTINCT COALESCE(d.field_id, '')) FILTER (WHERE d.field_id IS NOT NULL)
+                                                                   AS fields_changed,
+       bool_or(dis.trial_id IS NOT NULL)                           AS disagreed
+FROM pairs p
+LEFT JOIN trial_reviews t   ON t.trial_id = p.trial_id
+LEFT JOIN trial_decisions d ON d.trial_id = p.trial_id
+LEFT JOIN trial_disagreements dis ON dis.trial_id = p.trial_id
+GROUP BY p.sample_id, p.trial_id;
