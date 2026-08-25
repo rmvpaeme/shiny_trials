@@ -39,7 +39,7 @@ suppressPackageStartupMessages({
 })
 
 for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
-            "norm_review.R", "trials.R", "stats.R", "admin.R")) {
+            "norm_review.R", "sample.R", "trials.R", "stats.R", "admin.R")) {
   source(file.path("R", f))
 }
 
@@ -172,7 +172,8 @@ server <- function(input, output, session) {
   trials_server("trials", db = DB_POOL, session_user = session_user,
                 cache = TRIALS_CACHE)
   stats_server("stats", db = DB_POOL, session_user = session_user)
-  admin_server("admin", db = DB_POOL, session_user = session_user)
+  admin_server("admin", db = DB_POOL, session_user = session_user,
+               cache = TRIALS_CACHE)
 
   output$banner <- renderUI({
     require_role(session)

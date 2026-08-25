@@ -68,12 +68,35 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     output$filters <- shiny::renderUI({
       shiny::req(!is.null(cache))
       shiny::div(class = "d-flex gap-2 align-items-end mb-2",
+        # Defaults to the reviewer's own assignment. 51,311 trials will never
+        # all be validated; a stratified sample is drawn and split, and browsing
+        # the whole corpus is the exception rather than the starting point.
+        shiny::selectInput(ns("scope"), "Show",
+          choices = c("My assigned sample" = "mine", "All trials" = "all"),
+          selected = "mine", width = "200px"),
         shiny::textInput(ns("search"), "Search title, sponsor, substance or CT number",
-                         width = "420px"),
+                         width = "360px"),
         shiny::selectInput(ns("register"), "Register",
                            choices = c("All", sort(unique(stats::na.omit(cache$register)))),
                            width = "130px"),
         shiny::checkboxInput(ns("only_undecided"), "Hide trials already reviewed", value = FALSE))
+    })
+
+    assigned <- shiny::reactive({
+      reviewed_tick()
+      u <- session_user()
+      if (is.null(u) || is.null(db)) return(NULL)
+      tryCatch(sample_for_reviewer(db, u$username), error = function(e) NULL)
+    })
+
+    output$assignment_progress <- shiny::renderUI({
+      a <- assigned(); if (is.null(a) || !nrow(a)) return(NULL)
+      done <- sum(a$trial_id %in% my_reviews())
+      shiny::div(class = "small text-muted mb-2",
+        sprintf("%d of %d assigned trials reviewed", done, nrow(a)),
+        if (any(a$is_overlap))
+          sprintf(" · %d also assigned to someone else, to measure agreement",
+                  sum(a$is_overlap)))
     })
 
     reviewed_tick <- shiny::reactiveVal(0)
@@ -85,6 +108,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     filtered <- shiny::reactive({
       d <- cache; shiny::req(!is.null(d))
+      if (identical(input$scope %||% "mine", "mine")) {
+        a <- assigned()
+        # An empty assignment means no sample has been drawn for this reviewer
+        # yet. Showing all 51,311 instead would silently defeat the sampling.
+        d <- if (is.null(a) || !nrow(a)) d[0, , drop = FALSE]
+             else d[d$`_id` %in% a$trial_id, , drop = FALSE]
+      }
       q <- input$search %||% ""
       if (nzchar(q)) {
         # A few named columns, not all 81: a grepl across the whole frame on
@@ -102,7 +132,10 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     output$table <- DT::renderDT({
       d <- filtered()
-      shiny::validate(shiny::need(!is.null(d) && nrow(d), "No trials match."))
+      shiny::validate(shiny::need(!is.null(d) && nrow(d),
+        if (identical(input$scope %||% "mine", "mine"))
+          "No trials assigned to you yet — an admin draws the review sample."
+        else "No trials match."))
       d$title_short <- substr(d$Full_title %||% "", 1, 70)
       # No filter = "top": a row of per-column boxes above five columns is more
       # chrome than the table itself, and the search box above already covers
