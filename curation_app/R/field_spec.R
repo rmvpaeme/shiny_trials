@@ -132,12 +132,13 @@ fmt_sponsor <- function(row) {
 
 # Same principle: show the category, and only mention the register's own
 # wording when it differs. "Completed (category: Completed)" is noise.
+# The grouped status. The register's own wording is in the raw column beside
+# it, so repeating it here would be the "(final label: ...)" mistake again.
 fmt_status <- function(row) {
   cat_ <- row_val(row, "status")
   raw  <- row_val(row, "status_raw")
   if (is.na(cat_)) return(raw)
-  if (is.na(raw) || identical(trimws(raw), trimws(cat_))) return(cat_)
-  paste0(cat_, "  (register: ", raw, ")")
+  cat_
 }
 
 fmt_participants <- function(row) {
@@ -256,14 +257,15 @@ TRIAL_FIELD_SPEC <- list(
        note = "This trial only."),
 
   list(id = "register", label = "Register", group = "status",
-       raw_cols = character(), norm_col = "register", render = NULL,
+       raw_cols = "_id", norm_col = "register", render = NULL,
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "derived from the trial id pattern",
        note = "Comes from the trial number. Not editable."),
 
   list(id = "status", label = "Status", group = "status",
-       raw_cols = "status_raw", norm_col = "status", render = fmt_status,
+       raw_cols = c("trial_status_raw", "status_raw"), norm_col = "status",
+       render = fmt_status,
        editable = TRUE, control = "select", vocab = c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative"),
        route = "trial_override", override_col = "status",
        pipeline = "regex-bucketed into five categories",
@@ -301,7 +303,8 @@ TRIAL_FIELD_SPEC <- list(
        note = "This trial only."),
 
   list(id = "start_date", label = "Start Date", group = "status",
-       raw_cols = character(), norm_col = "start_date",
+       raw_cols = c("trialInformation.recruitmentStartDate",
+                    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedRecruitmentStartDate"), norm_col = "start_date",
        render = fmt_date("start_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "start_date",
@@ -309,7 +312,9 @@ TRIAL_FIELD_SPEC <- list(
        note = "This trial only."),
 
   list(id = "decision_date", label = "Decision Date", group = "status",
-       raw_cols = character(), norm_col = "decision_date",
+       raw_cols = c("n_date_of_competent_authority_decision",
+                    "ctis_decision_date_first",
+                    "authorizedApplication.applicationInfo.decisionDate"), norm_col = "decision_date",
        render = fmt_date("decision_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "decision_date",
@@ -317,7 +322,9 @@ TRIAL_FIELD_SPEC <- list(
        note = "This trial only."),
 
   list(id = "trial_end_date", label = "Trial End Date", group = "status",
-       raw_cols = character(), norm_col = "trial_duration_end_date",
+       raw_cols = c("p_date_of_the_global_end_of_the_trial",
+                    "trialInformation.globalEndOfTrialDate",
+                    "authorizedApplication.authorizedPartI.trialDetails.trialInformation.trialDuration.estimatedEndDate"), norm_col = "trial_duration_end_date",
        render = fmt_date("trial_duration_end_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "trial_duration_end_date",
@@ -330,6 +337,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "end date minus start date, discarded outside 0-3650 days",
+       no_source = "worked out from the start and end dates",
        note = "Worked out from the two dates. Edit those instead."),
 
   list(id = "has_results", label = "Results reported", group = "status",
@@ -338,6 +346,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "bool", vocab = NULL,
        route = "trial_override", override_col = "has_results",
        pipeline = "presence of the register's results flag",
+       no_source = "the register did not report results",
        note = "This trial only."),
 
   list(id = "result_source", label = "Result source", group = "status",
@@ -346,6 +355,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "not processed",
+       no_source = "the register did not say",
        note = "Not editable.")
 )
 
@@ -413,6 +423,9 @@ field_rows <- function(row, group = NULL, spec = TRIAL_FIELD_SPEC) {
       group = f$group,
       raw   = raw,
       raw_status = status,
+      # Why there is no register value, when we know. A bare dash on a field
+      # that is computed rather than reported reads as missing data.
+      no_source = f$no_source %||% NA_character_,
       norm  = norm,
       change = change,
       pipeline = f$pipeline %||% NA_character_

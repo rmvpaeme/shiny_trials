@@ -240,7 +240,18 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
               shiny::tags$th(x$label),
               shiny::tags$td(
                 if (identical(x$raw_status, "absent"))
-                  shiny::tags$span(class = "text-muted", "—")
+                  # NOT a bare dash. The register did supply this; the data file
+                  # the app is reading was built before it started keeping the
+                  # register's wording for this field. A dash here is
+                  # indistinguishable from "the register said nothing", which is
+                  # a different fact and a different action.
+                  shiny::tags$span(class = "text-muted fst-italic",
+                                   title = "The next nightly rebuild adds it.",
+                                   "not in this data yet")
+                # A bare dash on a field the register never reports reads as
+                # missing data. Where the reason is known, say it.
+                else if ((is.na(x$raw) || !nzchar(trimws(x$raw))) && !is.na(x$no_source))
+                  shiny::tags$span(class = "text-muted fst-italic", x$no_source)
                 else show_val(x$raw)),
               shiny::tags$td(
                 if (has_pending)
