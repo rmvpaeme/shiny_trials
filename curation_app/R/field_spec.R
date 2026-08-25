@@ -44,9 +44,20 @@
 #   render     Optional function(row) -> display string, for the few cells that
 #              are composites rather than a single column.
 #
-# Edit-side keys (editable/control/vocab/route/override_col) arrive with the
-# curation app's trial-validation tab. They are deliberately absent until there
-# is something that reads them.
+#   editable   FALSE for derived fields. Load-bearing: allowing an edit to
+#              trial_duration_days would silently contradict the two dates shown
+#              on the same screen.
+#   control    widget type: select | text | number | date | bool | entity
+#   vocab      a literal vector, or NULL for free text. Registry-backed fields
+#              resolve their choices server-side — 6,954 sponsor and 19,645
+#              substance canonicals do not belong in a browser payload.
+#   route      WHERE A CORRECTION GOES. sponsor_registry / substance_registry
+#              generalise to every trial carrying that raw string;
+#              trial_override applies to this trial alone.
+#   override_col  the cache column an override writes. MUST be NA whenever
+#              route is not trial_override — that is what keeps the routing
+#              split enforced rather than conventional, and
+#              attach_trial_overrides() refuses those columns a second time.
 
 FIELD_SPEC_VERSION <- "1"
 
@@ -145,83 +156,147 @@ TRIAL_FIELD_SPEC <- list(
        raw_cols = c("sponsor_name_raw",
                     "b1_sponsor.b11_name_of_sponsor",
                     "authorizedApplication.authorizedPartI.sponsors.organisation.name"),
-       norm_col = "sponsor_label", render = fmt_sponsor),
+       norm_col = "sponsor_label", render = fmt_sponsor,
+       editable = TRUE, control = "entity", vocab = NULL,
+       route = "sponsor_registry", override_col = NA_character_,
+       note = "Corrects EVERY trial carrying this raw sponsor string."),
 
   list(id = "sponsor_type", label = "Sponsor type", group = "entities",
        raw_cols = c("b1_sponsor.b31_and_b32_status_of_the_sponsor",
                     "authorizedApplication.authorizedPartI.sponsors.commercial"),
-       norm_col = "sponsor_type", render = NULL),
+       norm_col = "sponsor_type", render = NULL,
+       editable = TRUE, control = "select", vocab = c("academic", "industry"),
+       route = "sponsor_registry", override_col = NA_character_,
+       note = "Entity type on the registry; applies to every trial with this sponsor."),
 
   list(id = "product", label = "Product", group = "entities",
        raw_cols = c("DIMP_product_name_raw", "DIMP_product_name"),
-       norm_col = "DIMP_product_name", render = NULL),
+       norm_col = "DIMP_product_name", render = NULL,
+       editable = TRUE, control = "text", vocab = NULL,
+       route = "trial_override", override_col = "DIMP_product_name",
+       note = "This trial only."),
 
   list(id = "inn", label = "INN / Generic name", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_inn_name"),
-       norm_col = "DIMP_inn_name", render = NULL),
+       norm_col = "DIMP_inn_name", render = NULL,
+       editable = TRUE, control = "text", vocab = NULL,
+       route = "trial_override", override_col = "DIMP_inn_name",
+       note = "This trial only."),
 
   list(id = "substance", label = "Active substance", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_product_name_raw",
                     "DIMP_inn_name", "DIMP_product_name"),
-       norm_col = "substance_label", render = NULL),
+       norm_col = "substance_label", render = NULL,
+       editable = TRUE, control = "entity", vocab = NULL,
+       route = "substance_registry", override_col = NA_character_,
+       note = "Corrects EVERY trial carrying this raw substance string."),
 
   list(id = "organ_class", label = "MedDRA organ class", group = "entities",
        raw_cols = c("MEDDRA_organ_class_raw", "MEDDRA_organ_class"),
-       norm_col = "MEDDRA_organ_class", render = NULL),
+       norm_col = "MEDDRA_organ_class", render = NULL,
+       editable = TRUE, control = "text", vocab = NULL,
+       route = "trial_override", override_col = "MEDDRA_organ_class",
+       note = "This trial only. MedDRA has no registry."),
 
   list(id = "meddra_term", label = "MedDRA term", group = "entities",
        raw_cols = c("MEDDRA_term_raw", "MEDDRA_term"),
-       norm_col = "MEDDRA_term", render = NULL),
+       norm_col = "MEDDRA_term", render = NULL,
+       editable = TRUE, control = "text", vocab = NULL,
+       route = "trial_override", override_col = "MEDDRA_term",
+       note = "This trial only. MedDRA has no registry."),
 
   list(id = "age_group", label = "Age group", group = "entities",
-       raw_cols = "age_group_raw", norm_col = "age_group", render = NULL),
+       raw_cols = "age_group_raw", norm_col = "age_group", render = NULL,
+       editable = TRUE, control = "select", vocab = c("Paediatric", "Adult", "Paediatric & Adult", "Unknown"),
+       route = "trial_override", override_col = "age_group",
+       note = "This trial only."),
 
   list(id = "is_orphan", label = "Orphan designation", group = "entities",
-       raw_cols = "is_orphan_raw", norm_col = "is_orphan", render = NULL),
+       raw_cols = "is_orphan_raw", norm_col = "is_orphan", render = NULL,
+       editable = TRUE, control = "select", vocab = c("Yes", "No", "Unknown"),
+       route = "trial_override", override_col = "is_orphan",
+       note = "This trial only."),
 
   list(id = "register", label = "Register", group = "status",
-       raw_cols = character(), norm_col = "register", render = NULL),
+       raw_cols = character(), norm_col = "register", render = NULL,
+       editable = FALSE, control = "text", vocab = NULL,
+       route = NA_character_, override_col = NA_character_,
+       note = "Identity, derived from the trial id. Not editable."),
 
   list(id = "status", label = "Status", group = "status",
-       raw_cols = "status_raw", norm_col = "status", render = fmt_status),
+       raw_cols = "status_raw", norm_col = "status", render = fmt_status,
+       editable = TRUE, control = "select", vocab = c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative"),
+       route = "trial_override", override_col = "status",
+       note = "This trial only. The status CATEGORY, not the register wording."),
 
   list(id = "phase", label = "Phase", group = "entities",
-       raw_cols = "phase_raw", norm_col = "phase", render = NULL),
+       raw_cols = "phase_raw", norm_col = "phase", render = NULL,
+       editable = TRUE, control = "select", vocab = c("Phase I", "Phase II", "Phase III", "Phase IV",
+                       "Phase I / Phase II", "Phase II / Phase III"),
+       route = "trial_override", override_col = "phase",
+       note = "This trial only."),
 
   list(id = "participants", label = "Participants", group = "entities",
        raw_cols = "participants_n_raw", norm_col = "participants_n",
-       render = fmt_participants),
+       render = fmt_participants,
+       editable = TRUE, control = "number", vocab = NULL,
+       route = "trial_override", override_col = "participants_n",
+       note = "This trial only."),
 
   list(id = "countries", label = "Countries", group = "entities",
-       raw_cols = "Member_state_raw", norm_col = "Member_state", render = NULL),
+       raw_cols = "Member_state_raw", norm_col = "Member_state", render = NULL,
+       editable = TRUE, control = "text", vocab = NULL,
+       route = "trial_override", override_col = "Member_state",
+       note = "This trial only. Slash-separated; # Countries is recomputed."),
 
   list(id = "submitted", label = "Submitted", group = "status",
        raw_cols = "submission_date", norm_col = "submission_date_parsed",
-       render = fmt_date("submission_date_parsed")),
+       render = fmt_date("submission_date_parsed"),
+       editable = TRUE, control = "date", vocab = NULL,
+       route = "trial_override", override_col = "submission_date_parsed",
+       note = "This trial only."),
 
   list(id = "start_date", label = "Start Date", group = "status",
        raw_cols = character(), norm_col = "start_date",
-       render = fmt_date("start_date")),
+       render = fmt_date("start_date"),
+       editable = TRUE, control = "date", vocab = NULL,
+       route = "trial_override", override_col = "start_date",
+       note = "This trial only."),
 
   list(id = "decision_date", label = "Decision Date", group = "status",
        raw_cols = character(), norm_col = "decision_date",
-       render = fmt_date("decision_date")),
+       render = fmt_date("decision_date"),
+       editable = TRUE, control = "date", vocab = NULL,
+       route = "trial_override", override_col = "decision_date",
+       note = "This trial only."),
 
   list(id = "trial_end_date", label = "Trial End Date", group = "status",
        raw_cols = character(), norm_col = "trial_duration_end_date",
-       render = fmt_date("trial_duration_end_date")),
+       render = fmt_date("trial_duration_end_date"),
+       editable = TRUE, control = "date", vocab = NULL,
+       route = "trial_override", override_col = "trial_duration_end_date",
+       note = "This trial only. Trial duration is recomputed."),
 
   list(id = "trial_duration", label = "Trial duration", group = "status",
        raw_cols = character(), norm_col = "trial_duration_days",
-       render = fmt_duration),
+       render = fmt_duration,
+       editable = FALSE, control = "text", vocab = NULL,
+       route = NA_character_, override_col = NA_character_,
+       note = "Derived from the two dates. Edit those instead."),
 
   list(id = "has_results", label = "Results reported", group = "status",
        raw_cols = "results_source_raw", norm_col = "has_results",
-       render = fmt_results_reported),
+       render = fmt_results_reported,
+       editable = TRUE, control = "bool", vocab = NULL,
+       route = "trial_override", override_col = "has_results",
+       note = "This trial only."),
 
   list(id = "result_source", label = "Result source", group = "status",
        raw_cols = "results_source_raw", norm_col = "results_source_raw",
-       render = fmt_result_source)
+       render = fmt_result_source,
+       editable = FALSE, control = "text", vocab = NULL,
+       route = NA_character_, override_col = NA_character_,
+       note = "The register's own words. Not editable.")
 )
 
 # ── The extraction contract ───────────────────────────────────────────────────
