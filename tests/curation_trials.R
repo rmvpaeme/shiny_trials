@@ -6,7 +6,7 @@
 # edit does NOT become a per-trial override and a phase edit does NOT become a
 # registry pin. Needs CURATION_DB_URL for the write half.
 
-suppressPackageStartupMessages({ library(shiny); library(DBI); library(dplyr) })
+suppressPackageStartupMessages({ library(shiny); library(DBI); library(dplyr); library(DT); library(bslib) })
 
 owd <- setwd("curation_app"); on.exit(setwd(owd), add = TRUE)
 source("R/util.R"); source("R/field_spec.R"); source("R/github.R")
@@ -101,6 +101,36 @@ if (is.null(con)) { cat("  SKIP  database unreachable\n") } else {
           "no trial id leaked into a registry decision's key")
   }, finally = { cleanup(); dbDisconnect(con) })
 }}
+
+cat("\n5. the overview renders as a readable table, not a form\n")
+# Defaults to the gitignored local build (rebuild with:
+#   DB_PATH=data/trials_small.sqlite CACHE_PATH=trials_cache_local.rds Rscript -e 'source("app.R")')
+cache_path <- Sys.getenv("CACHE_TEST", unset = file.path(owd, "trials_cache_local.rds"))
+if (!nzchar(cache_path) || !file.exists(cache_path)) {
+  cat("  SKIP  set CACHE_TEST to a current trials cache to exercise the render\n")
+} else {
+  cache <- readRDS(cache_path)
+  testServer(function(input, output, session) {
+    auth_init(session)
+    auth_login(session, list(username = "u", display_name = "U", role = "reviewer", active = TRUE))
+    trials_server("trials", db = NULL, session_user = reactive(auth_user(session)),
+                  cache = cache, snapshot = function() list(sha = strrep("f", 40)))
+  }, {
+    session$setInputs(`trials-search` = "", `trials-register` = "All",
+                      `trials-only_undecided` = FALSE)
+    session$setInputs(`trials-table_rows_selected` = 1L)
+    h <- paste(as.character(output$`trials-detail`), collapse = "")
+    check(grepl("Registry raw / source value", h) && grepl("Normalised dashboard value", h),
+          "raw and normalised are shown side by side, as in the dashboard")
+    n_edit <- length(gregexpr(">edit<", h)[[1]])
+    check(n_edit == length(ed),
+          sprintf("every editable field is clickable (%d links, %d editable fields)", n_edit, length(ed)))
+    check(length(gregexpr("text-muted small\">—<", h)[[1]]) == 3,
+          "the three derived fields are NOT clickable")
+    for (lbl in c("Sponsor", "Phase", "Age group", "Orphan designation", "Countries"))
+      check(grepl(paste0(">", lbl, "<"), h), sprintf("the %s row is present", lbl))
+  })
+}
 
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
