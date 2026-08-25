@@ -17,25 +17,29 @@
 # registry, so they fix every trial carrying it. Everything else becomes a
 # per-trial override. The editor says which, every time, before saving.
 
-TRIAL_TABLE_COLS <- c("_id", "CT_number", "register", "Full_title", "sponsor_label",
-                      "substance_label", "MEDDRA_term", "phase", "status",
-                      "Member_state", "year", "participants_n")
+# Deliberately short. The full title, substance, condition, countries and
+# participant count all appear in the detail panel beside their raw values, so
+# repeating them here only makes every row tall enough to hide the panel. The
+# title is truncated rather than dropped: it is how a human recognises a trial.
+TRIAL_TABLE_COLS <- c("CT_number", "title_short", "sponsor_label", "phase", "status", "year")
 
 trials_ui <- function(id) {
   ns <- shiny::NS(id)
-  bslib::layout_sidebar(
-    sidebar = bslib::sidebar(
-      width = 330, position = "right",
-      shiny::uiOutput(ns("detail_header")),
-      shiny::hr(),
-      shiny::uiOutput(ns("sign_off"))
-    ),
-    shiny::div(
-      class = "p-2",
-      shiny::uiOutput(ns("filters")),
-      DT::DTOutput(ns("table")),
-      shiny::hr(),
-      shiny::uiOutput(ns("detail"))
+  shiny::div(
+    class = "p-2",
+    shiny::uiOutput(ns("filters")),
+    bslib::layout_columns(
+      col_widths = c(5, 7),
+      # overflow-x on the COLUMN, not the page: without it the table renders at
+      # its natural width, spills out of its 5/12 track and the detail panel is
+      # drawn on top of it.
+      shiny::div(style = "overflow-x:auto; min-width:0;", DT::DTOutput(ns("table"))),
+      bslib::card(
+        class = "p-3",
+        shiny::uiOutput(ns("detail_header")),
+        shiny::uiOutput(ns("detail")),
+        shiny::uiOutput(ns("sign_off"))
+      )
     )
   )
 }
@@ -46,6 +50,20 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     snap <- shiny::reactive(snapshot())
 
     editable_fields <- Filter(function(f) isTRUE(f$editable), TRIAL_FIELD_SPEC)
+
+    # The canonical pools, for the sponsor and substance pickers. Same loader
+    # tab 2 uses, so both screens offer exactly the same live entities — and
+    # merged-away ones are excluded in both.
+    registries <- shiny::reactive({
+      sp <- snap(); if (is.null(sp)) return(list())
+      list(sponsor   = norm_registry_load(sp, "sponsor"),
+           substance = norm_registry_load(sp, "substance"))
+    })
+
+    entity_domain <- function(f) {
+      if (identical(f$route, "sponsor_registry")) "sponsor"
+      else if (identical(f$route, "substance_registry")) "substance" else NA_character_
+    }
 
     output$filters <- shiny::renderUI({
       shiny::req(!is.null(cache))
@@ -85,10 +103,25 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     output$table <- DT::renderDT({
       d <- filtered()
       shiny::validate(shiny::need(!is.null(d) && nrow(d), "No trials match."))
-      DT::datatable(head(d[, intersect(TRIAL_TABLE_COLS, names(d)), drop = FALSE], 5000),
-                    selection = "single", rownames = FALSE, filter = "top",
-                    options = list(pageLength = 8, scrollX = TRUE))
-    })
+      d$title_short <- substr(d$Full_title %||% "", 1, 70)
+      # No filter = "top": a row of per-column boxes above five columns is more
+      # chrome than the table itself, and the search box above already covers
+      # the fields anyone searches on.
+      tbl <- head(d[, intersect(TRIAL_TABLE_COLS, names(d)), drop = FALSE], 5000)
+      names(tbl) <- c("CT number", "Title", "Sponsor", "Phase", "Status", "Year")[
+        match(names(tbl), TRIAL_TABLE_COLS)]
+      DT::datatable(
+        tbl, selection = "single", rownames = FALSE, width = "100%",
+        options = list(
+          pageLength = 15, lengthChange = FALSE,
+          # scrollX keeps the overflow INSIDE the table rather than letting it
+          # push into the neighbouring column.
+          scrollX = TRUE, autoWidth = FALSE,
+          # Without no-wrap a 70-character title becomes three lines and one row
+          # is taller than the whole panel beside it.
+          columnDefs = list(list(targets = "_all", className = "dt-nowrap")),
+          dom = "tip"))
+    }, server = TRUE)
 
     row <- shiny::reactive({
       i <- input$table_rows_selected; d <- filtered()
@@ -113,6 +146,7 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       r <- row()
       if (is.null(r)) return(shiny::div(class = "text-muted", "Select a trial below."))
       shiny::div(
+        class = "mb-2",
         shiny::tags$strong(show_val(r$CT_number)),
         shiny::tags$a(" open ↗", href = trial_link(r), target = "_blank", class = "small"),
         shiny::p(class = "small text-muted mt-1 mb-0", show_val(r$Full_title)))
@@ -165,6 +199,7 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       if (is.null(r)) return(shiny::div(class = "text-muted p-2",
         "Select a trial to see how it was recoded."))
       shiny::div(
+        class = "curation-fields",
         render_group(r, "entities", "Registry raw values vs normalised values"),
         render_group(r, "status", "Dates, status and results"))
     })
@@ -191,7 +226,15 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
                      show_val(cur$raw)),
           shiny::div(class = "small text-muted mb-3", shiny::tags$em("Currently shown as: "),
                      show_val(cur$norm)),
+          if (!is.na(entity_domain(f)))
+            shiny::uiOutput(ns("new_canonical_warning")),
           switch(f$control,
+            # Server-side and empty at render: 6,954 sponsor and 19,645
+            # substance canonicals must not ship to the browser. Populated by
+            # the updateSelectizeInput below, once the input exists.
+            entity = shiny::selectizeInput(ns("edit_value"), f$label,
+                       choices = NULL, selected = cur$norm,
+                       options = list(create = TRUE, placeholder = "type to search")),
             select = shiny::selectInput(ns("edit_value"), f$label,
                        choices = unique(c("", f$vocab, if (!is.na(cur$norm)) cur$norm)),
                        selected = cur$norm %||% ""),
@@ -213,8 +256,36 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           else shiny::div(class = "text-muted small", f$note),
           footer = shiny::tagList(
             shiny::modalButton("Cancel"),
-            shiny::actionButton(ns("edit_save"), "Save", class = "btn-primary"))))
+            shiny::actionButton(ns("edit_save"), "Save", class = "btn-primary")))) 
+
+        # Must run AFTER showModal: the input does not exist until the modal is
+        # in the DOM, and updating a selectize that is not there silently does
+        # nothing — which is what left these as free-text boxes.
+        dom <- entity_domain(f)
+        if (!is.na(dom)) {
+          reg <- registries()[[dom]]
+          if (!is.null(reg) && nrow(reg)) {
+            shiny::updateSelectizeInput(session, "edit_value",
+              choices = sort(unique(reg$canonical)), selected = cur$norm,
+              server = TRUE)
+          }
+        }
       }, ignoreInit = TRUE)
+    })
+
+    # Uncontrolled canonical creation is how near-duplicates accumulated in the
+    # registry originally, so it is shown before the save, never after.
+    output$new_canonical_warning <- shiny::renderUI({
+      fid <- editing(); if (is.null(fid)) return(NULL)
+      f <- Filter(function(x) identical(x$id, fid), TRIAL_FIELD_SPEC)[[1]]
+      dom <- entity_domain(f); if (is.na(dom)) return(NULL)
+      v <- input$edit_value
+      if (is.null(v) || !nzchar(v)) return(NULL)
+      reg <- registries()[[dom]]
+      if (!is.null(reg) && v %in% reg$canonical) return(NULL)
+      shiny::div(class = "alert alert-warning py-2 small",
+        shiny::strong("New canonical. "),
+        sprintf("\"%s\" is not in the %s registry and will be created.", v, dom))
     })
 
     shiny::observeEvent(input$edit_save, {
@@ -264,9 +335,9 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     output$sign_off <- shiny::renderUI({
       if (is.null(row())) return(NULL)
-      shiny::tagList(
-        shiny::textAreaInput(ns("comment"), "Comment", rows = 2),
-        shiny::div(class = "d-grid gap-2",
+      shiny::div(class = "mt-2",
+        shiny::textAreaInput(ns("comment"), "Comment", rows = 2, width = "100%"),
+        shiny::div(class = "d-flex gap-2",
           shiny::actionButton(ns("validate"), "Mark validated", class = "btn-success btn-sm"),
           shiny::actionButton(ns("flag"), "Flag for another reviewer", class = "btn-warning btn-sm")))
     })
