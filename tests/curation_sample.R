@@ -96,6 +96,32 @@ if (is.null(con)) { cat("  SKIP  database unreachable\n") } else {
     prog2 <- sample_progress(con)
     prog2 <- prog2[prog2$sample_id == "__test__smp" & prog2$reviewer == U[1], ]
     check(as.numeric(prog2$reviewed) == 1, "signing a trial off advances that reviewer's progress")
+  cat("\n7. undoing a draw\n")
+  pk2 <- draw_review_sample(d, U, n = 20L, overlap = 0, sample_id = "__test__smp2")
+  sample_store(con, pk2)
+  w <- sample_ids_with_work(con)
+  w2 <- w[w$sample_id == "__test__smp2", ]
+  check(nrow(w2) == 1 && as.numeric(w2$assignments) == 20,
+        "a draw is listed with its assignment count")
+  check(as.numeric(w2$reviewed) == 0, "and with no work against it yet")
+
+  res <- sample_delete(con, "__test__smp2")
+  check(res$deleted == 20, "an untouched draw deletes freely")
+  check(nrow(sample_for_reviewer(con, U[1], "__test__smp2")) == 0, "and its rows are gone")
+
+  # A draw with work behind it must NOT be silently erased: sign-offs and the
+  # overlap the agreement figures are computed from would be orphaned.
+  pk3 <- draw_review_sample(d, U, n = 20L, overlap = 0, sample_id = "__test__smp3")
+  sample_store(con, pk3)
+  invisible(append_trial_review(con, pk3$trial_id[1], "validated", pk3$reviewer[1], strrep("a", 40)))
+  refused <- tryCatch({ sample_delete(con, "__test__smp3"); FALSE },
+                      error = function(e) grepl("already been reviewed", conditionMessage(e)))
+  check(isTRUE(refused), "a draw with reviews behind it is REFUSED")
+  check(nrow(sample_for_reviewer(con, pk3$reviewer[1], "__test__smp3")) > 0,
+        "and nothing was deleted")
+  forced <- sample_delete(con, "__test__smp3", force = TRUE)
+  check(forced$deleted == 20 && forced$reviews_orphaned == 1,
+        "forcing works and REPORTS what it orphaned")
   }, finally = { cleanup(); dbDisconnect(con) })
 }}
 

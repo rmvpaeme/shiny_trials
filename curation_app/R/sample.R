@@ -147,6 +147,43 @@ sample_for_reviewer <- function(con, username, sample_id = NULL) {
   }
 }
 
+# Undo a draw.
+#
+# Refuses once work has been done against it: deleting the assignment would
+# orphan sign-offs and decisions that were made BECAUSE a trial was assigned,
+# and the agreement figures are computed from the overlap in this table. A draw
+# nobody has touched is free to remove; one with reviews behind it is not, and
+# the right move there is to draw a new sample rather than erase the record of
+# the old one.
+sample_delete <- function(con, sample_id, force = FALSE) {
+  n_rev <- as.numeric(DBI::dbGetQuery(con, "
+    SELECT count(*) n FROM trial_reviews r
+    WHERE EXISTS (SELECT 1 FROM review_sample s
+                  WHERE s.sample_id = $1 AND s.trial_id = r.trial_id
+                    AND s.reviewer = r.reviewer)", params = list(sample_id))$n)
+  if (n_rev > 0 && !force)
+    stop(sprintf("%d trial(s) in this sample have already been reviewed. Draw a new sample instead, or force it deliberately.",
+                 n_rev), call. = FALSE)
+  n <- DBI::dbExecute(con, "DELETE FROM review_sample WHERE sample_id = $1",
+                      params = list(sample_id))
+  list(deleted = n, reviews_orphaned = if (force) n_rev else 0)
+}
+
+# How much work exists against each draw, so the admin can see what deleting
+# one would cost before doing it.
+sample_ids_with_work <- function(con) {
+  DBI::dbGetQuery(con, "
+    SELECT s.sample_id,
+           min(s.drawn_at_utc)      AS drawn,
+           count(*)                 AS assignments,
+           count(DISTINCT s.trial_id) AS trials,
+           (SELECT count(*) FROM trial_reviews r
+             WHERE EXISTS (SELECT 1 FROM review_sample x
+                           WHERE x.sample_id = s.sample_id AND x.trial_id = r.trial_id
+                             AND x.reviewer = r.reviewer)) AS reviewed
+    FROM review_sample s GROUP BY s.sample_id ORDER BY drawn DESC")
+}
+
 sample_progress <- function(con) {
   DBI::dbGetQuery(con, "SELECT * FROM review_sample_progress ORDER BY sample_id DESC, reviewer")
 }
