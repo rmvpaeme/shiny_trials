@@ -36,16 +36,51 @@ curation_db_label <- function(cfg = curation_db_config()) {
 
 curation_connect <- function(cfg = curation_db_config(), timeout = 20L) {
   if (is.null(cfg)) stop("CURATION_DB_URL is not set", call. = FALSE)
-  DBI::dbConnect(RPostgres::Postgres(),
-                 host = cfg$host, port = cfg$port, dbname = cfg$dbname,
-                 user = cfg$user, password = cfg$password,
-                 sslmode = cfg$sslmode, connect_timeout = timeout)
+  tryCatch(
+    DBI::dbConnect(RPostgres::Postgres(),
+                   host = cfg$host, port = cfg$port, dbname = cfg$dbname,
+                   user = cfg$user, password = cfg$password,
+                   sslmode = cfg$sslmode, connect_timeout = timeout),
+    error = function(e) stop(explain_connect_error(conditionMessage(e), cfg), call. = FALSE))
+}
+
+# Two connection failures are routinely misdiagnosed as bad credentials, and
+# both have a specific fix. Say so rather than passing the raw libpq text up.
+explain_connect_error <- function(msg, cfg) {
+  if (grepl("EMAXCONNSESSION|max clients reached", msg)) {
+    return(paste0(
+      "the database is out of client slots (", curation_db_label(cfg), ").\n",
+      "  Supabase's session pooler allows 15 for the WHOLE project, shared with\n",
+      "  export.R, any psql session and any second copy of the app. Nothing is\n",
+      "  wrong with the credentials. Close idle sessions or wait for the pooler\n",
+      "  to reap them.\n  Original: ", msg))
+  }
+  if (grepl("no route to host|could not translate host name", msg, ignore.case = TRUE)) {
+    return(paste0(
+      "cannot reach ", curation_db_label(cfg), ".\n",
+      "  Supabase's DIRECT endpoint (db.<ref>.supabase.co) is IPv6-only; on a\n",
+      "  network without IPv6 it resolves and then has no route. Use the SESSION\n",
+      "  pooler (aws-<n>-<region>.pooler.supabase.com:5432, username\n",
+      "  postgres.<ref>).\n  Original: ", msg))
+  }
+  paste0("could not connect to ", curation_db_label(cfg), ": ", msg)
 }
 
 # The app uses a pool: several concurrent sessions each opening their own
 # connection is how a free-tier database runs out of them. export.R does not —
 # it is one short-lived process and a pool would outlive its usefulness.
-curation_pool <- function(cfg = curation_db_config(), min = 1L, max = 5L) {
+#
+# THE CEILING IS 15 CLIENTS, NOT 15 PER PROCESS. Supabase's session-mode pooler
+# allows pool_size 15 for the whole project, and every one of these slots is
+# shared with export.R, any psql, and any second copy of the app — a redeploy
+# that overlaps the old process, or a second instance. maxSize 5 means three
+# app processes exhaust it and reviewers are told "max clients reached" at the
+# LOGIN SCREEN, which reads exactly like a credentials problem.
+#
+# minSize 0 so an idle process holds nothing; idleTimeout hands slots back.
+# Measured the hard way: killed app instances leaked their connections until
+# the pooler reaped them, and the database was unreachable for minutes.
+curation_pool <- function(cfg = curation_db_config(), min = 0L, max = 3L) {
   if (is.null(cfg)) stop("CURATION_DB_URL is not set", call. = FALSE)
   pool::dbPool(RPostgres::Postgres(),
                host = cfg$host, port = cfg$port, dbname = cfg$dbname,
@@ -216,6 +251,68 @@ reviewer_set_password <- function(con, username, password) {
   DBI::dbExecute(con,
     "UPDATE reviewers SET password_hash = $1, must_change_pw = FALSE WHERE username = $2",
     params = list(sodium::password_store(password), username))
+}
+
+# Creating an account is a privileged write, so it validates rather than
+# trusting the form: a username that is not a plain identifier ends up in
+# decision rows, CSV exports and audit entries, and quoting it correctly
+# everywhere afterwards is not a bet worth taking.
+reviewer_create <- function(con, username, display_name, password,
+                            role = "reviewer", email = NA_character_) {
+  if (!grepl("^[a-z0-9_.-]{3,32}$", username))
+    stop("username must be 3-32 chars of a-z, 0-9, dot, dash or underscore", call. = FALSE)
+  if (!role %in% c("reviewer", "admin")) stop("unknown role: ", role, call. = FALSE)
+  if (is.null(password) || nchar(password) < 12)
+    stop("password must be at least 12 characters", call. = FALSE)
+  if (!is.null(reviewer_get(con, username)))
+    stop("that username already exists", call. = FALSE)
+  DBI::dbExecute(con, "
+    INSERT INTO reviewers (username, display_name, email, password_hash, role, must_change_pw)
+    VALUES ($1,$2,$3,$4,$5,TRUE)",
+    params = list(username, display_name, email,
+                  sodium::password_store(password), role))
+  invisible(TRUE)
+}
+
+# NEVER a DELETE. Both decision tables reference this row and a reviewer's work
+# has to outlive their account.
+reviewer_set_active <- function(con, username, active) {
+  DBI::dbExecute(con, "UPDATE reviewers SET active = $2 WHERE username = $1",
+                 params = list(username, isTRUE(active)))
+}
+
+reviewer_set_role <- function(con, username, role) {
+  if (!role %in% c("reviewer", "admin")) stop("unknown role: ", role, call. = FALSE)
+  DBI::dbExecute(con, "UPDATE reviewers SET role = $2 WHERE username = $1",
+                 params = list(username, role))
+}
+
+# How many admins are left, so the app can refuse to remove the last one.
+admin_count <- function(con) {
+  as.numeric(DBI::dbGetQuery(con,
+    "SELECT count(*) n FROM reviewers WHERE role = 'admin' AND active")$n)
+}
+
+# Everything a reviewer decided, flattened for download. Deliberately excludes
+# password_hash and every other reviewers column beyond the username.
+decisions_export <- function(con) {
+  DBI::dbGetQuery(con, "
+    SELECT 'norm' AS kind, decision_id, decided_at_utc, reviewer, domain AS scope,
+           raw_value AS key1, NULL::text AS key2, action, proposed AS before_value,
+           final_canonical AS after_value, new_canonical, n_trials_shown,
+           confidence_shown, review_reason, comment, snapshot_sha, decision_ms
+    FROM norm_decisions
+    UNION ALL
+    SELECT 'trial', decision_id, decided_at_utc, reviewer, 'trial',
+           trial_id, field_id, action, norm_shown, final_value, NULL::boolean,
+           NULL::integer, NULL::real, NULL::text, comment, snapshot_sha, decision_ms
+    FROM trial_decisions
+    ORDER BY decided_at_utc DESC")
+}
+
+admin_audit_recent <- function(con, n = 200L) {
+  DBI::dbGetQuery(con, "SELECT * FROM admin_audit ORDER BY at_utc DESC LIMIT $1",
+                  params = list(as.integer(n)))
 }
 
 reviewer_list <- function(con) {

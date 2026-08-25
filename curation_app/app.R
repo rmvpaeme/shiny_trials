@@ -15,6 +15,20 @@
 # Four screens: trial validation, normalisation review, changes & statistics,
 # and an admin panel that only admins can reach — enforced server-side, in every
 # output, not by hiding the nav item.
+#
+# ── DEPLOYMENT IS NOT THE DASHBOARD'S ─────────────────────────────────────────
+#
+# The dashboard ships through the nightly: a push to the `deploy` branch, every
+# night, because its data changes every night. This app does not. Its CODE is
+# uploaded by hand from an R session (rsconnect::deployApp("curation_app")) when
+# it actually changes, which is rarely.
+#
+# The two are independent on purpose, and it is why this app fetches DATA from
+# the repo at runtime rather than being rebuilt with it: a nightly data refresh
+# must not require redeploying an app, and redeploying the app must not wait for
+# a nightly. There is no manifest.json here — deployApp() builds its own bundle
+# — and the rsconnect/ directory it writes is gitignored, because it carries the
+# account token.
 
 suppressPackageStartupMessages({
   library(shiny)
@@ -25,7 +39,7 @@ suppressPackageStartupMessages({
 })
 
 for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
-            "norm_review.R", "trials.R", "stats.R")) {
+            "norm_review.R", "trials.R", "stats.R", "admin.R")) {
   source(file.path("R", f))
 }
 
@@ -132,7 +146,7 @@ server <- function(input, output, session) {
     # Cosmetic only. The admin outputs below refuse regardless of whether this
     # nav item was ever rendered.
     if (identical(a$role, "admin")) {
-      panels <- c(panels, list(bslib::nav_panel("Admin", uiOutput("tab_admin"))))
+      panels <- c(panels, list(bslib::nav_panel("Admin", admin_ui("admin"))))
     }
     do.call(bslib::page_navbar, c(
       list(
@@ -158,6 +172,7 @@ server <- function(input, output, session) {
   trials_server("trials", db = DB_POOL, session_user = session_user,
                 cache = TRIALS_CACHE)
   stats_server("stats", db = DB_POOL, session_user = session_user)
+  admin_server("admin", db = DB_POOL, session_user = session_user)
 
   output$banner <- renderUI({
     require_role(session)
@@ -168,12 +183,6 @@ server <- function(input, output, session) {
   # Placeholders until the screens land. The GUARD is the point of this commit:
   # every one of these refuses without a session, and the admin one refuses
   # without the admin role.
-
-  output$tab_admin <- renderUI({
-    require_role(session, "admin")
-    div(class = "p-3", h5("Admin"),
-        p(class = "text-muted", "Accounts, snapshot refresh, export status."))
-  })
 
   # Admin-only action. Re-checks the role INSIDE the handler: this input is
   # forgeable from the browser console with Shiny.setInputValue(), so the fact
