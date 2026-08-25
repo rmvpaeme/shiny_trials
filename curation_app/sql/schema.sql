@@ -247,6 +247,10 @@ CREATE TABLE IF NOT EXISTS review_sample (
   retired_by     TEXT,
   UNIQUE (sample_id, trial_id, reviewer)
 );
+-- What the admin called it. sample_id stays machine-generated and unique;
+-- this is what a reviewer picks from a list. Validation rounds get redone, so
+-- several draws coexist and each needs a name a human chose.
+ALTER TABLE review_sample ADD COLUMN IF NOT EXISTS label TEXT;
 ALTER TABLE review_sample ADD COLUMN IF NOT EXISTS retired_at_utc TIMESTAMPTZ;
 ALTER TABLE review_sample ADD COLUMN IF NOT EXISTS retired_by TEXT;
 CREATE INDEX IF NOT EXISTS review_sample_reviewer_idx
@@ -256,8 +260,13 @@ CREATE INDEX IF NOT EXISTS review_sample_trial_idx
 
 -- Progress against the sample, which is the number that actually matters:
 -- "N of your M done", not "N of 51,311".
-CREATE OR REPLACE VIEW review_sample_progress AS
-SELECT s.sample_id, s.reviewer,
+-- DROP first: CREATE OR REPLACE VIEW cannot rename or reorder existing columns,
+-- and adding `label` in the middle fails with "cannot change name of view
+-- column". Dropping is safe here because apply_app_role.R re-grants
+-- immediately afterwards, in that order, for exactly this reason.
+DROP VIEW IF EXISTS review_sample_progress;
+CREATE VIEW review_sample_progress AS
+SELECT s.sample_id, max(s.label) AS label, s.reviewer,
        count(*)                                             AS assigned,
        count(r.trial_id)                                    AS reviewed,
        count(*) FILTER (WHERE s.is_overlap)                 AS overlap_assigned

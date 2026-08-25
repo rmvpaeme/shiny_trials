@@ -59,6 +59,8 @@ admin_ui <- function(id) {
           "drawn once and split across the reviewers; the error rate measured ",
           "on it is what generalises to the corpus."),
         shiny::div(class = "d-flex gap-3 align-items-end",
+          shiny::textInput(ns("smp_label"), "Name this round", value = "",
+                           placeholder = "e.g. Round 1 — Aug 2026", width = "230px"),
           shiny::numericInput(ns("smp_n"), "Trials in the sample", value = 300,
                               min = 10, max = 5000, step = 10, width = "180px"),
           shiny::numericInput(ns("smp_overlap"), "Double-assigned %", value = 10,
@@ -72,7 +74,7 @@ admin_ui <- function(id) {
         shiny::h6("Draws"),
         DT::DTOutput(ns("smp_draws")),
         shiny::div(class = "d-flex gap-2 align-items-end mt-2",
-          shiny::selectInput(ns("smp_del_id"), "Undo a draw", choices = NULL, width = "280px"),
+          shiny::selectInput(ns("smp_del_id"), "Retire a round", choices = NULL, width = "300px"),
           shiny::actionButton(ns("smp_delete"), "Retire", class = "btn-danger btn-sm"),
           shiny::checkboxInput(ns("smp_force"), "Force (orphans reviews)", value = FALSE)),
         shiny::div(class = "form-text",
@@ -230,9 +232,11 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
       if (!length(revs)) { shiny::showNotification("No active reviewers.", type = "error"); return() }
       sid <- format(Sys.time(), "sample-%Y%m%d-%H%M%S", tz = "UTC")
       ok <- tryCatch({
+        lbl <- trimws(input$smp_label %||% "")
+        if (!nzchar(lbl)) lbl <- format(Sys.time(), "Round of %d %b %Y", tz = "UTC")
         picked <- draw_review_sample(cache, revs, n = as.integer(input$smp_n),
                                      overlap = (input$smp_overlap %||% 10) / 100,
-                                     sample_id = sid)
+                                     sample_id = sid, label = lbl)
         sample_store(db, picked)
         last_rep(sample_representativeness(cache, picked))
         TRUE
@@ -240,8 +244,10 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
         shiny::showNotification(conditionMessage(e), type = "error")
         note("draw_sample_failed", sid, list(reason = conditionMessage(e))); FALSE })
       if (ok) {
-        note("draw_sample", sid, list(n = input$smp_n, overlap_pct = input$smp_overlap,
+        note("draw_sample", sid, list(label = lbl, n = input$smp_n,
+                                      overlap_pct = input$smp_overlap,
                                       reviewers = length(revs)))
+        shiny::updateTextInput(session, "smp_label", value = "")
         sample_tick(sample_tick() + 1)
         shiny::showNotification("Sample drawn and assigned.", type = "message")
       }
@@ -258,7 +264,8 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
       sample_tick()
       d <- admin_q(sample_ids_with_work)
       shiny::updateSelectInput(session, "smp_del_id",
-        choices = if (is.null(d) || !nrow(d)) character() else d$sample_id)
+        choices = if (is.null(d) || !nrow(d)) character()
+                  else stats::setNames(d$sample_id, sprintf("%s — %s trials", d$label, d$trials)))
     })
 
     shiny::observeEvent(input$smp_delete, {

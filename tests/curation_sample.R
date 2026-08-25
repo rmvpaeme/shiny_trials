@@ -124,6 +124,34 @@ if (is.null(con)) { cat("  SKIP  database unreachable\n") } else {
   forced <- sample_delete(con, "__test__smp3", force = TRUE)
   check(forced$deleted == 20 && forced$reviews_orphaned == 1,
         "forcing works and REPORTS what it orphaned")
+  cat("\n8. named rounds, and switching between them\n")
+  # A validation round gets redone, so several draws coexist and the reviewer
+  # says which one they are working through. Without a name they are
+  # indistinguishable timestamps.
+  for (nm in c("Round 1 - pilot", "Round 2 - full")) {
+    sid <- paste0("__test__", gsub("[^a-z0-9]+", "-", tolower(nm)))
+    sample_store(con, draw_review_sample(d, U, n = 30L, overlap = 0.1,
+                                         sample_id = sid, label = nm))
+  }
+  ch <- sample_choices_for_reviewer(con, U[1])
+  ch <- ch[grepl("^__test__round", ch$sample_id), ]
+  check(nrow(ch) == 2, "a reviewer sees every round they are assigned to")
+  check(all(c("Round 1 - pilot", "Round 2 - full") %in% ch$label),
+        "listed by the name an admin gave them, not a timestamp")
+  check(which(ch$label == "Round 2 - full") < which(ch$label == "Round 1 - pilot"),
+        "newest first, so the current round is the default")
+  n1 <- nrow(sample_for_reviewer(con, U[1], ch$sample_id[ch$label == "Round 1 - pilot"]))
+  n2 <- nrow(sample_for_reviewer(con, U[1], ch$sample_id[ch$label == "Round 2 - full"]))
+  check(n1 > 0 && n2 > 0, "each round returns its own assignment")
+  # The rounds must not bleed into each other.
+  t1 <- sample_for_reviewer(con, U[1], ch$sample_id[ch$label == "Round 1 - pilot"])$trial_id
+  t2 <- sample_for_reviewer(con, U[1], ch$sample_id[ch$label == "Round 2 - full"])$trial_id
+  check(!identical(sort(t1), sort(t2)), "and they are independent draws")
+  check(all(sample_ids_with_work(con)$label != ""), "the admin list shows names too")
+  for (nm in c("Round 1 - pilot", "Round 2 - full"))
+    try(dbExecute(con, "DELETE FROM review_sample WHERE sample_id = $1",
+                  params = list(paste0("__test__", gsub("[^a-z0-9]+","-",tolower(nm))))), silent = TRUE)
+
   }, finally = { cleanup(); dbDisconnect(con) })
 }}
 

@@ -73,13 +73,38 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         # the whole corpus is the exception rather than the starting point.
         shiny::selectInput(ns("scope"), "Show",
           choices = c("My assigned sample" = "mine", "All trials" = "all"),
-          selected = "mine", width = "200px"),
+          selected = "mine", width = "190px"),
+        # Which round. A validation can be redone, so several draws coexist and
+        # the reviewer says which one they are working through.
+        shiny::selectInput(ns("draw"), "Review round", choices = NULL, width = "230px"),
         shiny::textInput(ns("search"), "Search title, sponsor, substance or CT number",
                          width = "360px"),
         shiny::selectInput(ns("register"), "Register",
                            choices = c("All", sort(unique(stats::na.omit(cache$register)))),
                            width = "130px"),
         shiny::checkboxInput(ns("only_undecided"), "Hide trials already reviewed", value = FALSE))
+    })
+
+    my_draws <- shiny::reactive({
+      reviewed_tick()
+      shiny::invalidateLater(20000, session)
+      u <- session_user()
+      if (is.null(u) || is.null(db)) return(NULL)
+      tryCatch(sample_choices_for_reviewer(db, u$username), error = function(e) NULL)
+    })
+
+    shiny::observeEvent(my_draws(), {
+      d <- my_draws()
+      if (is.null(d) || !nrow(d)) {
+        shiny::updateSelectInput(session, "draw", choices = character())
+        return()
+      }
+      ch <- stats::setNames(d$sample_id, sprintf("%s (%s assigned)", d$label, d$assigned))
+      # Keep the reviewer where they were if that round still exists; otherwise
+      # start them on the newest.
+      cur <- shiny::isolate(input$draw)
+      shiny::updateSelectInput(session, "draw", choices = ch,
+        selected = if (!is.null(cur) && cur %in% ch) cur else ch[[1]])
     })
 
     assigned <- shiny::reactive({
@@ -96,7 +121,7 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       # on any failure, so a permissions problem and "no sample drawn yet"
       # produced an identical empty table — the same blindness that made the
       # login failure take an afternoon.
-      tryCatch(sample_for_reviewer(db, u$username),
+      tryCatch(sample_for_reviewer(db, u$username, input$draw),
                error = function(e) {
                  message("trial validation: could not read the assignment for ",
                          u$username, ": ", conditionMessage(e))
