@@ -1,5 +1,125 @@
 # Changelog
 
+## v0.22.0 — 2026-08-25
+
+### A curation app, and the writer the pipeline had been waiting for
+
+`helper_scripts/llm_norm/registry.R` has honoured `decided_by = "human"` since
+v0.20 in three places — pinned assignments survive a re-run, merges of human
+entities are refused, and `route_for_review()` drops human rows so a decided
+string leaves the queue by construction. **Nothing wrote it.** 2,128 sponsor and
+4,717 substance rows were re-proposed every night to nobody, and the ~40 other
+recoded fields had no correction path at all.
+
+`curation_app/` is a separate multi-user Shiny app, deployed by hand to Posit
+Connect Cloud, that closes the loop:
+
+- **Trial validation** — what the register said beside what the app shows, with
+  the differing rows highlighted. Click a row to correct it.
+- **Normalisation review** — the sponsor and substance queues, with a
+  server-side picker over the live registry and a warning before a new
+  canonical is minted.
+- **Changes & statistics** — per-field change rate, reviewer disagreements,
+  throughput, and how many decisions are recorded but not yet live.
+- **Admin** — accounts, passwords, review rounds, snapshot refresh, exports.
+
+Decisions go to Postgres. `curation_app/export.R` runs inside the nightly, is
+the single writer, and materialises them into `assignments.csv`, `registry.csv`
+and `data/trial_overrides.csv`. The app never touches those files: there is no
+shared filesystem, and a second writer racing `N_nightly_resolve.R` is the
+read-modify-write collision that retired the v1 reviewer app.
+
+### A human reject would have frozen sponsor labels permanently
+
+Both `E_emit.R` files classified `entity_id = NA` as `REGRESSION: -> unknown`.
+Under `--assert-no-regressions` that exits 1, and `rebuild_cache.R` then keeps
+yesterday's labels **forever**, reported as a pipeline fault. One reviewer
+rejecting one string would have done it.
+
+`match_status` gains a third value, `human_unassigned`, tested before the
+unknown branch. The class is deliberately not asserted on, so both files now
+**print** the strings that took it — otherwise a mistaken reject of a 500-trial
+sponsor passes in silence, which is the failure these files already warn about
+twice.
+
+### The nightly published a stale review queue, silently
+
+`git add -f` stages the **work tree** copy, and after `git reset --hard
+origin/main` that is main's frozen version — not the live file in
+`$SPONSOR_V2_DIR`. `config/substance_norm_v2/E_review_queue.csv` had been listed
+in `GENERATED_FILES` since 2026-08-22 and published a file that never changed.
+
+The nightly now copies the live registries and queues into the work tree before
+staging, and warns loudly when a source is missing rather than skipping.
+
+### One trial-detail modal, from a shared catalogue
+
+`app.R` carried two byte-identical 123-line copies of the trial-detail modal.
+The field list moves to `curation_app/R/field_spec.R`, sourced by **both** apps,
+so a field cannot be added to one and forgotten in the other. Net −157 lines,
+and proven behaviour-preserving by rendering 28 trials before and after and
+diffing the HTML.
+
+The dashboard's modal inherits every display fix made for the curation app: the
+sponsor cell no longer reads `GlaxoSmithKline AB (final label: GlaxoSmithKline)`
+when the raw column beside it already says the first half, and status no longer
+reads `Completed (category: Completed)`.
+
+### The register's own words are kept for five more fields
+
+`phase_raw`, `Member_state_raw`, `age_group_raw`, `is_orphan_raw` and
+`participants_n_raw` are now retained, built from vectors the normalisation logs
+already computed. Without them the curation app cannot show what the register
+sent for phase, country, age group, orphan status or participant count — there
+is no SQLite on Posit to fall back to.
+
+**Measured cost: +1.55 MB on a 16.7 MB cache (+9.3%)**, about three times what a
+per-column estimate suggested, because `saveRDS` compresses the frame as a
+whole. `DATA_PROCESSING_VERSION` is bumped accordingly.
+
+A stale cache now beats no dashboard: `load_trial_data()` used to return `NULL`
+when the cache was invalid and no database was present — exactly Posit's
+situation — serving an empty dashboard over what is usually a cosmetic version
+mismatch.
+
+### Per-trial overrides
+
+`data/trial_overrides.csv`, applied on every cache load, corrects the fields
+that have no registry to generalise through. Sponsor and substance corrections
+still go to the registries, keyed on the raw string, so they fix every trial
+carrying it.
+
+That split is enforced in three independent places: the field spec gives
+registry-routed fields no override column, `attach_trial_overrides()` refuses
+those columns again, and a test fails if the two disagree. Loosening any of them
+makes the app lie to the reviewer about whether their edit affects one trial or
+four hundred.
+
+### Review rounds
+
+51,311 trials will never all be validated. An admin draws a **named** round,
+stratified by register and era and allocated proportionally — measured at N=300,
+every stratum within 0.31 percentage points of its true share. About 10% is
+double-assigned, always to a different reviewer, because without overlap no two
+people ever see the same trial and inter-rater agreement is unmeasurable.
+
+Rounds are reproducible from their id, reviewers switch between them, and a
+round with sign-offs behind it cannot be retired.
+
+### Also
+
+- `helper_scripts/sponsor_norm_pipeline/E_emit.R` honours `DATA_DIR`, which it
+  never has. Every "scratch directory" test of the sponsor gate had been
+  overwriting the production labels it was meant to leave alone.
+- The repo copy of the nightly tested `$SUBSTANCE_SENTINEL` without ever
+  assigning it, so substance failures were never reported from it.
+  `tests/nightly_scripts_agree.sh` now fails if the two copies drift.
+- `tests/no_secrets.sh` guards a public repo against the app's new credentials,
+  in five parts, verified by planting leaks.
+- `sql/app_role.sql` creates a least-privilege database role: no `DELETE` or
+  `TRUNCATE` anywhere, a column-scoped `UPDATE` on `reviewers`, and no rights on
+  tables added later.
+
 ## v0.21.1 — 2026-08-23
 
 ### The substance and sponsor filters search the raw register strings

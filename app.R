@@ -1,5 +1,5 @@
 # ============================================================================
-# app.R  (v0.21.1 — substance and sponsor filters match the raw register strings)
+# app.R  (v0.22.0 — a curation app, and the writer the pipeline was waiting for)
 # ============================================================================
 
 suppressPackageStartupMessages({

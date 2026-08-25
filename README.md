@@ -1,6 +1,6 @@
 # EU Paediatric Trial Monitor
 
-**v0.21.1** | R Shiny | EUCTR + CTIS | 50,487 deduplicated trials in the current local cache | MIT
+**v0.22.0** | R Shiny | EUCTR + CTIS | 51,311 deduplicated trials in the current local cache | MIT
 
 Authors: Ruben Van Paemel and Levi Hoste
 
@@ -598,6 +598,25 @@ code calls, not a step. Substance steps are still numbered `1`–`4`.
 `AGENTS/` contains local handover notes and `LEGACY/` holds retired scripts and
 completed handovers. Both are ignored by Git.
 
+### `curation_app/` — the reviewer app (v0.22.0+)
+
+A separate Shiny deployment, not part of the dashboard bundle. Reviewers
+validate trials and clear the normalisation queues; decisions land in Postgres
+and reach the pipeline through `export.R` inside the nightly.
+
+| Path | Purpose |
+|---|---|
+| `app.R` | Four-tab shell, auth gate, snapshot and pool at startup |
+| `export.R` | **The single writer.** Postgres to registries and `trial_overrides.csv` |
+| `deploy.R` | Allowlisted deploy to Posit; refuses to bundle credentials |
+| `apply_app_role.R` | Creates the least-privilege database role and verifies every grant |
+| `R/field_spec.R` | The recoded-field catalogue — **shared with the root `app.R`** |
+| `sql/schema.sql` | Tables, latest-wins views, disagreement views |
+
+See [curation_app/README.md](curation_app/README.md) for operating and
+deploying it, and [PLANS/curation-app-v2-handover.md](PLANS/curation-app-v2-handover.md)
+for the traps worth knowing before changing it.
+
 ## Preprocessing Audit Report
 
 `rmarkdown/preprocessing.Rmd` renders to `www/preprocessing.html` and is shown in
@@ -680,20 +699,38 @@ Rscript -e "shiny::runApp(port = 3838)"
 
 ## Latest Release
 
-### v0.21.1 - 2026-08-23
+### v0.22.0 - 2026-08-25
 
-The Product / Substance and Sponsor / Company filters now match the raw strings
-the registers carry, not only the normalised label. `KEYTRUDA 25 mg` finds
-`Pembrolizumab`, `CALCIUM FOLINATE` finds `Leucovorin`, `GlaxoSmithKline AB`
-finds `GlaxoSmithKline`. Every raw variant the pipeline folded into a label is
-carried beside it in a hidden `alias` field named in selectize's `searchField`,
-so the variants are matched but never rendered: the dropdown, the filter chips
-and the URL filter state stay normalised, and the value applied to the data is
-still the label. Substance variants come from the normalisation log, sponsor
-variants from the trial rows — the only place a human-curated or raw-fallback
-label appears. 5,649 substance labels and 5,168 sponsor labels carry aliases,
-capped at 200 variants each and built once at app start.
-`DATA_PROCESSING_VERSION` is unchanged, so no cache rebuild is required.
+A curation app, and the writer the pipeline had been waiting for.
+
+`registry.R` has honoured `decided_by = "human"` since v0.20 — pinned
+assignments survive a re-run, merges of human entities are refused, and
+`route_for_review()` drops human rows — but nothing wrote it, so 2,128 sponsor
+and 4,717 substance rows were re-proposed nightly to nobody.
+
+`curation_app/` is a separate multi-user Shiny app, deployed by hand to Posit
+Connect Cloud, with four screens: trial validation (what the register said
+beside what the app shows, differing rows highlighted), the two normalisation
+queues, per-field change statistics and reviewer disagreements, and an admin
+panel. Decisions go to Postgres; `curation_app/export.R` runs inside the nightly
+as the single writer and materialises them into the registries and
+`data/trial_overrides.csv`.
+
+Two faults found on the way, both of which would have bitten in production. A
+human `reject` sets `entity_id = NA`, which both `E_emit.R` files classified as
+a regression — under `--assert-no-regressions` that would have frozen sponsor
+labels permanently while reporting a pipeline fault. And the nightly stages the
+*work tree* copy of the review queue, which after `git reset --hard` is main's
+frozen version, so the substance queue had been published stale since
+2026-08-22 with nothing saying so.
+
+Also: the trial-detail modal is no longer duplicated in `app.R` — both copies
+now render `curation_app/R/field_spec.R`, shared with the curation app, so a
+field cannot be added to one and forgotten in the other. Five `_raw` columns are
+retained so the register's own wording can be shown for phase, country, age
+group, orphan status and participant count (+1.55 MB, +9.3%, hence the
+`DATA_PROCESSING_VERSION` bump). Review rounds are drawn stratified by register
+and era, named, and ~10% double-assigned so inter-rater agreement is measurable.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
