@@ -237,12 +237,50 @@ dummy_hash <- local({
 })
 
 reviewer_verify <- function(con, username, password) {
-  r <- tryCatch(reviewer_get(con, username), error = function(e) NULL)
+  # The CLIENT must not be able to tell these apart. The SERVER LOG must.
+  #
+  # The uniform failure is a real security property — distinguishing "no such
+  # user" from "wrong password" turns the form into a username oracle. But the
+  # first version also swallowed connection errors, permission errors and
+  # anything else into the same message, which made a failing login impossible
+  # to diagnose from outside: every cause looked like a typo. Everything below
+  # returns NULL to the caller and says why to the log.
+  why <- function(msg) { message("login refused [", username, "]: ", msg); NULL }
+
+  r <- tryCatch(reviewer_get(con, username),
+                error = function(e) {
+                  message("login ERROR [", username, "]: reviewer lookup failed: ",
+                          conditionMessage(e))
+                  NULL
+                })
+
+  # Verified against a real hash even when the user does not exist, so the two
+  # paths take the same time — see dummy_hash().
   hash <- if (is.null(r)) dummy_hash() else r$password_hash
-  ok <- tryCatch(sodium::password_verify(hash, password), error = function(e) FALSE)
-  if (is.null(r) || !isTRUE(ok) || !isTRUE(r$active)) return(NULL)
-  DBI::dbExecute(con, "UPDATE reviewers SET last_login_at = now() WHERE username = $1",
-                 params = list(username))
+  ok <- tryCatch(sodium::password_verify(hash, password),
+                 error = function(e) {
+                   message("login ERROR [", username, "]: password_verify failed: ",
+                           conditionMessage(e))
+                   FALSE
+                 })
+
+  if (is.null(r))        return(why("no such user"))
+  if (!isTRUE(ok))       return(why("wrong password"))
+  if (!isTRUE(r$active)) return(why("account is deactivated"))
+
+  # Bookkeeping, and it MUST NOT be able to block a sign-in. This is an UPDATE,
+  # so it is the one statement here that a missing column grant can reject — and
+  # in the first version that exception propagated out and the login failed with
+  # "check your username and password" for a reason that had nothing to do with
+  # either.
+  tryCatch(
+    DBI::dbExecute(con, "UPDATE reviewers SET last_login_at = now() WHERE username = $1",
+                   params = list(username)),
+    error = function(e)
+      message("login WARN [", username, "]: could not stamp last_login_at (",
+              conditionMessage(e), ") — signing in anyway"))
+
+  message("login ok [", username, "] role=", r$role)
   r$password_hash <- NULL   # never leaves this function
   r
 }

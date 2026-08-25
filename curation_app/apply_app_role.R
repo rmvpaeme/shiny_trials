@@ -127,10 +127,21 @@ if (length(problems)) {
 cat("\n  role has exactly the rights the app needs, and none it must not.\n")
 
 if (!is.null(pw)) {
-  url <- sprintf("postgresql://curation_app:%s@%s:%d/%s", pw, cfg$host, cfg$port, cfg$dbname)
+  # THE POOLER ROUTES BY <db_user>.<project_ref>.
+  #
+  # A bare "curation_app" never authenticates through it — the pooler cannot
+  # tell which project the connection is for. The superuser string shows the
+  # shape: postgres.<project_ref>. The project ref is taken from the
+  # username we connected with, not guessed.
+  ref <- sub("^[^.]+\\.", "", cfg$user)
+  app_user <- if (grepl("pooler", cfg$host) && nzchar(ref) && !identical(ref, cfg$user))
+    paste0("curation_app.", ref) else "curation_app"
+  url <- sprintf("postgresql://%s:%s@%s:%d/%s", app_user, pw, cfg$host, cfg$port, cfg$dbname)
   cat("\n", strrep("-", 72), "\n", sep = "")
   cat("CURATION_DB_URL for the DEPLOYED app — shown once, not stored anywhere:\n\n")
   cat(url, "\n\n")
+  cat("Username is '", app_user, "' — through the pooler the project ref is\n", sep = "")
+  cat("part of it. A bare role name will not authenticate.\n\n")
   cat("Paste it into Connect Cloud -> the app -> Vars -> CURATION_DB_URL.\n")
   cat("Do NOT put it in curation_app/.Renviron: that file is for local\n")
   cat("development and keeping the superuser there is fine, but the deployed\n")

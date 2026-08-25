@@ -112,9 +112,14 @@ cp curation_app/sql/seed_admin.sql.example /tmp/seed.sql
 R -e 'shiny::runApp("curation_app", port = 7913)'
 ```
 
-Use the **session pooler** (port 5432, user `postgres.<ref>`). The direct
-endpoint `db.<ref>.supabase.co` is IPv6-only and will not resolve on a network
-without IPv6 — it fails as "no route to host", which reads like an outage.
+Use the **session pooler** (port 5432). The direct endpoint
+`db.<ref>.supabase.co` is IPv6-only and will not resolve on a network without
+IPv6 — it fails as "no route to host", which reads like an outage.
+
+**Through the pooler the username carries the project ref**: `postgres.<ref>`,
+or `curation_app.<ref>` for the app role. A bare role name gets
+`(ENOIDENTIFIER) no tenant identifier provided`, because the pooler cannot tell
+which project the connection is for. `apply_app_role.R` builds this correctly.
 
 The pooler allows **15 clients for the whole project**, shared with `export.R`,
 any `psql`, and any second copy of the app. Exhausting it surfaces at the login
