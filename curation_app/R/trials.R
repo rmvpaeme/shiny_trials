@@ -222,10 +222,11 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           class = "table table-sm table-bordered align-middle",
           style = "font-size:12px;",
           shiny::tags$thead(shiny::tags$tr(
-            shiny::tags$th(style = "width:22%;", "Field"),
-            shiny::tags$th(style = "width:34%;", "Registry raw / source value"),
-            shiny::tags$th(style = "width:34%;", "Normalised dashboard value"),
-            shiny::tags$th(style = "width:10%;", ""))),
+            shiny::tags$th(style = "width:16%;", "Field"),
+            shiny::tags$th(style = "width:27%;", "What the register sent"),
+            shiny::tags$th(style = "width:27%;", "What the pipeline produced"),
+            shiny::tags$th(style = "width:22%;", "Processing"),
+            shiny::tags$th(style = "width:8%;",  ""))),
           shiny::tags$tbody(lapply(rows, function(x) {
             f <- spec_by_id[[x$id]]
             p <- if (!is.null(pend) && nrow(pend)) pend[pend$field_id == x$id, ] else NULL
@@ -247,6 +248,25 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
                     shiny::tags$span(class = "badge bg-warning text-dark ms-1",
                                      title = "saved, live after tonight's rebuild", "pending"))
                 else show_val(x$norm)),
+              # What happened between the two columns — the thing being
+              # validated. A reviewer scans this to find the rows worth
+              # reading, instead of comparing every pair by eye.
+              shiny::tags$td(
+                {
+                  badge <- switch(x$change,
+                    changed   = list("changed",   "bg-warning text-dark"),
+                    unchanged = list("unchanged", "bg-light text-muted border"),
+                    derived   = list("derived",   "bg-info text-dark"),
+                    dropped   = list("dropped",   "bg-danger"),
+                    `no raw`  = list("no raw",    "bg-light text-muted border"),
+                    empty     = list("—",         "bg-light text-muted border"),
+                    list(x$change, "bg-light text-muted border"))
+                  shiny::tagList(
+                    shiny::tags$span(class = paste("badge", badge[[2]]), badge[[1]]),
+                    if (!is.na(x$pipeline) && !x$change %in% c("empty", "no raw"))
+                      shiny::div(class = "text-muted", style = "font-size:10px;line-height:1.25;",
+                                 x$pipeline))
+                }),
               shiny::tags$td(
                 if (isTRUE(f$editable))
                   shiny::actionLink(ns(paste0("edit_", x$id)), "edit", class = "small")
@@ -261,7 +281,14 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         "Select a trial to see how it was recoded."))
       shiny::div(
         class = "curation-fields",
-        render_group(r, "entities", "Registry raw values vs normalised values"),
+        shiny::div(class = "small text-muted mb-2",
+          shiny::tags$span(class = "badge bg-warning text-dark", "changed"),
+          " the pipeline produced something different from the register — check these. ",
+          shiny::tags$span(class = "badge bg-info text-dark", "derived"),
+          " computed from other fields. ",
+          shiny::tags$span(class = "badge bg-light text-muted border", "unchanged"),
+          " the pipeline ran and agreed with the register."),
+        render_group(r, "entities", "Trial details"),
         render_group(r, "status", "Dates, status and results"))
     })
 

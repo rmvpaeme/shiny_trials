@@ -116,12 +116,16 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
     trials_server("trials", db = NULL, session_user = reactive(auth_user(session)),
                   cache = cache, snapshot = function() list(sha = strrep("f", 40)))
   }, {
-    session$setInputs(`trials-search` = "", `trials-register` = "All",
-                      `trials-only_undecided` = FALSE)
+    # scope = "all": this test has no database, so "my assigned sample" is
+    # correctly empty and there would be no row to select.
+    session$setInputs(`trials-scope` = "all", `trials-search` = "",
+                      `trials-register` = "All", `trials-only_undecided` = FALSE)
     session$setInputs(`trials-table_rows_selected` = 1L)
     h <- paste(as.character(output$`trials-detail`), collapse = "")
-    check(grepl("Registry raw / source value", h) && grepl("Normalised dashboard value", h),
-          "raw and normalised are shown side by side, as in the dashboard")
+    check(grepl("What the register sent", h) && grepl("What the pipeline produced", h),
+          "the register's value and the pipeline's are shown side by side")
+    check(grepl("Processing", h, fixed = TRUE),
+          "and a Processing column says what happened between them")
     n_edit <- length(gregexpr(">edit<", h)[[1]])
     check(n_edit == length(ed),
           sprintf("every editable field is clickable (%d links, %d editable fields)", n_edit, length(ed)))
@@ -161,15 +165,8 @@ check(identical(fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source = "pi
 # Nearly half of all trials take this path and most of those names are already
 # clean, so it must read as a fact and never as a warning.
 raw_txt <- fmt_sponsor(mk(sponsor_label = "Bristol Myers Squibb", sponsor_label_source = "raw"))
-check(grepl("not normalised", raw_txt, fixed = TRUE) &&
-        grepl("register's own name", raw_txt, fixed = TRUE),
-      "a raw fallback says it was not normalised and whose name it is")
-check(!grepl("registry", raw_txt, fixed = TRUE),
-      "and does not use 'registry', which presumes knowledge of the pipeline")
-check(!grepl("\u26a0", raw_txt) && !grepl("unresolved", raw_txt),
-      "and does NOT flag it as an error — 47% of trials take this path")
-check(startsWith(raw_txt, "Bristol Myers Squibb"),
-      "the label itself still leads")
+check(identical(raw_txt, "Bristol Myers Squibb"),
+      "an unmatched sponsor is shown PLAIN — the Processing column says the rest")
 check(grepl("human", fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source = "human"))),
       "a human decision is marked")
 check(identical(fmt_status(mk(status = "Completed", status_raw = "Completed")), "Completed"),
@@ -177,7 +174,28 @@ check(identical(fmt_status(mk(status = "Completed", status_raw = "Completed")), 
 check(grepl("register:", fmt_status(mk(status = "Administrative", status_raw = "Gb - no longer in eu/eea"))),
       "the register's wording is shown only when it differs")
 
-cat("\n8. a missing COLUMN is not the same as a missing VALUE\n")
+cat("\n8. the Processing column classifies what the pipeline did\n")
+# The app exists to validate the processing, and neither the raw nor the
+# normalised value says what happened between them.
+cl <- function(...) Filter(function(x) x$id == "phase", field_rows(data.frame(..., stringsAsFactors = FALSE)))[[1]]$change
+check(identical(cl(phase = "Phase II", phase_raw = "Therapeutic exploratory (Phase II)"), "changed"),
+      "a value the pipeline rewrote reads 'changed' — the row worth checking")
+check(identical(cl(phase = "Phase II", phase_raw = "Phase II"), "unchanged"),
+      "a value it agreed with reads 'unchanged'")
+check(identical(cl(phase = "Phase II", phase_raw = NA_character_), "derived"),
+      "a value with no raw counterpart reads 'derived', not 'missing data'")
+check(identical(cl(phase = NA_character_, phase_raw = "Phase II"), "dropped"),
+      "a raw value the pipeline discarded reads 'dropped'")
+check(identical(cl(phase = "Phase II"), "no raw"),
+      "a column absent from the cache reads 'no raw' — it cannot be judged")
+# Case and whitespace must not read as a change; they are not one.
+check(identical(cl(phase = "Phase II", phase_raw = " phase ii "), "unchanged"),
+      "case and padding alone do not count as a change")
+sp <- Filter(function(f) f$id == "sponsor", TRIAL_FIELD_SPEC)[[1]]
+check(!is.na(sp$pipeline) && nzchar(sp$pipeline),
+      "each field says WHICH pipeline stage processed it")
+
+cat("\n9. a missing COLUMN is not the same as a missing VALUE\n")
 # Both render as NA, and a reviewer acts differently on each: "the register
 # sent nothing" is a fact about the trial; "not in this snapshot" is a fact
 # about the cache. The deployed v0.21 cache lacks five _raw columns, so five
