@@ -25,7 +25,7 @@ suppressPackageStartupMessages({
 })
 
 for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
-            "norm_review.R", "trials.R")) {
+            "norm_review.R", "trials.R", "stats.R")) {
   source(file.path("R", f))
 }
 
@@ -148,6 +148,7 @@ server <- function(input, output, session) {
                      cache = TRIALS_CACHE)
   trials_server("trials", db = DB_POOL, session_user = session_user,
                 cache = TRIALS_CACHE)
+  stats_server("stats", db = DB_POOL, session_user = session_user)
 
   output$banner <- renderUI({
     require_role(session)
@@ -158,12 +159,6 @@ server <- function(input, output, session) {
   # Placeholders until the screens land. The GUARD is the point of this commit:
   # every one of these refuses without a session, and the admin one refuses
   # without the admin role.
-
-  output$tab_stats <- renderUI({
-    require_role(session)
-    div(class = "p-3", h5("Changes & statistics"),
-        p(class = "text-muted", "What changed, by whom, and how often."))
-  })
 
   output$tab_admin <- renderUI({
     require_role(session, "admin")
