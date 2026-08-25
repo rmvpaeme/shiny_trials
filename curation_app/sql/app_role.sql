@@ -1,7 +1,12 @@
 -- A least-privilege role for the deployed app.
 --
--- Apply as the superuser:  psql "$CURATION_DB_URL" -f curation_app/sql/app_role.sql
--- Then use THIS role's connection string in the app.
+-- Apply with:  Rscript curation_app/apply_app_role.R
+--
+-- That script does not need psql — it runs these statements over DBI, creates
+-- the role with a generated password, and prints the connection string once.
+-- (psql works too, but the CREATE ROLE below has no password in it: the applier
+-- supplies one, because a password committed to a .sql file is a password in
+-- the repo.)
 --
 -- ── WHY ───────────────────────────────────────────────────────────────────────
 --
@@ -24,24 +29,16 @@
 --   * No rights on anything else in the schema, and none by default on tables
 --     added later.
 --
--- Set the password to something long and unrelated to the superuser's.
 
-\set app_password 'CHANGE-ME-a-long-random-string'
-
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'curation_app') THEN
-    CREATE ROLE curation_app LOGIN PASSWORD :'app_password';
-  END IF;
-END
-$$;
+-- The role itself is created by apply_app_role.R, which supplies the password.
+-- Everything below is the grant set, and is safe to re-run.
 
 GRANT CONNECT ON DATABASE postgres TO curation_app;
 GRANT USAGE   ON SCHEMA public     TO curation_app;
 
 -- Append-only: the app writes decisions and reads them back, never deletes.
 GRANT SELECT, INSERT ON norm_decisions, trial_decisions, trial_reviews,
-                        export_runs, admin_audit TO curation_app;
+                        export_runs, admin_audit, review_sample TO curation_app;
 -- export.R closes out its own run row.
 GRANT UPDATE ON export_runs TO curation_app;
 GRANT USAGE  ON ALL SEQUENCES IN SCHEMA public TO curation_app;
@@ -53,7 +50,8 @@ GRANT UPDATE (password_hash, must_change_pw, role, active, display_name,
 GRANT INSERT ON reviewers TO curation_app;   -- admin panel creates reviewers
 
 GRANT SELECT ON norm_decisions_latest, trial_decisions_latest,
-                norm_disagreements, trial_disagreements TO curation_app;
+                norm_disagreements, trial_disagreements,
+                review_sample_progress, review_sample_agreement TO curation_app;
 
 -- Deliberately NOT granted: DELETE or TRUNCATE on anything, and any default
 -- privilege on tables created later. A new table is unreachable until granted,

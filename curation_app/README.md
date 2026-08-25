@@ -161,8 +161,18 @@ Set `CURATION_DB_URL` on the deployed app instead (Connect / Connect Cloud have
 a Vars pane). If the target has none — shinyapps.io does not — use
 `--deploy --include-env`, which bundles it deliberately and says what that costs.
 
-**Either way, do not deploy with the `postgres` superuser.** Apply
-`sql/app_role.sql` and use the `curation_app` role: SELECT and INSERT on
+**Either way, do not deploy with the `postgres` superuser.** Run
+
+```bash
+Rscript curation_app/apply_app_role.R           # creates the role, prints the URL once
+Rscript curation_app/apply_app_role.R --rotate  # new password, same grants
+```
+
+No `psql` needed — it runs over DBI, generates the password, applies the grants
+and verifies every table and view before printing the connection string. Paste
+that into Connect Cloud → Vars; it is not written to disk.
+
+The `curation_app` role has: SELECT and INSERT on
 decisions, a column-scoped UPDATE on `reviewers`, and no DELETE or TRUNCATE
 anywhere. A leaked app credential is then a much smaller event than a leaked
 superuser, which can read every password hash and disable the audit trail.
