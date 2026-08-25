@@ -101,14 +101,39 @@ coalesce_raw <- function(row, cols) {
 # These are functions of the row alone, so they belong on the data side of the
 # boundary. Each reproduces a display string the dashboard has always shown.
 
+# The normalised column shows the LABEL, not the label plus a restatement of
+# the raw. It used to read "GlaxoSmithKline AB (final label: GlaxoSmithKline)",
+# which repeated what the raw column already said and buried the answer.
+#
+# The layer that produced it is worth noting, but NOT as a warning.
+#
+# 47% of trials (7,587 of 16,209 measured) have no registry match and fall back
+# to the register's own name — and 6,757 of those names are already perfectly
+# clean, "Bristol Myers Squibb" among them. Flagging that with a warning symbol
+# fires on half the corpus and tells the reviewer something is wrong when
+# nothing is; it is alarm fatigue by construction.
+#
+# So it is stated as a fact and not decorated. What it actually means is "this
+# label is not backed by a registry entity", which is useful — that string is
+# a candidate for tab 2 — without implying the value is incorrect.
 fmt_sponsor <- function(row) {
-  paste(show_val(row_val(row, "sponsor_name")),
-        paste0("(final label: ", show_val(row_val(row, "sponsor_label")), ")"))
+  lab <- row_val(row, "sponsor_label")
+  src <- row_val(row, "sponsor_label_source")
+  if (is.na(lab)) return(NA_character_)
+  if (identical(src, "raw"))               paste0(lab, "  · not in the sponsor registry")
+  else if (identical(src, "human"))        paste0(lab, "  · human decision")
+  else if (identical(src, "human_reject")) paste0(lab, "  · human rejected the proposal")
+  else lab
 }
 
+# Same principle: show the category, and only mention the register's own
+# wording when it differs. "Completed (category: Completed)" is noise.
 fmt_status <- function(row) {
-  paste(show_val(row_val(row, "status_raw")),
-        paste0("(category: ", show_val(row_val(row, "status")), ")"))
+  cat_ <- row_val(row, "status")
+  raw  <- row_val(row, "status_raw")
+  if (is.na(cat_)) return(raw)
+  if (is.na(raw) || identical(trimws(raw), trimws(cat_))) return(cat_)
+  paste0(cat_, "  (register: ", raw, ")")
 }
 
 fmt_participants <- function(row) {
@@ -176,20 +201,20 @@ TRIAL_FIELD_SPEC <- list(
        route = "trial_override", override_col = "DIMP_product_name",
        note = "This trial only."),
 
-  list(id = "inn", label = "INN / Generic name", group = "entities",
+  list(id = "inn", label = "INN (register text)", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_inn_name"),
        norm_col = "DIMP_inn_name", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "DIMP_inn_name",
-       note = "This trial only."),
+       note = "This trial only. The register's own INN wording, with duplicate slash-parts removed — NOT the resolved substance."),
 
-  list(id = "substance", label = "Active substance", group = "entities",
+  list(id = "substance", label = "Active substance (resolved)", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_product_name_raw",
                     "DIMP_inn_name", "DIMP_product_name"),
        norm_col = "substance_label", render = NULL,
        editable = TRUE, control = "entity", vocab = NULL,
        route = "substance_registry", override_col = NA_character_,
-       note = "Corrects EVERY trial carrying this raw substance string."),
+       note = "What the substance registry resolved the INN text to. Corrects EVERY trial carrying this raw substance string."),
 
   list(id = "organ_class", label = "MedDRA organ class", group = "entities",
        raw_cols = c("MEDDRA_organ_class_raw", "MEDDRA_organ_class"),

@@ -10,7 +10,7 @@ suppressPackageStartupMessages({ library(shiny); library(DBI); library(dplyr); l
 
 owd <- setwd("curation_app"); on.exit(setwd(owd), add = TRUE)
 source("R/util.R"); source("R/field_spec.R"); source("R/github.R")
-source("R/store.R"); source("R/auth.R"); source("R/trials.R")
+source("R/store.R"); source("R/auth.R"); source("R/norm_review.R"); source("R/trials.R")
 APP_VERSION <- "test"
 
 failures <- character()
@@ -131,6 +131,48 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
       check(grepl(paste0(">", lbl, "<"), h), sprintf("the %s row is present", lbl))
   })
 }
+
+cat("\n6. sponsor and substance edits offer the existing canonicals\n")
+ent <- Filter(function(f) identical(f$control, "entity"), TRIAL_FIELD_SPEC)
+check(length(ent) == 2, "sponsor and substance use the entity control")
+check(all(vapply(ent, function(f) f$route %in% c("sponsor_registry","substance_registry"), logical(1))),
+      "both entity fields are registry-routed")
+# The bug: the editor's switch() had NO entity branch, so both fell through to a
+# plain text box. A reviewer typed canonicals free-hand against no list, which is
+# the surest way to create the near-duplicates the registry already suffers from.
+src <- readLines("R/trials.R", warn = FALSE)
+check(any(grepl("entity = shiny::selectizeInput", src, fixed = TRUE)),
+      "the editor has an entity branch, not a text fallback")
+check(any(grepl("updateSelectizeInput", src, fixed = TRUE)),
+      "choices are populated server-side, after the modal exists")
+check(any(grepl("new_canonical_warning", src, fixed = TRUE)),
+      "minting a canonical is warned about before the save")
+reg2 <- data.frame(entity_id = c("e1","e2"), canonical = c("Live Co","Merged Co"),
+                   merged_into = c(NA, "e1"), stringsAsFactors = FALSE)
+tmp2 <- tempfile(fileext = ".csv"); readr::write_csv(reg2, tmp2)
+DOMAIN_SPEC$sponsor$registry <- basename(tmp2)
+check(identical(norm_registry_load(list(dir = dirname(tmp2)), "sponsor")$canonical, "Live Co"),
+      "the picker pool excludes merged-away canonicals")
+
+cat("\n7. the normalised column shows the answer, not a restatement of the raw\n")
+mk <- function(...) { r <- data.frame(..., stringsAsFactors = FALSE); r }
+check(identical(fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source = "pipeline")), "GSK"),
+      "a pipeline label is shown plain, with no '(final label: ...)' echo")
+# Nearly half of all trials take this path and most of those names are already
+# clean, so it must read as a fact and never as a warning.
+raw_txt <- fmt_sponsor(mk(sponsor_label = "Bristol Myers Squibb", sponsor_label_source = "raw"))
+check(grepl("not in the sponsor registry", raw_txt, fixed = TRUE),
+      "a raw fallback says it is not registry-backed")
+check(!grepl("\u26a0", raw_txt) && !grepl("unresolved", raw_txt),
+      "and does NOT flag it as an error — 47% of trials take this path")
+check(startsWith(raw_txt, "Bristol Myers Squibb"),
+      "the label itself still leads")
+check(grepl("human", fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source = "human"))),
+      "a human decision is marked")
+check(identical(fmt_status(mk(status = "Completed", status_raw = "Completed")), "Completed"),
+      "status does not repeat itself when category and wording agree")
+check(grepl("register:", fmt_status(mk(status = "Administrative", status_raw = "Gb - no longer in eu/eea"))),
+      "the register's wording is shown only when it differs")
 
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }

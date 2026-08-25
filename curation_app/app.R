@@ -76,7 +76,16 @@ onStop(function() if (!is.null(DB_POOL)) pool::poolClose(DB_POOL))
 
 ui <- bslib::page_fluid(
   theme = bslib::bs_theme(version = 5, preset = "flatly"),
-  tags$head(tags$title("Curation — EU Paediatric Trial Monitor")),
+  tags$head(
+    tags$title("Curation — EU Paediatric Trial Monitor"),
+    # DT has no built-in no-wrap class; without it a long title wraps and one
+    # table row grows taller than the detail panel beside it.
+    tags$style(HTML(
+      ".dt-nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
+       table.dataTable td{padding-top:.25rem;padding-bottom:.25rem;}
+       /* The field tables are dense by design; keep them inside their card. */
+       .curation-fields table{margin-bottom:0;}
+       .curation-fields td,.curation-fields th{word-break:break-word;}"))),
   uiOutput("shell")
 )
 
