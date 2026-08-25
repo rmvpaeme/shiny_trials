@@ -136,13 +136,15 @@ sample_for_reviewer <- function(con, username, sample_id = NULL) {
   if (is.null(sample_id)) {
     DBI::dbGetQuery(con, "
       SELECT s.* FROM review_sample s
-      WHERE s.reviewer = $1
+      WHERE s.reviewer = $1 AND s.retired_at_utc IS NULL
         AND s.sample_id = (SELECT sample_id FROM review_sample
+                           WHERE retired_at_utc IS NULL
                            ORDER BY drawn_at_utc DESC LIMIT 1)",
       params = list(username))
   } else {
     DBI::dbGetQuery(con,
-      "SELECT * FROM review_sample WHERE reviewer = $1 AND sample_id = $2",
+      "SELECT * FROM review_sample
+       WHERE reviewer = $1 AND sample_id = $2 AND retired_at_utc IS NULL",
       params = list(username, sample_id))
   }
 }
@@ -155,7 +157,7 @@ sample_for_reviewer <- function(con, username, sample_id = NULL) {
 # nobody has touched is free to remove; one with reviews behind it is not, and
 # the right move there is to draw a new sample rather than erase the record of
 # the old one.
-sample_delete <- function(con, sample_id, force = FALSE) {
+sample_delete <- function(con, sample_id, force = FALSE, by = NA_character_) {
   n_rev <- as.numeric(DBI::dbGetQuery(con, "
     SELECT count(*) n FROM trial_reviews r
     WHERE EXISTS (SELECT 1 FROM review_sample s
@@ -164,8 +166,12 @@ sample_delete <- function(con, sample_id, force = FALSE) {
   if (n_rev > 0 && !force)
     stop(sprintf("%d trial(s) in this sample have already been reviewed. Draw a new sample instead, or force it deliberately.",
                  n_rev), call. = FALSE)
-  n <- DBI::dbExecute(con, "DELETE FROM review_sample WHERE sample_id = $1",
-                      params = list(sample_id))
+  # UPDATE, not DELETE. The app role has no DELETE on anything and this keeps
+  # it that way; the row survives as the record of what was assigned.
+  n <- DBI::dbExecute(con, "
+    UPDATE review_sample SET retired_at_utc = now(), retired_by = $2
+    WHERE sample_id = $1 AND retired_at_utc IS NULL",
+    params = list(sample_id, by))
   list(deleted = n, reviews_orphaned = if (force) n_rev else 0)
 }
 
@@ -181,7 +187,8 @@ sample_ids_with_work <- function(con) {
              WHERE EXISTS (SELECT 1 FROM review_sample x
                            WHERE x.sample_id = s.sample_id AND x.trial_id = r.trial_id
                              AND x.reviewer = r.reviewer)) AS reviewed
-    FROM review_sample s GROUP BY s.sample_id ORDER BY drawn DESC")
+    FROM review_sample s WHERE s.retired_at_utc IS NULL
+    GROUP BY s.sample_id ORDER BY drawn DESC")
 }
 
 sample_progress <- function(con) {
@@ -190,5 +197,6 @@ sample_progress <- function(con) {
 
 sample_ids <- function(con) {
   DBI::dbGetQuery(con, "SELECT sample_id, min(drawn_at_utc) drawn, count(*) rows_
-                        FROM review_sample GROUP BY sample_id ORDER BY drawn DESC")
+                        FROM review_sample WHERE retired_at_utc IS NULL
+                        GROUP BY sample_id ORDER BY drawn DESC")
 }

@@ -41,6 +41,10 @@ GRANT SELECT, INSERT ON norm_decisions, trial_decisions, trial_reviews,
                         export_runs, admin_audit, review_sample TO curation_app;
 -- export.R closes out its own run row.
 GRANT UPDATE ON export_runs TO curation_app;
+-- Retiring a draw. Column-scoped, so the assignment itself stays immutable —
+-- an admin can take a sample out of circulation but cannot rewrite who was
+-- asked to review what.
+GRANT UPDATE (retired_at_utc, retired_by) ON review_sample TO curation_app;
 GRANT USAGE  ON ALL SEQUENCES IN SCHEMA public TO curation_app;
 
 -- Sign-in, and the admin panel's account management. No DELETE.

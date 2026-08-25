@@ -238,8 +238,17 @@ CREATE TABLE IF NOT EXISTS review_sample (
   stratum       TEXT NOT NULL,          -- register × era, for the weighting
   is_overlap    BOOLEAN NOT NULL DEFAULT FALSE,
   drawn_at_utc  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  -- Undo is a RETIREMENT, not a DELETE. The app role is append-only by design
+  -- — no DELETE on anything — and that is worth keeping: a draw records who was
+  -- asked to review what, which is the denominator of every coverage figure and
+  -- the source of the overlap the agreement numbers come from. Retiring keeps
+  -- that and takes it out of circulation.
+  retired_at_utc TIMESTAMPTZ,
+  retired_by     TEXT,
   UNIQUE (sample_id, trial_id, reviewer)
 );
+ALTER TABLE review_sample ADD COLUMN IF NOT EXISTS retired_at_utc TIMESTAMPTZ;
+ALTER TABLE review_sample ADD COLUMN IF NOT EXISTS retired_by TEXT;
 CREATE INDEX IF NOT EXISTS review_sample_reviewer_idx
   ON review_sample (reviewer, sample_id);
 CREATE INDEX IF NOT EXISTS review_sample_trial_idx
@@ -255,6 +264,7 @@ SELECT s.sample_id, s.reviewer,
 FROM review_sample s
 LEFT JOIN (SELECT DISTINCT trial_id, reviewer FROM trial_reviews) r
        ON r.trial_id = s.trial_id AND r.reviewer = s.reviewer
+WHERE s.retired_at_utc IS NULL
 GROUP BY s.sample_id, s.reviewer;
 
 -- Where two reviewers were given the same trial, did they agree? Only the
