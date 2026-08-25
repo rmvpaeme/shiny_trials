@@ -174,6 +174,26 @@ check(identical(fmt_status(mk(status = "Completed", status_raw = "Completed")), 
 check(grepl("register:", fmt_status(mk(status = "Administrative", status_raw = "Gb - no longer in eu/eea"))),
       "the register's wording is shown only when it differs")
 
+cat("\n8. a missing COLUMN is not the same as a missing VALUE\n")
+# Both render as NA, and a reviewer acts differently on each: "the register
+# sent nothing" is a fact about the trial; "not in this snapshot" is a fact
+# about the cache. The deployed v0.21 cache lacks five _raw columns, so five
+# rows read as empty on every trial unless this is distinguished.
+full  <- data.frame(phase = "Phase II", phase_raw = "Therapeutic exploratory (Phase II)",
+                    stringsAsFactors = FALSE)
+blank <- data.frame(phase = "Phase II", phase_raw = NA_character_, stringsAsFactors = FALSE)
+older <- data.frame(phase = "Phase II", stringsAsFactors = FALSE)   # no phase_raw at all
+gs <- function(d) Filter(function(x) x$id == "phase", field_rows(d))[[1]]$raw_status
+check(identical(gs(full),  "present"), "a populated raw column reads 'present'")
+check(identical(gs(blank), "empty"),   "an empty value in an EXISTING column reads 'empty'")
+check(identical(gs(older), "absent"),  "a column missing from the cache reads 'absent'")
+reg_row <- Filter(function(x) x$id == "register", field_rows(full))[[1]]
+check(identical(reg_row$raw_status, "none"),
+      "a field with no raw counterpart reads 'none', not 'absent'")
+src2 <- readLines("R/trials.R", warn = FALSE)
+check(any(grepl("not retained in this snapshot", src2, fixed = TRUE)),
+      "the renderer says which of the two it is")
+
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
 cat("all checks passed\n")

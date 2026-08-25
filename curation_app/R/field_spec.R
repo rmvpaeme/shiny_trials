@@ -328,14 +328,34 @@ TRIAL_FIELD_SPEC <- list(
 #
 # One row of trials_cache.rds in, one list per field out. Pure and testable with
 # a one-row tibble; both apps build their own widgets from the result.
+# `raw_status` distinguishes three cases that all render as NA otherwise, and
+# which a reviewer must be able to tell apart:
+#
+#   "none"    the field has no single raw counterpart (register, trial duration)
+#   "absent"  the column is NOT IN THIS CACHE — an older snapshot that predates
+#             it. The register may well have sent a value; this build cannot
+#             show it.
+#   "empty"   the column exists and the register sent nothing for this trial.
+#
+# Conflating "absent" with "empty" is how a reviewer concludes the data is
+# missing when the cache is simply older than the field. Observed: the deployed
+# v0.21.0 cache has 73 columns and lacks phase_raw, Member_state_raw,
+# age_group_raw, is_orphan_raw and participants_n_raw, so five rows read as
+# empty on every single trial.
 field_rows <- function(row, group = NULL, spec = TRIAL_FIELD_SPEC) {
   if (!is.null(group)) spec <- Filter(function(f) f$group %in% group, spec)
   lapply(spec, function(f) {
+    raw <- if (length(f$raw_cols)) coalesce_raw(row, f$raw_cols) else NA_character_
+    status <- if (!length(f$raw_cols)) "none"
+              else if (!any(f$raw_cols %in% names(row))) "absent"
+              else if (is.na(raw) || !nzchar(trimws(raw))) "empty"
+              else "present"
     list(
       id    = f$id,
       label = f$label,
       group = f$group,
-      raw   = if (length(f$raw_cols)) coalesce_raw(row, f$raw_cols) else NA_character_,
+      raw   = raw,
+      raw_status = status,
       norm  = if (is.function(f$render)) f$render(row) else row_val(row, f$norm_col)
     )
   })
