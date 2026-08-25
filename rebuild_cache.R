@@ -76,6 +76,14 @@ if (!identical(st_export, 0L)) {
       "*** SPONSOR NIGHTLY FAILED (exit %s) — see N_nightly_runs.csv ***", st_new))
   }
 
+  # Human decisions land BETWEEN the model's pass and the gate, deliberately.
+  # N_nightly_resolve assigns strings the registry has never seen; a reviewer's
+  # pin must then overwrite whatever it decided, and the gate must measure the
+  # final state rather than an intermediate one. Never aborts: export.R exits 0
+  # on every failure path and reports through its own sentinel.
+  run_step("curation_app/export.R", c("--domain=sponsor", "--write"),
+           label = "curation export (sponsor)")
+
   # Gate BEFORE writing. A regression here means last night's labels are better
   # than tonight's, so keep them: unresolved strings degrade to their raw name,
   # which is visible, rather than to a wrong canonical, which is not.
@@ -135,6 +143,9 @@ if (!identical(st_sub_export, 0L)) {
       "*** SUBSTANCE NIGHTLY RESOLVE exited %s — see N_nightly_runs.csv ***", st_sub_new))
   }
 
+  run_step("curation_app/export.R", c("--domain=substance", "--write"),
+           label = "curation export (substance)")
+
   # Gate BEFORE writing, same rule as sponsors: a regression means last night's
   # labels are better than tonight's, so keep them.
   st_sub_gate <- run_step(sb("E_emit.R"), c("--diff-only", "--assert-no-regressions"),
@@ -173,6 +184,11 @@ if (!identical(st_sub_export, 0L)) {
   }
 }
 message("=== Substance labels build complete ===")
+
+# Per-trial overrides, written before the cache refresh below re-reads them
+# through attach_trial_overrides().
+run_step("curation_app/export.R", c("--domain=trial", "--write"),
+         label = "curation export (trial overrides)")
 
 message("=== Refreshing cache with latest substance/sponsor labels and PIP helpers ===")
 tryCatch({

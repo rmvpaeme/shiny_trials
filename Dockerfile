@@ -59,6 +59,14 @@ RUN R -e 'install.packages(c( \
     "nodbi", "RSQLite", "DBI" \
   ), repos = "https://cloud.r-project.org/")'
 
+# curation_app/export.R reads reviewer decisions out of Postgres inside the
+# nightly. libpq-dev is the build dependency RPostgres needs; without it the
+# install succeeds at the apt layer and fails at compile, which reads as a
+# missing package much later.
+RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev \
+  && rm -rf /var/lib/apt/lists/*
+RUN R -e 'install.packages(c("RPostgres", "sodium"), repos = "https://cloud.r-project.org/")'
+
 # Shiny + dashboard
 RUN R -e 'install.packages(c( \
     "shiny", "shinydashboard", "shinycssloaders", "htmltools", "httpuv", "eulerr"  \

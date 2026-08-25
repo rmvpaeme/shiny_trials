@@ -115,7 +115,11 @@ docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/update_data.R >>
 # hiccup. The sentinel is how that failure still gets reported.
 SPONSOR_SENTINEL="$PROJECT_DIR/data/.sponsor_nightly_failed"
 SUBSTANCE_SENTINEL="$PROJECT_DIR/data/.substance_nightly_failed"
-rm -f "$SPONSOR_SENTINEL" "$SUBSTANCE_SENTINEL"
+# curation_app/export.R exits 0 even when it fails, for the same reason
+# rebuild_cache.R does: a curation hiccup must never cost the data refresh.
+# This is how that failure still gets reported.
+CURATION_SENTINEL="$PROJECT_DIR/data/.curation_export_failed"
+rm -f "$SPONSOR_SENTINEL" "$SUBSTANCE_SENTINEL" "$CURATION_SENTINEL"
 
 log "Step 2/4: Rebuilding RDS cache..."
 docker exec "$INSTANCE_NAME" Rscript /shiny_trials/shiny_trials/rebuild_cache.R >> "$LOG_FILE" 2>&1
@@ -125,6 +129,12 @@ if [ -f "$SUBSTANCE_SENTINEL" ]; then
     NORM_FAILED=1
     log "ERROR: substance nightly resolution failed — $(cat "$SUBSTANCE_SENTINEL")"
     log "       see \$SUBSTANCE_V2_DIR/N_nightly_runs.csv for the full history"
+fi
+CURATION_FAILED=0
+if [ -f "$CURATION_SENTINEL" ]; then
+    CURATION_FAILED=1
+    log "ERROR: curation export failed — $(cat "$CURATION_SENTINEL")"
+    log "       reviewer decisions were NOT applied; the pipeline ran without them"
 fi
 SPONSOR_FAILED=0
 if [ -f "$SPONSOR_SENTINEL" ]; then
@@ -202,7 +212,7 @@ elif git rev-parse --verify --quiet "$REMOTE/$DEPLOY_BRANCH" >> "$LOG_FILE" 2>&1
      [ "$(git rev-parse "$DEPLOY_BRANCH")" = "$(git rev-parse "$REMOTE/$DEPLOY_BRANCH")" ]; then
     log "Remote $DEPLOY_BRANCH already matches local $DEPLOY_BRANCH; skipping push."
     log "=== Nightly deploy complete ==="
-    exit $(( SPONSOR_FAILED || NORM_FAILED ))
+    exit $(( SPONSOR_FAILED || NORM_FAILED || CURATION_FAILED ))
 fi
 timeout "$PUSH_TIMEOUT_SECONDS" git push --force-with-lease "$REMOTE" "$DEPLOY_BRANCH" >> "$LOG_FILE" 2>&1 \
     && log "Push succeeded." \
