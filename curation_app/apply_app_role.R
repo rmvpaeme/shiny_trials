@@ -57,6 +57,18 @@ if (!exists_already) {
   pw <- NULL
 }
 
+# Schema FIRST, then grants. A grant naming a column the schema has not created
+# yet fails with "column ... does not exist", which reads like a typo rather
+# than an ordering problem — and it is exactly what happens when a migration
+# and its grant land in the same commit. Both files are idempotent, so running
+# them together every time is free and keeps them from drifting.
+schema_path <- file.path(here, "sql", "schema.sql")
+if (file.exists(schema_path)) {
+  DBI::dbExecute(con, paste(readLines(schema_path, warn = FALSE), collapse = "\n"),
+                 immediate = TRUE)
+  cat("Schema applied (idempotent).\n")
+}
+
 # The grants, re-run every time so a new table added to schema.sql cannot be
 # left unreachable by an older role.
 sql <- paste(readLines(file.path(here, "sql", "app_role.sql"), warn = FALSE), collapse = "\n")

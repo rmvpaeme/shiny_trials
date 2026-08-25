@@ -106,11 +106,13 @@ if (is.null(con)) { cat("  SKIP  database unreachable\n") } else {
   check(as.numeric(w2$reviewed) == 0, "and with no work against it yet")
 
   res <- sample_delete(con, "__test__smp2")
-  check(res$deleted == 20, "an untouched draw deletes freely")
-  check(nrow(sample_for_reviewer(con, U[1], "__test__smp2")) == 0, "and its rows are gone")
+  check(res$deleted == 20, "an untouched draw retires freely")
+  check(nrow(sample_for_reviewer(con, U[1], "__test__smp2")) == 0, "and it no longer appears in the assignment")
 
-  # A draw with work behind it must NOT be silently erased: sign-offs and the
-  # overlap the agreement figures are computed from would be orphaned.
+  # A draw with work behind it must NOT be silently retired: sign-offs and the
+  # overlap the agreement figures are computed from would be orphaned. Note the
+  # row SURVIVES either way — the app role has no DELETE on anything, and the
+  # record of who was asked to review what is worth keeping.
   pk3 <- draw_review_sample(d, U, n = 20L, overlap = 0, sample_id = "__test__smp3")
   sample_store(con, pk3)
   invisible(append_trial_review(con, pk3$trial_id[1], "validated", pk3$reviewer[1], strrep("a", 40)))
@@ -118,7 +120,7 @@ if (is.null(con)) { cat("  SKIP  database unreachable\n") } else {
                       error = function(e) grepl("already been reviewed", conditionMessage(e)))
   check(isTRUE(refused), "a draw with reviews behind it is REFUSED")
   check(nrow(sample_for_reviewer(con, pk3$reviewer[1], "__test__smp3")) > 0,
-        "and nothing was deleted")
+        "and it is still in circulation")
   forced <- sample_delete(con, "__test__smp3", force = TRUE)
   check(forced$deleted == 20 && forced$reviews_orphaned == 1,
         "forcing works and REPORTS what it orphaned")

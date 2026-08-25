@@ -73,7 +73,7 @@ admin_ui <- function(id) {
         DT::DTOutput(ns("smp_draws")),
         shiny::div(class = "d-flex gap-2 align-items-end mt-2",
           shiny::selectInput(ns("smp_del_id"), "Undo a draw", choices = NULL, width = "280px"),
-          shiny::actionButton(ns("smp_delete"), "Delete", class = "btn-danger btn-sm"),
+          shiny::actionButton(ns("smp_delete"), "Retire", class = "btn-danger btn-sm"),
           shiny::checkboxInput(ns("smp_force"), "Force (orphans reviews)", value = FALSE)),
         shiny::div(class = "form-text",
           "A draw nobody has reviewed can be removed freely. Once trials have ",
@@ -266,8 +266,8 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
       if (is.null(u) || !identical(u$role, "admin") || is.null(db)) return()
       sid <- input$smp_del_id
       if (is.null(sid) || !nzchar(sid)) return()
-      res <- tryCatch(sample_delete(db, sid, force = isTRUE(input$smp_force)),
-                      error = function(e) e)
+      res <- tryCatch(sample_delete(db, sid, force = isTRUE(input$smp_force),
+                                    by = u$username), error = function(e) e)
       if (inherits(res, "error")) {
         shiny::showNotification(conditionMessage(res), type = "error", duration = 10)
         note("delete_sample_refused", sid, list(reason = conditionMessage(res)))
@@ -277,7 +277,7 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
            list(rows = res$deleted, forced = isTRUE(input$smp_force),
                 reviews_orphaned = res$reviews_orphaned))
       sample_tick(sample_tick() + 1)
-      shiny::showNotification(sprintf("Deleted %d assignment(s) from %s.",
+      shiny::showNotification(sprintf("Retired %d assignment(s) from %s.",
                                       res$deleted, sid), type = "message")
     })
 
