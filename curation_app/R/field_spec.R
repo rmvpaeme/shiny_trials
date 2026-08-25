@@ -113,14 +113,16 @@ coalesce_raw <- function(row, cols) {
 # fires on half the corpus and tells the reviewer something is wrong when
 # nothing is; it is alarm fatigue by construction.
 #
-# So it is stated as a fact and not decorated. What it actually means is "this
-# label is not backed by a registry entity", which is useful — that string is
-# a candidate for tab 2 — without implying the value is incorrect.
+# So it is stated as a fact and not decorated. It also avoids naming the
+# registry: "not in the sponsor registry" presumes the reader knows there is
+# one and what membership implies. What the reviewer needs is what they are
+# looking at — the register's own text, passed through unchanged — which is
+# also the hint that the string is a candidate for tab 2.
 fmt_sponsor <- function(row) {
   lab <- row_val(row, "sponsor_label")
   src <- row_val(row, "sponsor_label_source")
   if (is.na(lab)) return(NA_character_)
-  if (identical(src, "raw"))               paste0(lab, "  · not in the sponsor registry")
+  if (identical(src, "raw"))               paste0(lab, "  · not normalised — register's own name")
   else if (identical(src, "human"))        paste0(lab, "  · human decision")
   else if (identical(src, "human_reject")) paste0(lab, "  · human rejected the proposal")
   else lab
