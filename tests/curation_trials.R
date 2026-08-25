@@ -161,8 +161,11 @@ check(identical(fmt_sponsor(mk(sponsor_label = "GSK", sponsor_label_source = "pi
 # Nearly half of all trials take this path and most of those names are already
 # clean, so it must read as a fact and never as a warning.
 raw_txt <- fmt_sponsor(mk(sponsor_label = "Bristol Myers Squibb", sponsor_label_source = "raw"))
-check(grepl("not in the sponsor registry", raw_txt, fixed = TRUE),
-      "a raw fallback says it is not registry-backed")
+check(grepl("not normalised", raw_txt, fixed = TRUE) &&
+        grepl("register's own name", raw_txt, fixed = TRUE),
+      "a raw fallback says it was not normalised and whose name it is")
+check(!grepl("registry", raw_txt, fixed = TRUE),
+      "and does not use 'registry', which presumes knowledge of the pipeline")
 check(!grepl("\u26a0", raw_txt) && !grepl("unresolved", raw_txt),
       "and does NOT flag it as an error — 47% of trials take this path")
 check(startsWith(raw_txt, "Bristol Myers Squibb"),
