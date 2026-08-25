@@ -25,7 +25,7 @@ suppressPackageStartupMessages({
 })
 
 for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
-            "norm_review.R")) {
+            "norm_review.R", "trials.R")) {
   source(file.path("R", f))
 }
 
@@ -116,7 +116,7 @@ server <- function(input, output, session) {
 
   app_shell <- function(a) {
     panels <- list(
-      bslib::nav_panel("Trial validation",     uiOutput("tab_trials")),
+      bslib::nav_panel("Trial validation",     trials_ui("trials")),
       bslib::nav_panel("Normalisation review", norm_review_ui("norm")),
       bslib::nav_panel("Changes & statistics", uiOutput("tab_stats"))
     )
@@ -146,6 +146,8 @@ server <- function(input, output, session) {
   session_user <- reactive(auth_user(session))
   norm_review_server("norm", db = DB_POOL, session_user = session_user,
                      cache = TRIALS_CACHE)
+  trials_server("trials", db = DB_POOL, session_user = session_user,
+                cache = TRIALS_CACHE)
 
   output$banner <- renderUI({
     require_role(session)
@@ -156,12 +158,6 @@ server <- function(input, output, session) {
   # Placeholders until the screens land. The GUARD is the point of this commit:
   # every one of these refuses without a session, and the admin one refuses
   # without the admin role.
-
-  output$tab_trials <- renderUI({
-    require_role(session)
-    div(class = "p-3", h5("Trial validation"),
-        p(class = "text-muted", "Browse every trial and check its recoding."))
-  })
 
   output$tab_stats <- renderUI({
     require_role(session)

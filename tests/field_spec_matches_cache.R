@@ -72,6 +72,43 @@ if (length(bad_id)) {
   note(sprintf("field id(s) not lower_snake_case: %s", paste(bad_id, collapse = ", ")))
 }
 
+# THE ROUTING SPLIT, checked rather than trusted.
+#
+# A registry-routed field must have override_col = NA. If one ever gains a
+# column, attach_trial_overrides() would still refuse it (the deny list is a
+# second, independent guard) — but the two guards disagreeing means the spec is
+# lying to the reviewer about where their correction goes, and the note shown
+# next to the input would be wrong.
+for (f in TRIAL_FIELD_SPEC) {
+  if (identical(f$route, "trial_override")) {
+    if (is.na(f$override_col)) {
+      note(sprintf("%s: routed to trial_override but has no override_col", f$id))
+    } else if (!f$override_col %in% cols) {
+      note(sprintf("%s: override_col '%s' is not in the cache", f$id, f$override_col))
+    }
+  } else if (!is.na(f$override_col)) {
+    note(sprintf("%s: route is '%s' but override_col is set — a correction here would go two places",
+                 f$id, f$route %||% "NA"))
+  }
+  if (isTRUE(f$editable) && is.na(f$route)) {
+    note(sprintf("%s: editable but has no route — the save would go nowhere", f$id))
+  }
+  if (!isTRUE(f$editable) && !is.na(f$route)) {
+    note(sprintf("%s: not editable but has a route", f$id))
+  }
+  if (!is.null(f$control) &&
+      !f$control %in% c("select", "text", "number", "date", "bool", "entity")) {
+    note(sprintf("%s: unknown control type '%s'", f$id, f$control))
+  }
+  # Every editable field needs a note: it is the only place the reviewer is told
+  # whether their edit hits one trial or every trial with that raw string.
+  if (isTRUE(f$editable) && (is.null(f$note) || !nzchar(f$note))) {
+    note(sprintf("%s: editable but has no note explaining the scope of an edit", f$id))
+  }
+}
+
+`%||%` <- function(a, b) if (is.null(a)) b else a
+
 for (f in TRIAL_FIELD_SPEC) {
   if (!f$norm_col %in% cols) {
     note(sprintf("%s: norm_col '%s' is not in the cache", f$id, f$norm_col))
