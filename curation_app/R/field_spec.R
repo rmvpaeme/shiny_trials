@@ -152,20 +152,20 @@ fmt_duration <- function(row) {
           format(round(days), big.mark = ",", scientific = FALSE))
 }
 
-# The raw result flag is dropped from the cache (app.R's select(-any_of(...))),
-# so when it is absent say WHICH register field it came from rather than showing
-# a bare em-dash that reads as "no results information exists".
+# Plain language or nothing.
+#
+# This used to read "Derived from EUCTR endPoints.endPoint.readyForValues; raw
+# value not retained in this cache" — a register field name and an internal
+# detail, in a cell a reviewer is meant to judge at a glance. Someone who has
+# never seen the pipeline learns nothing from it and has to skip past it on
+# every trial.
+#
+# If the register supplied something, show it. Otherwise show nothing, and let
+# the em-dash mean what it means everywhere else on this screen: the register
+# did not supply this.
 fmt_result_source <- function(row) {
   raw <- row_val(row, "results_source_raw")
-  if (!is.na(raw) && nzchar(stringr::str_trim(raw))) return(raw)
-  reg <- row_val(row, "register")
-  if (identical(reg, "CTIS")) {
-    "Derived from CTIS resultsFirstReceived; raw value not retained in this cache."
-  } else if (identical(reg, "EUCTR")) {
-    "Derived from EUCTR endPoints.endPoint.readyForValues; raw value not retained in this cache."
-  } else {
-    "Raw result source not retained in this cache."
-  }
+  if (!is.na(raw) && nzchar(stringr::str_trim(raw))) raw else NA_character_
 }
 
 fmt_results_reported <- function(row) {
@@ -189,7 +189,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "entity", vocab = NULL,
        route = "sponsor_registry", override_col = NA_character_,
        pipeline = "sponsor registry (entity match)",
-       note = "Corrects EVERY trial carrying this raw sponsor string."),
+       note = "Corrects EVERY trial where the register wrote this same sponsor name."),
 
   list(id = "sponsor_type", label = "Sponsor type", group = "entities",
        raw_cols = c("b1_sponsor.b31_and_b32_status_of_the_sponsor",
@@ -198,7 +198,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "select", vocab = c("academic", "industry"),
        route = "sponsor_registry", override_col = NA_character_,
        pipeline = "sponsor registry, overridden by the trial's own commercial flag",
-       note = "Entity type on the registry; applies to every trial with this sponsor."),
+       note = "Applies to every trial with this sponsor."),
 
   list(id = "product", label = "Product", group = "entities",
        raw_cols = c("DIMP_product_name_raw", "DIMP_product_name"),
@@ -208,22 +208,22 @@ TRIAL_FIELD_SPEC <- list(
        pipeline = "duplicate slash-parts removed",
        note = "This trial only."),
 
-  list(id = "inn", label = "INN (register text)", group = "entities",
+  list(id = "inn", label = "Drug name, as written", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_inn_name"),
        norm_col = "DIMP_inn_name", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "DIMP_inn_name",
        pipeline = "duplicate slash-parts removed",
-       note = "This trial only. The register's own INN wording, with duplicate slash-parts removed — NOT the resolved substance."),
+       note = "This trial only. The drug name exactly as the register wrote it."),
 
-  list(id = "substance", label = "Active substance (resolved)", group = "entities",
+  list(id = "substance", label = "Drug name, matched", group = "entities",
        raw_cols = c("DIMP_inn_name_raw", "DIMP_product_name_raw",
                     "DIMP_inn_name", "DIMP_product_name"),
        norm_col = "substance_label", render = NULL,
        editable = TRUE, control = "entity", vocab = NULL,
        route = "substance_registry", override_col = NA_character_,
        pipeline = "substance registry (ChEMBL-backed entity match)",
-       note = "What the substance registry resolved the INN text to. Corrects EVERY trial carrying this raw substance string."),
+       note = "The matched drug name. Corrects EVERY trial where the register wrote this same text."),
 
   list(id = "organ_class", label = "MedDRA organ class", group = "entities",
        raw_cols = c("MEDDRA_organ_class_raw", "MEDDRA_organ_class"),
@@ -231,7 +231,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_organ_class",
        pipeline = "EUCTR prefix stripped; CTIS numeric SOC code resolved",
-       note = "This trial only. MedDRA has no registry."),
+       note = "This trial only."),
 
   list(id = "meddra_term", label = "MedDRA term", group = "entities",
        raw_cols = c("MEDDRA_term_raw", "MEDDRA_term"),
@@ -239,7 +239,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_term",
        pipeline = "US->UK spelling, roman->arabic, stage/metastatic qualifiers stripped, sentence-cased",
-       note = "This trial only. MedDRA has no registry."),
+       note = "This trial only."),
 
   list(id = "age_group", label = "Age group", group = "entities",
        raw_cols = "age_group_raw", norm_col = "age_group", render = NULL,
@@ -260,14 +260,14 @@ TRIAL_FIELD_SPEC <- list(
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "derived from the trial id pattern",
-       note = "Identity, derived from the trial id. Not editable."),
+       note = "Comes from the trial number. Not editable."),
 
   list(id = "status", label = "Status", group = "status",
        raw_cols = "status_raw", norm_col = "status", render = fmt_status,
        editable = TRUE, control = "select", vocab = c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative"),
        route = "trial_override", override_col = "status",
        pipeline = "regex-bucketed into five categories",
-       note = "This trial only. The status CATEGORY, not the register wording."),
+       note = "This trial only. The grouped status, not the register's exact wording."),
 
   list(id = "phase", label = "Phase", group = "entities",
        raw_cols = "phase_raw", norm_col = "phase", render = NULL,
@@ -290,7 +290,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "Member_state",
        pipeline = "country names matched to a lookup, junk tokens stripped, deduplicated",
-       note = "This trial only. Slash-separated; # Countries is recomputed."),
+       note = "This trial only. Separate several countries with a slash."),
 
   list(id = "submitted", label = "Submitted", group = "status",
        raw_cols = "submission_date", norm_col = "submission_date_parsed",
@@ -330,7 +330,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "end date minus start date, discarded outside 0-3650 days",
-       note = "Derived from the two dates. Edit those instead."),
+       note = "Worked out from the two dates. Edit those instead."),
 
   list(id = "has_results", label = "Results reported", group = "status",
        raw_cols = "results_source_raw", norm_col = "has_results",
@@ -346,7 +346,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
        pipeline = "not processed",
-       note = "The register's own words. Not editable.")
+       note = "Not editable.")
 )
 
 # ── The extraction contract ───────────────────────────────────────────────────

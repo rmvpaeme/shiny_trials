@@ -122,11 +122,16 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
                       `trials-register` = "All", `trials-only_undecided` = FALSE)
     session$setInputs(`trials-table_rows_selected` = 1L)
     h <- paste(as.character(output$`trials-detail`), collapse = "")
-    check(grepl("What the register sent", h) && grepl("What the pipeline produced", h),
-          "the register's value and the pipeline's are shown side by side")
-    check(grepl("Processing", h, fixed = TRUE),
-          "and a Processing column says what happened between them")
-    n_edit <- length(gregexpr(">edit<", h)[[1]])
+    check(grepl("What the register said", h) && grepl("What the app shows", h),
+          "the register's value and the app's are shown side by side")
+    check(grepl("Highlighted rows", h, fixed = TRUE),
+          "one plain sentence says what to do, with no pipeline vocabulary")
+    for (jargon in c("normalised", "pipeline", "registry", "derived", "canonical"))
+      check(!grepl(jargon, h, ignore.case = TRUE),
+            sprintf("the table uses no jargon: '%s' does not appear", jargon))
+    # Count the actual links by their input id. ">edit<" also matches the word
+    # "edit" in the instruction sentence above the table.
+    n_edit <- length(gregexpr('id="trials-edit_', h, fixed = TRUE)[[1]])
     check(n_edit == length(ed),
           sprintf("every editable field is clickable (%d links, %d editable fields)", n_edit, length(ed)))
     check(length(gregexpr("text-muted small\">—<", h)[[1]]) == 3,
@@ -213,10 +218,8 @@ reg_row <- Filter(function(x) x$id == "register", field_rows(full))[[1]]
 check(identical(reg_row$raw_status, "none"),
       "a field with no raw counterpart reads 'none', not 'absent'")
 src2 <- readLines("R/trials.R", warn = FALSE)
-check(any(grepl("not in this snapshot", src2, fixed = TRUE)),
-      "the renderer distinguishes 'absent from the cache' from 'the register sent nothing'")
-check(any(grepl("this cache predates the column", src2, fixed = TRUE)),
-      "and says the register's value exists, so it does not read as missing data")
+check(any(grepl("raw_status, \"absent\"", src2, fixed = TRUE)),
+      "a column missing from the cache still renders as a plain dash, not an error")
 
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
