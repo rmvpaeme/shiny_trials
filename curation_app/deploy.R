@@ -22,7 +22,16 @@
 # until it is named here.
 
 args <- commandArgs(trailingOnly = TRUE)
+arg_value <- function(flag, default = NA_character_) {
+  hit <- args[startsWith(args, paste0(flag, "="))]
+  if (length(hit)) sub(paste0("^", flag, "="), "", hit[[1L]]) else default
+}
 do_deploy <- "--deploy" %in% args
+# Connect Cloud by default, because it is the only target with a Vars pane —
+# CURATION_DB_URL is set on the deployed app and never enters the bundle.
+# shinyapps.io has no such UI, which is why --include-env exists at all.
+server  <- arg_value("--server",  "connect.posit.cloud")
+account <- arg_value("--account", NA_character_)
 # Some targets have no way to set an environment variable on a deployed app —
 # shinyapps.io in particular. Refusing outright there would just mean the app
 # cannot connect at all, so bundling is allowed, deliberately and loudly, rather
@@ -36,8 +45,12 @@ if (!file.exists(file.path(app_dir, "app.R")))
 # Everything the app needs at runtime, and nothing else.
 APP_FILES <- c(
   "app.R",
+  # MUST match what app.R sources. An allowlist fails closed, which is the safe
+  # direction — but it means a file added to app.R and not added here is simply
+  # absent at runtime and the app dies on startup. sample.R did exactly that.
+  # tests/no_secrets.sh now cross-checks the two.
   file.path("R", c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
-                   "norm_review.R", "trials.R", "stats.R", "admin.R")),
+                   "norm_review.R", "sample.R", "trials.R", "stats.R", "admin.R")),
   file.path("sql", c("schema.sql", "seed_admin.sql.example"))
 )
 
@@ -78,7 +91,32 @@ bare <- tryCatch({
 }, error = function(e) character())
 extra <- setdiff(bare, APP_FILES)
 
+# Fail here, with instructions, rather than inside deployApp() with a stack
+# trace about a missing account.
+accts <- tryCatch(rsconnect::accounts(), error = function(e) NULL)
+have <- !is.null(accts) && nrow(accts) && any(accts$server == server)
+if (!have) {
+  cat("\nNo account registered for '", server, "'.\n", sep = "")
+  if (identical(server, "connect.posit.cloud")) {
+    cat("Authorise it once:\n")
+    cat("  1. https://connect.posit.cloud -> your avatar -> API Keys -> New key\n")
+    cat("  2. In R:\n")
+    cat("       rsconnect::connectApiUser(\n")
+    cat("         account = \"<your-connect-username>\",\n")
+    cat("         server  = \"connect.posit.cloud\",\n")
+    cat("         apiKey  = \"<the key>\")\n")
+    cat("\nOr deploy to the account you already have:\n")
+    cat("  Rscript curation_app/deploy.R --server=shinyapps.io --deploy --include-env\n")
+    cat("  (shinyapps.io has no Vars pane, so the connection string must be\n")
+    cat("   bundled — apply sql/app_role.sql first so it is not the superuser.)\n")
+  }
+  if (do_deploy) quit(save = "no", status = 1L)
+} else if (is.na(account)) {
+  account <- accts$name[accts$server == server][1]
+}
+
 cat("Deploying from: ", normalizePath(app_dir), "\n", sep = "")
+cat("Target:         ", server, if (!is.na(account)) paste0(" (", account, ")") else "", "\n", sep = "")
 cat("Files to upload (", length(APP_FILES), "):\n", sep = "")
 for (f in APP_FILES) cat("   ", f, "\n")
 if (length(extra)) {
@@ -106,5 +144,12 @@ rsconnect::deployApp(
   appFiles    = APP_FILES,
   appName     = Sys.getenv("CURATION_APP_NAME", unset = "pedtrials-curation"),
   appTitle    = "Curation — EU Paediatric Trial Monitor",
+  server      = server,
+  account     = if (is.na(account)) NULL else account,
   forceUpdate = TRUE
 )
+
+cat("\nDeployed. ONE STEP REMAINS — the app cannot sign anyone in until it has\n")
+cat("a connection string:\n")
+cat("  Connect Cloud -> this app -> Vars -> CURATION_DB_URL = <session pooler URL>\n")
+cat("Use the curation_app role from sql/app_role.sql, not the postgres superuser.\n")
