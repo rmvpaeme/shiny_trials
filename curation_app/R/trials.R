@@ -2,68 +2,60 @@
 # TAB 1 — TRIAL VALIDATION
 # ══════════════════════════════════════════════════════════════════════════════
 #
-# Browse every trial, see what the register said beside what the dashboard
-# shows, and correct it. The catalogue is curation_app/R/field_spec.R, the same
-# list the dashboard renders read-only in its trial-detail modal — so a field
-# cannot appear in one and be forgotten in the other.
+# The SAME raw-vs-normalised overview the dashboard shows in its trial-detail
+# modal, with each field clickable to correct it.
 #
-# ── The routing split is the whole design ─────────────────────────────────────
+# The first version put eighteen input widgets in a sidebar. That is a form, not
+# a review: it asks the reviewer to scan eighteen controls to find the one thing
+# that is wrong, and it looks nothing like the screen they already know. Reading
+# comes first — raw beside normalised, one row per field — and editing is what
+# happens when a row looks wrong.
 #
-# A sponsor or substance correction is keyed on the RAW STRING and goes to the
-# registry, so it fixes every trial carrying that string — correcting "Novartis
-# Pharma AG" on one trial and leaving the other 400 wrong is not a fix. Every
-# other field has no registry to generalise through, so it becomes a per-trial
-# override.
+# ── The routing split ─────────────────────────────────────────────────────────
 #
-# The reviewer is told which is which, per field, before they save. That is what
-# the spec's `note` is for, and it is the entire UX of the split.
+# Sponsor and substance corrections are keyed on the RAW STRING and go to the
+# registry, so they fix every trial carrying it. Everything else becomes a
+# per-trial override. The editor says which, every time, before saving.
 
 TRIAL_TABLE_COLS <- c("_id", "CT_number", "register", "Full_title", "sponsor_label",
                       "substance_label", "MEDDRA_term", "phase", "status",
                       "Member_state", "year", "participants_n")
 
-# ── UI ────────────────────────────────────────────────────────────────────────
-
 trials_ui <- function(id) {
   ns <- shiny::NS(id)
   bslib::layout_sidebar(
     sidebar = bslib::sidebar(
-      width = 380, position = "right",
+      width = 330, position = "right",
       shiny::uiOutput(ns("detail_header")),
-      shiny::uiOutput(ns("form")),
       shiny::hr(),
-      shiny::uiOutput(ns("save_controls"))
+      shiny::uiOutput(ns("sign_off"))
     ),
     shiny::div(
       class = "p-2",
       shiny::uiOutput(ns("filters")),
-      DT::DTOutput(ns("table"))
+      DT::DTOutput(ns("table")),
+      shiny::hr(),
+      shiny::uiOutput(ns("detail"))
     )
   )
 }
 
-# ── Server ────────────────────────────────────────────────────────────────────
-
 trials_server <- function(id, db, session_user, cache, snapshot = snapshot_current) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
     snap <- shiny::reactive(snapshot())
 
     editable_fields <- Filter(function(f) isTRUE(f$editable), TRIAL_FIELD_SPEC)
 
     output$filters <- shiny::renderUI({
       shiny::req(!is.null(cache))
-      shiny::div(
-        class = "d-flex gap-2 align-items-end mb-2",
+      shiny::div(class = "d-flex gap-2 align-items-end mb-2",
         shiny::textInput(ns("search"), "Search title, sponsor, substance or CT number",
                          width = "420px"),
         shiny::selectInput(ns("register"), "Register",
                            choices = c("All", sort(unique(stats::na.omit(cache$register)))),
-                           width = "140px"),
-        shiny::checkboxInput(ns("only_undecided"), "Hide trials I have already reviewed",
-                             value = FALSE)
-      )
+                           width = "130px"),
+        shiny::checkboxInput(ns("only_undecided"), "Hide trials already reviewed", value = FALSE))
     })
 
     reviewed_tick <- shiny::reactiveVal(0)
@@ -74,21 +66,18 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     })
 
     filtered <- shiny::reactive({
-      d <- cache
-      shiny::req(!is.null(d))
-      q <- shiny::isolate(input$search)
+      d <- cache; shiny::req(!is.null(d))
       q <- input$search %||% ""
       if (nzchar(q)) {
-        # Deliberately a few named columns rather than everything: a grepl across
-        # 81 columns of 51k rows on every keystroke is not interactive.
+        # A few named columns, not all 81: a grepl across the whole frame on
+        # every keystroke is not interactive at 51k rows.
         hit <- Reduce(`|`, lapply(c("Full_title", "sponsor_label", "substance_label", "CT_number"),
-          function(cn) if (cn %in% names(d)) grepl(q, d[[cn]] %||% "", ignore.case = TRUE, fixed = FALSE)
+          function(cn) if (cn %in% names(d)) grepl(q, d[[cn]] %||% "", ignore.case = TRUE)
                        else rep(FALSE, nrow(d))))
         d <- d[which(hit), , drop = FALSE]
       }
-      if (!identical(input$register, "All") && !is.null(input$register)) {
+      if (!identical(input$register, "All") && !is.null(input$register))
         d <- d[d$register %in% input$register, , drop = FALSE]
-      }
       if (isTRUE(input$only_undecided)) d <- d[!d$`_id` %in% my_reviews(), , drop = FALSE]
       d
     })
@@ -96,15 +85,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     output$table <- DT::renderDT({
       d <- filtered()
       shiny::validate(shiny::need(!is.null(d) && nrow(d), "No trials match."))
-      cols <- intersect(TRIAL_TABLE_COLS, names(d))
-      DT::datatable(head(d[, cols, drop = FALSE], 5000), selection = "single",
-                    rownames = FALSE, filter = "top",
-                    options = list(pageLength = 12, scrollX = TRUE))
+      DT::datatable(head(d[, intersect(TRIAL_TABLE_COLS, names(d)), drop = FALSE], 5000),
+                    selection = "single", rownames = FALSE, filter = "top",
+                    options = list(pageLength = 8, scrollX = TRUE))
     })
 
     row <- shiny::reactive({
-      i <- input$table_rows_selected
-      d <- filtered()
+      i <- input$table_rows_selected; d <- filtered()
       if (is.null(i) || !length(i) || is.null(d) || !nrow(d)) return(NULL)
       d[i[1], , drop = FALSE]
     })
@@ -112,172 +99,202 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     shown_at <- shiny::reactiveVal(Sys.time())
     shiny::observeEvent(row(), shown_at(Sys.time()))
 
+    saved_tick <- shiny::reactiveVal(0)
+    # A reviewer's own pending edits, so the screen shows what they already did
+    # rather than the pipeline value they have just corrected. Labelled pending,
+    # because it is not live until the nightly runs.
+    pending <- shiny::reactive({
+      saved_tick()
+      r <- row(); if (is.null(r) || is.null(db)) return(NULL)
+      tryCatch(latest_trial_decisions(db, r$`_id`), error = function(e) NULL)
+    })
+
     output$detail_header <- shiny::renderUI({
       r <- row()
-      if (is.null(r)) return(shiny::div(class = "text-muted", "Select a trial."))
+      if (is.null(r)) return(shiny::div(class = "text-muted", "Select a trial below."))
       shiny::div(
         shiny::tags$strong(show_val(r$CT_number)),
-        shiny::tags$a(" open", href = trial_link(r), target = "_blank", class = "small"),
-        shiny::p(class = "small text-muted mb-2", show_val(r$Full_title))
-      )
+        shiny::tags$a(" open ↗", href = trial_link(r), target = "_blank", class = "small"),
+        shiny::p(class = "small text-muted mt-1 mb-0", show_val(r$Full_title)))
     })
 
-    # One input per editable field, pre-filled with the CURRENT value. The raw
-    # is shown beside it, because "is this recoding right" is unanswerable
-    # without what the register actually sent.
-    output$form <- shiny::renderUI({
+    # ── The overview: raw beside normalised, one row per field ────────────────
+    #
+    # Same shape as the dashboard's trial-detail modal, so a reviewer is reading
+    # a screen they already know. The only addition is that an editable row is a
+    # link.
+    render_group <- function(r, group, header) {
+      rows <- field_rows(r, group = group)
+      pend <- pending()
+      spec_by_id <- stats::setNames(TRIAL_FIELD_SPEC,
+                                    vapply(TRIAL_FIELD_SPEC, function(f) f$id, character(1)))
+      shiny::tagList(
+        shiny::h6(header, class = "mt-3"),
+        shiny::tags$table(
+          class = "table table-sm table-bordered align-middle",
+          style = "font-size:12px;",
+          shiny::tags$thead(shiny::tags$tr(
+            shiny::tags$th(style = "width:22%;", "Field"),
+            shiny::tags$th(style = "width:34%;", "Registry raw / source value"),
+            shiny::tags$th(style = "width:34%;", "Normalised dashboard value"),
+            shiny::tags$th(style = "width:10%;", ""))),
+          shiny::tags$tbody(lapply(rows, function(x) {
+            f <- spec_by_id[[x$id]]
+            p <- if (!is.null(pend) && nrow(pend)) pend[pend$field_id == x$id, ] else NULL
+            has_pending <- !is.null(p) && nrow(p) && identical(p$action[[1]], "override")
+            shiny::tags$tr(
+              shiny::tags$th(x$label),
+              shiny::tags$td(show_val(x$raw)),
+              shiny::tags$td(
+                if (has_pending)
+                  shiny::tagList(
+                    shiny::tags$span(p$final_value[[1]]),
+                    shiny::tags$span(class = "badge bg-warning text-dark ms-1",
+                                     title = "saved, live after tonight's rebuild", "pending"))
+                else show_val(x$norm)),
+              shiny::tags$td(
+                if (isTRUE(f$editable))
+                  shiny::actionLink(ns(paste0("edit_", x$id)), "edit", class = "small")
+                else shiny::tags$span(class = "text-muted small", "—")))
+          }))))
+    }
+
+    output$detail <- shiny::renderUI({
+      require_role(session)
       r <- row()
-      if (is.null(r)) return(NULL)
-      rows <- field_rows(r)
-      by_id <- stats::setNames(rows, vapply(rows, function(x) x$id, character(1)))
-      shiny::tagList(lapply(editable_fields, function(f) {
-        cur <- by_id[[f$id]]
-        val <- cur$norm
-        ctl <- switch(f$control,
-          select = shiny::selectInput(ns(paste0("f_", f$id)), f$label,
-                     choices = unique(c("", f$vocab, if (!is.na(val)) val)),
-                     selected = val %||% ""),
-          number = shiny::numericInput(ns(paste0("f_", f$id)), f$label,
-                     value = suppressWarnings(as.numeric(val))),
-          date   = shiny::dateInput(ns(paste0("f_", f$id)), f$label,
-                     value = suppressWarnings(as.Date(val))),
-          bool   = shiny::selectInput(ns(paste0("f_", f$id)), f$label,
-                     choices = c("Yes", "No", "Unknown"),
-                     selected = if (identical(val, "TRUE")) "Yes"
-                                else if (identical(val, "FALSE")) "No" else "Unknown"),
-          entity = shiny::selectizeInput(ns(paste0("f_", f$id)), f$label,
-                     choices = NULL, selected = val,
-                     options = list(create = TRUE, placeholder = "type to search")),
-          shiny::textInput(ns(paste0("f_", f$id)), f$label, value = val %||% ""))
-        shiny::div(
-          class = "mb-2",
-          ctl,
-          shiny::div(class = "small text-muted",
-            shiny::span(shiny::tags$em("register: "), show_val(cur$raw))),
-          # The scope warning. A registry edit is not a per-trial edit and the
-          # reviewer has to know before they press save, not after.
-          if (f$route %in% c("sponsor_registry", "substance_registry"))
-            shiny::div(class = "small text-warning", shiny::tags$strong("↗ "), f$note)
-          else shiny::div(class = "small text-muted", f$note)
-        )
-      }))
+      if (is.null(r)) return(shiny::div(class = "text-muted p-2",
+        "Select a trial to see how it was recoded."))
+      shiny::div(
+        render_group(r, "entities", "Registry raw values vs normalised values"),
+        render_group(r, "status", "Dates, status and results"))
     })
 
-    output$save_controls <- shiny::renderUI({
+    # ── One editor, one field ─────────────────────────────────────────────────
+    #
+    # The observers are created ONCE, here, from a static field list — not
+    # inside the renderUI. Shiny cannot observe inputs that are re-created on
+    # every render, and the legacy app hit exactly this: it needed a fixed pool
+    # of observers for the same reason. lapply + force, never a for loop, or
+    # every link edits the last field.
+    editing <- shiny::reactiveVal(NULL)
+    lapply(editable_fields, function(f) {
+      force(f)
+      shiny::observeEvent(input[[paste0("edit_", f$id)]], {
+        r <- row(); if (is.null(r)) return()
+        editing(f$id)
+        cur <- Filter(function(x) x$id == f$id, field_rows(r))[[1]]
+        registry_scope <- f$route %in% c("sponsor_registry", "substance_registry")
+        shiny::showModal(shiny::modalDialog(
+          title = paste("Edit:", f$label),
+          size = "m", easyClose = TRUE,
+          shiny::div(class = "small text-muted mb-1", shiny::tags$em("The register sent: "),
+                     show_val(cur$raw)),
+          shiny::div(class = "small text-muted mb-3", shiny::tags$em("Currently shown as: "),
+                     show_val(cur$norm)),
+          switch(f$control,
+            select = shiny::selectInput(ns("edit_value"), f$label,
+                       choices = unique(c("", f$vocab, if (!is.na(cur$norm)) cur$norm)),
+                       selected = cur$norm %||% ""),
+            number = shiny::numericInput(ns("edit_value"), f$label,
+                       value = suppressWarnings(as.numeric(cur$norm))),
+            date   = shiny::dateInput(ns("edit_value"), f$label,
+                       value = suppressWarnings(as.Date(cur$norm))),
+            bool   = shiny::selectInput(ns("edit_value"), f$label,
+                       choices = c("Yes", "No", "Unknown"),
+                       selected = if (identical(cur$norm, "TRUE")) "Yes"
+                                  else if (identical(cur$norm, "FALSE")) "No" else "Unknown"),
+            shiny::textInput(ns("edit_value"), f$label, value = cur$norm %||% "")),
+          shiny::textAreaInput(ns("edit_comment"), "Comment (optional)", rows = 2),
+          # Scope, stated before the save and not after. This is the entire UX
+          # of the routing split.
+          if (registry_scope)
+            shiny::div(class = "alert alert-warning py-2 small mb-0",
+              shiny::strong("This is not a per-trial edit. "), f$note)
+          else shiny::div(class = "text-muted small", f$note),
+          footer = shiny::tagList(
+            shiny::modalButton("Cancel"),
+            shiny::actionButton(ns("edit_save"), "Save", class = "btn-primary"))))
+      }, ignoreInit = TRUE)
+    })
+
+    shiny::observeEvent(input$edit_save, {
+      fid <- editing(); r <- row(); u <- session_user()
+      if (is.null(fid) || is.null(r) || is.null(u) || is.null(db)) return()
+      f <- Filter(function(x) identical(x$id, fid), TRIAL_FIELD_SPEC)[[1]]
+      cur <- Filter(function(x) x$id == fid, field_rows(r))[[1]]
+      new <- input$edit_value
+      new <- if (identical(f$control, "bool"))
+               switch(as.character(new), Yes = "TRUE", No = "FALSE", NA_character_)
+             else as.character(new)
+      if (identical(as.character(cur$norm), new) ||
+          (is.na(cur$norm) && (is.na(new) || !nzchar(new)))) {
+        shiny::showNotification("Unchanged — nothing saved.", type = "message")
+        shiny::removeModal(); return()
+      }
+      ms  <- as.integer(difftime(Sys.time(), shown_at(), units = "secs") * 1000)
+      sha <- snap()$sha %||% NA_character_
+      ok <- tryCatch({
+        if (identical(f$route, "trial_override")) {
+          append_trial_decision(db, trial_id = r$`_id`, field_id = f$id, action = "override",
+            reviewer = u$username, snapshot_sha = sha, raw_shown = cur$raw,
+            norm_shown = cur$norm, final_value = new, value_type = spec_value_type(f),
+            comment = input$edit_comment %||% NA_character_,
+            decision_ms = ms, app_version = APP_VERSION)
+        } else {
+          dom <- if (identical(f$route, "sponsor_registry")) "sponsor" else "substance"
+          raw <- if (dom == "sponsor") row_val(r, "sponsor_name_raw") else cur$raw
+          if (is.na(raw) || !nzchar(raw)) stop("no raw string to key this decision on")
+          append_norm_decision(db, domain = dom, raw_value = raw, action = "edit",
+            reviewer = u$username, snapshot_sha = sha, proposed = cur$norm,
+            final_canonical = new, comment = input$edit_comment %||% NA_character_,
+            decision_ms = ms, app_version = APP_VERSION)
+        }
+        TRUE
+      }, error = function(e) {
+        shiny::showNotification(conditionMessage(e), type = "error"); FALSE })
+      if (isTRUE(ok)) {
+        shiny::showNotification(
+          if (identical(f$route, "trial_override")) "Saved. Live after tonight's rebuild."
+          else "Saved to the registry — applies to every trial with this string.",
+          type = "message")
+        saved_tick(saved_tick() + 1)
+        shiny::removeModal()
+      }
+    })
+
+    output$sign_off <- shiny::renderUI({
       if (is.null(row())) return(NULL)
       shiny::tagList(
         shiny::textAreaInput(ns("comment"), "Comment", rows = 2),
         shiny::div(class = "d-grid gap-2",
-          shiny::actionButton(ns("save"), "Save changes", class = "btn-primary btn-sm"),
-          shiny::actionButton(ns("validate"), "Mark validated (no change)", class = "btn-success btn-sm"),
-          shiny::actionButton(ns("flag"), "Flag for another reviewer", class = "btn-warning btn-sm")),
-        shiny::uiOutput(ns("save_note"))
-      )
+          shiny::actionButton(ns("validate"), "Mark validated", class = "btn-success btn-sm"),
+          shiny::actionButton(ns("flag"), "Flag for another reviewer", class = "btn-warning btn-sm")))
     })
-
-    # What changed, compared against what was on screen. Only changed fields are
-    # written: saving a form of 18 unchanged values as 18 decisions would bury
-    # the real ones and make the per-field change rate meaningless.
-    changed_fields <- function(r) {
-      rows <- field_rows(r)
-      by_id <- stats::setNames(rows, vapply(rows, function(x) x$id, character(1)))
-      out <- list()
-      for (f in editable_fields) {
-        new <- input[[paste0("f_", f$id)]]
-        if (is.null(new)) next
-        new <- if (identical(f$control, "bool"))
-                 switch(new, Yes = "TRUE", No = "FALSE", NA_character_)
-               else as.character(new)
-        old <- by_id[[f$id]]$norm
-        same <- (is.na(old) && (is.na(new) || !nzchar(new))) || identical(as.character(old), new)
-        if (!same) out[[f$id]] <- list(field = f, old = old, new = new,
-                                       raw = by_id[[f$id]]$raw)
-      }
-      out
-    }
-
-    output$save_note <- shiny::renderUI({
-      r <- row(); if (is.null(r)) return(NULL)
-      ch <- changed_fields(r)
-      if (!length(ch)) return(shiny::div(class = "small text-muted mt-2", "No changes."))
-      reg <- Filter(function(x) x$field$route != "trial_override", ch)
-      shiny::div(class = "small mt-2",
-        sprintf("%d change(s) to save.", length(ch)),
-        if (length(reg))
-          shiny::div(class = "text-warning",
-            sprintf("%d of them affect every trial with the same raw string.", length(reg))))
-    })
-
-    shiny::observeEvent(input$save, {
-      r <- row(); u <- session_user()
-      if (is.null(r) || is.null(u) || is.null(db)) return()
-      ch <- changed_fields(r)
-      if (!length(ch)) { shiny::showNotification("Nothing changed.", type = "message"); return() }
-      ms  <- as.integer(difftime(Sys.time(), shown_at(), units = "secs") * 1000)
-      sha <- snap()$sha %||% NA_character_
-      n_ok <- 0L
-      for (x in ch) {
-        f <- x$field
-        ok <- tryCatch({
-          if (identical(f$route, "trial_override")) {
-            append_trial_decision(db, trial_id = r$`_id`, field_id = f$id,
-              action = "override", reviewer = u$username, snapshot_sha = sha,
-              raw_shown = x$raw, norm_shown = x$old, final_value = x$new,
-              value_type = spec_value_type(f), comment = input$comment %||% NA_character_,
-              decision_ms = ms, app_version = APP_VERSION)
-          } else {
-            # Keyed on the RAW STRING, not the trial: that is what makes it
-            # generalise. A registry edit made from this screen is the same kind
-            # of decision as one made in tab 2 and lands in the same table.
-            dom <- if (identical(f$route, "sponsor_registry")) "sponsor" else "substance"
-            raw <- if (dom == "sponsor") row_val(r, "sponsor_name_raw") else x$raw
-            if (is.na(raw) || !nzchar(raw)) stop("no raw string to key the decision on")
-            append_norm_decision(db, domain = dom, raw_value = raw, action = "edit",
-              reviewer = u$username, snapshot_sha = sha,
-              proposed = x$old, final_canonical = x$new,
-              comment = input$comment %||% NA_character_,
-              decision_ms = ms, app_version = APP_VERSION)
-          }
-          TRUE
-        }, error = function(e) {
-          shiny::showNotification(sprintf("%s: %s", f$label, conditionMessage(e)), type = "error")
-          FALSE
-        })
-        if (isTRUE(ok)) n_ok <- n_ok + 1L
-      }
-      if (n_ok) {
-        shiny::showNotification(sprintf("Saved %d change(s). Live after tonight's rebuild.",
-                                        n_ok), type = "message")
-        shiny::updateTextAreaInput(session, "comment", value = "")
-        reviewed_tick(reviewed_tick() + 1)
-      }
-    })
-
-    shiny::observeEvent(input$validate, sign_off("validated"))
-    shiny::observeEvent(input$flag,     sign_off("flagged"))
 
     sign_off <- function(status) {
       r <- row(); u <- session_user()
       if (is.null(r) || is.null(u) || is.null(db)) return()
       ok <- tryCatch({
-        append_trial_review(db, trial_id = r$`_id`, status = status,
-                            reviewer = u$username, snapshot_sha = snap()$sha %||% NA_character_,
+        append_trial_review(db, trial_id = r$`_id`, status = status, reviewer = u$username,
+                            snapshot_sha = snap()$sha %||% NA_character_,
                             comment = input$comment %||% NA_character_)
         TRUE
-      }, error = function(e) {
-        shiny::showNotification(conditionMessage(e), type = "error"); FALSE })
+      }, error = function(e) { shiny::showNotification(conditionMessage(e), type = "error"); FALSE })
       if (ok) {
         shiny::showNotification(sprintf("Trial marked %s.", status), type = "message")
+        shiny::updateTextAreaInput(session, "comment", value = "")
         reviewed_tick(reviewed_tick() + 1)
       }
     }
+    shiny::observeEvent(input$validate, sign_off("validated"))
+    shiny::observeEvent(input$flag,     sign_off("flagged"))
 
-    list(filtered = filtered, reviewed_tick = reviewed_tick)
+    list(filtered = filtered, reviewed_tick = reviewed_tick, saved_tick = saved_tick)
   })
 }
 
-# The cache is typed, so an override has to say what type it is carrying —
-# casting from a bare string is how "12" ends up in a numeric column.
+# The cache is typed, so an override must declare what it carries — casting
+# from a bare string is how "12" ends up in a numeric column.
 spec_value_type <- function(f) {
   switch(f$control, number = "numeric", date = "date", bool = "logical", "character")
 }
