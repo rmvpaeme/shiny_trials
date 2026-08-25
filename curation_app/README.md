@@ -26,7 +26,7 @@ This app is the writer.
 
 | Tab | What it does |
 |---|---|
-| **Trial validation** | The same raw-vs-normalised table the dashboard shows, with each field clickable. Defaults to *your assigned sample*, not all 51,311 trials. |
+| **Trial validation** | Two columns — what the register said, what the app shows — with the differing rows highlighted. Click any row to correct it. Defaults to *your assigned round*, not all 51,311 trials. |
 | **Normalisation review** | The sponsor and substance queues. Accept / edit / reject, plus *not a substance* on the substance side. |
 | **Changes & statistics** | Per-field change rate, disagreements, throughput, pipeline lag. Visible to everyone. |
 | **Admin** | Accounts, passwords, the review sample, snapshot refresh, export status, downloads. Admin only. |
@@ -89,8 +89,15 @@ and it is split across the reviewers.
 - **Reproducible** — seeded from the sample id, so the same id always yields
   the same draw.
 
-Admin → Review sample → set N and the double-assigned share → Draw. The
-representativeness table is shown after each draw, so the claim is checked.
+**Rounds are named.** A validation gets redone, so several draws coexist:
+Admin → Review sample → name it ("Round 1 — Aug 2026"), set N and the
+double-assigned share → Draw. Reviewers pick which round they are working
+through from a dropdown in Trial validation, newest first.
+
+The representativeness table appears after each draw, so the claim is checked
+rather than asserted. A round nobody has reviewed can be retired; one with
+sign-offs behind it is refused, because retiring it would orphan that work and
+discard the overlap the agreement figures come from.
 
 ---
 
