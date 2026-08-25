@@ -122,8 +122,10 @@ fmt_sponsor <- function(row) {
   lab <- row_val(row, "sponsor_label")
   src <- row_val(row, "sponsor_label_source")
   if (is.na(lab)) return(NA_character_)
-  if (identical(src, "raw"))               paste0(lab, "  · not normalised — register's own name")
-  else if (identical(src, "human"))        paste0(lab, "  · human decision")
+  # The "not normalised" suffix that used to be here is gone: it fired on 47%
+  # of trials and the "Processing" column now says the same thing in a place
+  # where it can be scanned rather than read.
+  if (identical(src, "human"))             paste0(lab, "  · human decision")
   else if (identical(src, "human_reject")) paste0(lab, "  · human rejected the proposal")
   else lab
 }
@@ -186,6 +188,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "sponsor_label", render = fmt_sponsor,
        editable = TRUE, control = "entity", vocab = NULL,
        route = "sponsor_registry", override_col = NA_character_,
+       pipeline = "sponsor registry (entity match)",
        note = "Corrects EVERY trial carrying this raw sponsor string."),
 
   list(id = "sponsor_type", label = "Sponsor type", group = "entities",
@@ -194,6 +197,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "sponsor_type", render = NULL,
        editable = TRUE, control = "select", vocab = c("academic", "industry"),
        route = "sponsor_registry", override_col = NA_character_,
+       pipeline = "sponsor registry, overridden by the trial's own commercial flag",
        note = "Entity type on the registry; applies to every trial with this sponsor."),
 
   list(id = "product", label = "Product", group = "entities",
@@ -201,6 +205,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "DIMP_product_name", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "DIMP_product_name",
+       pipeline = "duplicate slash-parts removed",
        note = "This trial only."),
 
   list(id = "inn", label = "INN (register text)", group = "entities",
@@ -208,6 +213,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "DIMP_inn_name", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "DIMP_inn_name",
+       pipeline = "duplicate slash-parts removed",
        note = "This trial only. The register's own INN wording, with duplicate slash-parts removed — NOT the resolved substance."),
 
   list(id = "substance", label = "Active substance (resolved)", group = "entities",
@@ -216,6 +222,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "substance_label", render = NULL,
        editable = TRUE, control = "entity", vocab = NULL,
        route = "substance_registry", override_col = NA_character_,
+       pipeline = "substance registry (ChEMBL-backed entity match)",
        note = "What the substance registry resolved the INN text to. Corrects EVERY trial carrying this raw substance string."),
 
   list(id = "organ_class", label = "MedDRA organ class", group = "entities",
@@ -223,6 +230,7 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "MEDDRA_organ_class", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_organ_class",
+       pipeline = "EUCTR prefix stripped; CTIS numeric SOC code resolved",
        note = "This trial only. MedDRA has no registry."),
 
   list(id = "meddra_term", label = "MedDRA term", group = "entities",
@@ -230,30 +238,35 @@ TRIAL_FIELD_SPEC <- list(
        norm_col = "MEDDRA_term", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_term",
+       pipeline = "US->UK spelling, roman->arabic, stage/metastatic qualifiers stripped, sentence-cased",
        note = "This trial only. MedDRA has no registry."),
 
   list(id = "age_group", label = "Age group", group = "entities",
        raw_cols = "age_group_raw", norm_col = "age_group", render = NULL,
        editable = TRUE, control = "select", vocab = c("Paediatric", "Adult", "Paediatric & Adult", "Unknown"),
        route = "trial_override", override_col = "age_group",
+       pipeline = "derived from three EUCTR boolean flags, or the CTIS ageGroup string",
        note = "This trial only."),
 
   list(id = "is_orphan", label = "Orphan designation", group = "entities",
        raw_cols = "is_orphan_raw", norm_col = "is_orphan", render = NULL,
        editable = TRUE, control = "select", vocab = c("Yes", "No", "Unknown"),
        route = "trial_override", override_col = "is_orphan",
+       pipeline = "derived from the EUCTR orphan text, or presence of a CTIS designation number",
        note = "This trial only."),
 
   list(id = "register", label = "Register", group = "status",
        raw_cols = character(), norm_col = "register", render = NULL,
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
+       pipeline = "derived from the trial id pattern",
        note = "Identity, derived from the trial id. Not editable."),
 
   list(id = "status", label = "Status", group = "status",
        raw_cols = "status_raw", norm_col = "status", render = fmt_status,
        editable = TRUE, control = "select", vocab = c("Ongoing", "Completed", "Withdrawn", "Not Authorised", "Administrative"),
        route = "trial_override", override_col = "status",
+       pipeline = "regex-bucketed into five categories",
        note = "This trial only. The status CATEGORY, not the register wording."),
 
   list(id = "phase", label = "Phase", group = "entities",
@@ -261,6 +274,7 @@ TRIAL_FIELD_SPEC <- list(
        editable = TRUE, control = "select", vocab = c("Phase I", "Phase II", "Phase III", "Phase IV",
                        "Phase I / Phase II", "Phase II / Phase III"),
        route = "trial_override", override_col = "phase",
+       pipeline = "EUCTR boolean flags, or the CTIS trialPhase string regex-mapped",
        note = "This trial only."),
 
   list(id = "participants", label = "Participants", group = "entities",
@@ -268,12 +282,14 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_participants,
        editable = TRUE, control = "number", vocab = NULL,
        route = "trial_override", override_col = "participants_n",
+       pipeline = "max of a slash-separated list",
        note = "This trial only."),
 
   list(id = "countries", label = "Countries", group = "entities",
        raw_cols = "Member_state_raw", norm_col = "Member_state", render = NULL,
        editable = TRUE, control = "text", vocab = NULL,
        route = "trial_override", override_col = "Member_state",
+       pipeline = "country names matched to a lookup, junk tokens stripped, deduplicated",
        note = "This trial only. Slash-separated; # Countries is recomputed."),
 
   list(id = "submitted", label = "Submitted", group = "status",
@@ -281,6 +297,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_date("submission_date_parsed"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "submission_date_parsed",
+       pipeline = "date parsed; CTIS takes the earliest of the amendment list",
        note = "This trial only."),
 
   list(id = "start_date", label = "Start Date", group = "status",
@@ -288,6 +305,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_date("start_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "start_date",
+       pipeline = "max of the recruitment-start candidates",
        note = "This trial only."),
 
   list(id = "decision_date", label = "Decision Date", group = "status",
@@ -295,6 +313,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_date("decision_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "decision_date",
+       pipeline = "EUCTR decision date, or the earliest CTIS per-country decision",
        note = "This trial only."),
 
   list(id = "trial_end_date", label = "Trial End Date", group = "status",
@@ -302,6 +321,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_date("trial_duration_end_date"),
        editable = TRUE, control = "date", vocab = NULL,
        route = "trial_override", override_col = "trial_duration_end_date",
+       pipeline = "global end date, kept only when the trial is Completed",
        note = "This trial only. Trial duration is recomputed."),
 
   list(id = "trial_duration", label = "Trial duration", group = "status",
@@ -309,6 +329,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_duration,
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
+       pipeline = "end date minus start date, discarded outside 0-3650 days",
        note = "Derived from the two dates. Edit those instead."),
 
   list(id = "has_results", label = "Results reported", group = "status",
@@ -316,6 +337,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_results_reported,
        editable = TRUE, control = "bool", vocab = NULL,
        route = "trial_override", override_col = "has_results",
+       pipeline = "presence of the register's results flag",
        note = "This trial only."),
 
   list(id = "result_source", label = "Result source", group = "status",
@@ -323,6 +345,7 @@ TRIAL_FIELD_SPEC <- list(
        render = fmt_result_source,
        editable = FALSE, control = "text", vocab = NULL,
        route = NA_character_, override_col = NA_character_,
+       pipeline = "not processed",
        note = "The register's own words. Not editable.")
 )
 
@@ -352,13 +375,41 @@ field_rows <- function(row, group = NULL, spec = TRIAL_FIELD_SPEC) {
               else if (!any(f$raw_cols %in% names(row))) "absent"
               else if (is.na(raw) || !nzchar(trimws(raw))) "empty"
               else "present"
+    norm <- if (is.function(f$render)) f$render(row) else row_val(row, f$norm_col)
+
+    # THE COLUMN THIS APP EXISTS FOR.
+    #
+    # Showing a raw value beside a normalised one does not say what happened
+    # between them, and that is the thing being validated. "HIV infection" ->
+    # "HIV infection" looks identical to a field the pipeline never touched;
+    # a value with no raw beside it looks like missing data rather than
+    # something derived from three other columns.
+    #
+    #   derived    no single raw counterpart — computed from other fields
+    #   unchanged  the pipeline ran and produced the register's own value
+    #   changed    the pipeline produced something different: CHECK THIS
+    #   no raw     the column is absent from this snapshot, so it cannot be judged
+    #   empty      the register sent nothing and nothing was derived
+    cmp <- function(a, b) {
+      identical(tolower(trimws(a %||% "")), tolower(trimws(b %||% "")))
+    }
+    change <- if (identical(status, "none")) "derived"
+              else if (identical(status, "absent")) "no raw"
+              else if (is.na(norm) || !nzchar(trimws(norm))) {
+                if (identical(status, "empty")) "empty" else "dropped"
+              } else if (identical(status, "empty")) "derived"
+              else if (cmp(raw, norm)) "unchanged"
+              else "changed"
+
     list(
       id    = f$id,
       label = f$label,
       group = f$group,
       raw   = raw,
       raw_status = status,
-      norm  = if (is.function(f$render)) f$render(row) else row_val(row, f$norm_col)
+      norm  = norm,
+      change = change,
+      pipeline = f$pipeline %||% NA_character_
     )
   })
 }
