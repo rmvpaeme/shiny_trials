@@ -24,7 +24,8 @@ suppressPackageStartupMessages({
   library(DT)
 })
 
-for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R")) {
+for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
+            "norm_review.R")) {
   source(file.path("R", f))
 }
 
@@ -41,10 +42,29 @@ snapshot_refresh()
 # The pool is opened once and shared. Several concurrent sessions each opening
 # their own connection is how a free-tier database runs out of them.
 DB_POOL <- tryCatch(curation_pool(), error = function(e) {
+  # R reads .Renviron from the STARTUP working directory, and this app starts in
+  # curation_app/ — so a .Renviron at the REPO ROOT is invisible here and the
+  # database silently does not connect. Same shape as the trap AGENTS/DEPLOY.md
+  # records for rebuild_cache.R, where a setwd() after startup defeats a project
+  # .Renviron. Hence the path in the message: the fix is never obvious from
+  # "connection failed".
   message("No database pool: ", conditionMessage(e))
+  message("  Reviewers cannot sign in and no decision can be recorded.")
+  message("  Locally: put CURATION_DB_URL in curation_app/.Renviron")
+  message("           (the repo-root one is NOT read — this app starts in curation_app/)")
+  message("  On Posit: set it as an environment variable on the deployed app.")
   NULL
 })
 if (!is.null(DB_POOL)) message("Database: ", curation_db_label())
+
+# Loaded once per process. Used for the sibling panel and, later, tab 1.
+TRIALS_CACHE <- local({
+  p <- snapshot_file("trials_cache.rds")
+  if (is.na(p)) { message("No trials cache in the snapshot"); return(NULL) }
+  d <- tryCatch(readRDS(p), error = function(e) NULL)
+  if (!is.null(d)) message(sprintf("Trials cache: %s rows", format(nrow(d), big.mark = ",")))
+  d
+})
 
 onStop(function() if (!is.null(DB_POOL)) pool::poolClose(DB_POOL))
 
@@ -97,7 +117,7 @@ server <- function(input, output, session) {
   app_shell <- function(a) {
     panels <- list(
       bslib::nav_panel("Trial validation",     uiOutput("tab_trials")),
-      bslib::nav_panel("Normalisation review", uiOutput("tab_norm")),
+      bslib::nav_panel("Normalisation review", norm_review_ui("norm")),
       bslib::nav_panel("Changes & statistics", uiOutput("tab_stats"))
     )
     # Cosmetic only. The admin outputs below refuse regardless of whether this
@@ -119,6 +139,14 @@ server <- function(input, output, session) {
     ))
   }
 
+  # The module needs the identity, and gets it as a REACTIVE rather than a
+  # value: when the session expires, session_user() becomes NULL and every
+  # write inside the module refuses. Passing a snapshot of the user at mount
+  # time would leave a module that keeps accepting decisions after logout.
+  session_user <- reactive(auth_user(session))
+  norm_review_server("norm", db = DB_POOL, session_user = session_user,
+                     cache = TRIALS_CACHE)
+
   output$banner <- renderUI({
     require_role(session)
     snapshot_banner(snapshot_current())
@@ -133,12 +161,6 @@ server <- function(input, output, session) {
     require_role(session)
     div(class = "p-3", h5("Trial validation"),
         p(class = "text-muted", "Browse every trial and check its recoding."))
-  })
-
-  output$tab_norm <- renderUI({
-    require_role(session)
-    div(class = "p-3", h5("Normalisation review"),
-        p(class = "text-muted", "The sponsor and substance queues."))
   })
 
   output$tab_stats <- renderUI({
