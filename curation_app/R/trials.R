@@ -60,7 +60,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
            substance = norm_registry_load(sp, "substance"))
     })
 
+    # Which registry to offer choices from — and ONLY for fields drawn as an
+    # entity picker. route says where a decision is written; control says what
+    # widget to draw. Keying this off route alone filled the two-value
+    # "Sponsor type" dropdown with all 6,954 sponsor canonicals, because that
+    # field is registry-routed but is a plain select.
     entity_domain <- function(f) {
+      if (!identical(f$control, "entity")) return(NA_character_)
       if (identical(f$route, "sponsor_registry")) "sponsor"
       else if (identical(f$route, "substance_registry")) "substance" else NA_character_
     }

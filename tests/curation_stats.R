@@ -112,10 +112,21 @@ run <- function() {
   fr <- metrics_field_change_rate(con, min_n = 1L)
   ph <- fr[fr$field_id == "phase", ]
   check(as.numeric(ph$n_changed) == 2, "phase was changed on 2 trials")
-  check(as.numeric(ph$n_trials_reviewed) == 4, "denominator is trials SIGNED OFF, not decisions")
-  check(abs(as.numeric(ph$change_rate) - 0.5) < 1e-9, "2 of 4 reads as 50%")
+
+  # The denominator is every trial ever signed off, not just this test's — the
+  # metric is deliberately global (see its comment). So it is read from the
+  # database rather than assumed to be 4: hardcoding it made this test fail the
+  # moment a real reviewer signed off a trial in the deployed app, which is a
+  # test fault, not a regression.
+  denom <- as.numeric(dbGetQuery(con,
+    "SELECT count(DISTINCT trial_id) n FROM trial_reviews")$n)
+  check(as.numeric(ph$n_trials_reviewed) == denom,
+        sprintf("denominator is trials SIGNED OFF (%d), not decisions", denom))
+  check(abs(as.numeric(ph$change_rate) - 2 / denom) < 1e-9,
+        sprintf("2 of %d reads as %.0f%%", denom, 100 * 2 / denom))
   md <- fr[fr$field_id == "meddra_term", ]
-  check(abs(as.numeric(md$change_rate) - 0.25) < 1e-9, "1 of 4 reads as 25%")
+  check(abs(as.numeric(md$change_rate) - 1 / denom) < 1e-9,
+        sprintf("1 of %d reads as %.0f%%", denom, 100 / denom))
   check(which(fr$field_id == "phase") < which(fr$field_id == "meddra_term"),
         "the least trustworthy field sorts first")
 

@@ -124,6 +124,45 @@ norm_siblings <- function(cache, domain, canonical, limit = 15L) {
   }
 }
 
+# Canonicals worth putting at the top of the list for this raw string.
+#
+# "Merck KGaA" should offer "Merck" without the reviewer typing anything. The
+# match is on WORD PREFIXES rather than a substring: "Merck" is a prefix of the
+# first word of "Merck KGaA", and that is a far better signal than "erck"
+# appearing somewhere. Legal-form words are dropped first, because "GmbH" and
+# "Ltd" are the least informative tokens in a sponsor string and match everything.
+LEGAL_FORMS <- c("ag","kgaa","gmbh","ltd","limited","llc","inc","incorporated",
+                 "corp","corporation","co","plc","sa","sas","nv","bv","ab","as",
+                 "oy","spa","srl","aps","kk","pte","pty","company","holdings",
+                 "group","international","pharma","pharmaceutical","pharmaceuticals",
+                 "the","and","of")
+
+canonical_suggestions <- function(raw_value, canonicals, limit = 8L) {
+  if (is.null(raw_value) || !nzchar(raw_value) || !length(canonicals)) return(character())
+  norm <- function(x) tolower(gsub("[^a-z0-9 ]+", " ", tolower(x)))
+  toks <- setdiff(strsplit(norm(raw_value), " +")[[1]], c("", LEGAL_FORMS))
+  if (!length(toks)) return(character())
+  cn <- norm(canonicals)
+  score <- vapply(seq_along(cn), function(i) {
+    ct <- setdiff(strsplit(cn[i], " +")[[1]], c("", LEGAL_FORMS))
+    if (!length(ct)) return(0)
+    # A token counts when one is a prefix of the other, so "novartis" matches
+    # "novartis" and "biotech" matches "biotechnology", but not mid-word noise.
+    hits <- sum(vapply(toks, function(t)
+      any(startsWith(ct, t) | startsWith(t, ct)), logical(1)))
+    if (!hits) return(0)
+    # Prefer the shorter canonical: "Merck" over "Merck Sharp & Dohme Animal
+    # Health" when the raw string is just "Merck KGaA".
+    hits + 1 / (1 + length(ct))
+  }, numeric(1))
+  if (!any(score > 0)) return(character())
+  ord <- order(score, decreasing = TRUE)
+  head(canonicals[ord][score[ord] > 0], limit)
+}
+
+# The reviewer says a canonical does not exist rather than inventing one.
+NO_CANONICAL <- "\u2014 no suitable canonical name exists \u2014"
+
 # ── UI ────────────────────────────────────────────────────────────────────────
 
 norm_review_ui <- function(id) {
@@ -200,10 +239,20 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
 
     # Server-side, because the canonical pools are 6,954 and 19,645 names and
     # neither belongs in a browser payload.
-    shiny::observeEvent(registry(), {
+    # Repopulated per ROW, so the suggestions are for the string on screen.
+    shiny::observeEvent(list(selected(), registry()), {
+      reg <- registry()
+      if (is.null(reg) || !nrow(reg)) return()
+      all_c <- sort(unique(reg$canonical))
+      row <- selected()
+      sug <- if (is.null(row)) character()
+             else canonical_suggestions(row$raw_value, all_c)
+      # Suggestions first, then the full list. server = TRUE because 6,954 and
+      # 19,645 canonicals must not ship to the browser.
       shiny::updateSelectizeInput(session, "canonical",
-        choices = sort(unique(registry()$canonical)), server = TRUE, selected = "")
-    })
+        choices = c("", NO_CANONICAL, sug, setdiff(all_c, sug)),
+        selected = row$proposed %||% "", server = TRUE)
+    }, ignoreNULL = FALSE)
 
     selected <- shiny::reactive({
       i <- input$queue_rows_selected
@@ -276,10 +325,15 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       if (is.null(row)) return(NULL)
       acts <- spec()$actions
       shiny::tagList(
+        # create = FALSE, deliberately. Minting a canonical from this box is
+        # how near-duplicates accumulated in the registry, and a reviewer
+        # cannot tell from here whether a name already exists in another form.
+        # If nothing fits, they say so and it is dealt with as a batch later.
         shiny::selectizeInput(ns("canonical"), "Canonical",
-                              choices = NULL, options = list(create = TRUE,
-                                                             placeholder = "type to search")),
-        shiny::uiOutput(ns("new_warning")),
+                              choices = NULL,
+                              options = list(create = FALSE,
+                                             placeholder = "suggestions first, then the full list")),
+        shiny::uiOutput(ns("suggestion_note")),
         shiny::textAreaInput(ns("comment"), "Comment", rows = 2),
         shiny::div(
           class = "d-grid gap-2",
@@ -345,7 +399,16 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
     }
 
     shiny::observeEvent(input$accept,  record("accept", selected()$proposed))
-    shiny::observeEvent(input$edit,    record("edit",   input$canonical))
+    shiny::observeEvent(input$edit, {
+      cn <- input$canonical
+      if (is.null(cn) || !nzchar(cn)) {
+        shiny::showNotification("Pick a canonical, or say none fits.", type = "warning")
+        return()
+      }
+      # "No canonical fits" is a REJECT: it leaves entity_id NA, which E_emit
+      # classifies as an intended human unassignment rather than a regression.
+      if (identical(cn, NO_CANONICAL)) record("reject") else record("edit", cn)
+    })
     shiny::observeEvent(input$reject,  record("reject"))
     shiny::observeEvent(input$skip,    record("skip"))
     shiny::observeEvent(input$not_sub, {

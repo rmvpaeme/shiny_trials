@@ -43,7 +43,7 @@ for (f in c("util.R", "field_spec.R", "github.R", "store.R", "auth.R",
   source(file.path("R", f))
 }
 
-APP_VERSION <- "0.22.0"
+# APP_VERSION lives in R/util.R — see the note there.
 
 # ── Startup ───────────────────────────────────────────────────────────────────
 #
@@ -122,6 +122,11 @@ ui <- bslib::page_fluid(
 # ── Server ────────────────────────────────────────────────────────────────────
 
 server <- function(input, output, session) {
+  # Posit Connect sits behind a proxy that will close an idle websocket. Without
+  # this, Shiny's default is to drop the session and the browser reloads —
+  # indistinguishable, from the reviewer's side, from the app restarting.
+  session$allowReconnect(TRUE)
+
   auth_init(session)
   # Clears the identity once the idle window passes, which invalidates every
   # output depending on it. Without it, expiry is only noticed the next time
@@ -147,17 +152,35 @@ server <- function(input, output, session) {
 
   # Re-evaluated whenever auth changes, so an expiry or a logout swaps the whole
   # UI back to the login form rather than leaving a dead shell on screen.
-  output$shell <- renderUI({
+  # THE WHOLE NAVBAR IS INSIDE THIS OUTPUT.
+  #
+  # Rendering it directly from auth_user() meant every re-evaluation of the auth
+  # reactive rebuilt all four tabs — which resets the navbar to the first panel
+  # and throws the reviewer back to Trial validation mid-task. Reported as the
+  # app "reloading randomly when they click something".
+  #
+  # It is now keyed on a STABLE STRING, updated only when the login state
+  # genuinely changes. A reactive alone would not do: reactives notify their
+  # dependents on every re-execution, whether or not the value changed. This
+  # compares first and writes only on a real transition.
+  shell_state <- reactiveVal("login")
+  observe({
     a <- auth_user(session)
-    if (is.null(a)) return(login_ui(login_error()))
-    app_shell(a)
+    k <- if (is.null(a)) "login" else paste0("app:", a$role)
+    if (!identical(shell_state(), k)) shell_state(k)
+  })
+
+  output$shell <- renderUI({
+    k <- shell_state()
+    if (identical(k, "login")) return(login_ui(login_error()))
+    app_shell(isolate(auth_user(session)))
   })
 
   app_shell <- function(a) {
     panels <- list(
       bslib::nav_panel("Trial validation",     trials_ui("trials")),
       bslib::nav_panel("Normalisation review", norm_review_ui("norm")),
-      bslib::nav_panel("Changes & statistics", uiOutput("tab_stats"))
+      bslib::nav_panel("Changes & statistics", stats_ui("stats"))
     )
     # Cosmetic only. The admin outputs below refuse regardless of whether this
     # nav item was ever rendered.
@@ -165,9 +188,11 @@ server <- function(input, output, session) {
       panels <- c(panels, list(bslib::nav_panel("Admin", admin_ui("admin"))))
     }
     do.call(bslib::page_navbar, c(
-      list(
+ list(
         title = "Curation",
         id = "main_nav",
+        # Survive a rebuild on the tab the reviewer was actually using.
+        selected = isolate(input$main_nav) %||% "Trial validation",
         header = div(class = "px-3 pt-2", uiOutput("banner")),
         footer = div(class = "px-3 py-2 text-muted small",
                      sprintf("v%s · signed in as %s (%s)", APP_VERSION,

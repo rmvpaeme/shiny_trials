@@ -69,6 +69,34 @@ check(!"not_a_substance" %in% DOMAIN_SPEC$sponsor$actions,
 check("not_a_substance" %in% DOMAIN_SPEC$substance$actions,
       "not_a_substance IS offered for substances")
 
+cat("\n3b. the canonical picker suggests, and cannot invent\n")
+regs <- c("Merck", "Merck Sharp & Dohme Animal Health", "Novartis", "Pfizer",
+          "GlaxoSmithKline", "Bristol Myers Squibb", "Wyeth", "Biogen")
+sg <- function(raw) canonical_suggestions(raw, regs)
+check(identical(sg("Merck KGaA")[1], "Merck"),
+      "'Merck KGaA' proposes 'Merck' first — the legal form is ignored")
+check(identical(sg("Novartis Pharma AG")[1], "Novartis"),
+      "'Novartis Pharma AG' proposes 'Novartis'")
+check(identical(sg("GlaxoSmithKline AB")[1], "GlaxoSmithKline"),
+      "'GlaxoSmithKline AB' proposes 'GlaxoSmithKline'")
+check(identical(sg("MERCK SHARP & DOHME LTD")[1], "Merck Sharp & Dohme Animal Health"),
+      "more matching words wins over the shorter name")
+check(length(sg("Totally Unrelated Institute")) == 0,
+      "an unrelated string proposes nothing rather than noise")
+# Legal forms match everything, so they must not drive a suggestion.
+check(length(sg("GmbH Ltd AG")) == 0,
+      "a string of only legal forms proposes nothing")
+check(!any(grepl("Biogen", sg("Merck KGaA"))),
+      "and suggestions do not include unrelated canonicals")
+
+src <- readLines("R/norm_review.R", warn = FALSE)
+check(any(grepl("create = FALSE", src, fixed = TRUE)),
+      "the box cannot create a canonical — minting is how near-duplicates began")
+check(any(grepl("NO_CANONICAL", src, fixed = TRUE)),
+      "and offers an explicit 'no suitable canonical' instead")
+check(any(grepl('identical(cn, NO_CANONICAL)) record("reject")', src, fixed = TRUE)),
+      "which is recorded as a reject, so E_emit treats it as an intended unassignment")
+
 cat("\n4. what a decision records\n")
 cfg <- curation_db_config()
 if (is.null(cfg)) {

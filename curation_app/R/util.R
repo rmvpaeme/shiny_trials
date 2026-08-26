@@ -1,5 +1,18 @@
 # Small shared helpers for the curation app.
 
+# ── Why this is here and not in app.R ─────────────────────────────────────────
+#
+# app.R sources these files with source(), which defaults to local = FALSE and
+# therefore evaluates them into globalenv(). But app.R's OWN top level is not
+# necessarily globalenv: Posit Connect evaluates the app file in its own
+# environment, so a constant assigned there is invisible to a function defined
+# in globalenv.
+#
+# The result was "object 'APP_VERSION' not found" the moment a reviewer saved a
+# decision — only on the deployed app, never locally, and never in the tests,
+# which set it themselves. Anything the modules need lives in a sourced file.
+APP_VERSION <- "0.22.0"
+
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0) b else a
 
 # Where a snapshot came from and how stale it is, for the persistent banner.

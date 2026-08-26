@@ -26,12 +26,41 @@ check(all(vapply(ed, function(f) !is.na(f$route), logical(1))),
       "every editable field has a route")
 reg <- Filter(function(f) f$route %in% c("sponsor_registry", "substance_registry"), ed)
 ovr <- Filter(function(f) identical(f$route, "trial_override"), ed)
-check(length(reg) == 3, "sponsor, sponsor_type and substance go to a registry")
-check(length(ovr) == length(ed) - 3, "everything else is a per-trial override")
+check(length(reg) == 2, "sponsor and substance go to a registry")
+check(length(ovr) == length(ed) - 2, "everything else is a per-trial override")
 check(all(vapply(reg, function(f) is.na(f$override_col), logical(1))),
       "a registry-routed field has NO override column")
 check(all(vapply(ovr, function(f) !is.na(f$override_col), logical(1))),
       "an override-routed field names the column it writes")
+
+cat("\n1b. the widget matches where the decision goes\n")
+# "Sponsor type > edit shows all sponsors, not the type."
+#
+# The editor picked its choices by ROUTE, so a registry-routed field drawn as a
+# plain select had its two options replaced by 6,954 sponsor canonicals. Worse,
+# saving it wrote final_canonical = "academic" and export.R mints any
+# final_canonical it cannot match — a registry sponsor named "academic".
+for (f in TRIAL_FIELD_SPEC) {
+  if (f$route %in% c("sponsor_registry", "substance_registry")) {
+    check(identical(f$control, "entity"),
+          sprintf("%s is registry-routed, so it must be an entity picker (is '%s')",
+                  f$label, f$control))
+  }
+  if (identical(f$control, "entity")) {
+    check(f$route %in% c("sponsor_registry", "substance_registry"),
+          sprintf("%s is an entity picker, so it must be registry-routed", f$label))
+  }
+}
+src0 <- readLines("R/trials.R", warn = FALSE)
+check(any(grepl('!identical(f$control, "entity")', src0, fixed = TRUE)),
+      "and the editor gates the registry choices on the CONTROL, not the route")
+
+# sponsor_type specifically: the pipeline resets it from the register's own
+# commercial flag every run, so an edit could never stick.
+st <- Filter(function(f) f$id == "sponsor_type", TRIAL_FIELD_SPEC)[[1]]
+check(!isTRUE(st$editable),
+      "sponsor type is not editable — E_emit resets it from the commercial flag")
+check(is.na(st$route), "and it routes nowhere, so it cannot reach the registry")
 
 cat("\n2. value types are declared, not guessed\n")
 check(identical(spec_value_type(list(control = "number")), "numeric"), "number -> numeric")
@@ -134,8 +163,9 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
     n_edit <- length(gregexpr('id="trials-edit_', h, fixed = TRUE)[[1]])
     check(n_edit == length(ed),
           sprintf("every editable field is clickable (%d links, %d editable fields)", n_edit, length(ed)))
-    check(length(gregexpr("text-muted small\">—<", h)[[1]]) == 3,
-          "the three derived fields are NOT clickable")
+    n_fixed <- length(TRIAL_FIELD_SPEC) - length(ed)
+    check(length(gregexpr("text-muted small\">—<", h)[[1]]) == n_fixed,
+          sprintf("the %d non-editable fields are NOT clickable", n_fixed))
     for (lbl in c("Sponsor", "Phase", "Age group", "Orphan designation", "Countries"))
       check(grepl(paste0(">", lbl, "<"), h), sprintf("the %s row is present", lbl))
   })

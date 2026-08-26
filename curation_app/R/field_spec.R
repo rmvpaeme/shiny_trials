@@ -196,10 +196,25 @@ TRIAL_FIELD_SPEC <- list(
        raw_cols = c("b1_sponsor.b31_and_b32_status_of_the_sponsor",
                     "authorizedApplication.authorizedPartI.sponsors.commercial"),
        norm_col = "sponsor_type", render = NULL,
-       editable = TRUE, control = "select", vocab = c("academic", "industry"),
-       route = "sponsor_registry", override_col = NA_character_,
-       pipeline = "sponsor registry, overridden by the trial's own commercial flag",
-       note = "Applies to every trial with this sponsor."),
+       # NOT EDITABLE, and the reason is in the pipeline rather than here.
+       #
+       # E_emit.R resets sponsor_type from the trial's own commercial flag on
+       # every run — "the trial's own commercial flag is authoritative over
+       # anything the model inferred from the string". A reviewer's edit would
+       # therefore be discarded the next night, silently.
+       #
+       # It was also a live route to corrupting the registry. The field routes
+       # to sponsor_registry, so saving it wrote final_canonical = "academic",
+       # and export.R mints any final_canonical it cannot match — creating a
+       # canonical sponsor named "academic". Offering an edit that cannot stick
+       # AND can damage the registry is worse than not offering it.
+       #
+       # If sponsor types need correcting, the fix is the register's commercial
+       # flag or the pipeline rule, not a per-trial override.
+       editable = FALSE, control = "text", vocab = NULL,
+       route = NA_character_, override_col = NA_character_,
+       pipeline = "the register's own commercial flag decides this",
+       note = "Set by the register's commercial flag. Not editable — the pipeline resets it on every run."),
 
   list(id = "product", label = "Product", group = "entities",
        raw_cols = c("DIMP_product_name_raw", "DIMP_product_name"),
