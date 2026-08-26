@@ -99,6 +99,37 @@ check(any(grepl('observeEvent(input$no_canonical, record("reject"))', src, fixed
 check(!any(grepl("NO_CANONICAL", src, fixed = TRUE)),
       "and the pseudo-choice is gone from the canonical list entirely")
 
+cat("\n3c. one save button, and the action follows the value\n")
+src2 <- readLines("R/norm_review.R", warn = FALSE)
+# Two buttons differing only by something already visible in the box above them
+# add nothing except the chance to record "accept" while the reviewer had typed
+# a correction.
+check(!any(grepl('ns("accept")', src2, fixed = TRUE)) &&
+      !any(grepl('ns("edit")', src2, fixed = TRUE)),
+      "the separate Accept and Save-edit buttons are gone")
+check(any(grepl("pending_action", src2, fixed = TRUE)),
+      "accept vs edit is derived from whether the value changed")
+check(any(grepl('record(a, trimws(input$canonical))', src2, fixed = TRUE)),
+      "and the derived action is what gets recorded")
+check(any(grepl('output$save_button', src2, fixed = TRUE)),
+      "the button label says which it will be, before the click")
+
+# The derivation itself, on the shapes that matter.
+decide <- function(proposed, chosen) {
+  cn <- trimws(chosen %||% "")
+  if (!nzchar(cn)) return(NULL)
+  if (identical(cn, trimws(proposed %||% ""))) "accept" else "edit"
+}
+check(identical(decide("Merck", "Merck"), "accept"),
+      "leaving the proposal untouched records an accept")
+check(identical(decide("Merck", "Merck KGaA"), "edit"),
+      "changing it records an edit")
+check(identical(decide("Merck", " Merck "), "accept"),
+      "whitespace alone is not a change")
+check(is.null(decide("Merck", "")), "an empty box records nothing at all")
+check(identical(decide(NA_character_, "Merck"), "edit"),
+      "choosing a canonical where the pipeline proposed none is an edit")
+
 cat("\n4. what a decision records\n")
 cfg <- curation_db_config()
 if (is.null(cfg)) {

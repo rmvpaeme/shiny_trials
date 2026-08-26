@@ -178,8 +178,10 @@ if (!nzchar(cache_path) || !file.exists(cache_path)) {
     h <- paste(as.character(output$`trials-detail`), collapse = "")
     check(grepl("What the register said", h) && grepl("What the app shows", h),
           "the register's value and the app's are shown side by side")
-    check(grepl("Highlighted rows", h, fixed = TRUE),
-          "one plain sentence says what to do, with no pipeline vocabulary")
+    check(!grepl("Highlighted rows", h, fixed = TRUE),
+          "no highlight instruction — the feature was removed on review")
+    check(!grepl("fff8e1", h, fixed = TRUE),
+          "and no row tinting remains")
     for (jargon in c("normalised", "pipeline", "registry", "canonical"))
       check(!grepl(jargon, h, ignore.case = TRUE),
             sprintf("the table uses no jargon: '%s' does not appear", jargon))

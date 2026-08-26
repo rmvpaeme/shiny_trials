@@ -26,10 +26,27 @@ This app is the writer.
 
 | Tab | What it does |
 |---|---|
-| **Trial validation** | Two columns — what the register said, what the app shows — with the differing rows highlighted. Click any row to correct it. Defaults to *your assigned round*, not all 51,311 trials. |
-| **Normalisation review** | The sponsor and substance queues. Accept / edit / reject, plus *not a substance* on the substance side. |
+| **Trial validation** | What the register said beside what the app shows, one row per field. Click any row to correct it. Defaults to *your assigned round*, and hides trials you have already signed off. |
+| **Normalisation review** | The sponsor and substance queues. One save button whose action follows the value; reject, *no canonical fits*, skip, plus *not a substance* on the substance side. |
 | **Changes & statistics** | Per-field change rate, disagreements, throughput, pipeline lag. Visible to everyone. |
 | **Admin** | Accounts, passwords, the review sample, snapshot refresh, export status, downloads. Admin only. |
+
+### Editing rules
+
+Nothing in the app can invent a value.
+
+- **Canonicals** come from the live registry only. The picker suggests from the
+  raw string first — "Merck KGaA" offers "Merck" — then lists everything.
+  Creating a new canonical is deliberately impossible: that is how near-duplicates
+  accumulated in the first place. If nothing fits, **No canonical fits** records
+  a reject and the string is collected for a batch decision.
+- **MedDRA organ class and term** are dropdowns of the 29 and 4,076 values
+  already in use, not free text.
+- **One save button.** Whether a decision is recorded as *accept* or *edit* is
+  derived from whether the value actually changed, never from which button was
+  pressed. The label says which it will be before you click.
+- **Sponsor type is read-only.** `E_emit` resets it from the trial's own
+  commercial flag on every run, so an edit could not stick.
 
 ### Where a correction goes
 

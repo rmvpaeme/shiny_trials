@@ -334,8 +334,15 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
         shiny::textAreaInput(ns("comment"), "Comment", rows = 2),
         shiny::div(
           class = "d-grid gap-2",
-          shiny::actionButton(ns("accept"), "Accept proposal", class = "btn-success btn-sm"),
-          shiny::actionButton(ns("edit"),   "Save edit",       class = "btn-primary btn-sm"),
+          # ONE button. Two — "Accept proposal" and "Save edit" — differ only by
+          # something already visible in the box above them, so the only thing
+          # they add is the chance to press the wrong one after typing a
+          # correction. What was recorded then said "accept" while the reviewer
+          # had chosen something else.
+          #
+          # The label says which it will be, so the outcome is legible before
+          # the click rather than inferred after it.
+          shiny::uiOutput(ns("save_button")),
           shiny::actionButton(ns("reject"), "Reject",          class = "btn-danger btn-sm"),
           # Its own button. Burying "none of these fit" inside the list of
           # canonicals makes it look like one, and it is the opposite: a
@@ -349,16 +356,36 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       )
     })
 
-    # Minting a canonical is the single most consequential thing a reviewer can
-    # do here — it is how near-duplicate canonicals accumulated in the first
-    # place — so it is never silent.
-    output$new_warning <- shiny::renderUI({
-      cn <- input$canonical
-      if (is.null(cn) || !nzchar(cn)) return(NULL)
-      if (cn %in% registry()$canonical) return(NULL)
-      shiny::div(class = "alert alert-warning py-2 small mb-2",
-        shiny::strong("New canonical. "),
-        "This name is not in the registry and will be created.")
+    # The box cannot create a canonical any more, so there is nothing to warn
+    # about. What helps instead is showing what the string suggests.
+    output$suggestion_note <- shiny::renderUI({
+      row <- selected(); if (is.null(row)) return(NULL)
+      sug <- canonical_suggestions(row$raw_value, registry()$canonical)
+      if (!length(sug)) return(NULL)
+      shiny::div(class = "small text-muted mb-2",
+        "Suggested from the string: ", paste(head(sug, 4), collapse = " \u00b7 "))
+    })
+
+    # accept or edit, decided by whether the value actually differs from what
+    # the pipeline proposed — never by which button was pressed.
+    pending_action <- shiny::reactive({
+      row <- selected(); if (is.null(row)) return(NULL)
+      cn <- trimws(input$canonical %||% "")
+      if (!nzchar(cn)) return(NULL)
+      if (identical(cn, trimws(row$proposed %||% ""))) "accept" else "edit"
+    })
+
+    # The label says which it will be, so the outcome is legible before the
+    # click rather than inferred after it.
+    output$save_button <- shiny::renderUI({
+      a <- pending_action()
+      if (is.null(a))
+        shiny::actionButton(ns("save"), "Pick a canonical",
+                            class = "btn-secondary btn-sm disabled")
+      else if (identical(a, "accept"))
+        shiny::actionButton(ns("save"), "Accept proposal", class = "btn-success btn-sm")
+      else
+        shiny::actionButton(ns("save"), "Save change", class = "btn-primary btn-sm")
     })
 
     output$progress <- shiny::renderUI({
@@ -400,16 +427,13 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       invisible(ok)
     }
 
-    shiny::observeEvent(input$accept,  record("accept", selected()$proposed))
-    shiny::observeEvent(input$edit, {
-      cn <- input$canonical
-      if (is.null(cn) || !nzchar(cn)) {
+    shiny::observeEvent(input$save, {
+      a <- pending_action()
+      if (is.null(a)) {
         shiny::showNotification("Pick a canonical, or say none fits.", type = "warning")
         return()
       }
-      # "No canonical fits" is a REJECT: it leaves entity_id NA, which E_emit
-      # classifies as an intended human unassignment rather than a regression.
-      record("edit", cn)
+      record(a, trimws(input$canonical))
     })
 
     # Recorded as a reject: it leaves entity_id NA, which E_emit classifies as

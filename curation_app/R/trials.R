@@ -279,13 +279,7 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
             f <- spec_by_id[[x$id]]
             p <- if (!is.null(pend) && nrow(pend)) pend[pend$field_id == x$id, ] else NULL
             has_pending <- !is.null(p) && nrow(p) && identical(p$action[[1]], "override")
-            # One signal, not a taxonomy: the row is tinted when the app's value
-            # differs from the register's. That is the only distinction a
-            # reviewer needs to decide where to look, and it needs no
-            # explanation of how the pipeline works.
-            differs <- identical(x$change, "changed")
             shiny::tags$tr(
-              style = if (differs) "background-color:#fff8e1;" else NULL,
               shiny::tags$th(x$label),
               shiny::tags$td(
                 if (identical(x$raw_status, "absent"))
@@ -330,13 +324,6 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         "Select a trial to see how it was recoded."))
       shiny::div(
         class = "curation-fields",
-        # One sentence, no jargon. Someone who has never heard of the pipeline
-        # should be able to start reviewing from this line alone.
-        shiny::div(class = "alert alert-light border py-2 small mb-2",
-          shiny::strong("Highlighted rows are where the app's value differs from the register's. "),
-          "Check those first. Click ", shiny::tags$em("edit"), " on any row that looks wrong. ",
-          shiny::tags$span(class = "text-muted",
-            "A dash means the register did not supply that field.")),
         if (length(missing_sources()))
           shiny::div(class = "alert alert-warning py-2 small mb-2",
             shiny::strong("This data file cannot show the register's own wording for: "),
