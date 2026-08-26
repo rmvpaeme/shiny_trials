@@ -92,10 +92,12 @@ check(!any(grepl("Biogen", sg("Merck KGaA"))),
 src <- readLines("R/norm_review.R", warn = FALSE)
 check(any(grepl("create = FALSE", src, fixed = TRUE)),
       "the box cannot create a canonical — minting is how near-duplicates began")
-check(any(grepl("NO_CANONICAL", src, fixed = TRUE)),
-      "and offers an explicit 'no suitable canonical' instead")
-check(any(grepl('identical(cn, NO_CANONICAL)) record("reject")', src, fixed = TRUE)),
-      "which is recorded as a reject, so E_emit treats it as an intended unassignment")
+check(any(grepl('actionButton(ns("no_canonical")', src, fixed = TRUE)),
+      "and offers 'No canonical fits' as its own BUTTON, not a list entry")
+check(any(grepl('observeEvent(input$no_canonical, record("reject"))', src, fixed = TRUE)),
+      "which records a reject, so E_emit treats it as an intended unassignment")
+check(!any(grepl("NO_CANONICAL", src, fixed = TRUE)),
+      "and the pseudo-choice is gone from the canonical list entirely")
 
 cat("\n4. what a decision records\n")
 cfg <- curation_db_config()

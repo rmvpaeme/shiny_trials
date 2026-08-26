@@ -160,9 +160,6 @@ canonical_suggestions <- function(raw_value, canonicals, limit = 8L) {
   head(canonicals[ord][score[ord] > 0], limit)
 }
 
-# The reviewer says a canonical does not exist rather than inventing one.
-NO_CANONICAL <- "\u2014 no suitable canonical name exists \u2014"
-
 # ── UI ────────────────────────────────────────────────────────────────────────
 
 norm_review_ui <- function(id) {
@@ -250,7 +247,7 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       # Suggestions first, then the full list. server = TRUE because 6,954 and
       # 19,645 canonicals must not ship to the browser.
       shiny::updateSelectizeInput(session, "canonical",
-        choices = c("", NO_CANONICAL, sug, setdiff(all_c, sug)),
+        choices = c("", sug, setdiff(all_c, sug)),
         selected = row$proposed %||% "", server = TRUE)
     }, ignoreNULL = FALSE)
 
@@ -340,6 +337,11 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
           shiny::actionButton(ns("accept"), "Accept proposal", class = "btn-success btn-sm"),
           shiny::actionButton(ns("edit"),   "Save edit",       class = "btn-primary btn-sm"),
           shiny::actionButton(ns("reject"), "Reject",          class = "btn-danger btn-sm"),
+          # Its own button. Burying "none of these fit" inside the list of
+          # canonicals makes it look like one, and it is the opposite: a
+          # statement that the list is missing something.
+          shiny::actionButton(ns("no_canonical"), "No canonical fits",
+                              class = "btn-outline-secondary btn-sm"),
           if ("not_a_substance" %in% acts)
             shiny::actionButton(ns("not_sub"), "Not a substance", class = "btn-warning btn-sm"),
           shiny::actionButton(ns("skip"),   "Skip",            class = "btn-light btn-sm")
@@ -407,8 +409,13 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       }
       # "No canonical fits" is a REJECT: it leaves entity_id NA, which E_emit
       # classifies as an intended human unassignment rather than a regression.
-      if (identical(cn, NO_CANONICAL)) record("reject") else record("edit", cn)
+      record("edit", cn)
     })
+
+    # Recorded as a reject: it leaves entity_id NA, which E_emit classifies as
+    # an intended human unassignment rather than a regression. Nothing is
+    # created — these are collected and dealt with as a batch.
+    shiny::observeEvent(input$no_canonical, record("reject"))
     shiny::observeEvent(input$reject,  record("reject"))
     shiny::observeEvent(input$skip,    record("skip"))
     shiny::observeEvent(input$not_sub, {

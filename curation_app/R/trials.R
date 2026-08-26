@@ -51,6 +51,21 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
 
     editable_fields <- Filter(function(f) isTRUE(f$editable), TRIAL_FIELD_SPEC)
 
+    # Choices for fields whose vocabulary is whatever the corpus already uses.
+    # Computed once per process, not per edit: splitting 51k slash-joined
+    # strings on every click is not interactive.
+    cache_vocab <- local({
+      memo <- list()
+      function(col) {
+        if (!is.null(memo[[col]])) return(memo[[col]])
+        if (is.null(cache) || !col %in% names(cache)) return(character())
+        v <- unlist(strsplit(cache[[col]][!is.na(cache[[col]])], " / ", fixed = TRUE))
+        v <- sort(unique(trimws(v)))
+        memo[[col]] <<- v[nzchar(v)]
+        memo[[col]]
+      }
+    })
+
     # The canonical pools, for the sponsor and substance pickers. Same loader
     # tab 2 uses, so both screens offer exactly the same live entities — and
     # merged-away ones are excluded in both.
@@ -88,7 +103,10 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         shiny::selectInput(ns("register"), "Register",
                            choices = c("All", sort(unique(stats::na.omit(cache$register)))),
                            width = "130px"),
-        shiny::checkboxInput(ns("only_undecided"), "Hide trials already reviewed", value = FALSE))
+        # Hidden by DEFAULT: a reviewer working a round wants what is left, not
+        # a list they have to remember their way through.
+        shiny::checkboxInput(ns("only_undecided"), "Hide trials I have reviewed",
+                             value = TRUE))
     })
 
     my_draws <- shiny::reactive({
@@ -360,10 +378,16 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
             # the updateSelectizeInput below, once the input exists.
             entity = shiny::selectizeInput(ns("edit_value"), f$label,
                        choices = NULL, selected = cur$norm,
-                       options = list(create = TRUE, placeholder = "type to search")),
-            select = shiny::selectInput(ns("edit_value"), f$label,
-                       choices = unique(c("", f$vocab, if (!is.na(cur$norm)) cur$norm)),
-                       selected = cur$norm %||% ""),
+                       options = list(create = FALSE, placeholder = "type to search")),
+            select = if (isTRUE(f$vocab_from_cache))
+                       # 4,076 MedDRA terms: same treatment as the registries.
+                       shiny::selectizeInput(ns("edit_value"), f$label,
+                         choices = NULL, selected = cur$norm,
+                         options = list(create = FALSE, placeholder = "type to search"))
+                     else
+                       shiny::selectInput(ns("edit_value"), f$label,
+                         choices = unique(c("", f$vocab, if (!is.na(cur$norm)) cur$norm)),
+                         selected = cur$norm %||% ""),
             number = shiny::numericInput(ns("edit_value"), f$label,
                        value = suppressWarnings(as.numeric(cur$norm))),
             date   = shiny::dateInput(ns("edit_value"), f$label,
@@ -394,6 +418,12 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
             shiny::updateSelectizeInput(session, "edit_value",
               choices = sort(unique(reg$canonical)), selected = cur$norm,
               server = TRUE)
+          }
+        } else if (isTRUE(f$vocab_from_cache)) {
+          v <- cache_vocab(f$norm_col)
+          if (length(v)) {
+            shiny::updateSelectizeInput(session, "edit_value",
+              choices = c("", v), selected = cur$norm, server = TRUE)
           }
         }
       }, ignoreInit = TRUE)

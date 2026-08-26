@@ -62,6 +62,31 @@ check(!isTRUE(st$editable),
       "sponsor type is not editable — E_emit resets it from the commercial flag")
 check(is.na(st$route), "and it routes nowhere, so it cannot reach the registry")
 
+cat("\n1c. MedDRA is a list, not a free-text box\n")
+# 29 organ classes and 4,076 terms are already in use. A text box invites a
+# 4,077th spelling of one that exists, which is the problem the substance and
+# sponsor registries were built to solve.
+for (fid in c("organ_class", "meddra_term")) {
+  f <- Filter(function(x) x$id == fid, TRIAL_FIELD_SPEC)[[1]]
+  check(identical(f$control, "select"), sprintf("%s is a dropdown", f$label))
+  check(isTRUE(f$vocab_from_cache),
+        sprintf("%s draws its choices from the values already in use", f$label))
+}
+src1 <- readLines("R/trials.R", warn = FALSE)
+check(any(grepl("cache_vocab", src1, fixed = TRUE)),
+      "the editor resolves those choices from the cache")
+check(any(grepl("server = TRUE", src1, fixed = TRUE)),
+      "server-side, because 4,076 terms must not ship to the browser")
+check(!any(grepl("create = TRUE", src1, fixed = TRUE)),
+      "and no editor box can invent a value")
+
+cat("\n1d. reviewed trials are out of the way by default\n")
+check(any(grepl('ns("only_undecided"), "Hide trials I have reviewed",\n                             value = TRUE', paste(src1, collapse = "\n"), fixed = TRUE)) ||
+      any(grepl('value = TRUE', grep("only_undecided", src1, value = TRUE), fixed = TRUE)) ||
+      any(grepl("only_undecided", src1, fixed = TRUE)) &&
+      any(grepl("value = TRUE", src1[grep("only_undecided", src1) + 1], fixed = TRUE)),
+      "a reviewer sees what is left, not what they have already done")
+
 cat("\n2. value types are declared, not guessed\n")
 check(identical(spec_value_type(list(control = "number")), "numeric"), "number -> numeric")
 check(identical(spec_value_type(list(control = "date")),   "date"),    "date -> date")

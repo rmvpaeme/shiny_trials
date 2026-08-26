@@ -48,6 +48,10 @@
 #              trial_duration_days would silently contradict the two dates shown
 #              on the same screen.
 #   control    widget type: select | text | number | date | bool | entity
+#   vocab_from_cache  TRUE means the choices are the values already present in
+#              the cache for this field. MedDRA has 29 organ classes and 4,076
+#              terms in use — far too many to hardcode, and a free-text box
+#              invites a 4,077th spelling of one that already exists.
 #   vocab      a literal vector, or NULL for free text. Registry-backed fields
 #              resolve their choices server-side — 6,954 sponsor and 19,645
 #              substance canonicals do not belong in a browser payload.
@@ -244,7 +248,7 @@ TRIAL_FIELD_SPEC <- list(
   list(id = "organ_class", label = "MedDRA organ class", group = "entities",
        raw_cols = c("MEDDRA_organ_class_raw", "MEDDRA_organ_class"),
        norm_col = "MEDDRA_organ_class", render = NULL,
-       editable = TRUE, control = "text", vocab = NULL,
+       editable = TRUE, control = "select", vocab_from_cache = TRUE, vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_organ_class",
        pipeline = "EUCTR prefix stripped; CTIS numeric SOC code resolved",
        note = "This trial only."),
@@ -252,7 +256,7 @@ TRIAL_FIELD_SPEC <- list(
   list(id = "meddra_term", label = "MedDRA term", group = "entities",
        raw_cols = c("MEDDRA_term_raw", "MEDDRA_term"),
        norm_col = "MEDDRA_term", render = NULL,
-       editable = TRUE, control = "text", vocab = NULL,
+       editable = TRUE, control = "select", vocab_from_cache = TRUE, vocab = NULL,
        route = "trial_override", override_col = "MEDDRA_term",
        pipeline = "US->UK spelling, roman->arabic, stage/metastatic qualifiers stripped, sentence-cased",
        note = "This trial only."),
