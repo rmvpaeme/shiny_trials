@@ -32,6 +32,13 @@ cleanup <- function() {
 
 run <- function() {
   cleanup()
+  # Baseline BEFORE seeding. The metrics are global by design, and there is real
+  # reviewer data in this database — asserting on absolute totals made the test
+  # fail the moment anyone used the app, which is a test fault, not a
+  # regression. Everything below asserts on the DELTA this test creates.
+  base <- dbGetQuery(con, "
+    SELECT (SELECT count(*) FROM norm_decisions WHERE action <> 'skip') a,
+           (SELECT count(*) FROM norm_decisions_latest) b")
   for (u in c(A, B))
     invisible(dbExecute(con, "INSERT INTO reviewers (username, display_name, password_hash, role)
                               VALUES ($1,$1,$2,'reviewer')",
@@ -60,8 +67,10 @@ run <- function() {
 
   cat("1. totals\n")
   t <- metrics_totals(con)
-  check(as.numeric(t$norm_all) == 4, "skips are excluded from the decision count")
-  check(as.numeric(t$norm_keys) == 3, "latest-wins collapses the two decisions on K3")
+  check(as.numeric(t$norm_all) - as.numeric(base$a) == 4,
+        "skips are excluded from the decision count")
+  check(as.numeric(t$norm_keys) - as.numeric(base$b) == 3,
+        "latest-wins collapses the two decisions on K3")
 
   cat("\n2. by reviewer\n")
   br <- metrics_by_reviewer(con)

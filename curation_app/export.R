@@ -72,6 +72,33 @@ fail_soft <- function(msg) {
   quit(save = "no", status = 0L)
 }
 
+# ── The kill switch ───────────────────────────────────────────────────────────
+#
+# OFF BY DEFAULT, WHILE THE APP IS IN TESTING.
+#
+# Reviewers are exercising the app against the real registries and the real
+# database, and their decisions are practice — not judgements anyone has
+# committed to. Applying them would put test data into assignments.csv and
+# registry.csv, which are paid model output and the seed state a fresh checkout
+# needs, and there is no clean way to unpick a partial application afterwards.
+#
+# So the whole path still RUNS every night — connect, read the decisions, work
+# out exactly what would change — and then writes nothing. That keeps the
+# plumbing exercised and the diff visible in the nightly log, which is worth far
+# more than switching the step off entirely and discovering on the first live
+# run that it never worked.
+#
+# To go live: set CURATION_EXPORT_APPLY=true in the container environment (the
+# same env_file that carries CURATION_DB_URL). Nothing else changes.
+apply_decisions <- identical(tolower(Sys.getenv("CURATION_EXPORT_APPLY", "false")), "true")
+if (do_write && !apply_decisions) {
+  message("CURATION_EXPORT_APPLY is not set — running as a DRY RUN.")
+  message("  Reviewer decisions will be reported but NOT written.")
+  message("  This is deliberate while the app is in testing; set")
+  message("  CURATION_EXPORT_APPLY=true to apply them.")
+  do_write <- FALSE
+}
+
 # ── Connect ───────────────────────────────────────────────────────────────────
 #
 # No connection string is NOT a failure. A laptop rebuild has no database and
@@ -218,10 +245,10 @@ export_norm <- function(domain) {
     return(invisible(TRUE))
   }
   if (!do_write) {
+    finish("skipped", if (!apply_decisions) "export disabled: CURATION_EXPORT_APPLY not set" else "dry run")
     message(sprintf("DRY RUN: would update %s%s (%d pin(s), %d new entity(ies))",
                     if (changed_asg) "assignments.csv " else "",
                     if (changed_reg) "registry.csv" else "", n_pins, n_new))
-    finish("skipped", "dry run")
     return(invisible(TRUE))
   }
 
@@ -297,8 +324,11 @@ export_trial <- function() {
   unlink(tmp)
 
   if (!changed) { message("trial_overrides.csv already up to date."); finish("ok", "no change"); return(invisible(TRUE)) }
-  if (!do_write) { message(sprintf("DRY RUN: would write %d override(s)", nrow(out)))
-                   finish("skipped", "dry run"); return(invisible(TRUE)) }
+  if (!do_write) {
+    message(sprintf("DRY RUN: would write %d override(s)", nrow(out)))
+    finish("skipped", if (!apply_decisions) "export disabled: CURATION_EXPORT_APPLY not set" else "dry run")
+    return(invisible(TRUE))
+  }
 
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   tmp2 <- paste0(path, ".tmp")

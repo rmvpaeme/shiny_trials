@@ -348,6 +348,17 @@ decisions_export <- function(con) {
     ORDER BY decided_at_utc DESC")
 }
 
+# Clears the testing data. Reviewer ACCOUNTS survive — resetting the data
+# should not lock everyone out.
+#
+# Goes through a SECURITY DEFINER function rather than DELETE statements: the
+# app role has no DELETE on any table and must not gain one. The function's
+# scope is fixed in schema.sql, so this cannot become "delete these rows".
+curation_reset_testing_data <- function(con, actor, clear_audit = FALSE) {
+  DBI::dbGetQuery(con, "SELECT * FROM curation_reset_testing_data($1, $2)",
+                  params = list(actor, isTRUE(clear_audit)))
+}
+
 admin_audit_recent <- function(con, n = 200L) {
   DBI::dbGetQuery(con, "SELECT * FROM admin_audit ORDER BY at_utc DESC LIMIT $1",
                   params = list(as.integer(n)))

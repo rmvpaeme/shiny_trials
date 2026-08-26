@@ -293,3 +293,61 @@ LEFT JOIN trial_reviews t   ON t.trial_id = p.trial_id
 LEFT JOIN trial_decisions d ON d.trial_id = p.trial_id
 LEFT JOIN trial_disagreements dis ON dis.trial_id = p.trial_id
 GROUP BY p.sample_id, p.trial_id;
+
+-- ── Resetting the testing data ───────────────────────────────────────────────
+--
+-- The app role has no DELETE on any table, on purpose: decisions are
+-- append-only and a leaked app credential must not be able to erase the audit
+-- trail. A reset button therefore cannot work by deleting rows.
+--
+-- Instead this function runs as its OWNER (postgres) rather than the caller.
+-- The app may EXECUTE it and nothing else, so exactly one destructive
+-- operation is reachable, its scope is fixed here rather than composed by the
+-- caller, and it cannot be turned into "delete these particular rows".
+--
+-- Reviewer ACCOUNTS are deliberately kept: resetting the data should not lock
+-- everyone out. Pass TRUE to clear the audit log too; the default keeps it, so
+-- the record of who reset what survives the reset.
+CREATE OR REPLACE FUNCTION curation_reset_testing_data(
+  p_actor       TEXT,
+  p_clear_audit BOOLEAN DEFAULT FALSE
+) RETURNS TABLE (table_name TEXT, rows_deleted BIGINT)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  n BIGINT;
+BEGIN
+  -- Recorded BEFORE the tables are cleared, so the entry survives when the
+  -- audit log itself is not being cleared.
+  INSERT INTO admin_audit (actor, action, target, detail)
+  VALUES (p_actor, 'reset_testing_data', NULL,
+          jsonb_build_object('clear_audit', p_clear_audit));
+
+  DELETE FROM trial_decisions; GET DIAGNOSTICS n = ROW_COUNT;
+  table_name := 'trial_decisions'; rows_deleted := n; RETURN NEXT;
+
+  DELETE FROM norm_decisions;  GET DIAGNOSTICS n = ROW_COUNT;
+  table_name := 'norm_decisions';  rows_deleted := n; RETURN NEXT;
+
+  DELETE FROM trial_reviews;   GET DIAGNOSTICS n = ROW_COUNT;
+  table_name := 'trial_reviews';   rows_deleted := n; RETURN NEXT;
+
+  DELETE FROM review_sample;   GET DIAGNOSTICS n = ROW_COUNT;
+  table_name := 'review_sample';   rows_deleted := n; RETURN NEXT;
+
+  DELETE FROM export_runs;     GET DIAGNOSTICS n = ROW_COUNT;
+  table_name := 'export_runs';     rows_deleted := n; RETURN NEXT;
+
+  IF p_clear_audit THEN
+    DELETE FROM admin_audit WHERE action <> 'reset_testing_data';
+    GET DIAGNOSTICS n = ROW_COUNT;
+    table_name := 'admin_audit'; rows_deleted := n; RETURN NEXT;
+  END IF;
+
+  RETURN;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION curation_reset_testing_data(TEXT, BOOLEAN) FROM PUBLIC;

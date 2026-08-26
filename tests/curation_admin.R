@@ -137,7 +137,42 @@ run <- function() {
           "the LAST active admin cannot be deactivated")
   })
 
-  cat("\n4. the export never carries a password hash\n")
+  cat("\n3b. the testing reset\n")
+# Runs inside a transaction that is ROLLED BACK, so it never destroys the
+# database it is testing against — the same rule as with_scratch_v2.sh.
+before <- dbGetQuery(con, "
+  SELECT (SELECT count(*) FROM norm_decisions) n,
+         (SELECT count(*) FROM review_sample)  s,
+         (SELECT count(*) FROM reviewers)      u")
+dbBegin(con)
+res <- curation_reset_testing_data(con, ADM, clear_audit = FALSE)
+mid <- dbGetQuery(con, "
+  SELECT (SELECT count(*) FROM norm_decisions) n,
+         (SELECT count(*) FROM review_sample)  s,
+         (SELECT count(*) FROM reviewers)      u,
+         (SELECT count(*) FROM admin_audit WHERE action='reset_testing_data') a")
+check(as.numeric(mid$n) == 0, "decisions are cleared")
+check(as.numeric(mid$s) == 0, "review rounds are cleared")
+check(as.numeric(mid$u) == as.numeric(before$u),
+      "reviewer ACCOUNTS are kept — a reset must not lock everyone out")
+check(as.numeric(mid$a) >= 1, "and the reset itself is in the audit log")
+check(nrow(res) >= 4, "it reports what it deleted, per table")
+dbRollback(con)
+after <- dbGetQuery(con, "SELECT count(*) n FROM norm_decisions")
+check(as.numeric(after$n) == as.numeric(before$n),
+      "and the rollback leaves the real database untouched")
+
+# The app role must reach this ONLY through the function. A DELETE grant would
+# undo the append-only property the whole role exists for.
+priv <- dbGetQuery(con, "
+  SELECT has_function_privilege('curation_app',
+           'curation_reset_testing_data(text,boolean)', 'EXECUTE') AS can_run,
+         has_table_privilege('curation_app','norm_decisions','DELETE') AS can_delete")
+check(isTRUE(priv$can_run), "the app role may EXECUTE the reset function")
+check(isFALSE(priv$can_delete),
+      "but still has no DELETE of its own — the scope is fixed in the function")
+
+cat("\n4. the export never carries a password hash\n")
   ex <- decisions_export(con)
   check(!"password_hash" %in% names(ex), "the decisions export has no password_hash column")
   check(all(!grepl("^\\$7\\$", unlist(lapply(ex, as.character)))),

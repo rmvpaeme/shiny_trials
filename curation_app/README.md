@@ -29,7 +29,36 @@ This app is the writer.
 | **Trial validation** | What the register said beside what the app shows, one row per field. Click any row to correct it. Defaults to *your assigned round*, and hides trials you have already signed off. |
 | **Normalisation review** | The sponsor and substance queues. One save button whose action follows the value; reject, *no canonical fits*, skip, plus *not a substance* on the substance side. |
 | **Changes & statistics** | Per-field change rate, disagreements, throughput, pipeline lag. Visible to everyone. |
-| **Admin** | Accounts, passwords, the review sample, snapshot refresh, export status, downloads. Admin only. |
+| **Admin** | Accounts, passwords, review rounds, snapshot refresh, export status, downloads, and the testing reset. Admin only. |
+
+### Testing phase
+
+Two things are deliberately true while the app is being trialled.
+
+**No decision reaches the pipeline.** `export.R` runs every night, connects,
+reads the decisions and reports exactly what it would change — then writes
+nothing. Reviewers are practising against the real registries, and their
+decisions are not judgements anyone has committed to; applying them would put
+test data into `assignments.csv` and `registry.csv`, which are paid model output
+and the seed state a fresh checkout needs.
+
+Running the whole path and writing nothing keeps the plumbing exercised and the
+diff visible in the nightly log, which is worth more than switching the step off
+and discovering on the first live run that it never worked.
+
+To go live, set `CURATION_EXPORT_APPLY=true` in the container environment — the
+same `env_file` that carries `CURATION_DB_URL`. Nothing else changes.
+
+**The database can be reset.** Admin → Reset clears every decision, sign-off,
+review round and export record. Reviewer accounts are kept, and the reset itself
+stays in the audit log. It needs `RESET` typed to confirm, because a misclick on
+a button labelled "delete everything" is exactly what a confirmation dialog does
+not prevent.
+
+The app role has no `DELETE` on any table and does not gain one: the reset runs
+through a `SECURITY DEFINER` function whose scope is fixed in `schema.sql`, so
+exactly one destructive operation is reachable and it cannot become "delete
+these particular rows".
 
 ### Editing rules
 

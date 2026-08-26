@@ -31,8 +31,13 @@ check <- function(cond, msg) {
 }
 rscript <- file.path(R.home("bin"), "Rscript")
 run_export <- function(domain, ...) {
+  # export.R is a DRY RUN unless CURATION_EXPORT_APPLY is set — off by default
+  # while the app is in testing. This test is about what happens when it does
+  # write, so it opts in explicitly. That the default is off is covered
+  # separately below.
   out <- suppressWarnings(system2(rscript,
     c("curation_app/export.R", paste0("--domain=", domain), ...),
+    env = "CURATION_EXPORT_APPLY=true",
     stdout = TRUE, stderr = TRUE))
   list(status = as.integer(attr(out, "status") %||% 0L), out = paste(out, collapse = "\n"))
 }
@@ -148,6 +153,21 @@ run <- function() {
   s_ov <- sha(ov_path)
   invisible(run_export("trial", "--write"))
   check(identical(s_ov, sha(ov_path)), "a second run is byte-identical")
+
+  cat("\n6b. the testing kill switch\n")
+  # With the switch OFF — the shipped default — a --write run must report what
+  # it would do and change nothing. This is what stops reviewer practice from
+  # reaching assignments.csv while the app is being trialled.
+  s_before <- sha(asg_path)
+  off <- suppressWarnings(system2(rscript,
+    c("curation_app/export.R", "--domain=sponsor", "--write"),
+    env = "R_ENVIRON_USER=/dev/null", stdout = TRUE, stderr = TRUE))
+  # (R_ENVIRON_USER only so the repo .Renviron cannot set the variable for us.)
+  check(identical(s_before, sha(asg_path)),
+        "with CURATION_EXPORT_APPLY unset, --write changes NOTHING")
+  check(any(grepl("DRY RUN", off, fixed = TRUE)) ||
+        any(grepl("No CURATION_DB_URL", off, fixed = TRUE)),
+        "and says why rather than looking like a successful no-op")
 
   cat("\n7. failure never costs the data refresh\n")
   # R_ENVIRON_USER is load-bearing here. R reads ./.Renviron at startup and it

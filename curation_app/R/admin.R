@@ -104,6 +104,20 @@ admin_ui <- function(id) {
           "Every decision, both kinds, flattened. Contains reviewer usernames ",
           "and comments — treat it as personal data."),
         shiny::downloadButton(ns("dl"), "Decisions CSV", class = "btn-sm")),
+      bslib::nav_panel("Reset",
+        shiny::div(class = "mt-3"),
+        shiny::div(class = "alert alert-danger py-2",
+          shiny::strong("Testing only. "),
+          "Deletes every decision, sign-off, review round and export record. ",
+          "Reviewer accounts are kept, and the reset itself stays in the audit ",
+          "log. There is no undo."),
+        shiny::uiOutput(ns("reset_counts")),
+        shiny::textInput(ns("reset_confirm"), NULL, placeholder = "type RESET to enable",
+                         width = "260px"),
+        shiny::checkboxInput(ns("reset_audit"), "Also clear the audit log", value = FALSE),
+        shiny::actionButton(ns("reset_go"), "Delete all testing data",
+                            class = "btn-danger btn-sm"),
+        shiny::uiOutput(ns("reset_result"))),
       bslib::nav_panel("Audit",
         shiny::div(class = "mt-3"),
         shiny::p(class = "small text-muted", "Every privileged action taken in this panel."),
@@ -345,6 +359,58 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
       e <- admin_q(export_runs_recent)
       shiny::validate(shiny::need(!is.null(e) && nrow(e), "No export has run yet."))
       DT::datatable(e, rownames = FALSE, options = list(pageLength = 10, scrollX = TRUE))
+    })
+
+    reset_tick <- shiny::reactiveVal(0)
+
+    output$reset_counts <- shiny::renderUI({
+      require_role(session, "admin")
+      reset_tick()
+      if (is.null(db)) return(NULL)
+      n <- tryCatch(DBI::dbGetQuery(db, "
+        SELECT (SELECT count(*) FROM norm_decisions)  AS norm,
+               (SELECT count(*) FROM trial_decisions) AS trial,
+               (SELECT count(*) FROM trial_reviews)   AS reviews,
+               (SELECT count(*) FROM review_sample)   AS sample_rows,
+               (SELECT count(*) FROM reviewers)       AS accounts"),
+        error = function(e) NULL)
+      if (is.null(n)) return(NULL)
+      shiny::tags$ul(class = "small",
+        shiny::tags$li(fmt_int(n$norm), " normalisation decisions"),
+        shiny::tags$li(fmt_int(n$trial), " trial decisions"),
+        shiny::tags$li(fmt_int(n$reviews), " trial sign-offs"),
+        shiny::tags$li(fmt_int(n$sample_rows), " review-round assignments"),
+        shiny::tags$li(fmt_int(n$accounts), " reviewer accounts ",
+                       shiny::tags$em("(kept)")))
+    })
+
+    shiny::observeEvent(input$reset_go, {
+      u <- auth_user(session)
+      if (is.null(u) || !identical(u$role, "admin") || is.null(db)) return()
+      # Typed confirmation, not a second click. This is unrecoverable and a
+      # misclick on a button labelled "delete everything" is exactly the thing
+      # a confirmation dialog does not prevent.
+      if (!identical(trimws(input$reset_confirm %||% ""), "RESET")) {
+        shiny::showNotification("Type RESET to confirm.", type = "warning")
+        note("reset_refused", NA, list(reason = "not confirmed"))
+        return()
+      }
+      res <- tryCatch(curation_reset_testing_data(db, u$username,
+                                                  isTRUE(input$reset_audit)),
+                      error = function(e) e)
+      if (inherits(res, "error")) {
+        shiny::showNotification(conditionMessage(res), type = "error", duration = 12)
+        note("reset_failed", NA, list(reason = conditionMessage(res)))
+        return()
+      }
+      shiny::updateTextInput(session, "reset_confirm", value = "")
+      reset_tick(reset_tick() + 1); tick(tick() + 1); sample_tick(sample_tick() + 1)
+      output$reset_result <- shiny::renderUI(
+        shiny::div(class = "alert alert-success py-2 small mt-2",
+          shiny::strong("Reset complete. "),
+          paste(sprintf("%s: %s", res$table_name, fmt_int(res$rows_deleted)),
+                collapse = " \u00b7 ")))
+      shiny::showNotification("Testing data cleared.", type = "message")
     })
 
     output$audit <- DT::renderDT({

@@ -53,6 +53,11 @@ GRANT UPDATE (password_hash, must_change_pw, role, active, display_name,
               email, last_login_at) ON reviewers TO curation_app;
 GRANT INSERT ON reviewers TO curation_app;   -- admin panel creates reviewers
 
+-- The one destructive operation the app may perform, and only through a
+-- SECURITY DEFINER function whose scope is fixed in schema.sql. This is not a
+-- DELETE grant: the role still cannot remove a single row of its own choosing.
+GRANT EXECUTE ON FUNCTION curation_reset_testing_data(TEXT, BOOLEAN) TO curation_app;
+
 GRANT SELECT ON norm_decisions_latest, trial_decisions_latest,
                 norm_disagreements, trial_disagreements,
                 review_sample_progress, review_sample_agreement TO curation_app;
