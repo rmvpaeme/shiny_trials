@@ -1,0 +1,29 @@
+"register","raw","normalised","n_trials","changed"
+"CTIS","Ongoing, recruiting","Ongoing, recruiting",3874,FALSE
+"CTIS","Ended","Completed",3720,TRUE
+"CTIS","Ongoing, recruitment ended","Ongoing, recruitment ended",2194,FALSE
+"CTIS","Authorised, recruitment pending","Authorised, recruitment pending",1404,FALSE
+"CTIS","Authorised, recruiting","Authorised, recruiting",813,FALSE
+"CTIS","Temporarily halted","Temporarily halted",116,FALSE
+"CTIS","Not authorised","Not Authorised",109,TRUE
+"CTIS","Expired","Expired",10,FALSE
+"CTIS","Suspended","Suspended",3,FALSE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",2,TRUE
+"CTIS","Cancelled","Cancelled",2,FALSE
+"CTIS","Authorised","Authorised",1,FALSE
+"CTIS","Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised / Authorised","Authorised",1,TRUE
+"CTIS","Revoked","Revoked",1,FALSE
+"CTIS","Under evaluation","Under evaluation",1,FALSE
+"EUCTR","Completed","Completed",27397,FALSE
+"EUCTR","Prematurely Ended","Prematurely ended",6041,TRUE
+"EUCTR","Ongoing","Ongoing",4558,FALSE
+"EUCTR","GB - no longer in EU/EEA","Gb - no longer in eu/eea",950,TRUE
+"EUCTR","Temporarily Halted","Temporarily halted",65,TRUE
+"EUCTR","Trial now transitioned","Trial now transitioned",25,FALSE
+"EUCTR","Restarted","Restarted",24,FALSE
+"EUCTR","Not Authorised","Not Authorised",14,FALSE
+"EUCTR","Prohibited by CA","Prohibited by ca",12,TRUE
+"EUCTR","Suspended by CA","Suspended by ca",5,TRUE
