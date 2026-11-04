@@ -130,6 +130,44 @@ check(is.null(decide("Merck", "")), "an empty box records nothing at all")
 check(identical(decide(NA_character_, "Merck"), "edit"),
       "choosing a canonical where the pipeline proposed none is an edit")
 
+cat("\n3d. flag for another reviewer\n")
+fl <- data.frame(raw_value = c("Beta Ltd", "Gamma SA"), reviewer = c("ann", "bob"),
+                 comment = c("check the parent", "is this a CRO?"),
+                 stringsAsFactors = FALSE)
+mk <- norm_mark_flags(q, fl, me = "ann")
+check(!"Beta Ltd" %in% mk$raw_value, "a row I flagged leaves MY queue")
+check(identical(mk$flagged[mk$raw_value == "Gamma SA"], "yes"),
+      "a row someone else flagged stays, marked")
+check(identical(mk$flag_comment[mk$raw_value == "Gamma SA"], "is this a CRO?"),
+      "and carries their comment")
+check(nrow(norm_mark_flags(q, fl, me = "carol", only_flagged = TRUE)) == 2,
+      "'only flagged' shows just the flagged rows")
+check(nrow(norm_mark_flags(q, NULL, me = "ann")) == 4, "no flags changes nothing")
+src3 <- readLines("R/norm_review.R", warn = FALSE)
+check(!any(grepl("invalidateLater", src3, fixed = TRUE)),
+      "the queue is not polled with a bare invalidateLater (redraws every tick)")
+check(!any(grepl("invalidateLater", readLines("R/trials.R", warn = FALSE), fixed = TRUE)),
+      "nor is Trial validation")
+sch <- paste(readLines("sql/schema.sql", warn = FALSE), collapse = "\n")
+check(grepl("FROM norm_decisions\nWHERE action NOT IN ('skip','flag')", sch, fixed = TRUE),
+      "flags are excluded from the latest-wins view export.R reads")
+
+cat("\n3e. polling only notifies on change\n")
+local({
+  n_read <- 0; val <- "a"
+  s <- shiny::MockShinySession$new()
+  shiny::withReactiveDomain(s, {
+    r <- poll_changes(s, 1000, function() { n_read <<- n_read + 1; val })
+    n_fire <- 0
+    shiny::observe({ r(); n_fire <<- n_fire + 1 })
+  })
+  s$flushReact(); s$elapse(1000); s$elapse(1000)
+  check(n_read >= 3, "it keeps reading on schedule")
+  check(n_fire == 1, "but an unchanged value does not wake dependents")
+  val <- "b"; s$elapse(1000)
+  check(n_fire == 2, "a changed value does")
+})
+
 cat("\n4. what a decision records\n")
 cfg <- curation_db_config()
 if (is.null(cfg)) {

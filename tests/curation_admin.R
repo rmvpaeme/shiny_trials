@@ -10,6 +10,22 @@ owd <- setwd("curation_app"); on.exit(setwd(owd), add = TRUE)
 source("R/util.R"); source("R/github.R"); source("R/store.R")
 source("R/auth.R"); source("R/admin.R")
 
+# ── Pure: no database needed ────────────────────────────────────────────────
+local({
+  d <- data.frame(kind = c("norm", "trial_signoff", "trial_field"),
+                  decision_id = 1:3, scope = c("sponsor", "trial", "trial"),
+                  key1 = c("Merck KGaA", "T1", "T9"), key2 = c(NA, NA, "phase"),
+                  action = c("accept", "flagged", "override"), stringsAsFactors = FALSE)
+  cache <- data.frame(`_id` = "T1", CT_number = "2020-000001-01",
+                      Full_title = "A trial", check.names = FALSE)
+  x <- decisions_export_label(d, cache)
+  stopifnot(identical(x$ct_number, c(NA, "2020-000001-01", NA)),
+            identical(x$trial_title[2], "A trial"),
+            identical(match(c("key2", "ct_number", "trial_title"), names(x)), 5:7),
+            identical(names(decisions_export_label(d, NULL))[5:7], c("key2", "ct_number", "trial_title")))
+  cat("  ok    export rows for trials carry the CT number and title\n")
+})
+
 cfg <- curation_db_config()
 if (is.null(cfg)) { message("COULD NOT MEASURE: CURATION_DB_URL is not set."); quit(save="no", status=2L) }
 con <- tryCatch(curation_connect(), error = function(e) NULL)

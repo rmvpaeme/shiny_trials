@@ -48,6 +48,7 @@ todo.md
 # password hashes, session tokens and per-user activity.
 curation_app/auth/
 curation_app/secrets/
+curation_app/user_data/
 curation_app/**/users.csv
 curation_app/**/users.rds
 curation_app/**/credentials*

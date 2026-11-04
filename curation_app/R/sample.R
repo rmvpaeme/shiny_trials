@@ -153,12 +153,14 @@ sample_for_reviewer <- function(con, username, sample_id = NULL) {
       WHERE s.reviewer = $1 AND s.retired_at_utc IS NULL
         AND s.sample_id = (SELECT sample_id FROM review_sample
                            WHERE retired_at_utc IS NULL
-                           ORDER BY drawn_at_utc DESC LIMIT 1)",
+                           ORDER BY drawn_at_utc DESC LIMIT 1)
+      ORDER BY s.trial_id",
       params = list(username))
   } else {
     DBI::dbGetQuery(con,
       "SELECT * FROM review_sample
-       WHERE reviewer = $1 AND sample_id = $2 AND retired_at_utc IS NULL",
+       WHERE reviewer = $1 AND sample_id = $2 AND retired_at_utc IS NULL
+       ORDER BY trial_id",
       params = list(username, sample_id))
   }
 }

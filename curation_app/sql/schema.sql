@@ -51,8 +51,11 @@ CREATE TABLE IF NOT EXISTS norm_decisions (
   raw_value        TEXT NOT NULL,   -- = assignments.raw_sponsor / raw_substance
   -- not_a_substance is substance-only: that pipeline has a third match_status
   -- ('rejected') fed by the not-a-substance lists. Sponsors have no analogue.
+  -- 'flag' is "another reviewer should look at this", with the reason in
+  -- comment. It is NOT a decision: the latest-wins views below exclude it, so
+  -- it never reaches export.R and never suppresses the row for anyone else.
   action           TEXT NOT NULL CHECK (action IN
-                     ('accept','edit','reject','not_a_substance','skip')),
+                     ('accept','edit','reject','not_a_substance','skip','flag')),
   entity_id_shown  TEXT,
   proposed         TEXT,            -- THE BEFORE VALUE. See the note below.
   final_canonical  TEXT,
@@ -87,6 +90,12 @@ CREATE INDEX IF NOT EXISTS norm_decisions_reviewer_idx
   ON norm_decisions (reviewer, decided_at_utc);
 CREATE INDEX IF NOT EXISTS norm_decisions_action_idx
   ON norm_decisions (action);
+
+-- The CHECK above is only used when the table is first created. An existing
+-- database gets 'flag' from here. Idempotent: drop and re-add the same rule.
+ALTER TABLE norm_decisions DROP CONSTRAINT IF EXISTS norm_decisions_action_check;
+ALTER TABLE norm_decisions ADD CONSTRAINT norm_decisions_action_check
+  CHECK (action IN ('accept','edit','reject','not_a_substance','skip','flag'));
 
 -- ── Tab 1: trial validation. Keyed on (trial, field). ───────────────────────
 CREATE TABLE IF NOT EXISTS trial_decisions (
@@ -177,11 +186,14 @@ CREATE INDEX IF NOT EXISTS admin_audit_recent_idx
 --
 -- 'skip' is excluded: it means "I am not deciding this now", which must leave
 -- the row in the queue rather than becoming a decision that suppresses it.
+-- 'flag' is excluded for the same reason, and because export.R reads this view:
+-- a flag that got through would be written to the pipeline as a human
+-- unassignment, since anything that is not accept/edit leaves entity NA.
 
 CREATE OR REPLACE VIEW norm_decisions_latest AS
 SELECT DISTINCT ON (domain, raw_value) *
 FROM norm_decisions
-WHERE action <> 'skip'
+WHERE action NOT IN ('skip','flag')
 ORDER BY domain, raw_value, decided_at_utc DESC, decision_id DESC;
 
 CREATE OR REPLACE VIEW trial_decisions_latest AS
@@ -202,7 +214,7 @@ SELECT domain, raw_value,
        array_agg(DISTINCT COALESCE(final_canonical, '<reject>')) AS values_chosen,
        max(decided_at_utc)               AS last_decided_at
 FROM norm_decisions
-WHERE action <> 'skip'
+WHERE action NOT IN ('skip','flag')
 GROUP BY domain, raw_value
 HAVING count(DISTINCT reviewer) > 1
    AND count(DISTINCT COALESCE(final_canonical, '<reject>')) > 1;

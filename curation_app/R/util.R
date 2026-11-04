@@ -11,7 +11,7 @@
 # The result was "object 'APP_VERSION' not found" the moment a reviewer saved a
 # decision — only on the deployed app, never locally, and never in the tests,
 # which set it themselves. Anything the modules need lives in a sourced file.
-APP_VERSION <- "0.22.0"
+APP_VERSION <- "0.22.1"
 
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0) b else a
 
@@ -40,3 +40,24 @@ snapshot_banner <- function(snap) {
 }
 
 fmt_int <- function(x) formatC(as.numeric(x), format = "d", big.mark = ",")
+
+# ── Polling without redrawing ─────────────────────────────────────────────────
+#
+# A reactive with invalidateLater() notifies everything downstream on EVERY
+# tick, whether or not the value changed. Both review tabs poll the database so
+# a second reviewer's work shows up, and each tick rebuilt the table — which
+# clears the selected row, the detail panel and any comment half-typed in it.
+# Reported as "a refresh every 30 seconds" and as "my comments will not save".
+#
+# This reads on the same schedule but only passes the value on when it differs
+# from the last one. read() may depend on other reactives (the user, the chosen
+# round); those still re-run it immediately.
+poll_changes <- function(session, ms, read) {
+  rv <- shiny::reactiveVal(NULL)
+  shiny::observe({
+    shiny::invalidateLater(ms, session)
+    v <- read()
+    if (!identical(v, shiny::isolate(rv()))) rv(v)
+  })
+  shiny::reactive(rv())
+}

@@ -122,7 +122,7 @@ append_norm_decision <- function(con, domain, raw_value, action, reviewer,
                                  confidence_shown = NA, review_reason = NA,
                                  comment = NA, decision_ms = NA, app_version = NA) {
   stopifnot(domain %in% c("sponsor", "substance"))
-  stopifnot(action %in% c("accept", "edit", "reject", "not_a_substance", "skip"))
+  stopifnot(action %in% c("accept", "edit", "reject", "not_a_substance", "skip", "flag"))
   if (identical(action, "not_a_substance") && !identical(domain, "substance")) {
     stop("not_a_substance is a substance-only action", call. = FALSE)
   }
@@ -201,6 +201,21 @@ latest_trial_reviews <- function(con) {
 
 norm_disagreements  <- function(con) DBI::dbGetQuery(con, "SELECT * FROM norm_disagreements ORDER BY last_decided_at DESC")
 trial_disagreements <- function(con) DBI::dbGetQuery(con, "SELECT * FROM trial_disagreements ORDER BY last_decided_at DESC")
+
+# Open flags: rows whose most recent non-skip entry is a flag, i.e. someone
+# asked for a second look and nobody has decided it since. Read straight from
+# the table, because the latest-wins view deliberately leaves flags out.
+open_norm_flags <- function(con, domain) {
+  DBI::dbGetQuery(con, "
+    SELECT raw_value, reviewer, comment, decided_at_utc FROM (
+      SELECT DISTINCT ON (raw_value) raw_value, action, reviewer, comment,
+             decided_at_utc
+      FROM norm_decisions
+      WHERE domain = $1 AND action <> 'skip'
+      ORDER BY raw_value, decided_at_utc DESC, decision_id DESC) x
+    WHERE action = 'flag'
+    ORDER BY raw_value", params = list(domain))
+}
 
 # Cheap enough to poll. Tab 2 uses it so two reviewers do not work the same row.
 max_norm_decision_id <- function(con) {
@@ -331,21 +346,68 @@ admin_count <- function(con) {
     "SELECT count(*) n FROM reviewers WHERE role = 'admin' AND active")$n)
 }
 
-# Everything a reviewer decided, flattened for download. Deliberately excludes
-# password_hash and every other reviewers column beyond the username.
+# Everything a reviewer did, flattened for download — one row per entry, all
+# three tables. Deliberately excludes password_hash and every other reviewers
+# column beyond the username.
+#
+#   kind = norm           tab 2: a sponsor/substance decision (or skip/flag)
+#          trial_field    tab 1: a correction to one field of one trial
+#          trial_signoff  tab 1: the whole-trial "validated" / "flagged" + comment
+#
+# trial_signoff was missing until v0.22.1, so a finished Trial validation round
+# exported as nothing at all — the comments reviewers wrote there were only in
+# the database.
+#
+# is_current says whether this entry is the one that counts now: entries are
+# appended, never updated, so a changed mind leaves the earlier one behind.
+# Skips and flags are never current, because they are not decisions.
 decisions_export <- function(con) {
   DBI::dbGetQuery(con, "
-    SELECT 'norm' AS kind, decision_id, decided_at_utc, reviewer, domain AS scope,
-           raw_value AS key1, NULL::text AS key2, action, proposed AS before_value,
-           final_canonical AS after_value, new_canonical, n_trials_shown,
-           confidence_shown, review_reason, comment, snapshot_sha, decision_ms
-    FROM norm_decisions
+    SELECT 'norm' AS kind, d.decision_id, d.decided_at_utc, d.reviewer,
+           d.domain AS scope, d.raw_value AS key1, NULL::text AS key2, d.action,
+           d.raw_value AS raw_value, d.proposed AS before_value,
+           d.final_canonical AS after_value, d.new_canonical, d.n_trials_shown,
+           d.confidence_shown, d.review_reason, d.comment,
+           (l.decision_id IS NOT NULL) AS is_current,
+           d.snapshot_sha, d.decision_ms, d.app_version
+    FROM norm_decisions d
+    LEFT JOIN norm_decisions_latest l ON l.decision_id = d.decision_id
     UNION ALL
-    SELECT 'trial', decision_id, decided_at_utc, reviewer, 'trial',
-           trial_id, field_id, action, norm_shown, final_value, NULL::boolean,
-           NULL::integer, NULL::real, NULL::text, comment, snapshot_sha, decision_ms
-    FROM trial_decisions
+    SELECT 'trial_field', d.decision_id, d.decided_at_utc, d.reviewer, 'trial',
+           d.trial_id, d.field_id, d.action, d.raw_shown, d.norm_shown,
+           d.final_value, NULL::boolean, NULL::integer, NULL::real, NULL::text,
+           d.comment, (l.decision_id IS NOT NULL), d.snapshot_sha, d.decision_ms,
+           d.app_version
+    FROM trial_decisions d
+    LEFT JOIN trial_decisions_latest l ON l.decision_id = d.decision_id
+    UNION ALL
+    SELECT 'trial_signoff', r.review_id, r.decided_at_utc, r.reviewer, 'trial',
+           r.trial_id, NULL::text, r.status, NULL::text, NULL::text, NULL::text,
+           NULL::boolean, NULL::integer, NULL::real, NULL::text, r.comment,
+           (l.review_id IS NOT NULL), r.snapshot_sha, NULL::integer, NULL::text
+    FROM trial_reviews r
+    LEFT JOIN (SELECT DISTINCT ON (trial_id) review_id FROM trial_reviews
+               ORDER BY trial_id, decided_at_utc DESC, review_id DESC) l
+           ON l.review_id = r.review_id
     ORDER BY decided_at_utc DESC")
+}
+
+# The database only knows a trial by the cache's internal `_id`. A reviewer
+# reading the export needs the CT number and title, so they are added from the
+# trials cache, right after the key. Pure, so it is testable.
+decisions_export_label <- function(d, cache) {
+  if (is.null(d) || !nrow(d)) return(d)
+  is_trial <- d$scope == "trial"
+  ct <- title <- rep(NA_character_, nrow(d))
+  if (!is.null(cache) && "_id" %in% names(cache)) {
+    m <- match(d$key1, cache$`_id`)
+    hit <- is_trial & !is.na(m)
+    if ("CT_number" %in% names(cache))  ct[hit]    <- as.character(cache$CT_number[m[hit]])
+    if ("Full_title" %in% names(cache)) title[hit] <- as.character(cache$Full_title[m[hit]])
+  }
+  at <- match("key2", names(d))
+  cbind(d[seq_len(at)], ct_number = ct, trial_title = title,
+        d[-seq_len(at)], stringsAsFactors = FALSE)
 }
 
 # Clears the testing data. Reviewer ACCOUNTS survive — resetting the data

@@ -425,9 +425,19 @@ admin_server <- function(id, db, session_user, snapshot = snapshot_current,
         # The guard belongs INSIDE the handler. A download URL is just a URL;
         # it can be requested without the button ever having been rendered.
         require_role(session, "admin")
-        d <- admin_q(decisions_export)
-        note("download_decisions", NA, list(rows = if (is.null(d)) 0L else nrow(d)))
-        readr::write_csv(d %||% data.frame(), file, na = "")
+        # Not admin_q(): that turns any failure into NULL, and this used to
+        # write it out as an empty file — indistinguishable from "no decisions".
+        if (is.null(db)) stop("The database is unavailable.")
+        d <- tryCatch(decisions_export(db), error = function(e) {
+          shiny::showNotification(paste("Export failed:", conditionMessage(e)),
+                                  type = "error", duration = 12)
+          stop(e)
+        })
+        d <- decisions_export_label(d, cache)
+        note("download_decisions", NA, list(rows = nrow(d)))
+        # The Excel flavour writes a byte-order mark. Without it Excel reads
+        # UTF-8 as Latin-1 and "Västra Götalandsregionen" arrives garbled.
+        readr::write_excel_csv(d, file, na = "")
       })
   })
 }

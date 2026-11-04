@@ -109,9 +109,10 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
                              value = TRUE))
     })
 
-    my_draws <- shiny::reactive({
+    # poll_changes, not a timer on a plain reactive: a tick that finds
+    # nothing new must not redraw the table and drop the reviewer's selection.
+    my_draws <- poll_changes(session, 20000, function() {
       reviewed_tick()
-      shiny::invalidateLater(20000, session)
       u <- session_user()
       if (is.null(u) || is.null(db)) return(NULL)
       tryCatch(sample_choices_for_reviewer(db, u$username), error = function(e) NULL)
@@ -131,14 +132,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         selected = if (!is.null(cur) && cur %in% ch) cur else ch[[1]])
     })
 
-    assigned <- shiny::reactive({
+    assigned <- poll_changes(session, 20000, function() {
       reviewed_tick()
       # Polled, because a sample drawn in the ADMIN tab must appear here. This
       # reactive otherwise only invalidates when the reviewer signs a trial off,
       # so a draw made after the page loaded left tab 1 showing the empty
       # assignment it computed at load — "works after a reload", which is the
-      # worst kind of working.
-      shiny::invalidateLater(20000, session)
+      # worst kind of working. Only a CHANGED assignment reaches the table.
       u <- session_user()
       if (is.null(u) || is.null(db)) return(NULL)
       # Errors are SURFACED, not swallowed. The previous version returned NULL
@@ -213,8 +213,13 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       tbl <- head(d[, intersect(TRIAL_TABLE_COLS, names(d)), drop = FALSE], 5000)
       names(tbl) <- c("CT number", "Title", "Sponsor", "Phase", "Status", "Year")[
         match(names(tbl), TRIAL_TABLE_COLS)]
+      # Redrawn with the same TRIAL still selected, if it is still listed.
+      k <- shiny::isolate(sel_key())
+      keep <- if (is.null(k)) integer() else which(d$`_id` == k)[1]
+      keep <- keep[!is.na(keep) & keep <= nrow(tbl)]
       DT::datatable(
-        tbl, selection = "single", rownames = FALSE, width = "100%",
+        tbl, selection = list(mode = "single", selected = keep),
+        rownames = FALSE, width = "100%",
         options = list(
           pageLength = 15, lengthChange = FALSE,
           # scrollX keeps the overflow INSIDE the table rather than letting it
@@ -226,11 +231,31 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
           dom = "tip"))
     }, server = TRUE)
 
-    row <- shiny::reactive({
-      i <- input$table_rows_selected; d <- filtered()
-      if (is.null(i) || !length(i) || is.null(d) || !nrow(d)) return(NULL)
-      d[i[1], , drop = FALSE]
+    # The selection is the TRIAL ID, not the row number.
+    #
+    # It used to be filtered()[row number]. Signing a trial off removes it from
+    # the list at once, so the same number then pointed at the NEXT trial —
+    # with the comment still in the box. A second click recorded a sign-off on
+    # a trial the reviewer had never opened: the review log shows the same
+    # comment on three or four adjacent trials within two seconds.
+    sel_key <- shiny::reactiveVal(NULL)
+    shiny::observeEvent(input$table_rows_selected, {
+      i <- input$table_rows_selected; d <- shiny::isolate(filtered())
+      sel_key(if (is.null(d) || !nrow(d) || !length(i) || i[1] > nrow(d)) NULL
+              else d$`_id`[i[1]])
+    }, ignoreNULL = FALSE, ignoreInit = TRUE)
+
+    # Only notifies when the trial itself changes, so the panel and the comment
+    # box are not rebuilt every time the list around them changes.
+    row_rv <- shiny::reactiveVal(NULL)
+    shiny::observe({
+      k <- sel_key(); d <- filtered()
+      r <- if (is.null(k) || is.null(d) || !nrow(d) || !k %in% d$`_id`) NULL
+           else d[match(k, d$`_id`), , drop = FALSE]
+      if (!is.null(r)) rownames(r) <- NULL
+      if (!identical(r, shiny::isolate(row_rv()))) row_rv(r)
     })
+    row <- shiny::reactive(row_rv())
 
     shown_at <- shiny::reactiveVal(Sys.time())
     shiny::observeEvent(row(), shown_at(Sys.time()))
@@ -495,8 +520,12 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         TRUE
       }, error = function(e) { shiny::showNotification(conditionMessage(e), type = "error"); FALSE })
       if (ok) {
-        shiny::showNotification(sprintf("Trial marked %s.", status), type = "message")
+        shiny::showNotification(sprintf("%s marked %s.", show_val(r$CT_number), status),
+                                type = "message")
         shiny::updateTextAreaInput(session, "comment", value = "")
+        # Nothing stays selected after a sign-off. The next trial is the
+        # reviewer's choice, never whatever slid into this row.
+        sel_key(NULL)
         reviewed_tick(reviewed_tick() + 1)
       }
     }

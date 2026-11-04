@@ -18,13 +18,13 @@
 metrics_totals <- function(con) {
   DBI::dbGetQuery(con, "
     SELECT
-      (SELECT count(*) FROM norm_decisions  WHERE action <> 'skip') AS norm_all,
+      (SELECT count(*) FROM norm_decisions  WHERE action NOT IN ('skip','flag')) AS norm_all,
       (SELECT count(*) FROM norm_decisions_latest)                  AS norm_keys,
       (SELECT count(*) FROM trial_decisions)                        AS trial_all,
       (SELECT count(*) FROM trial_decisions_latest)                 AS trial_keys,
       (SELECT count(DISTINCT trial_id) FROM trial_reviews)          AS trials_signed_off,
       (SELECT count(*) FROM norm_decisions
-        WHERE action <> 'skip' AND decided_at_utc > now() - interval '7 days')
+        WHERE action NOT IN ('skip','flag') AND decided_at_utc > now() - interval '7 days')
         + (SELECT count(*) FROM trial_decisions
         WHERE decided_at_utc > now() - interval '7 days')           AS last_7_days")
 }
@@ -45,7 +45,7 @@ metrics_by_reviewer <- function(con) {
            max(decided_at_utc)                            AS last_decision
     FROM (
       SELECT reviewer, action, decision_ms, decided_at_utc, 'norm'  AS kind
-        FROM norm_decisions WHERE action <> 'skip'
+        FROM norm_decisions WHERE action NOT IN ('skip','flag')
       UNION ALL
       SELECT reviewer, action, decision_ms, decided_at_utc, 'trial' AS kind
         FROM trial_decisions
@@ -57,7 +57,7 @@ metrics_daily <- function(con, days = 90L) {
   DBI::dbGetQuery(con, "
     SELECT date_trunc('day', decided_at_utc)::date AS day, reviewer, count(*) AS n
     FROM (
-      SELECT reviewer, decided_at_utc FROM norm_decisions WHERE action <> 'skip'
+      SELECT reviewer, decided_at_utc FROM norm_decisions WHERE action NOT IN ('skip','flag')
       UNION ALL
       SELECT reviewer, decided_at_utc FROM trial_decisions
     ) x
@@ -103,7 +103,7 @@ metrics_by_reason <- function(con) {
            count(*) FILTER (WHERE action = 'edit')   AS changed,
            count(*) FILTER (WHERE action IN ('reject','not_a_substance')) AS rejected,
            count(*) FILTER (WHERE action = 'edit')::float / NULLIF(count(*), 0) AS change_rate
-    FROM norm_decisions WHERE action <> 'skip'
+    FROM norm_decisions WHERE action NOT IN ('skip','flag')
     GROUP BY 1, 2 ORDER BY decided DESC")
 }
 
@@ -115,7 +115,7 @@ metrics_by_confidence <- function(con) {
            count(*) FILTER (WHERE action = 'accept') AS accepted,
            count(*) FILTER (WHERE action = 'edit')::float / NULLIF(count(*), 0) AS change_rate
     FROM norm_decisions
-    WHERE action <> 'skip' AND confidence_shown IS NOT NULL
+    WHERE action NOT IN ('skip','flag') AND confidence_shown IS NOT NULL
     GROUP BY 1, 2 ORDER BY 1, 2")
 }
 

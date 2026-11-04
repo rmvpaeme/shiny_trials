@@ -1,5 +1,42 @@
 # Changelog
 
+## v0.22.1 — 2026-11-04 (curation app)
+
+### No more redraw on a timer, and flagging on Normalisation review
+
+- **The "refresh every 30 seconds" is gone.** Trial validation re-read the
+  reviewer's assignment every 20 s and Normalisation review its decisions every
+  60 s, and each read redrew the table even when nothing had changed — which
+  dropped the selected row, the detail panel and any half-typed comment. The
+  reads still happen (`poll_changes()` in `R/util.R`) but only a real change
+  reaches the screen. Normalisation review also keeps its selection by the raw
+  string, so even a real change elsewhere in the queue no longer clears it.
+- **"Flag for another reviewer" on Normalisation review**, as on Trial
+  validation. It saves the comment (required) and
+  hands the row on without deciding it: the flagger stops seeing it, everyone
+  else sees it marked with the comment, and "Only rows flagged for review" in
+  the sidebar is the second-look queue.
+- A flag is **not a decision**. The latest-wins views exclude it, so it never
+  reaches `export.R` (which would otherwise write it as a human unassignment)
+  or the statistics. `export.R` also drops flags itself, as a second guard.
+- **A sign-off could land on the wrong trial.** Trial validation remembered
+  the selection as a row NUMBER. Signing a trial off removes it from the list,
+  so the same number then pointed at the next trial, with the comment still in
+  the box, and a quick second click recorded it there. The review log shows it
+  twice (one comment on 3–4 adjacent trials within two seconds). The selection
+  is now the trial ID and is cleared after every sign-off.
+- **The decisions CSV (Admin) now covers Trial validation.** Whole-trial
+  sign-offs — validated / flagged, with the reviewer's comment — were never
+  exported, so a finished validation round downloaded as nothing. New
+  `kind = trial_signoff` rows, plus: CT number and title on every trial row,
+  `is_current` (whether this entry is the one that counts, since a changed mind
+  leaves the earlier one behind), the register's raw value on field edits, the
+  app version, a byte-order mark so Excel shows accents correctly, and an
+  error instead of a silently empty file when the database read fails.
+- **Needs a schema migration** before deploy: `norm_decisions.action` gains
+  `'flag'`. Run `Rscript curation_app/apply_app_role.R` with the superuser
+  `CURATION_DB_URL`; it applies `schema.sql`, which is idempotent.
+
 ## v0.22.0 — 2026-08-25
 
 ### A curation app, and the writer the pipeline had been waiting for

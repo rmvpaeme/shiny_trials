@@ -170,6 +170,9 @@ export_norm <- function(domain) {
   reg <- registry_read(reg_path)
   asg <- assignments_read(asg_path, raw_col)
   dec <- latest_norm_decisions(con, domain)
+  # The view already excludes them. Restated here because a flag that slipped
+  # through would be written as a human unassignment.
+  dec <- dec[!dec$action %in% c("skip", "flag"), , drop = FALSE]
   if (!nrow(dec)) {
     message("No decisions for ", domain, " — nothing to do.")
     finish("ok", "no decisions", n_sponsor_pins = 0L, n_substance_pins = 0L)

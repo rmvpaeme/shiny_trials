@@ -302,6 +302,37 @@ src2 <- readLines("R/trials.R", warn = FALSE)
 check(any(grepl("missing_sources", src2, fixed = TRUE)),
       "a data file older than the spec is reported ONCE, not on every affected row")
 
+cat("\nsign-off lands on the trial the reviewer opened\n")
+# The review log showed one comment on three or four ADJACENT trials within two
+# seconds: the selection was a row number, a sign-off removed the trial from
+# the list, and the next click recorded the neighbour that slid into its place.
+local({
+  source("R/sample.R")
+  cache <- data.frame(`_id` = c("A", "B", "C"), CT_number = c("A", "B", "C"),
+                      Full_title = "t", sponsor_label = "s", substance_label = "x",
+                      register = "EUCTR", check.names = FALSE)
+  signed <- character()
+  env <- environment(trials_server)
+  old <- list(a = env$append_trial_review, l = env$latest_trial_reviews,
+              c = env$sample_choices_for_reviewer, s = env$sample_for_reviewer)
+  env$append_trial_review <- function(con, trial_id, ...) { signed <<- c(signed, trial_id); 1 }
+  env$latest_trial_reviews <- function(con) data.frame(trial_id = signed)
+  env$sample_choices_for_reviewer <- function(...) NULL
+  env$sample_for_reviewer <- function(...) NULL
+  on.exit({ env$append_trial_review <- old$a; env$latest_trial_reviews <- old$l
+            env$sample_choices_for_reviewer <- old$c; env$sample_for_reviewer <- old$s })
+  shiny::testServer(trials_server,
+    args = list(db = list(), session_user = function() list(username = "ann"), cache = cache), {
+      session$setInputs(scope = "all", search = "", register = "All", only_undecided = TRUE)
+      session$setInputs(table_rows_selected = 1)
+      check(identical(row()$`_id`, "A"), "the opened trial is the selected one")
+      session$setInputs(comment = "note", flag = 1)
+      check(is.null(row()), "after a sign-off nothing is selected, not the next trial")
+      session$setInputs(flag = 2)
+      check(identical(signed, "A"), "a rapid second click signs off nothing else")
+    })
+})
+
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
 cat("all checks passed\n")

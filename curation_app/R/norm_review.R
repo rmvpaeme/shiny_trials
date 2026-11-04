@@ -88,6 +88,26 @@ norm_pending <- function(queue, decided, domain) {
   queue[!queue$raw_value %in% d$raw_value, , drop = FALSE]
 }
 
+# Mark rows with an open flag, and hide the ones the CURRENT reviewer flagged:
+# they have already said someone else should look, as a flagged trial leaves
+# the flagger's list on Trial validation. Pure, so it is testable.
+norm_mark_flags <- function(queue, flags, me = NULL, only_flagged = FALSE) {
+  if (is.null(queue) || !nrow(queue)) return(queue)
+  queue$flagged <- ""
+  queue$flagged_by <- NA_character_
+  queue$flag_comment <- NA_character_
+  if (!is.null(flags) && nrow(flags)) {
+    m <- match(queue$raw_value, flags$raw_value)
+    hit <- !is.na(m)
+    queue$flagged[hit] <- "yes"
+    queue$flagged_by[hit] <- flags$reviewer[m[hit]]
+    queue$flag_comment[hit] <- flags$comment[m[hit]]
+    if (!is.null(me)) queue <- queue[!(hit & queue$flagged_by %in% me), , drop = FALSE]
+  }
+  if (only_flagged) queue <- queue[queue$flagged == "yes", , drop = FALSE]
+  queue
+}
+
 # Trials carrying this raw string, for the evidence panel.
 norm_trial_refs <- function(snap, domain, raw_value, cache = NULL, limit = 25L) {
   spec <- DOMAIN_SPEC[[domain]]
@@ -172,6 +192,8 @@ norm_review_ui <- function(id) {
                           selected = "sponsor"),
       shiny::selectInput(ns("reason"), "Review reason", choices = "All", selected = "All"),
       shiny::sliderInput(ns("min_trials"), "Minimum trials", min = 0, max = 50, value = 0),
+      # The second-look queue: rows another reviewer flagged for review.
+      shiny::checkboxInput(ns("only_flagged"), "Only rows flagged for review", value = FALSE),
       shiny::hr(),
       shiny::uiOutput(ns("actions")),
       shiny::hr(),
@@ -209,18 +231,30 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
     })
 
     # Re-read on every decision, and poll so a second reviewer's work shows up
-    # without a reload. One scalar on an already-open pool connection.
+    # without a reload. poll_changes, so a tick that finds nothing new does not
+    # rebuild the queue — that wiped the selected row and the comment box.
     decided_tick <- shiny::reactiveVal(0)
-    decided <- shiny::reactive({
+    decided <- poll_changes(session, 60000, function() {
       decided_tick()
-      shiny::invalidateLater(60000, session)
-      if (is.null(db)) return(NULL)
+      if (is.null(db) || is.null(session_user())) return(NULL)
       tryCatch(latest_norm_decisions(db, domain()), error = function(e) NULL)
+    })
+
+    # Rows someone asked a second reviewer to look at. A flag is not a
+    # decision, so it is read separately from decided() and never removes a row
+    # from anyone's queue except the flagger's own.
+    flags <- poll_changes(session, 60000, function() {
+      decided_tick()
+      if (is.null(db) || is.null(session_user())) return(NULL)
+      tryCatch(open_norm_flags(db, domain()), error = function(e) NULL)
     })
 
     pending <- shiny::reactive({
       q <- norm_pending(queue_raw(), decided(), domain())
       if (is.null(q) || !nrow(q)) return(q)
+      q <- norm_mark_flags(q, flags(), session_user()$username,
+                           only_flagged = isTRUE(input$only_flagged))
+      if (!nrow(q)) return(q)
       if (!identical(input$reason, "All") && !is.null(input$reason)) {
         q <- q[q$review_reason %in% input$reason, , drop = FALSE]
       }
@@ -251,12 +285,28 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
         selected = row$proposed %||% "", server = TRUE)
     }, ignoreNULL = FALSE)
 
-    selected <- shiny::reactive({
-      i <- input$queue_rows_selected
-      p <- pending()
-      if (is.null(i) || !length(i) || is.null(p) || !nrow(p)) return(NULL)
-      p[i[1], , drop = FALSE]
+    # The selection is remembered by the raw STRING, not the row number. When
+    # the queue changes underneath (another reviewer decided something) the
+    # table is redrawn with the same string still selected, and selected()
+    # only notifies when the row itself changes — so the card and the comment
+    # box survive.
+    sel_key <- shiny::reactiveVal(NULL)
+    shiny::observeEvent(input$queue_rows_selected, {
+      i <- input$queue_rows_selected; p <- shiny::isolate(pending())
+      sel_key(if (is.null(p) || !nrow(p) || !length(i) || i[1] > nrow(p)) NULL
+              else p$raw_value[i[1]])
+    }, ignoreNULL = FALSE, ignoreInit = TRUE)
+    shiny::observeEvent(domain(), sel_key(NULL), ignoreInit = TRUE)
+
+    selected_rv <- shiny::reactiveVal(NULL)
+    shiny::observe({
+      k <- sel_key(); p <- pending()
+      row <- if (is.null(k) || is.null(p) || !nrow(p) || !k %in% p$raw_value) NULL
+             else p[match(k, p$raw_value), , drop = FALSE]
+      if (!is.null(row)) rownames(row) <- NULL
+      if (!identical(row, shiny::isolate(selected_rv()))) selected_rv(row)
     })
+    selected <- shiny::reactive(selected_rv())
 
     # Time on the card. Feeds the median seconds/decision in tab 3, which is how
     # rubber-stamping shows up.
@@ -267,8 +317,12 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       p <- pending()
       shiny::validate(shiny::need(!is.null(p) && nrow(p), "Nothing left in this queue."))
       cols <- intersect(c("raw_value", "proposed", "confidence", "n_trials",
-                          "review_reason", "channel"), names(p))
-      DT::datatable(p[, cols, drop = FALSE], selection = "single",
+                          "review_reason", "channel", "flagged"), names(p))
+      k <- shiny::isolate(sel_key())
+      keep <- if (is.null(k)) integer() else which(p$raw_value == k)[1]
+      keep <- keep[!is.na(keep)]
+      DT::datatable(p[, cols, drop = FALSE],
+                    selection = list(mode = "single", selected = keep),
                     rownames = FALSE, filter = "top",
                     options = list(pageLength = 15, scrollX = TRUE))
     })
@@ -279,6 +333,12 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
                                           "Select a row to review it."))
       refs <- norm_trial_refs(snap(), domain(), row$raw_value)
       sibs <- norm_siblings(cache, domain(), row$proposed)
+      shiny::tagList(
+      if (isTRUE(row$flagged == "yes"))
+        shiny::div(class = "alert alert-warning py-2 small",
+          shiny::strong(sprintf("Flagged for review by %s. ", row$flagged_by %||% "?")),
+          if (!is.na(row$flag_comment %||% NA) && nzchar(row$flag_comment))
+            shiny::span(class = "fst-italic", row$flag_comment)),
       bslib::layout_columns(
         col_widths = c(6, 6),
         bslib::card(
@@ -314,7 +374,7 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
             if (is.null(sibs)) shiny::span(class = "text-muted", "none found")
             else shiny::tagList(lapply(sibs, function(s) shiny::div(s))))
         )
-      )
+      ))
     })
 
     output$actions <- shiny::renderUI({
@@ -351,6 +411,10 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
                               class = "btn-outline-secondary btn-sm"),
           if ("not_a_substance" %in% acts)
             shiny::actionButton(ns("not_sub"), "Not a substance", class = "btn-warning btn-sm"),
+          # Same as "Flag for another reviewer" on Trial validation: saves the
+          # comment and hands the row to someone else, without deciding it.
+          shiny::actionButton(ns("flag"), "Flag for another reviewer",
+                              class = "btn-outline-warning btn-sm"),
           shiny::actionButton(ns("skip"),   "Skip",            class = "btn-light btn-sm")
         )
       )
@@ -421,6 +485,10 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
       }, error = function(e) { shiny::showNotification(
           paste("Could not save:", conditionMessage(e)), type = "error"); FALSE })
       if (ok) {
+        shiny::showNotification(switch(action,
+          flag = "Flagged for another reviewer. Your comment is saved.",
+          skip = "Skipped.",
+          "Saved."), type = "message")
         shiny::updateTextAreaInput(session, "comment", value = "")
         decided_tick(decided_tick() + 1)
       }
@@ -442,6 +510,15 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
     shiny::observeEvent(input$no_canonical, record("reject"))
     shiny::observeEvent(input$reject,  record("reject"))
     shiny::observeEvent(input$skip,    record("skip"))
+    # A flag with no reason gives the next reviewer nothing to go on.
+    shiny::observeEvent(input$flag, {
+      if (!nzchar(trimws(input$comment %||% ""))) {
+        shiny::showNotification("Add a comment saying what the next reviewer should look at.",
+                                type = "warning")
+        return()
+      }
+      record("flag")
+    })
     shiny::observeEvent(input$not_sub, {
       # Refused for sponsors in store.R too — the guard is not only in the UI.
       if (!identical(domain(), "substance")) return()
