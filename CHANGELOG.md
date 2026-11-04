@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.22.2 — 2026-11-04 (curation app)
+
+### Second round of reviewer feedback
+
+- **Flagged trials can be found.** "Flag for another reviewer" on Trial
+  validation fed nothing a reviewer could see. The Show dropdown has a new
+  "Flagged for review" list: every trial whose latest sign-off is a flag, with
+  who flagged it and why. A flagged trial also shows the flag and comment on
+  its card wherever it is opened from. Validating it takes it off the list.
+- **One button for "nothing fits".** Normalisation review had "Reject" and "No
+  canonical fits", which recorded exactly the same thing; reviewers asked what
+  the difference was. Reject is gone. "No canonical fits" now requires a
+  comment with the right name, because those comments are the list of
+  canonicals to add.
+- **The molecule is highlighted in "Other strings on this canonical".** For
+  substances each line there is a trial's WHOLE substance list, so reviewers
+  read the other drugs as strings mapped to this canonical. The matching part
+  is now highlighted and the rest greyed out, with influenza A and B strains
+  told apart. Also fixes a case-sensitive match that showed nothing for e.g.
+  "Influenza A haemagglutinin". Still approximate: a list of strains joined by
+  commas is highlighted as one part. Exact per-string siblings, with the
+  option to reject individual ones, need assignments.csv published to the app
+  and wait for more feedback.
+
 ## v0.22.1 — 2026-11-04 (curation app)
 
 ### No more redraw on a timer, and flagging on Normalisation review

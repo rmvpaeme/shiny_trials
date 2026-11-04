@@ -138,10 +138,78 @@ norm_siblings <- function(cache, domain, canonical, limit = 15L) {
     head(sort(unique(cache$sponsor_name_raw[hit])), limit)
   } else {
     if (!"substance_label" %in% names(cache)) return(NULL)
-    hit <- grepl(canonical, cache$substance_label %||% "", fixed = TRUE)
+    # Case-insensitive: the labels are not consistently capitalised, and
+    # "Influenza A haemagglutinin" found nothing against "Influenza a
+    # haemagglutinin".
+    hit <- grepl(tolower(canonical), tolower(cache$substance_label %||% ""), fixed = TRUE)
     if (!any(hit)) return(NULL)
-    head(sort(unique(cache$DIMP_inn_name_raw[hit])), limit)
+    v <- unique(stats::na.omit(cache$DIMP_inn_name_raw[hit]))
+    # Lines where the molecule can actually be pointed at go first.
+    m <- vapply(v, function(x) any(sibling_parts(x, canonical)$match), logical(1))
+    head(c(sort(v[m]), sort(v[!m])), limit)
   }
+}
+
+# ── Which part of a sibling line is the molecule ─────────────────────────────
+#
+# For substances a "sibling" is a trial's WHOLE substance list, " / "-joined —
+# "Aprepitant / Granisetron / Dexamethason / Melphalan" under dexamethasone.
+# Reviewers read the other drugs as strings mapped to this canonical and asked
+# to deselect them, and could not see which molecule was meant (vaccines with
+# five strains per line especially). So each line is split and the parts that
+# match the canonical are highlighted; the rest is greyed out.
+#
+# A part matches when it shares a word with the canonical on the first five
+# letters ("dexam" covers Dexamethason, Dexametasone). Words that say nothing
+# about WHICH molecule — strain, vaccine, sodium, ... — are not used, or every
+# strain in a flu vaccine would light up.
+SIBLING_STOPWORDS <- c("strain", "strains", "influenza", "virus", "vaccine",
+  "vaccines", "antigen", "antigens", "like", "from", "type", "inactivated",
+  "purified", "surface", "split", "sodium", "phosphate", "hydrochloride",
+  "acetate", "sulfate", "sulphate", "chloride", "citrate", "tartrate",
+  "maleate", "mesylate", "potassium", "calcium", "magnesium", "with", "and")
+
+sibling_words <- function(x) {
+  w <- strsplit(tolower(x), "[^a-z0-9]+")[[1]]
+  w <- w[nchar(w) >= 4 & !grepl("^[0-9]+$", w)]
+  setdiff(w, SIBLING_STOPWORDS)
+}
+
+sibling_parts <- function(line, canonical) {
+  parts <- trimws(strsplit(line, " / ", fixed = TRUE)[[1]])
+  parts <- parts[nzchar(parts)]
+  key <- unique(substr(sibling_words(canonical), 1, 5))
+  # Influenza: an A canonical must not light up the B strains in the same
+  # vaccine, which share every other word with it ("Haemagglutinin from ...").
+  flu <- flu_types(canonical)
+  match <- vapply(parts, function(p) {
+    if (!(length(key) > 0 && any(substr(sibling_words(p), 1, 5) %in% key))) return(FALSE)
+    pt <- flu_types(p)
+    !(length(flu) && length(pt) && !any(pt %in% flu))
+  }, logical(1), USE.NAMES = FALSE)
+  data.frame(part = parts, match = match, stringsAsFactors = FALSE)
+}
+
+# "A/Brisbane/59/2007", "Influenza A haemagglutinin", "influenza B" -> "a"/"b".
+flu_types <- function(x) {
+  x <- tolower(x)
+  t <- c(regmatches(x, gregexpr("(^|[^a-z])[ab]/", x))[[1]],
+         regmatches(x, gregexpr("influenza[ -]+(type[ -]+)?[ab]([^a-z]|$)", x))[[1]])
+  unique(sub(".*([ab])[^ab]*$", "\\1", sub("/$", "", gsub("influenza[ -]+(type[ -]+)?", "", t))))
+}
+
+sibling_tag <- function(line, canonical) {
+  p <- sibling_parts(line, canonical)
+  if (!nrow(p)) return(NULL)
+  pieces <- lapply(seq_len(nrow(p)), function(i) {
+    if (p$match[i])
+      shiny::tags$mark(class = "px-1 rounded", style = "background:#ffe58f;", p$part[i])
+    else shiny::span(class = "text-muted", style = "opacity:.6;", p$part[i])
+  })
+  sep <- function() shiny::span(class = "text-muted", style = "opacity:.6;", " / ")
+  out <- list(pieces[[1]])
+  for (x in pieces[-1]) out <- c(out, list(sep(), x))
+  shiny::div(class = "mb-1", out)
 }
 
 # Canonicals worth putting at the top of the list for this raw string.
@@ -372,6 +440,13 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
           bslib::card_header("Other strings on this canonical"),
           shiny::div(class = "p-2 small",
             if (is.null(sibs)) shiny::span(class = "text-muted", "none found")
+            else if (identical(domain(), "substance"))
+              shiny::tagList(
+                shiny::div(class = "text-muted mb-2",
+                  "Each line is one trial's full substance list. The highlighted ",
+                  "part is the molecule on this canonical; the rest are other drugs ",
+                  "in the same trial."),
+                lapply(sibs, function(s) sibling_tag(s, row$proposed)))
             else shiny::tagList(lapply(sibs, function(s) shiny::div(s))))
         )
       ))
@@ -403,12 +478,16 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
           # The label says which it will be, so the outcome is legible before
           # the click rather than inferred after it.
           shiny::uiOutput(ns("save_button")),
-          shiny::actionButton(ns("reject"), "Reject",          class = "btn-danger btn-sm"),
           # Its own button. Burying "none of these fit" inside the list of
           # canonicals makes it look like one, and it is the opposite: a
           # statement that the list is missing something.
+          #
+          # There used to be a separate "Reject" as well. Both recorded the
+          # same thing and reviewers asked what the difference was — there was
+          # none. One button, and it asks for the right name, because those
+          # comments are the list of canonicals to add.
           shiny::actionButton(ns("no_canonical"), "No canonical fits",
-                              class = "btn-outline-secondary btn-sm"),
+                              class = "btn-danger btn-sm"),
           if ("not_a_substance" %in% acts)
             shiny::actionButton(ns("not_sub"), "Not a substance", class = "btn-warning btn-sm"),
           # Same as "Flag for another reviewer" on Trial validation: saves the
@@ -507,8 +586,15 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
     # Recorded as a reject: it leaves entity_id NA, which E_emit classifies as
     # an intended human unassignment rather than a regression. Nothing is
     # created — these are collected and dealt with as a batch.
-    shiny::observeEvent(input$no_canonical, record("reject"))
-    shiny::observeEvent(input$reject,  record("reject"))
+    shiny::observeEvent(input$no_canonical, {
+      if (!nzchar(trimws(input$comment %||% ""))) {
+        shiny::showNotification(
+          "Say in the comment what the right name would be. These comments are the list of names to add.",
+          type = "warning", duration = 8)
+        return()
+      }
+      record("reject")
+    })
     shiny::observeEvent(input$skip,    record("skip"))
     # A flag with no reason gives the next reviewer nothing to go on.
     shiny::observeEvent(input$flag, {

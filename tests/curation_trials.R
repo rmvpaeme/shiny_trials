@@ -333,6 +333,38 @@ local({
     })
 })
 
+cat("\nthe flagged list is where a flag goes\n")
+local({
+  source("R/sample.R")
+  cache <- data.frame(`_id` = c("A", "B", "C"), CT_number = c("A", "B", "C"),
+                      Full_title = "t", sponsor_label = "s", substance_label = "x",
+                      register = "EUCTR", check.names = FALSE)
+  reviews <- data.frame(trial_id = "B", status = "flagged", reviewer = "ann",
+                        comment = "end date wrong", stringsAsFactors = FALSE)
+  env <- environment(trials_server)
+  keep <- mget(c("append_trial_review", "my_reviewed_trials", "open_trial_flags",
+                 "sample_choices_for_reviewer", "sample_for_reviewer"), envir = env)
+  env$append_trial_review <- function(con, trial_id, status, reviewer, ...) {
+    reviews <<- rbind(reviews, data.frame(trial_id = trial_id, status = status,
+      reviewer = reviewer, comment = NA, stringsAsFactors = FALSE)); 1 }
+  env$my_reviewed_trials <- function(con, username) reviews$trial_id[reviews$reviewer == username]
+  env$open_trial_flags <- function(con) {
+    last <- reviews[!duplicated(reviews$trial_id, fromLast = TRUE), ]
+    last[last$status == "flagged", c("trial_id", "reviewer", "comment")] }
+  env$sample_choices_for_reviewer <- function(...) NULL
+  env$sample_for_reviewer <- function(...) NULL
+  on.exit(for (n in names(keep)) assign(n, keep[[n]], envir = env))
+  shiny::testServer(trials_server,
+    args = list(db = list(), session_user = function() list(username = "bob"), cache = cache), {
+      session$setInputs(scope = "flagged", search = "", register = "All", only_undecided = TRUE)
+      check(identical(filtered()$`_id`, "B"), "another reviewer's flag is listed for me")
+      session$setInputs(table_rows_selected = 1)
+      check(identical(row()$`_id`, "B"), "and opens")
+      session$setInputs(validate = 1)
+      check(nrow(filtered()) == 0, "validating it takes it off the flagged list")
+    })
+})
+
 cat("\n")
 if (length(failures)) { cat(sprintf("%d check(s) failed\n", length(failures))); quit(save = "no", status = 1L) }
 cat("all checks passed\n")

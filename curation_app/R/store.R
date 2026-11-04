@@ -217,6 +217,20 @@ my_reviewed_trials <- function(con, username) {
       '-infinity'::timestamptz)", params = list(username))$trial_id
 }
 
+# Trials whose most recent sign-off is "flagged": someone asked for a second
+# look and nobody has validated it since. Any reviewer's flag counts — this is
+# the list a SECOND reviewer works from. The flagger's comment comes along,
+# because it is the whole point of the flag.
+open_trial_flags <- function(con) {
+  DBI::dbGetQuery(con, "
+    SELECT trial_id, reviewer, comment, decided_at_utc FROM (
+      SELECT DISTINCT ON (trial_id) trial_id, status, reviewer, comment, decided_at_utc
+      FROM trial_reviews
+      ORDER BY trial_id, decided_at_utc DESC, review_id DESC) x
+    WHERE status = 'flagged'
+    ORDER BY decided_at_utc DESC")
+}
+
 norm_disagreements  <- function(con) DBI::dbGetQuery(con, "SELECT * FROM norm_disagreements ORDER BY last_decided_at DESC")
 trial_disagreements <- function(con) DBI::dbGetQuery(con, "SELECT * FROM trial_disagreements ORDER BY last_decided_at DESC")
 

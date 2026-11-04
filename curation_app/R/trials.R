@@ -93,7 +93,11 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         # all be validated; a stratified sample is drawn and split, and browsing
         # the whole corpus is the exception rather than the starting point.
         shiny::selectInput(ns("scope"), "Show",
-          choices = c("My assigned sample" = "mine", "All trials" = "all"),
+          choices = c("My assigned sample" = "mine",
+                      # What "Flag for another reviewer" feeds: every trial
+                      # anyone flagged, until someone validates it.
+                      "Flagged for review" = "flagged",
+                      "All trials" = "all"),
           selected = "mine", width = "190px"),
         # Which round. A validation can be redone, so several draws coexist and
         # the reviewer says which one they are working through.
@@ -171,9 +175,20 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       tryCatch(my_reviewed_trials(db, u$username), error = function(e) character())
     })
 
+    # Polled like the assignment, so a flag raised by someone else shows up.
+    flags <- poll_changes(session, 20000, function() {
+      reviewed_tick()
+      if (is.null(db) || is.null(session_user())) return(NULL)
+      tryCatch(open_trial_flags(db), error = function(e) NULL)
+    })
+
     filtered <- shiny::reactive({
       d <- cache; shiny::req(!is.null(d))
-      if (identical(input$scope %||% "mine", "mine")) {
+      if (identical(input$scope, "flagged")) {
+        f <- flags()
+        d <- if (is.null(f) || !nrow(f)) d[0, , drop = FALSE]
+             else d[d$`_id` %in% f$trial_id, , drop = FALSE]
+      } else if (identical(input$scope %||% "mine", "mine")) {
         a <- assigned()
         # An empty assignment means no sample has been drawn for this reviewer
         # yet. Showing all 51,311 instead would silently defeat the sampling.
@@ -199,7 +214,9 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       d <- filtered()
       # An empty table has several causes and they need different actions.
       shiny::validate(shiny::need(!is.null(d) && nrow(d),
-        if (!identical(input$scope %||% "mine", "mine")) "No trials match."
+        if (identical(input$scope, "flagged"))
+          "No trials are waiting for a second look (or you flagged them yourself — untick \u201cHide trials I have reviewed\u201d)."
+        else if (!identical(input$scope %||% "mine", "mine")) "No trials match."
         else if (inherits(assigned(), "assignment_error"))
           "Could not read your assignment from the database — see the app log."
         else if (is.null(assigned()) || !nrow(assigned()))
@@ -214,6 +231,15 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
       tbl <- head(d[, intersect(TRIAL_TABLE_COLS, names(d)), drop = FALSE], 5000)
       names(tbl) <- c("CT number", "Title", "Sponsor", "Phase", "Status", "Year")[
         match(names(tbl), TRIAL_TABLE_COLS)]
+      # In the flagged list, who flagged it and why is what the reviewer reads
+      # first. Same row order as d, so the row number still maps to d.
+      if (identical(input$scope, "flagged")) {
+        f <- flags(); m <- match(head(d$`_id`, nrow(tbl)), f$trial_id)
+        extra <- data.frame(`Flagged by` = f$reviewer[m],
+                            Why = substr(f$comment[m] %||% "", 1, 80),
+                            check.names = FALSE, stringsAsFactors = FALSE)
+        tbl <- cbind(tbl[1], extra, tbl[-1])
+      }
       # Redrawn with the same TRIAL still selected, if it is still listed.
       k <- shiny::isolate(sel_key())
       keep <- if (is.null(k)) integer() else which(d$`_id` == k)[1]
@@ -278,7 +304,20 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
         class = "mb-2",
         shiny::tags$strong(show_val(r$CT_number)),
         shiny::tags$a(" open ↗", href = trial_link(r), target = "_blank", class = "small"),
-        shiny::p(class = "small text-muted mt-1 mb-0", show_val(r$Full_title)))
+        shiny::p(class = "small text-muted mt-1 mb-0", show_val(r$Full_title)),
+        # Shown whichever list the trial was opened from, so a flag is never
+        # missed just because the reviewer came in through "All trials".
+        local({
+          f <- flags()
+          i <- if (is.null(f) || !nrow(f)) NA else match(r$`_id`, f$trial_id)
+          if (is.na(i)) return(NULL)
+          shiny::div(class = "alert alert-warning py-2 small mt-2 mb-0",
+            shiny::strong(sprintf("Flagged for review by %s. ", f$reviewer[i])),
+            if (!is.na(f$comment[i]) && nzchar(f$comment[i]))
+              shiny::span(class = "fst-italic", f$comment[i]),
+            shiny::div(class = "text-muted mt-1",
+              "Mark validated if it is fine, or correct the field and then validate."))
+        }))
     })
 
     # ── The overview: raw beside normalised, one row per field ────────────────

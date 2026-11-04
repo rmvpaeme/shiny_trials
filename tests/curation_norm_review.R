@@ -94,8 +94,11 @@ check(any(grepl("create = FALSE", src, fixed = TRUE)),
       "the box cannot create a canonical — minting is how near-duplicates began")
 check(any(grepl('actionButton(ns("no_canonical")', src, fixed = TRUE)),
       "and offers 'No canonical fits' as its own BUTTON, not a list entry")
-check(any(grepl('observeEvent(input$no_canonical, record("reject"))', src, fixed = TRUE)),
+check(any(grepl('observeEvent(input$no_canonical, {', src, fixed = TRUE)) &&
+      any(grepl('record("reject")', src, fixed = TRUE)),
       "which records a reject, so E_emit treats it as an intended unassignment")
+check(!any(grepl('ns("reject")', src, fixed = TRUE)),
+      "and there is no separate Reject button doing the same thing")
 check(!any(grepl("NO_CANONICAL", src, fixed = TRUE)),
       "and the pseudo-choice is gone from the canonical list entirely")
 
@@ -151,6 +154,21 @@ check(!any(grepl("invalidateLater", readLines("R/trials.R", warn = FALSE), fixed
 sch <- paste(readLines("sql/schema.sql", warn = FALSE), collapse = "\n")
 check(grepl("FROM norm_decisions\nWHERE action NOT IN ('skip','flag')", sch, fixed = TRUE),
       "flags are excluded from the latest-wins view export.R reads")
+
+cat("\n3f. the molecule is highlighted in a trial's substance list\n")
+hl <- function(line, cn) { p <- sibling_parts(line, cn); p$part[p$match] }
+check(identical(hl("Aprepitant / Granisetron-Hydrochlorid / Dexamethason / Melphalan",
+                   "Dexamethasone (sodium phosphate)"), "Dexamethason"),
+      "only the dexamethasone part of a multi-drug line lights up")
+check(identical(hl("Dexametasone / Bortezomib", "Dexamethasone"), "Dexametasone"),
+      "a spelling variant still matches on the first letters")
+check(!length(hl("Sodium chloride / Water for injection", "Dexamethasone (sodium phosphate)")),
+      "a shared salt word alone is not a match")
+flu <- "Haemagglutinin from A/Brisbane/59/2007 / Haemagglutinin from B/Brisbane/3/2007"
+check(identical(hl(flu, "Influenza A haemagglutinin"), "Haemagglutinin from A/Brisbane/59/2007"),
+      "an influenza A canonical does not light up the B strain")
+check(identical(hl(flu, "Influenza B haemagglutinin"), "Haemagglutinin from B/Brisbane/3/2007"),
+      "and a B canonical only the B strain")
 
 cat("\n3e. polling only notifies on change\n")
 local({
