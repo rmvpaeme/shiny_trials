@@ -166,8 +166,9 @@ trials_server <- function(id, db, session_user, cache, snapshot = snapshot_curre
     reviewed_tick <- shiny::reactiveVal(0)
     my_reviews <- shiny::reactive({
       reviewed_tick()
-      if (is.null(db)) return(character())
-      tryCatch(latest_trial_reviews(db)$trial_id, error = function(e) character())
+      u <- session_user()
+      if (is.null(db) || is.null(u)) return(character())
+      tryCatch(my_reviewed_trials(db, u$username), error = function(e) character())
     })
 
     filtered <- shiny::reactive({

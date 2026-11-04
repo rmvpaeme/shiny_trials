@@ -141,6 +141,11 @@ check(inherits(try(append_trial_decision(con, TID, "phase", "override", U1, SHA,
 
 invisible(append_trial_review(con, TID, "validated", U1, SHA, comment = "checked"))
 check(nrow(latest_trial_reviews(con)) >= 1, "a whole-trial sign-off is stored")
+check(TID %in% my_reviewed_trials(con, U1), "a sign-off counts as reviewed for its reviewer")
+check(!TID %in% my_reviewed_trials(con, U2),
+      "but not for a second reviewer, who still has to review an overlap trial")
+invisible(append_trial_review(con, TID, "reopened", U2, SHA, comment = "reopen"))
+check(!TID %in% my_reviewed_trials(con, U1), "reopening puts the trial back in the list")
 
 # ── export bookkeeping ───────────────────────────────────────────────────────
 eid <- export_run_start(con, "sponsor", host = "__test__host")

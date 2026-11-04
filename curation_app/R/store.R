@@ -199,6 +199,24 @@ latest_trial_reviews <- function(con) {
     ORDER BY trial_id, decided_at_utc DESC, review_id DESC")
 }
 
+# Trials THIS reviewer has signed off and that have not been reopened since.
+#
+# Drives "Hide trials I have reviewed" and the progress count. It used the
+# global latest sign-off, which had two faults: a trial assigned to two
+# reviewers to measure agreement disappeared from the second one's list as soon
+# as the first signed it off, and a 'reopened' entry still counted as reviewed,
+# so reopening could not put a trial back.
+my_reviewed_trials <- function(con, username) {
+  DBI::dbGetQuery(con, "
+    SELECT r.trial_id FROM trial_reviews r
+    WHERE r.reviewer = $1 AND r.status <> 'reopened'
+    GROUP BY r.trial_id
+    HAVING max(r.decided_at_utc) > COALESCE(
+      (SELECT max(o.decided_at_utc) FROM trial_reviews o
+       WHERE o.trial_id = r.trial_id AND o.status = 'reopened'),
+      '-infinity'::timestamptz)", params = list(username))$trial_id
+}
+
 norm_disagreements  <- function(con) DBI::dbGetQuery(con, "SELECT * FROM norm_disagreements ORDER BY last_decided_at DESC")
 trial_disagreements <- function(con) DBI::dbGetQuery(con, "SELECT * FROM trial_disagreements ORDER BY last_decided_at DESC")
 

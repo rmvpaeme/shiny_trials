@@ -313,13 +313,13 @@ local({
                       register = "EUCTR", check.names = FALSE)
   signed <- character()
   env <- environment(trials_server)
-  old <- list(a = env$append_trial_review, l = env$latest_trial_reviews,
+  old <- list(a = env$append_trial_review, l = env$my_reviewed_trials,
               c = env$sample_choices_for_reviewer, s = env$sample_for_reviewer)
   env$append_trial_review <- function(con, trial_id, ...) { signed <<- c(signed, trial_id); 1 }
-  env$latest_trial_reviews <- function(con) data.frame(trial_id = signed)
+  env$my_reviewed_trials <- function(con, username) signed
   env$sample_choices_for_reviewer <- function(...) NULL
   env$sample_for_reviewer <- function(...) NULL
-  on.exit({ env$append_trial_review <- old$a; env$latest_trial_reviews <- old$l
+  on.exit({ env$append_trial_review <- old$a; env$my_reviewed_trials <- old$l
             env$sample_choices_for_reviewer <- old$c; env$sample_for_reviewer <- old$s })
   shiny::testServer(trials_server,
     args = list(db = list(), session_user = function() list(username = "ann"), cache = cache), {

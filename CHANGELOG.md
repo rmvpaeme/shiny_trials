@@ -25,6 +25,12 @@
   the box, and a quick second click recorded it there. The review log shows it
   twice (one comment on 3–4 adjacent trials within two seconds). The selection
   is now the trial ID and is cleared after every sign-off.
+- **"Hide trials I have reviewed" means the reviewer, and respects reopening.**
+  It hid any trial ANYONE had signed off, so a trial assigned to two reviewers
+  for the agreement figures vanished from the second one's list. A
+  `reopened` entry also still counted as reviewed, so reopening could not put
+  a trial back. Now `my_reviewed_trials()`: this reviewer's sign-offs, newer
+  than any reopen.
 - **The decisions CSV (Admin) now covers Trial validation.** Whole-trial
   sign-offs — validated / flagged, with the reviewer's comment — were never
   exported, so a finished validation round downloaded as nothing. New
