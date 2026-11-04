@@ -145,6 +145,8 @@ check(identical(mk$flag_comment[mk$raw_value == "Gamma SA"], "is this a CRO?"),
       "and carries their comment")
 check(nrow(norm_mark_flags(q, fl, me = "carol", only_flagged = TRUE)) == 2,
       "'only flagged' shows just the flagged rows")
+check("Beta Ltd" %in% norm_mark_flags(q, fl, me = "ann", only_flagged = TRUE)$raw_value,
+      "and includes the rows I flagged myself")
 check(nrow(norm_mark_flags(q, NULL, me = "ann")) == 4, "no flags changes nothing")
 src3 <- readLines("R/norm_review.R", warn = FALSE)
 check(!any(grepl("invalidateLater", src3, fixed = TRUE)),
@@ -169,6 +171,15 @@ check(identical(hl(flu, "Influenza A haemagglutinin"), "Haemagglutinin from A/Br
       "an influenza A canonical does not light up the B strain")
 check(identical(hl(flu, "Influenza B haemagglutinin"), "Haemagglutinin from B/Brisbane/3/2007"),
       "and a B canonical only the B strain")
+
+cache_s <- data.frame(`_id` = c("T1", "T2", "T3"),
+  DIMP_inn_name_raw = c("PACLITAXEL / CARBOPLATIN / Bevacizumab", "Carboplatin", "CARBOPLATIN / Etoposide"),
+  substance_label = c("Paclitaxel / Carboplatin / Bevacizumab", "Carboplatin", "Carboplatin / Etoposide"),
+  check.names = FALSE, stringsAsFactors = FALSE)
+sb <- norm_siblings(cache_s, "substance", "Carboplatin")
+check(identical(sb$string, "CARBOPLATIN"),
+      "siblings are the matched strings only, capitals merged, not each trial's whole drug list")
+check(identical(sb$n_trials, 3L), "with the number of trials using it")
 
 cat("\n3e. polling only notifies on change\n")
 local({

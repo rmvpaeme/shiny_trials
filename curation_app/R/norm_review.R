@@ -102,7 +102,10 @@ norm_mark_flags <- function(queue, flags, me = NULL, only_flagged = FALSE) {
     queue$flagged[hit] <- "yes"
     queue$flagged_by[hit] <- flags$reviewer[m[hit]]
     queue$flag_comment[hit] <- flags$comment[m[hit]]
-    if (!is.null(me)) queue <- queue[!(hit & queue$flagged_by %in% me), , drop = FALSE]
+    # Hidden from the flagger's normal queue, but not from "only flagged":
+    # that list is where they go to see what they flagged.
+    if (!is.null(me) && !only_flagged)
+      queue <- queue[!(hit & queue$flagged_by %in% me), , drop = FALSE]
   }
   if (only_flagged) queue <- queue[queue$flagged == "yes", , drop = FALSE]
   queue
@@ -121,32 +124,58 @@ norm_trial_refs <- function(snap, domain, raw_value, cache = NULL, limit = 25L) 
   head(unique(ids), limit)
 }
 
-# Other raw strings already mapped to the same canonical.
+# Other raw strings already mapped to the same canonical, with how many trials
+# use each: data.frame(string, n_trials), most-used first.
 #
 # Derived from trials_cache.rds rather than assignments.csv, which is 7.4 MB
 # across the two domains and is not fetched. For sponsors this is exact: the
-# cache carries sponsor_name_raw beside sponsor_clean. For substances it is
-# approximate, because substance_label is a " / "-joined multi-substance string
-# — acceptable for a supporting panel, and the alternative costs 4.8 MB per
-# process for something a reviewer glances at.
+# cache carries sponsor_name_raw beside sponsor_clean.
+#
+# For substances it is approximate. The cache only has each trial's WHOLE
+# substance list, " / "-joined, and showing those lines buried the molecule in
+# long oncology regimens — reviewers could not tell what was being asked. So
+# each list is split and only the parts that match the canonical are kept and
+# counted: "CARBOPLATIN — 412 trials", "Carboplatino — 3 trials".
 norm_siblings <- function(cache, domain, canonical, limit = 15L) {
   if (is.null(cache) || is.null(canonical) || !nzchar(canonical)) return(NULL)
+  count <- function(strings, trial) {
+    ok <- !is.na(strings) & nzchar(trimws(strings))
+    if (!any(ok)) return(NULL)
+    # Spellings that differ only in capitals are one line ("CARBOPLATIN",
+    # "Carboplatin"), shown in the most common form.
+    u <- unique(data.frame(string = trimws(strings[ok]), trial = trial[ok],
+                           stringsAsFactors = FALSE))
+    u$key <- tolower(u$string)
+    n <- tapply(u$trial, u$key, function(x) length(unique(x)))
+    shown <- tapply(u$string, u$key, function(x) names(sort(table(x), decreasing = TRUE))[1])
+    out <- data.frame(string = as.character(shown[names(n)]), n_trials = as.integer(n),
+                      stringsAsFactors = FALSE)
+    out <- out[order(-out$n_trials, out$string), , drop = FALSE]
+    rownames(out) <- NULL
+    head(out, limit)
+  }
   if (identical(domain, "sponsor")) {
     if (!all(c("sponsor_clean", "sponsor_name_raw") %in% names(cache))) return(NULL)
-    hit <- cache$sponsor_clean %in% canonical
-    if (!any(hit)) return(NULL)
-    head(sort(unique(cache$sponsor_name_raw[hit])), limit)
+    hit <- which(cache$sponsor_clean %in% canonical)
+    if (!length(hit)) return(NULL)
+    count(cache$sponsor_name_raw[hit], cache$`_id`[hit])
   } else {
     if (!"substance_label" %in% names(cache)) return(NULL)
     # Case-insensitive: the labels are not consistently capitalised, and
     # "Influenza A haemagglutinin" found nothing against "Influenza a
     # haemagglutinin".
-    hit <- grepl(tolower(canonical), tolower(cache$substance_label %||% ""), fixed = TRUE)
-    if (!any(hit)) return(NULL)
-    v <- unique(stats::na.omit(cache$DIMP_inn_name_raw[hit]))
-    # Lines where the molecule can actually be pointed at go first.
-    m <- vapply(v, function(x) any(sibling_parts(x, canonical)$match), logical(1))
-    head(c(sort(v[m]), sort(v[!m])), limit)
+    hit <- which(grepl(tolower(canonical), tolower(cache$substance_label %||% ""), fixed = TRUE))
+    if (!length(hit)) return(NULL)
+    raw <- cache$DIMP_inn_name_raw[hit]; ids <- cache$`_id`[hit]
+    parts <- lapply(seq_along(raw), function(i) {
+      if (is.na(raw[i])) return(NULL)
+      p <- sibling_parts(raw[i], canonical)
+      p <- p$part[p$match]
+      if (length(p)) data.frame(s = p, t = ids[i], stringsAsFactors = FALSE)
+    })
+    parts <- do.call(rbind, parts)
+    if (is.null(parts) || !nrow(parts)) return(NULL)
+    count(parts$s, parts$t)
   }
 }
 
@@ -198,19 +227,6 @@ flu_types <- function(x) {
   unique(sub(".*([ab])[^ab]*$", "\\1", sub("/$", "", gsub("influenza[ -]+(type[ -]+)?", "", t))))
 }
 
-sibling_tag <- function(line, canonical) {
-  p <- sibling_parts(line, canonical)
-  if (!nrow(p)) return(NULL)
-  pieces <- lapply(seq_len(nrow(p)), function(i) {
-    if (p$match[i])
-      shiny::tags$mark(class = "px-1 rounded", style = "background:#ffe58f;", p$part[i])
-    else shiny::span(class = "text-muted", style = "opacity:.6;", p$part[i])
-  })
-  sep <- function() shiny::span(class = "text-muted", style = "opacity:.6;", " / ")
-  out <- list(pieces[[1]])
-  for (x in pieces[-1]) out <- c(out, list(sep(), x))
-  shiny::div(class = "mb-1", out)
-}
 
 # Canonicals worth putting at the top of the list for this raw string.
 #
@@ -440,14 +456,18 @@ norm_review_server <- function(id, db, session_user, snapshot = snapshot_current
           bslib::card_header("Other strings on this canonical"),
           shiny::div(class = "p-2 small",
             if (is.null(sibs)) shiny::span(class = "text-muted", "none found")
-            else if (identical(domain(), "substance"))
-              shiny::tagList(
+            else shiny::tagList(
+              if (identical(domain(), "substance"))
                 shiny::div(class = "text-muted mb-2",
-                  "Each line is one trial's full substance list. The highlighted ",
-                  "part is the molecule on this canonical; the rest are other drugs ",
-                  "in the same trial."),
-                lapply(sibs, function(s) sibling_tag(s, row$proposed)))
-            else shiny::tagList(lapply(sibs, function(s) shiny::div(s))))
+                  "How registers wrote this substance in other trials. ",
+                  "Approximate: found by name, not by the pipeline's mapping."),
+              shiny::tags$table(class = "table table-sm mb-0",
+                shiny::tags$tbody(lapply(seq_len(nrow(sibs)), function(i)
+                  shiny::tags$tr(
+                    shiny::tags$td(sibs$string[i]),
+                    shiny::tags$td(class = "text-muted text-end text-nowrap",
+                      sprintf("%s trial%s", fmt_int(sibs$n_trials[i]),
+                              if (sibs$n_trials[i] == 1) "" else "s"))))))))
         )
       ))
     })

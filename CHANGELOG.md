@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.22.3 — 2026-11-04 (curation app)
+
+- **"Other strings on this canonical" lists strings, not drug regimens.** The
+  v0.22.2 highlighting still showed each trial's whole substance list, and for
+  a drug like carboplatin those are long oncology regimens where the
+  highlighted word got lost. The panel now lists only the matching strings,
+  capitals merged, with how many trials use each: "Carboplatin — 222 trials",
+  "CARBOPLATINO — 23 trials". Sponsors get the same counts.
+- **"Only rows flagged for review" includes your own flags.** Rows you flag
+  still leave your normal queue, but this list hid them too, so it looked
+  empty to whoever had just flagged something.
+
 ## v0.22.2 — 2026-11-04 (curation app)
 
 ### Second round of reviewer feedback

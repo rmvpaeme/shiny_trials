@@ -11,7 +11,7 @@
 # The result was "object 'APP_VERSION' not found" the moment a reviewer saved a
 # decision — only on the deployed app, never locally, and never in the tests,
 # which set it themselves. Anything the modules need lives in a sourced file.
-APP_VERSION <- "0.22.2"
+APP_VERSION <- "0.22.3"
 
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0) b else a
 
