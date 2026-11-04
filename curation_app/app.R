@@ -20,7 +20,8 @@
 #
 # The dashboard ships through the nightly: a push to the `deploy` branch, every
 # night, because its data changes every night. This app does not. Its CODE is
-# uploaded by hand from an R session (rsconnect::deployApp("curation_app")) when
+# uploaded by hand with `Rscript curation_app/deploy.R --deploy` (never a bare
+# deployApp(), which would bundle .Renviron) when
 # it actually changes, which is rarely.
 #
 # The two are independent on purpose, and it is why this app fetches DATA from

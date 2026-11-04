@@ -39,6 +39,12 @@
   leaves the earlier one behind), the register's raw value on field edits, the
   app version, a byte-order mark so Excel shows accents correctly, and an
   error instead of a silently empty file when the database read fails.
+- **Deploying no longer wipes `CURATION_DB_URL`.** Connect Cloud replaces an
+  app's secret variables on every update, and a deploy that names none sends
+  an empty list. `deploy.R` now sends it every time, from
+  `CURATION_DEPLOY_DB_URL` in `curation_app/.Renviron` (the `curation_app`
+  role), and refuses a superuser URL. Deploy with
+  `Rscript curation_app/deploy.R --deploy`, never a bare `deployApp()`.
 - **Needs a schema migration** before deploy: `norm_decisions.action` gains
   `'flag'`. Run `Rscript curation_app/apply_app_role.R` with the superuser
   `CURATION_DB_URL`; it applies `schema.sql`, which is idempotent.

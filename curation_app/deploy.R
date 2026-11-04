@@ -38,6 +38,28 @@ account <- arg_value("--account", NA_character_)
 # than by accident.
 include_env <- "--include-env" %in% args
 
+# ── The connection string is sent WITH every deploy ──────────────────────────
+#
+# Connect Cloud replaces the app's whole list of secret variables on every
+# update, and a deployApp() call that names none sends an EMPTY list. So each
+# deploy silently wiped CURATION_DB_URL from the Vars pane and it had to be
+# typed in again. (rsconnect 1.7, connectCloudClient()$updateContent.)
+#
+# The fix is to name it in envVars, so rsconnect sends it as an encrypted
+# Connect Cloud variable — still never a file in the bundle.
+#
+# The value comes from CURATION_DEPLOY_DB_URL, NOT the local CURATION_DB_URL:
+# locally that one is the postgres superuser, which the scripts here need and
+# the deployed app must never have. Kept in curation_app/.Renviron, which this
+# script reads but does not upload.
+local({
+  f <- file.path(if (basename(getwd()) == "curation_app") "." else "curation_app", ".Renviron")
+  if (file.exists(f)) readRenviron(f)
+})
+deploy_url <- Sys.getenv("CURATION_DEPLOY_DB_URL")
+deploy_user <- sub("^postgres(ql)?://([^:@/]+).*$", "\\2", deploy_url)
+send_env <- nzchar(deploy_url) && !include_env
+
 app_dir <- if (basename(getwd()) == "curation_app") "." else "curation_app"
 if (!file.exists(file.path(app_dir, "app.R")))
   stop("run me from the repo root or from curation_app/", call. = FALSE)
@@ -124,7 +146,7 @@ if (length(extra)) {
   for (f in extra) cat("   ", f, "\n")
 }
 
-if (!include_env) {
+if (!include_env && !send_env) {
   cat("\nCURATION_DB_URL is NOT uploaded. The app reads it from the environment,\n")
   cat("so set it on the deployed app:\n")
   cat("  Posit Connect / Connect Cloud -> the app -> Vars -> CURATION_DB_URL\n")
@@ -133,6 +155,25 @@ if (!include_env) {
 }
 cat("\nUse the SESSION pooler string (port 5432, user postgres.<ref> or the\n")
 cat("curation_app role); the direct endpoint is IPv6-only and may be unreachable.\n")
+
+if (!include_env) {
+  if (!nzchar(deploy_url)) {
+    cat("\n!! CURATION_DEPLOY_DB_URL is not set. A deploy would WIPE CURATION_DB_URL\n")
+    cat("   on the app (Connect Cloud replaces its variables on every update).\n")
+    cat("   Add to curation_app/.Renviron:\n")
+    cat("     CURATION_DEPLOY_DB_URL=postgresql://curation_app.<ref>:<pw>@<pooler host>:5432/postgres\n")
+    cat("   (the curation_app role from apply_app_role.R, not the superuser).\n")
+    if (do_deploy) quit(save = "no", status = 1L)
+  } else if (grepl("^postgres(\\.|$)", deploy_user)) {
+    cat("\n!! REFUSING: CURATION_DEPLOY_DB_URL connects as '", sub("\\..*$", "", deploy_user),
+        "', the superuser.\n   Use the curation_app role from apply_app_role.R.\n", sep = "")
+    if (do_deploy) quit(save = "no", status = 1L)
+  } else {
+    cat("\nCURATION_DB_URL will be set on the app from CURATION_DEPLOY_DB_URL\n")
+    cat("(user ", sub("\\.[^.]+$", ".<ref>", deploy_user),
+        "), as an encrypted variable, not a file.\n", sep = "")
+  }
+}
 
 if (!do_deploy) {
   cat("\nDry run. Re-run with --deploy to upload.\n")
@@ -146,10 +187,20 @@ rsconnect::deployApp(
   appTitle    = "Curation — EU Paediatric Trial Monitor",
   server      = server,
   account     = if (is.na(account)) NULL else account,
+  # Sent from THIS process's environment under the name the app reads. Only
+  # this script's process sees the swap; the local CURATION_DB_URL is untouched.
+  envVars     = if (send_env) {
+                  Sys.setenv(CURATION_DB_URL = deploy_url)
+                  "CURATION_DB_URL"
+                },
   forceUpdate = TRUE
 )
 
-cat("\nDeployed. ONE STEP REMAINS — the app cannot sign anyone in until it has\n")
-cat("a connection string:\n")
-cat("  Connect Cloud -> this app -> Vars -> CURATION_DB_URL = <session pooler URL>\n")
-cat("Use the curation_app role from sql/app_role.sql, not the postgres superuser.\n")
+if (send_env) {
+  cat("\nDeployed, with CURATION_DB_URL set. Nothing to fill in by hand.\n")
+} else {
+  cat("\nDeployed. ONE STEP REMAINS — the app cannot sign anyone in until it has\n")
+  cat("a connection string:\n")
+  cat("  Connect Cloud -> this app -> Vars -> CURATION_DB_URL = <session pooler URL>\n")
+  cat("Use the curation_app role from sql/app_role.sql, not the postgres superuser.\n")
+}
