@@ -141,3 +141,7 @@ rsconnect/
 # must stay tracked" check caught it.
 !tests/*.sh
 !tests/*.R
+
+# Design notes and handovers describe deployment internals. Local only;
+# removed from history in Nov 2026 because the repo is public.
+PLANS/

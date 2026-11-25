@@ -227,8 +227,7 @@ The script downloads EMA's official PIP decisions feed into `config/pip_decision
 App-facing labels are read from `data/trial_sponsor_labels.csv`. That file is
 produced by the **v2 pipeline**, which replaced the deterministic matcher (~4,200
 lines of R plus 16,545 committed alias rows) with a model-built canonical
-registry. Full design notes and every measurement behind it:
-[PLANS/normalisation-v2-handover.md](PLANS/normalisation-v2-handover.md).
+registry.
 
 Current state: **16,594 / 16,594** distinct raw sponsor strings assigned,
 **50,359 / 50,359** trial rows labelled, **6,954** canonical sponsors, zero
@@ -581,7 +580,6 @@ Note: the current Docker defaults still use older `pediatric_trials.*` file name
 │   ├── preprocessing.Rmd
 │   └── sponsor_normalisation_pipeline.dot   # + .png, embedded in the report
 ├── nightly_update/
-├── PLANS/                        # Design notes and handovers
 ├── tests/
 │   ├── fixtures/
 │   └── gold/                     # Frozen stratified sponsor sample (unadjudicated)
@@ -595,8 +593,8 @@ Sponsor pipeline steps are lettered by execution order (`A_block` → `E_emit`);
 numbering, and `normalise_sponsors.R` is unnumbered because it is an engine other
 code calls, not a step. Substance steps are still numbered `1`–`4`.
 
-`AGENTS/` contains local handover notes and `LEGACY/` holds retired scripts and
-completed handovers. Both are ignored by Git.
+`AGENTS/` and `PLANS/` contain local design and handover notes and `LEGACY/`
+holds retired scripts and completed handovers. All three are ignored by Git.
 
 ### `curation_app/` — the reviewer app (v0.22.0+)
 
@@ -614,8 +612,7 @@ and reach the pipeline through `export.R` inside the nightly.
 | `sql/schema.sql` | Tables, latest-wins views, disagreement views |
 
 See [curation_app/README.md](curation_app/README.md) for operating and
-deploying it, and [PLANS/curation-app-v2-handover.md](PLANS/curation-app-v2-handover.md)
-for the traps worth knowing before changing it.
+deploying it.
 
 ## Preprocessing Audit Report
 
